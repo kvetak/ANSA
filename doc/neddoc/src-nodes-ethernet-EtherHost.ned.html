@@ -1,0 +1,109 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/nodes/ethernet/EtherHost.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost.html">EtherHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An example host with one Ethernet port and traffic generators that
+generate Ethernet traffic directly. This host model does not contain
+higher layer protocols (IP, TCP).</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2003 Andras Varga; CTIE, Monash University, Australia
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">applications</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">EtherAppCli</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">applications</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">EtherAppSrv</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">EtherLLC</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">EtherMAC</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// An example host with one Ethernet port and traffic generators that
+// generate Ethernet traffic directly. This host model does not contain
+// higher layer protocols (\IP, \TCP).
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherHost</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=device/pc2&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">cli</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherAppCli</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">registerSAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,60,col&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">srv</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherAppSrv</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">registerSAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=250,60,col&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherLLC</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=155,120&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+                </span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherMAC</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">queueModule</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=155,200;q=queue&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">;
+
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">;
+
+        </span><span style="color: #000000; ">cli</span><span style="color: #000000; ">.</span><span style="color: #000000; ">out</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">cli</span><span style="color: #000000; ">.</span><span style="color: #000000; ">in</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+
+        </span><span style="color: #000000; ">srv</span><span style="color: #000000; ">.</span><span style="color: #000000; ">out</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">srv</span><span style="color: #000000; ">.</span><span style="color: #000000; ">in</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">llc</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

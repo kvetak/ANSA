@@ -1,0 +1,349 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>FlatNetworkConfigurator</i></h2>
+<b>Package:</b> inet.networklayer.autorouting<br/><b>File: <a href="src-networklayer-autorouting-FlatNetworkConfigurator.ned.html">src/networklayer/autorouting/FlatNetworkConfigurator.ned</a></b><br/><p><a href="../doxy/class_flat_network_configurator.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Configures IP addresses and routing tables for a "flat" network,
+"flat" meaning that all hosts and routers will have the same
+network address and will only differ in the host part.</p>
+<p>This module does't connect to any other modules (it has no gates),
+and should have only one instance in the whole model. The module
+will only run once, at the beginning of the simulation.
+When it runs, it will:</p>
+  <ol><li>assign IP addresses to hosts and routers. All hosts and
+      routers will be in the same network (same network address).
+      For simplicity, it will assign the same address to all interfaces
+      of a router;</li>
+  <li>then it'll discover the topology of the network (using OMNeT++'s
+      cTopology class), and calculate shortest paths;</li>
+  <li>finally, it will add routes which correspond to the shortest
+      paths to the routing tables (see <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>::addRoutingEntry()).</li></ol>
+<p>How does it know which modules are routers, hosts, et.c that need to
+be configured, and what is the network topology? The configurator
+picks all modules which have a @node property and their connections,
+and builds a graph from it. Then it runs Dijstra's
+shortest path algorithm on it, and configures all modules which are
+<a href="inet.networklayer.ipv4.IP.html">IP</a> nodes.</p>
+<p>It is assumed that the routing table (<a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a> module) is the
+"routingTable" or "networkLayer.routingTable" submodule in all hosts
+and routers.</p>
+<p>To avoid interference with the above algorithm, it's recommended that
+no host or router should have its address set explicitly, and
+no routes are set up manually. Practically, routing files (.irt, .mrt)
+should be absent or empty.</p>
+<p>All the above takes place in initialization stage 2. (In stage 0,
+interfaces register themselves in the <a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a> modules, and
+in stage 1, routing files are read.)</p>
+<img src="inet.networklayer.autorouting.FlatNetworkConfigurator-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="FlatNetworkConfigurator" alt="FlatNetworkConfigurator" coords="0,31,198,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.autorouting.FlatNetworkConfigurator-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="Simple Module FlatNetworkConfigurator" alt="" coords="643,83,805,111">
+<area shape="rect" id="node2" href="inet.examples.ethernet.arptest2.ARPTest.html" title="Network ARPTest" alt="" coords="5,6,80,34">
+<area shape="rect" id="node5" href="inet.examples.inet.bulktransfer.BulkTransfer.html" title="Network BulkTransfer" alt="" coords="104,6,200,34">
+<area shape="rect" id="node7" href="inet.examples.inet.tcpclientserver.ClientServer.html" title="Network ClientServer" alt="" coords="224,6,317,34">
+<area shape="rect" id="node9" href="inet.examples.inet.flatnet.FlatNet.html" title="Network FlatNet" alt="" coords="341,6,413,34">
+<area shape="rect" id="node11" href="inet.examples.wireless.handover.HandoverNetwork.html" title="Network HandoverNetwork" alt="" coords="437,6,563,34">
+<area shape="rect" id="node13" href="inet.examples.wireless.lan80211.Lan80211.html" title="Network Lan80211" alt="" coords="587,6,664,34">
+<area shape="rect" id="node15" href="inet.examples.sctp.nclients.NClients.html" title="Network NClients" alt="" coords="688,6,760,34">
+<area shape="rect" id="node18" href="inet.examples.inet.nclients.NClients2.html" title="Network NClients2" alt="" coords="784,6,864,34">
+<area shape="rect" id="node20" href="inet.examples.adhoc.mf80211.Net80211.html" title="Network Net80211" alt="" coords="888,6,965,34">
+<area shape="rect" id="node23" href="inet.examples.inet.redtest.REDTest.html" title="Network REDTest" alt="" coords="989,6,1067,34">
+<area shape="rect" id="node25" href="inet.examples.inet.redtest.REDTestDebug.html" title="Network REDTestDebug" alt="" coords="1091,6,1205,34">
+<area shape="rect" id="node27" href="inet.examples.inet.redtest.REDTestTh.html" title="Network REDTestTh" alt="" coords="1229,6,1320,34">
+<area shape="rect" id="node29" href="inet.examples.inet.routerperf.RouterPerfNetwork.html" title="Network RouterPerfNetwork" alt="" coords="1344,6,1477,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.autorouting.FlatNetworkConfigurator-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="Simple Module FlatNetworkConfigurator" alt="" coords="5,6,168,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.arptest.ARPTest.html">ARPTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.arptest2.ARPTest.html">ARPTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.bulktransfer.BulkTransfer.html">BulkTransfer</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.tcpclientserver.ClientServer.html">ClientServer</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.flatnet.FlatNet.html">FlatNet</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.handover.HandoverNetwork.html">HandoverNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.lan80211.Lan80211.html">Lan80211</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.nclients.NClients.html">NClients</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.sctp.nclients.NClients.html">NClients</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.nclients.NClients2.html">NClients2</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.adhoc.ieee80211.Net80211.html">Net80211</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.adhoc.mf80211.Net80211.html">Net80211</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTest.html">REDTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTestDebug.html">REDTestDebug</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTestTh.html">REDTestTh</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.routerperf.RouterPerfNetwork.html">RouterPerfNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>networkAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"192.168.0.0"</td>
+   <td>
+<p>network part of the address (see netmask parameter)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>netmask</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"255.255.0.0"</td>
+   <td>
+<p>host part of addresses are autoconfigured</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Configures \IP addresses and routing tables for a &quot;flat&quot; network,
+// &quot;flat&quot; meaning that all hosts and routers will have the same
+// network address and will only differ in the host part.
+//
+// This module does't connect to any other modules (it has no gates),
+// and should have only one instance in the whole model. The module
+// will only run once, at the beginning of the simulation.
+// When it runs, it will:
+//
+//   -#  assign \IP addresses to hosts and routers. All hosts and
+//       routers will be in the same network (same network address).
+//       For simplicity, it will assign the same address to all interfaces
+//       of a router;
+//   -#  then it'll discover the topology of the network (using OMNeT++'s
+//       cTopology class), and calculate shortest paths;
+//   -#  finally, it will add routes which correspond to the shortest
+//       paths to the routing tables (see RoutingTable::addRoutingEntry()).
+//
+// How does it know which modules are routers, hosts, et.c that need to
+// be configured, and what is the network topology? The configurator
+// picks all modules which have a @node property and their connections,
+// and builds a graph from it. Then it runs Dijstra's
+// shortest path algorithm on it, and configures all modules which are
+// IP nodes.
+//
+// It is assumed that the routing table (RoutingTable module) is the
+// &quot;routingTable&quot; or &quot;networkLayer.routingTable&quot; submodule in all hosts
+// and routers.
+//
+// To avoid interference with the above algorithm, it's recommended that
+// no host or router should have its address set explicitly, and
+// no routes are set up manually. Practically, routing files (.irt, .mrt)
+// should be absent or empty.
+//
+// All the above takes place in initialization stage 2. (In stage 0,
+// interfaces register themselves in the InterfaceTable modules, and
+// in stage 1, routing files are read.)
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">FlatNetworkConfigurator</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkAddress</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;192.168.0.0&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// network part of the address (see netmask parameter)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">netmask</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;255.255.0.0&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// host part of addresses are autoconfigured
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

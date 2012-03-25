@@ -1,0 +1,42 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Enum <i>Ieee80211PrimRequestCode</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211Primitives.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211Primitives.msg</a></b><br/>
+<p>IEEE 802.11 command codes, sent by the agent to the management entity.
+These constants should be set as message kind on the messages.</p>
+<p><b>See also:</b> <a href="Ieee80211PrimConfirmCode.html">Ieee80211PrimConfirmCode</a>, <a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA.html">Ieee80211MgmtSTA</a>, <a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">Ieee80211AgentSTA</a></p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211PrimRequestCode-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211PrimRequestCode.html" title="Enum Ieee80211PrimRequestCode" alt="" coords="5,6,195,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211PrimRequestCode-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211PrimRequestCode.html" title="Enum Ieee80211PrimRequestCode" alt="" coords="5,6,195,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// IEEE 802.11 command codes, sent by the agent to the management entity.
+// These constants should be set as message kind on the messages.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> Ieee80211PrimConfirmCode, Ieee80211MgmtSTA, Ieee80211AgentSTA
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequestCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">PR_SCAN_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_AUTHENTICATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_DEAUTHENTICATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_ASSOCIATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_REASSOCIATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_DISASSOCIATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

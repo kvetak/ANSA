@@ -1,0 +1,75 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/icmpv6/ICMPv6.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> implementation.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">icmpv6</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 implementation.
+//
+// To send ICMPv6 Echo Request, send any message to port pingIn with IPv6ControlInfo
+// attached. The message will be used as ping payload (encapsulated into an ICMPv6Message).
+// When ICMPv6 Echo Reply is received, the payload message will be sent to pingOut.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> IPv6, RoutingTable6, IPv6NeighbourDiscovery
+</span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> gate descriptions needed...
+</span><span style="color: #808080; font-style: italic; ">//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/control&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">pingIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// ping requests from app
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">pingOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">errorOut</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// for errors
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

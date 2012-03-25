@@ -1,0 +1,875 @@
+<?xml version="1.0" ?>
+<Routers>
+    <Router id="192.168.6.1">
+        <Hostname>Brno</Hostname>
+        <Interfaces>
+            <Interface name="ppp5">
+                <Bandwidth>10</Bandwidth>
+                <IPAddress>192.168.5.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp4">
+                <Bandwidth>10</Bandwidth>
+                <IPAddress>192.168.6.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp3">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.3.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp2">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>10000</Bandwidth>
+                <IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.4.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.1.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.2.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.3.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.4.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.5.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.6.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.28.1">
+        <Hostname>CeskeBudejovice</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.27.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.28.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.27.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.28.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.17.1">
+        <Hostname>HradecKralove</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.13.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.14.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.17.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.13.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.14.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.17.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.24.1">
+        <Hostname>Cheb</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.23.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.24.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.23.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.24.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.28.2">
+        <Hostname>JHradec</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.28.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.9.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.9.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.28.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.9.1">
+        <Hostname>Jihlava</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.9.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.4.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.4.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.9.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.16.2">
+        <Hostname>KutnaHora</Hostname>
+        <Interfaces>
+            <Interface name="ppp0">
+                <Bandwidth>10</Bandwidth>
+                <IPAddress>192.168.16.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.16.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.6.2">
+        <Hostname>Kyjov</Hostname>
+        <Interfaces>
+            <Interface name="ppp0">
+                <Bandwidth>10</Bandwidth>
+                <IPAddress>192.168.6.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.6.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.13.1">
+        <Hostname>Letohrad</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.11.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.12.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.13.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.11.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.12.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.13.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.18.1">
+        <Hostname>Liberec</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.17.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.18.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.17.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.18.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.26.1">
+        <Hostname>MarLazne</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.24.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>4</Bandwidth>
+                <IPAddress>192.168.25.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.26.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.24.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.25.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.26.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.23.1">
+        <Hostname>Most</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.22.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.23.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.22.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.23.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.12.1">
+        <Hostname>Olomouc</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.8.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.12.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.7.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.7.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.8.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.12.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.11.1">
+        <Hostname>Opava</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.10.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.11.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.10.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.11.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.10.1">
+        <Hostname>Ostrava</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.2.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.8.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.10.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.2.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.8.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.10.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.16.1">
+        <Hostname>Pardubice</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.14.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>10</Bandwidth>
+                <IPAddress>192.168.16.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.15.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.14.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.15.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.16.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.27.1">
+        <Hostname>Plzen</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.26.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.27.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.26.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.27.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.21.2">
+        <Hostname>Podebrady</Hostname>
+        <Interfaces>
+            <Interface name="ppp0">
+                <Bandwidth>40</Bandwidth>
+                <IPAddress>192.168.21.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.21.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.25.1">
+        <Hostname>Praha</Hostname>
+        <Interfaces>
+            <Interface name="ppp5">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.15.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp4">
+                <Bandwidth>10000</Bandwidth>
+                <IPAddress>192.168.1.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp3">
+                <Bandwidth>50</Bandwidth>
+                <IPAddress>192.168.20.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp2">
+                <Bandwidth>40</Bandwidth>
+                <IPAddress>192.168.21.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.19.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>4</Bandwidth>
+                <IPAddress>192.168.25.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.1.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.15.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.19.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.20.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.21.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.25.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.20.2">
+        <Hostname>Tabor</Hostname>
+        <Interfaces>
+            <Interface name="ppp0">
+                <Bandwidth>50</Bandwidth>
+                <IPAddress>192.168.20.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.20.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.22.1">
+        <Hostname>UstinL</Hostname>
+        <Interfaces>
+            <Interface name="ppp2">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.19.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.18.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>1000</Bandwidth>
+                <IPAddress>192.168.22.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.18.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.19.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.22.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.7.1">
+        <Hostname>Zlin</Hostname>
+        <Interfaces>
+            <Interface name="ppp1">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.3.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+            <Interface name="ppp0">
+                <Bandwidth>100</Bandwidth>
+                <IPAddress>192.168.7.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.3.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>192.168.7.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+    <Router id="192.168.5.2">
+        <Hostname>Znojmo</Hostname>
+        <Interfaces>
+            <Interface name="ppp0">
+                <Bandwidth>10</Bandwidth>
+                <IPAddress>192.168.5.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>192.168.5.0</IPAddress>
+                                <Wildcard>0.0.0.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+        </Routing>
+    </Router>
+</Routers>

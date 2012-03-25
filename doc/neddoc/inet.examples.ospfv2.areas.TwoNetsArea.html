@@ -1,0 +1,1444 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>TwoNetsArea</i></h2>
+<b>Package:</b> inet.examples.ospfv2.areas<br/><b>File: <a href="examples-ospfv2-areas-Area1.ned.html">examples/ospfv2/areas/Area1.ned</a></b><br/><p>(no description)</p><img src="inet.examples.ospfv2.areas.TwoNetsArea-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.nodes.inet.OSPFRouter.html" title="OSPFRouter" alt="OSPFRouter" coords="230,166,274,219">
+<area shape="rect" href="inet.linklayer.ethernet.EtherHub.html" title="EtherHub" alt="EtherHub" coords="138,117,182,164">
+<area shape="rect" href="inet.linklayer.ethernet.EtherHub.html" title="EtherHub" alt="EtherHub" coords="142,329,186,376">
+<area shape="rect" href="inet.nodes.inet.OSPFRouter.html" title="OSPFRouter" alt="OSPFRouter" coords="342,222,386,275">
+<area shape="rect" href="inet.nodes.inet.StandardHost.html" title="StandardHost" alt="StandardHost" coords="38,112,82,169">
+<area shape="rect" href="inet.nodes.inet.StandardHost.html" title="StandardHost" alt="StandardHost" coords="38,328,82,385">
+<area shape="rect" href="inet.nodes.inet.OSPFRouter.html" title="OSPFRouter" alt="OSPFRouter" coords="230,274,274,327">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.ospfv2.areas.TwoNetsArea-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.examples.ospfv2.areas.TwoNetsArea.html" title="Compound Module TwoNetsArea" alt="" coords="209,83,311,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="5,161,101,189">
+<area shape="rect" id="node4" href="inet.examples.ospfv2.areas.TwoNetsArea.C.html" title="Channel C" alt="" coords="125,161,197,189">
+<area shape="rect" id="node6" href="inet.linklayer.ethernet.EtherHub.html" title="Simple Module EtherHub" alt="" coords="221,161,299,189">
+<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="323,161,421,189">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="445,161,547,189">
+<area shape="rect" id="node12" href="inet.examples.ospfv2.areas.OSPF_AreaTest.html" title="Network OSPF_AreaTest" alt="" coords="201,6,319,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.ospfv2.areas.TwoNetsArea-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.examples.ospfv2.areas.TwoNetsArea.html" title="Compound Module TwoNetsArea" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.areas.OSPF_AreaTest.html">OSPF_AreaTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>p=10,10;b=412,316</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>ethg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.networklayer.ospfv2.OSPFRouting.html">ospf</a>.ospfConfigFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>xml file containing the full OSPF AS configuration</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.networklayer.ospfv2.OSPFRouting.html">ospf</a>.ospfConfigFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>xml file containing the full OSPF AS configuration</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R3</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.numGapReports</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>====== <a href="inet.transport.sctp.SCTP.html">SCTP</a> Association Parameters =================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoInitial</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>3s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoMin</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoMax</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>60s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.125</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoBeta</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.250</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.maxBurst</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.assocMaxRetrans</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>10</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.pathMaxRetrans</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>5</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.maxInitRetrans</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>8</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sackPeriod</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>200ms</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sackFrequency</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>2</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.reactivatePrimaryPath</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sendQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.validCookieLifetime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>10s</td>
+   <td>
+<p>====== Testing =====================================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.enableHeartbeats</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>====== Heartbeats ==================================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.hbInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>30s</td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.nagleEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>====== Nagle Algorithm =============================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.naglePoint</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1468</td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.fastRecoverySupported</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>====== Congestion Control ==========================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sctpAlgorithmClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"SCTPAlg"</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.ccModule</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>RFC4960=0</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.ssModule</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>ROUND_ROBIN=0</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.arwnd</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>65535</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.swsLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3000</td>
+   <td>
+<p>Limit for SWS</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.udpEncapsEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.destAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.srcAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>source <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address (useful with <a href="inet.examples.sctp.multihomed.multi.html">multi</a>-homing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.packetSize</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>56B</td>
+   <td>
+<p>of ping payload, in bytes</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.interval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>time to wait between pings (can be random)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.hopLimit</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>32</td>
+   <td>
+<p>TTL or hopLimit for <a href="inet.networklayer.ipv4.IP.html">IP</a> packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.count</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>stop after count ping requests, 0 means continuously</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,this.interval)</td>
+   <td>
+<p>send first ping at startTime</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.stopTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>
+<p>send no pings after stopTime, 0 means forever</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.printPing</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>dump on stdout</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ext.ExtInterface.html">ext</a>.filterString</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ext.ExtInterface.html">ext</a>.device</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.linklayer.ext.ExtInterface.html">ext</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.dumpFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.threadEnable</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.snaplen</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>65535</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H1</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.verbosity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.numGapReports</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>====== <a href="inet.transport.sctp.SCTP.html">SCTP</a> Association Parameters =================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoInitial</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>3s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoMin</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoMax</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>60s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.125</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.rtoBeta</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.250</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.maxBurst</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.assocMaxRetrans</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>10</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.pathMaxRetrans</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>5</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.maxInitRetrans</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>8</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sackPeriod</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>200ms</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sackFrequency</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>2</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.reactivatePrimaryPath</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sendQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.validCookieLifetime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>10s</td>
+   <td>
+<p>====== Testing =====================================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.enableHeartbeats</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>====== Heartbeats ==================================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.hbInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>30s</td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.nagleEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>====== Nagle Algorithm =============================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.naglePoint</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1468</td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.fastRecoverySupported</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>====== Congestion Control ==========================================</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.sctpAlgorithmClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"SCTPAlg"</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.ccModule</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>RFC4960=0</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.ssModule</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>ROUND_ROBIN=0</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.arwnd</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>65535</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.swsLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3000</td>
+   <td>
+<p>Limit for SWS</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.transport.sctp.SCTP.html">sctp</a>.udpEncapsEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.destAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.srcAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>source <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address (useful with <a href="inet.examples.sctp.multihomed.multi.html">multi</a>-homing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.packetSize</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>56B</td>
+   <td>
+<p>of ping payload, in bytes</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.interval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>time to wait between pings (can be random)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.hopLimit</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>32</td>
+   <td>
+<p>TTL or hopLimit for <a href="inet.networklayer.ipv4.IP.html">IP</a> packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.count</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>stop after count ping requests, 0 means continuously</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,this.interval)</td>
+   <td>
+<p>send first ping at startTime</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.stopTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>
+<p>send no pings after stopTime, 0 means forever</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.printPing</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>dump on stdout</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ext.ExtInterface.html">ext</a>.filterString</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ext.ExtInterface.html">ext</a>.device</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.linklayer.ext.ExtInterface.html">ext</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.dumpFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.threadEnable</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.snaplen</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>65535</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.StandardHost.html">H2</a>.<a href="inet.util.TCPDump.html">tcpdump</a>.verbosity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.networklayer.ospfv2.OSPFRouting.html">ospf</a>.ospfConfigFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>xml file containing the full OSPF AS configuration</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.OSPFRouter.html">R2</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">TwoNetsArea</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=10,10;b=412,316&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[];
+    </span><span style="color: #800000; font-weight: bold; ">types</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+        {
+            </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">;
+        }
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">R1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">OSPFRouter</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=248,124&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">N1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHub</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=156,72&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">N2</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHub</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=160,284&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">R3</span><span style="color: #000000; ">: </span><span style="color: #000000; ">OSPFRouter</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=360,180&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">H1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=56,72;i=device/laptop&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">H2</span><span style="color: #000000; ">: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=56,288;i=device/laptop&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">R2</span><span style="color: #000000; ">: </span><span style="color: #000000; ">OSPFRouter</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=248,232&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">H1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">N1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">R1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">R1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">R3</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">H2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">R1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">R2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">R2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">R3</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">R2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">C</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">N2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+
+        </span><span style="color: #808080; font-style: italic; ">// towards other areas
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">R3</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

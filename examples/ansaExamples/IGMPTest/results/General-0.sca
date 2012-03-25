@@ -1,0 +1,103 @@
+version 2
+run General-0-20100519-00:56:19-30495
+attr configname General
+attr datetime 20100519-00:56:19
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network MulticastNetwork
+attr processid 30495
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar MulticastNetwork.host1.pingApp 	"Pings sent" 	0
+scalar MulticastNetwork.host1.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.host1.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.host1.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.host1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.host1.ppp[0].queue 	"packets received by queue" 	5
+scalar MulticastNetwork.host1.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host2.pingApp 	"Pings sent" 	0
+scalar MulticastNetwork.host2.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.host2.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.host2.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.host2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.host2.ppp[0].queue 	"packets received by queue" 	5
+scalar MulticastNetwork.host2.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host2.ppp[1].queue 	"packets received by queue" 	0
+scalar MulticastNetwork.host2.ppp[1].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host3.pingApp 	"Pings sent" 	0
+scalar MulticastNetwork.host3.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.host3.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.host3.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.host3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.host3.ppp[0].queue 	"packets received by queue" 	5
+scalar MulticastNetwork.host3.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host3.ppp[1].queue 	"packets received by queue" 	0
+scalar MulticastNetwork.host3.ppp[1].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host4.pingApp 	"Pings sent" 	0
+scalar MulticastNetwork.host4.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.host4.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.host4.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.host4.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.host4.ppp[0].queue 	"packets received by queue" 	5
+scalar MulticastNetwork.host4.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host5.pingApp 	"Pings sent" 	0
+scalar MulticastNetwork.host5.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.host5.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.host5.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.host5.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.host5.ppp[0].queue 	"packets received by queue" 	5
+scalar MulticastNetwork.host5.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.host6.pingApp 	"Pings sent" 	0
+scalar MulticastNetwork.host6.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.host6.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.host6.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.host6.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.host6.ppp[0].queue 	"packets received by queue" 	5
+scalar MulticastNetwork.host6.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router1.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.router1.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.router1.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.router1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.router1.ppp[0].queue 	"packets received by queue" 	10
+scalar MulticastNetwork.router1.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router1.ppp[1].queue 	"packets received by queue" 	10
+scalar MulticastNetwork.router1.ppp[1].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router1.ppp[2].queue 	"packets received by queue" 	10
+scalar MulticastNetwork.router1.ppp[2].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router1.ppp[3].queue 	"packets received by queue" 	8
+scalar MulticastNetwork.router1.ppp[3].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router2.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.router2.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.router2.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.router2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.router2.ppp[0].queue 	"packets received by queue" 	1
+scalar MulticastNetwork.router2.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router2.ppp[1].queue 	"packets received by queue" 	8
+scalar MulticastNetwork.router2.ppp[1].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router2.ppp[2].queue 	"packets received by queue" 	8
+scalar MulticastNetwork.router2.ppp[2].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router3.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.router3.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.router3.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.router3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.router3.ppp[0].queue 	"packets received by queue" 	10
+scalar MulticastNetwork.router3.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router3.ppp[1].queue 	"packets received by queue" 	1
+scalar MulticastNetwork.router3.ppp[1].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router4.networkLayer.arp 	"ARP requests sent" 	0
+scalar MulticastNetwork.router4.networkLayer.arp 	"ARP replies sent" 	0
+scalar MulticastNetwork.router4.networkLayer.arp 	"ARP resolutions" 	0
+scalar MulticastNetwork.router4.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar MulticastNetwork.router4.ppp[0].queue 	"packets received by queue" 	10
+scalar MulticastNetwork.router4.ppp[0].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router4.ppp[1].queue 	"packets received by queue" 	10
+scalar MulticastNetwork.router4.ppp[1].queue 	"packets dropped by queue" 	0
+scalar MulticastNetwork.router4.ppp[2].queue 	"packets received by queue" 	1
+scalar MulticastNetwork.router4.ppp[2].queue 	"packets dropped by queue" 	0

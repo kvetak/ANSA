@@ -1,0 +1,151 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Module Interface <i>Radio</i></h2>
+<b>Package:</b> inet.linklayer.radio<br/><b>File: <a href="src-linklayer-radio-Radio.ned.html">src/linklayer/radio/Radio.ned</a></b><br/>
+<p>Prototype for radio modules. <a href="inet.linklayer.radio.Radio.html">Radio</a> modules deal with the transmission
+of frames over a wireless medium (the radio channel).</p>
+<p><b>Transmission</b></p>
+<p>Upper layers (wireless L2 protocols) can send frames to the radio
+module. Frames will be encapsulated into <a href="AirFrame.html">AirFrame</a> messages and
+distributed to other network nodes within interference distance.
+The <a href="AirFrame.html">AirFrame</a> represents the signal in the radio channel, and
+its fields hold properties of the transmission like the transmit power.</p>
+<p>The global <a href="inet.world.ChannelControl.html">ChannelControl</a> module keeps track of node positions,
+and knows which nodes are within interference distance of others
+(neighbour list). When transmitting, the radio module obtains the
+neighbour list, and sends a copy of the <a href="AirFrame.html">AirFrame</a> to each neighbour.</p>
+<p><b>Reception</b></p>
+<p>Received <a href="AirFrame.html">AirFrame</a> messages get delivered to the radioIn gate of the
+module. If it was found to have been received correctly, it gets
+decapsulated and the frame sent to the upper layer.</p>
+<p>Note: currently the packet is also sent up if it was NOT received
+incorrectly, with its message kind set to COLLISION or BITERROR.
+This may change in the future, as erroneous receptions could also
+be signalled via the <a href="inet.base.NotificationBoard.html">NotificationBoard</a>.</p>
+<p>Determining whether the frame was received correctly is a complicated
+process. The AbstractRadio C++ class from which the <a href="inet.linklayer.radio.Ieee80211Radio.html">Ieee80211Radio</a>
+and <a href="inet.linklayer.radio.GenericRadio.html">GenericRadio</a> are derived, basically first calculates the received
+power of the frame, taking a path loss model into account.
+Then it calculates the signal-noise ratio, thermal noise and other
+frames being counted as noise. It is determined from the SNR
+whether the packet was received correctly, taking modulation
+scheme and possible forward error correction into account.
+For details please see the C++ code and its documentation.</p>
+<p><b>Monitoring the radio state</b></p>
+<p>Wireless L2 protocols and other modules within the node can monitor
+radio transmissions and receptions by subscribing to the
+<code>NF_RADIOSTATE_CHANGED</code> category at the <a href="inet.base.NotificationBoard.html">NotificationBoard</a>
+module of the node.</p>
+<p><b>Dynamically configuring the radio</b></p>
+<p>The bitrate and the receive/transmit channel can be changed by sending
+<a href="inet.linklayer.radio.Radio.html">Radio</a> a blank cMessage with <tt>PHY_C_CONFIGURERADIO</tt> as message kind, and
+a <a href="PhyControlInfo.html">PhyControlInfo</a> object attached to it as control info, to hold the
+new bitrate and/or channel number. If the radio is currently transmitting,
+the change will actually take place after the transmission is completed.</p>
+<p>It is also possible to specify a different bitrate for individual frames;
+to do that, attach a <a href="PhyControlInfo.html">PhyControlInfo</a> with bitrate filled in to the frame.</p>
+<img src="inet.linklayer.radio.Radio-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.radio.Radio.html" title="Radio" alt="Radio" coords="0,31,149,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.radio.Radio-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.radio.Radio.html" title="Module Interface Radio" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.radio.Radio-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.radio.Radio.html" title="Module Interface Radio" alt="" coords="85,6,157,34">
+<area shape="rect" id="node2" href="inet.linklayer.radio.GenericRadio.html" title="Simple Module GenericRadio" alt="" coords="5,83,107,111">
+<area shape="rect" id="node4" href="inet.linklayer.radio.Ieee80211Radio.html" title="Simple Module Ieee80211Radio" alt="" coords="131,83,245,111">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/wrxtx</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Prototype for radio modules. Radio modules deal with the transmission
+// of frames over a wireless medium (the radio channel).
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Transmission</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Upper layers (wireless L2 protocols) can send frames to the radio
+// module. Frames will be encapsulated into AirFrame messages and
+// distributed to other network nodes within interference distance.
+// The AirFrame represents the signal in the radio channel, and
+// its fields hold properties of the transmission like the transmit power.
+//
+// The global ChannelControl module keeps track of node positions,
+// and knows which nodes are within interference distance of others
+// (neighbour list). When transmitting, the radio module obtains the
+// neighbour list, and sends a copy of the AirFrame to each neighbour.
+//
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Reception</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Received AirFrame messages get delivered to the radioIn gate of the
+// module. If it was found to have been received correctly, it gets
+// decapsulated and the frame sent to the upper layer.
+//
+// Note: currently the packet is also sent up if it was NOT received
+// incorrectly, with its message kind set to COLLISION or BITERROR.
+// This may change in the future, as erroneous receptions could also
+// be signalled via the NotificationBoard.
+//
+// Determining whether the frame was received correctly is a complicated
+// process. The AbstractRadio C++ class from which the Ieee80211Radio
+// and GenericRadio are derived, basically first calculates the received
+// power of the frame, taking a path loss model into account.
+// Then it calculates the signal-noise ratio, thermal noise and other
+// frames being counted as noise. It is determined from the SNR
+// whether the packet was received correctly, taking modulation
+// scheme and possible forward error correction into account.
+// For details please see the C++ code and its documentation.
+//
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Monitoring the radio state</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Wireless L2 protocols and other modules within the node can monitor
+// radio transmissions and receptions by subscribing to the
+// </span><span style="color: #800000; ">&lt;code&gt;</span><span style="color: #808080; font-style: italic; ">NF_RADIOSTATE_CHANGED</span><span style="color: #800000; ">&lt;/code&gt;</span><span style="color: #808080; font-style: italic; "> category at the NotificationBoard
+// module of the node.
+//
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Dynamically configuring the radio</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The bitrate and the receive/transmit channel can be changed by sending
+// Radio a blank cMessage with </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">PHY_C_CONFIGURERADIO</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> as message kind, and
+// a PhyControlInfo object attached to it as control info, to hold the
+// new bitrate and/or channel number. If the radio is currently transmitting,
+// the change will actually take place after the transmission is completed.
+//
+// It is also possible to specify a different bitrate for individual frames;
+// to do that, attach a PhyControlInfo with bitrate filled in to the frame.
+//
+</span><span style="color: #800000; font-weight: bold; ">moduleinterface</span><span style="color: #000000; "> </span><span style="color: #000000; ">Radio</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/wrxtx&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PhyControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// from higher layer protocol (MAC)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PhyControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to higher layer protocol (MAC)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to receive frames (AirFrame) on the radio channel
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

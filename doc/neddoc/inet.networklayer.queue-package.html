@@ -1,0 +1,73 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.networklayer.queue</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.queue.DropTailQoSQueue.html">DropTailQoSQueue</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Drop-tail queue with QoS support, to be used in network interfaces.
+Performs priority queueing.
+Conforms to the <a href="inet.networklayer.queue.OutputQueue.html">OutputQueue</a> interface.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.networklayer.queue.DropTailQueue.html">DropTailQueue</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Drop-tail queue, to be used in network interfaces.
+Conforms to the <a href="inet.networklayer.queue.OutputQueue.html">OutputQueue</a> interface.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.networklayer.queue.OutputQueue.html">OutputQueue</a>
+   </td>
+   <td>
+<i>module&nbsp;interface</i>
+   </td>
+   <td>
+
+<p>Prototype for per-NIC output queues. Concrete queues can implement
+drop-tail, RED etc. policy.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.networklayer.queue.REDQueue.html">REDQueue</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>RED (Random Early Detection) queue, to be used in routers' network
+interfaces. Conforms to the <a href="inet.networklayer.queue.OutputQueue.html">OutputQueue</a> interface.</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

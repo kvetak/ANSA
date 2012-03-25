@@ -1,0 +1,150 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/linklayer/contract/Ieee802Ctrl.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee802MessageKind.html">Ieee802MessageKind</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Message kind values used with in communication between L3 and IEEE 802 L2</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SAPCode.html">SAPCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Some 8-bit SAP values for IEEE 802.x LLC headers.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherType.html">EtherType</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Some <a href="EtherType.html">EtherType</a> values (Ethernet II).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee802Ctrl.html">Ieee802Ctrl</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control structure for communication between LLC and higher layers</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2003 Andras Varga; CTIE, Monash University, Australia
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;MACAddress.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Message kind values used with in communication between L3 and IEEE 802 L2
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee802MessageKind</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">IEEE802CTRL_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2003</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// data to/from higher layer
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IEEE802CTRL_REGISTER_DSAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2004</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// higher layer registers itself in LLC
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IEEE802CTRL_DEREGISTER_DSAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2005</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// higher layer deregisters itself in LLC
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IEEE802CTRL_SENDPAUSE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2006</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// higher layer wants MAC to send PAUSE frame
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Some 8-bit SAP values for IEEE 802.x LLC headers.
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">SAPCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">SAP_IBM_SNA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x04</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_IP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x06</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_3COM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x80</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_SNAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xAA</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_BANYAN</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xBC</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_NOVELL_IPX</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xE0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_LAN_MANAGER</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xF4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SAP_CLNS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xFE</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Some EtherType values (Ethernet II).
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherType</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">ETHERTYPE_IP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x0800</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ETHERTYPE_ARP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x0806</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ETHERTYPE_RARP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x8035</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Control structure for communication between LLC and higher layers
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">src</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// src MAC address (can be left empty when sending)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">dest</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// dest MAC address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">etherType</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// used with EthernetIIFrame
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ssap</span><span style="color: #000000; ">;        </span><span style="color: #808080; font-style: italic; ">// used with IEEE 802 LLC (see EtherFrameWithLLC)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">dsap</span><span style="color: #000000; ">;        </span><span style="color: #808080; font-style: italic; ">// used with IEEE 802 LLC (see EtherFrameWithLLC)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pauseUnits</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// used with IEEE802CTRL_SENDPAUSE
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">inputPort</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// convenience field, used between IPv6 and IPv6ND
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

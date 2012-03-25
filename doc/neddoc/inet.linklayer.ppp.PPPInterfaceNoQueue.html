@@ -1,0 +1,111 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>PPPInterfaceNoQueue</i></h2>
+<b>Package:</b> inet.linklayer.ppp<br/><b>File: <a href="src-linklayer-ppp-PPPInterfaceNoQueue.ned.html">src/linklayer/ppp/PPPInterfaceNoQueue.ned</a></b><br/>
+<p>PPP interface. Assumes inifinite queue.</p>
+<p><b>See also:</b> <a href="inet.linklayer.ppp.PPPInterface.html">PPPInterface</a></p>
+<img src="inet.linklayer.ppp.PPPInterfaceNoQueue-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ppp.PPP.html" title="PPP" alt="PPP" coords="62,100,113,161">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ppp.PPPInterfaceNoQueue-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ppp.PPPInterfaceNoQueue.html" title="Compound Module PPPInterfaceNoQueue" alt="" coords="19,6,173,34">
+<area shape="rect" id="node2" href="inet.linklayer.ppp.PPP.html" title="Simple Module PPP" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="101,83,200,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ppp.PPPInterfaceNoQueue-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ppp.PPPInterfaceNoQueue.html" title="Compound Module PPPInterfaceNoQueue" alt="" coords="5,83,160,111">
+<area shape="rect" id="node2" href="inet.linklayer.INetworkInterface.html" title="Module Interface INetworkInterface" alt="" coords="20,6,145,34">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/ifcard</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>netwIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>netwOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>phys</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \PPP interface. Assumes inifinite queue.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> PPPInterface
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">PPPInterfaceNoQueue</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">INetworkInterface</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/ifcard&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">netwIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">netwOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PPPFrame</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">: </span><span style="color: #000000; ">PPP</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">queueModule</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">txQueueLimit</span><span style="color: #000000; "> = </span><span style="color: #008000; ">100000</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// prevents overflow in bogus simulations
+</span><span style="color: #000000; ">                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=80,80;q=txQueue&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=n&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">netwIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=n&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">netwOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=s&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

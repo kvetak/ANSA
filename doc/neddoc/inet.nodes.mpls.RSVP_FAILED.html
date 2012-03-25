@@ -1,0 +1,132 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>RSVP_FAILED</i></h2>
+<b>Package:</b> inet.nodes.mpls<br/><b>File: <a href="src-nodes-mpls-RSVP_FAILED.ned.html">src/nodes/mpls/RSVP_FAILED.ned</a></b><br/>
+<p>Failed router. Discards all incoming traffic and generates nothing. Its
+interface (gates, parameters) is fully compatible with the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a> router
+and node failures may thus be simulated by replacing the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+with RSVP_FAILED.</p>
+<img src="inet.nodes.mpls.RSVP_FAILED-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.extras.Dummy.html" title="Dummy" alt="Dummy" coords="28,77,77,134">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.mpls.RSVP_FAILED-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.mpls.RSVP_FAILED.html" title="Compound Module RSVP_FAILED" alt="" coords="5,6,117,34">
+<area shape="rect" id="node2" href="inet.networklayer.extras.Dummy.html" title="Simple Module Dummy" alt="" coords="25,83,97,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.mpls.RSVP_FAILED-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.mpls.RSVP_FAILED.html" title="Compound Module RSVP_FAILED" alt="" coords="5,6,117,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>namid</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>peers</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>routerId</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>routingFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=abstract/router;i2=status/noentry</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>pppg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Failed router. Discards all incoming traffic and generates nothing. Its
+// interface (gates, parameters) is fully compatible with the RSVP_LSR router
+// and node failures may thus be simulated by replacing the RSVP_LSR
+// with \RSVP_FAILED.
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVP_FAILED</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=abstract/router;i2=status/noentry&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">namid</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">peers</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routerId</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;auto&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PPPFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">dummy</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Dummy</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">in</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)];
+                </span><span style="color: #000000; ">out</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)];
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">$</span><span style="color: #000000; ">i</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">dummy</span><span style="color: #000000; ">.</span><span style="color: #000000; ">in</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">dummy</span><span style="color: #000000; ">.</span><span style="color: #000000; ">out</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">$</span><span style="color: #000000; ">o</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+}
+</span></pre>
+   </body>
+</html>

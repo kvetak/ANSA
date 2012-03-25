@@ -1,0 +1,339 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>EtherSwitch</i></h2>
+<b>Package:</b> inet.nodes.ethernet<br/><b>File: <a href="src-nodes-ethernet-EtherSwitch.ned.html">src/nodes/ethernet/EtherSwitch.ned</a></b><br/>
+<p>Model of an Ethernet switch.</p>
+<p>The duplexChannel attributes of the MACs must be set according to the
+medium connected to the port; if collisions are possible (it's a bus or hub)
+it must be set to false, otherwise it can be set to true.</p>
+<p>This model does not contain the spanning tree algorithm.</p>
+<img src="inet.nodes.ethernet.EtherSwitch-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="MACRelayUnit" alt="MACRelayUnit" coords="174,70,231,131">
+<area shape="rect" href="inet.linklayer.ethernet.EtherMAC.html" title="EtherMAC" alt="EtherMAC" coords="15,170,129,231">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.ethernet.EtherSwitch-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.ethernet.EtherSwitch.html" title="Compound Module EtherSwitch" alt="" coords="307,83,400,111">
+<area shape="rect" id="node2" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="Module Interface MACRelayUnit" alt="" coords="239,161,348,189">
+<area shape="rect" id="node4" href="inet.linklayer.ethernet.EtherMAC.html" title="Simple Module EtherMAC" alt="" coords="372,161,455,189">
+<area shape="rect" id="node6" href="inet.examples.ethernet.arptest.ARPTest.html" title="Network ARPTest" alt="" coords="5,6,80,34">
+<area shape="rect" id="node8" href="inet.examples.ethernet.lans.LargeLAN.html" title="Compound Module LargeLAN" alt="" coords="104,6,184,34">
+<area shape="rect" id="node10" href="inet.examples.ethernet.lans.LargeNet.html" title="Network LargeNet" alt="" coords="208,6,283,34">
+<area shape="rect" id="node12" href="inet.examples.ethernet.lans.MediumLAN.html" title="Compound Module MediumLAN" alt="" coords="307,6,400,34">
+<area shape="rect" id="node14" href="inet.examples.ethernet.lans.MixedLAN.html" title="Network MixedLAN" alt="" coords="424,6,507,34">
+<area shape="rect" id="node16" href="inet.examples.ethernet.lans.SwitchedLAN.html" title="Network SwitchedLAN" alt="" coords="531,6,632,34">
+<area shape="rect" id="node18" href="inet.examples.emulation.traceroute.Traceroute.html" title="Network Traceroute" alt="" coords="656,6,739,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.ethernet.EtherSwitch-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.ethernet.EtherSwitch.html" title="Compound Module EtherSwitch" alt="" coords="5,6,99,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.LargeLAN.html">LargeLAN</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Several hosts and an Ethernet hub on a switch. One port of the hub
+connect to a 10Base2 segment.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.MediumLAN.html">MediumLAN</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Several hosts and an Ethernet hub on a switch</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.arptest.ARPTest.html">ARPTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.LargeNet.html">LargeNet</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>A large Ethernet LAN -- see model description
+<a href="largenet.html">here</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.MixedLAN.html">MixedLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN containing eight hosts, a switch and a bus.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.SwitchedLAN.html">SwitchedLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN: four hosts connected to a switch.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.emulation.traceroute.Traceroute.html">Traceroute</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>relayUnitType</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"MACRelayUnitNP"</td>
+   <td>
+<p>type of the <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a>; currently possible
+values are <a href="inet.linklayer.etherswitch.MACRelayUnitNP.html">MACRelayUnitNP</a> and <a href="inet.linklayer.etherswitch.MACRelayUnitPP.html">MACRelayUnitPP</a></p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=device/switch</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>ethg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.linklayer.etherswitch.MACRelayUnit.html">relayUnit</a>.addressTableFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>set to empty string if not used</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.etherswitch.MACRelayUnit.html">relayUnit</a>.addressTableSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>max size of address table</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.etherswitch.MACRelayUnit.html">relayUnit</a>.agingTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>max idle time for address table entries
+(when it expires, entry is removed from the table)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1000</td>
+   <td>
+<p>maximum number of frames queued up for transmission;
+additional frames are dropped. Only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Model of an Ethernet switch.
+//
+// The duplexChannel attributes of the MACs must be set according to the
+// medium connected to the port; if collisions are possible (it's a bus or hub)
+// it must be set to false, otherwise it can be set to true.
+//
+// This model does not contain the spanning tree algorithm.
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherSwitch</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=device/switch&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnitType</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;MACRelayUnitNP&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// type of the MACRelayUnit; currently possible
+</span><span style="color: #000000; ">                                                          </span><span style="color: #808080; font-style: italic; ">// values are MACRelayUnitNP and MACRelayUnitPP
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">: &lt;</span><span style="color: #000000; ">relayUnitType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACRelayUnit</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=200,50&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)];
+                </span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)];
+        }
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)]: </span><span style="color: #000000; ">EtherMAC</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">promiscuous</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">queueModule</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=70,150,row;q=queue&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+}
+
+</span></pre>
+   </body>
+</html>

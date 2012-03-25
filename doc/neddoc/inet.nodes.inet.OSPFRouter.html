@@ -1,0 +1,398 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>OSPFRouter</i></h2>
+<b>Package:</b> inet.nodes.inet<br/><b>File: <a href="src-nodes-inet-OSPFRouter.ned.html">src/nodes/inet/OSPFRouter.ned</a></b><br/>
+<p>An OSPFv2 router.</p>
+<img src="inet.nodes.inet.OSPFRouter-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.base.NotificationBoard.html" title="NotificationBoard" alt="NotificationBoard" coords="8,80,116,141">
+<area shape="rect" href="inet.networklayer.common.InterfaceTable.html" title="InterfaceTable" alt="InterfaceTable" coords="18,160,106,221">
+<area shape="rect" href="inet.networklayer.ipv4.RoutingTable.html" title="RoutingTable" alt="RoutingTable" coords="24,240,101,301">
+<area shape="rect" href="inet.networklayer.ospfv2.OSPFRouting.html" title="OSPFRouting" alt="OSPFRouting" coords="282,160,326,221">
+<area shape="rect" href="inet.nodes.inet.NetworkLayer.html" title="NetworkLayer" alt="NetworkLayer" coords="160,160,245,221">
+<area shape="rect" href="inet.linklayer.ppp.PPPInterface.html" title="PPPInterface" alt="PPPInterface" coords="36,277,149,338">
+<area shape="rect" href="inet.linklayer.ethernet.EthernetInterface.html" title="EthernetInterface" alt="EthernetInterface" coords="94,277,201,338">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.inet.OSPFRouter-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="479,83,575,111">
+<area shape="rect" id="node2" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="5,161,104,189">
+<area shape="rect" id="node4" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="128,161,251,189">
+<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="275,161,373,189">
+<area shape="rect" id="node8" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="397,161,520,189">
+<area shape="rect" id="node10" href="inet.networklayer.ospfv2.OSPFRouting.html" title="Simple Module OSPFRouting" alt="" coords="544,161,645,189">
+<area shape="rect" id="node12" href="inet.networklayer.ipv4.RoutingTable.html" title="Simple Module RoutingTable" alt="" coords="669,161,768,189">
+<area shape="rect" id="node14" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="792,161,893,189">
+<area shape="rect" id="node16" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="917,161,1021,189">
+<area shape="rect" id="node18" href="inet.examples.ospfv2.backbone.Backbone.html" title="Network Backbone" alt="" coords="72,6,152,34">
+<area shape="rect" id="node20" href="inet.examples.ospfv2.areas.OneNetArea.html" title="Compound Module OneNetArea" alt="" coords="176,6,269,34">
+<area shape="rect" id="node22" href="inet.examples.ospfv2.fulltest.OSPF_Area1.html" title="Compound Module OSPF_Area1" alt="" coords="293,6,392,34">
+<area shape="rect" id="node24" href="inet.examples.ospfv2.fulltest.OSPF_Area2.html" title="Compound Module OSPF_Area2" alt="" coords="416,6,515,34">
+<area shape="rect" id="node26" href="inet.examples.ospfv2.fulltest.OSPF_Area3.html" title="Compound Module OSPF_Area3" alt="" coords="539,6,637,34">
+<area shape="rect" id="node28" href="inet.examples.ospfv2.fulltest.OSPF_TestNetwork.html" title="Network OSPF_TestNetwork" alt="" coords="661,6,800,34">
+<area shape="rect" id="node30" href="inet.examples.ospfv2.simpletest.SimpleTest.html" title="Network SimpleTest" alt="" coords="824,6,912,34">
+<area shape="rect" id="node32" href="inet.examples.ospfv2.areas.TwoNetsArea.html" title="Compound Module TwoNetsArea" alt="" coords="936,6,1037,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.inet.OSPFRouter-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="5,6,101,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.areas.OneNetArea.html">OneNetArea</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area1.html">OSPF_Area1</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area2.html">OSPF_Area2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area3.html">OSPF_Area3</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.areas.TwoNetsArea.html">TwoNetsArea</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.backbone.Backbone.html">Backbone</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_TestNetwork.html">OSPF_TestNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.simpletest.SimpleTest.html">SimpleTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>routingFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=abstract/router</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>pppg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ethg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.networklayer.ospfv2.OSPFRouting.html">ospf</a>.ospfConfigFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>xml file containing the full OSPF AS configuration</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// An OSPFv2 router.
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFRouter</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=abstract/router&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PPPFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">notificationBoard</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,60&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">interfaceTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">InterfaceTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,140&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">routingTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RoutingTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routerId</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;auto&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,220&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">ospf</span><span style="color: #000000; ">: </span><span style="color: #000000; ">OSPFRouting</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=300,140,row&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NetworkLayer</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=200,140;q=queue&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)];
+                </span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)];
+        }
+        </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)]: </span><span style="color: #000000; ">PPPInterface</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=90,257,row,110;q=l2queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)]: </span><span style="color: #000000; ">EthernetInterface</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=145,257,row,110;q=l2queue&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">ospf</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ospfIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">ospf</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ospfOut</span><span style="color: #000000; ">;
+
+        </span><span style="color: #808080; font-style: italic; ">// connections to network outside
+</span><span style="color: #000000; ">        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+}
+
+</span></pre>
+   </body>
+</html>

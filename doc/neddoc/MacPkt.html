@@ -1,0 +1,108 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>MacPkt</i></h2>
+<b>File: <a href="src-linklayer-mf80211-macLayer-MacPkt.msg.html">src/linklayer/mf80211/macLayer/MacPkt.msg</a></b><br/>
+<p>A basic MAC (Media Access Control) packet format definition</p>
+<p>subclass if you want to create your own MAC layer message class</p>
+<p>The basic MAC message only provides source and destination address
+and and the channel it should be send on</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>Author:</b> Daniel Willkomm</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="MacPkt-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="MacPkt.html" title="Packet MacPkt" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="MacPkt-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="MacPkt.html" title="Packet MacPkt" alt="" coords="20,6,92,34">
+<area shape="rect" id="node2" href="Mac80211Pkt.html" title="Packet Mac80211Pkt" alt="" coords="5,83,107,111">
+</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Mac80211Pkt.html">Mac80211Pkt</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Defines all fields of an 802.11 MAC frame</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>destAddr</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>destination mac address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>srcAddr</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>source mac address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>channelId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>channel to send / receive on</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// A basic MAC (Media Access Control) packet format definition
+//
+// subclass if you want to create your own MAC layer message class
+//
+// The basic MAC message only provides source and destination address
+// and and the channel it should be send on
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Daniel Willkomm
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> just temporary here
+</span><span style="color: #808080; font-style: italic; ">//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">MacPkt</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddr</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// destination mac address
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddr</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// source mac address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelId</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// channel to send / receive on
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

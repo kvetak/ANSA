@@ -1,0 +1,111 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Struct <i>OSPFOptions</i></h2>
+<b>File: <a href="src-networklayer-ospfv2-OSPFPacket.msg.html">src/networklayer/ospfv2/OSPFPacket.msg</a></b><br/>
+<p>should be a byte long bitfield</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFOptions-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="OSPFOptions.html" title="Struct OSPFOptions" alt="" coords="264,83,365,111">
+<area shape="rect" id="node2" href="OSPFDatabaseDescriptionPacket.html" title="Packet OSPFDatabaseDescriptionPacket" alt="" coords="5,6,227,34">
+<area shape="rect" id="node4" href="OSPFHelloPacket.html" title="Packet OSPFHelloPacket" alt="" coords="251,6,379,34">
+<area shape="rect" id="node6" href="OSPFLSAHeader.html" title="Class OSPFLSAHeader" alt="" coords="403,6,528,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFOptions-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="OSPFOptions.html" title="Struct OSPFOptions" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>unused_1</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>E_ExternalRoutingCapability</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>MC_MulticastForwarding</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>NP_Type7LSA</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>EA_ForwardExternalLSAs</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>DC_DemandCircuits</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>unused_2</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>unused_3</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">// should be a byte long bitfield
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFOptions</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">unused_1</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">E_ExternalRoutingCapability</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">MC_MulticastForwarding</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">NP_Type7LSA</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">EA_ForwardExternalLSAs</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">DC_DemandCircuits</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">unused_2</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">unused_3</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

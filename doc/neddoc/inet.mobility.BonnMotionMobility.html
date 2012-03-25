@@ -1,0 +1,123 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>BonnMotionMobility</i></h2>
+<b>Package:</b> inet.mobility<br/><b>File: <a href="src-mobility-BonnMotionMobility.ned.html">src/mobility/BonnMotionMobility.ned</a></b><br/><p><a href="../doxy/class_bonn_motion_mobility.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Uses the native file format of BonnMotion (http://www.cs.uni-bonn.de/IV/BonnMotion/).</p>
+<p>The file is a plain text file, where every line describes the motion
+of one host. A line consists of one or more (t, x, y) triplets of real
+numbers, like:</p>
+<p>t1 x1 y1 t2 x2 y2 t3 x3 y3 t4 x4 y4 ...</p>
+<p>The meaning is that the given node gets to (xk,yk) at tk. There's no
+separate notation for wait, so x and y coordinates will be repeated there.</p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.mobility.BonnMotionMobility-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.mobility.BonnMotionMobility.html" title="BonnMotionMobility" alt="BonnMotionMobility" coords="0,31,168,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.BonnMotionMobility-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.mobility.BonnMotionMobility.html" title="Simple Module BonnMotionMobility" alt="" coords="5,6,141,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.BonnMotionMobility-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.mobility.BonnMotionMobility.html" title="Simple Module BonnMotionMobility" alt="" coords="5,83,141,111">
+<area shape="rect" id="node2" href="inet.mobility.BasicMobility.html" title="Module Interface BasicMobility" alt="" coords="24,6,123,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>traceFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>the BonnMotion trace file</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>nodeId</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>selects line in trace file; -1 gets substituted to parent module's index</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>updateInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100ms</td>
+   <td>
+<p>time interval to update the hosts position</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Uses the native file format of BonnMotion (http://www.cs.uni-bonn.de/IV/BonnMotion/).
+//
+// The file is a plain text file, where every line describes the motion
+// of one host. A line consists of one or more (t, x, y) triplets of real
+// numbers, like:
+//
+// t1 x1 y1 t2 x2 y2 t3 x3 y3 t4 x4 y4 ...
+//
+// The meaning is that the given node gets to (xk,yk) at tk. There's no
+// separate notation for wait, so x and y coordinates will be repeated there.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">BonnMotionMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">traceFile</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// the BonnMotion trace file
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">nodeId</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// selects line in trace file; -1 gets substituted to parent module's index
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">ms</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// time interval to update the hosts position
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+
+
+
+</span></pre>
+   </body>
+</html>

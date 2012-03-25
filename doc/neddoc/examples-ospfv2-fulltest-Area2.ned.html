@@ -1,0 +1,107 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>examples/ospfv2/fulltest/Area2.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area2.html">OSPF_Area2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">examples</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ospfv2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">fulltest</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">EtherHub</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">OSPFRouter</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPF_Area2</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=10,10;b=424,400&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[];
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">RT8</span><span style="color: #000000; ">: </span><span style="color: #000000; ">OSPFRouter</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=304,196&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">N6</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHub</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=304,100&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">4</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">N7</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHub</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=304,300&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">N8</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHub</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=104,100&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">H8</span><span style="color: #000000; ">: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=392,100;i=device/pc_s&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">H9</span><span style="color: #000000; ">: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=348,364;i=device/pc_s&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">H10</span><span style="color: #000000; ">: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=260,364;i=device/pc_s&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">H11</span><span style="color: #000000; ">: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=104,156;i=device/pc_s&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">N8</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">H11</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N6</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">RT8</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N6</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">H8</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">RT8</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">N7</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N7</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">H10</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N7</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">H9</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+
+        </span><span style="color: #808080; font-style: italic; ">// towards other areas
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">N8</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N8</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,52,64,40,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">N6</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,28,36,48,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">N6</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,136 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>IPv6ExtensionHeader</i></h2>
+<b>File: <a href="src-networklayer-ipv6-IPv6Datagram.msg.html">src/networklayer/ipv6/IPv6Datagram.msg</a></b><br/><p><a href="../doxy/class_i_pv6_extension_header.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>This serves as the base class for all the other extension headers.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPv6ExtensionHeader-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPv6ExtensionHeader.html" title="Class IPv6ExtensionHeader" alt="" coords="5,6,155,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPv6ExtensionHeader-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPv6ExtensionHeader.html" title="Class IPv6ExtensionHeader" alt="" coords="603,6,752,34">
+<area shape="rect" id="node2" href="IPv6AuthenticationHeader.html" title="Class IPv6AuthenticationHeader" alt="" coords="5,83,179,111">
+<area shape="rect" id="node4" href="IPv6DestinationOptionsHeader.html" title="Class IPv6DestinationOptionsHeader" alt="" coords="203,83,405,111">
+<area shape="rect" id="node6" href="IPv6EncapsulatingSecurityPayloadHeader.html" title="Class IPv6EncapsulatingSecurityPayloadHeader" alt="" coords="429,83,696,111">
+<area shape="rect" id="node8" href="IPv6FragmentHeader.html" title="Class IPv6FragmentHeader" alt="" coords="720,83,867,111">
+<area shape="rect" id="node10" href="IPv6HopByHopOptionsHeader.html" title="Class IPv6HopByHopOptionsHeader" alt="" coords="891,83,1091,111">
+<area shape="rect" id="node12" href="IPv6RoutingHeader.html" title="Class IPv6RoutingHeader" alt="" coords="1115,83,1251,111">
+</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPv6AuthenticationHeader.html">IPv6AuthenticationHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Authentication Header
+RFC 2402
+Not Implemented</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6DestinationOptionsHeader.html">IPv6DestinationOptionsHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Destination Options Header
+RFC 2460 Section 4.6
+Next Header Value: 60</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6EncapsulatingSecurityPayloadHeader.html">IPv6EncapsulatingSecurityPayloadHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Encapsulating Security Payload Header
+RFC 2406
+Not Implemented</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6FragmentHeader.html">IPv6FragmentHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Fragment Header
+RFC 2460 Section 4.5
+Next Header Value: 44</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6HopByHopOptionsHeader.html">IPv6HopByHopOptionsHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Hop-by-Hop Options Header.
+RFC 2460 Section 4.3
+Next Header Value: 0</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6RoutingHeader.html">IPv6RoutingHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Routing Header
+RFC 2460 Section 4.4
+Next Header Value: 43</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// This serves as the base class for all the other extension headers.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

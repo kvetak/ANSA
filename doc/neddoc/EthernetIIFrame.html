@@ -1,0 +1,94 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>EthernetIIFrame</i></h2>
+<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/>
+<p>Ethernet II headers contain a 16-bit <a href="EtherType.html">EtherType</a> to identify
+the encapsulated protocol.</p>
+<p>Header length: src(6)+dest(6)+etherType(2) = 14 bytes</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="EthernetIIFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="EthernetIIFrame.html" title="Packet EthernetIIFrame" alt="" coords="5,6,120,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="EthernetIIFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="EthernetIIFrame.html" title="Packet EthernetIIFrame" alt="" coords="5,83,120,111">
+<area shape="rect" id="node2" href="EtherFrame.html" title="Packet EtherFrame" alt="" coords="17,6,108,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="EtherFrame.html">EtherFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Common base class for classes representing Ethernet II and 802.3 frame types,
+containing their common header fields.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>etherType</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>dest</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>src</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>MessageId id; -- uncomment for tracing frames</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Ethernet II headers contain a 16-bit EtherType to identify
+// the encapsulated protocol.
+//
+// Header length: src(6)+dest(6)+etherType(2) = 14 bytes
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EthernetIIFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">etherType</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

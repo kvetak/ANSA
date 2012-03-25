@@ -1,0 +1,3 @@
+<area shape="rect" id="node1" href="inet.examples.ethernet.lans.TwoHosts.html" title="Network TwoHosts" alt="" coords="73,6,156,34">
+<area shape="rect" id="node2" href="ned.DelayChannel.html" title="Channel DelayChannel" alt="" coords="5,83,109,111">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="133,83,213,111">

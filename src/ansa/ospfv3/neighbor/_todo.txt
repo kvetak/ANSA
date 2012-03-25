@@ -1,0 +1,6 @@
+::: ansaOspfNeighborState6
+[ ] pár øádkù závislých na LSA
+ 
+::: ansaOspfNeighbor6.cc
+[ ] Kde se øeší LSA, dávám automaticky i Link LSA - ale není tøeba je øešit jinde?
+[ ] V metodì CreateDatabaseSummary se neøeší Link LSA, musí se øešit jinde?

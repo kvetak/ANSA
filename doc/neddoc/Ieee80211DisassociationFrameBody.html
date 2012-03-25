@@ -1,0 +1,81 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>Ieee80211DisassociationFrameBody</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtFrames.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtFrames.msg</a></b><br/>
+<p>Dis-association frame body format (same as De-authentication)</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211DisassociationFrameBody-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211DisassociationFrameBody.html" title="Class Ieee80211DisassociationFrameBody" alt="" coords="5,83,240,111">
+<area shape="rect" id="node2" href="Ieee80211DisassociationFrame.html" title="Packet Ieee80211DisassociationFrame" alt="" coords="20,6,225,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211DisassociationFrameBody-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211DisassociationFrameBody.html" title="Class Ieee80211DisassociationFrameBody" alt="" coords="5,83,240,111">
+<area shape="rect" id="node2" href="Ieee80211FrameBody.html" title="Class Ieee80211FrameBody" alt="" coords="48,6,197,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211FrameBody.html">Ieee80211FrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Frame body base class used to hide various frame body types</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>bodyLength</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>not an actual frame field</p>
+</td>
+</tr>
+<tr class="local">
+   <td>reasonCode</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Dis-association frame body format (same as De-authentication)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DisassociationFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reasonCode</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,65 @@
+!
+version 12.2
+no service password-encryption
+!
+hostname Praha
+!
+!
+!
+!
+!
+ip ssh version 1
+!
+!
+!
+interface Serial2/0
+ bandwidth 1000
+ ip address 192.168.15.1 255.255.255.0
+ clock rate 64000
+!
+interface Serial3/0
+ bandwidth 10000
+ ip address 192.168.1.2 255.255.255.0
+!
+interface Serial4/0
+ bandwidth 50
+ ip address 192.168.20.1 255.255.255.0
+ clock rate 64000
+!
+interface Serial5/0
+ bandwidth 40
+ ip address 192.168.21.1 255.255.255.0
+ clock rate 64000
+!
+interface Serial6/0
+ bandwidth 1000
+ ip address 192.168.19.2 255.255.255.0
+ clock rate 64000
+!
+interface Serial7/0
+ bandwidth 4
+ ip address 192.168.25.1 255.255.255.0
+!
+!
+router ospf 1
+ log-adjacency-changes
+ network 192.168.1.0 0.0.0.255 area 0
+ network 192.168.15.0 0.0.0.255 area 0
+ network 192.168.19.0 0.0.0.255 area 0
+ network 192.168.20.0 0.0.0.255 area 0
+ network 192.168.21.0 0.0.0.255 area 0
+ network 192.168.25.0 0.0.0.255 area 0
+!
+ip classless
+!
+!
+!
+!
+!
+line con 0
+line vty 0 4
+ login
+!
+!
+end
+

@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<Devices>
+	<Router id="192.168.12.1">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IPv6Address>2001:ab::1/64</IPv6Address>
+      		</Interface>
+      		<Interface name="eth2">
+      			<IPv6Address>2001:a::1/64</IPv6Address>
+      		</Interface>
+    	</Interfaces>
+    	
+    	<Routing6>
+    		<Static>
+    			<Route>
+    				<NetworkAddress>2001:b::/64</NetworkAddress>
+    				<NextHopAddress>2001:ab::2</NextHopAddress>
+    				<AdministrativeDistance>5</AdministrativeDistance>
+    			</Route>
+    		</Static>
+    	</Routing6>
+	</Router>
+	
+	<Router id="192.168.12.2">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IPv6Address>2001:ab::2/64</IPv6Address>
+      		</Interface>
+      		<Interface name="eth2">
+      			<IPv6Address>2001:b::1/64</IPv6Address>
+      		</Interface>
+    	</Interfaces>
+    	
+    	<Routing6>
+    		<Static>
+    			<Route>
+    				<NetworkAddress>2001:a::/64</NetworkAddress>
+    				<NextHopAddress>2001:ab::1</NextHopAddress>
+    			</Route>
+    		</Static>
+    	</Routing6>
+	</Router>
+	
+	<Router id="192.168.12.3">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.3</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+      		</Interface>
+  		</Interfaces>
+	</Router>
+	
+	<Host id="HostA1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:a::10/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:a::1</DefaultRouter>
+	</Host>
+	
+	<Host id="HostA2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:a::11/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:a::1</DefaultRouter>
+	</Host>
+	
+	<Host id="HostB">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:b::10/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:b::1</DefaultRouter>
+	</Host>
+</Devices>

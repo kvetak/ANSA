@@ -1,0 +1,96 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/mobility/MassMobility.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.mobility.MassMobility.html">MassMobility</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This is a random mobility model for a mobile host with a mass. It is the
+one used in "Optimized Smooth Handoffs in Mobile <a href="inet.networklayer.ipv4.IP.html">IP</a>" by Perkins &amp;Wang.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Author: Emin Ilker Cetinbas (niw3_at_yahoo_d0t_com)
+// Generalization: Andras Varga
+// Copyright (C) 2005 Emin Ilker Cetinbas, Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// This is a random mobility model for a mobile host with a mass. It is the
+// one used in &quot;Optimized Smooth Handoffs in Mobile IP&quot; by Perkins &amp;Wang.
+//
+// &quot;An MH moves within the room according to the following pattern. It moves
+// along a straight line for a certain period of time before it makes a turn.
+// This moving period is a random number, normally distributed with average of
+// 5 seconds and standard deviation of 0.1 second. When it makes a turn, the
+// new direction (angle) in which it will move is a normally distributed
+// random number with average equal to the previous direction and standard
+// deviation of 30 degrees. Its speed is also a normally distributed random
+// number, with a controlled average, ranging from 0.1 to 0.45 (unit/sec), and
+// standard deviation of 0.01 (unit/sec). A new such random number is picked
+// as its speed when it makes a turn. This pattern of mobility is intended to
+// model node movement during which the nodes have momentum, and thus do not
+// start, stop, or turn abruptly. When it hits a wall, it reflects off the
+// wall at the same angle; in our simulated world, there is little other
+// choice.&quot;
+//
+// This implementation can be parameterized a bit more, via the changeInterval,
+// changeAngleBy and changeSpeedBy parameters. The parameters described above
+// correspond to the following settings:
+//    - changeInterval = normal(5, 0.1)
+//    - changeAngleBy = normal(0, 30)
+//    - speed = normal(avgSpeed, 0.01)
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> ChannelControl
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Emin Ilker Cetinbas, Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">MassMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">x</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start x coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">y</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start y coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">changeInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// frequency of changing speed and angle (can be random) [s]
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">changeAngleBy</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;deg&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// change angle by this much (can be random) [deg]
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">speed</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mps&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">mps</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// speed (can be random, updated every changeInterval) [m/s]
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">ms</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// time interval to update the hosts position
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

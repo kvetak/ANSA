@@ -1,0 +1,81 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/mobility/RandomWPMobility.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.mobility.RandomWPMobility.html">RandomWPMobility</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Random Waypoint mobility model.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Georg Lutz, Institut fuer Telematik, University of Karlsruhe
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Random Waypoint mobility model.
+//
+// The node moves in line segments. For each line segment, a random destination
+// position (distributed uniformly over the playground) and a random speed
+// is chosen. You can define a speed as a variate from which a new value
+// will be drawn for each line segment; it is customary to specify it as
+// uniform(minSpeed, maxSpeed). When the node reaches the target position,
+// it waits for the time waitTime which can also be defined as a variate.
+// After this time the the algorithm calculates a new random position, etc.
+//
+// This model was written by Georg Lutz (GeorgLutz AT gmx DOT de) for his
+// diploma thesis &quot;Effizientes Modell fuer Funkverbindungen in 4G-Netzen fuer
+// OMNeT++&quot; (Efficient model for radio links in 4G networks for OMNeT++)
+// at Institut fuer Telematik, Universitaet Karlsruhe (Institute for
+// Telematics, University Karlsruhe, Germany), 2005-06-21. Slightly modified
+// by Andras Varga 2005.06.22.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Georg Lutz
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">RandomWPMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">x</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start x coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">y</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start y coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">speed</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mps&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">mps</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// use uniform(minSpeed, maxSpeed) or another distribution
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">waitTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// wait time between reaching a target and choosing a new one
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,119 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/nodes/wireless/WirelessAPWithEthSimplified.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAPWithEthSimplified.html">WirelessAPWithEthSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point with Ethernet ports, but using a simplified NIC
+that does not support handovers. It can be used in conjunction with
+<a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>, or any other host model containing WirelessNicSTASimplified.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2006 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">wireless</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">base</span><span style="color: #000000; ">.</span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">.</span><span style="color: #000000; ">NullMobility</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">EtherMAC</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">etherswitch</span><span style="color: #000000; ">.</span><span style="color: #000000; ">MACRelayUnit</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ieee80211</span><span style="color: #000000; ">.</span><span style="color: #000000; ">Ieee80211NicAPSimplified</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Models a 802.11 Access Point with Ethernet ports, but using a simplified NIC
+// that does not support handovers. It can be used in conjunction with
+// WirelessHostSimplified, or any other host model containing WirelessNicSTASimplified.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> WirelessAP, WirelessAPSimplified, WirelessAPWithEth, WirelessAPWithEthSimplified
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> WirelessHost, WirelessHostSimplified
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> MobileHost, MFMobileHost
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">WirelessAPWithEthSimplified</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">wireless</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=device/accesspoint&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnitType</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;MACRelayUnitNP&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// type of the MACRelayUnit (MACRelayUnitNP, MACRelayUnitPP, etc)
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@directIn</span><span style="color: #000000; ">;
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">: &lt;</span><span style="color: #000000; ">relayUnitType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACRelayUnit</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=169,124&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)+</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+                </span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)+</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Ieee80211NicAPSimplified</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=89,225;q=queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)]: </span><span style="color: #000000; ">EtherMAC</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">promiscuous</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">txQueueLimit</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1000</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// increase if needed
+</span><span style="color: #000000; ">                </span><span style="color: #000000; ">queueModule</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=174,225,row;q=queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">notificationBoard</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=78,60&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NullMobility</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=71,121&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=s&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">radioIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">+</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">relayUnit</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">+</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<scenario>
+	<at t="120"> <!--  Brno-Praha down  -->
+		<interfacedown module="R6_Brno.interfaceStateManager" int="ppp1"/>
+	</at>
+	<at t="180"> <!--  HradecKralove-Letohrad down  -->
+		<interfacedown module="R16_HradecKralove.interfaceStateManager" int="ppp2"/>
+	</at>
+	<at t="220"> <!--  Usti n.L.-Most down  -->
+		<interfacedown module="R14_UstinL.interfaceStateManager" int="ppp0"/>
+	</at>
+	<at t="480"> <!--  HradecKralove-Letohrad up  -->
+		<interfaceup module="R16_HradecKralove.interfaceStateManager" int="ppp2"/>
+	</at>
+	<at t="570"> <!--  Usti n.L.-Most up  -->
+		<interfaceup module="R14_UstinL.interfaceStateManager" int="ppp0"/>
+	</at>
+	<at t="660"> <!--  Brno-Praha   -->
+		<interfaceup module="R6_Brno.interfaceStateManager" int="ppp1"/>
+	</at>
+</scenario>

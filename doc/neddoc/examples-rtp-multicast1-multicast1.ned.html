@@ -1,0 +1,99 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>examples/rtp/multicast1/multicast1.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.rtp.multicast1.RTPMulticast1.html">RTPMulticast1</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">examples</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">multicast1</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">Router</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">transport</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">ned</span><span style="color: #000000; ">.</span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPMulticast1</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">types</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+        {
+            </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #800080; font-weight: bold; ">normal</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00015</span><span style="color: #000000; ">s</span><span style="color: #000000; ">, </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00005</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+            </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">;
+        }
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">host1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host1.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,50&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">host2</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host2.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=250,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">host3</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host3.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,250&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">host4</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host4.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=50,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Router</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;router1.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,150&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">4</span><span style="color: #000000; ">];
+
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">host1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host3</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host4</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+
+}
+
+</span></pre>
+   </body>
+</html>

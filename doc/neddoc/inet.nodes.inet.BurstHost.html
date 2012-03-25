@@ -1,0 +1,244 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>BurstHost</i></h2>
+<b>Package:</b> inet.nodes.inet<br/><b>File: <a href="src-nodes-inet-BurstHost.ned.html">src/nodes/inet/BurstHost.ned</a></b><br/>
+<p>Definition of an <a href="inet.networklayer.ipv4.IP.html">IP</a> node with a transport generator that connects
+to <a href="inet.networklayer.ipv4.IP.html">IP</a> directly, without <a href="inet.transport.tcp.TCP.html">TCP</a> or <a href="inet.transport.udp.UDP.html">UDP</a>.</p>
+<img src="inet.nodes.inet.BurstHost-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.base.NotificationBoard.html" title="NotificationBoard" alt="NotificationBoard" coords="31,86,139,147">
+<area shape="rect" href="inet.networklayer.common.InterfaceTable.html" title="InterfaceTable" alt="InterfaceTable" coords="41,156,129,217">
+<area shape="rect" href="inet.networklayer.ipv4.RoutingTable.html" title="RoutingTable" alt="RoutingTable" coords="47,226,124,287">
+<area shape="rect" href="inet.applications.generic.IPTrafficGenerator.html" title="IPTrafficGenerator" alt="IPTrafficGenerator" coords="176,106,224,167">
+<area shape="rect" href="inet.nodes.inet.NetworkLayer.html" title="NetworkLayer" alt="NetworkLayer" coords="158,193,243,254">
+<area shape="rect" href="inet.linklayer.ppp.PPPInterface.html" title="PPPInterface" alt="PPPInterface" coords="179,282,231,343">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.inet.BurstHost-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="436,83,516,111">
+<area shape="rect" id="node2" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="5,161,104,189">
+<area shape="rect" id="node4" href="inet.applications.generic.IPTrafficGenerator.html" title="Module Interface IPTrafficGenerator" alt="" coords="128,161,256,189">
+<area shape="rect" id="node6" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="280,161,403,189">
+<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="427,161,525,189">
+<area shape="rect" id="node10" href="inet.networklayer.ipv4.RoutingTable.html" title="Simple Module RoutingTable" alt="" coords="549,161,648,189">
+<area shape="rect" id="node12" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="672,161,773,189">
+<area shape="rect" id="node14" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="797,161,901,189">
+<area shape="rect" id="node16" href="inet.examples.inet.routerperf.RouterPerfNetwork.html" title="Network RouterPerfNetwork" alt="" coords="409,6,543,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.inet.BurstHost-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="5,6,85,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.routerperf.RouterPerfNetwork.html">RouterPerfNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>trafGenType</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>IPForward</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>routingFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=device/pc3</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>pppg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Definition of an IP node with a transport generator that connects
+// to IP directly, without TCP or UDP.
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">BurstHost</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=device/pc3&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">trafGenType</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PPPFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">notificationBoard</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=83,66&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">interfaceTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">InterfaceTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=83,136&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">routingTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RoutingTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routerId</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=83,206&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">trafGen</span><span style="color: #000000; ">: &lt;</span><span style="color: #000000; ">trafGenType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPTrafficGenerator</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=198,86&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NetworkLayer</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=198,173;q=queue&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+                </span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">]: </span><span style="color: #000000; ">PPPInterface</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=198,262,row,90;q=txQueue&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #808080; font-style: italic; ">// transport connections
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">trafGen</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">trafGen</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipOut</span><span style="color: #000000; ">;
+
+        </span><span style="color: #808080; font-style: italic; ">// connections to network outside
+</span><span style="color: #000000; ">        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #800000; font-weight: bold; ">..</span><span style="color: #008000; ">0</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+
+}
+
+</span></pre>
+   </body>
+</html>

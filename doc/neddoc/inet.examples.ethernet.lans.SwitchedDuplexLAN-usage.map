@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.examples.ethernet.lans.SwitchedDuplexLAN.html" title="Network SwitchedDuplexLAN" alt="" coords="96,6,237,34">
+<area shape="rect" id="node2" href="inet.examples.ethernet.lans.ethernetline.html" title="Channel ethernetline" alt="" coords="5,83,93,111">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherSwitch2.html" title="Compound Module EtherSwitch2" alt="" coords="117,83,216,111">
+<area shape="rect" id="node6" href="inet.nodes.ethernet.EtherHost2.html" title="Compound Module EtherHost2" alt="" coords="240,83,328,111">

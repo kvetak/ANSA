@@ -1,0 +1,91 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>IPTimestampOption</i></h2>
+<b>File: <a href="src-networklayer-ipv4-IPDatagram.msg.html">src/networklayer/ipv4/IPDatagram.msg</a></b><br/>
+<p>Option structure: Timestamp</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPTimestampOption-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPTimestampOption.html" title="Class IPTimestampOption" alt="" coords="5,83,144,111">
+<area shape="rect" id="node2" href="IPDatagram.html" title="Packet IPDatagram" alt="" coords="29,6,120,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPTimestampOption-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPTimestampOption.html" title="Class IPTimestampOption" alt="" coords="5,6,144,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>flag</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>overflow</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>nextAddressPtr</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>recordAddress</td>
+   <td>
+      <i>
+IPAddress[MAX_TIMESTAMP_OPTION_ENTRIES]</i>
+   </td>
+   <td>
+<p>use either up to 4 addresses with timestamps or
+only up to 9 timestamps, according to the flag</p>
+</td>
+</tr>
+<tr class="local">
+   <td>recordTimestamp</td>
+   <td>
+      <i>
+simtime_t[MAX_IPADDR_OPTION_ENTRIES]</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Option structure: Timestamp
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPTimestampOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">flag</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TimestampFlag</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">overflow</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">nextAddressPtr</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// use either up to 4 addresses with timestamps or
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// only up to 9 timestamps, according to the flag
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordAddress</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_TIMESTAMP_OPTION_ENTRIES</span><span style="color: #000000; ">];
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordTimestamp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_IPADDR_OPTION_ENTRIES</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

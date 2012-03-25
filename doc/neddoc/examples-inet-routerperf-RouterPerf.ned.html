@@ -1,0 +1,94 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>examples/inet/routerperf/RouterPerf.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.routerperf.RouterPerfNetwork.html">RouterPerfNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
+</span><span style="color: #000000; ">
+
+
+
+
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">examples</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">routerperf</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">autorouting</span><span style="color: #000000; ">.</span><span style="color: #000000; ">FlatNetworkConfigurator</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">BurstHost</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">Router</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">world</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ChannelInstaller</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">RouterPerfNetwork</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">nodeNo</span><span style="color: #000000; ">;
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">channelInstaller</span><span style="color: #000000; ">: </span><span style="color: #000000; ">ChannelInstaller</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">channelClass</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;ThruputMeteringChannel&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">channelAttrs</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;format=u&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=59,211&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">configurator</span><span style="color: #000000; ">: </span><span style="color: #000000; ">FlatNetworkConfigurator</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=61,163&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">sender</span><span style="color: #000000; ">[</span><span style="color: #000000; ">nodeNo</span><span style="color: #000000; ">]: </span><span style="color: #000000; ">BurstHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=100,300,row,100&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">recip</span><span style="color: #000000; ">[</span><span style="color: #000000; ">nodeNo</span><span style="color: #000000; ">]: </span><span style="color: #000000; ">BurstHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=100,80,row,100&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">router</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Router</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=210,190&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #000000; ">nodeNo</span><span style="color: #000000; ">-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">sender</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">++ </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">++;
+            </span><span style="color: #000000; ">recip</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">++ </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> {  </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">; } </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">++;
+        }
+}
+
+</span></pre>
+   </body>
+</html>

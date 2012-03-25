@@ -1,0 +1,226 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Channel <i>ethernetline</i></h2>
+<b>Package:</b> inet.examples.ethernet.lans<br/><b>File: <a href="examples-ethernet-lans-Networks.ned.html">examples/ethernet/lans/Networks.ned</a></b><br/><p>(no description)</p><img src="inet.examples.ethernet.lans.ethernetline-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.examples.ethernet.lans.ethernetline.html" title="ethernetline" alt="ethernetline" coords="0,1874,122,1890">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.ethernet.lans.ethernetline-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.examples.ethernet.lans.ethernetline.html" title="Channel ethernetline" alt="" coords="32,83,120,111">
+<area shape="rect" id="node2" href="inet.examples.ethernet.lans.SwitchedDuplexLAN.html" title="Network SwitchedDuplexLAN" alt="" coords="5,6,147,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.ethernet.lans.ethernetline-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.examples.ethernet.lans.ethernetline.html" title="Channel ethernetline" alt="" coords="21,83,109,111">
+<area shape="rect" id="node2" href="ned.DatarateChannel.html" title="Channel DatarateChannel" alt="" coords="5,6,125,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="ned.DatarateChannel.html">DatarateChannel</a>
+   </td>
+   <td>
+<i>channel</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.SwitchedDuplexLAN.html">SwitchedDuplexLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="inherited">
+   <td>disabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr class="inherited">
+   <td>delay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.1us</td>
+   <td>
+<p>propagation delay</p>
+   </td>
+</tr>
+<tr class="inherited">
+   <td>datarate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>10Mbps</td>
+   <td>
+<p>bits per second; 0=infinite</p>
+   </td>
+</tr>
+<tr class="inherited">
+   <td>ber</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>bit error rate (BER)</p>
+   </td>
+</tr>
+<tr class="inherited">
+   <td>per</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>packet error rate (PER)</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>class</td>
+   <td><i>cDatarateChannel</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Signals:</h3>
+<table class="signalstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="unit">Unit</th>
+   </tr>
+<tr class="local">
+   <td>messageDiscarded</td>
+   <td><i>
+cMessage   </i></td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>messageSent</td>
+   <td><i>
+cMessage   </i></td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>channelBusy</td>
+   <td><i>
+int   </i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Statistics:</h3>
+<table class="statisticstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="title">Title</th>
+      <th class="source">Source</th>
+      <th class="record">Record</th>
+      <th class="unit">Unit</th>
+      <th class="interpolationmode">Interpolation Mode</th>
+   </tr>
+<tr class="local">
+   <td>utilization</td>
+   <td></td>
+   <td>timeavg(channelBusy)</td>
+   <td>last?</td>
+   <td></td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>packetsDiscarded</td>
+   <td></td>
+   <td>constant1(messageDiscarded)</td>
+   <td>count?</td>
+   <td></td>
+   <td>none</td>
+</tr>
+<tr class="local">
+   <td>packetBytes</td>
+   <td></td>
+   <td>packetBytes(messageSent)</td>
+   <td>sum?</td>
+   <td>B</td>
+   <td>none</td>
+</tr>
+<tr class="local">
+   <td>packets</td>
+   <td></td>
+   <td>constant1(messageSent)</td>
+   <td>count?</td>
+   <td></td>
+   <td>none</td>
+</tr>
+<tr class="local">
+   <td>busy</td>
+   <td></td>
+   <td>channelBusy</td>
+   <td>vector?</td>
+   <td></td>
+   <td>sample-hold</td>
+</tr>
+<tr class="local">
+   <td>throughput</td>
+   <td></td>
+   <td>sumPerDuration(packetBits(messageSent))</td>
+   <td>last?</td>
+   <td>bps</td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernetline</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">us</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,154 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/mobility/TurtleMobility.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.mobility.TurtleMobility.html">TurtleMobility</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>A LOGO-style movement model, with the script coming from XML. It can be
+useful for describing random as well as deterministic scenarios.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// A LOGO-style movement model, with the script coming from XML. It can be
+// useful for describing random as well as deterministic scenarios.
+//
+// First, a few examples.
+//
+// Node will move along a square's borders:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+//     &lt;movement&gt;
+//         &lt;set speed=&quot;10&quot; angle=&quot;180&quot;/&gt;
+//         &lt;repeat n=&quot;4&quot;&gt;
+//             &lt;forward d=&quot;50&quot;/&gt;
+//             &lt;turn angle=&quot;90&quot;/&gt;
+//         &lt;/repeat&gt;
+//     &lt;/movement&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// MassMobility (in which the node is assumed to have a mass, and cannot turn
+// abruptly):
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+//     &lt;movement&gt;
+//         &lt;repeat&gt;
+//             &lt;set speed=&quot;uniform(10,20)&quot;/&gt;
+//             &lt;turn angle=&quot;uniform(-30,30)&quot;/&gt;
+//             &lt;forward t=&quot;uniform(0.1,1)&quot;/&gt;
+//         &lt;/repeat&gt;
+//     &lt;/movement&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Random Waypoint:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+//     &lt;movement&gt;
+//         &lt;repeat&gt;
+//             &lt;set speed=&quot;uniform(20,60)&quot;/&gt;
+//             &lt;moveto x=&quot;uniform(0,$MAXX)&quot; y=&quot;uniform(0,$MAXY)&quot;/&gt;
+//         &lt;/repeat&gt;
+//     &lt;/movement&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Commands (XML element names) are: repeat, set, forward, turn, wait,
+// moveto, and moveby.
+//
+// Accepted attributes:
+//    - repeat: n (optional)
+//    - set: x, y, speed, angle, borderPolicy (all optional)
+//    - forward: d, t (at last one of them must be present)
+//    - turn: angle (required)
+//    - wait: t (required)
+//    - moveto: x, y, t (all optional)
+//    - moveby: x, y, t (all optional)
+//
+// Attribute values can be literal numbers (e.g. x=&quot;100&quot;), or any
+// distribution accepted in omnetpp.ini (e.g. speed=&quot;uniform(10,20)&quot;).
+// A new value will be chosen each time the statement is executed.
+// The $MAXX and $MAXY strings will be substituted with the
+// playground width and height minus 1, respectively.
+//
+// t is time interval, calculated from the end of the previous movement.
+// x, y are absolute coordinates with &lt;set&gt; and &lt;moveto&gt;, and relative
+// with &lt;moveby&gt;. angle is clockwise in degrees, with 0 pointing west.
+// d is distance in meters (speed is m/s).
+//
+// borderPolicy controls what happens when a node reaches the edge of the
+// playground, and can take one of the values &quot;reflect&quot;, &quot;wrap&quot;,
+// &quot;placerandomly&quot;. In the first case, the node reflects off the wall;
+// with &quot;wrap&quot;, it'll come in on the other side (torus); and with
+// &quot;placerandomly&quot;, it will be placed at a random position on the
+// playground.
+//
+// In addition to the node position, the module maintains two interval variables,
+// 'speed' and 'angle', which can be adjusted by &lt;set&gt; and &lt;turn&gt;.
+// The &lt;forward&gt; statement, if only t or d is given, uses the speed variable.
+// If you specify d and t together, that determines speed as well,
+// so the speed variable will be ignored completely.
+//
+// Likewise, &lt;moveto&gt; and &lt;moveby&gt; will ignore the angle variable,
+// and will only use the speed variable if the t attribute is omitted.
+//
+// If the repeat count n is omitted for the &lt;repeat&gt; statement, that
+// means an infinite loop.
+//
+//
+//
+// You can find the DTD with the sources: TurtleMobility.dtd.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> ChannelControl
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">TurtleMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">xml</span><span style="color: #000000; "> </span><span style="color: #000000; ">turtleScript</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// describes the movement
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// time interval to update the hosts position
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+
+
+
+</span></pre>
+   </body>
+</html>

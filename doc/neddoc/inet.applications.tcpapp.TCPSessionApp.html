@@ -1,0 +1,233 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>TCPSessionApp</i></h2>
+<b>Package:</b> inet.applications.tcpapp<br/><b>File: <a href="src-applications-tcpapp-TCPSessionApp.ned.html">src/applications/tcpapp/TCPSessionApp.ned</a></b><br/><p><a href="../doxy/class_t_c_p_session_app.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Single-connection <a href="inet.transport.tcp.TCP.html">TCP</a> application: it opens a connection, sends
+the given number of bytes, and closes. Sending may be one-off,
+or may be controlled by a "script" which is a series of
+(time, number of bytes) pairs. May act either as client or as server,
+and works with TCPVirtualBytesSendQueue/RcvQueue as sendQueue/receiveQueue
+setting for <a href="inet.transport.tcp.TCP.html">TCP</a>.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+<p><b>Opening the connection</b></p>
+<p>Regarding the type of opening the connection, the application may
+be either a client or a server. When active=false, the application
+will listen on the given local port, and wait for an incoming connection.
+When active=true, the application will bind to given local address:port,
+and connect to the connectAddress:connectPort. To use an ephemeral port
+as local port, set the port parameter to -1.</p>
+<p>Even when in server mode (active=false), the application will only
+serve one incoming connection. Further connect attempts will be
+refused by <a href="inet.transport.tcp.TCP.html">TCP</a> (it will send RST) for lack of LISTENing connections.</p>
+<p>The time of opening the connection is in the tOpen parameter.</p>
+<p><b>Sending data</b></p>
+<p>Regardless of the type of OPEN, the application can be made to send
+data. One way of specifying sending is via the tSend, sendBytes
+parameters, the other way is sendScript. With the former, sendBytes
+bytes will be sent at tSend. With sendScript, the format is
+"&lt;time&gt; &lt;numBytes&gt;;&lt;time&gt; &lt;numBytes&gt;;..."</p>
+<p><b>Closing the connection</b></p>
+<p>The application will issue a TCP CLOSE at time tClose. If tClose=-1, no
+CLOSE will be issued.</p>
+<img src="inet.applications.tcpapp.TCPSessionApp-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.tcpapp.TCPSessionApp.html" title="TCPSessionApp" alt="TCPSessionApp" coords="0,31,142,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.tcpapp.TCPSessionApp-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.tcpapp.TCPSessionApp.html" title="Simple Module TCPSessionApp" alt="" coords="5,6,123,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.tcpapp.TCPSessionApp-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.tcpapp.TCPSessionApp.html" title="Simple Module TCPSessionApp" alt="" coords="5,83,123,111">
+<area shape="rect" id="node2" href="inet.applications.tcpapp.TCPApp.html" title="Module Interface TCPApp" alt="" coords="28,6,100,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>port</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>FIXME change to listenPort = default(1000)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>active</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>connectAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>connectPort</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1000</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>tOpen</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>tSend</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>sendBytes</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1MiB</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>sendScript</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>tClose</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2s</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>tcpIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>tcpOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Single-connection TCP application: it opens a connection, sends
+// the given number of bytes, and closes. Sending may be one-off,
+// or may be controlled by a &quot;script&quot; which is a series of
+// (time, number of bytes) pairs. May act either as client or as server,
+// and works with TCPVirtualBytesSendQueue/RcvQueue as sendQueue/receiveQueue
+// setting for TCP.
+// Compatible with both IPv4 and IPv6.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Opening the connection</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Regarding the type of opening the connection, the application may
+// be either a client or a server. When active=false, the application
+// will listen on the given local port, and wait for an incoming connection.
+// When active=true, the application will bind to given local address:port,
+// and connect to the connectAddress:connectPort. To use an ephemeral port
+// as local port, set the port parameter to -1.
+//
+// Even when in server mode (active=false), the application will only
+// serve one incoming connection. Further connect attempts will be
+// refused by TCP (it will send RST) for lack of LISTENing connections.
+//
+// The time of opening the connection is in the tOpen parameter.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Sending data</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Regardless of the type of OPEN, the application can be made to send
+// data. One way of specifying sending is via the tSend, sendBytes
+// parameters, the other way is sendScript. With the former, sendBytes
+// bytes will be sent at tSend. With sendScript, the format is
+// &quot;&lt;time&gt; &lt;numBytes&gt;;&lt;time&gt; &lt;numBytes&gt;;...&quot;
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Closing the connection</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The application will issue a \TCP CLOSE at time tClose. If tClose=-1, no
+// CLOSE will be issued.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPSessionApp</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPApp</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">port</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// FIXME change to listenPort = default(1000)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">active</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">connectAddress</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">connectPort</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1000</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">tOpen</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">tSend</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sendBytes</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;B&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">MiB</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">sendScript</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">tClose</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcpIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcpOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,174 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>EtherEncap</i></h2>
+<b>Package:</b> inet.linklayer.ethernet<br/><b>File: <a href="src-linklayer-ethernet-EtherEncap.ned.html">src/linklayer/ethernet/EtherEncap.ned</a></b><br/><p><a href="../doxy/class_ether_encap.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Performs Ethernet II encapsulation/decapsulation.</p>
+<p>Expected environment:</p>
+  <ul><li>lowerLayerIn, lowerLayerOut gates should be connected to Ethernet <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a></li>
+  <li>upperLayerIn, upperLayerOut gates should be connected to higher layer
+  protocol or application</li></ul>
+<p>Functionality:</p>
+  <ul><li>packets coming from upper layers will be encapsulated in <a href="EthernetIIFrame.html">EthernetIIFrame</a>
+  and sent to MAC. <a href="EtherType.html">EtherType</a> is taken from the <a href="Ieee802Ctrl.html">Ieee802Ctrl</a> structure attached
+  to the message as control info (see setControlInfo(), controlInfo()
+  methods). Src address will be filled in by <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>.</li>
+  <li>also accepts SENDPAUSE command (message kind=IEEE802CTRL_SENDPAUSE) from
+  higher layer: send PAUSE frame, as described in
+  <a href="ether-pause.html">PAUSE frames</a>.</li>
+  <li>Ethernet frames arriving from MAC will be decapsulated, and sent up to the
+  higher layers. Accepts <a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a> and <a href="EtherFrameWithSNAP.html">EtherFrameWithSNAP</a> too.</li></ul>
+<img src="inet.linklayer.ethernet.EtherEncap-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ethernet.EtherEncap.html" title="EtherEncap" alt="EtherEncap" coords="0,31,117,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EtherEncap-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherEncap.html" title="Simple Module EtherEncap" alt="" coords="171,83,261,111">
+<area shape="rect" id="node2" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="5,6,128,34">
+<area shape="rect" id="node4" href="inet.linklayer.ethernet.EthernetInterface2.html" title="Compound Module EthernetInterface2" alt="" coords="152,6,280,34">
+<area shape="rect" id="node6" href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html" title="Compound Module EthernetInterfaceNoQueue" alt="" coords="304,6,480,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EtherEncap-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherEncap.html" title="Simple Module EtherEncap" alt="" coords="5,6,96,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ethernet.EthernetInterface.html">EthernetInterface</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface. Complements <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a>
+with an output queue for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ethernet.EthernetInterface2.html">EthernetInterface2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface which supports full-duplex operation only.
+Complements <a href="inet.linklayer.ethernet.EtherMAC2.html">EtherMAC2</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a> with an output queue for QoS and
+RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html">EthernetInterfaceNoQueue</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface. Assumes inifinite queue.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/square</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>upperLayerIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>higher layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>upperLayerOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>higher layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowerLayerIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to Ethernet MAC</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowerLayerOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to Ethernet MAC</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Performs Ethernet II encapsulation/decapsulation.
+//
+// Expected environment:
+// - lowerLayerIn, lowerLayerOut gates should be connected to Ethernet EtherMAC
+// - upperLayerIn, upperLayerOut gates should be connected to higher layer
+//   protocol or application
+//
+// Functionality:
+// - packets coming from upper layers will be encapsulated in EthernetIIFrame
+//   and sent to MAC. EtherType is taken from the Ieee802Ctrl structure attached
+//   to the message as control info (see setControlInfo(), controlInfo()
+//   methods). Src address will be filled in by EtherMAC.
+// - also accepts SENDPAUSE command (message kind=IEEE802CTRL_SENDPAUSE) from
+//   higher layer: send PAUSE frame, as described in
+//   </span><span style="color: #800000; ">&lt;a href=&quot;ether-pause.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">PAUSE frames</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+// - Ethernet frames arriving from MAC will be decapsulated, and sent up to the
+//   higher layers. Accepts EtherFrameWithLLC and EtherFrameWithSNAP too.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherEncap</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/square&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// higher layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// higher layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// to Ethernet MAC
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to Ethernet MAC
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

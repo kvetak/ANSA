@@ -1,0 +1,302 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>Router6</i></h2>
+<b>Package:</b> inet.nodes.ipv6<br/><b>File: <a href="src-nodes-ipv6-Router6.ned.html">src/nodes/ipv6/Router6.ned</a></b><br/>
+<p>IPv6 router.</p>
+<img src="inet.nodes.ipv6.Router6-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.base.NotificationBoard.html" title="NotificationBoard" alt="NotificationBoard" coords="8,80,116,141">
+<area shape="rect" href="inet.networklayer.common.InterfaceTable.html" title="InterfaceTable" alt="InterfaceTable" coords="108,80,196,141">
+<area shape="rect" href="inet.networklayer.ipv6.RoutingTable6.html" title="RoutingTable6" alt="RoutingTable6" coords="200,80,285,141">
+<area shape="rect" href="inet.nodes.ipv6.NetworkLayer6.html" title="NetworkLayer6" alt="NetworkLayer6" coords="160,161,245,222">
+<area shape="rect" href="inet.linklayer.ppp.PPPInterface.html" title="PPPInterface" alt="PPPInterface" coords="36,277,149,338">
+<area shape="rect" href="inet.linklayer.ethernet.EthernetInterface.html" title="EthernetInterface" alt="EthernetInterface" coords="94,277,201,338">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.ipv6.Router6-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="348,83,420,111">
+<area shape="rect" id="node2" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="5,161,104,189">
+<area shape="rect" id="node4" href="inet.nodes.ipv6.NetworkLayer6.html" title="Compound Module NetworkLayer6" alt="" coords="128,161,237,189">
+<area shape="rect" id="node6" href="inet.networklayer.ipv6.RoutingTable6.html" title="Simple Module RoutingTable6" alt="" coords="261,161,368,189">
+<area shape="rect" id="node8" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="392,161,515,189">
+<area shape="rect" id="node10" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="539,161,661,189">
+<area shape="rect" id="node12" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="685,161,789,189">
+<area shape="rect" id="node14" href="inet.examples.ipv6.ipv6bulk.BulkTransfer6.html" title="Network BulkTransfer6" alt="" coords="63,6,164,34">
+<area shape="rect" id="node16" href="inet.examples.ipv6.demonetworketh.DemoNetworkEth.html" title="Network DemoNetworkEth" alt="" coords="188,6,313,34">
+<area shape="rect" id="node18" href="inet.examples.ipv6.nclients.NClientsEth.html" title="Network NClientsEth" alt="" coords="337,6,431,34">
+<area shape="rect" id="node21" href="inet.examples.ipv6.nclients.NClientsPPP.html" title="Network NClientsPPP" alt="" coords="455,6,553,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.ipv6.Router6-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ipv6.ipv6bulk.BulkTransfer6.html">BulkTransfer6</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ipv6.demonetworketh.DemoNetworkEth.html">DemoNetworkEth</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ipv6.ipv6nclients.NClientsEth.html">NClientsEth</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ipv6.nclients.NClientsEth.html">NClientsEth</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ipv6.ipv6nclients.NClientsPPP.html">NClientsPPP</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ipv6.nclients.NClientsPPP.html">NClientsPPP</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=abstract/router</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>pppg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ethg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.networklayer.ipv6.RoutingTable6.html">routingTable6</a>.routingTableFile</td>
+   <td>
+      <i>xml</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ipv6.NetworkLayer6.html">networkLayer</a>.<a href="inet.networklayer.ipv6.IPv6.html">ipv6</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \IPv6 router.
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">Router6</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=abstract/router&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">PPPFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">notificationBoard</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,60&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">interfaceTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">InterfaceTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,60&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">routingTable6</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RoutingTable6</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">isRouter</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=240,60&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NetworkLayer6</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=200,141;q=queue&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)];
+                </span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)];
+        }
+        </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)]: </span><span style="color: #000000; ">PPPInterface</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=90,257,row,110;q=l2queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)]: </span><span style="color: #000000; ">EthernetInterface</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=145,257,row,110;q=l2queue&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #808080; font-style: italic; ">// connections to network outside
+</span><span style="color: #000000; ">        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">ppp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">)-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+            </span><span style="color: #000000; ">eth</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #800000; font-weight: bold; ">sizeof</span><span style="color: #000000; ">(</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">)+</span><span style="color: #000000; ">i</span><span style="color: #000000; ">];
+        }
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Enum <i>Ieee80211StatusCode</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtFrames.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtFrames.msg</a></b><br/>
+<p>802.11 status code; values correspond to the standard.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211StatusCode-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211StatusCode.html" title="Enum Ieee80211StatusCode" alt="" coords="5,6,155,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211StatusCode-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211StatusCode.html" title="Enum Ieee80211StatusCode" alt="" coords="5,6,155,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// 802.11 status code; values correspond to the standard.
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211StatusCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">SC_SUCCESSFUL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_UNSPECIFIED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_UNSUP_CAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_REASS_DENIED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">11</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_ASS_DENIED_UNKNOWN</span><span style="color: #000000; "> = </span><span style="color: #008000; ">12</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_ALG0_UNSUP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">13</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_OUT_OF_SEQ</span><span style="color: #000000; "> = </span><span style="color: #008000; ">14</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_CHALLENGE_FAIL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">15</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_TIMEOUT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">16</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_ASS_TOO_MANY_MS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">17</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_DATARATE_UNSUP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">18</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

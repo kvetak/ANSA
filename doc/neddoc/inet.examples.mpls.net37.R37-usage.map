@@ -1,0 +1,7 @@
+<area shape="rect" id="node1" href="inet.examples.mpls.net37.R37.html" title="Network R37" alt="" coords="319,6,391,34">
+<area shape="rect" id="node2" href="inet.examples.mpls.net37.R37.line.html" title="Channel line" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="inet.world.ChannelInstaller.html" title="Simple Module ChannelInstaller" alt="" coords="101,83,216,111">
+<area shape="rect" id="node6" href="inet.nodes.mpls.RSVP_LSR.html" title="Compound Module RSVP_LSR" alt="" coords="240,83,331,111">
+<area shape="rect" id="node8" href="inet.networklayer.autorouting.NetworkConfigurator.html" title="Simple Module NetworkConfigurator" alt="" coords="355,83,496,111">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="520,83,621,111">
+<area shape="rect" id="node12" href="inet.world.NAMTrace.html" title="Simple Module NAMTrace" alt="" coords="645,83,731,111">

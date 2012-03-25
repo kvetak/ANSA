@@ -1,0 +1,679 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/linklayer/ieee80211/mgmt/Ieee80211MgmtFrames.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211CapabilityInformation.html">Ieee80211CapabilityInformation</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Capability Information field format. This field is not used
+by the model (and is omitted from management frame formats too),
+because its fields are related to features not supported by this model
+(PCF, privacy, and beacons in ad-hoc mode). It is only provided here
+for completeness.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211HandoverParameters.html">Ieee80211HandoverParameters</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Additional parameters for handover decisions
+(Not part of standard, for experimental purposes)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ReasonCode.html">Ieee80211ReasonCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>802.11 reason code; values correspond to the standard.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211StatusCode.html">Ieee80211StatusCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>802.11 status code; values correspond to the standard.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211SupportedRatesElement.html">Ieee80211SupportedRatesElement</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Structure to store supported rates</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211FrameBody.html">Ieee80211FrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Frame body base class used to hide various frame body types</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211AuthenticationFrameBody.html">Ieee80211AuthenticationFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Authentication frame body format.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211DeauthenticationFrameBody.html">Ieee80211DeauthenticationFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>De-authentication frame body format</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211DisassociationFrameBody.html">Ieee80211DisassociationFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Dis-association frame body format (same as De-authentication)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ProbeRequestFrameBody.html">Ieee80211ProbeRequestFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Probe request frame body format</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211AssociationRequestFrameBody.html">Ieee80211AssociationRequestFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Association request frame body format</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ReassociationRequestFrameBody.html">Ieee80211ReassociationRequestFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Re-association request frame body format (same as association)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211AssociationResponseFrameBody.html">Ieee80211AssociationResponseFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Association response frame body format</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ReassociationResponseFrameBody.html">Ieee80211ReassociationResponseFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Re-association response frame body format (same as AssociationResponse)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211BeaconFrameBody.html">Ieee80211BeaconFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Beacon frame body format.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ProbeResponseFrameBody.html">Ieee80211ProbeResponseFrameBody</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Probe response frame body format (same as Beacon)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211AuthenticationFrame.html">Ieee80211AuthenticationFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Authentication frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211DeauthenticationFrame.html">Ieee80211DeauthenticationFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>De-authentication frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211DisassociationFrame.html">Ieee80211DisassociationFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Dis-association frame format (management frame + body) (same as De-authentication)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ProbeRequestFrame.html">Ieee80211ProbeRequestFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Probe request frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211AssociationRequestFrame.html">Ieee80211AssociationRequestFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Association request frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ReassociationRequestFrame.html">Ieee80211ReassociationRequestFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Re-association request frame format (management frame + body) (same as association)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211AssociationResponseFrame.html">Ieee80211AssociationResponseFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Association response frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ReassociationResponseFrame.html">Ieee80211ReassociationResponseFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Re-association response frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211BeaconFrame.html">Ieee80211BeaconFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Beacon frame format (management frame + body)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ProbeResponseFrame.html">Ieee80211ProbeResponseFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Probe response frame format (management frame + body); same as Beacon</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2006 Andras Varga
+// Copyright (C) 2001 Eric Wu and Steve Woon, Monash University, Melbourne, Australia
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+</span><span style="color: #000000; ">
+</span><span style="color: #808080; font-style: italic; ">//
+// Required for MACAddress declarations
+//
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;MACAddress.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;Ieee80211Frame_m.h&quot;</span><span style="color: #000000; ">
+}}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Capability Information field format. This field is not used
+// by the model (and is omitted from management frame formats too),
+// because its fields are related to features not supported by this model
+// (PCF, privacy, and beacons in ad-hoc mode). It is only provided here
+// for completeness.
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211CapabilityInformation</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">ESS</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">IBSS</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">CFPollable</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">CFPollRequest</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">privacy</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Additional parameters for handover decisions
+// (Not part of standard, for experimental purposes)
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211HandoverParameters</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">avgBackoffTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">avgWaitTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">avgErrorRate</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">estAvailBW</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// 802.11 reason code; values correspond to the standard.
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">RC_UNSPECIFIED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_PREV_AUTH_EXPIRED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_DEAUTH_MS_LEAVING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_DISASS_INACTIVITY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_DISASS_TOO_MANY_MS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_NONAUTH_CLASS2</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_NONASS_CLASS3</span><span style="color: #000000; "> = </span><span style="color: #008000; ">7</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_DIASS_MS_LEAVING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">RC_NONAUTH_ASS_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">9</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// 802.11 status code; values correspond to the standard.
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211StatusCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">SC_SUCCESSFUL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_UNSPECIFIED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_UNSUP_CAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_REASS_DENIED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">11</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_ASS_DENIED_UNKNOWN</span><span style="color: #000000; "> = </span><span style="color: #008000; ">12</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_ALG0_UNSUP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">13</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_OUT_OF_SEQ</span><span style="color: #000000; "> = </span><span style="color: #008000; ">14</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_CHALLENGE_FAIL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">15</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_AUTH_TIMEOUT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">16</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_ASS_TOO_MANY_MS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">17</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SC_DATARATE_UNSUP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">18</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Structure to store supported rates
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">numRates</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// number of rates (max 8)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">rate</span><span style="color: #000000; ">[</span><span style="color: #008000; ">8</span><span style="color: #000000; ">]; </span><span style="color: #808080; font-style: italic; ">// in Mbit/s; should be multiple of 500 kbit/s
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Frame body base class used to hide various frame body types
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// not an actual frame field
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Authentication frame body format.
+//
+// Note: the &quot;isLast&quot; field is not part of the standard.
+// The authentication procedure is simulated by this model by exchanging
+// a number of &quot;dummy&quot; authentication frames without real contents;
+// the &quot;isLast&quot; field gets set by the AP to signal the STA that
+// the authentication procedure has completed and it does not need to
+// send any more Authentication frames.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AuthenticationFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// add 2+len bytes for challenge text if present
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">sequenceNumber</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">statusCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211StatusCode</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">isLast</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// not part of the standard; see above
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// De-authentication frame body format
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DeauthenticationFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reasonCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Dis-association frame body format (same as De-authentication)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DisassociationFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reasonCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Probe request frame body format
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ProbeRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">12</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// assuming a 8-character SSID
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">SSID</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; "> </span><span style="color: #000000; ">supportedRates</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Association request frame body format
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AssociationRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">16</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// assuming a 8-character SSID
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">SSID</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; "> </span><span style="color: #000000; ">supportedRates</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Re-association request frame body format (same as association)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReassociationRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AssociationRequestFrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">26</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// assuming a 8-character SSID and 4 supported datarates
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">currentAP</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Association response frame body format
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AssociationResponseFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">26</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// assuming a 8-character SSID and 4 supported datarates
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">statusCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211StatusCode</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">aid</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; "> </span><span style="color: #000000; ">supportedRates</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Re-association response frame body format (same as AssociationResponse)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReassociationResponseFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AssociationResponseFrameBody</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Beacon frame body format.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211BeaconFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameBody</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">bodyLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">50</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// assuming a 8-character SSID, 4 supported datarate plus TIM
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">SSID</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; "> </span><span style="color: #000000; ">supportedRates</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">beaconInterval</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelNumber</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Ieee80211HandoverParameters</span><span style="color: #000000; "> </span><span style="color: #000000; ">handoverParameters</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Probe response frame body format (same as Beacon)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ProbeResponseFrameBody</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211BeaconFrameBody</span><span style="color: #000000; ">
+{
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//--------------------------------------------------------------
+</span><span style="color: #000000; ">
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Authentication frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AuthenticationFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_AUTHENTICATION</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211AuthenticationFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// De-authentication frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DeauthenticationFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_DEAUTHENTICATION</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211DeauthenticationFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Dis-association frame format (management frame + body) (same as De-authentication)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DisassociationFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_DISASSOCIATION</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211DisassociationFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Probe request frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ProbeRequestFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_PROBEREQUEST</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211ProbeRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Association request frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AssociationRequestFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_ASSOCIATIONREQUEST</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211AssociationRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Re-association request frame format (management frame + body) (same as association)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReassociationRequestFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_REASSOCIATIONREQUEST</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211ReassociationRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Association response frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211AssociationResponseFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_ASSOCIATIONRESPONSE</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211AssociationResponseFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Re-association response frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReassociationResponseFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_REASSOCIATIONRESPONSE</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211ReassociationResponseFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Beacon frame format (management frame + body)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211BeaconFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_BEACON</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211BeaconFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Probe response frame format (management frame + body); same as Beacon
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ProbeResponseFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_PROBERESPONSE</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211ProbeResponseFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

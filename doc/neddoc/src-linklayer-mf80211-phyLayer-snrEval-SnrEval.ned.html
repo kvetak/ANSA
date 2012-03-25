@@ -1,0 +1,93 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/linklayer/mf80211/phyLayer/snrEval/SnrEval.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Represents the radio. Frames received from higher layers (typically the
+MAC protocol) are transmitted on the radio channel, using the global
+<a href="inet.world.ChannelControl.html">ChannelControl</a> module. Frames received on the radio channel will have
+their signal-noise ratio evaluated and passed up to the decider.
+(It is the decider's task to determine whether the frame was received
+correctly, and pass it up to the MAC layer).</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//***************************************************************************
+// * file:        SnrEval.ned
+// *
+// * author:      Marc Loebbers, Andras Varga, Levente Meszaros
+// *
+// * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
+// *              Technische Universitaet Berlin, Germany.
+// *
+// *              This program is free software; you can redistribute it
+// *              and/or modify it under the terms of the GNU General Public
+// *              License as published by the Free Software Foundation; either
+// *              version 2 of the License, or (at your option) any later
+// *              version.
+// *              For further information see file COPYING
+// *              in the top level directory
+// ***************************************************************************
+// * part of:     framework implementation developed by tkn
+// **************************************************************************/
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mf80211</span><span style="color: #000000; ">.</span><span style="color: #000000; ">phyLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Represents the radio. Frames received from higher layers (typically the
+// MAC protocol) are transmitted on the radio channel, using the global
+// ChannelControl module. Frames received on the radio channel will have
+// their signal-noise ratio evaluated and passed up to the decider.
+// (It is the decider's task to determine whether the frame was received
+// correctly, and pass it up to the MAC layer).
+//
+// The receive/transmit channel (frequency) can be changed by sending
+// SnrEval a blank cMessage with PHY_C_CONFIGURERADIO as message kind, and
+// a PhyControlInfo object attached to it as control info, to hold the
+// new channel number. If the radio is currently transmitting, the channel
+// switch will actually take place after the transmission is completed.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> merge docu with BasicSnrEval's
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">SnrEval</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelNumber</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// channel identifier
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">transmitterPower</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mW&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">bitrate</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;bps&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">b</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">thermalNoise</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;dBm&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">pathLossAlpha</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">sensitivity</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">mW</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/wrxtx&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// from higher layer protocol (MAC)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to decider (decider connects to higher layer protocol, i.e. the MAC)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to receive frames (AirFrame) on the radio channel
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

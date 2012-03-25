@@ -1,0 +1,82 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>The traffic.xml file</h2>
+<p>The traffic.xml file is read by the RSVP-TE module (RSVP).
+The file must be in the same folder as the executable
+network simulation file.</p>
+<p>The XML elements used in the "traffic.xml" file:</p>
+  <ul><li>&lt;Traffic&gt;&lt;/Traffic&gt; is the root element. It may contain one or more &lt;Conn&gt;
+  elements.</li>
+  <li>&lt;Conn&gt;&lt;/Conn&gt; specifies an RSVP session. It may contain the following elements.</li>
+  <li>&lt;src&gt;&lt;/src&gt; specifies sender IP address</li>
+  <li>&lt;dest&gt;&lt;/dest&gt; specifies receiver IP address</li>
+  <li>&lt;setupPri&gt;&lt;/setupPri&gt; specifies LSP setup priority</li>
+  <li>&lt;holdingPri&gt;&lt;/holdingPri&gt; specifies LSP holding priority</li>
+  <li>&lt;bandwidth&gt;&lt;/bandwidth&gt; specifies the requested BW.</li>
+  <li>&lt;delay&gt;&lt;/delay&gt; specifies the requested delay.</li>
+  <li>&lt;route&gt;&lt;/route&gt; specifies the explicit route. This is a comma-separated
+  list of <a href="inet.networklayer.ipv4.IP.html">IP</a>-address, hop-type pairs (also separated by comma).
+  A hop type has a value of 1 if the hop is a loose hop and 0 otherwise.</li></ul>
+<p>The following presents an example file:</p>
+<p><pre>
+&lt;?xml version="1.0"?&gt;
+&lt;!-- Example of traffic control file --&gt;
+&lt;traffic&gt;
+   &lt;conn&gt;
+       &lt;src&gt;10.0.0.1&lt;/src&gt;
+       &lt;dest&gt;10.0.1.2&lt;/dest&gt;
+       &lt;setupPri&gt;7&lt;/setupPri&gt;
+       &lt;holdingPri&gt;7&lt;/holdingPri&gt;
+       &lt;bandwidth&gt;400&lt;/bandwidth&gt;
+       &lt;delay&gt;5&lt;/delay&gt;
+   &lt;/conn&gt;
+   &lt;conn&gt;
+       &lt;src&gt;11.0.0.1&lt;/src&gt;
+       &lt;dest&gt;11.0.1.2&lt;/dest&gt;
+       &lt;setupPri&gt;7&lt;/setupPri&gt;
+       &lt;holdingPri&gt;7&lt;/holdingPri&gt;
+       &lt;bandwidth&gt;100&lt;/bandwidth&gt;
+       &lt;delay&gt;5&lt;/delay&gt;
+   &lt;/conn&gt;
+&lt;/traffic&gt;
+</pre></p>
+<p>An example of using RSVP-TE as signaling protocol can be found in
+ExplicitRouting folder distributed with the simulation. In this
+example, a network similar to the network in <a href="inet.networklayer.ldp.LDP.html">LDP</a>-<a href="inet.networklayer.mpls.MPLS.html">MPLS</a> example is
+setup. Instead of using <a href="inet.networklayer.ldp.LDP.html">LDP</a>, "signaling" parameter is set to 2 (value
+of RSVP-TE handler). The following xml file is used for traffic
+control. Note the explicit routes specified in the second connection.
+It indicates that the route is a strict one since the values of every
+hop types are 0. The route defined is 10.0.0.1 -&gt; 1.0.0.1 -&gt;
+10.0.0.3 -&gt; 1.0.0.4 -&gt; 10.0.0.5 -&gt; 10.0.1.2.</p>
+<p><pre>
+&lt;?xml version="1.0"?&gt;
+&lt;!-- Example of traffic control file --&gt;
+&lt;traffic&gt;
+    &lt;conn&gt;
+        &lt;src&gt;10.0.0.1&lt;/src&gt;
+        &lt;dest&gt;10.0.1.2&lt;/dest&gt;
+        &lt;setupPri&gt;7&lt;/setupPri&gt;
+        &lt;holdingPri&gt;7&lt;/holdingPri&gt;
+        &lt;bandwidth&gt;0&lt;/bandwidth&gt;
+        &lt;delay&gt;0&lt;/delay&gt;
+        &lt;ER&gt;false&lt;/ER&gt;
+    &lt;/conn&gt;
+    &lt;conn&gt;
+        &lt;src&gt;11.0.0.1&lt;/src&gt;
+        &lt;dest&gt;11.0.1.2&lt;/dest&gt;
+        &lt;setupPri&gt;7&lt;/setupPri&gt;
+        &lt;holdingPri&gt;7&lt;/holdingPri&gt;
+        &lt;bandwidth&gt;0&lt;/bandwidth&gt;
+        &lt;delay&gt;0&lt;/delay&gt;
+        &lt;ER&gt;true&lt;/ER&gt;
+        &lt;route&gt;1.0.0.1,0,1.0.0.3,0,1.0.0.4,0,1.0.0.5,0,10.0.1.2,0&lt;/route&gt;
+    &lt;/conn&gt;
+&lt;/traffic&gt;
+</pre></p>
+   </body>
+</html>

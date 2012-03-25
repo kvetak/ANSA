@@ -1,0 +1,120 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>UDPVideoStreamCli</i></h2>
+<b>Package:</b> inet.applications.udpapp<br/><b>File: <a href="src-applications-udpapp-UDPVideoStreamCli.ned.html">src/applications/udpapp/UDPVideoStreamCli.ned</a></b><br/><p><a href="../doxy/class_u_d_p_video_stream_cli.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Video streaming client.</p>
+<p><b>See also:</b> <a href="inet.applications.udpapp.UDPVideoStreamSvr.html">UDPVideoStreamSvr</a></p>
+<img src="inet.applications.udpapp.UDPVideoStreamCli-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.udpapp.UDPVideoStreamCli.html" title="UDPVideoStreamCli" alt="UDPVideoStreamCli" coords="0,31,171,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.udpapp.UDPVideoStreamCli-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.udpapp.UDPVideoStreamCli.html" title="Simple Module UDPVideoStreamCli" alt="" coords="5,6,147,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.udpapp.UDPVideoStreamCli-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.udpapp.UDPVideoStreamCli.html" title="Simple Module UDPVideoStreamCli" alt="" coords="5,83,147,111">
+<area shape="rect" id="node2" href="inet.applications.udpapp.UDPApp.html" title="Module Interface UDPApp" alt="" coords="39,6,113,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>localPort</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>serverAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>serverPort</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>udpIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>udpOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Video streaming client.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPVideoStreamSvr
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPVideoStreamCli</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPApp</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localPort</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">serverAddress</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">serverPort</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">startTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

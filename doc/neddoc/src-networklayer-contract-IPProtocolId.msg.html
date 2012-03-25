@@ -1,0 +1,89 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/contract/IPProtocolId.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPProtocolId.html">IPProtocolId</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Protocol field: taken from RFC 1700.
+Replacing old RFC1700 with newer (28/06/01) Protocol Numbers</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+// Copyright (C) 2004 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Protocol field: taken from RFC 1700.
+// Replacing old RFC1700 with newer (28/06/01) Protocol Numbers
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #808080; font-style: italic; ">//  IP_PROT_HOPOPT    = 0;
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_ICMP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_IGMP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_IP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// used for IP tunneling. FIXME: RFC1700 specifies =3 (old IPSuite) ???
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_TCP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_EGP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_IGP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">9</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_UDP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">17</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_XTP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">36</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_IPv6</span><span style="color: #000000; "> = </span><span style="color: #008000; ">41</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_RSVP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">46</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_IPv6_ICMP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">58</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_NONE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">59</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_IPv6_MOBILITY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">62</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_OSPF</span><span style="color: #000000; "> = </span><span style="color: #008000; ">89</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_SCTP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">132</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_PROT_MANET</span><span style="color: #000000; "> = </span><span style="color: #008000; ">254</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//XXX Use for simplicity
+</span><span style="color: #000000; ">
+    </span><span style="color: #000000; ">IP_PROT_IPv6EXT_HOP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// Hop-by-hop option header.
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_IPv6EXT_DEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">60</span><span style="color: #000000; ">;     </span><span style="color: #808080; font-style: italic; ">// Destination options header.
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_IPv6EXT_ROUTING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">43</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// Routing header.
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_IPv6EXT_FRAGMENT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">44</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Fragmentation/reassembly header.
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_IPv6EXT_AUTH</span><span style="color: #000000; "> = </span><span style="color: #008000; ">51</span><span style="color: #000000; ">;     </span><span style="color: #808080; font-style: italic; ">// Authentication header.
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IP_PROT_IPv6EXT_ESP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">50</span><span style="color: #000000; ">;      </span><span style="color: #808080; font-style: italic; ">// Encapsulating security payload.
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

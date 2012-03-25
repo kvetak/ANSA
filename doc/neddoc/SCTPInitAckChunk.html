@@ -1,0 +1,170 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Message <i>SCTPInitAckChunk</i></h2>
+<b>File: <a href="src-transport-sctp-SCTPMessage.msg.html">src/transport/sctp/SCTPMessage.msg</a></b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPInitAckChunk-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="SCTPInitAckChunk.html" title="Message SCTPInitAckChunk" alt="" coords="5,6,141,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPInitAckChunk-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="SCTPInitAckChunk.html" title="Message SCTPInitAckChunk" alt="" coords="5,83,141,111">
+<area shape="rect" id="node2" href="SCTPChunk.html" title="Message SCTPChunk" alt="" coords="25,6,121,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="SCTPChunk.html">SCTPChunk</a>
+   </td>
+   <td>
+<i>message</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>initTag</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td>
+<p>Initiate Tag</p>
+</td>
+</tr>
+<tr class="local">
+   <td>a_rwnd</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td>
+<p>Advertised Receiver Window</p>
+</td>
+</tr>
+<tr class="local">
+   <td>noOutStreams</td>
+   <td>
+      <i>
+uint16</i>
+   </td>
+   <td>
+<p>Number of Outbound Streams</p>
+</td>
+</tr>
+<tr class="local">
+   <td>noInStreams</td>
+   <td>
+      <i>
+uint16</i>
+   </td>
+   <td>
+<p>Number of Inbound Streams</p>
+</td>
+</tr>
+<tr class="local">
+   <td>initTSN</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td>
+<p>Initial TSN</p>
+</td>
+</tr>
+<tr class="local">
+   <td>forwardTsn</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>addresses</td>
+   <td>
+      <i>
+IPvXAddress[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>cookie</td>
+   <td>
+      <i>
+char[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>unrecognizedParameters</td>
+   <td>
+      <i>
+uint8[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>stateCookie</td>
+   <td>
+      <i>
+cPacketPtr</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>chunkType</td>
+   <td>
+      <i>
+uint8</i>
+   </td>
+   <td>
+<p>Chunk Type</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">message</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPInitAckChunk</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPChunk</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">// Initiate Tag
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">initTag</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">// Advertised Receiver Window
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">a_rwnd</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">// Number of Outbound Streams
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint16</span><span style="color: #000000; "> </span><span style="color: #000000; ">noOutStreams</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">// Number of Inbound Streams
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint16</span><span style="color: #000000; "> </span><span style="color: #000000; ">noInStreams</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">// Initial TSN
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">initTSN</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">forwardTsn</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">addresses</span><span style="color: #000000; ">[];
+    </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">cookie</span><span style="color: #000000; ">[];
+    </span><span style="color: #000000; ">uint8</span><span style="color: #000000; "> </span><span style="color: #000000; ">unrecognizedParameters</span><span style="color: #000000; ">[];
+    </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; "> </span><span style="color: #000000; ">stateCookie</span><span style="color: #000000; ">;
+}
+
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,106 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/linklayer/mf80211/NicCsma.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.NicCsma.html">NicCsma</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>The CsmaNic contains a csma-like MAC layer.
+The <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> module is used as the mac needs a RadioState to be published.
+However as still the <a href="inet.linklayer.mfcore.BasicDecider.html">BasicDecider</a> is used all messages will be delivered to
+the MAC and no packets get lost</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//***************************************************************************
+// * file:        NicCsma.ned
+// *
+// * author:      Marc Loebbers
+// *
+// * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
+// *              Technische Universitaet Berlin, Germany.
+// *
+// *              This program is free software; you can redistribute it
+// *              and/or modify it under the terms of the GNU General Public
+// *              License as published by the Free Software Foundation; either
+// *              version 2 of the License, or (at your option) any later
+// *              version.
+// *              For further information see file COPYING
+// *              in the top level directory
+// ***************************************************************************
+// * part of:     framework implementation developed by tkn
+// **************************************************************************/
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mf80211</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mf80211</span><span style="color: #000000; ">.</span><span style="color: #000000; ">macLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">CSMAMacLayer</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mf80211</span><span style="color: #000000; ">.</span><span style="color: #000000; ">phyLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">SnrEval</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mfcore</span><span style="color: #000000; ">.</span><span style="color: #000000; ">BasicDecider</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// The CsmaNic contains a csma-like MAC layer.
+// The SnrEval module is used as the mac needs a RadioState to be published.
+// However as still the BasicDecider is used all messages will be delivered to
+// the MAC and no packets get lost
+//
+// This nic is intended to be used in order to test the implementation
+// of the csma protocol.
+//
+// IMPORTANT:</span><span style="color: #800000; ">&lt;br&gt;</span><span style="color: #808080; font-style: italic; "> In order to work with the ChannelControl module the snrEval
+// module has to be called &quot;snrEval&quot; in the ned file.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> BasicMacLayer, BasicDecider, BasicSnrEval
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc Loebbers
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">NicCsma</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to upper layers
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from upper layers
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to receive AirFrames
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">: </span><span style="color: #000000; ">CSMAMacLayer</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=96,87&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">: </span><span style="color: #000000; ">BasicDecider</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=106,157&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">: </span><span style="color: #000000; ">SnrEval</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=96,236&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">radioIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,50,50,75,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,25,0,25,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,73,0,50,50&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">;
+
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

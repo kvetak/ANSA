@@ -1,0 +1,75 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/util/NAMTraceWriter.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.util.NAMTraceWriter.html">NAMTraceWriter</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>When placed inside a host or router, it writes a NAM trace, based on
+notifications it receives via the <a href="inet.base.NotificationBoard.html">NotificationBoard</a>. It expects to find
+a <a href="inet.world.NAMTrace.html">NAMTrace</a> module named "nam" at network level. If the "nam" module
+is missing, this module does not do anything and has no runtime
+overhead.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">util</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// When placed inside a host or router, it writes a NAM trace, based on
+// notifications it receives via the NotificationBoard. It expects to find
+// a NAMTrace module named &quot;nam&quot; at network level. If the &quot;nam&quot; module
+// is missing, this module does not do anything and has no runtime
+// overhead.
+//
+// This module has no gates and does not process messages.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> NAMTrace, NotificationBoard
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">NAMTraceWriter</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">namid</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// -1 means auto
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/sink&quot;</span><span style="color: #000000; ">);
+}
+
+
+</span></pre>
+   </body>
+</html>

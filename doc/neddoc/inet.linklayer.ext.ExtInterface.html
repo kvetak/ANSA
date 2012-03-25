@@ -1,0 +1,181 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>ExtInterface</i></h2>
+<b>Package:</b> inet.linklayer.ext<br/><b>File: <a href="src-linklayer-ext-ExtInterface.ned.html">src/linklayer/ext/ExtInterface.ned</a></b><br/><p><a href="../doxy/class_ext_interface.html" target="mainframe"><b>C++ definition</b></a></p>
+<p>(no description)</p><img src="inet.linklayer.ext.ExtInterface-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ext.ExtInterface.html" title="ExtInterface" alt="ExtInterface" coords="0,31,120,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ext.ExtInterface-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ext.ExtInterface.html" title="Simple Module ExtInterface" alt="" coords="453,83,547,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.ExtRouter.html" title="Compound Module ExtRouter" alt="" coords="5,6,85,34">
+<area shape="rect" id="node4" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="109,6,211,34">
+<area shape="rect" id="node6" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="235,6,499,34">
+<area shape="rect" id="node8" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="523,6,744,34">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="768,6,1005,34">
+<area shape="rect" id="node12" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="1029,6,1251,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ext.ExtInterface-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ext.ExtInterface.html" title="Simple Module ExtInterface" alt="" coords="5,6,99,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.ExtRouter.html">ExtRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>External router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHost.html">StandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html">StandardHostWithDLDuplicatesGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html">PPPInterfaceWithDLDuplicatesGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLThruputMeter.html">StandardHostWithDLThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html">PPPInterfaceWithDLThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULDropsGenerator.html">StandardHostWithULDropsGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html">PPPInterfaceWithULDropsGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULThruputMeter.html">StandardHostWithULThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html">PPPInterfaceWithULThruputMeter</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>filterString</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>device</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>netwIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>netwOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">ExtInterface</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">filterString</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">device</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">mtu</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1500</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">netwIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">netwOut</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,83 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>RSVPMessage</i></h2>
+<b>File: <a href="src-networklayer-rsvp_te-RSVPPacket.msg.html">src/networklayer/rsvp_te/RSVPPacket.msg</a></b><br/>
+<p>RSVP message common part</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="RSVPMessage-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="RSVPMessage.html" title="Packet RSVPMessage" alt="" coords="5,6,117,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="RSVPMessage-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="RSVPMessage.html" title="Packet RSVPMessage" alt="" coords="72,6,184,34">
+<area shape="rect" id="node2" href="RSVPHelloMsg.html" title="Packet RSVPHelloMsg" alt="" coords="5,83,120,111">
+<area shape="rect" id="node4" href="RSVPPacket.html" title="Packet RSVPPacket" alt="" coords="144,83,243,111">
+</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="RSVPHelloMsg.html">RSVPHelloMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="RSVPPacket.html">RSVPPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>rsvpKind</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \RSVP message common part
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">rsvpKind</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,65 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/transport/rtp/RTPLayer.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.transport.rtp.RTPLayer.html">RTPLayer</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">transport</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPLayer</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/layer;bgb=178,105&quot;</span><span style="color: #000000; ">);
+
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">appIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">RTPInterfacePacket</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">fromUDPtoRTP</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">fromUDPtoRTCP</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">appOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">RTPInterfacePacket</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">toUDPfromRTP</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">toUDPfromRTCP</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTP</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=63,64&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">rtcp</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTCP</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=135,64&quot;</span><span style="color: #000000; ">);
+        }
+
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">appIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">appOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtcpOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">rtcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtpIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtcpIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">rtcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtpOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">toUDPfromRTP</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">fromUDPtoRTP</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">rtcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">toUDPfromRTCP</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">rtcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">fromUDPtoRTCP</span><span style="color: #000000; ">;
+
+}
+
+
+</span></pre>
+   </body>
+</html>

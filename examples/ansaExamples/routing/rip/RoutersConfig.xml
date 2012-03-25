@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="130.10.63.1"> <!-- R1 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>130.10.8.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.62.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth2">
+        <IPAddress>130.10.63.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+  <Router id="130.10.64.2"> <!-- R2 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>130.10.17.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.62.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth2">
+        <IPAddress>130.10.64.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+  <Router id="130.10.64.3"> <!-- R3 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>130.10.24.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.63.3</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth2">
+        <IPAddress>130.10.64.3</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.8.1"> <!-- R1A -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.8.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.8.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+    	<Rip>
+    		<Network>130.10.0.0</Network>
+        	<Network>192.168.8.0</Network>
+        	<Passive-interface>eth0</Passive-interface>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+   <Router id="192.168.17.1"> <!-- R2B -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.17.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.17.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+    	<Rip>
+    		<Network>130.10.0.0</Network>
+        	<Network>192.168.17.0</Network>
+        	<Passive-interface>eth0</Passive-interface>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+   <Router id="192.168.24.1"> <!-- R3C -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.24.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.24.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+        	<Network>192.168.24.0</Network>
+        	<Passive-interface>eth0</Passive-interface>
+    	</Rip>
+    </Routing>
+  </Router>
+
+</Routers>

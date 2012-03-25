@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<scenario>
+	<at t="1">
+		<interfacedown module="DUT.interfaceStateManager" int="ppp0"/>
+	</at>
+	<at t="3800">
+		<interfaceup module="DUT.interfaceStateManager" int="ppp0"/>
+	</at>
+</scenario>

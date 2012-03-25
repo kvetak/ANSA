@@ -1,0 +1,80 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/arp/ARP.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.arp.ARP.html">ARP</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Implements the Address Resolution Protocol for IPv4 and IEEE 802 6-byte
+MAC addresses.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2004 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">arp</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Implements the Address Resolution Protocol for IPv4 and IEEE 802 6-byte
+// MAC addresses.
+//
+// Expects IPRoutingDecision control info objects to be attached to packets
+// coming from higher layers. \ARP packets are represented by the ARPPacket
+// class. Datagrams to be sent and incoming \ARP packets are expected to
+// on gate ipIn.
+//
+// \ARP resolution is used over </span><span style="color: #800000; ">&lt;i&gt;</span><span style="color: #808080; font-style: italic; ">broadcast</span><span style="color: #800000; ">&lt;/i&gt;</span><span style="color: #808080; font-style: italic; "> interfaces only,
+// that is, over interfaces that have the </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">isBroadcast()</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> flag set in
+// </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">InterfaceEntry</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> (see InterfaceTable). Since routing files
+// (</span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">.irt</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> or </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">.mrt</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> files, given as parameter to RoutingTable)
+// may modify the default interface configuration, you must take care that
+// these files don't contain the word </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">BROADCAST</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> e.g. for PPP
+// interfaces.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">ARP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">retryTimeout</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// number seconds ARP waits between retries to resolve an \IP address
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">retryCount</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">3</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// number of times ARP will attempt to resolve an \IP address
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">cacheTimeout</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">120</span><span style="color: #000000; ">s</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// number seconds unused entries in the cache will time out
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">proxyARP</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);        </span><span style="color: #808080; font-style: italic; ">// sets proxy \ARP mode (replying to \ARP requests for the addresses for which a routing table entry exists)
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/layer&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ARPPacket</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPDatagram</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">nicOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ARPPacket</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

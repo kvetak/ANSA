@@ -1,0 +1,60 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.util</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.util.NAMTraceWriter.html">NAMTraceWriter</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>When placed inside a host or router, it writes a NAM trace, based on
+notifications it receives via the <a href="inet.base.NotificationBoard.html">NotificationBoard</a>. It expects to find
+a <a href="inet.world.NAMTrace.html">NAMTrace</a> module named "nam" at network level. If the "nam" module
+is missing, this module does not do anything and has no runtime
+overhead.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.util.NetAnimTrace.html">NetAnimTrace</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Records a NetAnim trace, using network-level modules and their connections.
+See http://www.nsnam.org/wiki/index.php/NetAnim</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.util.TCPDump.html">TCPDump</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Provides tcpdump-like functionality</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

@@ -1,0 +1,10 @@
+::: ansaOspfInterfaceState6
+[ ] pár øádkù závislých na LSA
+ 
+::: ansaOspfInterface.cc
+[ ] podívat se na to, že seznam advertise prefixù je jak v area, tak i na interface
+	teoreticky by to nemìlo být takhle redundantní
+	ta dvojice prefix listù (advertiseAddressPrefixes a interfaceAddressPrefixes)
+	je celkovì zvláštní a je tøeba to zkontrolovat
+
+ 

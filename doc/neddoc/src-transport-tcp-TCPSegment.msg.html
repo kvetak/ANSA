@@ -1,0 +1,275 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/transport/tcp/TCPSegment.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="TCPPayloadMessage.html">TCPPayloadMessage</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="TCPOptionNumbers.html">TCPOptionNumbers</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.transport.tcp.TCP.html">TCP</a> Option Numbers
+Reference: http://www.iana.org/assignments/tcp-parameters/
+Date: 2010-07-04</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Sack.html">Sack</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>This structure represents a single SACK (selective acknowledgment):</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="TCPOption.html">TCPOption</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Header Options (optional):</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="TCPSegment.html">TCPSegment</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Represents a TCP segment, to be used with the <a href="inet.transport.tcp.TCP.html">TCP</a> module.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2004 Andras Varga
+// Copyright (C) 2009-2010 Thomas Reschka
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> &lt;</span><span style="color: #000000; ">iostream</span><span style="color: #000000; ">&gt;
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+
+    </span><span style="color: #808080; font-style: italic; ">// default TCP header length: 20 bytes
+</span><span style="color: #000000; ">    #</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCP_HEADER_OCTETS</span><span style="color: #000000; ">  </span><span style="color: #008000; ">20</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// without options
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">// maximum TCP header length (base+options): 60 = 4 * 15 bytes
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">const</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCP_MAX_HEADER_OCTETS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">60</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// maximum allowed sack entry number, if no other options are used
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">const</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">MAX_SACK_ENTRIES</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000000; ">cPacket</span><span style="color: #000000; "> *</span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000000; ">inline</span><span style="color: #000000; "> </span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">ostream</span><span style="color: #000000; ">&amp; </span><span style="color: #000000; ">operator</span><span style="color: #000000; ">&lt;&lt;(</span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">ostream</span><span style="color: #000000; ">&amp; </span><span style="color: #000000; ">os</span><span style="color: #000000; ">, </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; "> </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">)
+    {
+        </span><span style="color: #000000; ">return</span><span style="color: #000000; "> </span><span style="color: #000000; ">os</span><span style="color: #000000; "> &lt;&lt; </span><span style="color: #008000; ">&quot;(&quot;</span><span style="color: #000000; "> &lt;&lt; </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">-&gt;</span><span style="color: #000000; ">getClassName</span><span style="color: #000000; ">() &lt;&lt; </span><span style="color: #008000; ">&quot;) &quot;</span><span style="color: #000000; "> &lt;&lt; </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">-&gt;</span><span style="color: #000000; ">getName</span><span style="color: #000000; ">() &lt;&lt; </span><span style="color: #008000; ">&quot;: &quot;</span><span style="color: #000000; "> &lt;&lt; </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">-&gt;</span><span style="color: #000000; ">info</span><span style="color: #000000; ">();
+    }
+
+    </span><span style="color: #000000; ">inline</span><span style="color: #000000; "> </span><span style="color: #000000; ">void</span><span style="color: #000000; "> </span><span style="color: #000000; ">doPacking</span><span style="color: #000000; ">(</span><span style="color: #000000; ">cCommBuffer</span><span style="color: #000000; "> *</span><span style="color: #000000; ">b</span><span style="color: #000000; ">, </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; ">&amp; </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">) {</span><span style="color: #000000; ">msg</span><span style="color: #000000; ">-&gt;</span><span style="color: #000000; ">parsimPack</span><span style="color: #000000; ">(</span><span style="color: #000000; ">b</span><span style="color: #000000; ">);}
+    </span><span style="color: #000000; ">inline</span><span style="color: #000000; "> </span><span style="color: #000000; ">void</span><span style="color: #000000; "> </span><span style="color: #000000; ">doUnpacking</span><span style="color: #000000; ">(</span><span style="color: #000000; ">cCommBuffer</span><span style="color: #000000; "> *</span><span style="color: #000000; ">b</span><span style="color: #000000; ">, </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; ">&amp; </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">) {</span><span style="color: #000000; ">msg</span><span style="color: #000000; ">-&gt;</span><span style="color: #000000; ">parsimUnpack</span><span style="color: #000000; ">(</span><span style="color: #000000; ">b</span><span style="color: #000000; ">);}
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPPayloadMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">endSequenceNo</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; "> </span><span style="color: #000000; ">msg</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// TCP Option Numbers
+// Reference: http://www.iana.org/assignments/tcp-parameters/
+// Date: 2010-07-04
+//
+// Note: Options not yet implemented should stay commented out
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPOptionNumbers</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">TCPOPTION_END_OF_OPTION_LIST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;                   </span><span style="color: #808080; font-style: italic; ">// RFC 793, LENGTH: 1 Byte
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOPTION_NO_OPERATION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;                         </span><span style="color: #808080; font-style: italic; ">// RFC 793, LENGTH: 1 Byte
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOPTION_MAXIMUM_SEGMENT_SIZE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;                 </span><span style="color: #808080; font-style: italic; ">// RFC 793, LENGTH: 4 Bytes
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOPTION_WINDOW_SCALE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;                         </span><span style="color: #808080; font-style: italic; ">// RFC 1323, LENGTH: 3 Bytes
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOPTION_SACK_PERMITTED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;                       </span><span style="color: #808080; font-style: italic; ">// RFC 2018, LENGTH: 2 Bytes
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOPTION_SACK</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;                                 </span><span style="color: #808080; font-style: italic; ">// RFC 2018, LENGTH: N (max. N = 4) 8 * n + 2 Bytes  =&gt; 32 + 2 + 2 * NOP = 36 Bytes; If TIMESTAMP option is used with SACK: max. n = 3 =&gt; 12 Bytes (for Timestamp) + 28 Bytes (for SACK) = 40 Bytes
+//    TCPOPTION_ECHO = 6;                              // (obsoleted by option 8) RFC 1072, LENGTH: 6 Bytes
+//    TCPOPTION_ECHO_REPLY = 7;                        // (obsoleted by option 8) RFC 1072, LENGTH: 6 Bytes
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOPTION_TIMESTAMP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8</span><span style="color: #000000; ">;                            </span><span style="color: #808080; font-style: italic; ">// RFC 1323, LENGTH: 10 Bytes
+//  TCPOPTION_PARTIAL_ORDER_CONNECTION_PERMITTED = 9;   // RFC 1693, LENGTH: 2 Bytes
+//  TCPOPTION_PARTIAL_ORDER_SERVICE_PROFILE = 10;       // RFC 1693, LENGTH: 3 Bytes
+//  TCPOPTION_CC = 11;                                  // RFC 1644, LENGTH: -
+//  TCPOPTION_CC_NEW = 12;                              // RFC 1644, LENGTH: -
+//  TCPOPTION_CC_ECHO = 13;                             // RFC 1644, LENGTH: -
+//  TCPOPTION_TCP_ALTERNATE_CHECKSUM_REQUEST = 14;      // RFC 1146, LENGTH: 3 Bytes
+//  TCPOPTION_TCP_ALTERNATE_CHECKSUM_DATA = 15;         // RFC 1146, LENGTH: N
+//  TCPOPTION_SKEETER = 16;                             // [Knowles], LENGTH: -
+//  TCPOPTION_BUBBA = 17;                               // [Knowles], LENGTH: -
+//  TCPOPTION_TRAILER_CHECKSUM_OPTION = 18;             // [Subbu &amp; Monroe], LENGTH: 3Bytes
+//     TCPOPTION_MD5_SIGNATURE_OPTION = 19;             // (obsoleted by option 29) RFC 2385, LENGTH: 18 Bytes
+//  TCPOPTION_SCPS_CAPABILITIES = 20;                   // [Scott], LENGTH: -
+//  TCPOPTION_SELECTIVE_NEGATIVE_ACKNOWLEDGEMENTS = 21; // [Scott], LENGTH: -
+//  TCPOPTION_RECORD_BOUNDARIES = 22;                   // [Scott], LENGTH: -
+//  TCPOPTION_CORRUPTION_EXPERIENCED = 23;              // [Scott], LENGTH: -
+//  TCPOPTION_SANP = 24;                                // [Sukonnik], LENGTH: -
+//  TCPOPTION_UNASSIGNED = 25;                          // released 2000-12-18 [-], LENGTH: -
+//  TCPOPTION_TCP_COMPESSION_FILTER = 26;               // [Bellovin], LENGTH: -
+//  TCPOPTION_QUICK_START_RESPONSE = 27;                // RFC 4782, LENGTH: 8 Bytes
+//  TCPOPTION_USER_TIMEOUT_OPTION = 28;                 // RFC 5482, LENGTH: 4 Bytes
+//  TCPOPTION_AUTHENTICATION_OPTION = 29;               // RFC 5925, LENGTH: -
+//    TCPOPTION kinds 30-252 Unassigned
+//  TCPOPTION_RFC3692_STYLE_EXPERIMENT_1 = 253;         // RFC 4727, LENGTH: N
+//  TCPOPTION_RFC3692_STYLE_EXPERIMENT_2 = 254;         // RFC 4727, LENGTH: N
+</span><span style="color: #000000; ">};
+
+</span><span style="color: #808080; font-style: italic; ">//
+// This structure represents a single SACK (selective acknowledgment):
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Sack</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">start</span><span style="color: #000000; ">;     </span><span style="color: #808080; font-style: italic; ">// start seq no. of sack block
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">end</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// end seq no. of sack block
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">// Header Options (optional):
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">kind</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPOptionNumbers</span><span style="color: #000000; ">) = </span><span style="color: #000000; ">TCPOPTION_END_OF_OPTION_LIST</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// option kind
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">length</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;                          </span><span style="color: #808080; font-style: italic; ">// option length
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">values</span><span style="color: #000000; ">[];                              </span><span style="color: #808080; font-style: italic; ">// option value(s)
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Represents a \TCP segment, to be used with the TCP module.
+//
+// \TCP header fields not explicitly modelled: work on going
+// - Data Offset (number of 32 bit words in the header): represented
+//   by cMessage::length().
+// - Reserved (reserved for future use)
+// - Checksum (header checksum): modelled by cMessage::hasBitError()
+// - Header Options: Currently only EOL, NOP, MSS, WS, SACK_PERMITTED, SACK and TS are implemented
+// - Padding
+//
+// cMessage::getKind() may be set to an arbitrary value: TCP entities will
+// ignore it and use only the header fields (synBit, ackBit, rstBit).
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #808080; font-style: italic; ">// Source Port
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcPort</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Destination Port
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">destPort</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Sequence Number: first sequence number of the first data octet
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// in the respective segment (except if SYN is set; then the the
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// seq. number is the initial seq. number (ISS) and the first data
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// octet is ISS+1)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sequenceNo</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Acknowledgement Number: if ACK flag is set, this field contains
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// the next sequence number the sender of this segment is expecting
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// to receive
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ackNo</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// TCP Header Length - default: 20 bytes
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// if header options are used the headerLength is greater then 20 bytes (default)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> = </span><span style="color: #000000; ">TCP_HEADER_OCTETS</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// TCP_HEADER_OCTETS = 20
+</span><span style="color: #000000; ">
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">urgBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// URG: urgent pointer field significant if set
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">ackBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// ACK: ackNo significant if set
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">pshBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// PSH: push function
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">rstBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// RST: reset the connection
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">synBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// SYN: synchronize seq. numbers
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">finBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// FIN: finish - no more data from sender
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">// Window Size: the number of data octets beginning with the one indicated
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// in the acknowledgement field which the sender of this segment is
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// willing to accept
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">window</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Urgent Pointer: communicates the current value of the urgent pointer
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// as a positive offset from the sequence number in this segment. The
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// urgent pointer points to the sequence number of the octet following
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// the urgent data. This field is only be interpreted in segments with
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// the URG control bit set.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">urgentPointer</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Header options (optional)
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// Currently only EOL, NOP, MSS, WS, SACK_PERMITTED, SACK and TS are implemented
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">options</span><span style="color: #000000; ">[];
+
+    </span><span style="color: #808080; font-style: italic; ">// Payload length in octets (not an actual \TCP header field).
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// This may not always be the same as encapsulatedPacket()-&gt;getByteLength();
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// e.g. when simulating a virtual data stream there's no encapsulated
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// packet at all.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">payloadLength</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Message objects (cMessages) that travel in this segment as data.
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// (This field is used only with TCPMsgBasedSendQueue/RcvQueue and
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// not with TCPVirtualBytesSendQueue/RcvQueue.)  Every message object
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// is put into the TCPSegment that would (in real life) carry its
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// last octet. That is, if message object 'msg' with length=100 bytes
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// occupies sequence number range 10000..10099, it will travel in the
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// TCPSegment which carries the octet 10099. This way it is easily achieved
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// that the receiving TCP passes up the message object to its client
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// when the last byte of the message has arrived.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">abstract</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPPayloadMessage</span><span style="color: #000000; "> </span><span style="color: #000000; ">payload</span><span style="color: #000000; ">[];
+}
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,170 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>EthernetInterface2</i></h2>
+<b>Package:</b> inet.linklayer.ethernet<br/><b>File: <a href="src-linklayer-ethernet-EthernetInterface2.ned.html">src/linklayer/ethernet/EthernetInterface2.ned</a></b><br/>
+<p>Ethernet network interface which supports full-duplex operation only.
+Complements <a href="inet.linklayer.ethernet.EtherMAC2.html">EtherMAC2</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a> with an output queue for QoS and
+RED support.</p>
+<p><b>See also:</b> <a href="inet.linklayer.ethernet.EthernetInterface.html">EthernetInterface</a>, <a href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html">EthernetInterfaceNoQueue</a></p>
+<img src="inet.linklayer.ethernet.EthernetInterface2-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.queue.OutputQueue.html" title="OutputQueue" alt="OutputQueue" coords="74,91,125,152">
+<area shape="rect" href="inet.linklayer.ethernet.EtherMAC2.html" title="EtherMAC2" alt="EtherMAC2" coords="98,251,142,312">
+<area shape="rect" href="inet.linklayer.ethernet.EtherEncap.html" title="EtherEncap" alt="EtherEncap" coords="98,171,142,232">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EthernetInterface2-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EthernetInterface2.html" title="Compound Module EthernetInterface2" alt="" coords="160,6,288,34">
+<area shape="rect" id="node2" href="inet.linklayer.ethernet.EtherEncap.html" title="Simple Module EtherEncap" alt="" coords="5,83,96,111">
+<area shape="rect" id="node4" href="inet.linklayer.ethernet.EtherMAC2.html" title="Simple Module EtherMAC2" alt="" coords="120,83,211,111">
+<area shape="rect" id="node6" href="inet.networklayer.queue.OutputQueue.html" title="Module Interface OutputQueue" alt="" coords="235,83,333,111">
+<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="357,83,456,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EthernetInterface2-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EthernetInterface2.html" title="Compound Module EthernetInterface2" alt="" coords="5,83,133,111">
+<area shape="rect" id="node2" href="inet.linklayer.INetworkInterface.html" title="Module Interface INetworkInterface" alt="" coords="7,6,132,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>queueType</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"DropTailQueue"</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/ifcard</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>netwIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>netwOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>phys</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC2.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC2.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ethernet.EtherMAC2.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Ethernet network interface which supports full-duplex operation only.
+// Complements EtherMAC2 and EtherEncap with an output queue for QoS and
+// RED support.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> EthernetInterface, EthernetInterfaceNoQueue
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">EthernetInterface2</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">INetworkInterface</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueType</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;DropTailQueue&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/ifcard&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">netwIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">netwOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">queue</span><span style="color: #000000; ">: &lt;</span><span style="color: #000000; ">queueType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">OutputQueue</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=92,71;q=l2queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherMAC2</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">queueModule</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;queue&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">txQueueLimit</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// queue sends one packet at a time
+</span><span style="color: #000000; ">                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=116,231&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">encap</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherEncap</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=116,151&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">netwIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">queue</span><span style="color: #000000; ">.</span><span style="color: #000000; ">in</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">queue</span><span style="color: #000000; ">.</span><span style="color: #000000; ">out</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">encap</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">netwOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=n&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">encap</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">encap</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">encap</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">phys</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">phys</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

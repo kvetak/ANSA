@@ -1,0 +1,86 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>IPTrafSink</i></h2>
+<b>Package:</b> inet.applications.generic<br/><b>File: <a href="src-applications-generic-IPTrafGen.ned.html">src/applications/generic/IPTrafGen.ned</a></b><br/><p><a href="../doxy/class_i_p_traf_sink.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Consumes and prints packets received from the <a href="inet.networklayer.ipv4.IP.html">IP</a> module.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+<img src="inet.applications.generic.IPTrafSink-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.generic.IPTrafSink.html" title="IPTrafSink" alt="IPTrafSink" coords="0,31,104,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.generic.IPTrafSink-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.generic.IPTrafSink.html" title="Simple Module IPTrafSink" alt="" coords="5,6,88,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.generic.IPTrafSink-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.generic.IPTrafSink.html" title="Simple Module IPTrafSink" alt="" coords="28,83,111,111">
+<area shape="rect" id="node2" href="inet.applications.generic.IPTrafficGenerator.html" title="Module Interface IPTrafficGenerator" alt="" coords="5,6,133,34">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/sink</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>ipIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipv6In</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipv6Out</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Consumes and prints packets received from the IP module.
+// Compatible with both IPv4 and IPv6.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPTrafSink</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPTrafficGenerator</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/sink&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,179 @@
+file 13429 1331056168                                           
+version 2
+run General-0-20120306-18:48:55-4640
+attr configname General
+attr datetime 20120306-18:48:55
+attr experiment General
+attr inifile /home/student/omnetpp-4.1/samples/ANSAINET/examples/ansaExamples/IPv6StaticRouting/omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network IPv6StaticRouting
+attr processid 4640
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+vector 60  IPv6StaticRouting.R1.eth[0].mac  framesSent  ETV
+60	7586 71 63 380 0.001006719999 1.784228996624 3 1 3 6 14
+vector 62  IPv6StaticRouting.R1.eth[0].mac  bytesSent  ETV
+62	7728 76 63 380 0.001006719999 1.784228996624 3 64 192 384 57344
+vector 107  IPv6StaticRouting.R2.eth[0].mac  framesReceivedOK  ETV
+107	8984 74 64 381 0.001006719999 1.784228996624 3 1 3 6 14
+vector 109  IPv6StaticRouting.R2.eth[0].mac  bytesReceivedOK  ETV
+109	9137 79 64 381 0.001006719999 1.784228996624 3 64 192 384 57344
+vector 113  IPv6StaticRouting.R2.eth[0].mac  framesPassedToHL  ETV
+113	9216 74 64 381 0.001006719999 1.784228996624 3 1 3 6 14
+vector 106  IPv6StaticRouting.R2.eth[0].mac  framesSent  ETV
+106	8910 74 70 432 0.001006719999 1.980491326463 3 1 3 6 14
+vector 108  IPv6StaticRouting.R2.eth[0].mac  bytesSent  ETV
+108	9058 79 70 432 0.001006719999 1.980491326463 3 64 192 384 57344
+vector 61  IPv6StaticRouting.R1.eth[0].mac  framesReceivedOK  ETV
+61	7657 71 71 433 0.001006719999 1.980491326463 3 1 3 6 14
+vector 63  IPv6StaticRouting.R1.eth[0].mac  bytesReceivedOK  ETV
+63	7804 76 71 433 0.001006719999 1.980491326463 3 64 192 384 57344
+vector 67  IPv6StaticRouting.R1.eth[0].mac  framesPassedToHL  ETV
+67	7880 71 71 433 0.001006719999 1.980491326463 3 1 3 6 14
+vector 152  IPv6StaticRouting.R3.eth[0].mac  framesSent  ETV
+152	9799 74 77 366 0.001006719999 1.723400712869 3 1 3 6 14
+vector 154  IPv6StaticRouting.R3.eth[0].mac  bytesSent  ETV
+154	9923 79 77 366 0.001006719999 1.723400712869 3 64 192 384 57344
+vector 75  IPv6StaticRouting.R1.eth[1].mac  framesReceivedOK  ETV
+75	7999 71 78 367 0.001006719999 1.723400712869 3 1 3 6 14
+vector 77  IPv6StaticRouting.R1.eth[1].mac  bytesReceivedOK  ETV
+77	8121 76 78 367 0.001006719999 1.723400712869 3 64 192 384 57344
+vector 81  IPv6StaticRouting.R1.eth[1].mac  framesPassedToHL  ETV
+81	8197 71 78 367 0.001006719999 1.723400712869 3 1 3 6 14
+vector 74  IPv6StaticRouting.R1.eth[1].mac  framesSent  ETV
+74	7951 48 111 347 0.006072239735 1.146423017158 2 1 2 3 5
+vector 76  IPv6StaticRouting.R1.eth[1].mac  bytesSent  ETV
+76	8070 51 111 347 0.006072239735 1.146423017158 2 64 128 192 20480
+vector 153  IPv6StaticRouting.R3.eth[0].mac  framesReceivedOK  ETV
+153	9873 50 112 348 0.006072239735 1.146423017158 2 1 2 3 5
+vector 155  IPv6StaticRouting.R3.eth[0].mac  bytesReceivedOK  ETV
+155	10002 53 112 348 0.006072239735 1.146423017158 2 64 128 192 20480
+vector 159  IPv6StaticRouting.R3.eth[0].mac  framesPassedToHL  ETV
+159	10055 50 112 348 0.006072239735 1.146423017158 2 1 2 3 5
+vector 88  IPv6StaticRouting.R1.eth[2].mac  framesSent  ETV
+88	8268 96 116 639 0.006072239735 2.315229190472 4 1 4 10 30
+vector 90  IPv6StaticRouting.R1.eth[2].mac  bytesSent  ETV
+90	8508 103 116 639 0.006072239735 2.315229190472 4 64 256 640 122880
+vector 198  IPv6StaticRouting.SW1.mac[0]  framesReceivedOK  ETV
+198	11275 100 117 640 0.006072239735 2.315229190472 4 1 4 10 30
+vector 200  IPv6StaticRouting.SW1.mac[0]  bytesReceivedOK  ETV
+200	11536 107 117 640 0.006072239735 2.315229190472 4 64 256 640 122880
+vector 204  IPv6StaticRouting.SW1.mac[0]  framesPassedToHL  ETV
+204	11643 100 117 640 0.006072239735 2.315229190472 4 1 4 10 30
+vector 196  IPv6StaticRouting.SW1.relayUnit  "buffer level"  ETV
+196	10615 510 118 642 0.006072239735 2.315229190472 20 0 64 640 40960
+vector 209  IPv6StaticRouting.SW1.mac[1]  framesSent  ETV
+209	11743 197 129 652 0.006078959734 2.315235910471 8 1 8 36 204
+vector 211  IPv6StaticRouting.SW1.mac[1]  bytesSent  ETV
+211	11990 212 129 652 0.006078959734 2.315235910471 8 64 512 2304 835584
+vector 7  IPv6StaticRouting.H1.eth[0].mac  framesReceivedOK  ETV
+7	5609 181 130 653 0.006078959734 2.315235910471 8 1 8 36 204
+vector 9  IPv6StaticRouting.H1.eth[0].mac  bytesReceivedOK  ETV
+9	5839 196 130 653 0.006078959734 2.315235910471 8 64 512 2304 835584
+vector 13  IPv6StaticRouting.H1.eth[0].mac  framesPassedToHL  ETV
+13	6035 189 130 653 0.006078959734 2.315235910471 8 1 8 36 204
+vector 221  IPv6StaticRouting.SW1.mac[2]  framesSent  ETV
+221	12305 197 134 658 0.006078959734 2.315235910471 8 1 8 36 204
+vector 223  IPv6StaticRouting.SW1.mac[2]  bytesSent  ETV
+223	12552 212 134 658 0.006078959734 2.315235910471 8 64 512 2304 835584
+vector 25  IPv6StaticRouting.H2.eth[0].mac  framesReceivedOK  ETV
+25	6272 189 135 659 0.006078959734 2.315235910471 8 1 8 36 204
+vector 27  IPv6StaticRouting.H2.eth[0].mac  bytesReceivedOK  ETV
+27	6512 204 135 659 0.006078959734 2.315235910471 8 64 512 2304 835584
+vector 31  IPv6StaticRouting.H2.eth[0].mac  framesPassedToHL  ETV
+31	6716 189 135 659 0.006078959734 2.315235910471 8 1 8 36 204
+vector 233  IPv6StaticRouting.SW1.mac[3]  framesSent  ETV
+233	12867 197 139 664 0.006078959734 2.315235910471 8 1 8 36 204
+vector 235  IPv6StaticRouting.SW1.mac[3]  bytesSent  ETV
+235	13114 212 139 664 0.006078959734 2.315235910471 8 64 512 2304 835584
+vector 43  IPv6StaticRouting.H3.eth[0].mac  framesReceivedOK  ETV
+43	6953 189 140 665 0.006078959734 2.315235910471 8 1 8 36 204
+vector 45  IPv6StaticRouting.H3.eth[0].mac  bytesReceivedOK  ETV
+45	7193 204 140 665 0.006078959734 2.315235910471 8 64 512 2304 835584
+vector 49  IPv6StaticRouting.H3.eth[0].mac  framesPassedToHL  ETV
+49	7397 189 140 665 0.006078959734 2.315235910471 8 1 8 36 204
+vector 120  IPv6StaticRouting.R2.eth[1].mac  framesSent  ETV
+120	9290 50 171 446 0.110479181207 1.980566432274 2 1 2 3 5
+vector 122  IPv6StaticRouting.R2.eth[1].mac  bytesSent  ETV
+122	9390 53 171 446 0.110479181207 1.980566432274 2 64 128 192 20480
+vector 167  IPv6StaticRouting.R3.eth[1].mac  framesReceivedOK  ETV
+167	10155 50 172 447 0.110479181207 1.980566432274 2 1 2 3 5
+vector 169  IPv6StaticRouting.R3.eth[1].mac  bytesReceivedOK  ETV
+169	10258 53 172 447 0.110479181207 1.980566432274 2 64 128 192 20480
+vector 173  IPv6StaticRouting.R3.eth[1].mac  framesPassedToHL  ETV
+173	10311 50 172 447 0.110479181207 1.980566432274 2 1 2 3 5
+vector 134  IPv6StaticRouting.R2.eth[2].mac  framesSent  ETV
+134	9546 50 176 474 0.110479181207 2.089097524102 2 1 2 3 5
+vector 136  IPv6StaticRouting.R2.eth[2].mac  bytesSent  ETV
+136	9645 53 176 474 0.110479181207 2.089097524102 2 64 128 192 20480
+vector 185  IPv6StaticRouting.S1.eth[0].mac  framesReceivedOK  ETV
+185	10410 50 177 475 0.110479181207 2.089097524102 2 1 2 3 5
+vector 187  IPv6StaticRouting.S1.eth[0].mac  bytesReceivedOK  ETV
+187	10512 53 177 475 0.110479181207 2.089097524102 2 64 128 192 20480
+vector 191  IPv6StaticRouting.S1.eth[0].mac  framesPassedToHL  ETV
+191	10565 50 177 475 0.110479181207 2.089097524102 2 1 2 3 5
+vector 166  IPv6StaticRouting.R3.eth[1].mac  framesSent  ETV
+166	10105 50 201 460 0.249792672851 2.048951236688 2 1 2 3 5
+vector 168  IPv6StaticRouting.R3.eth[1].mac  bytesSent  ETV
+168	10205 53 201 460 0.249792672851 2.048951236688 2 64 128 192 20480
+vector 121  IPv6StaticRouting.R2.eth[1].mac  framesReceivedOK  ETV
+121	9340 50 202 461 0.249792672851 2.048951236688 2 1 2 3 5
+vector 123  IPv6StaticRouting.R2.eth[1].mac  bytesReceivedOK  ETV
+123	9443 53 202 461 0.249792672851 2.048951236688 2 64 128 192 20480
+vector 127  IPv6StaticRouting.R2.eth[1].mac  framesPassedToHL  ETV
+127	9496 50 202 461 0.249792672851 2.048951236688 2 1 2 3 5
+vector 6  IPv6StaticRouting.H1.eth[0].mac  framesSent  ETV
+6	5563 46 214 563 0.442628355225 2.243539107724 2 1 2 3 5
+vector 8  IPv6StaticRouting.H1.eth[0].mac  bytesSent  ETV
+8	5790 49 214 563 0.442628355225 2.243539107724 2 64 128 192 20480
+vector 210  IPv6StaticRouting.SW1.mac[1]  framesReceivedOK  ETV
+210	11940 50 215 564 0.442628355225 2.243539107724 2 1 2 3 5
+vector 212  IPv6StaticRouting.SW1.mac[1]  bytesReceivedOK  ETV
+212	12202 53 215 564 0.442628355225 2.243539107724 2 64 128 192 20480
+vector 216  IPv6StaticRouting.SW1.mac[1]  framesPassedToHL  ETV
+216	12255 50 215 564 0.442628355225 2.243539107724 2 1 2 3 5
+vector 197  IPv6StaticRouting.SW1.mac[0]  framesSent  ETV
+197	11125 150 227 576 0.442635075224 2.243545827723 6 1 6 21 91
+vector 199  IPv6StaticRouting.SW1.mac[0]  bytesSent  ETV
+199	11375 161 227 576 0.442635075224 2.243545827723 6 64 384 1344 372736
+vector 89  IPv6StaticRouting.R1.eth[2].mac  framesReceivedOK  ETV
+89	8364 144 228 577 0.442635075224 2.243545827723 6 1 6 21 91
+vector 91  IPv6StaticRouting.R1.eth[2].mac  bytesReceivedOK  ETV
+91	8611 155 228 577 0.442635075224 2.243545827723 6 64 384 1344 372736
+vector 95  IPv6StaticRouting.R1.eth[2].mac  framesPassedToHL  ETV
+95	8766 144 228 577 0.442635075224 2.243545827723 6 1 6 21 91
+vector 42  IPv6StaticRouting.H3.eth[0].mac  framesSent  ETV
+42	6905 48 253 394 0.452284298179 1.913763660977 2 1 2 3 5
+vector 44  IPv6StaticRouting.H3.eth[0].mac  bytesSent  ETV
+44	7142 51 253 394 0.452284298179 1.913763660977 2 64 128 192 20480
+vector 234  IPv6StaticRouting.SW1.mac[3]  framesReceivedOK  ETV
+234	13064 50 254 395 0.452284298179 1.913763660977 2 1 2 3 5
+vector 236  IPv6StaticRouting.SW1.mac[3]  bytesReceivedOK  ETV
+236	13326 53 254 395 0.452284298179 1.913763660977 2 64 128 192 20480
+vector 240  IPv6StaticRouting.SW1.mac[3]  framesPassedToHL  ETV
+240	13379 50 254 395 0.452284298179 1.913763660977 2 1 2 3 5
+vector 24  IPv6StaticRouting.H2.eth[0].mac  framesSent  ETV
+24	6224 48 289 487 0.602444416977 2.122921897464 2 1 2 3 5
+vector 26  IPv6StaticRouting.H2.eth[0].mac  bytesSent  ETV
+26	6461 51 289 487 0.602444416977 2.122921897464 2 64 128 192 20480
+vector 222  IPv6StaticRouting.SW1.mac[2]  framesReceivedOK  ETV
+222	12502 50 290 488 0.602444416977 2.122921897464 2 1 2 3 5
+vector 224  IPv6StaticRouting.SW1.mac[2]  bytesReceivedOK  ETV
+224	12764 53 290 488 0.602444416977 2.122921897464 2 64 128 192 20480
+vector 228  IPv6StaticRouting.SW1.mac[2]  framesPassedToHL  ETV
+228	12817 50 290 488 0.602444416977 2.122921897464 2 1 2 3 5
+vector 184  IPv6StaticRouting.S1.eth[0].mac  framesSent  ETV
+184	10361 49 325 678 0.97429981259 2.653179346251 2 1 2 3 5
+vector 186  IPv6StaticRouting.S1.eth[0].mac  bytesSent  ETV
+186	10460 52 325 678 0.97429981259 2.653179346251 2 64 128 192 20480
+vector 135  IPv6StaticRouting.R2.eth[2].mac  framesReceivedOK  ETV
+135	9596 49 326 679 0.97429981259 2.653179346251 2 1 2 3 5
+vector 137  IPv6StaticRouting.R2.eth[2].mac  bytesReceivedOK  ETV
+137	9698 52 326 679 0.97429981259 2.653179346251 2 64 128 192 20480
+vector 141  IPv6StaticRouting.R2.eth[2].mac  framesPassedToHL  ETV
+141	9750 49 326 679 0.97429981259 2.653179346251 2 1 2 3 5

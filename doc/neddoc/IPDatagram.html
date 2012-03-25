@@ -1,0 +1,202 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>IPDatagram</i></h2>
+<b>File: <a href="src-networklayer-ipv4-IPDatagram.msg.html">src/networklayer/ipv4/IPDatagram.msg</a></b><br/>
+<p>Represents an <a href="inet.networklayer.ipv4.IP.html">IP</a> datagram.</p>
+<p>Uses the following cPacket fields:</p>
+  <ul><ul><li>getByteLength() / setByteLength() to represent total datagram length</li>
+  <li>hasBitError() / setBitError() to represent datagram correctness</li>
+  <li>getTimestamp() / setTimestamp (simtime) used in timestamp option</li></ul></ul>
+<p>Additional length fields defined in this class are in bytes.</p>
+<p>Only one of the option fields can exist at a time.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPDatagram-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPDatagram.html" title="Packet IPDatagram" alt="" coords="197,6,288,34">
+<area shape="rect" id="node2" href="IPTimestampOption.html" title="Class IPTimestampOption" alt="" coords="5,83,144,111">
+<area shape="rect" id="node4" href="IPRecordRouteOption.html" title="Class IPRecordRouteOption" alt="" coords="168,83,317,111">
+<area shape="rect" id="node6" href="IPSourceRoutingOption.html" title="Class IPSourceRoutingOption" alt="" coords="341,83,499,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPDatagram-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPDatagram.html" title="Packet IPDatagram" alt="" coords="5,6,96,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>version</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>headerLength</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>srcAddress</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>destAddress</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>transportProtocol</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>timeToLive</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>identification</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>moreFragments</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>dontFragment</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>fragmentOffset</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>diffServCodePoint</td>
+   <td>
+      <i>
+unsigned char</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>optionCode</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>recordRoute</td>
+   <td>
+      <i>
+<a href="IPRecordRouteOption.html">IPRecordRouteOption</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>timestampOption</td>
+   <td>
+      <i>
+<a href="IPTimestampOption.html">IPTimestampOption</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>sourceRoutingOption</td>
+   <td>
+      <i>
+<a href="IPSourceRoutingOption.html">IPSourceRoutingOption</a></i>
+   </td>
+   <td>
+<p>optionCode determines if strict or loose source routing</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Represents an IP datagram.
+//
+// Uses the following cPacket fields:
+//    - getByteLength() / setByteLength() to represent total datagram length
+//    - hasBitError() / setBitError() to represent datagram correctness
+//    - getTimestamp() / setTimestamp (simtime) used in timestamp option
+//
+// Additional length fields defined in this class are in bytes.
+//
+// Only one of the option fields can exist at a time.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPDatagram</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">version</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> = </span><span style="color: #000000; ">IP_HEADER_BYTES</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddress</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportProtocol</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">) = </span><span style="color: #000000; ">IP_PROT_NONE</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">timeToLive</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">identification</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">moreFragments</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">dontFragment</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">fragmentOffset</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">diffServCodePoint</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">optionCode</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPOption</span><span style="color: #000000; ">) = </span><span style="color: #000000; ">IPOPTION_NO_OPTION</span><span style="color: #000000; ">;  </span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> modify header length when options are present
+</span><span style="color: #000000; ">                                                         </span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> also: the RFC says that more than one IP-Option is allowed
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPRecordRouteOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordRoute</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPTimestampOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">timestampOption</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPSourceRoutingOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceRoutingOption</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// optionCode determines if strict or loose source routing
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

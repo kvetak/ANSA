@@ -1,0 +1,54 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Struct <i>FEC_TLV</i></h2>
+<b>File: <a href="src-networklayer-ldp-LDPPacket.msg.html">src/networklayer/ldp/LDPPacket.msg</a></b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="FEC_TLV-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="FEC_TLV.html" title="Struct FEC_TLV" alt="" coords="181,83,261,111">
+<area shape="rect" id="node2" href="LDPLabelMapping.html" title="Packet LDPLabelMapping" alt="" coords="5,6,133,34">
+<area shape="rect" id="node4" href="LDPLabelRequest.html" title="Packet LDPLabelRequest" alt="" coords="157,6,285,34">
+<area shape="rect" id="node6" href="LDPNotify.html" title="Packet LDPNotify" alt="" coords="309,6,392,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="FEC_TLV-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="FEC_TLV.html" title="Struct FEC_TLV" alt="" coords="5,6,85,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>addr</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>length</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FEC_TLV</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">addr</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">length</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

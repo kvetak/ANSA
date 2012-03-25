@@ -1,0 +1,305 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>Nic80211</i></h2>
+<b>Package:</b> inet.linklayer.mf80211<br/><b>File: <a href="src-linklayer-mf80211-Nic80211.ned.html">src/linklayer/mf80211/Nic80211.ned</a></b><br/>
+<p>This NIC implements an 802.11 network interface card.</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>See also:</b> <a href="inet.linklayer.mf80211.macLayer.Mac80211.html">Mac80211</a>, <a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">Decider80211</a>, <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">SnrEval80211</a></p>
+<p><b>Author:</b> Marc Loebbers</p>
+<img src="inet.linklayer.mf80211.Nic80211-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.mf80211.macLayer.Mac80211.html" title="Mac80211" alt="Mac80211" coords="78,107,122,168">
+<area shape="rect" href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html" title="Decider80211" alt="Decider80211" coords="85,185,132,230">
+<area shape="rect" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html" title="SnrEval80211" alt="SnrEval80211" coords="75,256,122,317">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mf80211.Nic80211-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.mf80211.Nic80211.html" title="Compound Module Nic80211" alt="" coords="204,83,281,111">
+<area shape="rect" id="node2" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html" title="Simple Module SnrEval80211" alt="" coords="5,161,107,189">
+<area shape="rect" id="node4" href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html" title="Simple Module Decider80211" alt="" coords="131,161,232,189">
+<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="256,161,355,189">
+<area shape="rect" id="node8" href="inet.linklayer.mf80211.macLayer.Mac80211.html" title="Simple Module Mac80211" alt="" coords="379,161,461,189">
+<area shape="rect" id="node10" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="189,6,296,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mf80211.Nic80211-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.mf80211.Nic80211.html" title="Compound Module Nic80211" alt="" coords="5,6,83,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MFMobileHost.html">MFMobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the Mobility Framework's 802.11 implementation, <a href="inet.linklayer.mf80211.Nic80211.html">Nic80211</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be dynamically
+specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/ifcard</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to upper layers</p>
+</td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>from upper layers</p>
+</td>
+</tr>
+<tr class="local">
+   <td>radioIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to receive AirFrames</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.maxQueueSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.rtsCts</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.broadcastBackoff</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">decider</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">decider</a>.snirThreshold</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>4dB</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">decider</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.channelNumber</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.headerLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.carrierFrequency</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// This NIC implements an 802.11 network interface card.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> Mac80211, Decider80211, SnrEval80211
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc Loebbers
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">Nic80211</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/ifcard&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to upper layers
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from upper layers
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to receive AirFrames
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Mac80211</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=96,87&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Decider80211</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=106,157&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">: </span><span style="color: #000000; ">SnrEval80211</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=96,236&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">radioIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,50,50,75,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,25,0,25,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,73,0,50,50&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">;
+
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

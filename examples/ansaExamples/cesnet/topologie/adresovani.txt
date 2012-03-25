@@ -1,0 +1,102 @@
+Brno:
+SE6/0: >Praha   192.168.1.1 DCE
+SE5/0: >Ostrava 192.168.2.1
+SE4/0: >Zlín    192.168.3.1 DCE
+SE7/0: >Jihlava 192.168.4.1
+SE2/0: >Znojmo  192.168.5.1 DCE
+SE3/0: >Kyjov   192.168.6.1 DCE
+
+Praha:
+SE3/0: >Brno    192.168.1.2
+SE2/0: >Pardubi 192.168.15.1 DCE
+SE5/0: >Podebra 192.168.21.1 DCE
+SE6/0: >Usti    192.168.19.2 DCE
+SE4/0: >Tabor   192.168.20.1 DCE
+SE7/0: >Mar.Laz 192.168.25.1
+
+Znojmo:
+SE2/0: >Brno    192.168.5.2
+
+Kyjov:
+SE2/0: >Brno    192.168.6.2
+
+Zlin:
+SE2/0: >Brno    192.168.3.2
+SE3/0: >Olomouc 192.168.7.1
+
+Olomouc:
+SE2/0: >Ostrava 192.168.8.1
+SE3/0: >Letohra 192.168.12.1 DCE
+SE4/0: >Zlin    192.168.7.2 DCE
+
+Ostrava:
+SE2/0: >Brno    192.168.2.2 DCE
+SE3/0: >Olomouc 192.168.8.2 DCE
+SE4/0: >Opava   192.168.10.1 DCE
+
+Opava:
+SE2/0: >Ostrava 192.168.10.2
+SE3/0: >Letohra 192.168.11.1 DCE
+
+Letohrad:
+SE2/0: >Opava   192.168.11.2
+SE3/0: >Olomouc 192.168.12.2
+SE4/0: >HradecK 192.168.13.1 DCE
+
+Hradec Kralove:
+SE2/0: >Letohra 192.168.13.2
+SE3/0: >Pardubi 192.168.14.1 DCE
+SE4/0: >Liberec 192.168.17.1 DCE
+
+Pardubice:
+SE2/0: >HradecK 192.168.14.2
+SE3/0: >KutnaH  192.168.16.1 DCE
+SE4/0: >Praha   192.168.15.2
+
+Kutna Hora:
+SE2/0: >Pardubi 192.168.16.2
+
+Podebrady:
+SE2/0: >Praha   192.168.21.2
+
+Tabor:
+SE2/0: >Praha   192.168.20.2
+
+Liberec:
+SE2/0: >HradecK 192.168.17.2
+SE3/0: >Usti    192.168.18.1 DCE
+
+Usti n.L.:
+SE2/0: >Praha   192.168.19.1
+SE3/0: >Liberec 192.168.18.2
+SE4/0: >Most    192.168.22.1 DCE
+
+Most:
+SE2/0: >Usti    192.168.22.2
+SE3/0: >Cheb    192.168.23.1 DCE
+
+Cheb:
+SE2/0: >Most    192.168.23.2
+SE3/0: >Mar.Laz 192.168.24.1 DCE
+
+Marianske Lazne:
+SE2/0: >Cheb    192.168.24.2
+SE3/0: >Praha   192.168.25.2 DCE
+SE4/0: >Plzen   192.168.26.1
+
+Plzen:
+SE2/0: >Mar.Laz 192.168.26.2 DCE
+SE3/0: >CB      192.168.27.1 DCE
+
+Ceske Budejovice:
+SE2/0: >Plzen   192.168.27.2
+SE3/0: >J.Hrade 192.168.28.1 DCE
+
+Jindrichuv Hradec:
+SE2/0: >CB      192.168.28.2
+SE3/0: >Jihlava 192.168.9.2 DCE
+
+Jihlava:
+SE2/0: >CB      192.168.9.1
+SE3/0: >Brno    192.168.4.2 DCE
+

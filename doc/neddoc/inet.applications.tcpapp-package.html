@@ -1,0 +1,154 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.applications.tcpapp</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPApp.html">TCPApp</a>
+   </td>
+   <td>
+<i>module&nbsp;interface</i>
+   </td>
+   <td>
+
+<p>Template for <a href="inet.transport.tcp.TCP.html">TCP</a> applications. It shows what gates a <a href="inet.transport.tcp.TCP.html">TCP</a> app
+needs, to be able to be used in <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> etc.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPBasicClientApp.html">TCPBasicClientApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Client for a generic request-response style protocol over <a href="inet.transport.tcp.TCP.html">TCP</a>.
+May be used as a rough model of HTTP or FTP users.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPEchoApp.html">TCPEchoApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Accepts any number of incoming <a href="inet.transport.tcp.TCP.html">TCP</a> connections, and sends back the
+messages that arrive on them, The lengths of the messages are
+multiplied by echoFactor before sending them back (echoFactor=1 will
+result in sending back the same message unmodified.) The reply can also be
+delayed by a constant time (echoDelay parameter).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPGenericSrvApp.html">TCPGenericSrvApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Generic server application for modelling <a href="inet.transport.tcp.TCP.html">TCP</a>-based request-reply style
+protocols or applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPSessionApp.html">TCPSessionApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Single-connection <a href="inet.transport.tcp.TCP.html">TCP</a> application: it opens a connection, sends
+the given number of bytes, and closes. Sending may be one-off,
+or may be controlled by a "script" which is a series of
+(time, number of bytes) pairs. May act either as client or as server,
+and works with TCPVirtualBytesSendQueue/RcvQueue as sendQueue/receiveQueue
+setting for <a href="inet.transport.tcp.TCP.html">TCP</a>.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPSinkApp.html">TCPSinkApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Accepts any number of incoming <a href="inet.transport.tcp.TCP.html">TCP</a> connections, and discards whatever
+arrives on them.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPSpoof.html">TCPSpoof</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Sends fabricated <a href="inet.transport.tcp.TCP.html">TCP</a> packets. This is a base implementation,
+you'll probably have to customize it in C++ according to
+what you want to send and when you want to send it.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TCPSrvHostApp.html">TCPSrvHostApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This module hosts <a href="inet.transport.tcp.TCP.html">TCP</a>-based server applications. It dynamically creates
+and launches a new "thread" object for each incoming connection.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.tcpapp.TelnetApp.html">TelnetApp</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models Telnet sessions with a specific user behaviour.
+The server app should be <a href="inet.applications.tcpapp.TCPGenericSrvApp.html">TCPGenericSrvApp</a>.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

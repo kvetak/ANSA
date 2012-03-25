@@ -1,0 +1,696 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>MFMobileHost</i></h2>
+<b>Package:</b> inet.nodes.adhoc<br/><b>File: <a href="src-nodes-adhoc-MFMobileHost.ned.html">src/nodes/adhoc/MFMobileHost.ned</a></b><br/>
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the Mobility Framework's 802.11 implementation, <a href="inet.linklayer.mf80211.Nic80211.html">Nic80211</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be dynamically
+specified with the mobilityType parameter.</p>
+<p><b>See also:</b> <a href="inet.nodes.adhoc.MobileHost.html">MobileHost</a>, <a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a></p>
+<img src="inet.nodes.adhoc.MFMobileHost-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.base.NotificationBoard.html" title="NotificationBoard" alt="NotificationBoard" coords="8,90,116,151">
+<area shape="rect" href="inet.networklayer.common.InterfaceTable.html" title="InterfaceTable" alt="InterfaceTable" coords="18,170,106,231">
+<area shape="rect" href="inet.networklayer.ipv4.RoutingTable.html" title="RoutingTable" alt="RoutingTable" coords="24,250,101,311">
+<area shape="rect" href="inet.applications.tcpapp.TCPApp.html" title="TCPApp" alt="TCPApp" coords="97,87,233,148">
+<area shape="rect" href="inet.transport.tcp.TCP.html" title="TCP" alt="TCP" coords="145,174,189,235">
+<area shape="rect" href="inet.applications.udpapp.UDPApp.html" title="UDPApp" alt="UDPApp" coords="201,87,347,148">
+<area shape="rect" href="inet.transport.udp.UDP.html" title="UDP" alt="UDP" coords="254,174,298,235">
+<area shape="rect" href="inet.applications.pingapp.PingApp.html" title="PingApp" alt="PingApp" coords="319,220,371,281">
+<area shape="rect" href="inet.nodes.inet.NetworkLayer.html" title="NetworkLayer" alt="NetworkLayer" coords="208,267,293,328">
+<area shape="rect" href="inet.linklayer.mf80211.Nic80211.html" title="Nic80211" alt="Nic80211" coords="230,369,281,430">
+<area shape="rect" href="inet.mobility.BasicMobility.html" title="BasicMobility" alt="BasicMobility" coords="126,327,176,388">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.adhoc.MFMobileHost-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="589,83,696,111">
+<area shape="rect" id="node2" href="inet.applications.pingapp.PingApp.html" title="Simple Module PingApp" alt="" coords="5,161,77,189">
+<area shape="rect" id="node4" href="inet.transport.udp.UDP.html" title="Simple Module UDP" alt="" coords="101,161,173,189">
+<area shape="rect" id="node6" href="inet.transport.tcp.TCP.html" title="Simple Module TCP" alt="" coords="197,161,269,189">
+<area shape="rect" id="node8" href="inet.applications.udpapp.UDPApp.html" title="Module Interface UDPApp" alt="" coords="293,161,368,189">
+<area shape="rect" id="node10" href="inet.mobility.BasicMobility.html" title="Module Interface BasicMobility" alt="" coords="392,161,491,189">
+<area shape="rect" id="node12" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="515,161,637,189">
+<area shape="rect" id="node14" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="661,161,760,189">
+<area shape="rect" id="node16" href="inet.applications.tcpapp.TCPApp.html" title="Module Interface TCPApp" alt="" coords="784,161,856,189">
+<area shape="rect" id="node18" href="inet.networklayer.ipv4.RoutingTable.html" title="Simple Module RoutingTable" alt="" coords="880,161,979,189">
+<area shape="rect" id="node20" href="inet.linklayer.mf80211.Nic80211.html" title="Compound Module Nic80211" alt="" coords="1003,161,1080,189">
+<area shape="rect" id="node22" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="1104,161,1205,189">
+<area shape="rect" id="node24" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="1229,161,1333,189">
+<area shape="rect" id="node26" href="inet.examples.adhoc.mf80211.Net80211.html" title="Network Net80211" alt="" coords="604,6,681,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.adhoc.MFMobileHost-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.adhoc.mf80211.Net80211.html">Net80211</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>numTcpApps</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>numUdpApps</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>tcpAppType</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>udpAppType</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>IPForward</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>routingFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>mobilityType</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"NullMobility"</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=device/pocketpc_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>radioIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.advertisedWindow</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>14*this.mss</td>
+   <td>
+<p>in bytes, corresponds with the maximal receiver buffer capacity (Note: normally, NIC queues should be at least this size)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.delayedAcksEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>delayed ACK algorithm (RFC 1122) enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.nagleEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>Nagle's algorithm (RFC 896) enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.limitedTransmitEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Limited Transmit algorithm (RFC 3042) enabled/disabled (can be used for TCPReno/TCPTahoe/TCPNewReno/TCPNoCongestionControl)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.increasedIWEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Increased Initial Window (RFC 3390) enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.sackSupport</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Selective Acknowledgment (RFC 2018, 2883, 3517) support (header option) (SACK will be enabled for a connection if both endpoints support it)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.windowScalingSupport</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Window Scale (RFC 1323) support (header option) (WS will be enabled for a connection if both endpoints support it)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.timestampSupport</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Timestamps (RFC 1323) support (header option) (TS will be enabled for a connection if both endpoints support it)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.mss</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>536</td>
+   <td>
+<p>Maximum Segment Size (RFC 793) (header option)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.tcpAlgorithmClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCPReno"</td>
+   <td>
+<p>TCPReno/TCPTahoe/TCPNewReno/TCPNoCongestionControl/DumbTCP</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.sendQueueClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCPVirtualDataSendQueue"</td>
+   <td>
+<p>TCPVirtualDataSendQueue/TCPMsgBasedSendQueue</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.receiveQueueClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCPVirtualDataRcvQueue"</td>
+   <td>
+<p>TCPVirtualDataRcvQueue/TCPMsgBasedRcvQueue</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.tcp.TCP.html">tcp</a>.recordStats</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>recording of seqNum etc. into output vectors enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.destAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.srcAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>source <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address (useful with <a href="inet.examples.sctp.multihomed.multi.html">multi</a>-homing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.packetSize</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>56B</td>
+   <td>
+<p>of ping payload, in bytes</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.interval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>time to wait between pings (can be random)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.hopLimit</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>32</td>
+   <td>
+<p>TTL or hopLimit for <a href="inet.networklayer.ipv4.IP.html">IP</a> packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.count</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>stop after count ping requests, 0 means continuously</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,this.interval)</td>
+   <td>
+<p>send first ping at startTime</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.stopTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>
+<p>send no pings after stopTime, 0 means forever</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.applications.pingapp.PingApp.html">pingApp</a>.printPing</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>dump on stdout</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.maxQueueSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.rtsCts</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.broadcastBackoff</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.macLayer.Mac80211.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">decider</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">decider</a>.snirThreshold</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>4dB</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.decider.Decider80211.html">decider</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.channelNumber</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.headerLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.carrierFrequency</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.Nic80211.html">wlan</a>.<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">snrEval</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+// This model contains the Mobility Framework's 802.11 implementation, Nic80211,
+// and IP, TCP and UDP protocols. The mobility model can be dynamically
+// specified with the mobilityType parameter.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> MobileHost, WirelessHost
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">MFMobileHost</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">numTcpApps</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">numUdpApps</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcpAppType</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpAppType</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">mobilityType</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;NullMobility&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=device/pocketpc_s&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@directIn</span><span style="color: #000000; ">;
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">notificationBoard</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,70&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">interfaceTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">InterfaceTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">routingTable</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RoutingTable</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routerId</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,230&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">tcpApp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">numTcpApps</span><span style="color: #000000; ">]: &lt;</span><span style="color: #000000; ">tcpAppType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPApp</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=163,67&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">tcp</span><span style="color: #000000; ">: </span><span style="color: #000000; ">TCP</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=163,154&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">udpApp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">numUdpApps</span><span style="color: #000000; ">]: &lt;</span><span style="color: #000000; ">udpAppType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPApp</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=272,67&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">udp</span><span style="color: #000000; ">: </span><span style="color: #000000; ">UDP</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=272,154&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">pingApp</span><span style="color: #000000; ">: </span><span style="color: #000000; ">PingApp</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=343,200&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NetworkLayer</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">proxyARP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=248,247;q=queue&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+                </span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Nic80211</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=248,349;q=queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">: &lt;</span><span style="color: #000000; ">mobilityType</span><span style="color: #000000; ">&gt; </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=149,307&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #000000; ">numTcpApps</span><span style="color: #000000; ">-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">tcpApp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">tcpOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">++;
+            </span><span style="color: #000000; ">tcpApp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">tcpIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">++;
+        }
+
+        </span><span style="color: #000000; ">tcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">tcpIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">tcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">tcpOut</span><span style="color: #000000; ">;
+
+        </span><span style="color: #800000; font-weight: bold; ">for</span><span style="color: #000000; "> </span><span style="color: #000000; ">i</span><span style="color: #000000; ">=</span><span style="color: #008000; ">0</span><span style="color: #000000; ">..</span><span style="color: #000000; ">numUdpApps</span><span style="color: #000000; ">-</span><span style="color: #008000; ">1</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">udpApp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">udp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">++;
+            </span><span style="color: #000000; ">udpApp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">i</span><span style="color: #000000; ">].</span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">udp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">++;
+        }
+
+        </span><span style="color: #000000; ">udp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">udp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">udpOut</span><span style="color: #000000; ">;
+
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pingOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">pingApp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pingIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pingIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">pingApp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pingOut</span><span style="color: #000000; ">;
+
+        </span><span style="color: #808080; font-style: italic; ">// connections to network outside
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">radioIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifIn</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ifOut</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<Routers>
+<Router id="192.168.3.1"> <!-- R1 -->
+	<ACLs>
+	  <ACL no="101">
+	    <entry seq_no="10">
+	      <action>permit</action>
+	      <IP_src>192.168.3.100</IP_src>
+	      <IP_dst>10.60.0.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.127</WC_dst>
+	      <port_op_src>eq</port_op_src>
+	      <port_op_dst>range</port_op_dst>
+	      <port_beg_src>80</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>40000</port_beg_dst>
+	      <port_end_dst>40100</port_end_dst>
+	      <protocol>tcp</protocol>
+	    </entry>
+	    <entry seq_no="15">
+	      <action>deny</action>
+	      <IP_src>192.168.3.101</IP_src>
+	      <IP_dst>10.60.20.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.255</WC_dst>
+	      <port_op_src>gt</port_op_src>
+	      <port_op_dst>neq</port_op_dst>
+	      <port_beg_src>3128</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>80</port_beg_dst>
+	      <port_end_dst></port_end_dst>
+	      <protocol>udp</protocol>
+	    </entry>
+	    <interfaces>
+			<interface dir="out">eth0</interface>
+			<interface dir="out">eth1</interface>
+			<interface dir="in">eth1</interface>
+	    </interfaces>
+	  </ACL>
+	</ACLs>
+</Router>
+
+<Router id="192.168.4.2"> <!-- R2 -->
+	<ACLs>
+	  <ACL no="101">
+	    <entry seq_no="10">
+	      <action>permit</action>
+	      <IP_src>192.168.4.100</IP_src>
+	      <IP_dst>10.60.0.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.127</WC_dst>
+	      <port_op_src>eq</port_op_src>
+	      <port_op_dst>range</port_op_dst>
+	      <port_beg_src>80</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>40000</port_beg_dst>
+	      <port_end_dst>40100</port_end_dst>
+	      <protocol>tcp</protocol>
+	    </entry>
+	    <entry seq_no="15">
+	      <action>deny</action>
+	      <IP_src>192.168.4.100</IP_src>
+	      <IP_dst>10.60.20.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.255</WC_dst>
+	      <port_op_src>gt</port_op_src>
+	      <port_op_dst>neq</port_op_dst>
+	      <port_beg_src>3128</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>80</port_beg_dst>
+	      <port_end_dst></port_end_dst>
+	      <protocol>udp</protocol>
+	    </entry>
+	    <interfaces>
+			<interface dir="out">eth0</interface>
+			<interface dir="out">eth1</interface>
+			<interface dir="in">eth1</interface>
+	    </interfaces>
+	  </ACL>
+	</ACLs>
+</Router>
+
+<Router id="192.168.3.3"> <!-- R3 -->
+	<ACLs>
+	  <ACL no="101">
+	    <entry seq_no="10">
+	      <action>permit</action>
+	      <IP_src>192.168.3.2</IP_src>
+	      <IP_dst>10.60.0.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.127</WC_dst>
+	      <port_op_src>eq</port_op_src>
+	      <port_op_dst>range</port_op_dst>
+	      <port_beg_src>80</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>40000</port_beg_dst>
+	      <port_end_dst>40100</port_end_dst>
+	      <protocol>tcp</protocol>
+	    </entry>
+	    <entry seq_no="15">
+	      <action>deny</action>
+	      <IP_src>192.168.3.226</IP_src>
+	      <IP_dst>10.60.20.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.255</WC_dst>
+	      <port_op_src>gt</port_op_src>
+	      <port_op_dst>neq</port_op_dst>
+	      <port_beg_src>3128</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>80</port_beg_dst>
+	      <port_end_dst></port_end_dst>
+	      <protocol>udp</protocol>
+	    </entry>
+	    <interfaces>
+			<interface dir="out">eth0</interface>
+			<interface dir="out">eth1</interface>
+			<interface dir="in">eth1</interface>
+	    </interfaces>
+	  </ACL>
+	</ACLs>
+</Router>
+
+<Router id="192.168.4.4"> <!-- R4 -->
+	<ACLs>
+	  <ACL no="101">
+	    <entry seq_no="10">
+	      <action>permit</action>
+	      <IP_src>192.168.4.3</IP_src>
+	      <IP_dst>10.60.0.0</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.127</WC_dst>
+	      <port_op_src>eq</port_op_src>
+	      <port_op_dst>range</port_op_dst>
+	      <port_beg_src>80</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>40000</port_beg_dst>
+	      <port_end_dst>40100</port_end_dst>
+	      <protocol>tcp</protocol>
+	    </entry>
+	    <entry seq_no="15">
+	      <action>deny</action>
+	      <IP_src>192.168.4.166</IP_src>
+	      <IP_dst>10.60.20.6</IP_dst>
+	      <WC_src>0.0.0.255</WC_src>
+	      <WC_dst>0.0.0.255</WC_dst>
+	      <port_op_src>gt</port_op_src>
+	      <port_op_dst>neq</port_op_dst>
+	      <port_beg_src>3128</port_beg_src>
+	      <port_end_src></port_end_src>
+	      <port_beg_dst>80</port_beg_dst>
+	      <port_end_dst></port_end_dst>
+	      <protocol>udp</protocol>
+	    </entry>
+	    <interfaces>
+			<interface dir="out">eth0</interface>
+			<interface dir="out">eth1</interface>
+			<interface dir="in">eth1</interface>
+	    </interfaces>
+	  </ACL>
+	</ACLs>
+</Router>
+</Routers>

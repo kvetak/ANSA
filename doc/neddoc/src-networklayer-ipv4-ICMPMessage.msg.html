@@ -1,0 +1,131 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ipv4/ICMPMessage.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="ICMPType.html">ICMPType</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Not the real <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> codes; here it's set up so that codes above 128 are
+informational</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPMessage.html">ICMPMessage</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> message class</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+// Copyright (C) 2004 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Not the real ICMP codes; here it's set up so that codes above 128 are
+// informational
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPType</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">ICMP_DESTINATION_UNREACHABLE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">13</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMP_REDIRECT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMP_TIME_EXCEEDED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">11</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMP_PARAMETER_PROBLEM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">12</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000000; ">ICMP_ECHO_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">128</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMP_ECHO_REPLY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">129</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMP_TIMESTAMP_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">130</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMP_TIMESTAMP_REPLY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">131</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+</span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPCode</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Codes for type ICMP_DESTINATION_UNREACHABLE
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPDestinationUnreachableCodes</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">ICMP_DU_NETWORK_UNREACHABLE</span><span style="color: #000000; "> =                      </span><span style="color: #008000; ">0</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_HOST_UNREACHABLE</span><span style="color: #000000; "> =                         </span><span style="color: #008000; ">1</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_PROTOCOL_UNREACHABLE</span><span style="color: #000000; "> =                     </span><span style="color: #008000; ">2</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_PORT_UNREACHABLE</span><span style="color: #000000; "> =                         </span><span style="color: #008000; ">3</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_FRAGMENTATION_NEEDED</span><span style="color: #000000; "> =                     </span><span style="color: #008000; ">4</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_SOURCE_ROUTE_FAILED</span><span style="color: #000000; "> =                      </span><span style="color: #008000; ">5</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_DESTINATION_NETWORK_UNKNOWN</span><span style="color: #000000; "> =              </span><span style="color: #008000; ">6</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_DESTINATION_HOST_UNKNOWN</span><span style="color: #000000; "> =                 </span><span style="color: #008000; ">7</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_SOURCE_HOST_ISOLATED</span><span style="color: #000000; "> =                     </span><span style="color: #008000; ">8</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_NETWORK_PROHIBITED</span><span style="color: #000000; "> =                       </span><span style="color: #008000; ">9</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_HOST_PROHIBITED</span><span style="color: #000000; "> =                         </span><span style="color: #008000; ">10</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_NETWORK_UNREACHABLE_FOR_TYPE_OF_SERVICE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">11</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_HOST_UNREACHABLE_FOR_TYPE_OF_SERVICE</span><span style="color: #000000; "> =    </span><span style="color: #008000; ">12</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_COMMUNICATION_PROHIBITED</span><span style="color: #000000; "> =                </span><span style="color: #008000; ">13</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_HOST_PRECEDENCE_VIOLATION</span><span style="color: #000000; "> =               </span><span style="color: #008000; ">14</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_DU_PRECEDENCE_CUTOFF_IN_EFFECT</span><span style="color: #000000; "> =             </span><span style="color: #008000; ">15</span><span style="color: #000000; ">,
+    </span><span style="color: #000000; ">ICMP_AODV_QUEUE_FULL</span><span style="color: #000000; "> =                            </span><span style="color: #008000; ">16</span><span style="color: #000000; ">
+};
+
+}}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMP message class
+//
+// Note: receiver MUST NOT decapsulate the datagram from ICMP error messages,
+// because their contents is conceptually truncated. decapsulate() would result
+// in a &quot;length became negative&quot; error; use getEncapsulatedMsg() instead.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">type</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ICMPType</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

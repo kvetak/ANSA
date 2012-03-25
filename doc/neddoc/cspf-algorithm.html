@@ -1,0 +1,51 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>The CSPF Algorithm</h2>
+<p>CSPF stands for Constraint Shortest Path First.
+This constraint-based routing is executed online by Ingress Router.
+The CSPF calculates an optimum explicit route (ER), based on
+specific constraints. CSPF relies on a Traffic Engineering Database (<a href="inet.networklayer.ted.TED.html">TED</a>)
+to do those calculations. The resulting route is then used by RSVP-TE.</p>
+<p>The CSPF in particular and any constraint based routing process requires following
+inputs:</p>
+  <ul><li>Attributes of the traffic trunks, e.g., bandwidth, link affinities</li>
+  <li>Attributes of the links of the network, e.g. bandwidth, delay</li>
+  <li>Attributes of the LSRs, e.g. types of signaling protocols supported</li>
+  <li>Other topology state information.</li></ul>
+<p>There has been no standard for CSPF so far. The implementation of CSPF in
+the simulation is based on the concept of "induced graph" introduced in RFC
+2702. An induced graph is analogous to a virtual topology in an overlay
+model. It is logically mapped onto the physical network through the
+selection of LSPs for traffic trunks. CSPF is similar to a normal SPF,
+except during link examination, it rejects links without capacity or links
+that do not match color constraints or configured policy. The CSPF
+algorithm used in the simulation has two phases. In the first phase, all
+the links that do not satisfy the constraints of bandwidth are excluded
+from the network topology. The link affinity is also examined in this
+phase. In the second phase, Dijkstra algorithm is performed.</p>
+<p>Dijkstra Algorithm:</p>
+<p><pre>
+Dijkstra(G, w, s):
+   Initialize-single-source(G,s);
+   S = empty set;
+   Q = V[G];
+   While Q is not empty {
+       u = Extract-Min(Q);
+       S = S union {u};
+       for each vertex v in Adj[u] {
+           relax(u, v, w);
+       }
+   }
+</pre></p>
+<p>In which:</p>
+  <ul><li>G: the graph, represented in some way (e.g. adjacency list)</li>
+  <li>w: the distance (weight) for each edge (u,v)</li>
+  <li>s (small s): the starting vertex (source)</li>
+  <li>S (big S): a set of vertices whose final shortest path from s have already been determined</li>
+  <li>Q: set of remaining vertices, Q union S = V</li></ul>
+   </body>
+</html>

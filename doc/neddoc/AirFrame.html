@@ -1,0 +1,117 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>AirFrame</i></h2>
+<b>File: <a href="src-linklayer-mfcore-AirFrame.msg.html">src/linklayer/mfcore/AirFrame.msg</a></b><br/>
+<p>Format of the messages that are sent to the channel</p>
+<p>subclass if you want to create your own <a href="AirFrame.html">AirFrame</a> message class</p>
+<p>This message format is used to send a packet from a snrEval module
+to the channel. All other snrEval modules that can 'hear' this
+message can evaluate noise, interference etc. from the information
+contained in this message:</p>
+<p>If you need more fields for whatever reason, please do NOT create
+your own message! Just extend (subclass) this message format (see Omnet
+manual,chapter Messages - Inheritance among message classes).</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>TODO:</b> As soon as opp_msgc also supports pointers we should replace
+the id with a pointer to the nodes coordinates itself.</p>
+<p><b>Author:</b> Marc Loebbers</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="AirFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="AirFrame.html" title="Packet AirFrame" alt="" coords="5,6,80,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="AirFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="AirFrame.html" title="Packet AirFrame" alt="" coords="5,6,80,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>pSend</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td>
+<p>Power with which this packet is transmitted</p>
+</td>
+</tr>
+<tr class="local">
+   <td>channelNumber</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>Channel on which the packet is sent</p>
+</td>
+</tr>
+<tr class="local">
+   <td>duration</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>Time it takes to transmit the packet, in seconds</p>
+</td>
+</tr>
+<tr class="local">
+   <td>bitrate</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>senderPos</td>
+   <td>
+      <i>
+Coord</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Format of the messages that are sent to the channel
+//
+// subclass if you want to create your own AirFrame message class
+//
+// This message format is used to send a packet from a snrEval module
+// to the channel. All other snrEval modules that can 'hear' this
+// message can evaluate noise, interference etc. from the information
+// contained in this message:
+//
+// If you need more fields for whatever reason, please do NOT create
+// your own message! Just extend (subclass) this message format (see Omnet
+// manual,chapter Messages - Inheritance among message classes).
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@todo</span><span style="color: #808080; font-style: italic; "> As soon as opp_msgc also supports pointers we should replace
+// the id with a pointer to the nodes coordinates itself.
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc Loebbers
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">pSend</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Power with which this packet is transmitted
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelNumber</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Channel on which the packet is sent
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">duration</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Time it takes to transmit the packet, in seconds
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">bitrate</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Coord</span><span style="color: #000000; "> </span><span style="color: #000000; ">senderPos</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

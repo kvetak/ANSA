@@ -1,0 +1,47 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.applications.ethernet</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.applications.ethernet.EtherAppCli.html">EtherAppCli</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>A simple traffic generator for the Ethernet model and the 802.11 model,
+and generally for any L2 model that accepts Ieee80211Ctrl control info
+on the packets. It generates <a href="EtherAppReq.html">EtherAppReq</a> packets. It should be connected
+directly to <a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a> or a Ieee802NicXXX module.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.applications.ethernet.EtherAppSrv.html">EtherAppSrv</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Server side of the EtherCli model -- generates <a href="EtherAppResp.html">EtherAppResp</a> packets
+with the number of bytes requested by the client in <a href="EtherAppReq.html">EtherAppReq</a>.
+It should be connected directly to <a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a> or a Ieee802NicXXX module.</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

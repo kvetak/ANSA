@@ -1,0 +1,251 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>TurtleMobility</i></h2>
+<b>Package:</b> inet.mobility<br/><b>File: <a href="src-mobility-TurtleMobility.ned.html">src/mobility/TurtleMobility.ned</a></b><br/><p><a href="../doxy/class_turtle_mobility.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>A LOGO-style movement model, with the script coming from XML. It can be
+useful for describing random as well as deterministic scenarios.</p>
+<p>First, a few examples.</p>
+<p>Node will move along a square's borders:</p>
+<p><pre>
+    &lt;movement&gt;
+        &lt;set speed=&quot;10&quot; angle=&quot;180&quot;/&gt;
+        &lt;repeat n=&quot;4&quot;&gt;
+            &lt;forward d=&quot;50&quot;/&gt;
+            &lt;turn angle=&quot;90&quot;/&gt;
+        &lt;/repeat&gt;
+    &lt;/movement&gt;
+</pre></p>
+<p><a href="inet.mobility.MassMobility.html">MassMobility</a> (in which the node is assumed to have a mass, and cannot turn
+abruptly):</p>
+<p><pre>
+    &lt;movement&gt;
+        &lt;repeat&gt;
+            &lt;set speed=&quot;uniform(10,20)&quot;/&gt;
+            &lt;turn angle=&quot;uniform(-30,30)&quot;/&gt;
+            &lt;forward t=&quot;uniform(0.1,1)&quot;/&gt;
+        &lt;/repeat&gt;
+    &lt;/movement&gt;
+</pre></p>
+<p>Random Waypoint:</p>
+<p><pre>
+    &lt;movement&gt;
+        &lt;repeat&gt;
+            &lt;set speed=&quot;uniform(20,60)&quot;/&gt;
+            &lt;moveto x=&quot;uniform(0,$MAXX)&quot; y=&quot;uniform(0,$MAXY)&quot;/&gt;
+        &lt;/repeat&gt;
+    &lt;/movement&gt;
+</pre></p>
+<p>Commands (XML element names) are: repeat, set, forward, turn, wait,
+moveto, and moveby.</p>
+<p>Accepted attributes:</p>
+  <ul><ul><li>repeat: n (optional)</li>
+  <li>set: x, y, speed, angle, borderPolicy (all optional)</li>
+  <li>forward: d, t (at last one of them must be present)</li>
+  <li>turn: angle (required)</li>
+  <li>wait: t (required)</li>
+  <li>moveto: x, y, t (all optional)</li>
+  <li>moveby: x, y, t (all optional)</li></ul></ul>
+<p>Attribute values can be literal numbers (e.g. x="100"), or any
+distribution accepted in omnetpp.ini (e.g. speed="uniform(10,20)").
+A new value will be chosen each time the statement is executed.
+The $MAXX and $MAXY strings will be substituted with the
+playground width and height minus 1, respectively.</p>
+<p>t is time interval, calculated from the end of the previous movement.
+x, y are absolute coordinates with &lt;set&gt; and &lt;moveto&gt;, and relative
+with &lt;moveby&gt;. angle is clockwise in degrees, with 0 pointing west.
+d is distance in meters (speed is m/s).</p>
+<p>borderPolicy controls what happens when a node reaches the edge of the
+playground, and can take one of the values "reflect", "wrap",
+"placerandomly". In the first case, the node reflects off the wall;
+with "wrap", it'll come in on the other side (torus); and with
+"placerandomly", it will be placed at a random position on the
+playground.</p>
+<p>In addition to the node position, the module maintains two interval variables,
+'speed' and 'angle', which can be adjusted by &lt;set&gt; and &lt;turn&gt;.
+The &lt;forward&gt; statement, if only t or d is given, uses the speed variable.
+If you specify d and t together, that determines speed as well,
+so the speed variable will be ignored completely.</p>
+<p>Likewise, &lt;moveto&gt; and &lt;moveby&gt; will ignore the angle variable,
+and will only use the speed variable if the t attribute is omitted.</p>
+<p>If the repeat count n is omitted for the &lt;repeat&gt; statement, that
+means an infinite loop.</p>
+<p>You can find the DTD with the sources: <a href="inet.mobility.TurtleMobility.html">TurtleMobility</a>.dtd.</p>
+<p><b>See also:</b> <a href="inet.world.ChannelControl.html">ChannelControl</a></p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.mobility.TurtleMobility-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.mobility.TurtleMobility.html" title="TurtleMobility" alt="TurtleMobility" coords="0,31,126,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.TurtleMobility-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.mobility.TurtleMobility.html" title="Simple Module TurtleMobility" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.TurtleMobility-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.mobility.TurtleMobility.html" title="Simple Module TurtleMobility" alt="" coords="5,83,104,111">
+<area shape="rect" id="node2" href="inet.mobility.BasicMobility.html" title="Module Interface BasicMobility" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>turtleScript</td>
+   <td>
+      <i>xml</i>
+   </td>
+   <td></td>
+   <td>
+<p>describes the movement</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>updateInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.1s</td>
+   <td>
+<p>time interval to update the hosts position</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// A LOGO-style movement model, with the script coming from XML. It can be
+// useful for describing random as well as deterministic scenarios.
+//
+// First, a few examples.
+//
+// Node will move along a square's borders:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+//     &lt;movement&gt;
+//         &lt;set speed=&quot;10&quot; angle=&quot;180&quot;/&gt;
+//         &lt;repeat n=&quot;4&quot;&gt;
+//             &lt;forward d=&quot;50&quot;/&gt;
+//             &lt;turn angle=&quot;90&quot;/&gt;
+//         &lt;/repeat&gt;
+//     &lt;/movement&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// MassMobility (in which the node is assumed to have a mass, and cannot turn
+// abruptly):
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+//     &lt;movement&gt;
+//         &lt;repeat&gt;
+//             &lt;set speed=&quot;uniform(10,20)&quot;/&gt;
+//             &lt;turn angle=&quot;uniform(-30,30)&quot;/&gt;
+//             &lt;forward t=&quot;uniform(0.1,1)&quot;/&gt;
+//         &lt;/repeat&gt;
+//     &lt;/movement&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Random Waypoint:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+//     &lt;movement&gt;
+//         &lt;repeat&gt;
+//             &lt;set speed=&quot;uniform(20,60)&quot;/&gt;
+//             &lt;moveto x=&quot;uniform(0,$MAXX)&quot; y=&quot;uniform(0,$MAXY)&quot;/&gt;
+//         &lt;/repeat&gt;
+//     &lt;/movement&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// Commands (XML element names) are: repeat, set, forward, turn, wait,
+// moveto, and moveby.
+//
+// Accepted attributes:
+//    - repeat: n (optional)
+//    - set: x, y, speed, angle, borderPolicy (all optional)
+//    - forward: d, t (at last one of them must be present)
+//    - turn: angle (required)
+//    - wait: t (required)
+//    - moveto: x, y, t (all optional)
+//    - moveby: x, y, t (all optional)
+//
+// Attribute values can be literal numbers (e.g. x=&quot;100&quot;), or any
+// distribution accepted in omnetpp.ini (e.g. speed=&quot;uniform(10,20)&quot;).
+// A new value will be chosen each time the statement is executed.
+// The $MAXX and $MAXY strings will be substituted with the
+// playground width and height minus 1, respectively.
+//
+// t is time interval, calculated from the end of the previous movement.
+// x, y are absolute coordinates with &lt;set&gt; and &lt;moveto&gt;, and relative
+// with &lt;moveby&gt;. angle is clockwise in degrees, with 0 pointing west.
+// d is distance in meters (speed is m/s).
+//
+// borderPolicy controls what happens when a node reaches the edge of the
+// playground, and can take one of the values &quot;reflect&quot;, &quot;wrap&quot;,
+// &quot;placerandomly&quot;. In the first case, the node reflects off the wall;
+// with &quot;wrap&quot;, it'll come in on the other side (torus); and with
+// &quot;placerandomly&quot;, it will be placed at a random position on the
+// playground.
+//
+// In addition to the node position, the module maintains two interval variables,
+// 'speed' and 'angle', which can be adjusted by &lt;set&gt; and &lt;turn&gt;.
+// The &lt;forward&gt; statement, if only t or d is given, uses the speed variable.
+// If you specify d and t together, that determines speed as well,
+// so the speed variable will be ignored completely.
+//
+// Likewise, &lt;moveto&gt; and &lt;moveby&gt; will ignore the angle variable,
+// and will only use the speed variable if the t attribute is omitted.
+//
+// If the repeat count n is omitted for the &lt;repeat&gt; statement, that
+// means an infinite loop.
+//
+//
+//
+// You can find the DTD with the sources: TurtleMobility.dtd.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> ChannelControl
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">TurtleMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">xml</span><span style="color: #000000; "> </span><span style="color: #000000; ">turtleScript</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// describes the movement
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// time interval to update the hosts position
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+
+
+
+</span></pre>
+   </body>
+</html>

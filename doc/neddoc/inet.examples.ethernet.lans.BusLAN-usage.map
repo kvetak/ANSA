@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.examples.ethernet.lans.BusLAN.html" title="Network BusLAN" alt="" coords="108,6,180,34">
+<area shape="rect" id="node2" href="inet.linklayer.ethernet.EtherBus.html" title="Simple Module EtherBus" alt="" coords="5,83,80,111">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="104,83,184,111">
+<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="208,83,307,111">

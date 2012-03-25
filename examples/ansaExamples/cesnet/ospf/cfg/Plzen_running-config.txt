@@ -1,0 +1,43 @@
+!
+version 12.2
+no service password-encryption
+!
+hostname Plzen
+!
+!
+!
+!
+!
+ip ssh version 1
+!
+!
+!
+interface Serial2/0
+ bandwidth 1000
+ ip address 192.168.26.2 255.255.255.0
+ clock rate 64000
+!
+interface Serial3/0
+ bandwidth 1000
+ ip address 192.168.27.1 255.255.255.0
+ clock rate 64000
+!
+!
+router ospf 1
+ log-adjacency-changes
+ network 192.168.26.0 0.0.0.255 area 0
+ network 192.168.27.0 0.0.0.255 area 0
+!
+ip classless
+!
+!
+!
+!
+!
+line con 0
+line vty 0 4
+ login
+!
+!
+end
+

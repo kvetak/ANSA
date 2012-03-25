@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="130.10.63.1"> <!-- R1 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>130.10.8.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.62.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth2">
+        <IPAddress>130.10.63.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+  <Router id="130.10.64.2"> <!-- R2 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>130.10.17.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.62.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth2">
+        <IPAddress>130.10.64.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+    	</Rip>
+    </Routing>
+    <ACLs>
+		 <ACL no="110">
+		   <entry seq_no="15">
+		     <action>deny</action>
+		     <IP_src>0.0.0.0</IP_src>
+		     <IP_dst>192.168.17.0</IP_dst>
+		     <WC_src>255.255.255.255</WC_src>
+		     <WC_dst>0.0.0.255</WC_dst>
+		     <port_op_src></port_op_src>
+		     <port_op_dst></port_op_dst>
+		     <port_beg_src></port_beg_src>
+		     <port_end_src></port_end_src>
+		     <port_beg_dst></port_beg_dst>
+		     <port_end_dst></port_end_dst>
+		     <protocol>icmp</protocol>
+		     <orig>access-list 110 deny icmp any 192.168.17.0 0.0.0.255</orig>
+		   </entry>
+		   <entry seq_no="20">
+		     <action>permit</action>
+		     <IP_src>0.0.0.0</IP_src>
+		     <IP_dst>0.0.0.0</IP_dst>
+		     <WC_src>255.255.255.255</WC_src>
+		     <WC_dst>255.255.255.255</WC_dst>
+		     <port_op_src></port_op_src>
+		     <port_op_dst></port_op_dst>
+		     <port_beg_src></port_beg_src>
+		     <port_end_src></port_end_src>
+		     <port_beg_dst></port_beg_dst>
+		     <port_end_dst></port_end_dst>
+		     <protocol>ip</protocol>
+		     <orig>access-list 110 permit ip any any</orig>
+		   </entry>
+		   <interfaces>
+		     <interface dir="in">eth2</interface>
+		   </interfaces>
+		 </ACL>
+    </ACLs>
+  </Router>
+  
+  <Router id="130.10.64.3"> <!-- R3 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>130.10.24.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.63.3</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth2">
+        <IPAddress>130.10.64.3</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.8.1"> <!-- R1A -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.8.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.8.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+    	<Rip>
+    		<Network>130.10.0.0</Network>
+        	<Network>192.168.8.0</Network>
+        	<Passive-interface>eth0</Passive-interface>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+   <Router id="192.168.17.1"> <!-- R2B -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.17.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.17.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+    	<Rip>
+    		<Network>130.10.0.0</Network>
+        	<Network>192.168.17.0</Network>
+        	<Passive-interface>eth0</Passive-interface>
+    	</Rip>
+    </Routing>
+  </Router>
+  
+   <Router id="192.168.24.1"> <!-- R3C -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.24.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>130.10.24.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Rip>
+    		<Network>130.10.0.0</Network>
+        	<Network>192.168.24.0</Network>
+        	<Passive-interface>eth0</Passive-interface>
+    	</Rip>
+    </Routing>
+  </Router>
+
+</Routers>

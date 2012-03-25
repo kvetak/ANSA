@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="192.168.3.1"> <!-- R1 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>10.10.10.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.3.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+    <ACLs>
+	    <ACL no="110">
+	      <entry seq_no="15">
+	        <action>permit</action>
+	        <IP_src>192.168.3.101</IP_src>
+	        <IP_dst>10.60.20.0</IP_dst>
+	        <WC_src>0.0.0.255</WC_src>
+	        <WC_dst>0.0.0.255</WC_dst>
+	        <port_op_src>gt</port_op_src>
+	        <port_op_dst>neq</port_op_dst>
+	        <port_beg_src>3128</port_beg_src>
+	        <port_end_src></port_end_src>
+	        <port_beg_dst>80</port_beg_dst>
+	        <port_end_dst></port_end_dst>
+	        <protocol>udp</protocol>
+	      </entry>
+	      <interfaces>
+	        <interface dir="in">eth0</interface>
+	        <interface dir="out">eth0</interface>			
+	        <interface dir="in">eth1</interface>
+	        <interface dir="out">eth1</interface>
+	      </interfaces>
+	    </ACL>
+	  </ACLs>
+  </Router>
+  
+  <Router id="192.168.4.2"> <!-- R2 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>10.10.10.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.4.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+    <ACLs>
+	    <ACL no="110">
+	      <entry seq_no="15">
+	        <action>permit</action>
+	        <IP_src>192.168.3.101</IP_src>
+	        <IP_dst>10.60.20.0</IP_dst>
+	        <WC_src>0.0.0.255</WC_src>
+	        <WC_dst>0.0.0.255</WC_dst>
+	        <port_op_src>gt</port_op_src>
+	        <port_op_dst>neq</port_op_dst>
+	        <port_beg_src>3128</port_beg_src>
+	        <port_end_src></port_end_src>
+	        <port_beg_dst>80</port_beg_dst>
+	        <port_end_dst></port_end_dst>
+	        <protocol>udp</protocol>
+	      </entry>
+	      <interfaces>
+	        <interface dir="in">eth0</interface>
+	        <interface dir="out">eth0</interface>			
+	      </interfaces>
+	    </ACL>
+	  </ACLs>
+  </Router>
+  
+  <Router id="192.168.3.3"> <!-- R3 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.1.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.3.3</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+    <ACLs>
+	    <ACL no="110">
+	      <entry seq_no="15">
+	        <action>permit</action>
+	        <IP_src>192.168.3.101</IP_src>
+	        <IP_dst>10.60.20.0</IP_dst>
+	        <WC_src>0.0.0.255</WC_src>
+	        <WC_dst>0.0.0.255</WC_dst>
+	        <port_op_src>gt</port_op_src>
+	        <port_op_dst>neq</port_op_dst>
+	        <port_beg_src>3128</port_beg_src>
+	        <port_end_src></port_end_src>
+	        <port_beg_dst>80</port_beg_dst>
+	        <port_end_dst></port_end_dst>
+	        <protocol>udp</protocol>
+	      </entry>
+	      <interfaces>
+	        <interface dir="in">eth0</interface>
+	        <interface dir="out">eth0</interface>			
+	        <interface dir="in">eth1</interface>
+	        <interface dir="out">eth1</interface>
+	      </interfaces>
+	    </ACL>
+	  </ACLs>
+  </Router>
+  
+  <Router id="192.168.4.4"> <!-- R4 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.4.4</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.2.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+    <ACLs>
+	    <ACL no="110">
+	      <entry seq_no="15">
+	        <action>permit</action>
+	        <IP_src>192.168.3.101</IP_src>
+	        <IP_dst>10.60.20.0</IP_dst>
+	        <WC_src>0.0.0.255</WC_src>
+	        <WC_dst>0.0.0.255</WC_dst>
+	        <port_op_src>gt</port_op_src>
+	        <port_op_dst>neq</port_op_dst>
+	        <port_beg_src>3128</port_beg_src>
+	        <port_end_src></port_end_src>
+	        <port_beg_dst>80</port_beg_dst>
+	        <port_end_dst></port_end_dst>
+	        <protocol>udp</protocol>
+	      </entry>
+	      <interfaces>
+	        <interface dir="out">eth0</interface>			
+	        <interface dir="out">eth1</interface>
+	      </interfaces>
+	    </ACL>
+	    <ACL no="120">
+	      <entry seq_no="15">
+	        <action>permit</action>
+	        <IP_src>0.0.0.0</IP_src>
+	        <IP_dst>0.0.0.0</IP_dst>
+	        <WC_src>255.255.255.255</WC_src>
+	        <WC_dst>255.255.255.255/WC_dst>
+	        <port_op_src></port_op_src>
+	        <port_op_dst></port_op_dst>
+	        <port_beg_src></port_beg_src>
+	        <port_end_src></port_end_src>
+	        <port_beg_dst></port_beg_dst>
+	        <port_end_dst></port_end_dst>
+	        <protocol>ip</protocol>
+	      </entry>
+	      <interfaces>
+	        <interface dir="out">eth0</interface>			
+	        <interface dir="out">eth1</interface>
+	        <interface dir="in">eth0</interface>			
+	        <interface dir="in">eth1</interface>
+	      </interfaces>
+	    </ACL>
+	  </ACLs>
+  </Router>
+
+</Routers>

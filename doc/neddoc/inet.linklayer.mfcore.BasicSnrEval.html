@@ -1,0 +1,159 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>BasicSnrEval</i></h2>
+<b>Package:</b> inet.linklayer.mfcore<br/><b>File: <a href="src-linklayer-mfcore-BasicSnrEval.ned.html">src/linklayer/mfcore/BasicSnrEval.ned</a></b><br/><p><a href="../doxy/class_basic_snr_eval.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>The basic class for all snrEval modules</p>
+<p>The <a href="inet.linklayer.mfcore.BasicSnrEval.html">BasicSnrEval</a> module provides functionality like en- and
+decapsulation of messages. If you use the standard message formats
+everythng should work fine. Before a packet is sent some
+information, e.g. transmission power, can be written to the
+<a href="AirFrame.html">AirFrame</a> header. If you write your own snrEval, just subclass and
+redefine the handleUpperMsg function (see description of the
+function). After receiving a message it can be processed in
+handleLowerMsgStart. Then it is buffered for the time the
+transmission would last in reality, and then can be handled
+again. Again you can redefine the 1. handleLowerMsgStart and
+2. handleLowerMsgEnd for your own needs (see description). So, the
+call of these functions represent the following events: 1. received
+a message (i.e. transmission startet) 2. message will be handed on
+to the upper layer (i.e. transmission time is over)</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>See also:</b> <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a></p>
+<p><b>Author:</b> Marc Loebbers</p>
+<img src="inet.linklayer.mfcore.BasicSnrEval-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.mfcore.BasicSnrEval.html" title="BasicSnrEval" alt="BasicSnrEval" coords="0,31,126,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mfcore.BasicSnrEval-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.mfcore.BasicSnrEval.html" title="Simple Module BasicSnrEval" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mfcore.BasicSnrEval-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.mfcore.BasicSnrEval.html" title="Simple Module BasicSnrEval" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>coreDebug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch for the core framework</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>power used for transmission of messages</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>bitrate</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>headerLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>header length of the <a href="AirFrame.html">AirFrame</a></p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from the MAC layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to the decider sub-module</p>
+</td>
+</tr>
+<tr class="local">
+   <td>radioIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to receive AirFrames</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// The basic class for all snrEval modules
+//
+// The BasicSnrEval module provides functionality like en- and
+// decapsulation of messages. If you use the standard message formats
+// everythng should work fine. Before a packet is sent some
+// information, e.g. transmission power, can be written to the
+// AirFrame header. If you write your own snrEval, just subclass and
+// redefine the handleUpperMsg function (see description of the
+// function). After receiving a message it can be processed in
+// handleLowerMsgStart. Then it is buffered for the time the
+// transmission would last in reality, and then can be handled
+// again. Again you can redefine the 1. handleLowerMsgStart and
+// 2. handleLowerMsgEnd for your own needs (see description). So, the
+// call of these functions represent the following events: 1. received
+// a message (i.e. transmission startet) 2. message will be handed on
+// to the upper layer (i.e. transmission time is over)
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> SnrEval
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc Loebbers
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicSnrEval</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">coreDebug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch for the core framework
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">transmitterPower</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mW&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// power used for transmission of messages
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">bitrate</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;bps&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// bitrate
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">b</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// header length of the AirFrame
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from the MAC layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to the decider sub-module
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to receive AirFrames
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

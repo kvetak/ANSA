@@ -1,0 +1,60 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.linklayer.mf80211.phyLayer.snrEval</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.phyLayer.snrEval.GilbertElliotSnr.html">GilbertElliotSnr</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Gilbert-Elliot signal-noise evaluator</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Represents the radio. Frames received from higher layers (typically the
+MAC protocol) are transmitted on the radio channel, using the global
+<a href="inet.world.ChannelControl.html">ChannelControl</a> module. Frames received on the radio channel will have
+their signal-noise ratio evaluated and passed up to the decider.
+(It is the decider's task to determine whether the frame was received
+correctly, and pass it up to the MAC layer).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval80211.html">SnrEval80211</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

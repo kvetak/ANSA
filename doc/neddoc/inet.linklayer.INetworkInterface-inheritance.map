@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.linklayer.INetworkInterface.html" title="Module Interface INetworkInterface" alt="" coords="153,6,279,34">
+<area shape="rect" id="node2" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="5,83,128,111">
+<area shape="rect" id="node4" href="inet.linklayer.ethernet.EthernetInterface2.html" title="Compound Module EthernetInterface2" alt="" coords="152,83,280,111">
+<area shape="rect" id="node6" href="inet.linklayer.ppp.PPPInterfaceNoQueue.html" title="Compound Module PPPInterfaceNoQueue" alt="" coords="304,83,459,111">

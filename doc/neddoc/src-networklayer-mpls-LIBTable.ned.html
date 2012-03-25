@@ -1,0 +1,60 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/mpls/LIBTable.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.mpls.LIBTable.html">LIBTable</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Stores the LIB (Label Information Base), accessed by <a href="inet.networklayer.mpls.MPLS.html">MPLS</a> and its
+associated control protocols (<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>, <a href="inet.networklayer.ldp.LDP.html">LDP</a>) via direct C++ method calls.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+// (C) 2003 Xuan Thang Nguyen
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mpls</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Stores the LIB (Label Information Base), accessed by MPLS and its
+// associated control protocols (RSVP, LDP) via direct C++ method calls.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">LIBTable</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">xml</span><span style="color: #000000; "> </span><span style="color: #000000; ">conf</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// table contents to be loaded on startup
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/table2&quot;</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

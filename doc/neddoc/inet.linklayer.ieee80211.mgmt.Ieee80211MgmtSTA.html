@@ -1,0 +1,144 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>Ieee80211MgmtSTA</i></h2>
+<b>Package:</b> inet.linklayer.ieee80211.mgmt<br/><b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtSTA.ned.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtSTA.ned</a></b><br/><p><a href="../doxy/class_ieee80211_mgmt_s_t_a.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Used in 802.11 infrastructure mode: handles management frames for a station (STA).</p>
+<p>Relies on the MAC layer (<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">Ieee80211Mac</a>) for reception and transmission of frames.</p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA.html" title="Ieee80211MgmtSTA" alt="Ieee80211MgmtSTA" coords="0,31,172,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA.html" title="Simple Module Ieee80211MgmtSTA" alt="" coords="5,83,147,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.Ieee80211NicSTA.html" title="Compound Module Ieee80211NicSTA" alt="" coords="12,6,140,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA.html" title="Simple Module Ieee80211MgmtSTA" alt="" coords="5,83,147,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.mgmt.Ieee80211Mgmt.html" title="Module Interface Ieee80211Mgmt" alt="" coords="19,6,133,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">Ieee80211NicSTA</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card,
+in a STA, using infrastructure mode.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>maximum queue length</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>macIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>macOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>agentIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>agentOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Used in 802.11 infrastructure mode: handles management frames for a station (STA).
+//
+// Relies on the MAC layer (Ieee80211Mac) for reception and transmission of frames.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211MgmtSTA</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Mgmt</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">frameCapacity</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// maximum queue length
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">macIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">macOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">agentIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">agentOut</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

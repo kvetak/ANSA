@@ -1,0 +1,66 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>NetworkInfo</i></h2>
+<b>Package:</b> inet.networklayer.extras<br/><b>File: <a href="src-networklayer-extras-NetworkInfo.ned.html">src/networklayer/extras/NetworkInfo.ned</a></b><br/><p><a href="../doxy/class_network_info.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p><a href="inet.networklayer.extras.NetworkInfo.html">NetworkInfo</a> does not send or receive messages and has no parameters
+either. Instead it is invoked from <a href="inet.world.ScenarioManager.html">ScenarioManager</a> scripts. E.g.:</p>
+<p><pre>
+&lt;scenario&gt;
+  &lt;at t=&quot;2&quot;&gt;
+    &lt;routing module=&quot;NetworkInfo&quot; target=&quot;LSR2&quot; file=&quot;LSR2_002.txt&quot;/&gt;
+  &lt;/at&gt;
+&lt;/scenario&gt;
+</pre></p>
+<p>It is currently only used in the Quagga/INET validation scenarios, and supports following
+commands:</p>
+  <ul><li><code>routing</code>: dumps routing table of the <tt>target</tt> node into
+  specified <tt>file</tt>. Optionally <tt>mode</tt> attribute can be set to "a"
+  to have the output appended (default is to truncate target file if such exists).
+  Setting attribute <tt>compat</tt> to value "linux" modifies the
+  output to look like `route -n | sort -r` output on linux...</li></ul>
+<img src="inet.networklayer.extras.NetworkInfo-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.extras.NetworkInfo.html" title="NetworkInfo" alt="NetworkInfo" coords="0,31,119,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.extras.NetworkInfo-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.extras.NetworkInfo.html" title="Simple Module NetworkInfo" alt="" coords="5,6,99,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.extras.NetworkInfo-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.extras.NetworkInfo.html" title="Simple Module NetworkInfo" alt="" coords="5,6,99,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// NetworkInfo does not send or receive messages and has no parameters
+// either. Instead it is invoked from ScenarioManager scripts. E.g.:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+// &lt;scenario&gt;
+//   &lt;at t=&quot;2&quot;&gt;
+//     &lt;routing module=&quot;NetworkInfo&quot; target=&quot;LSR2&quot; file=&quot;LSR2_002.txt&quot;/&gt;
+//   &lt;/at&gt;
+// &lt;/scenario&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// It is currently only used in the Quagga/INET validation scenarios, and supports following
+// commands:
+//
+// - </span><span style="color: #800000; ">&lt;code&gt;</span><span style="color: #808080; font-style: italic; ">routing</span><span style="color: #800000; ">&lt;/code&gt;</span><span style="color: #808080; font-style: italic; ">: dumps routing table of the </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">target</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> node into
+//   specified </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">file</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">. Optionally </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">mode</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> attribute can be set to &quot;a&quot;
+//   to have the output appended (default is to truncate target file if such exists).
+//   Setting attribute </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">compat</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> to value &quot;linux&quot; modifies the
+//   output to look like `route -n | sort -r` output on linux...
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">NetworkInfo</span><span style="color: #000000; ">
+{
+}
+</span></pre>
+   </body>
+</html>

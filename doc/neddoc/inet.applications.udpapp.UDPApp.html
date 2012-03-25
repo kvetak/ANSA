@@ -1,0 +1,221 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Module Interface <i>UDPApp</i></h2>
+<b>Package:</b> inet.applications.udpapp<br/><b>File: <a href="src-applications-udpapp-UDPApp.ned.html">src/applications/udpapp/UDPApp.ned</a></b><br/>
+<p>Template for <a href="inet.transport.udp.UDP.html">UDP</a> applications. It shows what gates a <a href="inet.transport.udp.UDP.html">UDP</a> app
+needs, to be able to be used in <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> etc.</p>
+<img src="inet.applications.udpapp.UDPApp-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.udpapp.UDPApp.html" title="UDPApp" alt="UDPApp" coords="0,31,166,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.udpapp.UDPApp-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.udpapp.UDPApp.html" title="Module Interface UDPApp" alt="" coords="735,83,809,111">
+<area shape="rect" id="node2" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="5,6,112,34">
+<area shape="rect" id="node4" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="136,6,224,34">
+<area shape="rect" id="node6" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="248,6,349,34">
+<area shape="rect" id="node8" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="373,6,483,34">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="507,6,771,34">
+<area shape="rect" id="node12" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="795,6,1016,34">
+<area shape="rect" id="node14" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="1040,6,1277,34">
+<area shape="rect" id="node16" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="1301,6,1523,34">
+<area shape="rect" id="node18" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="1547,6,1648,34">
+<area shape="rect" id="node20" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="1672,6,1829,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.udpapp.UDPApp-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.udpapp.UDPApp.html" title="Module Interface UDPApp" alt="" coords="265,6,340,34">
+<area shape="rect" id="node2" href="inet.applications.udpapp.UDPBasicApp.html" title="Simple Module UDPBasicApp" alt="" coords="5,83,112,111">
+<area shape="rect" id="node4" href="inet.applications.udpapp.UDPEchoApp.html" title="Simple Module UDPEchoApp" alt="" coords="136,83,240,111">
+<area shape="rect" id="node6" href="inet.applications.udpapp.UDPSink.html" title="Simple Module UDPSink" alt="" coords="264,83,341,111">
+<area shape="rect" id="node8" href="inet.applications.udpapp.UDPVideoStreamCli.html" title="Simple Module UDPVideoStreamCli" alt="" coords="365,83,507,111">
+<area shape="rect" id="node10" href="inet.applications.udpapp.UDPVideoStreamSvr.html" title="Simple Module UDPVideoStreamSvr" alt="" coords="531,83,677,111">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MFMobileHost.html">MFMobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the Mobility Framework's 802.11 implementation, <a href="inet.linklayer.mf80211.Nic80211.html">Nic80211</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be dynamically
+specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MobileHost.html">MobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the new IEEE 802.11 implementation, <a href="inet.linklayer.ieee80211.Ieee80211Nic.html">Ieee80211Nic</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be
+dynamically specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHost.html">StandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.StandardHost6.html">StandardHost6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IPv6 host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html">StandardHostWithDLDuplicatesGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html">PPPInterfaceWithDLDuplicatesGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLThruputMeter.html">StandardHostWithDLThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html">PPPInterfaceWithDLThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULDropsGenerator.html">StandardHostWithULDropsGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html">PPPInterfaceWithULDropsGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULThruputMeter.html">StandardHostWithULThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html">PPPInterfaceWithULThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a host with one wireless (802.11b) card in infrastructure mode.
+This module is basically a <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> with an <a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">Ieee80211NicSTA</a> added.
+It should be used in conjunction with <a href="inet.nodes.wireless.WirelessAP.html">WirelessAP</a>, or any other AP model
+which contains <a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">Ieee80211NicAP</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a host with one wireless (802.11b) card in infrastructure mode,
+but using a simplified NIC that does not support handovers.
+This module is basically a <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> with an <a href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html">Ieee80211NicSTASimplified</a>
+added. It should be used in conjunction with <a href="inet.nodes.wireless.WirelessAPSimplified.html">WirelessAPSimplified</a>,
+or any other AP model which contains <a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">Ieee80211NicAPSimplified</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Template for UDP applications. It shows what gates a UDP app
+// needs, to be able to be used in StandardHost etc.
+//
+</span><span style="color: #800000; font-weight: bold; ">moduleinterface</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPApp</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+
+
+</span></pre>
+   </body>
+</html>

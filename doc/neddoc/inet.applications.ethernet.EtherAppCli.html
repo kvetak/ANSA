@@ -1,0 +1,213 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>EtherAppCli</i></h2>
+<b>Package:</b> inet.applications.ethernet<br/><b>File: <a href="src-applications-ethernet-EtherAppCli.ned.html">src/applications/ethernet/EtherAppCli.ned</a></b><br/><p><a href="../doxy/class_ether_app_cli.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>A simple traffic generator for the Ethernet model and the 802.11 model,
+and generally for any L2 model that accepts Ieee80211Ctrl control info
+on the packets. It generates <a href="EtherAppReq.html">EtherAppReq</a> packets. It should be connected
+directly to <a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a> or a Ieee802NicXXX module.</p>
+<img src="inet.applications.ethernet.EtherAppCli-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.ethernet.EtherAppCli.html" title="EtherAppCli" alt="EtherAppCli" coords="0,31,118,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.ethernet.EtherAppCli-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.ethernet.EtherAppCli.html" title="Simple Module EtherAppCli" alt="" coords="172,83,263,111">
+<area shape="rect" id="node2" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="5,6,85,34">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherHost2.html" title="Compound Module EtherHost2" alt="" coords="109,6,197,34">
+<area shape="rect" id="node6" href="inet.examples.wireless.throughput.ThroughputClient.html" title="Compound Module ThroughputClient" alt="" coords="221,6,341,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.ethernet.EtherAppCli-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.ethernet.EtherAppCli.html" title="Simple Module EtherAppCli" alt="" coords="5,6,96,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost.html">EtherHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An example host with one Ethernet port and traffic generators that
+generate Ethernet traffic directly. This host model does not contain
+higher layer protocols (IP, TCP).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost2.html">EtherHost2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Example host model with one Ethernet port and several traffic generators
+to create traffic in the test network.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.hosttohost.ThroughputClient.html">ThroughputClient</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.throughput.ThroughputClient.html">ThroughputClient</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>destAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination MAC address, or module path name of destination station; empty means off</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>this.waitTime</td>
+   <td>
+<p>time of sending the first request</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>waitTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,1s)</td>
+   <td>
+<p>interval between sending requests</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>reqLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100B</td>
+   <td>
+<p>length of request packets</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>respLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1KiB</td>
+   <td>
+<p>length of response packets</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>registerSAP</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>whether to sent IEEE802CTRL_REGISTER_DSAP on startup</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>in</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>out</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// A simple traffic generator for the Ethernet model and the 802.11 model,
+// and generally for any L2 model that accepts Ieee80211Ctrl control info
+// on the packets. It generates EtherAppReq packets. It should be connected
+// directly to EtherLLC or a Ieee802NicXXX module.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherAppCli</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddress</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// destination MAC address, or module path name of destination station; empty means off
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">startTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #800000; font-weight: bold; ">this</span><span style="color: #000000; ">.</span><span style="color: #000000; ">waitTime</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// time of sending the first request
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">waitTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #800080; font-weight: bold; ">uniform</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">s</span><span style="color: #000000; ">,</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">));  </span><span style="color: #808080; font-style: italic; ">// interval between sending requests
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reqLength</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">B</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">B</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// length of request packets
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">respLength</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">B</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">KiB</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// length of response packets
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">registerSAP</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// whether to sent IEEE802CTRL_REGISTER_DSAP on startup
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">in</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">out</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

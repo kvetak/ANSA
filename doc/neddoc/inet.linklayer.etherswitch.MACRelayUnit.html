@@ -1,0 +1,205 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Module Interface <i>MACRelayUnit</i></h2>
+<b>Package:</b> inet.linklayer.etherswitch<br/><b>File: <a href="src-linklayer-etherswitch-MACRelayUnit.ned.html">src/linklayer/etherswitch/MACRelayUnit.ned</a></b><br/>
+<p>Prototype for modules providing Ethernet switch functionality.
+These modules handle the mapping between ports and MAC addresses,
+and forward frames (<a href="EtherFrame.html">EtherFrame</a>) to appropriate ports.</p>
+<p>Functions:</p>
+  <ul><li>relays frames based on their dest MAC addresses (dest--&gt;port mapping)</li>
+  <li>models finite buffer size (drops) and finite processing power (latency, queueing)</li></ul>
+<p>Address caching is modeled by a fixed-size lookup table.
+When the table is full, the oldest address is kicked out of the cache.</p>
+<p>Entries are also deleted if their age exceeds a certain limit.</p>
+<p>If needed, address tables can be pre-loaded from text files at the beginning
+of the simulation; this controlled by the addressTableFile module parameter.</p>
+<p>This module is not a concrete implementation, it just defines gates and
+parameters a <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a> should have. Concrete inplementations add
+capacity and performance aspects to the model (number of frames processed
+per second, amount of memory available in the switch, etc.)
+C++ implementations can subclass from the class <tt>MACRelayUnitBase</tt>.</p>
+<p>Known implementations are <a href="inet.linklayer.etherswitch.MACRelayUnitNP.html">MACRelayUnitNP</a> and <a href="inet.linklayer.etherswitch.MACRelayUnitPP.html">MACRelayUnitPP</a>.</p>
+<img src="inet.linklayer.etherswitch.MACRelayUnit-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="MACRelayUnit" alt="MACRelayUnit" coords="0,31,202,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.etherswitch.MACRelayUnit-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="Module Interface MACRelayUnit" alt="" coords="188,83,297,111">
+<area shape="rect" id="node2" href="inet.nodes.ethernet.EtherSwitch.html" title="Compound Module EtherSwitch" alt="" coords="5,6,99,34">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherSwitch2.html" title="Compound Module EtherSwitch2" alt="" coords="123,6,221,34">
+<area shape="rect" id="node6" href="inet.nodes.wireless.WirelessAPWithEth.html" title="Compound Module WirelessAPWithEth" alt="" coords="245,6,384,34">
+<area shape="rect" id="node8" href="inet.nodes.wireless.WirelessAPWithEthSimplified.html" title="Compound Module WirelessAPWithEthSimplified" alt="" coords="408,6,603,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.etherswitch.MACRelayUnit-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="Module Interface MACRelayUnit" alt="" coords="91,6,200,34">
+<area shape="rect" id="node2" href="inet.linklayer.etherswitch.MACRelayUnitNP.html" title="Simple Module MACRelayUnitNP" alt="" coords="5,83,133,111">
+<area shape="rect" id="node4" href="inet.linklayer.etherswitch.MACRelayUnitPP.html" title="Simple Module MACRelayUnitPP" alt="" coords="157,83,285,111">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherSwitch.html">EtherSwitch</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Model of an Ethernet switch.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherSwitch2.html">EtherSwitch2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Model of an Ethernet switch built with <a href="inet.linklayer.ethernet.EtherMAC2.html">EtherMAC2</a>, which means
+that all ports are operating in strictly full-duplex mode.
+Use <a href="inet.nodes.ethernet.EtherSwitch.html">EtherSwitch</a> if you need half-duplex operation on some ports.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAPWithEth.html">WirelessAPWithEth</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point with Ethernet ports.
+It can be used in conjunction with <a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>, or any other host model
+containing WirelessNicSTA.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAPWithEthSimplified.html">WirelessAPWithEthSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point with Ethernet ports, but using a simplified NIC
+that does not support handovers. It can be used in conjunction with
+<a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>, or any other host model containing WirelessNicSTASimplified.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>addressTableFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>set to empty string if not used</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>addressTableSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>max size of address table</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>agingTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>max idle time for address table entries
+(when it expires, entry is removed from the table)</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/switch</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Prototype for modules providing Ethernet switch functionality.
+// These modules handle the mapping between ports and MAC addresses,
+// and forward frames (EtherFrame) to appropriate ports.
+//
+// Functions:
+// - relays frames based on their dest MAC addresses (dest--&gt;port mapping)
+// - models finite buffer size (drops) and finite processing power (latency, queueing)
+//
+// Address caching is modeled by a fixed-size lookup table.
+// When the table is full, the oldest address is kicked out of the cache.
+//
+// Entries are also deleted if their age exceeds a certain limit.
+//
+// If needed, address tables can be pre-loaded from text files at the beginning
+// of the simulation; this controlled by the addressTableFile module parameter.
+//
+// This module is not a concrete implementation, it just defines gates and
+// parameters a MACRelayUnit should have. Concrete inplementations add
+// capacity and performance aspects to the model (number of frames processed
+// per second, amount of memory available in the switch, etc.)
+// C++ implementations can subclass from the class </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">MACRelayUnitBase</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">.
+//
+// Known implementations are MACRelayUnitNP and MACRelayUnitPP.
+//
+</span><span style="color: #800000; font-weight: bold; ">moduleinterface</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACRelayUnit</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">addressTableFile</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// set to empty string if not used
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">addressTableSize</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// max size of address table
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">agingTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// max idle time for address table entries
+</span><span style="color: #000000; ">                                     </span><span style="color: #808080; font-style: italic; ">// (when it expires, entry is removed from the table)
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/switch&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

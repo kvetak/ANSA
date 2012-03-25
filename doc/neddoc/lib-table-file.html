@@ -1,0 +1,28 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>LIB Table File Format</h2>
+<p>The format of a LIB table file is:</p>
+<p>The beginning of the file should begin with comments. Lines begin with # are treated
+as comments. An empty line is required after the comments. The "LIB TABLE"
+syntax must come next with an empty line. The column headers follow. This header
+must be strictly "In-lbl In-intf Out-lbl Out-intf". Column
+values are after that with space or tab for field separation.
+The following is a sample of lib table file.</p>
+<p><pre>
+#lib table for <a href="inet.networklayer.mpls.MPLS.html">MPLS</a> network simulation test
+#lib1.table for LSR1 - this is an edge router
+#no incoming label for traffic from in-intf 0 &amp;1 - LSR1 is ingress router for those traffic
+#no outgoing label for traffic from in_intf 2 &amp;3 - LSR 1 is egress router for those traffic
+
+LIB TABLE:
+
+In-lbl  In-intf         Out-lbl     Out-intf
+1       193.233.7.90    1           193.231.7.21
+2       193.243.2.1     0           193.243.2.3
+</pre></p>
+   </body>
+</html>

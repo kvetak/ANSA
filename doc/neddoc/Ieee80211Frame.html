@@ -1,0 +1,158 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>Ieee80211Frame</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mac-Ieee80211Frame.msg.html">src/linklayer/ieee80211/mac/Ieee80211Frame.msg</a></b><br/>
+<p>The common part of 802.11 frames.</p>
+<p>NOTE:
+FCS value is not explicitly modeled, but it is included in the length.
+Frame control format fields not supported by this model are omitted:
+MoreFlag, PowerMgmt, MoreData, WEP, Order.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211Frame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211Frame.html" title="Packet Ieee80211Frame" alt="" coords="5,6,123,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211Frame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211Frame.html" title="Packet Ieee80211Frame" alt="" coords="41,6,159,34">
+<area shape="rect" id="node2" href="Ieee80211OneAddressFrame.html" title="Packet Ieee80211OneAddressFrame" alt="" coords="5,83,195,111">
+</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211OneAddressFrame.html">Ieee80211OneAddressFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of a 802.11 frame with address1 present, like ACK and CTS</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>byteLength</td>
+   <td>
+      <i>
+</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>type</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>type and subtype</p>
+</td>
+</tr>
+<tr class="local">
+   <td>toDS</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>fromDS</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>retry</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>moreFragments</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>duration</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>"duration" in the Duration/ID field (-1=no duration)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>AID</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>"id" (Association ID) in the Duration/ID field (-1=no ID)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>receiverAddress</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>aka address1</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// The common part of 802.11 frames.
+//
+// NOTE:
+// FCS value is not explicitly modeled, but it is included in the length.
+// Frame control format fields not supported by this model are omitted:
+// MoreFlag, PowerMgmt, MoreData, WEP, Order.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">14</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">type</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211FrameType</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// type and subtype
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">toDS</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">fromDS</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">retry</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">moreFragments</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">duration</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// &quot;duration&quot; in the Duration/ID field (-1=no duration)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">AID</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;          </span><span style="color: #808080; font-style: italic; ">// &quot;id&quot; (Association ID) in the Duration/ID field (-1=no ID)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiverAddress</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// aka address1
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,1172 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Network <i>HandoverNetwork</i></h2>
+<b>Package:</b> inet.examples.wireless.handover<br/><b>File: <a href="examples-wireless-handover-HandoverNetwork.ned.html">examples/wireless/handover/HandoverNetwork.ned</a></b><br/><p>(no description)</p><img src="inet.examples.wireless.handover.HandoverNetwork-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.nodes.wireless.WirelessHost.html" title="WirelessHost" alt="WirelessHost" coords="32,153,76,208">
+<area shape="rect" href="inet.nodes.wireless.WirelessAP.html" title="WirelessAP" alt="WirelessAP" coords="82,225,126,277">
+<area shape="rect" href="inet.nodes.wireless.WirelessAP.html" title="WirelessAP" alt="WirelessAP" coords="482,225,526,277">
+<area shape="rect" href="inet.world.ChannelControl.html" title="ChannelControl" alt="ChannelControl" coords="15,74,109,128">
+<area shape="rect" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="FlatNetworkConfigurator" alt="FlatNetworkConfigurator" coords="104,78,181,123">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.wireless.handover.HandoverNetwork-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.examples.wireless.handover.HandoverNetwork.html" title="Network HandoverNetwork" alt="" coords="229,6,355,34">
+<area shape="rect" id="node2" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="5,83,107,111">
+<area shape="rect" id="node4" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="Simple Module FlatNetworkConfigurator" alt="" coords="131,83,293,111">
+<area shape="rect" id="node6" href="inet.world.ChannelControl.html" title="Simple Module ChannelControl" alt="" coords="317,83,429,111">
+<area shape="rect" id="node8" href="inet.nodes.wireless.WirelessAP.html" title="Compound Module WirelessAP" alt="" coords="453,83,544,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.wireless.handover.HandoverNetwork-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.examples.wireless.handover.HandoverNetwork.html" title="Network HandoverNetwork" alt="" coords="5,6,131,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>playgroundSizeX</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>playgroundSizeY</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>isNetwork</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.advertisedWindow</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>14*this.mss</td>
+   <td>
+<p>in bytes, corresponds with the maximal receiver buffer capacity (Note: normally, NIC queues should be at least this size)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.delayedAcksEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>delayed ACK algorithm (RFC 1122) enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.nagleEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>Nagle's algorithm (RFC 896) enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.limitedTransmitEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Limited Transmit algorithm (RFC 3042) enabled/disabled (can be used for TCPReno/TCPTahoe/TCPNewReno/TCPNoCongestionControl)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.increasedIWEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Increased Initial Window (RFC 3390) enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.sackSupport</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Selective Acknowledgment (RFC 2018, 2883, 3517) support (header option) (SACK will be enabled for a connection if both endpoints support it)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.windowScalingSupport</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Window Scale (RFC 1323) support (header option) (WS will be enabled for a connection if both endpoints support it)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.timestampSupport</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>Timestamps (RFC 1323) support (header option) (TS will be enabled for a connection if both endpoints support it)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.mss</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>536</td>
+   <td>
+<p>Maximum Segment Size (RFC 793) (header option)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.tcpAlgorithmClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCPReno"</td>
+   <td>
+<p>TCPReno/TCPTahoe/TCPNewReno/TCPNoCongestionControl/DumbTCP</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.sendQueueClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCPVirtualDataSendQueue"</td>
+   <td>
+<p>TCPVirtualDataSendQueue/TCPMsgBasedSendQueue</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.receiveQueueClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCPVirtualDataRcvQueue"</td>
+   <td>
+<p>TCPVirtualDataRcvQueue/TCPMsgBasedRcvQueue</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.transport.tcp.TCP.html">tcp</a>.recordStats</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>recording of seqNum etc. into output vectors enabled/disabled</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.destAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.srcAddr</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>source <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address (useful with <a href="inet.examples.sctp.multihomed.multi.html">multi</a>-homing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.packetSize</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>56B</td>
+   <td>
+<p>of ping payload, in bytes</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.interval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>time to wait between pings (can be random)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.hopLimit</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>32</td>
+   <td>
+<p>TTL or hopLimit for <a href="inet.networklayer.ipv4.IP.html">IP</a> packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.count</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>stop after count ping requests, 0 means continuously</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,this.interval)</td>
+   <td>
+<p>send first ping at startTime</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.stopTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>
+<p>send no pings after stopTime, 0 means forever</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.applications.pingapp.PingApp.html">pingApp</a>.printPing</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>dump on stdout</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.activeScan</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>selects between active and passive scanning</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.channelsToScan</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>list of channel numbers to scan (space delimited); empty means all channels</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.probeDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>delay before sending a probe request during active scanning</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.minChannelTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>min interval to spend on a channel during active scanning</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.maxChannelTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>channel time for passive scanning, and max channel time for active scanning</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.authenticationTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>5s</td>
+   <td>
+<p>timeout for the authentication procedure</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211AgentSTA.html">agent</a>.associationTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>5s</td>
+   <td>
+<p>timeout for the association procedure</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA.html">mgmt</a>.frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>maximum queue length</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.maxQueueSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>max queue length in frames; only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.rtsThresholdBytes</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>2346B</td>
+   <td>
+<p>longer messages will be sent using RTS/CTS</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.retryLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>maximum number of retries per message, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinData</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for normal data frames, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinBroadcast</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for broadcast messages, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.channelNumber</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>20mW</td>
+   <td>
+<p>power used for transmission of messages (in mW)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>(in bits/s)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-110dBm</td>
+   <td>
+<p>base noise level (dBm)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2</td>
+   <td>
+<p>used by the path loss calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.shadowingDeviation</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0dB</td>
+   <td>
+<p>used by the shadowing model calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.snirThreshold</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>4dB</td>
+   <td>
+<p>if signal-noise ratio is below this threshold, frame is considered noise (in dB)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessHost.html">host</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>received signals with power below sensitivity are ignored</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.ssid</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"SSID"</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.beaconInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100ms</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>maximum queue length</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.numAuthSteps</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4</td>
+   <td>
+<p>use 2 for Open System auth, 4 for WEP</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.maxQueueSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>max queue length in frames; only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.rtsThresholdBytes</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>2346B</td>
+   <td>
+<p>longer messages will be sent using RTS/CTS</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.retryLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>maximum number of retries per message, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinData</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for normal data frames, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinBroadcast</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for broadcast messages, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.channelNumber</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>20mW</td>
+   <td>
+<p>power used for transmission of messages (in mW)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>(in bits/s)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-110dBm</td>
+   <td>
+<p>base noise level (dBm)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2</td>
+   <td>
+<p>used by the path loss calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.shadowingDeviation</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0dB</td>
+   <td>
+<p>used by the shadowing model calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.snirThreshold</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>4dB</td>
+   <td>
+<p>if signal-noise ratio is below this threshold, frame is considered noise (in dB)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>received signals with power below sensitivity are ignored</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.mobility.NullMobility.html">mobility</a>.x</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start x coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap1</a>.<a href="inet.mobility.NullMobility.html">mobility</a>.y</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start y coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.ssid</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"SSID"</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.beaconInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100ms</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>maximum queue length</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html">mgmt</a>.numAuthSteps</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4</td>
+   <td>
+<p>use 2 for Open System auth, 4 for WEP</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.maxQueueSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>max queue length in frames; only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.rtsThresholdBytes</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>2346B</td>
+   <td>
+<p>longer messages will be sent using RTS/CTS</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.retryLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>maximum number of retries per message, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinData</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for normal data frames, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinBroadcast</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for broadcast messages, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.channelNumber</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>20mW</td>
+   <td>
+<p>power used for transmission of messages (in mW)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>(in bits/s)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-110dBm</td>
+   <td>
+<p>base noise level (dBm)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2</td>
+   <td>
+<p>used by the path loss calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.shadowingDeviation</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0dB</td>
+   <td>
+<p>used by the shadowing model calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.snirThreshold</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>4dB</td>
+   <td>
+<p>if signal-noise ratio is below this threshold, frame is considered noise (in dB)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>received signals with power below sensitivity are ignored</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.mobility.NullMobility.html">mobility</a>.x</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start x coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.wireless.WirelessAP.html">ap2</a>.<a href="inet.mobility.NullMobility.html">mobility</a>.y</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start y coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.world.ChannelControl.html">channelcontrol</a>.coreDebug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch for core framework</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.world.ChannelControl.html">channelcontrol</a>.pMax</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>20mW</td>
+   <td>
+<p>maximum sending power used for this network (in mW)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.world.ChannelControl.html">channelcontrol</a>.sat</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-110dBm</td>
+   <td>
+<p>signal attenuation threshold (in dBm)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.world.ChannelControl.html">channelcontrol</a>.alpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2</td>
+   <td>
+<p>path loss coefficient</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.world.ChannelControl.html">channelcontrol</a>.carrierFrequency</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2.4GHz</td>
+   <td>
+<p>carrier frequency of the channel (in Hz)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.world.ChannelControl.html">channelcontrol</a>.numChannels</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1</td>
+   <td>
+<p>number of radio channels (frequencies)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.networklayer.autorouting.FlatNetworkConfigurator.html">configurator</a>.networkAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"192.168.0.0"</td>
+   <td>
+<p>network part of the address (see netmask parameter)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.networklayer.autorouting.FlatNetworkConfigurator.html">configurator</a>.netmask</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"255.255.0.0"</td>
+   <td>
+<p>host part of addresses are autoconfigured</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">HandoverNetwork</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">playgroundSizeX</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">playgroundSizeY</span><span style="color: #000000; ">;
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">host</span><span style="color: #000000; ">: </span><span style="color: #000000; ">WirelessHost</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=50,130;r=,,#707070&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">ap1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">WirelessAP</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=100,200;r=,,#707070&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">ap2</span><span style="color: #000000; ">: </span><span style="color: #000000; ">WirelessAP</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=500,200;r=,,#707070&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">channelcontrol</span><span style="color: #000000; ">: </span><span style="color: #000000; ">ChannelControl</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; ">playgroundSizeX</span><span style="color: #000000; "> = </span><span style="color: #000000; ">playgroundSizeX</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; ">playgroundSizeY</span><span style="color: #000000; "> = </span><span style="color: #000000; ">playgroundSizeY</span><span style="color: #000000; ">;
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,50&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">configurator</span><span style="color: #000000; ">: </span><span style="color: #000000; ">FlatNetworkConfigurator</span><span style="color: #000000; "> {
+            </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=140,50&quot;</span><span style="color: #000000; ">);
+        }
+}
+
+</span></pre>
+   </body>
+</html>

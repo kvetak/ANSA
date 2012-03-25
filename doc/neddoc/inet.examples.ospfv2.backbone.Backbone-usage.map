@@ -1,0 +1,6 @@
+<area shape="rect" id="node1" href="inet.examples.ospfv2.backbone.Backbone.html" title="Network Backbone" alt="" coords="239,6,319,34">
+<area shape="rect" id="node2" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="5,83,101,111">
+<area shape="rect" id="node4" href="inet.examples.ospfv2.backbone.Backbone.C.html" title="Channel C" alt="" coords="125,83,197,111">
+<area shape="rect" id="node6" href="inet.world.ChannelInstaller.html" title="Simple Module ChannelInstaller" alt="" coords="221,83,336,111">
+<area shape="rect" id="node8" href="inet.linklayer.ethernet.EtherHub.html" title="Simple Module EtherHub" alt="" coords="360,83,437,111">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="461,83,563,111">

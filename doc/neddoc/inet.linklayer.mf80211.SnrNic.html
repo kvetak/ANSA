@@ -1,0 +1,247 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>SnrNic</i></h2>
+<b>Package:</b> inet.linklayer.mf80211<br/><b>File: <a href="src-linklayer-mf80211-SnrNic.ned.html">src/linklayer/mf80211/SnrNic.ned</a></b><br/>
+<p>This is the easiest nic to implement "real" network behaviour. It uses
+the CsmaMacLayer and the <a href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html">SnrDecider</a> and <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> modules.</p>
+<p>The csma mac provides basic medium access and is used here to prevent a
+host from trying to send a message while it is still in receive mode.</p>
+<p>The phy layer modules allow to account for collision and take fading into
+account so that messages can actually be lost.</p>
+<p>IMPORTANT:<br> In order to work with the <a href="inet.world.ChannelControl.html">ChannelControl</a> module the snrEval
+module has to be called "snrEval" in the ned file.</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>See also:</b> BasicMacLayer, <a href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html">SnrDecider</a>, <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a></p>
+<p><b>Author:</b> Daniel Willkomm</p>
+<img src="inet.linklayer.mf80211.SnrNic-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.mf80211.macLayer.CSMAMacLayer.html" title="CSMAMacLayer" alt="CSMAMacLayer" coords="46,75,82,126">
+<area shape="rect" href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html" title="SnrDecider" alt="SnrDecider" coords="47,132,94,169">
+<area shape="rect" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html" title="SnrEval" alt="SnrEval" coords="39,170,86,231">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mf80211.SnrNic-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.mf80211.SnrNic.html" title="Compound Module SnrNic" alt="" coords="196,6,268,34">
+<area shape="rect" id="node2" href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html" title="Simple Module SnrDecider" alt="" coords="5,83,91,111">
+<area shape="rect" id="node4" href="inet.linklayer.mf80211.macLayer.CSMAMacLayer.html" title="Simple Module CSMAMacLayer" alt="" coords="115,83,232,111">
+<area shape="rect" id="node6" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html" title="Simple Module SnrEval" alt="" coords="256,83,328,111">
+<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="352,83,451,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mf80211.SnrNic-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.mf80211.SnrNic.html" title="Compound Module SnrNic" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/ifcard</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to upper layers</p>
+</td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>from upper layers</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.CSMAMacLayer.html">mac</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.CSMAMacLayer.html">mac</a>.headerLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.macLayer.CSMAMacLayer.html">mac</a>.queueLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html">decider</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html">decider</a>.snrThresholdLevel</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.channelNumber</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.headerLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">snrEval</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">// This is the easiest nic to implement &quot;real&quot; network behaviour. It uses
+// the CsmaMacLayer and the SnrDecider and SnrEval modules.
+//
+// The csma mac provides basic medium access and is used here to prevent a
+// host from trying to send a message while it is still in receive mode.
+//
+// The phy layer modules allow to account for collision and take fading into
+// account so that messages can actually be lost.
+//
+// IMPORTANT:</span><span style="color: #800000; ">&lt;br&gt;</span><span style="color: #808080; font-style: italic; "> In order to work with the ChannelControl module the snrEval
+// module has to be called &quot;snrEval&quot; in the ned file.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> BasicMacLayer, SnrDecider, SnrEval
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Daniel Willkomm
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">SnrNic</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/ifcard&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to upper layers
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from upper layers
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">: </span><span style="color: #000000; ">CSMAMacLayer</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,50;b=32,30&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">: </span><span style="color: #000000; ">SnrDecider</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=68,100;b=16,16;o=white&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">: </span><span style="color: #000000; ">SnrEval</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=60,150;b=32,30&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,50,50,75,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,25,0,25,0&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">snrEval</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=m,73,0,50,50&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">decider</span><span style="color: #000000; ">.</span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">;
+
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">mac</span><span style="color: #000000; ">.</span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;
+
+}
+
+</span></pre>
+   </body>
+</html>

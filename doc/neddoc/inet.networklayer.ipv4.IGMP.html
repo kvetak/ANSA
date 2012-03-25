@@ -1,0 +1,99 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>IGMP</i></h2>
+<b>Package:</b> inet.networklayer.ipv4<br/><b>File: <a href="src-networklayer-ipv4-IGMP.ned.html">src/networklayer/ipv4/IGMP.ned</a></b><br/>
+<p>Placeholder for the <a href="inet.networklayer.ipv4.IGMP.html">IGMP</a> protocol</p>
+<p>author: Andras Varga</p>
+<img src="inet.networklayer.ipv4.IGMP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv4.IGMP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv4.IGMP.html" title="Compound Module IGMP" alt="" coords="20,83,92,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv4.IGMP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv4.IGMP.html" title="Compound Module IGMP" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.NetworkLayer.html">NetworkLayer</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Network layer of an IP node.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>localIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>delivered <a href="inet.networklayer.ipv4.IGMP.html">IGMP</a> packets</p>
+</td>
+</tr>
+<tr class="local">
+   <td>sendOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to <a href="inet.networklayer.ipv4.IP.html">IP</a></p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Placeholder for the IGMP protocol
+//
+// author: Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">IGMP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">localIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// delivered IGMP packets
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">sendOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to IP
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+}
+
+</span></pre>
+   </body>
+</html>

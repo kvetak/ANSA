@@ -1,0 +1,263 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>IP</i></h2>
+<b>Package:</b> inet.networklayer.ipv4<br/><b>File: <a href="src-networklayer-ipv4-IP.ned.html">src/networklayer/ipv4/IP.ned</a></b><br/><p><a href="../doxy/class_i_p.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Implements the IP protocol. The protocol header is represented
+by the <a href="IPDatagram.html">IPDatagram</a> message class.</p>
+<p><b>Interfacing with higher layer protocols</b></p>
+<p>To send a packet over <a href="inet.networklayer.ipv4.IP.html">IP</a> from a higher layer protocol, the module should
+fill in an <a href="IPControlInfo.html">IPControlInfo</a> object, attach it to the packet with cMessage's
+setControlInfo() method, the send it to the <a href="inet.networklayer.ipv4.IP.html">IP</a> module.</p>
+<p>When <a href="inet.networklayer.ipv4.IP.html">IP</a> sends up a packet to a higher layer protocol, it will also attach
+an <a href="IPControlInfo.html">IPControlInfo</a> to the packet, with the source and destination <a href="inet.networklayer.ipv4.IP.html">IP</a> address,
+etc. of the <a href="inet.networklayer.ipv4.IP.html">IP</a> datagram in which the packet arrived.</p>
+<p><a href="inet.networklayer.ipv4.IP.html">IP</a> can serve several higher-layer protocols. When delivering packets
+to them, the output gate is determined from the Protocol field in the
+IP header. The protocol-to-gateindex mapping must be given in the
+protocolMapping string parameter, in the following format:
+<pre>
+protocolnumber:gateindex, protocolnumber:gateindex, ...
+</pre></p>
+<p>The recommended setting is:</p>
+  <ul><li>TCP (6) : 0</li>
+  <li>UDP (17) : 1</li>
+  <li>ICMP (1) : 2</li>
+  <li>IGMP (2) : 3</li>
+  <li>RSVP (46) : 4</li></ul>
+<p>That is, <tt>protocolMapping="6:0,17:1,1:2,2:3,46:4"</tt></p>
+<p><b>Routing and interfacing with lower layers</b></p>
+<p>The routing table is stored in the module <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>. When a datagram
+needs to be routed, <a href="inet.networklayer.ipv4.IP.html">IP</a> queries <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a> for the output interface
+(or "port") and next hop address of the packet. This is done by directly
+calling C++ methods (such as findBestMatchingRoute(destAddress)) of <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>.
+No message exchange with <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a> takes place.</p>
+<p>A routed datagram will be sent to the queueOut gate, with an
+<a href="IPRoutingDecision.html">IPRoutingDecision</a> control info object attached which contains
+next hop address and interface number. queueOut is expected to be
+connected to <a href="inet.networklayer.arp.ARP.html">ARP</a>.</p>
+<p>Routing protocol implementations (e.g. OSPF and ISIS) can also query
+and manipulate the route table by calling <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>'s methods in C++.</p>
+<p><b>Performance model, QoS</b></p>
+<p>In the current form, <a href="inet.networklayer.ipv4.IP.html">IP</a> contains a FIFO which queues up IP datagrams;
+datagrams are processed in order. The processing time is determined by the
+procDelay module parameter.</p>
+<p>The current performance model comes from the QueueBase C++ base class.
+If you need a more sophisticated performance model, you may change the
+module implementation (the <a href="inet.networklayer.ipv4.IP.html">IP</a> class), and: (1) override the startService()
+method which determines processing time for a packet, or (2) use a
+different base class.</p>
+<p><b>See also:</b> <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>, <a href="IPControlInfo.html">IPControlInfo</a>, <a href="IPRoutingDecision.html">IPRoutingDecision</a>, <a href="inet.networklayer.arp.ARP.html">ARP</a></p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.networklayer.ipv4.IP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.ipv4.IP.html" title="IP" alt="IP" coords="0,31,55,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv4.IP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv4.IP.html" title="Simple Module IP" alt="" coords="20,83,92,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv4.IP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv4.IP.html" title="Simple Module IP" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.NetworkLayer.html">NetworkLayer</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Network layer of an IP node.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>timeToLive</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>32</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>multicastTimeToLive</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>protocolMapping</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>fragmentTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>60s</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/routing</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>transportIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>transportOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>queueIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>queueOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Implements the \IP protocol. The protocol header is represented
+// by the IPDatagram message class.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Interfacing with higher layer protocols</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// To send a packet over IP from a higher layer protocol, the module should
+// fill in an IPControlInfo object, attach it to the packet with cMessage's
+// setControlInfo() method, the send it to the IP module.
+//
+// When IP sends up a packet to a higher layer protocol, it will also attach
+// an IPControlInfo to the packet, with the source and destination IP address,
+// etc. of the IP datagram in which the packet arrived.
+//
+// IP can serve several higher-layer protocols. When delivering packets
+// to them, the output gate is determined from the Protocol field in the
+// \IP header. The protocol-to-gateindex mapping must be given in the
+// protocolMapping string parameter, in the following format:
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">
+// protocolnumber:gateindex, protocolnumber:gateindex, ...
+// </span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The recommended setting is:
+// - \TCP (6) : 0
+// - \UDP (17) : 1
+// - \ICMP (1) : 2
+// - \IGMP (2) : 3
+// - \RSVP (46) : 4
+//
+// That is, </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">protocolMapping=&quot;6:0,17:1,1:2,2:3,46:4&quot;</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Routing and interfacing with lower layers</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The routing table is stored in the module RoutingTable. When a datagram
+// needs to be routed, IP queries RoutingTable for the output interface
+// (or &quot;port&quot;) and next hop address of the packet. This is done by directly
+// calling C++ methods (such as findBestMatchingRoute(destAddress)) of RoutingTable.
+// No message exchange with RoutingTable takes place.
+//
+// A routed datagram will be sent to the queueOut gate, with an
+// IPRoutingDecision control info object attached which contains
+// next hop address and interface number. queueOut is expected to be
+// connected to ARP.
+//
+// Routing protocol implementations (e.g. OSPF and ISIS) can also query
+// and manipulate the route table by calling RoutingTable's methods in C++.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Performance model, QoS</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// In the current form, IP contains a FIFO which queues up \IP datagrams;
+// datagrams are processed in order. The processing time is determined by the
+// procDelay module parameter.
+//
+// The current performance model comes from the QueueBase C++ base class.
+// If you need a more sophisticated performance model, you may change the
+// module implementation (the IP class), and: (1) override the startService()
+// method which determines processing time for a packet, or (2) use a
+// different base class.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RoutingTable, IPControlInfo, IPRoutingDecision, ARP
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">IP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">procDelay</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">timeToLive</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">32</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">multicastTimeToLive</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">protocolMapping</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">fragmentTimeout</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">60</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/routing&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">,</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">,</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPDatagram</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPDatagram</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

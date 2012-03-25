@@ -1,0 +1,70 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>examples/rtp/unicast/unicast.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.rtp.unicast.RTPNetwork.html">RTPNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">examples</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">unicast</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">transport</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rtp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPNetwork</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">types</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ned</span><span style="color: #000000; ">.</span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+        {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #800080; font-weight: bold; ">normal</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00015</span><span style="color: #000000; ">s</span><span style="color: #000000; ">, </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00005</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+                </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">ber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00001</span><span style="color: #000000; ">;
+        }
+
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">sender</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;inet.transport.rtp.RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;10.0.0.2&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">fileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;../Data/moving.mpg.gdf&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">payloadType</span><span style="color: #000000; "> = </span><span style="color: #008000; ">32</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;server.irt&quot;</span><span style="color: #000000; ">;
+        }
+        </span><span style="color: #000000; ">receiver</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;inet.transport.rtp.RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;10.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">fileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">payloadType</span><span style="color: #000000; "> = </span><span style="color: #008000; ">32</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;client.irt&quot;</span><span style="color: #000000; ">;
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">sender</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">++ </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiver</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">++;
+}
+</span></pre>
+   </body>
+</html>

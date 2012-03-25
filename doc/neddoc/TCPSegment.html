@@ -1,0 +1,305 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>TCPSegment</i></h2>
+<b>File: <a href="src-transport-tcp-TCPSegment.msg.html">src/transport/tcp/TCPSegment.msg</a></b><br/><p><a href="../doxy/class_t_c_p_segment.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Represents a TCP segment, to be used with the <a href="inet.transport.tcp.TCP.html">TCP</a> module.</p>
+<p>TCP header fields not explicitly modelled: work on going</p>
+  <ul><li>Data Offset (number of 32 bit words in the header): represented
+  by cMessage::length().</li>
+  <li>Reserved (reserved for future use)</li>
+  <li>Checksum (header checksum): modelled by cMessage::hasBitError()</li>
+  <li>Header Options: Currently only EOL, NOP, MSS, WS, SACK_PERMITTED, SACK and TS are implemented</li>
+  <li>Padding</li></ul>
+<p>cMessage::getKind() may be set to an arbitrary value: <a href="inet.transport.tcp.TCP.html">TCP</a> entities will
+ignore it and use only the header fields (synBit, ackBit, rstBit).</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="TCPSegment-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TCPSegment.html" title="Packet TCPSegment" alt="" coords="100,6,201,34">
+<area shape="rect" id="node2" href="TCPPayloadMessage.html" title="Struct TCPPayloadMessage" alt="" coords="5,83,155,111">
+<area shape="rect" id="node4" href="TCPOption.html" title="Class TCPOption" alt="" coords="179,83,264,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="TCPSegment-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TCPSegment.html" title="Packet TCPSegment" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>srcPort</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>Source Port</p>
+</td>
+</tr>
+<tr class="local">
+   <td>destPort</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>Destination Port</p>
+</td>
+</tr>
+<tr class="local">
+   <td>sequenceNo</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td>
+<p>Sequence Number: first sequence number of the first data octet
+in the respective segment (except if SYN is set; then the the
+seq. number is the initial seq. number (ISS) and the first data
+octet is ISS+1)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>ackNo</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td>
+<p>Acknowledgement Number: if ACK flag is set, this field contains
+the next sequence number the sender of this segment is expecting
+to receive</p>
+</td>
+</tr>
+<tr class="local">
+   <td>headerLength</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p><a href="inet.transport.tcp.TCP.html">TCP</a> Header Length - default: 20 bytes
+if header options are used the headerLength is greater then 20 bytes (default)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>urgBit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>URG: urgent pointer field significant if set</p>
+</td>
+</tr>
+<tr class="local">
+   <td>ackBit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>ACK: ackNo significant if set</p>
+</td>
+</tr>
+<tr class="local">
+   <td>pshBit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>PSH: push function</p>
+</td>
+</tr>
+<tr class="local">
+   <td>rstBit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>RST: reset the connection</p>
+</td>
+</tr>
+<tr class="local">
+   <td>synBit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>SYN: synchronize seq. numbers</p>
+</td>
+</tr>
+<tr class="local">
+   <td>finBit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>FIN: finish - no more data from sender</p>
+</td>
+</tr>
+<tr class="local">
+   <td>window</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>Window Size: the number of data octets beginning with the one indicated
+in the acknowledgement field which the sender of this segment is
+willing to accept</p>
+</td>
+</tr>
+<tr class="local">
+   <td>urgentPointer</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>Urgent Pointer: communicates the current value of the urgent pointer
+as a positive offset from the sequence number in this segment. The
+urgent pointer points to the sequence number of the octet following
+the urgent data. This field is only be interpreted in segments with
+the URG control bit set.</p>
+</td>
+</tr>
+<tr class="local">
+   <td>options</td>
+   <td>
+      <i>
+<a href="TCPOption.html">TCPOption</a>[]</i>
+   </td>
+   <td>
+<p>Header options (optional)
+Currently only EOL, NOP, MSS, WS, SACK_PERMITTED, SACK and TS are implemented</p>
+</td>
+</tr>
+<tr class="local">
+   <td>payloadLength</td>
+   <td>
+      <i>
+unsigned long</i>
+   </td>
+   <td>
+<p>Payload length in octets (not an actual TCP header field).
+This may not always be the same as encapsulatedPacket()-&gt;getByteLength();
+e.g. when simulating a virtual data stream there's no encapsulated
+packet at all.</p>
+</td>
+</tr>
+<tr class="local">
+   <td>payload</td>
+   <td>
+      <i>
+<a href="TCPPayloadMessage.html">TCPPayloadMessage</a>[]</i>
+   </td>
+   <td>
+<p>Message objects (cMessages) that travel in this segment as data.
+(This field is used only with TCPMsgBasedSendQueue/RcvQueue and
+not with TCPVirtualBytesSendQueue/RcvQueue.)  Every message object
+is put into the <a href="TCPSegment.html">TCPSegment</a> that would (in real life) carry its
+last octet. That is, if message object 'msg' with length=100 bytes
+occupies sequence number range 10000..10099, it will travel in the
+<a href="TCPSegment.html">TCPSegment</a> which carries the octet 10099. This way it is easily achieved
+that the receiving <a href="inet.transport.tcp.TCP.html">TCP</a> passes up the message object to its client
+when the last byte of the message has arrived.</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Represents a \TCP segment, to be used with the TCP module.
+//
+// \TCP header fields not explicitly modelled: work on going
+// - Data Offset (number of 32 bit words in the header): represented
+//   by cMessage::length().
+// - Reserved (reserved for future use)
+// - Checksum (header checksum): modelled by cMessage::hasBitError()
+// - Header Options: Currently only EOL, NOP, MSS, WS, SACK_PERMITTED, SACK and TS are implemented
+// - Padding
+//
+// cMessage::getKind() may be set to an arbitrary value: TCP entities will
+// ignore it and use only the header fields (synBit, ackBit, rstBit).
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #808080; font-style: italic; ">// Source Port
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcPort</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Destination Port
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">destPort</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Sequence Number: first sequence number of the first data octet
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// in the respective segment (except if SYN is set; then the the
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// seq. number is the initial seq. number (ISS) and the first data
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// octet is ISS+1)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sequenceNo</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Acknowledgement Number: if ACK flag is set, this field contains
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// the next sequence number the sender of this segment is expecting
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// to receive
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ackNo</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// TCP Header Length - default: 20 bytes
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// if header options are used the headerLength is greater then 20 bytes (default)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> = </span><span style="color: #000000; ">TCP_HEADER_OCTETS</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// TCP_HEADER_OCTETS = 20
+</span><span style="color: #000000; ">
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">urgBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// URG: urgent pointer field significant if set
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">ackBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// ACK: ackNo significant if set
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">pshBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// PSH: push function
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">rstBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// RST: reset the connection
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">synBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// SYN: synchronize seq. numbers
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">finBit</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// FIN: finish - no more data from sender
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">// Window Size: the number of data octets beginning with the one indicated
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// in the acknowledgement field which the sender of this segment is
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// willing to accept
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">window</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Urgent Pointer: communicates the current value of the urgent pointer
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// as a positive offset from the sequence number in this segment. The
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// urgent pointer points to the sequence number of the octet following
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// the urgent data. This field is only be interpreted in segments with
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// the URG control bit set.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">urgentPointer</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Header options (optional)
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// Currently only EOL, NOP, MSS, WS, SACK_PERMITTED, SACK and TS are implemented
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCPOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">options</span><span style="color: #000000; ">[];
+
+    </span><span style="color: #808080; font-style: italic; ">// Payload length in octets (not an actual \TCP header field).
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// This may not always be the same as encapsulatedPacket()-&gt;getByteLength();
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// e.g. when simulating a virtual data stream there's no encapsulated
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// packet at all.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">payloadLength</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// Message objects (cMessages) that travel in this segment as data.
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// (This field is used only with TCPMsgBasedSendQueue/RcvQueue and
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// not with TCPVirtualBytesSendQueue/RcvQueue.)  Every message object
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// is put into the TCPSegment that would (in real life) carry its
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// last octet. That is, if message object 'msg' with length=100 bytes
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// occupies sequence number range 10000..10099, it will travel in the
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// TCPSegment which carries the octet 10099. This way it is easily achieved
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// that the receiving TCP passes up the message object to its client
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// when the last byte of the message has arrived.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">abstract</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPPayloadMessage</span><span style="color: #000000; "> </span><span style="color: #000000; ">payload</span><span style="color: #000000; ">[];
+}
+</span></pre>
+   </body>
+</html>

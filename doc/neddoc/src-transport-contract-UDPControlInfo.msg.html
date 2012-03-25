@@ -1,0 +1,139 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/transport/contract/UDPControlInfo.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="UDPCommandCode.html">UDPCommandCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>UDP command codes, sent by the application to <a href="inet.transport.udp.UDP.html">UDP</a>. These constants
+should be set as message kind on a message sent to the <a href="inet.transport.udp.UDP.html">UDP</a> entity.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="UDPStatusInd.html">UDPStatusInd</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>UDP indications, sent by <a href="inet.transport.udp.UDP.html">UDP</a> to the application. <a href="inet.transport.udp.UDP.html">UDP</a> will set these
+constants as message kind on messages it sends to the application.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="UDPControlInfo.html">UDPControlInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info for sending/receiving data via UDP. Travels between
+application and the <a href="inet.transport.udp.UDP.html">UDP</a> module.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+// Copyright (C) 2004 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPvXAddress.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// \UDP command codes, sent by the application to UDP. These constants
+// should be set as message kind on a message sent to the UDP entity.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPControlInfo, UDPStatusInd, UDP
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPCommandCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">UDP_C_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// datagram to send (must carry UDPControlInfo)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">UDP_C_BIND</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// fill srcPort and srcAddr in UDPControlInfo
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">UDP_C_CONNECT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// fill destAddr and destPort in UDPControlInfo
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">UDP_C_UNBIND</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// fill sockId in UDPControlInfo
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// \UDP indications, sent by UDP to the application. UDP will set these
+// constants as message kind on messages it sends to the application.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPControlInfo, UDPCommandCode, UDP
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPStatusInd</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">UDP_I_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// data packet (set on data packet)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">UDP_I_ERROR</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// ICMP error received on a sent datagram
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Control info for sending/receiving data via \UDP. Travels between
+// application and the UDP module.
+//
+// The most convenient way to handle UDP is the UDPSocket class, which hides
+// UDPControlInfo completely from you. But even if you manage talking
+// to UDP yourself without help from UDPSocket, sockId must be obtained
+// from UDPSocket::generateSocketId().
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">TODO</span><span style="color: #0000ff; font-style: italic; "> explain userId, sockId, etc.
+</span><span style="color: #808080; font-style: italic; ">//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPCommandCode
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sockId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// uniquely identifies the \UDP socket
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">userId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// id than can be freely used by the app
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddr</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// source \IP or \IPv6 address, or local address with BIND
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddr</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// destination \IP or \IPv6 address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcPort</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// \UDP source port in packet, or local port with BIND
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">destPort</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// \UDP destination port in packet
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">interfaceId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// interface on which pk was received/should be sent (see InterfaceTable)
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

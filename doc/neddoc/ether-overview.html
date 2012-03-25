@@ -1,0 +1,56 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Ethernet Model Overview</h2>
+<p><h3>Data packets and Ethernet frames</h3></p>
+<p>Ethernet frames carry data packets as encapsulated cMessage objects.
+Data packets can be of any message type (cMessage or cMessage subclass).</p>
+<p>The model encapsulates data packets in Ethernet frames using the <tt>encapsulate()</tt>
+method of cMessage. Encapsulate() updates the length of the Ethernet frame too,
+so the model doesn't have to take care of that.</p>
+<p>The models supports various Ethernet frame types: Ethernet II, 803.2 with
+LLC header, and 803.3 with LLC and SNAP headers. The corresponding classes are:
+<a href="EthernetIIFrame.html">EthernetIIFrame</a>, <a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a> and <a href="EtherFrameWithSNAP.html">EtherFrameWithSNAP</a>. They all class
+from <a href="EtherFrame.html">EtherFrame</a> which only represents the basic MAC frame with source and
+destination addresses. <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> only deals with EtherFrames, and does not
+care about the specific subclass.</p>
+<p><h3>Autoconfiguration</h3></p>
+<p>In order to facilitate building large models, <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and other Ethernet model
+components provide some degree of auto-configuration. Specifically, transmission
+rate and half duplex/full duplex mode can be chosen automatically so that
+connecting Ethernet MACs have matching settings. The purpose is similar to
+Ethernet Auto-Negotiation; however the mechanism is NOT a model of
+Auto-Negotiation (e.g. <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a> and <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a> also actively participate,
+which obviously does not happen in a real Ethernet.)</p>
+<p>What it does:</p>
+  <ul><li>the txrate parameters of <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> represent the highest speed supported
+   by that station, or 0 for full autoconfiguration. Autoconfig will choose
+   the largest common denominator (the speed of the slowest station in the
+   collision domain) for all stations. If all stations are set to auto
+   txrate, 100Mb will be chosen, or 10Mb if there's a bus (<a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>) in
+   the collision domain.</li>
+  <li>the duplexEnabled parameter of <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> means whether the station supports
+   duplex operation. However, duplex operation will actually be chosen only
+   if it's a DTE-to-DTE direct connection (there's no shared media like
+   <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a> or <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>) and both sides have duplexEnabled=true set.</li></ul>
+<p>How it works:</p>
+<p>Auto-configuration occurs at the beginning of the simulation, by
+Ethernet model components (<a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>, <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a> and <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>) exchanging
+<a href="EtherAutoconfig.html">EtherAutoconfig</a> messages with each other. See description of <a href="EtherAutoconfig.html">EtherAutoconfig</a>
+for more info.</p>
+<p><h3>MAC and higher layers</h3></p>
+<p>MAC and LLC are implemented as separate modules (<a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and
+<a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a>/<a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a>) because encapsulation/decapsulation functionality
+is not always needed. (Switches don't do encapsulation/decapsulation.)
+In switches, <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> is used with <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a>.</p>
+<p><h3><a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a> and higher layers</h3></p>
+<p>The <a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a> module can serve several applications (higher layer protocols),
+and dispatch data to them. Higher layers are identified by DSAP.
+See <a href="appreg.html">Application registration</a> for more info.</p>
+<p><a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a> doesn't have the functionality to dispatch to different
+higher layers because in practice it'll always be used with <a href="inet.networklayer.ipv4.IP.html">IP</a>.</p>
+   </body>
+</html>

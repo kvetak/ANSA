@@ -1,0 +1,114 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>Ieee802Ctrl</i></h2>
+<b>File: <a href="src-linklayer-contract-Ieee802Ctrl.msg.html">src/linklayer/contract/Ieee802Ctrl.msg</a></b><br/>
+<p>Control structure for communication between LLC and higher layers</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee802Ctrl-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee802Ctrl.html" title="Class Ieee802Ctrl" alt="" coords="5,6,93,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee802Ctrl-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee802Ctrl.html" title="Class Ieee802Ctrl" alt="" coords="5,6,93,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>src</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>src MAC address (can be left empty when sending)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>dest</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>dest MAC address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>etherType</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>used with <a href="EthernetIIFrame.html">EthernetIIFrame</a></p>
+</td>
+</tr>
+<tr class="local">
+   <td>ssap</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>used with IEEE 802 LLC (see <a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a>)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>dsap</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>used with IEEE 802 LLC (see <a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a>)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>pauseUnits</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>used with IEEE802CTRL_SENDPAUSE</p>
+</td>
+</tr>
+<tr class="local">
+   <td>inputPort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>convenience field, used between <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> and IPv6ND</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Control structure for communication between LLC and higher layers
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee802Ctrl</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">src</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// src MAC address (can be left empty when sending)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">dest</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// dest MAC address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">etherType</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// used with EthernetIIFrame
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ssap</span><span style="color: #000000; ">;        </span><span style="color: #808080; font-style: italic; ">// used with IEEE 802 LLC (see EtherFrameWithLLC)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">dsap</span><span style="color: #000000; ">;        </span><span style="color: #808080; font-style: italic; ">// used with IEEE 802 LLC (see EtherFrameWithLLC)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pauseUnits</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// used with IEEE802CTRL_SENDPAUSE
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">inputPort</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// convenience field, used between IPv6 and IPv6ND
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

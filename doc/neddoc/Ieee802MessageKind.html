@@ -1,0 +1,36 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Enum <i>Ieee802MessageKind</i></h2>
+<b>File: <a href="src-linklayer-contract-Ieee802Ctrl.msg.html">src/linklayer/contract/Ieee802Ctrl.msg</a></b><br/>
+<p>Message kind values used with in communication between L3 and IEEE 802 L2</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee802MessageKind-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee802MessageKind.html" title="Enum Ieee802MessageKind" alt="" coords="5,6,152,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee802MessageKind-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee802MessageKind.html" title="Enum Ieee802MessageKind" alt="" coords="5,6,152,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Message kind values used with in communication between L3 and IEEE 802 L2
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee802MessageKind</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">IEEE802CTRL_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2003</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// data to/from higher layer
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IEEE802CTRL_REGISTER_DSAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2004</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// higher layer registers itself in LLC
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IEEE802CTRL_DEREGISTER_DSAP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2005</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// higher layer deregisters itself in LLC
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IEEE802CTRL_SENDPAUSE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2006</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// higher layer wants MAC to send PAUSE frame
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,131 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/transport/tcp_nsc/TCP_NSC.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.transport.tcp_nsc.TCP_NSC.html">TCP_NSC</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>TCP model based on the Network Simulation Cradle by Sam Jansen.
+TCP segments are represented by the class <a href="ByteArrayMessage.html">ByteArrayMessage</a> which 
+carries a network byte order packet. Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2006 Sam Jansen, Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">transport</span><span style="color: #000000; ">.</span><span style="color: #000000; ">tcp_nsc</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">transport</span><span style="color: #000000; ">.</span><span style="color: #000000; ">tcp</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ITCP</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// \TCP model based on the Network Simulation Cradle by Sam Jansen.
+// \TCP segments are represented by the class ByteArrayMessage which 
+// carries a network byte order packet. Compatible with both IPv4 and IPv6.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Communication with clients</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// For communication between client applications and TCP, the TcpCommandCode
+// and TcpStatusInd enums are used as message kinds, and TCPCommand
+// and its subclasses are used as control info.
+//
+// To open a connection from a client app, send a cMessage to TCP with
+// TCP_C_OPEN_ACTIVE as message kind and a TCPOpenCommand object filled in
+// and attached to it as control info. (The peer TCP will have to be LISTENing;
+// the server app can achieve this with a similar cMessage but TCP_C_OPEN_PASSIVE
+// message kind.) With passive open, there's a possibility to cause the connection
+// &quot;fork&quot; on an incoming connection, leaving the original connection LISTENing
+// on the port (see the fork field in TCPOpenCommand).
+//
+// The client app can send data by assigning the TCP_C_SEND message kind
+// and attaching a TCPSendCommand control info object to the data packet,
+// and sending it to TCP. The server app will receive data as messages
+// with the TCP_I_DATA message kind and TCPSendCommand control info.
+// (Whether you'll receive the same or identical messages, or even whether
+// you'll receive data in the same sized chunks as sent depends on the
+// sendQueueClass and receiveQueueClass used, see below. With
+// TCPVirtualDataSendQueue and TCPVirtualDataRcvQueue set, message objects
+// and even message boundaries are not preserved.)
+//
+// To close, the client sends a cMessage to TCP with the TCP_C_CLOSE message kind
+// and TCPCommand control info.
+//
+// TCP sends notifications to the application whenever there's a significant
+// change in the state of the connection: established, remote TCP closed,
+// closed, timed out, connection refused, connection reset, etc. These
+// notifications are also cMessages with message kind TCP_I_xxx
+// (TCP_I_ESTABLISHED, etc.) and TCPCommand as control info.
+//
+// One TCP module can serve several application modules, and several
+// connections per application. The </span><span style="color: #800000; ">&lt;i&gt;</span><span style="color: #808080; font-style: italic; ">k</span><span style="color: #800000; ">&lt;/i&gt;</span><span style="color: #808080; font-style: italic; ">th application connects to TCP's
+// from_appl[k] and appOut[k] ports. When talking to applications, a
+// connection is identified by the (application port index, connId) pair,
+// where connId is assigned by the application in the OPEN call.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Sockets</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The TCPSocket C++ class is provided to simplify managing \TCP connections
+// from applications. TCPSocket handles the job of assembling and sending
+// command messages (OPEN, CLOSE, etc) to TCP, and it also simplifies
+// the task of dealing with packets and notification messages coming from TCP.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Communication with the \IP layer</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The TCP model relies on sending and receiving IPControlInfo objects
+// attached to \TCP segment objects as control info
+// (see cMessage::setControlInfo()).
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCP_NSC</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">ITCP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #808080; font-style: italic; ">// full library name of the tcp stack implementation
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">stackName</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;liblinux2.6.26.so&quot;</span><span style="color: #000000; ">) </span><span style="color: #000000; font-weight: bold; ">@choice</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;liblinux2.6.10.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;liblinux2.6.18.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;liblinux2.6.26.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;liblwip.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;libopenbsd3.5.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;libfreebsd5.3.so&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">stackBufferSize</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">80000</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// the size of buffer used when communicating with the specified NSC stack
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">sendQueueClass</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;TCP_NSC_VirtualDataSendQueue&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiveQueueClass</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;TCP_NSC_VirtualDataReceiveQueue&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

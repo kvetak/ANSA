@@ -1,0 +1,5 @@
+<area shape="rect" id="node1" href="inet.linklayer.ieee80211.Ieee80211Nic.html" title="Compound Module Ieee80211Nic" alt="" coords="217,6,319,34">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.mgmt.Ieee80211Mgmt.html" title="Module Interface Ieee80211Mgmt" alt="" coords="5,83,120,111">
+<area shape="rect" id="node4" href="inet.linklayer.radio.Ieee80211Radio.html" title="Simple Module Ieee80211Radio" alt="" coords="144,83,259,111">
+<area shape="rect" id="node6" href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html" title="Simple Module Ieee80211Mac" alt="" coords="283,83,389,111">
+<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="413,83,512,111">

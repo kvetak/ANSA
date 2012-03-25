@@ -1,0 +1,119 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>examples/inet/kidsnw1/KIDSNw1.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.kidsnw1.KIDSNw1.html">KIDSNw1</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+//
+</span><span style="color: #000000; ">
+
+
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">examples</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">kidsnw1</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">Router</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">nodes</span><span style="color: #000000; ">.</span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; ">;
+</span><span style="color: #800000; font-weight: bold; ">import</span><span style="color: #000000; "> </span><span style="color: #000000; ">ned</span><span style="color: #000000; ">.</span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">KIDSNw1</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">types</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+        {
+            </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #800080; font-weight: bold; ">normal</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00015</span><span style="color: #000000; ">s</span><span style="color: #000000; ">, </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00005</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+            </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">;
+        }
+        </span><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">fiberrouterline</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+        {
+            </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #800080; font-weight: bold; ">normal</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">000001</span><span style="color: #000000; ">s</span><span style="color: #000000; ">, </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">0000001</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+            </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">512</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">;
+        }
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">host</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">]: </span><span style="color: #000000; ">StandardHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">0</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;host1.irt&quot;</span><span style="color: #000000; "> : (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">1</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;host2.irt&quot;</span><span style="color: #000000; "> : (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">2</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;host3.irt&quot;</span><span style="color: #000000; "> : </span><span style="color: #008000; ">&quot;PROBLEM&quot;</span><span style="color: #000000; ">)));
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=101,307,row;i=device/pc2&quot;</span><span style="color: #000000; ">);
+
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #808080; font-style: italic; ">// First Hop Router
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">fhrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">]: </span><span style="color: #000000; ">Router</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">0</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;fhrouter1.irt&quot;</span><span style="color: #000000; "> : (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">1</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;fhrouter5.irt&quot;</span><span style="color: #000000; "> : </span><span style="color: #008000; ">&quot;PROBLEM&quot;</span><span style="color: #000000; ">));
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=119,222,row,130&quot;</span><span style="color: #000000; ">);
+
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[(</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">0</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">3</span><span style="color: #000000; "> : </span><span style="color: #008000; ">2</span><span style="color: #000000; ">)];
+        }
+        </span><span style="color: #808080; font-style: italic; ">// InteriorRouter
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">irouter</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Router</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;irouter2.irt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=115,144&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        }
+        </span><span style="color: #808080; font-style: italic; ">// Border Gatgeway Router
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">bgrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">]: </span><span style="color: #000000; ">Router</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">0</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;bgrouter3.irt&quot;</span><span style="color: #000000; "> : (</span><span style="color: #800000; font-weight: bold; ">index</span><span style="color: #000000; ">==</span><span style="color: #008000; ">1</span><span style="color: #000000; "> ? </span><span style="color: #008000; ">&quot;bgrouter4.irt&quot;</span><span style="color: #000000; "> : </span><span style="color: #008000; ">&quot;PROBLEM&quot;</span><span style="color: #000000; ">));
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=135,64,row&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #808080; font-style: italic; ">// host connections
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">host</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fhrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fhrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fhrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+
+        </span><span style="color: #808080; font-style: italic; ">// router connections
+</span><span style="color: #000000; ">        </span><span style="color: #000000; ">fhrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fiberrouterline</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">irouter</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">irouter</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fiberrouterline</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">bgrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">bgrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fiberrouterline</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">bgrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">bgrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fiberrouterline</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">fhrouter</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">].</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

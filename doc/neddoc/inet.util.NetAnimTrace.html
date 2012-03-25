@@ -1,0 +1,99 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>NetAnimTrace</i></h2>
+<b>Package:</b> inet.util<br/><b>File: <a href="src-util-NetAnimTrace.ned.html">src/util/NetAnimTrace.ned</a></b><br/><p><a href="../doxy/class_net_anim_trace.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Records a NetAnim trace, using network-level modules and their connections.
+See http://www.nsnam.org/wiki/index.php/NetAnim</p>
+<p>Note: NetAnim does not have a built-in layouter, and requires explicit 
+node coordinates to be written into the file. This module takes node
+coordinates from module display strings; if there are no coordinates
+there, random coordinates will be generated. Thus, for good results 
+it is recommended that you assign explicit coordinates to all network 
+nodes.</p>
+<p><b>Author:</b> Andras</p>
+<img src="inet.util.NetAnimTrace-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.util.NetAnimTrace.html" title="NetAnimTrace" alt="NetAnimTrace" coords="0,31,133,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.util.NetAnimTrace-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.util.NetAnimTrace.html" title="Simple Module NetAnimTrace" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.util.NetAnimTrace-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.util.NetAnimTrace.html" title="Simple Module NetAnimTrace" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>enabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>filename</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"netanim-trace.txt"</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/control_s</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Records a NetAnim trace, using network-level modules and their connections.
+// See http://www.nsnam.org/wiki/index.php/NetAnim
+// 
+// Note: NetAnim does not have a built-in layouter, and requires explicit 
+// node coordinates to be written into the file. This module takes node
+// coordinates from module display strings; if there are no coordinates
+// there, random coordinates will be generated. Thus, for good results 
+// it is recommended that you assign explicit coordinates to all network 
+// nodes.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">NetAnimTrace</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">enabled</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">filename</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;netanim-trace.txt&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/control_s&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

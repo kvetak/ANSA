@@ -1,0 +1,131 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>UDPControlInfo</i></h2>
+<b>File: <a href="src-transport-contract-UDPControlInfo.msg.html">src/transport/contract/UDPControlInfo.msg</a></b><br/>
+<p>Control info for sending/receiving data via UDP. Travels between
+application and the <a href="inet.transport.udp.UDP.html">UDP</a> module.</p>
+<p>The most convenient way to handle <a href="inet.transport.udp.UDP.html">UDP</a> is the UDPSocket class, which hides
+<a href="UDPControlInfo.html">UDPControlInfo</a> completely from you. But even if you manage talking
+to <a href="inet.transport.udp.UDP.html">UDP</a> yourself without help from UDPSocket, sockId must be obtained
+from UDPSocket::generateSocketId().</p>
+<p><b>See also:</b> <a href="UDPCommandCode.html">UDPCommandCode</a></p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="UDPControlInfo-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="UDPControlInfo.html" title="Class UDPControlInfo" alt="" coords="5,6,120,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="UDPControlInfo-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="UDPControlInfo.html" title="Class UDPControlInfo" alt="" coords="5,6,120,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>sockId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>uniquely identifies the UDP socket</p>
+</td>
+</tr>
+<tr class="local">
+   <td>userId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>id than can be freely used by the app</p>
+</td>
+</tr>
+<tr class="local">
+   <td>srcAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td>
+<p>source IP or IPv6 address, or local address with BIND</p>
+</td>
+</tr>
+<tr class="local">
+   <td>destAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td>
+<p>destination IP or IPv6 address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>srcPort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>UDP source port in packet, or local port with BIND</p>
+</td>
+</tr>
+<tr class="local">
+   <td>destPort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>UDP destination port in packet</p>
+</td>
+</tr>
+<tr class="local">
+   <td>interfaceId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>interface on which pk was received/should be sent (see <a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a>)</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Control info for sending/receiving data via \UDP. Travels between
+// application and the UDP module.
+//
+// The most convenient way to handle UDP is the UDPSocket class, which hides
+// UDPControlInfo completely from you. But even if you manage talking
+// to UDP yourself without help from UDPSocket, sockId must be obtained
+// from UDPSocket::generateSocketId().
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">TODO</span><span style="color: #0000ff; font-style: italic; "> explain userId, sockId, etc.
+</span><span style="color: #808080; font-style: italic; ">//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPCommandCode
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sockId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// uniquely identifies the \UDP socket
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">userId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// id than can be freely used by the app
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddr</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// source \IP or \IPv6 address, or local address with BIND
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddr</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// destination \IP or \IPv6 address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcPort</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// \UDP source port in packet, or local port with BIND
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">destPort</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// \UDP destination port in packet
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">interfaceId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// interface on which pk was received/should be sent (see InterfaceTable)
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

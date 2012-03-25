@@ -1,0 +1,109 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>DropTailQoSQueue</i></h2>
+<b>Package:</b> inet.networklayer.queue<br/><b>File: <a href="src-networklayer-queue-DropTailQoSQueue.ned.html">src/networklayer/queue/DropTailQoSQueue.ned</a></b><br/><p><a href="../doxy/class_drop_tail_qo_s_queue.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Drop-tail queue with QoS support, to be used in network interfaces.
+Performs priority queueing.
+Conforms to the <a href="inet.networklayer.queue.OutputQueue.html">OutputQueue</a> interface.</p>
+<img src="inet.networklayer.queue.DropTailQoSQueue-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.queue.DropTailQoSQueue.html" title="DropTailQoSQueue" alt="DropTailQoSQueue" coords="0,31,163,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.queue.DropTailQoSQueue-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.queue.DropTailQoSQueue.html" title="Simple Module DropTailQoSQueue" alt="" coords="5,6,139,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.queue.DropTailQoSQueue-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.queue.DropTailQoSQueue.html" title="Simple Module DropTailQoSQueue" alt="" coords="5,83,139,111">
+<area shape="rect" id="node2" href="inet.networklayer.queue.OutputQueue.html" title="Module Interface OutputQueue" alt="" coords="23,6,121,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>per-subqueue capacity</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>classifierClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>class that inherits from IQoSClassifier</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/queue</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>in</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>out</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Drop-tail queue with QoS support, to be used in network interfaces.
+// Performs priority queueing.
+// Conforms to the OutputQueue interface.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">DropTailQoSQueue</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">OutputQueue</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">frameCapacity</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// per-subqueue capacity
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">classifierClass</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// class that inherits from IQoSClassifier
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/queue&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">in</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">out</span><span style="color: #000000; ">;
+}
+
+
+
+</span></pre>
+   </body>
+</html>

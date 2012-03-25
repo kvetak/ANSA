@@ -1,0 +1,178 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>MACRelayUnitPP</i></h2>
+<b>Package:</b> inet.linklayer.etherswitch<br/><b>File: <a href="src-linklayer-etherswitch-MACRelayUnitPP.ned.html">src/linklayer/etherswitch/MACRelayUnitPP.ned</a></b><br/><p><a href="../doxy/class_m_a_c_relay_unit_p_p.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>A <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a> implementation which models one CPU assigned to each
+incoming port, working with shared memory but separate queues.</p>
+<p>It also models fixed delay for precessing each frame.
+Finite memory is taken into account by dropping frames if
+total number of bits enqueued exceed a given limit.</p>
+<p>A simple scheme for sending PAUSE frames is built in (although
+users will probably change it). When the buffer level goes
+above a high watermark, PAUSE frames are sent on all ports.
+The watermark and the pause time is configurable; use zero
+values to disable the PAUSE feature.</p>
+<img src="inet.linklayer.etherswitch.MACRelayUnitPP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.etherswitch.MACRelayUnitPP.html" title="MACRelayUnitPP" alt="MACRelayUnitPP" coords="0,31,148,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.etherswitch.MACRelayUnitPP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.etherswitch.MACRelayUnitPP.html" title="Simple Module MACRelayUnitPP" alt="" coords="5,6,133,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.etherswitch.MACRelayUnitPP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.etherswitch.MACRelayUnitPP.html" title="Simple Module MACRelayUnitPP" alt="" coords="5,83,133,111">
+<area shape="rect" id="node2" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="Module Interface MACRelayUnit" alt="" coords="15,6,124,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>addressTableFile</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>see <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a></p>
+   </td>
+</tr>
+<tr class="local">
+   <td>addressTableSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>see <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a></p>
+   </td>
+</tr>
+<tr class="local">
+   <td>agingTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>see <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a></p>
+   </td>
+</tr>
+<tr class="local">
+   <td>processingTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>
+<p>processing time of one frame</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>bufferSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1MiB</td>
+   <td>
+<p>memory</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>highWatermark</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>512KiB</td>
+   <td>
+<p>buffer usage threshold to send PAUSE frame</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>pauseUnits</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>300</td>
+   <td>
+<p>time to put in PAUSE frames (in units of 512 bit times)</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/switch</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>lowerLayerIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>lowerLayerOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// A MACRelayUnit implementation which models one CPU assigned to each
+// incoming port, working with shared memory but separate queues.
+//
+// It also models fixed delay for precessing each frame.
+// Finite memory is taken into account by dropping frames if
+// total number of bits enqueued exceed a given limit.
+//
+// A simple scheme for sending PAUSE frames is built in (although
+// users will probably change it). When the buffer level goes
+// above a high watermark, PAUSE frames are sent on all ports.
+// The watermark and the pause time is configurable; use zero
+// values to disable the PAUSE feature.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACRelayUnitPP</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACRelayUnit</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">addressTableFile</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// see MACRelayUnit
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">addressTableSize</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// see MACRelayUnit
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">agingTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">120</span><span style="color: #000000; ">s</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// see MACRelayUnit
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">processingTime</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// processing time of one frame
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">bufferSize</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;B&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">MiB</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// memory
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">highWatermark</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;B&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">512</span><span style="color: #000000; ">KiB</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// buffer usage threshold to send PAUSE frame
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pauseUnits</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">300</span><span style="color: #000000; ">);       </span><span style="color: #808080; font-style: italic; ">// time to put in PAUSE frames (in units of 512 bit times)
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/switch&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

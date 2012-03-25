@@ -1,0 +1,67 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>IPSourceRoutingOption</i></h2>
+<b>File: <a href="src-networklayer-ipv4-IPDatagram.msg.html">src/networklayer/ipv4/IPDatagram.msg</a></b><br/>
+<p>Option Structure: Source Routing</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPSourceRoutingOption-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPSourceRoutingOption.html" title="Class IPSourceRoutingOption" alt="" coords="5,83,163,111">
+<area shape="rect" id="node2" href="IPDatagram.html" title="Packet IPDatagram" alt="" coords="39,6,129,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPSourceRoutingOption-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPSourceRoutingOption.html" title="Class IPSourceRoutingOption" alt="" coords="5,6,163,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>recordAddress</td>
+   <td>
+      <i>
+IPAddress[MAX_IPADDR_OPTION_ENTRIES]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>nextAddressPtr</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>lastAddressPtr</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Option Structure: Source Routing
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPSourceRoutingOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordAddress</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_IPADDR_OPTION_ENTRIES</span><span style="color: #000000; ">];
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">nextAddressPtr</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">lastAddressPtr</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,74 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.nodes.mpls</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.LDP_FAILED.html">LDP_FAILED</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Failed router. Discards all incoming traffic and generates nothing. Its
+interface (gates, parameters) is fully compatible with the <a href="inet.nodes.mpls.LDP_LSR.html">LDP_LSR</a> router
+and node failures may thus be simulated by replacing the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+with LDP_FAILED.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.LDP_LSR.html">LDP_LSR</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An <a href="inet.networklayer.ldp.LDP.html">LDP</a>-capable router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.RSVP_FAILED.html">RSVP_FAILED</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Failed router. Discards all incoming traffic and generates nothing. Its
+interface (gates, parameters) is fully compatible with the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a> router
+and node failures may thus be simulated by replacing the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+with RSVP_FAILED.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An RSVP-TE capable router.</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

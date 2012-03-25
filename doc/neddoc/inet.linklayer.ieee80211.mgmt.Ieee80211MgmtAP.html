@@ -1,0 +1,188 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>Ieee80211MgmtAP</i></h2>
+<b>Package:</b> inet.linklayer.ieee80211.mgmt<br/><b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtAP.ned.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtAP.ned</a></b><br/><p><a href="../doxy/class_ieee80211_mgmt_a_p.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Used in 802.11 infrastructure mode: handles management frames for
+an access point (AP). It relies on a connected <a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">Ieee80211Mac</a> for actual
+reception and transmission of frames.</p>
+<p>When simulating an AP that has other (Ethernet or wireless) interfaces
+as well, this module can be connected to a <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a> which performs
+bridging of Ethernet frames. This module will perform conversion from/to
+<a href="EtherFrame.html">EtherFrame</a> for <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a>.</p>
+<p>This module never switches channels, that is, it will operate on the channel
+the physical layer is configured for (see channelNumber in <a href="inet.linklayer.radio.Ieee80211Radio.html">Ieee80211Radio</a>).</p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html" title="Ieee80211MgmtAP" alt="Ieee80211MgmtAP" coords="0,31,165,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html" title="Simple Module Ieee80211MgmtAP" alt="" coords="5,83,139,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.Ieee80211NicAP.html" title="Compound Module Ieee80211NicAP" alt="" coords="12,6,132,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html" title="Simple Module Ieee80211MgmtAP" alt="" coords="5,83,139,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.mgmt.Ieee80211Mgmt.html" title="Module Interface Ieee80211Mgmt" alt="" coords="15,6,129,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">Ieee80211NicAP</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card,
+in an AP, using infrastructure mode.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>ssid</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"SSID"</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>beaconInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100ms</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>
+<p>maximum queue length</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>numAuthSteps</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4</td>
+   <td>
+<p>use 2 for Open System auth, 4 for WEP</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel</i></td>
+   <td>
+<p>dataRate: numeric; XXX TBD</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a>; can be left unconnected</p>
+</td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a>; can be left unconnected</p>
+</td>
+</tr>
+<tr class="local">
+   <td>macIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from <a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">Ieee80211Mac</a></p>
+</td>
+</tr>
+<tr class="local">
+   <td>macOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to <a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">Ieee80211Mac</a></p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Used in 802.11 infrastructure mode: handles management frames for
+// an access point (AP). It relies on a connected Ieee80211Mac for actual
+// reception and transmission of frames.
+//
+// When simulating an AP that has other (Ethernet or wireless) interfaces
+// as well, this module can be connected to a MACRelayUnit which performs
+// bridging of Ethernet frames. This module will perform conversion from/to
+// EtherFrame for MACRelayUnit.
+//
+// This module never switches channels, that is, it will operate on the channel
+// the physical layer is configured for (see channelNumber in Ieee80211Radio).
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211MgmtAP</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Mgmt</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">ssid</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;SSID&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">beaconInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">ms</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">frameCapacity</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// maximum queue length
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">numAuthSteps</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">4</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// use 2 for Open System auth, 4 for WEP
+</span><span style="color: #000000; ">        </span><span style="color: #808080; font-style: italic; ">//dataRate: numeric; XXX TBD
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from MACRelayUnit; can be left unconnected
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to MACRelayUnit; can be left unconnected
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">macIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// from Ieee80211Mac
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">macOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to Ieee80211Mac
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

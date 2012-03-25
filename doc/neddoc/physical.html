@@ -1,0 +1,24 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Ethernet: Messaging on the Physical Layer</h2>
+<p>Messages sent by <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> mark the beginning of a transmission.
+The end of a transmission is not explicitly represented by a message,
+but instead, the <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> calculates it from the frame length and
+the transmission rate. Frames are represented by <a href="EtherFrame.html">EtherFrame</a>.</p>
+<p>When frames collide, the transmission is aborted -- in this case
+<a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> makes use of the modelled jam signals to figure out
+when colliding transmissions end.</p>
+<p>When a transmitting station senses a collision, it transmits a jam signal.
+Jam signals are represented by a <a href="EtherJam.html">EtherJam</a> message.
+When <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> received a jam signal, it knows that one transmission
+has ended in jamming -- thus when it receives as many jam messages
+as colliding frames, it can be sure all transmissions have been aborted.</p>
+<p>Receiving a jam message marks the beginning (and not the end)
+of a jam signal, so actually <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> has to wait for the duration
+of the jamming before assuming the channel is free again.</p>
+   </body>
+</html>

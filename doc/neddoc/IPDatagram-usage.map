@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="IPDatagram.html" title="Packet IPDatagram" alt="" coords="197,6,288,34">
+<area shape="rect" id="node2" href="IPTimestampOption.html" title="Class IPTimestampOption" alt="" coords="5,83,144,111">
+<area shape="rect" id="node4" href="IPRecordRouteOption.html" title="Class IPRecordRouteOption" alt="" coords="168,83,317,111">
+<area shape="rect" id="node6" href="IPSourceRoutingOption.html" title="Class IPSourceRoutingOption" alt="" coords="341,83,499,111">

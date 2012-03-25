@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.examples.ethernet.lans.SwitchedLAN.html" title="Network SwitchedLAN" alt="" coords="97,6,199,34">
+<area shape="rect" id="node2" href="inet.examples.ethernet.lans.SwitchedLAN.C.html" title="Channel C" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherSwitch.html" title="Compound Module EtherSwitch" alt="" coords="101,83,195,111">
+<area shape="rect" id="node6" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="219,83,299,111">

@@ -1,0 +1,186 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>Ieee80211ReassociationRequestFrame</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtFrames.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtFrames.msg</a></b><br/>
+<p>Re-association request frame format (management frame + body) (same as association)</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211ReassociationRequestFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211ReassociationRequestFrame.html" title="Packet Ieee80211ReassociationRequestFrame" alt="" coords="20,6,271,34">
+<area shape="rect" id="node2" href="Ieee80211ReassociationRequestFrameBody.html" title="Class Ieee80211ReassociationRequestFrameBody" alt="" coords="5,83,285,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211ReassociationRequestFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211ReassociationRequestFrame.html" title="Packet Ieee80211ReassociationRequestFrame" alt="" coords="5,83,256,111">
+<area shape="rect" id="node2" href="Ieee80211ManagementFrame.html" title="Packet Ieee80211ManagementFrame" alt="" coords="33,6,228,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211ManagementFrame.html">Ieee80211ManagementFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Base class for 802.11 management frames (subclasses will add frame body contents)</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>type</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>type and subtype</p>
+</td>
+</tr>
+<tr class="local">
+   <td>byteLength</td>
+   <td>
+      <i>
+</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>body</td>
+   <td>
+      <i>
+<a href="Ieee80211ReassociationRequestFrameBody.html">Ieee80211ReassociationRequestFrameBody</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>address3</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>fragmentNumber</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>sequenceNumber</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>transmitterAddress</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>aka address2</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>toDS</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>fromDS</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>retry</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>moreFragments</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>duration</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>"duration" in the Duration/ID field (-1=no duration)</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>AID</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>"id" (Association ID) in the Duration/ID field (-1=no ID)</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>receiverAddress</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>aka address1</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Re-association request frame format (management frame + body) (same as association)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReassociationRequestFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_REASSOCIATIONREQUEST</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">+</span><span style="color: #000000; ">getBody</span><span style="color: #000000; ">().</span><span style="color: #000000; ">getBodyLength</span><span style="color: #000000; ">();
+    </span><span style="color: #000000; ">Ieee80211ReassociationRequestFrameBody</span><span style="color: #000000; "> </span><span style="color: #000000; ">body</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,97 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>WirelessMac</i></h2>
+<b>Package:</b> inet.linklayer.mfcore<br/><b>File: <a href="src-linklayer-mfcore-WirelessMac.ned.html">src/linklayer/mfcore/WirelessMac.ned</a></b><br/>
+<p>This is not an actual MAC implementation, just a prototype for wireless MAC's
+that use a MF (Mobility Framework)-based physical layer.</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>Author:</b> Daniel Willkomm, Andras Varga</p>
+<img src="inet.linklayer.mfcore.WirelessMac-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.mfcore.WirelessMac.html" title="WirelessMac" alt="WirelessMac" coords="0,31,122,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mfcore.WirelessMac-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.mfcore.WirelessMac.html" title="Simple Module WirelessMac" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mfcore.WirelessMac-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.mfcore.WirelessMac.html" title="Simple Module WirelessMac" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/ifcard</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from the network layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to the network layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from the physical layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to the physical layer</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// This is not an actual MAC implementation, just a prototype for wireless MAC's
+// that use a MF (Mobility Framework)-based physical layer.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Daniel Willkomm, Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">WirelessMac</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/ifcard&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from the network layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to the network layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from the physical layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to the physical layer
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,140 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>ConstSpeedMobility</i></h2>
+<b>Package:</b> inet.mobility<br/><b>File: <a href="src-mobility-ConstSpeedMobility.ned.html">src/mobility/ConstSpeedMobility.ned</a></b><br/><p><a href="../doxy/class_const_speed_mobility.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Controls all movement related things of a host</p>
+<p><a href="inet.mobility.ConstSpeedMobility.html">ConstSpeedMobility</a> does not use one of the standard mobility approaches.
+The user can define a velocity for each Host and an update interval. If
+the velocity is greater than zero (i.e. the Host is not stationary) the
+<a href="inet.mobility.ConstSpeedMobility.html">ConstSpeedMobility</a> module calculates a random target position for the Host.
+Depending to the update interval and the velocity it calculates the number of
+steps to reach the destination and the step-size. Every update interval
+<a href="inet.mobility.ConstSpeedMobility.html">ConstSpeedMobility</a> calculates the new position on its way to the target
+position and updates the display. Once the target position is reached
+<a href="inet.mobility.ConstSpeedMobility.html">ConstSpeedMobility</a> calculates a new target position.</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>See also:</b> <a href="inet.world.ChannelControl.html">ChannelControl</a></p>
+<p><b>Author:</b> Steffen Sroka, Marc Loebbers, Daniel Willkomm</p>
+<img src="inet.mobility.ConstSpeedMobility-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.mobility.ConstSpeedMobility.html" title="ConstSpeedMobility" alt="ConstSpeedMobility" coords="0,31,170,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.ConstSpeedMobility-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.mobility.ConstSpeedMobility.html" title="Simple Module ConstSpeedMobility" alt="" coords="5,6,144,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.ConstSpeedMobility-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.mobility.ConstSpeedMobility.html" title="Simple Module ConstSpeedMobility" alt="" coords="5,83,144,111">
+<area shape="rect" id="node2" href="inet.mobility.BasicMobility.html" title="Module Interface BasicMobility" alt="" coords="25,6,124,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>vHost</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2mps</td>
+   <td>
+<p>speed of the host (in m/s)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>updateInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0.1s</td>
+   <td>
+<p>time interval to update the hosts position</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>x</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start x coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>y</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start y coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Controls all movement related things of a host
+//
+// ConstSpeedMobility does not use one of the standard mobility approaches.
+// The user can define a velocity for each Host and an update interval. If
+// the velocity is greater than zero (i.e. the Host is not stationary) the
+// ConstSpeedMobility module calculates a random target position for the Host.
+// Depending to the update interval and the velocity it calculates the number of
+// steps to reach the destination and the step-size. Every update interval
+// ConstSpeedMobility calculates the new position on its way to the target
+// position and updates the display. Once the target position is reached
+// ConstSpeedMobility calculates a new target position.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> ChannelControl
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Steffen Sroka, Marc Loebbers, Daniel Willkomm
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">ConstSpeedMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">vHost</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mps&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">mps</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// speed of the host (in m/s)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">1</span><span style="color: #000000; ">s</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// time interval to update the hosts position
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">x</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start x coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">y</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start y coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

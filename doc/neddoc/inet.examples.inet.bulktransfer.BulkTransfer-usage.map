@@ -1,0 +1,5 @@
+<area shape="rect" id="node1" href="inet.examples.inet.bulktransfer.BulkTransfer.html" title="Network BulkTransfer" alt="" coords="205,6,301,34">
+<area shape="rect" id="node2" href="inet.examples.inet.bulktransfer.BulkTransfer.C.html" title="Channel C" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="Simple Module FlatNetworkConfigurator" alt="" coords="101,83,264,111">
+<area shape="rect" id="node6" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="288,83,360,111">
+<area shape="rect" id="node8" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="384,83,485,111">

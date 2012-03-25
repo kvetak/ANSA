@@ -1,0 +1,7 @@
+<area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherMAC.html" title="Simple Module EtherMAC" alt="" coords="381,83,464,111">
+<area shape="rect" id="node2" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="5,6,85,34">
+<area shape="rect" id="node4" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="109,6,232,34">
+<area shape="rect" id="node6" href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html" title="Compound Module EthernetInterfaceNoQueue" alt="" coords="256,6,432,34">
+<area shape="rect" id="node8" href="inet.nodes.ethernet.EtherSwitch.html" title="Compound Module EtherSwitch" alt="" coords="456,6,549,34">
+<area shape="rect" id="node10" href="inet.nodes.wireless.WirelessAPWithEth.html" title="Compound Module WirelessAPWithEth" alt="" coords="573,6,712,34">
+<area shape="rect" id="node12" href="inet.nodes.wireless.WirelessAPWithEthSimplified.html" title="Compound Module WirelessAPWithEthSimplified" alt="" coords="736,6,931,34">

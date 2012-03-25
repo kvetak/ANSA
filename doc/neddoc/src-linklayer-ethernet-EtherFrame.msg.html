@@ -1,0 +1,252 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/linklayer/ethernet/EtherFrame.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="EtherJam.html">EtherJam</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Represents jam on the Ethernet.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherFrame.html">EtherFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Common base class for classes representing Ethernet II and 802.3 frame types,
+containing their common header fields.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EthernetIIFrame.html">EthernetIIFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet II headers contain a 16-bit <a href="EtherType.html">EtherType</a> to identify
+the encapsulated protocol.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet frame with 802.3 LLC header.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherFrameWithSNAP.html">EtherFrameWithSNAP</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet frame with 802.3 LLC and SNAP headers.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherPauseFrame.html">EtherPauseFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet frame used by the PAUSE protocol</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherAutoconfig.html">EtherAutoconfig</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet model components (<a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>, <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a> and <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>) send this
+message at the beginning of the simulation, so that "auto"-valued "txrate"
+and "duplex" parameters of <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> can be initialized. The purpose is
+similar to Ethernet Auto-Negotiation; however this is NOT meant to be
+the model of that Ethernet feature. (For example, <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a> also sends
+an <a href="EtherAutoconfig.html">EtherAutoconfig</a> message in the model, which obviously does not happen in
+a real Ethernet.)</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2003 Andras Varga; CTIE, Monash University, Australia
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;Ethernet.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;MACAddress.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;Ieee802Ctrl_m.h&quot;</span><span style="color: #000000; "> </span><span style="color: #808080; font-style: italic; ">// for enums
+</span><span style="color: #000000; ">}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MessageId</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherType</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">SAPCode</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Represents jam on the Ethernet.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherJam</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Common base class for classes representing Ethernet II and 802.3 frame types,
+// containing their common header fields.
+//
+// This class should never be instantiated by the models, only specific
+// subclasses: EthernetIIFrame, EtherFrameWithLLC and EtherFrameWithSNAP.
+//
+// Source and destination MAC address are stored in data members.
+// Other fields include:
+//  - preamble: not stored (only contributes length)
+//  - length: stored in cMessage length, not stored explicitly
+//  - payload: stored a encapsulated packet (cMessage::encapsulate())
+//  - crc: represented by cMessage::hasBitError()
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">dest</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">src</span><span style="color: #000000; ">;
+        </span><span style="color: #808080; font-style: italic; ">//MessageId id; -- uncomment for tracing frames
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Ethernet II headers contain a 16-bit EtherType to identify
+// the encapsulated protocol.
+//
+// Header length: src(6)+dest(6)+etherType(2) = 14 bytes
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EthernetIIFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">etherType</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Ethernet frame with 802.3 LLC header.
+//
+// Header length: src(6)+dest(6)+length(2)+ssap(1)+dsap(1)+control(1) = 17 bytes
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrameWithLLC</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ssap</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">dsap</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">control</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Ethernet frame with 802.3 LLC and SNAP headers.
+//
+// The fields ssap, dsap and control are not included in the class because
+// they are always set to fixed values: 0xAA, 0xAA, 0x03.
+//
+// Header length: src(6)+dest(6)+length(2)+ssap(1)+dsap(1)+control(1)+
+// orgCode(3)+localCode(2) = 22 bytes
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrameWithSNAP</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">orgCode</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// SNAP organization code, 0 for IP and ARP
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localcode</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// SNAP local code (stores EtherType for IP and ARP)
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Ethernet frame used by the PAUSE protocol
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherPauseFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pauseTime</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// in 512 bit-time units
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Ethernet model components (EtherMAC, EtherHub and EtherBus) send this
+// message at the beginning of the simulation, so that &quot;auto&quot;-valued &quot;txrate&quot;
+// and &quot;duplex&quot; parameters of EtherMAC can be initialized. The purpose is
+// similar to Ethernet Auto-Negotiation; however this is NOT meant to be
+// the model of that Ethernet feature. (For example, EtherBus also sends
+// an EtherAutoconfig message in the model, which obviously does not happen in
+// a real Ethernet.)
+//
+// - txrate: EtherMAC with non-auto txrate send configured txrate value;
+//   EtherBus sends 10Mbps (0 means not set). Lowest value will be chosen by
+//   all EtherMACs, or if no txrate was advertised (all were 0), 100Mbps is chosen.
+// - halfDuplex: EtherHub, EtherBus, plus EtherMAC with duplexEnabled=false setting
+//   send true. Duplex operation only chosen by a MAC if nobody vetoed it by sending
+//   halfDuplex=true.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherAutoconfig</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">txrate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">halfDuplex</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

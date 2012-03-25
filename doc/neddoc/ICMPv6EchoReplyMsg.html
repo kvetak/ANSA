@@ -1,0 +1,102 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>ICMPv6EchoReplyMsg</i></h2>
+<b>File: <a href="src-networklayer-icmpv6-ICMPv6Message.msg.html">src/networklayer/icmpv6/ICMPv6Message.msg</a></b><br/>
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> Echo Reply packet. Data is attached through encapsulation (see <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a>.cc)</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="ICMPv6EchoReplyMsg-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="ICMPv6EchoReplyMsg.html" title="Packet ICMPv6EchoReplyMsg" alt="" coords="5,6,163,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="ICMPv6EchoReplyMsg-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="ICMPv6EchoReplyMsg.html" title="Packet ICMPv6EchoReplyMsg" alt="" coords="5,83,163,111">
+<area shape="rect" id="node2" href="ICMPv6Message.html" title="Packet ICMPv6Message" alt="" coords="23,6,145,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="ICMPv6Message.html">ICMPv6Message</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Represents an <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> packet.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>code</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>set to 0.</p>
+</td>
+</tr>
+<tr class="local">
+   <td>identifier</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>identifier to aid in matching Echo replies. May be Zero</p>
+</td>
+</tr>
+<tr class="local">
+   <td>seqNumber</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>sequence number to aid in matching Echo replies. May be Zero</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>type</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>int code; //TODO: this should be specific to different <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> types.</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 Echo Reply packet. Data is attached through encapsulation (see ICMPv6.cc)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6EchoReplyMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//set to 0.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">identifier</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// identifier to aid in matching Echo replies. May be Zero
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">seqNumber</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// sequence number to aid in matching Echo replies. May be Zero
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

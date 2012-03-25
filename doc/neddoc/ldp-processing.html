@@ -1,0 +1,61 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>LDP Message Processing</h2>
+<p>The simulation follows message processing rules specified in RFC3036
+(<a href="inet.networklayer.ldp.LDP.html">LDP</a> Specification). A summary of the algorithm used in the RFC is
+presented below.</p>
+<p><b>Label Request Message processing</b></p>
+<p>An LSR may transmit a Request message under any of the conditions below:</p>
+  <ul><li>The LSR recognizes a new FEC via the forwarding tale, and the next hop
+  is its <a href="inet.networklayer.ldp.LDP.html">LDP</a> peer. The LIB of this LSR does not have a mapping from the
+  next hop for the given FEC.</li>
+  <li>Network topology changes, the next hop to the FEC is no longer valid
+  and new mapping is not available.</li>
+  <li>The LSR receives a Label Request for a FEC from an upstream <a href="inet.networklayer.ldp.LDP.html">LDP</a> and it
+  does not have label binding information for this FEC. The FEC next hop
+  is an <a href="inet.networklayer.ldp.LDP.html">LDP</a> peer.</li></ul>
+<p>Upon receiving a Label Request message, the following procedures will be
+performed:</p>
+<p><pre>
+Step 1: Extract the FEC from the message and locate the incoming interface
+        of the message.
+Step 2: Check whether the FEC is an outstanding FEC.
+    Alternative 1: This FEC is outstanding
+        Step 1: Return
+    Alternative 2: This FEC is not outstanding
+        Step 1: Continue
+Step 3: Check if there is an exact match of the FEC in the routing table.
+    Alternative 1: There is an exact match
+        Step 1: Continue
+    Alternative 2: There is no match
+        Step 1: Construct a Notification message of No route and
+                send this message back to the sender.
+Step 4: Make query to local LIB to find out the corresponding label.
+    Alternative 1: The label found
+        Step 1: Construct a Label Mapping message and send over
+                the incoming interface.
+    Alternative 2: The label cannot be found for this FEC
+        Step 1: Construct a new Label Request message and send
+                the message out using L3 routing.
+        Step 2: Construct a Notification message indicating that the
+                label cannot be found.
+</pre></p>
+<p><b>Label Mapping Message processing</b></p>
+<p>Upon receiving a Label Mapping message, the following procedures will be
+performed:</p>
+<p><pre>
+Step 1: Extract the FEC and the label from the message.
+Step 2: Check whether this is an outstanding FEC
+    Alternative 1: This FEC is outstanding
+        Step 1: Continue
+    Alternative 2: This FEC is not outstanding
+        Step 1: Send back the server an Notification of Error message.
+Step 3: Install the new label to the local LIB using the extracted label,
+        FEC and the message incoming interface.
+</pre></p>
+   </body>
+</html>

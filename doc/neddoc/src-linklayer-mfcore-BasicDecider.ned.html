@@ -1,0 +1,89 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/linklayer/mfcore/BasicDecider.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mfcore.BasicDecider.html">BasicDecider</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Module to decide whether a frame is received correctly or is
+lost due to bit errors, interference...</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//***************************************************************************
+// * file:        BasicDecider.ned
+// *
+// * author:      Marc Loebbers
+// *
+// * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
+// *              Technische Universitaet Berlin, Germany.
+// *
+// *              This program is free software; you can redistribute it
+// *              and/or modify it under the terms of the GNU General Public
+// *              License as published by the Free Software Foundation; either
+// *              version 2 of the License, or (at your option) any later
+// *              version.
+// *              For further information see file COPYING
+// *              in the top level directory
+// ***************************************************************************
+// * part of:     framework implementation developed by tkn
+// **************************************************************************/
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">linklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">mfcore</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Module to decide whether a frame is received correctly or is
+// lost due to bit errors, interference...
+//
+// The decider module only handles messages from lower layers. All
+// messages from upper layers are directly passed to the snrEval layer
+// and cannot be processed in the decider module
+//
+// This is the basic decider module which does not really decide
+// anything. It only provides the basic functionality which all
+// decider modules should have, namely message de- &amp;encapsulation
+// (For further information about the functionality of the physical
+// layer modules and the formats used for communication in between
+// them have a look at the manual
+//
+// Every own decider module class should be derived from this class
+// and only the handle*Msg functions may be redefined for your own
+// needs. The other functions should usually NOT be changed.
+//
+// All decider modules should assume bits as a unit for the length
+// fields.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc L&#65533;bbers, Daniel Willkomm
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicDecider</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">coreDebug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch for the core framework
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/process_s&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to MAC layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from snrEval sub-module
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

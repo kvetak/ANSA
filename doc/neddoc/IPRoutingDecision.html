@@ -1,0 +1,66 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>IPRoutingDecision</i></h2>
+<b>File: <a href="src-networklayer-contract-IPControlInfo.msg.html">src/networklayer/contract/IPControlInfo.msg</a></b><br/>
+<p>Control info attached to packets sent from <a href="inet.networklayer.ipv4.IP.html">IP</a> to <a href="inet.networklayer.arp.ARP.html">ARP</a>.</p>
+<p>Next hop address is used on a LAN to determine the MAC destination
+address (and it may be used on other multicast networks for similar
+addressing purpose).</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPRoutingDecision-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPRoutingDecision.html" title="Class IPRoutingDecision" alt="" coords="5,6,136,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPRoutingDecision-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPRoutingDecision.html" title="Class IPRoutingDecision" alt="" coords="5,6,136,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>interfaceId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>interface on which dgram should be sent (see <a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a>)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>nextHopAddr</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Control info attached to packets sent from IP to ARP.
+//
+// Next hop address is used on a LAN to determine the MAC destination
+// address (and it may be used on other multicast networks for similar
+// addressing purpose).
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPRoutingDecision</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">interfaceId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// interface on which dgram should be sent (see InterfaceTable)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">nextHopAddr</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

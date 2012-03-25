@@ -1,0 +1,54 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Struct <i>TOSData</i></h2>
+<b>File: <a href="src-networklayer-ospfv2-OSPFPacket.msg.html">src/networklayer/ospfv2/OSPFPacket.msg</a></b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="TOSData-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TOSData.html" title="Struct TOSData" alt="" coords="144,83,221,111">
+<area shape="rect" id="node2" href="ExternalTOSInfo.html" title="Struct ExternalTOSInfo" alt="" coords="5,6,123,34">
+<area shape="rect" id="node4" href="Link.html" title="Class Link" alt="" coords="147,6,219,34">
+<area shape="rect" id="node6" href="OSPFSummaryLSA.html" title="Class OSPFSummaryLSA" alt="" coords="243,6,381,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="TOSData-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TOSData.html" title="Struct TOSData" alt="" coords="5,6,83,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>tos</td>
+   <td>
+      <i>
+unsigned char</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>tosMetric</td>
+   <td>
+      <i>
+unsigned char[3]</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">TOSData</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">tos</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">tosMetric</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+}
+
+</span></pre>
+   </body>
+</html>

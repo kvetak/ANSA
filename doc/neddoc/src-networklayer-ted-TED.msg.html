@@ -1,0 +1,103 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ted/TED.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="TELinkStateInfo.html">TELinkStateInfo</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Represents a link in the <a href="inet.networklayer.ted.TED.html">TED</a> and in <a href="LinkStateMsg.html">LinkStateMsg</a> packets.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="TEDChangeInfo.html">TEDChangeInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Data structure supplied with NF_TED_CHANGE <a href="inet.base.NotificationBoard.html">NotificationBoard</a> notifications.
+This triggers the link state protocol to send out up-to-date link state info
+about the given links.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPAddress.h&quot;</span><span style="color: #000000; ">
+
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">LINK_STATE_MESSAGE</span><span style="color: #000000; ">      </span><span style="color: #008000; ">1</span><span style="color: #000000; ">
+
+</span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">vector</span><span style="color: #000000; ">&lt;</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">TELinkStateInfo</span><span style="color: #000000; ">&gt; </span><span style="color: #000000; ">TELinkStateInfoVector</span><span style="color: #000000; ">;
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Represents a link in the TED and in LinkStateMsg packets.
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">TELinkStateInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">advrouter</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// routerId of originator of this link state entry
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">linkid</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// identifies link within advrouter; set to peer's address
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">local</span><span style="color: #000000; ">;     </span><span style="color: #808080; font-style: italic; ">// address of local interface of this link
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remote</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// address of &quot;gateway&quot; to peer
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">metric</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// link metric
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">MaxBandwidth</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// maximum bandwidth (bps)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">UnResvBandwidth</span><span style="color: #000000; ">[</span><span style="color: #008000; ">8</span><span style="color: #000000; ">]; </span><span style="color: #808080; font-style: italic; ">// unreserved bandwidths --FIXME indexed by what?
+</span><span style="color: #000000; ">
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">timestamp</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// time of originating this entry
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceId</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// FIXME looks like this is the same as advrouter -- really needed?
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">messageId</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// id assigned to originating LinkStateMsg (FIXME or?)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">state</span><span style="color: #000000; ">;             </span><span style="color: #808080; font-style: italic; ">// false = down, true = up
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Data structure supplied with NF_TED_CHANGE NotificationBoard notifications.
+// This triggers the link state protocol to send out up-to-date link state info
+// about the given links.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">TEDChangeInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">tedLinkIndices</span><span style="color: #000000; ">[];
+}
+
+
+</span></pre>
+   </body>
+</html>

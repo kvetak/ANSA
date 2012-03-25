@@ -1,0 +1,5 @@
+: ansaLinkStateUpdateHandler6.
+[ ] verifikovat podmínku na line 195, pùvodnì tam bylo ještì nìco s LSA
+	ale pokud vím, tak v IPv6 LinkStateID ztratilo svoji adresovací sémantiku,
+	takže to asi už neplatí 
+ 

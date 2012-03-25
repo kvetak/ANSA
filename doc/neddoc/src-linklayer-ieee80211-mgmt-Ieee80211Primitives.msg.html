@@ -1,0 +1,460 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/linklayer/ieee80211/mgmt/Ieee80211Primitives.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211PrimRequestCode.html">Ieee80211PrimRequestCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>IEEE 802.11 command codes, sent by the agent to the management entity.
+These constants should be set as message kind on the messages.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211PrimConfirmCode.html">Ieee80211PrimConfirmCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>IEEE 802.11 confirm codes, sent by the management entity to the agent,
+in response to the agents's requests.
+These constants should be set as message kind on the messages.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211BSSType.html">Ieee80211BSSType</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211PrimResultCode.html">Ieee80211PrimResultCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Values for the resultCode field in confirm primitives, sent from
+the management entity to the agent.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211PrimRequest.html">Ieee80211PrimRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Base class for request primitives</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211PrimConfirm.html">Ieee80211PrimConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Base class for confirm primitives</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_ScanRequest.html">Ieee80211Prim_ScanRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-SCAN.request.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_BSSDescription.html">Ieee80211Prim_BSSDescription</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_ScanConfirm.html">Ieee80211Prim_ScanConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-SCAN.confirm
+Possible result codes: SUCCESS, INVALID_PARAMETERS</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AuthenticateRequest.html">Ieee80211Prim_AuthenticateRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-AUTHENTICATE.request.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AuthenticateConfirm.html">Ieee80211Prim_AuthenticateConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-AUTHENTICATE.confirm.
+Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, TOO_MANY_SIMULTANEOUS_REQUESTS, REFUSED</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_DeauthenticateRequest.html">Ieee80211Prim_DeauthenticateRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-DEAUTHENTICATE.request</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AssociateRequest.html">Ieee80211Prim_AssociateRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-ASSOCIATE.request</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AssociateConfirm.html">Ieee80211Prim_AssociateConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-ASSOCIATE.confirm
+Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, REFUSED</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_ReassociateRequest.html">Ieee80211Prim_ReassociateRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>MLME-REASSOCIATE.request is very similar to MLME-ASSOCIATE.request</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_ReassociateConfirm.html">Ieee80211Prim_ReassociateConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>MLME-REASSOCIATE.confirm is very similar to MLME-ASSOCIATE.confirm</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_DisassociateRequest.html">Ieee80211Prim_DisassociateRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-DISASSOCIATE.request.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2006 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+</span><span style="color: #000000; ">
+</span><span style="color: #808080; font-style: italic; ">//
+// Required for MACAddress declarations
+//
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;Ieee80211MgmtFrames_m.h&quot;</span><span style="color: #000000; ">
+}}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// IEEE 802.11 command codes, sent by the agent to the management entity.
+// These constants should be set as message kind on the messages.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> Ieee80211PrimConfirmCode, Ieee80211MgmtSTA, Ieee80211AgentSTA
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequestCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">PR_SCAN_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_AUTHENTICATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_DEAUTHENTICATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_ASSOCIATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_REASSOCIATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_DISASSOCIATE_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// IEEE 802.11 confirm codes, sent by the management entity to the agent,
+// in response to the agents's requests.
+// These constants should be set as message kind on the messages.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> Ieee80211PrimRequestCode, Ieee80211MgmtSTA, Ieee80211AgentSTA
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimConfirmCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">PR_SCAN_CONFIRM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_AUTHENTICATE_CONFIRM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_DEAUTHENTICATE_CONFIRM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_ASSOCIATE_CONFIRM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_REASSOCIATE_CONFIRM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PR_DISASSOCIATE_CONFIRM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211BSSType</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">BSSTYPE_ANY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">BSSTYPE_INFRASTRUCTURE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">BSSTYPE_INDEPENDENT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Values for the resultCode field in confirm primitives, sent from
+// the management entity to the agent.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> Ieee80211PrimConfirmCode, Ieee80211MgmtSTA, Ieee80211AgentSTA
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimResultCode</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">PRC_SUCCESS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PRC_INVALID_PARAMETERS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PRC_TIMEOUT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PRC_TOO_MANY_SIMULTANEOUS_REQUESTS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PRC_REFUSED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Base class for request primitives
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Base class for confirm primitives
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimConfirm</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">resultCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211PrimResultCode</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-SCAN.request.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_ScanRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">BSSType</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211BSSType</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// determines type of BSS's to include in the scan
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">BSSID</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// specific BSSID to scan for (default: any)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">SSID</span><span style="color: #000000; ">;      </span><span style="color: #808080; font-style: italic; ">// SSID to scan for SSID (default: any)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">activeScan</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// whether to perform active or passive scanning
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">probeDelay</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// delay (in &#65533;s) to be used prior to transmitting a Probe frame during active scanning
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelList</span><span style="color: #000000; ">[]; </span><span style="color: #808080; font-style: italic; ">// list of channels to scan (default: all channels)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">minChannelTime</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// minimum time to spend on each channel when scanning
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">maxChannelTime</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// maximum time to spend on each channel when scanning
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_BSSDescription</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelNumber</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">BSSID</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">SSID</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; "> </span><span style="color: #000000; ">supportedRates</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">beaconInterval</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">rxPower</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// received power from AP; not part of the standard
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-SCAN.confirm
+// Possible result codes: SUCCESS, INVALID_PARAMETERS
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_ScanConfirm</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimConfirm</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">Ieee80211Prim_BSSDescription</span><span style="color: #000000; "> </span><span style="color: #000000; ">bssList</span><span style="color: #000000; ">[];
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-AUTHENTICATE.request.
+//
+// Note: the &quot;authType&quot; parameter (Open System, Shared Key, etc) is omitted.
+// The authentication procedure is simulated by this model by exchanging
+// a number of &quot;dummy&quot; authentication frames without real contents,
+// and it is configured in the AP how many authentication steps it requires.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AuthenticateRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">timeout</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-AUTHENTICATE.confirm.
+// Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, TOO_MANY_SIMULTANEOUS_REQUESTS, REFUSED
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AuthenticateConfirm</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimConfirm</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-DEAUTHENTICATE.request
+//
+// NOTE: there is no Deauthenticate Confirm, because Deauthenticate Request
+// takes place immediately, and nothing can go wrong (there is no reply
+// from the AP to wait for)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_DeauthenticateRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reasonCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-ASSOCIATE.request
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AssociateRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">timeout</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-ASSOCIATE.confirm
+// Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, REFUSED
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AssociateConfirm</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimConfirm</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// MLME-REASSOCIATE.request is very similar to MLME-ASSOCIATE.request
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_ReassociateRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AssociateRequest</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// MLME-REASSOCIATE.confirm is very similar to MLME-ASSOCIATE.confirm
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_ReassociateConfirm</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AssociateConfirm</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-DISASSOCIATE.request.
+//
+// NOTE: there is no Disassociate Confirm, because Disassociate Request
+// takes place immediately, and nothing can go wrong (there is no reply
+// from the AP to wait for)
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_DisassociateRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reasonCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211ReasonCode</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

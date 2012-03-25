@@ -1,0 +1,276 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ldp/LDPPacket.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="LDP_MESSAGE_TYPES.html">LDP_MESSAGE_TYPES</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> message types</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDP_STATUS_TYPES.html">LDP_STATUS_TYPES</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="FEC_TLV.html">FEC_TLV</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPPacket.html">LDPPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Base class for <a href="inet.networklayer.ldp.LDP.html">LDP</a> packets</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPLabelMapping.html">LDPLabelMapping</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> Label Mapping Message</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPLabelRequest.html">LDPLabelRequest</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> Label Request Message</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPHello.html">LDPHello</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> Hello Message</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPNotify.html">LDPNotify</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> notification message</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPIni.html">LDPIni</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> Ini Message</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LDPAddress.html">LDPAddress</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> Address Message</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPAddress.h&quot;</span><span style="color: #000000; ">
+
+</span><span style="color: #808080; font-style: italic; ">// base header: version, length, LSR ID, Label space
+</span><span style="color: #000000; ">#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDP_BASEHEADER_BYTES</span><span style="color: #000000; ">  </span><span style="color: #008000; ">10</span><span style="color: #000000; ">
+
+</span><span style="color: #808080; font-style: italic; ">// FIXME: the length below is just a guess. TBD find lengths for individual TLVs
+// making up different LDP packet types, and determine length for each packet type
+</span><span style="color: #000000; ">#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDP_HEADER_BYTES</span><span style="color: #000000; ">  (</span><span style="color: #000000; ">LDP_BASEHEADER_BYTES</span><span style="color: #000000; ">+</span><span style="color: #008000; ">20</span><span style="color: #000000; ">)
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP message types
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDP_MESSAGE_TYPES</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">NOTIFICATION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">HELLO</span><span style="color: #000000; "> = </span><span style="color: #008000; ">11</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">INITIALIZATION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">12</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">KEEP_ALIVE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">13</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ADDRESS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">14</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ADDRESS_WITHDRAW</span><span style="color: #000000; "> = </span><span style="color: #008000; ">15</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">LABEL_MAPPING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">16</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">LABEL_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">17</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">LABEL_WITHDRAW</span><span style="color: #000000; "> = </span><span style="color: #008000; ">18</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">LABEL_RELEASE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">19</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">UNKNOWN</span><span style="color: #000000; "> = </span><span style="color: #008000; ">20</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDP_STATUS_TYPES</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">NO_ROUTE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">13</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FEC_TLV</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">addr</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">length</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Base class for LDP packets
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">type</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">senderAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiverAddress</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP Label Mapping Message
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPLabelMapping</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">FEC_TLV</span><span style="color: #000000; "> </span><span style="color: #000000; ">fec</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">label</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP Label Request Message
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPLabelRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">FEC_TLV</span><span style="color: #000000; "> </span><span style="color: #000000; ">fec</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP Hello Message
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPHello</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">holdTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">tbit</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">rbit</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP notification message
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPNotify</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">status</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">FEC_TLV</span><span style="color: #000000; "> </span><span style="color: #000000; ">fec</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP Ini Message
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> currently unused
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPIni</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">keepAliveTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">abit</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">dbit</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pvLim</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiverLDPIdentifier</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// LDP Address Message
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> currently unused
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPAddress</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">isWithdraw</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">family</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">addresses</span><span style="color: #000000; ">[];
+}
+
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,135 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>IPv6ControlInfo</i></h2>
+<b>File: <a href="src-networklayer-contract-IPv6ControlInfo.msg.html">src/networklayer/contract/IPv6ControlInfo.msg</a></b><br/><p><a href="../doxy/class_i_pv6_control_info.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Control information for sending/receiving packets over IPv6.</p>
+<p>To send a packet over IPv6, fill in an <a href="IPv6ControlInfo.html">IPv6ControlInfo</a> object,
+attach it to the packet with the C++ method setControlInfo(),
+the send it to the <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> module.</p>
+<p>When sending, the following fields are required:</p>
+  <ul><li>protocol: a value from <a href="IPProtocolId.html">IPProtocolId</a></li>
+  <li>destAddr</li></ul>
+<p>Optional fields:</p>
+  <ul><li>srcAddr: it will be set to the address of the outgoing interface</li>
+  <li>timeToLive</li></ul>
+<p>When <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> delivers a packet to higher layers, it also attaches an 
+<a href="IPv6ControlInfo.html">IPv6ControlInfo</a> to it. It fills in the following fields: </p>
+  <ul><li>srcAddr, destAddr, protocol, hopLimit: values from the original datagram</li>
+  <li>interfaceId: the interface on which the datagram arrived, or -1 if it was
+   created locally</li></ul>
+<p><a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> also puts the original datagram object into the control info, because
+it may be needed by higher layers.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPv6ControlInfo-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPv6ControlInfo.html" title="Class IPv6ControlInfo" alt="" coords="5,6,117,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPv6ControlInfo-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPv6ControlInfo.html" title="Class IPv6ControlInfo" alt="" coords="5,6,117,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>protocol</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>transport layer protocol</p>
+</td>
+</tr>
+<tr class="local">
+   <td>destAddr</td>
+   <td>
+      <i>
+IPv6Address</i>
+   </td>
+   <td>
+<p>destination <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>srcAddr</td>
+   <td>
+      <i>
+IPv6Address</i>
+   </td>
+   <td>
+<p>source <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>hopLimit</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>hop limit</p>
+</td>
+</tr>
+<tr class="local">
+   <td>interfaceId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>interface on which the datagram was received, or
+should be sent (see <a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a>)</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Control information for sending/receiving packets over \IPv6.
+//
+// To send a packet over \IPv6, fill in an IPv6ControlInfo object,
+// attach it to the packet with the C++ method setControlInfo(),
+// the send it to the IPv6 module.
+//
+// When sending, the following fields are required:
+// - protocol: a value from IPProtocolId
+// - destAddr
+//
+// Optional fields:
+// - srcAddr: it will be set to the address of the outgoing interface
+// - timeToLive
+//
+// When IPv6 delivers a packet to higher layers, it also attaches an 
+// IPv6ControlInfo to it. It fills in the following fields: 
+//  - srcAddr, destAddr, protocol, hopLimit: values from the original datagram
+//  - interfaceId: the interface on which the datagram arrived, or -1 if it was
+//    created locally
+//
+// IPv6 also puts the original datagram object into the control info, because
+// it may be needed by higher layers.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">protocol</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// transport layer protocol
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddr</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// destination IPv6 address
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddr</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// source IPv6 address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">hopLimit</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// hop limit
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">interfaceId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// interface on which the datagram was received, or
+</span><span style="color: #000000; ">                          </span><span style="color: #808080; font-style: italic; ">// should be sent (see InterfaceTable)
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

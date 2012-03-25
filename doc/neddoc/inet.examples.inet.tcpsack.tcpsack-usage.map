@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.examples.inet.tcpsack.tcpsack.html" title="Network tcpsack" alt="" coords="276,6,348,34">
+<area shape="rect" id="node2" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="5,83,243,111">
+<area shape="rect" id="node4" href="inet.examples.inet.tcpsack.NormalPath.html" title="Channel NormalPath" alt="" coords="267,83,357,111">
+<area shape="rect" id="node6" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="381,83,453,111">

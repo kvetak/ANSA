@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<Routers>
+    <Router id="10.1.13.1">
+        <Hostname>R1</Hostname>
+        <Interfaces>
+            <Interface name="eth1">
+                <IPAddress>10.1.12.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <Duplex>auto</Duplex>
+                <Speed>auto</Speed>
+                <OspfPriority>10</OspfPriority>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+            <Interface name="eth0">
+                <IPAddress>10.1.13.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <Duplex>auto</Duplex>
+                <Speed>auto</Speed>
+                <OspfPriority>10</OspfPriority>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>10.0.0.0</IPAddress>
+                                <Wildcard>0.255.255.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+            
+        </Routing>
+    </Router>
+    <Router id="172.16.0.1">
+        <Hostname>R2</Hostname>
+        <Interfaces>
+            <Interface name="eth1">
+                <IPAddress>10.1.12.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <Duplex>auto</Duplex>
+                <Speed>auto</Speed>
+                <OspfPriority>5</OspfPriority>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+            <Interface name="eth0">
+                <IPAddress>172.16.0.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <Duplex>auto</Duplex>
+                <Speed>auto</Speed>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+            <Interface name="ppp0">
+                <IPAddress>10.1.23.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>10.0.0.0</IPAddress>
+                                <Wildcard>0.255.255.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>172.0.0.0</IPAddress>
+                                <Wildcard>0.255.255.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+            
+        </Routing>
+    </Router>
+    <Router id="172.15.0.1">
+        <Hostname>R3</Hostname>
+        <Interfaces>
+            <Interface name="eth1">
+                <IPAddress>10.1.13.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <OspfPriority>5</OspfPriority>
+                <Duplex>auto</Duplex>
+                <Speed>auto</Speed>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+            <Interface name="eth0">
+                <IPAddress>172.15.0.1</IPAddress>
+                <Mask>255.255.0.0</Mask>
+                <Duplex>auto</Duplex>
+                <Speed>auto</Speed>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+            <Interface name="ppp0">
+                <IPAddress>10.1.23.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <OspfNetworkType>point-to-point</OspfNetworkType>
+            </Interface>
+        </Interfaces>
+        <Routing>
+            <Ospf>
+                <RFC1583Compatible />
+                <Areas>
+                    <Area id="0.0.0.0">
+                        <Networks>
+                            <Network>
+                                <IPAddress>10.0.0.0</IPAddress>
+                                <Wildcard>0.255.255.255</Wildcard>
+                            </Network>
+                            <Network>
+                                <IPAddress>172.0.0.0</IPAddress>
+                                <Wildcard>0.255.255.255</Wildcard>
+                            </Network>
+                        </Networks>
+                    </Area>
+                </Areas>
+            </Ospf>
+            
+        </Routing>
+    </Router>
+</Routers>

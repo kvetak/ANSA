@@ -1,0 +1,70 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>TCPOption</i></h2>
+<b>File: <a href="src-transport-tcp-TCPSegment.msg.html">src/transport/tcp/TCPSegment.msg</a></b><br/>
+<p>Header Options (optional):</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="TCPOption-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TCPOption.html" title="Class TCPOption" alt="" coords="13,83,99,111">
+<area shape="rect" id="node2" href="TCPSegment.html" title="Packet TCPSegment" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="TCPOption-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TCPOption.html" title="Class TCPOption" alt="" coords="5,6,91,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>kind</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>option kind</p>
+</td>
+</tr>
+<tr class="local">
+   <td>length</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>option length</p>
+</td>
+</tr>
+<tr class="local">
+   <td>values</td>
+   <td>
+      <i>
+unsigned int[]</i>
+   </td>
+   <td>
+<p>option value(s)</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">// Header Options (optional):
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">kind</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPOptionNumbers</span><span style="color: #000000; ">) = </span><span style="color: #000000; ">TCPOPTION_END_OF_OPTION_LIST</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// option kind
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">length</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;                          </span><span style="color: #808080; font-style: italic; ">// option length
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">values</span><span style="color: #000000; ">[];                              </span><span style="color: #808080; font-style: italic; ">// option value(s)
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

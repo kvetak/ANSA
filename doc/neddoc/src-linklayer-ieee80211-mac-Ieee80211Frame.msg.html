@@ -1,0 +1,295 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/linklayer/ieee80211/mac/Ieee80211Frame.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211FrameType.html">Ieee80211FrameType</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>802.11 frame type constants (type+subtype), for the "type" field of
+Ieee80211FrameControl</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Frame.html">Ieee80211Frame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>The common part of 802.11 frames.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211OneAddressFrame.html">Ieee80211OneAddressFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of a 802.11 frame with address1 present, like ACK and CTS</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ACKFrame.html">Ieee80211ACKFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of the 802.11 ACK frame</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211TwoAddressFrame.html">Ieee80211TwoAddressFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of a 802.11 frame with address1 and address2 present</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211RTSFrame.html">Ieee80211RTSFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of the 802.11 RTS frame</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211CTSFrame.html">Ieee80211CTSFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of the 802.11 CTS frame</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211DataOrMgmtFrame.html">Ieee80211DataOrMgmtFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Common base class for 802.11 data and management frames</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211DataFrame.html">Ieee80211DataFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of the 802.11 data frame</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211ManagementFrame.html">Ieee80211ManagementFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Base class for 802.11 management frames (subclasses will add frame body contents)</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2006 Andras Varga
+// Copyright (C) 2001 Eric Wu and Steve Woon, Monash University, Melbourne, Australia
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+</span><span style="color: #000000; ">
+</span><span style="color: #808080; font-style: italic; ">//
+// Required for MACAddress declarations
+//
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+</span><span style="color: #808080; font-style: italic; ">//FIXME use consts for frame lengths!!! account for LLC(3)+SNAP(5) headers in data frames!!! +add SNAP orgcode, localcode into the msg?
+</span><span style="color: #000000; ">#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;MACAddress.h&quot;</span><span style="color: #000000; ">
+}}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// 802.11 frame type constants (type+subtype), for the &quot;type&quot; field of
+// Ieee80211FrameControl
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211FrameType</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #808080; font-style: italic; ">// management:
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">ST_ASSOCIATIONREQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x00</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_ASSOCIATIONRESPONSE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x01</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_REASSOCIATIONREQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x02</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_REASSOCIATIONRESPONSE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x03</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_PROBEREQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x04</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_PROBERESPONSE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x05</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_BEACON</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x08</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_ATIM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x09</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_DISASSOCIATION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x0a</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_AUTHENTICATION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x0b</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_DEAUTHENTICATION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x0c</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// control (CFEND/CFEND_CFACK omitted):
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">ST_PSPOLL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x1a</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_RTS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x1b</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_CTS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x1c</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ST_ACK</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x1d</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// data (CFPOLL/CFACK subtypes omitted):
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">ST_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">x20</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// The common part of 802.11 frames.
+//
+// NOTE:
+// FCS value is not explicitly modeled, but it is included in the length.
+// Frame control format fields not supported by this model are omitted:
+// MoreFlag, PowerMgmt, MoreData, WEP, Order.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">14</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">type</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211FrameType</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// type and subtype
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">toDS</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">fromDS</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">retry</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">moreFragments</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">duration</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// &quot;duration&quot; in the Duration/ID field (-1=no duration)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">AID</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;          </span><span style="color: #808080; font-style: italic; ">// &quot;id&quot; (Association ID) in the Duration/ID field (-1=no ID)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiverAddress</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// aka address1
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of a 802.11 frame with address1 present, like ACK and CTS
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211OneAddressFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of the 802.11 ACK frame
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ACKFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211OneAddressFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_ACK</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of a 802.11 frame with address1 and address2 present
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211TwoAddressFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211OneAddressFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">20</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">transmitterAddress</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// aka address2
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of the 802.11 RTS frame
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211RTSFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211TwoAddressFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_RTS</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of the 802.11 CTS frame
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211CTSFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211OneAddressFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_CTS</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Common base class for 802.11 data and management frames
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DataOrMgmtFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211TwoAddressFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">28</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address3</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">fragmentNumber</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">sequenceNumber</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of the 802.11 data frame
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DataFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DataOrMgmtFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_DATA</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">byteLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">34</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">address4</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Base class for 802.11 management frames (subclasses will add frame body contents)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ManagementFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211DataOrMgmtFrame</span><span style="color: #000000; ">
+{
+}
+
+</span></pre>
+   </body>
+</html>

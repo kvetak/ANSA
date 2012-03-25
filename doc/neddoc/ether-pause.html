@@ -1,0 +1,28 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Ethernet: PAUSE handling</h2>
+<p>The 802.3x standard supports PAUSE frames as a means of flow
+control. The frame contains a timer value, expressed as a multiple
+of 512 bit-times, that specifies how long the transmitter should
+remain quiet. If the receiver becomes uncongested before the
+transmitter's pause timer expires, the receiver may elect to send
+another Pause frame to the transmitter with a timer value of zero,
+allowing the transmitter to resume immediately.</p>
+<p><a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> will properly respond to PAUSE frames it receives
+(<a href="EtherPauseFrame.html">EtherPauseFrame</a> class),
+however it will never send a PAUSE frame by itself. (For one thing,
+it doesn't have an input buffer that can overflow.)</p>
+<p><a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>, however, transmits PAUSE frames received by higher layers,
+and <a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a> can be instructed by a command to send a PAUSE frame to MAC.</p>
+<p><a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a> types (and thus <a href="inet.nodes.ethernet.EtherSwitch.html">EtherSwitch</a>) currently implement a very simple
+scheme for sending PAUSE frames -- this can be refined if the need arises.</p>
+<p>For background on PAUSE, see e.g.
+http://www.computer.org/proceedings/lcn/0309/03090160abs.htm,
+http://www.nwfusion.com/netresources/0913flow.html, and
+http://www.nwfusion.com/netresources/0913flow2.html.</p>
+   </body>
+</html>

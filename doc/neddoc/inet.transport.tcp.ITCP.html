@@ -1,0 +1,150 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Module Interface <i>ITCP</i></h2>
+<b>Package:</b> inet.transport.tcp<br/><b>File: <a href="src-transport-tcp-ITCP.ned.html">src/transport/tcp/ITCP.ned</a></b><br/>
+<p>Interface for <a href="inet.transport.tcp.TCP.html">TCP</a> protocol implementations. All <a href="inet.transport.tcp.TCP.html">TCP</a> implementations should
+implement this (i.e. <a href="inet.transport.tcp.TCP.html">TCP</a> like <a href="inet.transport.tcp.ITCP.html">ITCP</a>)</p>
+<img src="inet.transport.tcp.ITCP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.transport.tcp.ITCP.html" title="ITCP" alt="ITCP" coords="0,31,140,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.transport.tcp.ITCP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.transport.tcp.ITCP.html" title="Module Interface ITCP" alt="" coords="493,83,565,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="5,6,107,34">
+<area shape="rect" id="node4" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="131,6,240,34">
+<area shape="rect" id="node6" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="264,6,528,34">
+<area shape="rect" id="node8" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="552,6,773,34">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="797,6,1035,34">
+<area shape="rect" id="node12" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="1059,6,1280,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.transport.tcp.ITCP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.transport.tcp.ITCP.html" title="Module Interface ITCP" alt="" coords="108,6,180,34">
+<area shape="rect" id="node2" href="inet.transport.tcp.TCP.html" title="Simple Module TCP" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="inet.transport.tcp_nsc.TCP_NSC.html" title="Simple Module TCP_NSC" alt="" coords="101,83,187,111">
+<area shape="rect" id="node6" href="inet.transport.tcp_old.TCP_old.html" title="Simple Module TCP_old" alt="" coords="211,83,283,111">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHost.html">StandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.StandardHost6.html">StandardHost6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IPv6 host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html">StandardHostWithDLDuplicatesGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html">PPPInterfaceWithDLDuplicatesGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLThruputMeter.html">StandardHostWithDLThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html">PPPInterfaceWithDLThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULDropsGenerator.html">StandardHostWithULDropsGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html">PPPInterfaceWithULDropsGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULThruputMeter.html">StandardHostWithULThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html">PPPInterfaceWithULThruputMeter</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/wheelbarrow</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Interface for TCP protocol implementations. All TCP implementations should
+// implement this (i.e. TCP like ITCP)
+//
+</span><span style="color: #800000; font-weight: bold; ">moduleinterface</span><span style="color: #000000; "> </span><span style="color: #000000; ">ITCP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/wheelbarrow&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

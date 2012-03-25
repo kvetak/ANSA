@@ -1,0 +1,258 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ipv4/IPDatagram.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPOptionClass.html">IPOptionClass</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ipv4.IP.html">IP</a> options class</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPOption.html">IPOption</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ipv4.IP.html">IP</a> option numbers</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="TimestampFlag.html">TimestampFlag</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>The timestamp flag uses the same numeric values as the <a href="inet.networklayer.ipv4.IP.html">IP</a> Protocol</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPRecordRouteOption.html">IPRecordRouteOption</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Option structure: Record Route</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPTimestampOption.html">IPTimestampOption</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Option structure: Timestamp</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPSourceRoutingOption.html">IPSourceRoutingOption</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Option Structure: Source Routing</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPDatagram.html">IPDatagram</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Represents an <a href="inet.networklayer.ipv4.IP.html">IP</a> datagram.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+// Copyright (C) 2004, 2009 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPAddress.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPProtocolId_m.h&quot;</span><span style="color: #000000; ">
+
+</span><span style="color: #808080; font-style: italic; ">// default IP header length: 20 bytes
+</span><span style="color: #000000; ">const</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">IP_HEADER_BYTES</span><span style="color: #000000; "> = </span><span style="color: #008000; ">20</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">// maximum IP header length (base+options): 60 = 4 * 15 bytes
+</span><span style="color: #000000; ">const</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">IP_MAX_HEADER_BYTES</span><span style="color: #000000; "> = </span><span style="color: #008000; ">60</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">// option entry number
+</span><span style="color: #000000; ">const</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">MAX_IPADDR_OPTION_ENTRIES</span><span style="color: #000000; "> = </span><span style="color: #008000; ">9</span><span style="color: #000000; ">;
+</span><span style="color: #000000; ">const</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">MAX_TIMESTAMP_OPTION_ENTRIES</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+}}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// IP options class
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPOptionClass</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPOPTION_CLASS_CONTROL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_CLASS_RESERVED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_CLASS_DEBUGGING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_CLASS_RESERVED2</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+};
+
+</span><span style="color: #808080; font-style: italic; ">//
+// IP option numbers
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPOPTION_END_OF_OPTIONS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_NO_OPTION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_SECURITY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_LOOSE_SOURCE_ROUTING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_TIMESTAMP</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_RECORD_ROUTE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">7</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_STREAM_ID</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_STRICT_SOURCE_ROUTING</span><span style="color: #000000; "> = </span><span style="color: #008000; ">9</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPOPTION_ROUTER_ALERT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">20</span><span style="color: #000000; ">;
+};
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// The timestamp flag uses the same numeric values as the IP Protocol
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">TimestampFlag</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IP_TIMESTAMP_TIMESTAMP_ONLY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_TIMESTAMP_WITH_ADDRESS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IP_TIMESTAMP_SENDER_INIT_ADDRESS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Option structure: Record Route
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPRecordRouteOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordAddress</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_IPADDR_OPTION_ENTRIES</span><span style="color: #000000; ">];
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">nextAddressPtr</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Option structure: Timestamp
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPTimestampOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">flag</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TimestampFlag</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">overflow</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">nextAddressPtr</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">// use either up to 4 addresses with timestamps or
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">// only up to 9 timestamps, according to the flag
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordAddress</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_TIMESTAMP_OPTION_ENTRIES</span><span style="color: #000000; ">];
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordTimestamp</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_IPADDR_OPTION_ENTRIES</span><span style="color: #000000; ">];
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Option Structure: Source Routing
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPSourceRoutingOption</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordAddress</span><span style="color: #000000; ">[</span><span style="color: #000000; ">MAX_IPADDR_OPTION_ENTRIES</span><span style="color: #000000; ">];
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">nextAddressPtr</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">lastAddressPtr</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Represents an IP datagram.
+//
+// Uses the following cPacket fields:
+//    - getByteLength() / setByteLength() to represent total datagram length
+//    - hasBitError() / setBitError() to represent datagram correctness
+//    - getTimestamp() / setTimestamp (simtime) used in timestamp option
+//
+// Additional length fields defined in this class are in bytes.
+//
+// Only one of the option fields can exist at a time.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPDatagram</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">version</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> = </span><span style="color: #000000; ">IP_HEADER_BYTES</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddress</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportProtocol</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">) = </span><span style="color: #000000; ">IP_PROT_NONE</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">timeToLive</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">identification</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">moreFragments</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">dontFragment</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">fragmentOffset</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">diffServCodePoint</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">optionCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPOption</span><span style="color: #000000; ">) = </span><span style="color: #000000; ">IPOPTION_NO_OPTION</span><span style="color: #000000; ">;  </span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> modify header length when options are present
+</span><span style="color: #000000; ">                                                         </span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> also: the RFC says that more than one IP-Option is allowed
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPRecordRouteOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">recordRoute</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPTimestampOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">timestampOption</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPSourceRoutingOption</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceRoutingOption</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// optionCode determines if strict or loose source routing
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Enum <i>UDPStatusInd</i></h2>
+<b>File: <a href="src-transport-contract-UDPControlInfo.msg.html">src/transport/contract/UDPControlInfo.msg</a></b><br/>
+<p>UDP indications, sent by <a href="inet.transport.udp.UDP.html">UDP</a> to the application. <a href="inet.transport.udp.UDP.html">UDP</a> will set these
+constants as message kind on messages it sends to the application.</p>
+<p><b>See also:</b> <a href="UDPControlInfo.html">UDPControlInfo</a>, <a href="UDPCommandCode.html">UDPCommandCode</a>, <a href="inet.transport.udp.UDP.html">UDP</a></p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="UDPStatusInd-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="UDPStatusInd.html" title="Enum UDPStatusInd" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="UDPStatusInd-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="UDPStatusInd.html" title="Enum UDPStatusInd" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \UDP indications, sent by UDP to the application. UDP will set these
+// constants as message kind on messages it sends to the application.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPControlInfo, UDPCommandCode, UDP
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPStatusInd</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">UDP_I_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// data packet (set on data packet)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">UDP_I_ERROR</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// ICMP error received on a sent datagram
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

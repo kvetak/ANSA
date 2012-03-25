@@ -1,0 +1,8 @@
+<area shape="rect" id="node1" href="inet.examples.ethernet.lans.MixedLAN.html" title="Network MixedLAN" alt="" coords="365,6,448,34">
+<area shape="rect" id="node2" href="ned.DelayChannel.html" title="Channel DelayChannel" alt="" coords="5,83,109,111">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherSwitch.html" title="Compound Module EtherSwitch" alt="" coords="133,83,227,111">
+<area shape="rect" id="node6" href="inet.linklayer.ethernet.EtherBus.html" title="Simple Module EtherBus" alt="" coords="251,83,325,111">
+<area shape="rect" id="node8" href="inet.world.ChannelInstaller.html" title="Simple Module ChannelInstaller" alt="" coords="349,83,464,111">
+<area shape="rect" id="node10" href="inet.linklayer.ethernet.EtherHub.html" title="Simple Module EtherHub" alt="" coords="488,83,565,111">
+<area shape="rect" id="node12" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="589,83,669,111">
+<area shape="rect" id="node14" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="693,83,792,111">

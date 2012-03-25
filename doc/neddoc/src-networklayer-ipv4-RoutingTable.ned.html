@@ -1,0 +1,90 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/ipv4/RoutingTable.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Stores the routing table. (Per-interface configuration is stored in
+<a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a>.)</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2004 Andras Varga
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipv4</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Stores the routing table. (Per-interface configuration is stored in
+// InterfaceTable.)
+//
+// For hosts, the routerId module parameter should be empty (&quot;&quot;),
+// in which case the loopback IP address will be set to 127.0.0.1/8.
+// For routers which have a routerId set, the loopback address will be set to
+// routerId. (See also RFC 2072 &quot;\Router Renumbering Guide&quot;.)
+//
+// RouterId may also be set to the string </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">&quot;auto&quot;</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">, in which case the
+// highest interface address will be chosen as routerId; the loopback address
+// will remain 127.0.0.1/8.
+//
+// The routing table is read from a file (parameter routingFile);
+// the file can also fill in or overwrite interface settings.
+// The file format is documented </span><span style="color: #800000; ">&lt;a href=&quot;irt.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">here</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+//
+// Note that many protocols don't require routerId to be routable, but some
+// others do -- so it is probably a good idea to set up routable routerIds.
+//
+// This module has no gates; all functionality can be accessed via member
+// functions of the C++ module class. For detailed info, please see the C++
+// documentation of the class (Doxygen).
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> InterfaceTable
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; ">: Jochen Reber, Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">RoutingTable</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routerId</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;auto&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// for routers, the router id using IP address dotted
+</span><span style="color: #000000; ">                          </span><span style="color: #808080; font-style: italic; ">// notation; specify &quot;auto&quot; to select the highest
+</span><span style="color: #000000; ">                          </span><span style="color: #808080; font-style: italic; ">// interface address; should be left empty (&quot;&quot;) for hosts
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPForward</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// turns IP forwarding on/off
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// routing table file name
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/table&quot;</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

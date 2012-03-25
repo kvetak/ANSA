@@ -1,0 +1,38 @@
+ifconfig:
+
+# ethernet card 0 of router - connected to R2B
+name: eth0
+  inet_addr: 130.10.17.1
+  Mask: 255.255.255.0
+  Groups: 224.0.0.5
+  MTU: 1500
+  Metric: 1
+  BROADCAST MULTICAST
+
+# ethernet card 1 of router - connected to R1
+name: eth1
+  inet_addr: 130.10.62.2
+  Mask: 255.255.255.0
+  Groups: 224.0.0.5
+  MTU: 1500
+  Metric: 1
+  POINTTOPOINT BROADCAST
+  
+# ethernet card 2 of router - connected to R3
+name: eth2
+  inet_addr: 130.10.64.2
+  Mask: 255.255.255.0
+  Groups: 224.0.0.5
+  MTU: 1500
+  Metric: 1
+  POINTTOPOINT BROADCAST
+
+ifconfigend.
+
+route:
+
+# 224.0.0.0 * 240.0.0.0   H 0 eth0
+# 224.0.0.0 * 240.0.0.0   H 0 eth1
+# 224.0.0.0 * 240.0.0.0   H 0 eth2
+
+routeend.

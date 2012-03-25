@@ -1,0 +1,96 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/transport/rtp/profiles/avprofile/RTPMpegPacket.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="RTPMpegPacket.html">RTPMpegPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>An <a href="RTPMpegPacket.html">RTPMpegPacket</a> is intended to be capsulated into an RTPPacket when
+transmitting mpeg data with rtp under the rtp audio/video profile.
+It stores information about the mpeg data as described in rfc 2250.
+This implementation doesn't transport real mpeg data. It is intended
+to simulate storing mpeg data by adding length.
+Currently only one header field (picture type) is filled with the right
+value. The values for the other header fields can't be determined by
+reading the gdf file.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2008 Andras Varga
+// Copyright (C) 2001 Matthias Oppitz
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// An RTPMpegPacket is intended to be capsulated into an RTPPacket when
+// transmitting mpeg data with rtp under the rtp audio/video profile.
+// It stores information about the mpeg data as described in rfc 2250.
+// This implementation doesn't transport real mpeg data. It is intended
+// to simulate storing mpeg data by adding length.
+// Currently only one header field (picture type) is filled with the right
+// value. The values for the other header fields can't be determined by
+// reading the gdf file.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RTPAVProfilePayload32Sender
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RTPAVProfilePayload32Receiver
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPMpegPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">payloadLength</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// size of the mpeg data
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pictureType</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// picture type of the frame the data in this packet belongs to.
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">// currenrtly unused fields:
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int mzb;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int two;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int temporalReference;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int activeN;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int newPictureHeader;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int sequenceHeaderPresent;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int beginningOfSlice;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int endOfSlice;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int fbv;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int bfc;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int ffv;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int ffc;
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

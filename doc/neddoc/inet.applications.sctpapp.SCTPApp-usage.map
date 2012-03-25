@@ -1,0 +1,6 @@
+<area shape="rect" id="node1" href="inet.applications.sctpapp.SCTPApp.html" title="Module Interface SCTPApp" alt="" coords="489,83,569,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="5,6,107,34">
+<area shape="rect" id="node4" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="131,6,395,34">
+<area shape="rect" id="node6" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="419,6,640,34">
+<area shape="rect" id="node8" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="664,6,901,34">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="925,6,1147,34">

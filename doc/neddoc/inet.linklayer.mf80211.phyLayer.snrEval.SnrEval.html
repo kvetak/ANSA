@@ -1,0 +1,233 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>SnrEval</i></h2>
+<b>Package:</b> inet.linklayer.mf80211.phyLayer.snrEval<br/><b>File: <a href="src-linklayer-mf80211-phyLayer-snrEval-SnrEval.ned.html">src/linklayer/mf80211/phyLayer/snrEval/SnrEval.ned</a></b><br/><p><a href="../doxy/class_snr_eval.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Represents the radio. Frames received from higher layers (typically the
+MAC protocol) are transmitted on the radio channel, using the global
+<a href="inet.world.ChannelControl.html">ChannelControl</a> module. Frames received on the radio channel will have
+their signal-noise ratio evaluated and passed up to the decider.
+(It is the decider's task to determine whether the frame was received
+correctly, and pass it up to the MAC layer).</p>
+<p>The receive/transmit channel (frequency) can be changed by sending
+<a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> a blank cMessage with PHY_C_CONFIGURERADIO as message kind, and
+a <a href="PhyControlInfo.html">PhyControlInfo</a> object attached to it as control info, to hold the
+new channel number. If the radio is currently transmitting, the channel
+switch will actually take place after the transmission is completed.</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<img src="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html" title="SnrEval" alt="SnrEval" coords="0,31,92,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html" title="Simple Module SnrEval" alt="" coords="57,83,129,111">
+<area shape="rect" id="node2" href="inet.linklayer.mf80211.NicCsma.html" title="Compound Module NicCsma" alt="" coords="5,6,83,34">
+<area shape="rect" id="node4" href="inet.linklayer.mf80211.SnrNic.html" title="Compound Module SnrNic" alt="" coords="107,6,179,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html" title="Simple Module SnrEval" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.NicCsma.html">NicCsma</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>The CsmaNic contains a csma-like MAC layer.
+The <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> module is used as the mac needs a RadioState to be published.
+However as still the <a href="inet.linklayer.mfcore.BasicDecider.html">BasicDecider</a> is used all messages will be delivered to
+the MAC and no packets get lost</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.SnrNic.html">SnrNic</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This is the easiest nic to implement "real" network behaviour. It uses
+the CsmaMacLayer and the <a href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html">SnrDecider</a> and <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> modules.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>channelNumber</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>headerLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/wrxtx</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from higher layer protocol (MAC)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to decider (decider connects to higher layer protocol, i.e. the MAC)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>radioIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to receive frames (<a href="AirFrame.html">AirFrame</a>) on the radio channel</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Represents the radio. Frames received from higher layers (typically the
+// MAC protocol) are transmitted on the radio channel, using the global
+// ChannelControl module. Frames received on the radio channel will have
+// their signal-noise ratio evaluated and passed up to the decider.
+// (It is the decider's task to determine whether the frame was received
+// correctly, and pass it up to the MAC layer).
+//
+// The receive/transmit channel (frequency) can be changed by sending
+// SnrEval a blank cMessage with PHY_C_CONFIGURERADIO as message kind, and
+// a PhyControlInfo object attached to it as control info, to hold the
+// new channel number. If the radio is currently transmitting, the channel
+// switch will actually take place after the transmission is completed.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> merge docu with BasicSnrEval's
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">SnrEval</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelNumber</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// channel identifier
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">transmitterPower</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mW&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">bitrate</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;bps&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">b</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">thermalNoise</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;dBm&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">pathLossAlpha</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">sensitivity</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">mW</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/wrxtx&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// from higher layer protocol (MAC)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to decider (decider connects to higher layer protocol, i.e. the MAC)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// to receive frames (AirFrame) on the radio channel
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

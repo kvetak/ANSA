@@ -1,0 +1,346 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/transport/contract/SCTPCommand.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="SCTPErrorCode.html">SCTPErrorCode</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p>Currently not in use.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPCommand.html">SCTPCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info for <a href="inet.transport.sctp.SCTP.html">SCTP</a> connections. This class is to be set as control info
+(see cMessage::setControlInfo()) on all messages exchanged between <a href="inet.transport.sctp.SCTP.html">SCTP</a> and
+application, in both directions. Some commands and indications
+(SCTP_C_OPEN_xxx, SCTP_I_STATUS) use subclasses.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPErrorInfo.html">SCTPErrorInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Currently not in use.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPOpenCommand.html">SCTPOpenCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info to be used for active or passive <a href="inet.transport.sctp.SCTP.html">SCTP</a> open.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPSendCommand.html">SCTPSendCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info to be used with the SEND command.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPConnectInfo.html">SCTPConnectInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Sent with message kind SCTP_I_ESTABLISHED, to let the app know
+about the local and remote <a href="inet.networklayer.ipv4.IP.html">IP</a> address and port.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPStatusInfo.html">SCTPStatusInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Sent with message kind SCTP_I_STATUS, in response to command SCTP_C_STATUS.
+For explanation of variables, see RFC 793 or SCTPStateVariables in
+SCTPConnection.h.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPPathInfo.html">SCTPPathInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPResetInfo.html">SCTPResetInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPInfo.html">SCTPInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SCTPRcvCommand.html">SCTPRcvCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2008 Irene Ruengeler
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPvXAddress.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;SCTPAssociation.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;SCTPCommand.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">AddressVector</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Currently not in use.
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPErrorCode</span><span style="color: #000000; ">
+{
+
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Control info for SCTP connections. This class is to be set as control info
+// (see cMessage::setControlInfo()) on all messages exchanged between SCTP and
+// application, in both directions. Some commands and indications
+// (SCTP_C_OPEN_xxx, SCTP_I_STATUS) use subclasses.
+//
+// connId identifies the connection locally within the application (internally,
+// SCTP uses the (app gate index, connId) pair to identify the socket).
+// connId is to be chosen by the application in the open command.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpCommandCode, TcpStatusInd, SCTPOpenCommand, SCTPStatusInfo, SCTPMain
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">cPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">assocId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// identifies the socket within the application
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sid</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">numMsgs</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ssn</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">sendUnordered</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">lifetime</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">localAddr</span><span style="color: #000000; "> = </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;0.0.0.0&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddr</span><span style="color: #000000; "> = </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;0.0.0.0&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">gate</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Currently not in use.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPErrorInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">errorCode</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">SCTPErrorCode</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">messageText</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Control info to be used for active or passive SCTP open.
+//
+// localAddr, remoteAddr, localPort, remotePort should be self-explanatory.
+// localAddr is optional because SCTP can learn it from IP when a packet
+// is received from the peer; localPort is optional because SCTP supports
+// ephemeral ports.
+//
+// The sendQueueClass, receiveQueueClass and sctpAlgorithmClass fields
+// allow per-connection SCTP configuration. These fields may contain
+// names of classes subclassed from SCTPSendQueue, SCTPReceiveQueue
+// and SCTPAlgorithm, respectively. If not set, module parameters with
+// similar names are used.
+//
+// The fork parameter is used with passive open, and controls what happens
+// when an incoming connection is received. With fork=true, it emulates
+// the Unix accept(2) syscall semantics: a new connection structure
+// is created for the connection (with a new connId, see in SCTPCommand),
+// and the connection structure with the old connId remains listening.
+// With fork=false, all the above does not happen: the first connection
+// is accepted (with the original connId), and further incoming connections
+// will be refused by SCTP by sending an RST segment.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpCommandCode, SCTPMain
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPOpenCommand</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+   </span><span style="color: #808080; font-style: italic; ">//IPvXAddress localAddr;             // may be left empty
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">AddressVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">localAddresses</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddr</span><span style="color: #000000; ">;            </span><span style="color: #808080; font-style: italic; ">// required for active open
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">AddressVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddresses</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localPort</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;              </span><span style="color: #808080; font-style: italic; ">// required for passive open
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">remotePort</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;             </span><span style="color: #808080; font-style: italic; ">// required for active open
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">fork</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;               </span><span style="color: #808080; font-style: italic; ">// used only for passive open
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueClass</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;SCTPQueue&quot;</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// may be left empty
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">sctpAlgorithmClass</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// may be left empty
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">inboundStreams</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">outboundStreams</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">numRequests</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">messagesToPush</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Control info to be used with the SEND command.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpCommandCode, SCTPMain
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPSendCommand</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">last</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppid</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">primary</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Sent with message kind SCTP_I_ESTABLISHED, to let the app know
+// about the local and remote IP address and port.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpCommandCode, SCTPMain
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPConnectInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//IPvXAddress localAddr;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//IPvXAddress remoteAddr;
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">AddressVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddresses</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localPort</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">remotePort</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">status</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">inboundStreams</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">outboundStreams</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Sent with message kind SCTP_I_STATUS, in response to command SCTP_C_STATUS.
+// For explanation of variables, see RFC 793 or SCTPStateVariables in
+// SCTPConnection.h.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpStatusInd, TcpCommandCode, SCTPMain
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPStatusInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">state</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">stateName</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">pathId</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">active</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPPathInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddress</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPResetInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddr</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">requestType</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">streams</span><span style="color: #000000; ">[];
+}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">text</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPRcvCommand</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppid</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">tsn</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">cumTsn</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

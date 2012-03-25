@@ -1,0 +1,137 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>RSVPPathMsg</i></h2>
+<b>File: <a href="src-networklayer-rsvp_te-RSVPPathMsg.msg.html">src/networklayer/rsvp_te/RSVPPathMsg.msg</a></b><br/><p><a href="../doxy/class_r_s_v_p_path_msg.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>FIXME missing documentation</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="RSVPPathMsg-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="RSVPPathMsg.html" title="Packet RSVPPathMsg" alt="" coords="175,6,284,34">
+<area shape="rect" id="node2" href="SenderDescriptor_t.html" title="Struct SenderDescriptor_t" alt="" coords="5,83,139,111">
+<area shape="rect" id="node4" href="LabelRequestObj_t.html" title="Struct LabelRequestObj_t" alt="" coords="163,83,296,111">
+<area shape="rect" id="node6" href="RsvpHopObj_t.html" title="Struct RsvpHopObj_t" alt="" coords="320,83,427,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="RSVPPathMsg-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="RSVPPathMsg.html" title="Packet RSVPPathMsg" alt="" coords="5,83,115,111">
+<area shape="rect" id="node2" href="RSVPPacket.html" title="Packet RSVPPacket" alt="" coords="11,6,109,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="RSVPPacket.html">RSVPPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>hop</td>
+   <td>
+      <i>
+<a href="RsvpHopObj_t.html">RsvpHopObj_t</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>label_request</td>
+   <td>
+      <i>
+<a href="LabelRequestObj_t.html">LabelRequestObj_t</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>sender_descriptor</td>
+   <td>
+      <i>
+<a href="SenderDescriptor_t.html">SenderDescriptor_t</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>ERO</td>
+   <td>
+      <i>
+EroVector</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>color</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>rsvpKind</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>session</td>
+   <td>
+      <i>
+<a href="SessionObj_t.html">SessionObj_t</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>checksumValid</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// FIXME missing documentation
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPathMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000000; ">RsvpHopObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">hop</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">LabelRequestObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">label_request</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">sender_descriptor</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">EroVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">ERO</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">color</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">rsvpKind</span><span style="color: #000000; "> = </span><span style="color: #000000; ">PATH_MESSAGE</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

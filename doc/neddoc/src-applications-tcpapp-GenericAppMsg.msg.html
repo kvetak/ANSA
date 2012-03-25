@@ -1,0 +1,78 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/applications/tcpapp/GenericAppMsg.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="GenericAppMsg.html">GenericAppMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Message class for generic request-reply style applications.
+The client sends a <a href="GenericAppMsg.html">GenericAppMsg</a> which contains the number of
+bytes the client wants the server to send back as reply.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2004 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Message class for generic request-reply style applications.
+// The client sends a GenericAppMsg which contains the number of
+// bytes the client wants the server to send back as reply.
+//
+// This way intelligence (behaviour specific to the modelled application,
+// e.g. HTTP, SMB, database protocol) needs only to be present in
+// the client, and the server model can be kept simple and dumb.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TCPGenericSrvApp, TCPGenericCliAppBase (C++ only)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">GenericAppMsg</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">expectedReplyLength</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// in bytes
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">replyDelay</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// reply after this many seconds
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">serverClose</span><span style="color: #000000; ">;        </span><span style="color: #808080; font-style: italic; ">// with TCP: if true, server should close the
+</span><span style="color: #000000; ">                             </span><span style="color: #808080; font-style: italic; ">// connection after sending the reply
+</span><span style="color: #000000; ">}
+
+
+
+</span></pre>
+   </body>
+</html>

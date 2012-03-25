@@ -1,0 +1,5 @@
+<area shape="rect" id="node1" href="inet.examples.ipv6.ipv6bulk.BulkTransfer6.html" title="Network BulkTransfer6" alt="" coords="245,6,347,34">
+<area shape="rect" id="node2" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="5,83,115,111">
+<area shape="rect" id="node4" href="inet.networklayer.autorouting.FlatNetworkConfigurator6.html" title="Simple Module FlatNetworkConfigurator6" alt="" coords="139,83,309,111">
+<area shape="rect" id="node6" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="333,83,405,111">
+<area shape="rect" id="node8" href="inet.examples.ipv6.ipv6bulk.BulkTransfer6.C.html" title="Channel C" alt="" coords="429,83,501,111">

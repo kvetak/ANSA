@@ -1,0 +1,124 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/ipv6/IPv6.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Implements the IPv6 protocol.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ipv6</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Implements the \IPv6 protocol.
+//
+// An overview of the \IPv6 implementation in the INET Framework is
+// provided </span><span style="color: #800000; ">&lt;a href=&quot;ipv6overview.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">here</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+//
+// The \IPv6 protocol header is represented by the IPv6Datagram message class.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Interfacing with higher layer protocols</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// To send a packet over \IPv6 from a higher layer protocol, the module should
+// fill in an IPv6ControlInfo object, attach it to the packet with cMessage's
+// setControlInfo() method, the send it to the IPv6 module.
+//
+// When IPv6 sends up a packet to a higher layer protocol, it will also attach
+// an IPv6ControlInfo to the packet, with the source and destination \IPv6 address,
+// etc. of the \IPv6 datagram in which the packet arrived.
+//
+// IPv6 can serve several higher-layer protocols. When delivering packets
+// to them, the output gate is determined from the Protocol field in the
+// \IPv6 datagram class. The protocol-to-gateindex mapping must be given
+// in the protocolMapping string parameter, in the following format:
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">
+// protocolnumber:gateindex, protocolnumber:gateindex, ...
+// </span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The recommended setting is:
+// - \TCP (6) : 0
+// - \UDP (17) : 1
+// - \RSVP (46) : 2
+// - \ICMPv6 (89) : 3
+//
+// That is, </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">protocolMapping=&quot;6:0,17:1,46:2,89:3&quot;</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Routing and interfacing with lower layers</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The routing table is stored in the module RoutingTable6. When a datagram
+// needs to be routed, \IPv6 queries RoutingTable6 for the output interface
+// (or &quot;port&quot;) and next hop address of the packet. This is done by directly
+// calling C++ methods of RoutingTable6. No message exchange with RoutingTable6
+// takes place.
+//
+</span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> </span><span style="color: #000080; ">TBD</span><span style="color: #0000ff; font-style: italic; "> describe operation
+</span><span style="color: #808080; font-style: italic; ">//
+// Routing protocol implementations can also query and manipulate the route table
+// by calling RoutingTable6's methods in C++.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Performance model, QoS</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// In the current form, IPv6 contains a FIFO which queues up \IPv6 datagrams;
+// datagrams are processed in order. The processing time is determined by the
+// procDelay module parameter.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RoutingTable6, IPv6ControlInfo, IPv6NeighbourDiscovery, ICMPv6
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">procDelay</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">protocolMapping</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/network2&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">,</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">,</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6Datagram</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6Datagram</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">icmpIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">icmpOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ndIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ndOut</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

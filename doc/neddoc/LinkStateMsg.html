@@ -1,0 +1,78 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>LinkStateMsg</i></h2>
+<b>File: <a href="src-networklayer-ted-LinkStatePacket.msg.html">src/networklayer/ted/LinkStatePacket.msg</a></b><br/>
+<p>Packet for disseminating link state information (<a href="TELinkStateInfo.html">TELinkStateInfo</a>[]) by the
+<a href="inet.networklayer.ted.LinkStateRouting.html">LinkStateRouting</a> module which implements a minimalistic link state routing
+protocol.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="LinkStateMsg-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="LinkStateMsg.html" title="Packet LinkStateMsg" alt="" coords="12,6,113,34">
+<area shape="rect" id="node2" href="TELinkStateInfo.html" title="Struct TELinkStateInfo" alt="" coords="5,83,120,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="LinkStateMsg-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="LinkStateMsg.html" title="Packet LinkStateMsg" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>linkInfo</td>
+   <td>
+      <i>
+<a href="TELinkStateInfo.html">TELinkStateInfo</a>[]</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>request</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>if true, receiver is expected to send back its own link state database to the sender --FIXME really needed?
+bool ack = false; -- apparently unused, removed -- TODO check with Vojta</p>
+</td>
+</tr>
+<tr class="local">
+   <td>command</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>FIXME maybe do without this...</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Packet for disseminating link state information (TELinkStateInfo[]) by the
+// LinkStateRouting module which implements a minimalistic link state routing
+// protocol.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LinkStateMsg</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">TELinkStateInfo</span><span style="color: #000000; "> </span><span style="color: #000000; ">linkInfo</span><span style="color: #000000; ">[];
+
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">request</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// if true, receiver is expected to send back its own link state database to the sender --FIXME really needed?
+</span><span style="color: #000000; ">        </span><span style="color: #808080; font-style: italic; ">// bool ack = false; -- apparently unused, removed -- TODO check with Vojta
+</span><span style="color: #000000; ">
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">command</span><span style="color: #000000; "> = </span><span style="color: #000000; ">LINK_STATE_MESSAGE</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// FIXME maybe do without this...
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

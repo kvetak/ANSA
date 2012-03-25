@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<OSPFASConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="OSPF.xsd">
+
+  <!-- Areas -->
+  <Area id="0.0.0.0">
+    <AddressRange>
+      <Address>192.168.1.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>192.168.2.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>192.168.3.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>192.168.4.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>10.10.10.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>10.10.56.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>10.10.3.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+    <AddressRange>
+      <Address>10.10.4.0</Address>
+      <Mask>255.255.255.0</Mask>
+      <Status>Advertise</Status>
+    </AddressRange>
+  </Area>
+
+  <!-- Routers -->
+  <Router id="192.168.3.1"> <!-- R1 -->
+    <RFC1583Compatible />
+    <PointToPointInterface ifName="eth0">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+    <PointToPointInterface ifName="eth1">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+  </Router>
+
+  <Router id="192.168.4.2"> <!-- R2 -->
+    <RFC1583Compatible />
+    <PointToPointInterface ifName="eth0">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+    <PointToPointInterface ifName="eth1">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+  </Router>
+  
+    <!-- Routers -->
+  <Router id="10.10.56.5"> <!-- R5 -->
+    <RFC1583Compatible />
+    <PointToPointInterface ifName="eth0">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+    <PointToPointInterface ifName="eth1">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>2</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+  </Router>
+
+  <Router id="10.10.56.6"> <!-- R6 -->
+    <RFC1583Compatible />
+    <PointToPointInterface ifName="eth0">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>2</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+    <PointToPointInterface ifName="eth1">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+  </Router>
+  
+    <Router id="192.168.3.3"> <!-- R3 -->
+    <RFC1583Compatible />
+    <BroadcastInterface ifName="eth0">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <RouterPriority>1</RouterPriority>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </BroadcastInterface>
+    <PointToPointInterface ifName="eth1">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+    <PointToPointInterface ifName="eth2">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+  </Router>
+  
+  <Router id="192.168.4.4"> <!-- R4 -->
+    <RFC1583Compatible />
+    <PointToPointInterface ifName="eth0">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+    <BroadcastInterface ifName="eth1">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <RouterPriority>1</RouterPriority>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </BroadcastInterface>
+    <PointToPointInterface ifName="eth2">
+      <AreaID>0.0.0.0</AreaID>
+      <InterfaceOutputCost>1</InterfaceOutputCost>
+      <RetransmissionInterval>5</RetransmissionInterval>
+      <InterfaceTransmissionDelay>1</InterfaceTransmissionDelay>
+      <HelloInterval>10</HelloInterval>
+      <RouterDeadInterval>40</RouterDeadInterval>
+      <AuthenticationType>NullType</AuthenticationType>
+      <AuthenticationKey>0x00</AuthenticationKey>
+    </PointToPointInterface>
+  </Router>
+
+</OSPFASConfig>

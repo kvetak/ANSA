@@ -1,0 +1,149 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>TCPEchoApp</i></h2>
+<b>Package:</b> inet.applications.tcpapp<br/><b>File: <a href="src-applications-tcpapp-TCPEchoApp.ned.html">src/applications/tcpapp/TCPEchoApp.ned</a></b><br/><p><a href="../doxy/class_t_c_p_echo_app.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Accepts any number of incoming <a href="inet.transport.tcp.TCP.html">TCP</a> connections, and sends back the
+messages that arrive on them, The lengths of the messages are
+multiplied by echoFactor before sending them back (echoFactor=1 will
+result in sending back the same message unmodified.) The reply can also be
+delayed by a constant time (echoDelay parameter).</p>
+<p>When <a href="inet.applications.tcpapp.TCPEchoApp.html">TCPEchoApp</a> receives data packets from <a href="inet.transport.tcp.TCP.html">TCP</a> (and such, when they can be
+echoed) depends on the sendQueue/receiveQueue setting of <a href="inet.transport.tcp.TCP.html">TCP</a>.
+With TCPVirtualBytesSendQueue/RcvQueue, <a href="inet.transport.tcp.TCP.html">TCP</a> passes up data to us
+as soon as a segment arrives, so it can be echoed immediately.
+With TCPMsgBasedSendQueue/RcvQueue, our local <a href="inet.transport.tcp.TCP.html">TCP</a> reproduces the same
+messages that the sender app passed down to its <a href="inet.transport.tcp.TCP.html">TCP</a> -- so if the sender
+app sent a single 100 MiB message, it will be echoed only when all
+100 megabytes have arrived.</p>
+<p>Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+<img src="inet.applications.tcpapp.TCPEchoApp-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.tcpapp.TCPEchoApp.html" title="TCPEchoApp" alt="TCPEchoApp" coords="0,31,123,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.tcpapp.TCPEchoApp-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.tcpapp.TCPEchoApp.html" title="Simple Module TCPEchoApp" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.tcpapp.TCPEchoApp-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.tcpapp.TCPEchoApp.html" title="Simple Module TCPEchoApp" alt="" coords="5,83,107,111">
+<area shape="rect" id="node2" href="inet.applications.tcpapp.TCPApp.html" title="Module Interface TCPApp" alt="" coords="20,6,92,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>local address; may be left empty ("")</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>port</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>port number to listen on</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>echoFactor</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>echoDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>tcpIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>tcpOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Accepts any number of incoming TCP connections, and sends back the
+// messages that arrive on them, The lengths of the messages are
+// multiplied by echoFactor before sending them back (echoFactor=1 will
+// result in sending back the same message unmodified.) The reply can also be
+// delayed by a constant time (echoDelay parameter).
+//
+// When TCPEchoApp receives data packets from TCP (and such, when they can be
+// echoed) depends on the sendQueue/receiveQueue setting of TCP.
+// With TCPVirtualBytesSendQueue/RcvQueue, TCP passes up data to us
+// as soon as a segment arrives, so it can be echoed immediately.
+// With TCPMsgBasedSendQueue/RcvQueue, our local TCP reproduces the same
+// messages that the sender app passed down to its TCP -- so if the sender
+// app sent a single 100 MiB message, it will be echoed only when all
+// 100 megabytes have arrived.
+//
+// Compatible with both IPv4 and IPv6.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPEchoApp</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPApp</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// local address; may be left empty (&quot;&quot;)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">port</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// port number to listen on
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">echoFactor</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">echoDelay</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcpIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">tcpOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

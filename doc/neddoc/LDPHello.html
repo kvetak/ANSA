@@ -1,0 +1,111 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>LDPHello</i></h2>
+<b>File: <a href="src-networklayer-ldp-LDPPacket.msg.html">src/networklayer/ldp/LDPPacket.msg</a></b><br/>
+<p><a href="inet.networklayer.ldp.LDP.html">LDP</a> Hello Message</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="LDPHello-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="LDPHello.html" title="Packet LDPHello" alt="" coords="5,6,83,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="LDPHello-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="LDPHello.html" title="Packet LDPHello" alt="" coords="11,83,88,111">
+<area shape="rect" id="node2" href="LDPPacket.html" title="Packet LDPPacket" alt="" coords="5,6,93,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="LDPPacket.html">LDPPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Base class for <a href="inet.networklayer.ldp.LDP.html">LDP</a> packets</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>holdTime</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>tbit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>rbit</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>type</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>senderAddress</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>receiverAddress</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// LDP Hello Message
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPHello</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">LDPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">holdTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">tbit</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">rbit</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

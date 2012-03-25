@@ -1,0 +1,35 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Enum <i>OSPFTimerType</i></h2>
+<b>File: <a href="src-networklayer-ospfv2-OSPFTimer.msg.html">src/networklayer/ospfv2/OSPFTimer.msg</a></b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFTimerType-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="OSPFTimerType.html" title="Enum OSPFTimerType" alt="" coords="5,6,125,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFTimerType-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="OSPFTimerType.html" title="Enum OSPFTimerType" alt="" coords="5,6,125,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFTimerType</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">InterfaceHelloTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">InterfaceWaitTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">InterfaceAcknowledgementTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">NeighborInactivityTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">NeighborPollTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">NeighborDDRetransmissionTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">NeighborUpdateRetransmissionTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">7</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">NeighborRequestRetransmissionTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">DatabaseAgeTimer</span><span style="color: #000000; "> = </span><span style="color: #008000; ">9</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

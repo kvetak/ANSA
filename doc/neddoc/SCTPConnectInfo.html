@@ -1,0 +1,202 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>SCTPConnectInfo</i></h2>
+<b>File: <a href="src-transport-contract-SCTPCommand.msg.html">src/transport/contract/SCTPCommand.msg</a></b><br/>
+<p>Sent with message kind SCTP_I_ESTABLISHED, to let the app know
+about the local and remote <a href="inet.networklayer.ipv4.IP.html">IP</a> address and port.</p>
+<p><b>See also:</b> <a href="TcpCommandCode.html">TcpCommandCode</a>, SCTPMain</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPConnectInfo-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="SCTPConnectInfo.html" title="Class SCTPConnectInfo" alt="" coords="5,6,133,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPConnectInfo-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="SCTPConnectInfo.html" title="Class SCTPConnectInfo" alt="" coords="5,83,133,111">
+<area shape="rect" id="node2" href="SCTPCommand.html" title="Class SCTPCommand" alt="" coords="11,6,128,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="SCTPCommand.html">SCTPCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info for <a href="inet.transport.sctp.SCTP.html">SCTP</a> connections. This class is to be set as control info
+(see cMessage::setControlInfo()) on all messages exchanged between <a href="inet.transport.sctp.SCTP.html">SCTP</a> and
+application, in both directions. Some commands and indications
+(SCTP_C_OPEN_xxx, SCTP_I_STATUS) use subclasses.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>remoteAddresses</td>
+   <td>
+      <i>
+AddressVector</i>
+   </td>
+   <td>
+<p>IPvXAddress localAddr;
+IPvXAddress remoteAddr;</p>
+</td>
+</tr>
+<tr class="local">
+   <td>localPort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>remotePort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>status</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>inboundStreams</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>outboundStreams</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>assocId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>identifies the socket within the application</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>sid</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>numMsgs</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>ssn</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>sendUnordered</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>lifetime</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>localAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>remoteAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>gate</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Sent with message kind SCTP_I_ESTABLISHED, to let the app know
+// about the local and remote IP address and port.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpCommandCode, SCTPMain
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPConnectInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//IPvXAddress localAddr;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//IPvXAddress remoteAddr;
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">AddressVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddresses</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localPort</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">remotePort</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">status</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">inboundStreams</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">outboundStreams</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

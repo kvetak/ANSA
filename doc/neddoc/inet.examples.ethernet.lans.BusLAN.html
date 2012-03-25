@@ -1,0 +1,560 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Network <i>BusLAN</i></h2>
+<b>Package:</b> inet.examples.ethernet.lans<br/><b>File: <a href="examples-ethernet-lans-Networks.ned.html">examples/ethernet/lans/Networks.ned</a></b><br/>
+<p>Sample Ethernet LAN: four hosts on a bus.</p>
+<img src="inet.examples.ethernet.lans.BusLAN-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.nodes.ethernet.EtherHost.html" title="EtherHost" alt="EtherHost" coords="82,170,126,231">
+<area shape="rect" href="inet.nodes.ethernet.EtherHost.html" title="EtherHost" alt="EtherHost" coords="182,170,226,231">
+<area shape="rect" href="inet.nodes.ethernet.EtherHost.html" title="EtherHost" alt="EtherHost" coords="282,170,326,231">
+<area shape="rect" href="inet.nodes.ethernet.EtherHost.html" title="EtherHost" alt="EtherHost" coords="382,170,426,231">
+<area shape="rect" href="inet.linklayer.ethernet.EtherBus.html" title="EtherBus" alt="EtherBus" coords="52,137,456,164">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.ethernet.lans.BusLAN-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.examples.ethernet.lans.BusLAN.html" title="Network BusLAN" alt="" coords="108,6,180,34">
+<area shape="rect" id="node2" href="inet.linklayer.ethernet.EtherBus.html" title="Simple Module EtherBus" alt="" coords="5,83,80,111">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="104,83,184,111">
+<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="208,83,307,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.ethernet.lans.BusLAN-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.examples.ethernet.lans.BusLAN.html" title="Network BusLAN" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>isNetwork</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.destAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination MAC address, or module path name of destination station; empty means off</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>this.waitTime</td>
+   <td>
+<p>time of sending the first request</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.waitTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,1s)</td>
+   <td>
+<p>interval between sending requests</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.reqLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100B</td>
+   <td>
+<p>length of request packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.respLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1KiB</td>
+   <td>
+<p>length of response packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1000</td>
+   <td>
+<p>maximum number of frames queued up for transmission;
+additional frames are dropped. Only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostA</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.destAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination MAC address, or module path name of destination station; empty means off</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>this.waitTime</td>
+   <td>
+<p>time of sending the first request</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.waitTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,1s)</td>
+   <td>
+<p>interval between sending requests</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.reqLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100B</td>
+   <td>
+<p>length of request packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.respLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1KiB</td>
+   <td>
+<p>length of response packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1000</td>
+   <td>
+<p>maximum number of frames queued up for transmission;
+additional frames are dropped. Only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostB</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.destAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination MAC address, or module path name of destination station; empty means off</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>this.waitTime</td>
+   <td>
+<p>time of sending the first request</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.waitTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,1s)</td>
+   <td>
+<p>interval between sending requests</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.reqLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100B</td>
+   <td>
+<p>length of request packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.respLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1KiB</td>
+   <td>
+<p>length of response packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1000</td>
+   <td>
+<p>maximum number of frames queued up for transmission;
+additional frames are dropped. Only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostC</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.destAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>destination MAC address, or module path name of destination station; empty means off</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.startTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>this.waitTime</td>
+   <td>
+<p>time of sending the first request</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.waitTime</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>uniform(0s,1s)</td>
+   <td>
+<p>interval between sending requests</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.reqLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100B</td>
+   <td>
+<p>length of request packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.applications.ethernet.EtherAppCli.html">cli</a>.respLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1KiB</td>
+   <td>
+<p>length of response packets</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txQueueLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1000</td>
+   <td>
+<p>maximum number of frames queued up for transmission;
+additional frames are dropped. Only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.ethernet.EtherHost.html">hostD</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Sample Ethernet LAN: four hosts on a bus.
+//
+</span><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">BusLAN</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">hostA</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=100,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">hostB</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=200,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">hostC</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=300,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">hostD</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=400,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">bus</span><span style="color: #000000; ">: </span><span style="color: #000000; ">EtherBus</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">positions</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;0 10 20 30&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">propagationSpeed</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">e8</span><span style="color: #000000; "> </span><span style="color: #000000; ">mps</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=250,100;b=400,6;o=#408060&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">4</span><span style="color: #000000; ">];
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">bus</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">hostA</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">bus</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">hostB</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">bus</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">hostC</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; ">bus</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">hostD</span><span style="color: #000000; ">.</span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

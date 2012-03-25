@@ -1,0 +1,145 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>LinearMobility</i></h2>
+<b>Package:</b> inet.mobility<br/><b>File: <a href="src-mobility-LinearMobility.ned.html">src/mobility/LinearMobility.ned</a></b><br/><p><a href="../doxy/class_linear_mobility.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>This is a linear mobility model with speed, angle and acceleration parameters.
+Angle only changes when the mobile node hits a wall: then it reflects
+off the wall at the same angle.</p>
+<p><b>See also:</b> <a href="inet.world.ChannelControl.html">ChannelControl</a></p>
+<p><b>Author:</b> Emin Ilker Cetinbas</p>
+<img src="inet.mobility.LinearMobility-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.mobility.LinearMobility.html" title="LinearMobility" alt="LinearMobility" coords="0,31,131,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.LinearMobility-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.mobility.LinearMobility.html" title="Simple Module LinearMobility" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.mobility.LinearMobility-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.mobility.LinearMobility.html" title="Simple Module LinearMobility" alt="" coords="5,83,107,111">
+<area shape="rect" id="node2" href="inet.mobility.BasicMobility.html" title="Module Interface BasicMobility" alt="" coords="7,6,105,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>debug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>x</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start x coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>y</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start y coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>speed</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2mps</td>
+   <td>
+<p>speed of the host (in m/s)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>angle</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>angle of linear motion (degreees)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>acceleration</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>acceleration of linear motion (m/s2)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>updateInterval</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100ms</td>
+   <td>
+<p>time interval to update the hosts position</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// This is a linear mobility model with speed, angle and acceleration parameters.
+// Angle only changes when the mobile node hits a wall: then it reflects
+// off the wall at the same angle.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> ChannelControl
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Emin Ilker Cetinbas
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">LinearMobility</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicMobility</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">debug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">x</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start x coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">y</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// start y coordinate (-1 = display string position, or random if it's missing)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">speed</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mps&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">mps</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// speed of the host (in m/s)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">angle</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;deg&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// angle of linear motion (degreees)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">acceleration</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// acceleration of linear motion (m/s2)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">updateInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">ms</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// time interval to update the hosts position
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

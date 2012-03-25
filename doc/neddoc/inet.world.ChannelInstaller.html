@@ -1,0 +1,239 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>ChannelInstaller</i></h2>
+<b>Package:</b> inet.world<br/><b>File: <a href="src-world-ChannelInstaller.ned.html">src/world/ChannelInstaller.ned</a></b><br/><p><a href="../doxy/class_channel_installer.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Replaces channel objects in the network.</p>
+<p>This module is a temporary solution until the NED infrastructure
+gets extended to accomodate channel classes.</p>
+<img src="inet.world.ChannelInstaller-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.world.ChannelInstaller.html" title="ChannelInstaller" alt="ChannelInstaller" coords="0,31,146,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.world.ChannelInstaller-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.world.ChannelInstaller.html" title="Simple Module ChannelInstaller" alt="" coords="529,83,644,111">
+<area shape="rect" id="node2" href="inet.examples.ospfv2.backbone.Backbone.html" title="Network Backbone" alt="" coords="5,6,85,34">
+<area shape="rect" id="node4" href="inet.examples.ethernet.lans.MixedLAN.html" title="Network MixedLAN" alt="" coords="109,6,192,34">
+<area shape="rect" id="node6" href="inet.examples.sctp.nclients.NClients.html" title="Network NClients" alt="" coords="216,6,288,34">
+<area shape="rect" id="node9" href="inet.examples.ospfv2.areas.OSPF_AreaTest.html" title="Network OSPF_AreaTest" alt="" coords="312,6,429,34">
+<area shape="rect" id="node11" href="inet.examples.ospfv2.fulltest.OSPF_TestNetwork.html" title="Network OSPF_TestNetwork" alt="" coords="453,6,592,34">
+<area shape="rect" id="node13" href="inet.examples.mpls.net37.R37.html" title="Network R37" alt="" coords="616,6,688,34">
+<area shape="rect" id="node15" href="inet.examples.inet.redtest.REDTest.html" title="Network REDTest" alt="" coords="712,6,789,34">
+<area shape="rect" id="node17" href="inet.examples.inet.redtest.REDTestDebug.html" title="Network REDTestDebug" alt="" coords="813,6,928,34">
+<area shape="rect" id="node19" href="inet.examples.inet.redtest.REDTestTh.html" title="Network REDTestTh" alt="" coords="952,6,1043,34">
+<area shape="rect" id="node21" href="inet.examples.inet.routerperf.RouterPerfNetwork.html" title="Network RouterPerfNetwork" alt="" coords="1067,6,1200,34">
+<area shape="rect" id="node23" href="inet.examples.ospfv2.simpletest.SimpleTest.html" title="Network SimpleTest" alt="" coords="1224,6,1312,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.world.ChannelInstaller-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.world.ChannelInstaller.html" title="Simple Module ChannelInstaller" alt="" coords="5,6,120,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.backbone.Backbone.html">Backbone</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.MixedLAN.html">MixedLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN containing eight hosts, a switch and a bus.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.nclients.NClients.html">NClients</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.sctp.nclients.NClients.html">NClients</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.areas.OSPF_AreaTest.html">OSPF_AreaTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_TestNetwork.html">OSPF_TestNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.mpls.net37.R37.html">R37</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTest.html">REDTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTestDebug.html">REDTestDebug</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTestTh.html">REDTestTh</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.routerperf.RouterPerfNetwork.html">RouterPerfNetwork</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.simpletest.SimpleTest.html">SimpleTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>channelClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>e.g. "ThruputMeteringChannel"</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>channelAttrs</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>params for the channel class, e.g. "format=N (U)"</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Replaces channel objects in the network.
+//
+// This module is a temporary solution until the NED infrastructure
+// gets extended to accomodate channel classes.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">ChannelInstaller</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelClass</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// e.g. &quot;ThruputMeteringChannel&quot;
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelAttrs</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// params for the channel class, e.g. &quot;format=N (U)&quot;
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel_s&quot;</span><span style="color: #000000; ">);
+}
+
+
+</span></pre>
+   </body>
+</html>

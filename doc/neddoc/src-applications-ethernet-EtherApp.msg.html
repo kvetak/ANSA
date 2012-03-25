@@ -1,0 +1,92 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/applications/ethernet/EtherApp.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="EtherAppReq.html">EtherAppReq</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Request packet sent by <a href="inet.applications.ethernet.EtherAppCli.html">EtherAppCli</a>. Contains the number of bytes to be
+sent back as response; if this value is greater than ~1400, the reply
+will consist of several Ethernet frames. See also <a href="EtherAppResp.html">EtherAppResp</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherAppResp.html">EtherAppResp</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Packet sent back by <a href="inet.applications.ethernet.EtherAppSrv.html">EtherAppSrv</a> in response to an <a href="EtherAppReq.html">EtherAppReq</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2003 Andras Varga; CTIE, Monash University, Australia
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">ETHERAPP_CLI_SAP</span><span style="color: #000000; ">  </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xf0</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">ETHERAPP_SRV_SAP</span><span style="color: #000000; ">  </span><span style="color: #008000; ">0</span><span style="color: #000000; ">xf1</span><span style="color: #000000; ">
+}}
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Request packet sent by EtherAppCli. Contains the number of bytes to be
+// sent back as response; if this value is greater than ~1400, the reply
+// will consist of several Ethernet frames. See also EtherAppResp.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherAppReq</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">requestId</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">responseBytes</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Packet sent back by EtherAppSrv in response to an EtherAppReq.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherAppResp</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">requestId</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">numFrames</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

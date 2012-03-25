@@ -1,0 +1,112 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/rsvp_te/RSVPPacket.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="RSVPMessage.html">RSVPMessage</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>RSVP message common part</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="RSVPPacket.html">RSVPPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+// (C) 2003 Xuan Thang Nguyen
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IntServ_m.h&quot;</span><span style="color: #000000; ">
+
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">PATH_MESSAGE</span><span style="color: #000000; ">   </span><span style="color: #008000; ">1</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">RESV_MESSAGE</span><span style="color: #000000; ">   </span><span style="color: #008000; ">2</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">PTEAR_MESSAGE</span><span style="color: #000000; ">  </span><span style="color: #008000; ">3</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTEAR_MESSAGE</span><span style="color: #000000; ">  </span><span style="color: #008000; ">4</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">PERROR_MESSAGE</span><span style="color: #000000; "> </span><span style="color: #008000; ">5</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">RERROR_MESSAGE</span><span style="color: #000000; "> </span><span style="color: #008000; ">6</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">HELLO_MESSAGE</span><span style="color: #000000; ">   </span><span style="color: #008000; ">7</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SessionObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">RsvpHopObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTspecObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FlowSpecObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FilterSpecObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">LabelRequestObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FlowDescriptor_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">EroObj_t</span><span style="color: #000000; ">;
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// \RSVP message common part
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">rsvpKind</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// FIXME missing documentation
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPacket</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000000; ">SessionObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">session</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">checksumValid</span><span style="color: #000000; "> = </span><span style="color: #008000; ">true</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

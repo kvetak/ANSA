@@ -1,0 +1,71 @@
+version 2
+run General-0-20100519-00:56:19-30495
+attr configname General
+attr datetime 20100519-00:56:19
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network MulticastNetwork
+attr processid 30495
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 54  MulticastNetwork.host1.ppp[0].queue  "queue length"  ETV
+vector 58  MulticastNetwork.host2.ppp[0].queue  "queue length"  ETV
+vector 64  MulticastNetwork.host3.ppp[0].queue  "queue length"  ETV
+vector 70  MulticastNetwork.host4.ppp[0].queue  "queue length"  ETV
+vector 74  MulticastNetwork.host5.ppp[0].queue  "queue length"  ETV
+vector 78  MulticastNetwork.host6.ppp[0].queue  "queue length"  ETV
+54	86	0	1
+54	87	0	2
+54	88	0	3
+54	89	0	4
+54	169	0.0000216	3
+54	181	0.0000432	2
+54	189	0.0000648	1
+54	197	0.0000864	0
+58	91	0	1
+58	92	0	2
+58	93	0	3
+58	94	0	4
+58	170	0.0000216	3
+58	182	0.0000432	2
+58	190	0.0000648	1
+58	198	0.0000864	0
+64	96	0	1
+64	97	0	2
+64	98	0	3
+64	99	0	4
+64	171	0.0000216	3
+64	183	0.0000432	2
+64	191	0.0000648	1
+64	199	0.0000864	0
+70	101	0	1
+70	102	0	2
+70	103	0	3
+70	104	0	4
+70	172	0.0000216	3
+70	184	0.0000432	2
+70	192	0.0000648	1
+70	200	0.0000864	0
+74	106	0	1
+74	107	0	2
+74	108	0	3
+74	109	0	4
+74	313	0.003375	3
+74	325	0.00675	2
+74	338	0.010125	1
+74	348	0.0135	0
+78	111	0	1
+78	112	0	2
+78	113	0	3
+78	114	0	4
+78	314	0.003375	3
+78	326	0.00675	2
+78	339	0.010125	1
+78	349	0.0135	0

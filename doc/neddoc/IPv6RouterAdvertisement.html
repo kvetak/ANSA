@@ -1,0 +1,175 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>IPv6RouterAdvertisement</i></h2>
+<b>File: <a href="src-networklayer-icmpv6-IPv6NDMessage.msg.html">src/networklayer/icmpv6/IPv6NDMessage.msg</a></b><br/>
+<p><a href="inet.nodes.inet.Router.html">Router</a> Advertisement Message Format
+RFC 2461 Section 4.2</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="IPv6RouterAdvertisement-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="IPv6RouterAdvertisement.html" title="Packet IPv6RouterAdvertisement" alt="" coords="5,6,176,34">
+<area shape="rect" id="node2" href="IPv6NDPrefixInformation.html" title="Class IPv6NDPrefixInformation" alt="" coords="7,83,175,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="IPv6RouterAdvertisement-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="IPv6RouterAdvertisement.html" title="Packet IPv6RouterAdvertisement" alt="" coords="5,83,176,111">
+<area shape="rect" id="node2" href="IPv6NDMessage.html" title="Packet IPv6NDMessage" alt="" coords="29,6,152,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPv6NDMessage.html">IPv6NDMessage</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Neighbour Discovery for <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.
+RFC 2461</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>curHopLimit</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td>
+<p>Additional <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> fields</p>
+</td>
+</tr>
+<tr class="local">
+   <td>managedAddrConfFlag</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>otherStatefulConfFlag</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>routerLifetime</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td>
+<p>0 indicates router is not a default router</p>
+</td>
+</tr>
+<tr class="local">
+   <td>reachableTime</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>retransTimer</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>sourceLinkLayerAddress</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>Possible Options</p>
+</td>
+</tr>
+<tr class="local">
+   <td>MTU</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>prefixInformation</td>
+   <td>
+      <i>
+<a href="IPv6NDPrefixInformation.html">IPv6NDPrefixInformation</a>[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>code</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>customize=true;</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>type</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>int code; //TODO: this should be specific to different <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> types.</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Router Advertisement Message Format
+// RFC 2461 Section 4.2
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6RouterAdvertisement</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//Additional ICMP fields
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">curHopLimit</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">managedAddrConfFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">otherStatefulConfFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">routerLifetime</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// 0 indicates router is not a default router
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reachableTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">retransTimer</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">//Possible Options
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceLinkLayerAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">MTU</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6NDPrefixInformation</span><span style="color: #000000; "> </span><span style="color: #000000; ">prefixInformation</span><span style="color: #000000; ">[];
+}
+
+</span></pre>
+   </body>
+</html>

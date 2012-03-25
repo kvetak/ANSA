@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<Configuration>
+   <Hostname>Router1</Hostname>
+   <Router Protocol="rip">
+        <Network>130.10.0.0</Network>
+        <Passive-interface>Serial0/1/0</Passive-interface>
+        <Passive-interface>Serial0/1/1</Passive-interface>
+        <Redistribute>
+            <Protocol>ospf</Protocol>
+            <Metric>4</Metric>
+        </Redistribute>
+    </Router>
+</Configuration>
+

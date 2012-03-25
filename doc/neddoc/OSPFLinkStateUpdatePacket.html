@@ -1,0 +1,175 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>OSPFLinkStateUpdatePacket</i></h2>
+<b>File: <a href="src-networklayer-ospfv2-OSPFPacket.msg.html">src/networklayer/ospfv2/OSPFPacket.msg</a></b><br/>
+<p>Represents an OSPF <a href="Link.html">Link</a> State Update packet</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFLinkStateUpdatePacket-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="OSPFLinkStateUpdatePacket.html" title="Packet OSPFLinkStateUpdatePacket" alt="" coords="201,6,396,34">
+<area shape="rect" id="node2" href="OSPFRouterLSA.html" title="Class OSPFRouterLSA" alt="" coords="5,83,128,111">
+<area shape="rect" id="node4" href="OSPFNetworkLSA.html" title="Class OSPFNetworkLSA" alt="" coords="152,83,283,111">
+<area shape="rect" id="node6" href="OSPFASExternalLSA.html" title="Class OSPFASExternalLSA" alt="" coords="307,83,456,111">
+<area shape="rect" id="node8" href="OSPFSummaryLSA.html" title="Class OSPFSummaryLSA" alt="" coords="480,83,619,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFLinkStateUpdatePacket-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="OSPFLinkStateUpdatePacket.html" title="Packet OSPFLinkStateUpdatePacket" alt="" coords="5,83,200,111">
+<area shape="rect" id="node2" href="OSPFPacket.html" title="Packet OSPFPacket" alt="" coords="53,6,152,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="OSPFPacket.html">OSPFPacket</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Represents an OSPF packet header</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>numberOfLSAs</td>
+   <td>
+      <i>
+unsigned long</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>routerLSAs</td>
+   <td>
+      <i>
+<a href="OSPFRouterLSA.html">OSPFRouterLSA</a>[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>networkLSAs</td>
+   <td>
+      <i>
+<a href="OSPFNetworkLSA.html">OSPFNetworkLSA</a>[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>summaryLSAs</td>
+   <td>
+      <i>
+<a href="OSPFSummaryLSA.html">OSPFSummaryLSA</a>[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>asExternalLSAs</td>
+   <td>
+      <i>
+<a href="OSPFASExternalLSA.html">OSPFASExternalLSA</a>[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>version</td>
+   <td>
+      <i>
+char</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>type</td>
+   <td>
+      <i>
+char</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>packetLength</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="inherited">
+   <td>routerID</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>areaID</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="inherited">
+   <td>checksum</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>authenticationType</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>authentication</td>
+   <td>
+      <i>
+char[8]</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Represents an OSPF Link State Update packet
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFLinkStateUpdatePacket</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">numberOfLSAs</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">OSPFRouterLSA</span><span style="color: #000000; "> </span><span style="color: #000000; ">routerLSAs</span><span style="color: #000000; ">[];
+    </span><span style="color: #000000; ">OSPFNetworkLSA</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkLSAs</span><span style="color: #000000; ">[];
+    </span><span style="color: #000000; ">OSPFSummaryLSA</span><span style="color: #000000; "> </span><span style="color: #000000; ">summaryLSAs</span><span style="color: #000000; ">[];
+    </span><span style="color: #000000; ">OSPFASExternalLSA</span><span style="color: #000000; "> </span><span style="color: #000000; ">asExternalLSAs</span><span style="color: #000000; ">[];
+}
+
+</span></pre>
+   </body>
+</html>

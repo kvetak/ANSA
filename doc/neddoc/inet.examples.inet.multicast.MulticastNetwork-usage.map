@@ -1,0 +1,6 @@
+<area shape="rect" id="node1" href="inet.examples.inet.multicast.MulticastNetwork.html" title="Network MulticastNetwork" alt="" coords="176,6,299,34">
+<area shape="rect" id="node2" href="inet.examples.inet.multicast.MulticastNetwork.dialup.html" title="Channel dialup" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="inet.examples.inet.multicast.MulticastNetwork.ethernet.html" title="Channel ethernet" alt="" coords="101,83,173,111">
+<area shape="rect" id="node6" href="inet.examples.inet.multicast.MulticastNetwork.fiberrouter.html" title="Channel fiberrouter" alt="" coords="197,83,277,111">
+<area shape="rect" id="node8" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="301,83,373,111">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="397,83,499,111">

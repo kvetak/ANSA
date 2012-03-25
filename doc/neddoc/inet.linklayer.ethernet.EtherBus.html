@@ -1,0 +1,206 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>EtherBus</i></h2>
+<b>Package:</b> inet.linklayer.ethernet<br/><b>File: <a href="src-linklayer-ethernet-EtherBus.ned.html">src/linklayer/ethernet/EtherBus.ned</a></b><br/><p><a href="../doxy/class_ether_bus.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>A generic bus model.</p>
+<p>The ethg[i] gates represent taps. Messages arriving on a tap
+travel on the bus on both directions, and copies of it are sent out
+on every other tap after delays proportional to their distances.</p>
+<p>Tap connections should have zero delays and zero data rates!</p>
+<p>Messages are not interpreted by the bus model in any way, thus the bus
+model is not specific to Ethernet in any way. Messages may
+represent anything, from the beginning of a frame transmission to
+end (or abortion) of transmission.</p>
+<img src="inet.linklayer.ethernet.EtherBus-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ethernet.EtherBus.html" title="EtherBus" alt="EtherBus" coords="0,31,102,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EtherBus-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherBus.html" title="Simple Module EtherBus" alt="" coords="152,83,227,111">
+<area shape="rect" id="node2" href="inet.examples.ethernet.arptest2.ARPTest.html" title="Network ARPTest" alt="" coords="5,6,80,34">
+<area shape="rect" id="node4" href="inet.examples.ethernet.lans.BusLAN.html" title="Network BusLAN" alt="" coords="104,6,176,34">
+<area shape="rect" id="node6" href="inet.examples.ethernet.lans.LargeLAN.html" title="Compound Module LargeLAN" alt="" coords="200,6,280,34">
+<area shape="rect" id="node8" href="inet.examples.ethernet.lans.MixedLAN.html" title="Network MixedLAN" alt="" coords="304,6,387,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EtherBus-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherBus.html" title="Simple Module EtherBus" alt="" coords="5,6,80,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.LargeLAN.html">LargeLAN</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Several hosts and an Ethernet hub on a switch. One port of the hub
+connect to a 10Base2 segment.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.arptest2.ARPTest.html">ARPTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.BusLAN.html">BusLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN: four hosts on a bus.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.MixedLAN.html">MixedLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN containing eight hosts, a switch and a bus.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>positions</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>positions of taps on the <a href="inet.examples.ethernet.lans.cable.html">cable</a> in meters, as a sequence
+of numbers separated by spaces. If there are too
+few values, the distance between the last two positions
+is repeated, or 5 meters is used.</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>propagationSpeed</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>200mps</td>
+   <td>
+<p>signal propagation speed on the bus</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>b=200,5,,,,1</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>ethg [ ]</xsl:if></td>
+   <td><i>inout</i></td>
+   <td></td>   <td>
+<p>to stations; each one represents a tap</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// A generic bus model.
+//
+// The ethg[i] gates represent taps. Messages arriving on a tap
+// travel on the bus on both directions, and copies of it are sent out
+// on every other tap after delays proportional to their distances.
+//
+// Tap connections should have zero delays and zero data rates!
+//
+// Messages are not interpreted by the bus model in any way, thus the bus
+// model is not specific to Ethernet in any way. Messages may
+// represent anything, from the beginning of a frame transmission to
+// end (or abortion) of transmission.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherBus</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">ethernet</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;b=200,5,,,,1&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">positions</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// positions of taps on the cable in meters, as a sequence
+</span><span style="color: #000000; ">                           </span><span style="color: #808080; font-style: italic; ">// of numbers separated by spaces. If there are too
+</span><span style="color: #000000; ">                           </span><span style="color: #808080; font-style: italic; ">// few values, the distance between the last two positions
+</span><span style="color: #000000; ">                           </span><span style="color: #808080; font-style: italic; ">// is repeated, or 5 meters is used.
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">propagationSpeed</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mps&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">200</span><span style="color: #000000; ">mps</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// signal propagation speed on the bus
+</span><span style="color: #000000; ">    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">inout</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethg</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">-</span><span style="color: #000000; ">conn</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// to stations; each one represents a tap
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

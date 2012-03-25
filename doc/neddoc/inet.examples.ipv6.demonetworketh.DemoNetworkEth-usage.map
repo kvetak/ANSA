@@ -1,0 +1,6 @@
+<area shape="rect" id="node1" href="inet.examples.ipv6.demonetworketh.DemoNetworkEth.html" title="Network DemoNetworkEth" alt="" coords="227,6,352,34">
+<area shape="rect" id="node2" href="inet.util.TCPDump.html" title="Simple Module TCPDump" alt="" coords="5,83,88,111">
+<area shape="rect" id="node4" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="112,83,221,111">
+<area shape="rect" id="node6" href="inet.examples.ipv6.demonetworketh.DemoNetworkEth.ethernetline.html" title="Channel ethernetline" alt="" coords="245,83,333,111">
+<area shape="rect" id="node8" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="357,83,429,111">
+<area shape="rect" id="node10" href="inet.networklayer.autorouting.FlatNetworkConfigurator6.html" title="Simple Module FlatNetworkConfigurator6" alt="" coords="453,83,624,111">

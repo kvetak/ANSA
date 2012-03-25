@@ -1,0 +1,65 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Struct <i>Ieee80211SupportedRatesElement</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtFrames.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtFrames.msg</a></b><br/>
+<p>Structure to store supported rates</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211SupportedRatesElement-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211SupportedRatesElement.html" title="Struct Ieee80211SupportedRatesElement" alt="" coords="579,83,803,111">
+<area shape="rect" id="node2" href="Ieee80211AssociationRequestFrameBody.html" title="Class Ieee80211AssociationRequestFrameBody" alt="" coords="5,6,272,34">
+<area shape="rect" id="node4" href="Ieee80211AssociationResponseFrameBody.html" title="Class Ieee80211AssociationResponseFrameBody" alt="" coords="296,6,571,34">
+<area shape="rect" id="node6" href="Ieee80211BeaconFrameBody.html" title="Class Ieee80211BeaconFrameBody" alt="" coords="595,6,787,34">
+<area shape="rect" id="node8" href="Ieee80211Prim_BSSDescription.html" title="Class Ieee80211Prim_BSSDescription" alt="" coords="811,6,1019,34">
+<area shape="rect" id="node10" href="Ieee80211ProbeRequestFrameBody.html" title="Class Ieee80211ProbeRequestFrameBody" alt="" coords="1043,6,1275,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211SupportedRatesElement-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211SupportedRatesElement.html" title="Struct Ieee80211SupportedRatesElement" alt="" coords="5,6,229,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>numRates</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>number of rates (max 8)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>rate</td>
+   <td>
+      <i>
+double[8]</i>
+   </td>
+   <td>
+<p>in Mbit/s; should be multiple of 500 kbit/s</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Structure to store supported rates
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211SupportedRatesElement</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">numRates</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// number of rates (max 8)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">rate</span><span style="color: #000000; ">[</span><span style="color: #008000; ">8</span><span style="color: #000000; ">]; </span><span style="color: #808080; font-style: italic; ">// in Mbit/s; should be multiple of 500 kbit/s
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

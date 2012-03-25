@@ -1,0 +1,100 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>Ieee80211PrimConfirm</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211Primitives.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211Primitives.msg</a></b><br/>
+<p>Base class for confirm primitives</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211PrimConfirm-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211PrimConfirm.html" title="Class Ieee80211PrimConfirm" alt="" coords="5,6,160,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211PrimConfirm-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211PrimConfirm.html" title="Class Ieee80211PrimConfirm" alt="" coords="288,6,443,34">
+<area shape="rect" id="node2" href="Ieee80211Prim_AssociateConfirm.html" title="Class Ieee80211Prim_AssociateConfirm" alt="" coords="5,83,224,111">
+<area shape="rect" id="node4" href="Ieee80211Prim_AuthenticateConfirm.html" title="Class Ieee80211Prim_AuthenticateConfirm" alt="" coords="248,83,483,111">
+<area shape="rect" id="node6" href="Ieee80211Prim_ScanConfirm.html" title="Class Ieee80211Prim_ScanConfirm" alt="" coords="507,83,699,111">
+</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AssociateConfirm.html">Ieee80211Prim_AssociateConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-ASSOCIATE.confirm
+Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, REFUSED</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AuthenticateConfirm.html">Ieee80211Prim_AuthenticateConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-AUTHENTICATE.confirm.
+Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, TOO_MANY_SIMULTANEOUS_REQUESTS, REFUSED</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_ScanConfirm.html">Ieee80211Prim_ScanConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-SCAN.confirm
+Possible result codes: SUCCESS, INVALID_PARAMETERS</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>resultCode</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Base class for confirm primitives
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimConfirm</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">resultCode</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211PrimResultCode</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

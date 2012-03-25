@@ -1,0 +1,5 @@
+<area shape="rect" id="node1" href="inet.transport.rtp.IRTPPayloadReceiver.html" title="Module Interface IRTPPayloadReceiver" alt="" coords="411,6,563,34">
+<area shape="rect" id="node2" href="inet.transport.rtp.RTPAVProfilePayload10Receiver.html" title="Simple Module RTPAVProfilePayload10Receiver" alt="" coords="5,83,221,111">
+<area shape="rect" id="node4" href="inet.transport.rtp.RTPAVProfilePayload32Receiver.html" title="Simple Module RTPAVProfilePayload32Receiver" alt="" coords="245,83,461,111">
+<area shape="rect" id="node6" href="inet.transport.rtp.RTPAVProfileSampleBasedAudioReceiver.html" title="Simple Module RTPAVProfileSampleBasedAudioReceiver" alt="" coords="485,83,755,111">
+<area shape="rect" id="node8" href="inet.transport.rtp.RTPPayloadReceiver.html" title="Simple Module RTPPayloadReceiver" alt="" coords="779,83,925,111">

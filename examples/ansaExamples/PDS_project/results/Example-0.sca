@@ -1,0 +1,318 @@
+version 2
+run Example-0-20110818-11:00:40-1581
+attr configname Example
+attr datetime 20110818-11:00:40
+attr experiment Example
+attr inifile /home/student/omnetpp-4.1/samples/ANSAINET/examples/ansaExamples/PDS_project/omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network example
+attr processid 1581
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar example.ansaSwitch.mac[0] 	"simulated time" 	124.20851370064
+scalar example.ansaSwitch.mac[0] 	"txrate (Mb)" 	100
+scalar example.ansaSwitch.mac[0] 	"full duplex" 	1
+scalar example.ansaSwitch.mac[0] 	"frames sent" 	9
+scalar example.ansaSwitch.mac[0] 	"frames rcvd" 	7
+scalar example.ansaSwitch.mac[0] 	"bytes sent" 	1266
+scalar example.ansaSwitch.mac[0] 	"bytes rcvd" 	1138
+scalar example.ansaSwitch.mac[0] 	"frames from higher layer" 	10
+scalar example.ansaSwitch.mac[0] 	"frames from higher layer dropped (iface down)" 	0
+scalar example.ansaSwitch.mac[0] 	"frames dropped (bit error)" 	0
+scalar example.ansaSwitch.mac[0] 	"frames dropped (not for us)" 	0
+scalar example.ansaSwitch.mac[0] 	"frames passed up to HL" 	7
+scalar example.ansaSwitch.mac[0] 	"PAUSE frames sent" 	0
+scalar example.ansaSwitch.mac[0] 	"PAUSE frames rcvd" 	0
+scalar example.ansaSwitch.mac[0] 	"frames/sec sent" 	0.07245880118726
+scalar example.ansaSwitch.mac[0] 	"frames/sec rcvd" 	0.056356845367869
+scalar example.ansaSwitch.mac[0] 	"bits/sec sent" 	81.540304269396
+scalar example.ansaSwitch.mac[0] 	"bits/sec rcvd" 	73.296102889868
+scalar example.ansaSwitch.mac[0] 	"rx channel idle (%)" 	99.999923097059
+scalar example.ansaSwitch.mac[0] 	"rx channel utilization (%)" 	7.6902940993412e-05
+scalar example.ansaSwitch.mac[0] 	"rx channel collision (%)" 	0
+scalar example.ansaSwitch.mac[0] 	collisions 	0
+scalar example.ansaSwitch.mac[0] 	backoffs 	0
+scalar example.ansaSwitch.mac[1] 	"simulated time" 	124.20851370064
+scalar example.ansaSwitch.mac[1] 	"txrate (Mb)" 	100
+scalar example.ansaSwitch.mac[1] 	"full duplex" 	1
+scalar example.ansaSwitch.mac[1] 	"frames sent" 	7
+scalar example.ansaSwitch.mac[1] 	"frames rcvd" 	0
+scalar example.ansaSwitch.mac[1] 	"bytes sent" 	448
+scalar example.ansaSwitch.mac[1] 	"bytes rcvd" 	0
+scalar example.ansaSwitch.mac[1] 	"frames from higher layer" 	7
+scalar example.ansaSwitch.mac[1] 	"frames from higher layer dropped (iface down)" 	0
+scalar example.ansaSwitch.mac[1] 	"frames dropped (bit error)" 	0
+scalar example.ansaSwitch.mac[1] 	"frames dropped (not for us)" 	0
+scalar example.ansaSwitch.mac[1] 	"frames passed up to HL" 	0
+scalar example.ansaSwitch.mac[1] 	"PAUSE frames sent" 	0
+scalar example.ansaSwitch.mac[1] 	"PAUSE frames rcvd" 	0
+scalar example.ansaSwitch.mac[1] 	"frames/sec sent" 	0.056356845367869
+scalar example.ansaSwitch.mac[1] 	"frames/sec rcvd" 	0
+scalar example.ansaSwitch.mac[1] 	"bits/sec sent" 	28.854704828349
+scalar example.ansaSwitch.mac[1] 	"bits/sec rcvd" 	0
+scalar example.ansaSwitch.mac[1] 	"rx channel idle (%)" 	100
+scalar example.ansaSwitch.mac[1] 	"rx channel utilization (%)" 	0
+scalar example.ansaSwitch.mac[1] 	"rx channel collision (%)" 	0
+scalar example.ansaSwitch.mac[1] 	collisions 	0
+scalar example.ansaSwitch.mac[1] 	backoffs 	0
+scalar example.ansaSwitch.mac[2] 	"simulated time" 	124.20851370064
+scalar example.ansaSwitch.mac[2] 	"txrate (Mb)" 	100
+scalar example.ansaSwitch.mac[2] 	"full duplex" 	1
+scalar example.ansaSwitch.mac[2] 	"frames sent" 	10
+scalar example.ansaSwitch.mac[2] 	"frames rcvd" 	6
+scalar example.ansaSwitch.mac[2] 	"bytes sent" 	1330
+scalar example.ansaSwitch.mac[2] 	"bytes rcvd" 	1074
+scalar example.ansaSwitch.mac[2] 	"frames from higher layer" 	10
+scalar example.ansaSwitch.mac[2] 	"frames from higher layer dropped (iface down)" 	0
+scalar example.ansaSwitch.mac[2] 	"frames dropped (bit error)" 	0
+scalar example.ansaSwitch.mac[2] 	"frames dropped (not for us)" 	0
+scalar example.ansaSwitch.mac[2] 	"frames passed up to HL" 	6
+scalar example.ansaSwitch.mac[2] 	"PAUSE frames sent" 	0
+scalar example.ansaSwitch.mac[2] 	"PAUSE frames rcvd" 	0
+scalar example.ansaSwitch.mac[2] 	"frames/sec sent" 	0.080509779096955
+scalar example.ansaSwitch.mac[2] 	"frames/sec rcvd" 	0.048305867458173
+scalar example.ansaSwitch.mac[2] 	"bits/sec sent" 	85.66240495916
+scalar example.ansaSwitch.mac[2] 	"bits/sec rcvd" 	69.174002200104
+scalar example.ansaSwitch.mac[2] 	"rx channel idle (%)" 	99.999927734422
+scalar example.ansaSwitch.mac[2] 	"rx channel utilization (%)" 	7.2265577717427e-05
+scalar example.ansaSwitch.mac[2] 	"rx channel collision (%)" 	0
+scalar example.ansaSwitch.mac[2] 	collisions 	0
+scalar example.ansaSwitch.mac[2] 	backoffs 	0
+scalar example.ansaSwitch.mac[3] 	"simulated time" 	124.20851370064
+scalar example.ansaSwitch.mac[3] 	"txrate (Mb)" 	100
+scalar example.ansaSwitch.mac[3] 	"full duplex" 	1
+scalar example.ansaSwitch.mac[3] 	"frames sent" 	10
+scalar example.ansaSwitch.mac[3] 	"frames rcvd" 	6
+scalar example.ansaSwitch.mac[3] 	"bytes sent" 	1330
+scalar example.ansaSwitch.mac[3] 	"bytes rcvd" 	1074
+scalar example.ansaSwitch.mac[3] 	"frames from higher layer" 	10
+scalar example.ansaSwitch.mac[3] 	"frames from higher layer dropped (iface down)" 	0
+scalar example.ansaSwitch.mac[3] 	"frames dropped (bit error)" 	0
+scalar example.ansaSwitch.mac[3] 	"frames dropped (not for us)" 	0
+scalar example.ansaSwitch.mac[3] 	"frames passed up to HL" 	6
+scalar example.ansaSwitch.mac[3] 	"PAUSE frames sent" 	0
+scalar example.ansaSwitch.mac[3] 	"PAUSE frames rcvd" 	0
+scalar example.ansaSwitch.mac[3] 	"frames/sec sent" 	0.080509779096955
+scalar example.ansaSwitch.mac[3] 	"frames/sec rcvd" 	0.048305867458173
+scalar example.ansaSwitch.mac[3] 	"bits/sec sent" 	85.66240495916
+scalar example.ansaSwitch.mac[3] 	"bits/sec rcvd" 	69.174002200104
+scalar example.ansaSwitch.mac[3] 	"rx channel idle (%)" 	99.999927734422
+scalar example.ansaSwitch.mac[3] 	"rx channel utilization (%)" 	7.2265577717427e-05
+scalar example.ansaSwitch.mac[3] 	"rx channel collision (%)" 	0
+scalar example.ansaSwitch.mac[3] 	collisions 	0
+scalar example.ansaSwitch.mac[3] 	backoffs 	0
+scalar example.ansaSwitch.mac[4] 	"simulated time" 	124.20851370064
+scalar example.ansaSwitch.mac[4] 	"txrate (Mb)" 	100
+scalar example.ansaSwitch.mac[4] 	"full duplex" 	1
+scalar example.ansaSwitch.mac[4] 	"frames sent" 	10
+scalar example.ansaSwitch.mac[4] 	"frames rcvd" 	7
+scalar example.ansaSwitch.mac[4] 	"bytes sent" 	1330
+scalar example.ansaSwitch.mac[4] 	"bytes rcvd" 	1138
+scalar example.ansaSwitch.mac[4] 	"frames from higher layer" 	10
+scalar example.ansaSwitch.mac[4] 	"frames from higher layer dropped (iface down)" 	0
+scalar example.ansaSwitch.mac[4] 	"frames dropped (bit error)" 	0
+scalar example.ansaSwitch.mac[4] 	"frames dropped (not for us)" 	0
+scalar example.ansaSwitch.mac[4] 	"frames passed up to HL" 	7
+scalar example.ansaSwitch.mac[4] 	"PAUSE frames sent" 	0
+scalar example.ansaSwitch.mac[4] 	"PAUSE frames rcvd" 	0
+scalar example.ansaSwitch.mac[4] 	"frames/sec sent" 	0.080509779096955
+scalar example.ansaSwitch.mac[4] 	"frames/sec rcvd" 	0.056356845367869
+scalar example.ansaSwitch.mac[4] 	"bits/sec sent" 	85.66240495916
+scalar example.ansaSwitch.mac[4] 	"bits/sec rcvd" 	73.296102889868
+scalar example.ansaSwitch.mac[4] 	"rx channel idle (%)" 	99.999923097059
+scalar example.ansaSwitch.mac[4] 	"rx channel utilization (%)" 	7.6902940993412e-05
+scalar example.ansaSwitch.mac[4] 	"rx channel collision (%)" 	0
+scalar example.ansaSwitch.mac[4] 	collisions 	0
+scalar example.ansaSwitch.mac[4] 	backoffs 	0
+scalar example.Host1.pingApp 	"Pings sent" 	4
+scalar example.Host1.pingApp 	"Pings dropped" 	0
+scalar example.Host1.pingApp 	"Out-of-order ping arrivals" 	0
+scalar example.Host1.pingApp 	"Pings outstanding at end" 	1
+scalar example.Host1.pingApp 	"Ping drop rate (%)" 	0
+scalar example.Host1.pingApp 	"Ping out-of-order rate (%)" 	0
+statistic example.Host1.pingApp 	"Ping roundtrip delays"
+field count 3
+field mean 0.000187359992
+field stddev 0
+field sum 0.000562079976
+field sqrsum 1.0531129980672e-07
+field min 0.000187359992
+field max 0.000187359992
+scalar example.Host1.networkLayer.arp 	"ARP requests sent" 	4
+scalar example.Host1.networkLayer.arp 	"ARP replies sent" 	0
+scalar example.Host1.networkLayer.arp 	"ARP resolutions" 	4
+scalar example.Host1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar example.Host1.eth[0].queue 	"packets received by queue" 	7
+scalar example.Host1.eth[0].queue 	"packets dropped by queue" 	0
+scalar example.Host1.eth[0].mac 	"simulated time" 	124.20851370064
+scalar example.Host1.eth[0].mac 	"txrate (Mb)" 	100
+scalar example.Host1.eth[0].mac 	"full duplex" 	1
+scalar example.Host1.eth[0].mac 	"frames sent" 	7
+scalar example.Host1.eth[0].mac 	"frames rcvd" 	9
+scalar example.Host1.eth[0].mac 	"bytes sent" 	1138
+scalar example.Host1.eth[0].mac 	"bytes rcvd" 	1266
+scalar example.Host1.eth[0].mac 	"frames from higher layer" 	7
+scalar example.Host1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar example.Host1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar example.Host1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar example.Host1.eth[0].mac 	"frames passed up to HL" 	9
+scalar example.Host1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar example.Host1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar example.Host1.eth[0].mac 	"frames/sec sent" 	0.056356845367869
+scalar example.Host1.eth[0].mac 	"frames/sec rcvd" 	0.07245880118726
+scalar example.Host1.eth[0].mac 	"bits/sec sent" 	73.296102889868
+scalar example.Host1.eth[0].mac 	"bits/sec rcvd" 	81.540304269396
+scalar example.Host1.eth[0].mac 	"rx channel idle (%)" 	99.999913822332
+scalar example.Host1.eth[0].mac 	"rx channel utilization (%)" 	8.6177667545381e-05
+scalar example.Host1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar example.Host1.eth[0].mac 	collisions 	0
+scalar example.Host1.eth[0].mac 	backoffs 	0
+scalar example.Host1.eth[0].encap 	"packets from higher layer" 	7
+scalar example.Host1.eth[0].encap 	"frames from MAC" 	9
+scalar example.Host2.pingApp 	"Pings sent" 	0
+scalar example.Host2.networkLayer.arp 	"ARP requests sent" 	0
+scalar example.Host2.networkLayer.arp 	"ARP replies sent" 	0
+scalar example.Host2.networkLayer.arp 	"ARP resolutions" 	0
+scalar example.Host2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar example.Host2.eth[0].queue 	"packets received by queue" 	0
+scalar example.Host2.eth[0].queue 	"packets dropped by queue" 	0
+scalar example.Host2.eth[0].mac 	"simulated time" 	124.20851370064
+scalar example.Host2.eth[0].mac 	"txrate (Mb)" 	100
+scalar example.Host2.eth[0].mac 	"full duplex" 	1
+scalar example.Host2.eth[0].mac 	"frames sent" 	0
+scalar example.Host2.eth[0].mac 	"frames rcvd" 	7
+scalar example.Host2.eth[0].mac 	"bytes sent" 	0
+scalar example.Host2.eth[0].mac 	"bytes rcvd" 	448
+scalar example.Host2.eth[0].mac 	"frames from higher layer" 	0
+scalar example.Host2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar example.Host2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar example.Host2.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar example.Host2.eth[0].mac 	"frames passed up to HL" 	7
+scalar example.Host2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar example.Host2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar example.Host2.eth[0].mac 	"frames/sec sent" 	0
+scalar example.Host2.eth[0].mac 	"frames/sec rcvd" 	0.056356845367869
+scalar example.Host2.eth[0].mac 	"bits/sec sent" 	0
+scalar example.Host2.eth[0].mac 	"bits/sec rcvd" 	28.854704828349
+scalar example.Host2.eth[0].mac 	"rx channel idle (%)" 	99.999967538457
+scalar example.Host2.eth[0].mac 	"rx channel utilization (%)" 	3.2461542931892e-05
+scalar example.Host2.eth[0].mac 	"rx channel collision (%)" 	0
+scalar example.Host2.eth[0].mac 	collisions 	0
+scalar example.Host2.eth[0].mac 	backoffs 	0
+scalar example.Host2.eth[0].encap 	"packets from higher layer" 	0
+scalar example.Host2.eth[0].encap 	"frames from MAC" 	7
+scalar example.Host3.pingApp 	"Pings sent" 	3
+scalar example.Host3.pingApp 	"Pings dropped" 	0
+scalar example.Host3.pingApp 	"Out-of-order ping arrivals" 	0
+scalar example.Host3.pingApp 	"Pings outstanding at end" 	0
+scalar example.Host3.pingApp 	"Ping drop rate (%)" 	0
+scalar example.Host3.pingApp 	"Ping out-of-order rate (%)" 	0
+statistic example.Host3.pingApp 	"Ping roundtrip delays"
+field count 3
+field mean 0.000187359992
+field stddev 0
+field sum 0.000562079976
+field sqrsum 1.0531129980672e-07
+field min 0.000187359992
+field max 0.000187359992
+scalar example.Host3.networkLayer.arp 	"ARP requests sent" 	3
+scalar example.Host3.networkLayer.arp 	"ARP replies sent" 	0
+scalar example.Host3.networkLayer.arp 	"ARP resolutions" 	3
+scalar example.Host3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar example.Host3.eth[0].queue 	"packets received by queue" 	6
+scalar example.Host3.eth[0].queue 	"packets dropped by queue" 	0
+scalar example.Host3.eth[0].mac 	"simulated time" 	124.20851370064
+scalar example.Host3.eth[0].mac 	"txrate (Mb)" 	100
+scalar example.Host3.eth[0].mac 	"full duplex" 	1
+scalar example.Host3.eth[0].mac 	"frames sent" 	6
+scalar example.Host3.eth[0].mac 	"frames rcvd" 	10
+scalar example.Host3.eth[0].mac 	"bytes sent" 	1074
+scalar example.Host3.eth[0].mac 	"bytes rcvd" 	1330
+scalar example.Host3.eth[0].mac 	"frames from higher layer" 	6
+scalar example.Host3.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar example.Host3.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar example.Host3.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar example.Host3.eth[0].mac 	"frames passed up to HL" 	10
+scalar example.Host3.eth[0].mac 	"PAUSE frames sent" 	0
+scalar example.Host3.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar example.Host3.eth[0].mac 	"frames/sec sent" 	0.048305867458173
+scalar example.Host3.eth[0].mac 	"frames/sec rcvd" 	0.080509779096955
+scalar example.Host3.eth[0].mac 	"bits/sec sent" 	69.174002200104
+scalar example.Host3.eth[0].mac 	"bits/sec rcvd" 	85.66240495916
+scalar example.Host3.eth[0].mac 	"rx channel idle (%)" 	99.999909184969
+scalar example.Host3.eth[0].mac 	"rx channel utilization (%)" 	9.0815030821366e-05
+scalar example.Host3.eth[0].mac 	"rx channel collision (%)" 	0
+scalar example.Host3.eth[0].mac 	collisions 	0
+scalar example.Host3.eth[0].mac 	backoffs 	0
+scalar example.Host3.eth[0].encap 	"packets from higher layer" 	6
+scalar example.Host3.eth[0].encap 	"frames from MAC" 	10
+scalar example.Host4.pingApp 	"Pings sent" 	0
+scalar example.Host4.networkLayer.arp 	"ARP requests sent" 	0
+scalar example.Host4.networkLayer.arp 	"ARP replies sent" 	3
+scalar example.Host4.networkLayer.arp 	"ARP resolutions" 	0
+scalar example.Host4.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar example.Host4.eth[0].queue 	"packets received by queue" 	6
+scalar example.Host4.eth[0].queue 	"packets dropped by queue" 	0
+scalar example.Host4.eth[0].mac 	"simulated time" 	124.20851370064
+scalar example.Host4.eth[0].mac 	"txrate (Mb)" 	100
+scalar example.Host4.eth[0].mac 	"full duplex" 	1
+scalar example.Host4.eth[0].mac 	"frames sent" 	6
+scalar example.Host4.eth[0].mac 	"frames rcvd" 	10
+scalar example.Host4.eth[0].mac 	"bytes sent" 	1074
+scalar example.Host4.eth[0].mac 	"bytes rcvd" 	1330
+scalar example.Host4.eth[0].mac 	"frames from higher layer" 	6
+scalar example.Host4.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar example.Host4.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar example.Host4.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar example.Host4.eth[0].mac 	"frames passed up to HL" 	10
+scalar example.Host4.eth[0].mac 	"PAUSE frames sent" 	0
+scalar example.Host4.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar example.Host4.eth[0].mac 	"frames/sec sent" 	0.048305867458173
+scalar example.Host4.eth[0].mac 	"frames/sec rcvd" 	0.080509779096955
+scalar example.Host4.eth[0].mac 	"bits/sec sent" 	69.174002200104
+scalar example.Host4.eth[0].mac 	"bits/sec rcvd" 	85.66240495916
+scalar example.Host4.eth[0].mac 	"rx channel idle (%)" 	99.999909184969
+scalar example.Host4.eth[0].mac 	"rx channel utilization (%)" 	9.0815030821366e-05
+scalar example.Host4.eth[0].mac 	"rx channel collision (%)" 	0
+scalar example.Host4.eth[0].mac 	collisions 	0
+scalar example.Host4.eth[0].mac 	backoffs 	0
+scalar example.Host4.eth[0].encap 	"packets from higher layer" 	6
+scalar example.Host4.eth[0].encap 	"frames from MAC" 	10
+scalar example.Host5.pingApp 	"Pings sent" 	0
+scalar example.Host5.networkLayer.arp 	"ARP requests sent" 	0
+scalar example.Host5.networkLayer.arp 	"ARP replies sent" 	4
+scalar example.Host5.networkLayer.arp 	"ARP resolutions" 	0
+scalar example.Host5.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar example.Host5.eth[0].queue 	"packets received by queue" 	7
+scalar example.Host5.eth[0].queue 	"packets dropped by queue" 	0
+scalar example.Host5.eth[0].mac 	"simulated time" 	124.20851370064
+scalar example.Host5.eth[0].mac 	"txrate (Mb)" 	100
+scalar example.Host5.eth[0].mac 	"full duplex" 	1
+scalar example.Host5.eth[0].mac 	"frames sent" 	7
+scalar example.Host5.eth[0].mac 	"frames rcvd" 	10
+scalar example.Host5.eth[0].mac 	"bytes sent" 	1138
+scalar example.Host5.eth[0].mac 	"bytes rcvd" 	1330
+scalar example.Host5.eth[0].mac 	"frames from higher layer" 	7
+scalar example.Host5.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar example.Host5.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar example.Host5.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar example.Host5.eth[0].mac 	"frames passed up to HL" 	10
+scalar example.Host5.eth[0].mac 	"PAUSE frames sent" 	0
+scalar example.Host5.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar example.Host5.eth[0].mac 	"frames/sec sent" 	0.056356845367869
+scalar example.Host5.eth[0].mac 	"frames/sec rcvd" 	0.080509779096955
+scalar example.Host5.eth[0].mac 	"bits/sec sent" 	73.296102889868
+scalar example.Host5.eth[0].mac 	"bits/sec rcvd" 	85.66240495916
+scalar example.Host5.eth[0].mac 	"rx channel idle (%)" 	99.999909184969
+scalar example.Host5.eth[0].mac 	"rx channel utilization (%)" 	9.0815030821366e-05
+scalar example.Host5.eth[0].mac 	"rx channel collision (%)" 	0
+scalar example.Host5.eth[0].mac 	collisions 	0
+scalar example.Host5.eth[0].mac 	backoffs 	0
+scalar example.Host5.eth[0].encap 	"packets from higher layer" 	7
+scalar example.Host5.eth[0].encap 	"frames from MAC" 	10

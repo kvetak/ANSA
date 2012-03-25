@@ -1,0 +1,146 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/rsvp_te/RSVP.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Implements RSVP-TE, a signalling protocol for <a href="inet.networklayer.mpls.MPLS.html">MPLS</a>. The module
+processes RSVP-TE messages, installs labels and does the reservation
+along LSP paths.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">rsvp_te</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Implements \RSVP-TE, a signalling protocol for MPLS. The module
+// processes \RSVP-TE messages, installs labels and does the reservation
+// along LSP paths.
+//
+// Paths can be specified statically in an XML config file (&quot;traffic&quot;
+// parameter), or can be set up and torn down dynamically with ScenarioManager
+// commands.
+//
+// An example traffic.xml file:
+//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> verify against the code, and document formally (DTD)!
+//# &lt;setup_pri&gt;, &lt;holding_pri&gt;, &lt;sender&gt;, &lt;owner&gt;, &lt;max_delay&gt; elements
+//# are implemented but missing from this doc!
+</span><span style="color: #808080; font-style: italic; ">//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">
+// &lt;?xml version=&quot;1.0&quot;?&gt;
+// &lt;sessions&gt;
+//     &lt;session&gt;
+//         &lt;endpoint&gt;host3&lt;/endpoint&gt;
+//         &lt;tunnel_id&gt;1&lt;/tunnel_id&gt;
+//         &lt;paths&gt;
+//             &lt;path&gt;
+//                 &lt;lspid&gt;100&lt;/lspid&gt;
+//                 &lt;bandwidth&gt;100000&lt;/bandwidth&gt;
+//                 &lt;route&gt;
+//                     &lt;node&gt;10.1.1.1&lt;/node&gt;
+//                     &lt;lnode&gt;10.1.2.1&lt;/lnode&gt;
+//                     &lt;node&gt;10.1.4.1&lt;/node&gt;
+//                     &lt;node&gt;10.1.5.1&lt;/node&gt;
+//                 &lt;/route&gt;
+//                 &lt;permanent&gt;true&lt;/permanent&gt;
+//                 &lt;color&gt;100&lt;/color&gt;
+//             &lt;/path&gt;
+//         &lt;/paths&gt;
+//     &lt;/session&gt;
+// &lt;/sessions&gt;
+// </span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// In the route, &lt;node&gt; stands for strict hop, and &lt;lnode&gt; for loose hop.
+//
+// RSVP understands the &quot;add-session&quot; and &quot;del-session&quot; ScenarioManager
+// commands. The contents of the &lt;add-session&gt; element can be the same
+// as the &lt;session&gt; element for the traffic.xml above.
+// The &lt;del-command&gt; element syntax is also similar, but only
+// &lt;endpoint&gt;, &lt;tunnel_id&gt; and &lt;lspid&gt; needs to be specified.
+//
+// The following is an example scenario.xml file:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">
+// &lt;?xml version=&quot;1.0&quot;?&gt;
+// &lt;scenario&gt;
+//     &lt;at t=&quot;2&quot;&gt;
+//         &lt;add-session module=&quot;LSR1.rsvp&quot;&gt;
+//             &lt;endpoint&gt;10.2.1.1&lt;/endpoint&gt;
+//             &lt;tunnel_id&gt;1&lt;/tunnel_id&gt;
+//             &lt;paths&gt;
+//                 ...
+//             &lt;/paths&gt;
+//         &lt;/add-session&gt;
+//     &lt;/at&gt;
+//     &lt;at t=&quot;2.4&quot;&gt;
+//         &lt;del-session module=&quot;LSR1.rsvp&quot;&gt;
+//             &lt;endpoint&gt;10.2.1.1&lt;/endpoint&gt;
+//             &lt;tunnel_id&gt;1&lt;/tunnel_id&gt;
+//             &lt;paths&gt;
+//                 &lt;path&gt;
+//                     &lt;lspid&gt;100&lt;/lspid&gt;
+//                 &lt;/path&gt;
+//             &lt;/paths&gt;
+//         &lt;/del-session&gt;
+//     &lt;/at&gt;
+// &lt;/scenario&gt;
+// </span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// \RSVP messages are subclassed from RSVPMessage, and include RSVPPathMsg,
+// RSVPPathTear, RSVPPathError, RSVPResvMsg and RSVPHelloMsg.
+//
+// \RSVP-TE communicates with the following components in the system:
+// TED, MPLS, and may receive commands from ScenarioManager.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">xml</span><span style="color: #000000; "> </span><span style="color: #000000; ">traffic</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// specifies paths to set up
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">peers</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// names of the interfaces towards RSVP peers
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">helloInterval</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">helloTimeout</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/control&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">mplsSwitchIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

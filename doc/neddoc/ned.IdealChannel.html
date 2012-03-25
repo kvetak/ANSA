@@ -1,0 +1,938 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Channel <i>IdealChannel</i></h2>
+<b>Package:</b> ned<br/><b>Built-in type</b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="ned.IdealChannel-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="3787,83,3885,111">
+<area shape="rect" id="node2" href="inet.examples.ethernet.arptest2.ARPTest.html" title="Network ARPTest" alt="" coords="5,6,80,34">
+<area shape="rect" id="node5" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="104,6,184,34">
+<area shape="rect" id="node7" href="inet.examples.ethernet.lans.BusLAN.html" title="Network BusLAN" alt="" coords="208,6,280,34">
+<area shape="rect" id="node9" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="304,6,384,34">
+<area shape="rect" id="node11" href="inet.nodes.ethernet.EtherHost2.html" title="Compound Module EtherHost2" alt="" coords="408,6,496,34">
+<area shape="rect" id="node13" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="520,6,643,34">
+<area shape="rect" id="node15" href="inet.linklayer.ethernet.EthernetInterface2.html" title="Compound Module EthernetInterface2" alt="" coords="667,6,795,34">
+<area shape="rect" id="node17" href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html" title="Compound Module EthernetInterfaceNoQueue" alt="" coords="819,6,995,34">
+<area shape="rect" id="node19" href="inet.linklayer.ieee80211.Ieee80211Nic.html" title="Compound Module Ieee80211Nic" alt="" coords="1019,6,1120,34">
+<area shape="rect" id="node21" href="inet.linklayer.ieee80211.Ieee80211NicAdhoc.html" title="Compound Module Ieee80211NicAdhoc" alt="" coords="1144,6,1283,34">
+<area shape="rect" id="node23" href="inet.linklayer.ieee80211.Ieee80211NicAP.html" title="Compound Module Ieee80211NicAP" alt="" coords="1307,6,1427,34">
+<area shape="rect" id="node25" href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html" title="Compound Module Ieee80211NicAPSimplified" alt="" coords="1451,6,1627,34">
+<area shape="rect" id="node27" href="inet.linklayer.ieee80211.Ieee80211NicSTA.html" title="Compound Module Ieee80211NicSTA" alt="" coords="1651,6,1779,34">
+<area shape="rect" id="node29" href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html" title="Compound Module Ieee80211NicSTASimplified" alt="" coords="1803,6,1987,34">
+<area shape="rect" id="node31" href="inet.examples.ethernet.lans.LargeLAN.html" title="Compound Module LargeLAN" alt="" coords="2011,6,2091,34">
+<area shape="rect" id="node33" href="inet.nodes.mpls.LDP_LSR.html" title="Compound Module LDP_LSR" alt="" coords="2115,6,2195,34">
+<area shape="rect" id="node35" href="inet.examples.ethernet.lans.MediumLAN.html" title="Compound Module MediumLAN" alt="" coords="2219,6,2312,34">
+<area shape="rect" id="node37" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="2336,6,2443,34">
+<area shape="rect" id="node39" href="inet.examples.ethernet.lans.MixedLAN.html" title="Network MixedLAN" alt="" coords="2467,6,2549,34">
+<area shape="rect" id="node41" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="2573,6,2661,34">
+<area shape="rect" id="node43" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="2685,6,2787,34">
+<area shape="rect" id="node45" href="inet.nodes.ipv6.NetworkLayer6.html" title="Compound Module NetworkLayer6" alt="" coords="2811,6,2920,34">
+<area shape="rect" id="node47" href="inet.linklayer.mf80211.Nic80211.html" title="Compound Module Nic80211" alt="" coords="2944,6,3021,34">
+<area shape="rect" id="node49" href="inet.linklayer.mf80211.NicCsma.html" title="Compound Module NicCsma" alt="" coords="3045,6,3123,34">
+<area shape="rect" id="node51" href="inet.base.Nop.html" title="Compound Module Nop" alt="" coords="3147,6,3219,34">
+<area shape="rect" id="node53" href="inet.examples.ospfv2.areas.OneNetArea.html" title="Compound Module OneNetArea" alt="" coords="3243,6,3336,34">
+<area shape="rect" id="node55" href="inet.examples.ospfv2.fulltest.OSPF_Area1.html" title="Compound Module OSPF_Area1" alt="" coords="3360,6,3459,34">
+<area shape="rect" id="node57" href="inet.examples.ospfv2.fulltest.OSPF_Area2.html" title="Compound Module OSPF_Area2" alt="" coords="3483,6,3581,34">
+<area shape="rect" id="node59" href="inet.examples.ospfv2.fulltest.OSPF_Area3.html" title="Compound Module OSPF_Area3" alt="" coords="3605,6,3704,34">
+<area shape="rect" id="node61" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="3728,6,3824,34">
+<area shape="rect" id="node63" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="3848,6,3947,34">
+<area shape="rect" id="node65" href="inet.linklayer.ppp.PPPInterfaceNoQueue.html" title="Compound Module PPPInterfaceNoQueue" alt="" coords="3971,6,4125,34">
+<area shape="rect" id="node67" href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html" title="Compound Module PPPInterfaceWithDLDuplicatesGenerator" alt="" coords="4149,6,4411,34">
+<area shape="rect" id="node69" href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html" title="Compound Module PPPInterfaceWithDLThruputMeter" alt="" coords="4435,6,4656,34">
+<area shape="rect" id="node71" href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html" title="Compound Module PPPInterfaceWithULDropsGenerator" alt="" coords="4680,6,4915,34">
+<area shape="rect" id="node73" href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html" title="Compound Module PPPInterfaceWithULThruputMeter" alt="" coords="4939,6,5160,34">
+<area shape="rect" id="node75" href="inet.examples.inet.redtest.REDTestTh.html" title="Network REDTestTh" alt="" coords="5184,6,5275,34">
+<area shape="rect" id="node77" href="inet.nodes.mpls.RSVP_LSR.html" title="Compound Module RSVP_LSR" alt="" coords="5299,6,5389,34">
+<area shape="rect" id="node79" href="inet.transport.rtp.RTPHost.html" title="Compound Module RTPHost" alt="" coords="5413,6,5491,34">
+<area shape="rect" id="node81" href="inet.transport.rtp.RTPLayer.html" title="Compound Module RTPLayer" alt="" coords="5515,6,5595,34">
+<area shape="rect" id="node83" href="inet.examples.ethernet.lans.SmallLAN.html" title="Compound Module SmallLAN" alt="" coords="5619,6,5699,34">
+<area shape="rect" id="node85" href="inet.linklayer.mf80211.SnrNic.html" title="Compound Module SnrNic" alt="" coords="5723,6,5795,34">
+<area shape="rect" id="node87" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="5819,6,5920,34">
+<area shape="rect" id="node89" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="5944,6,6053,34">
+<area shape="rect" id="node91" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="6077,6,6341,34">
+<area shape="rect" id="node93" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="6365,6,6587,34">
+<area shape="rect" id="node95" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="6611,6,6848,34">
+<area shape="rect" id="node97" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="6872,6,7093,34">
+<area shape="rect" id="node99" href="inet.nodes.inet.TCPSpoofingHost.html" title="Compound Module TCPSpoofingHost" alt="" coords="7117,6,7245,34">
+<area shape="rect" id="node101" href="inet.examples.wireless.throughput.ThroughputClient.html" title="Compound Module ThroughputClient" alt="" coords="7269,6,7389,34">
+<area shape="rect" id="node104" href="inet.examples.wireless.hosttohost.ThroughputServer.html" title="Compound Module ThroughputServer" alt="" coords="7413,6,7539,34">
+<area shape="rect" id="node106" href="inet.examples.emulation.traceroute.Traceroute.html" title="Network Traceroute" alt="" coords="7563,6,7645,34">
+<area shape="rect" id="node108" href="inet.examples.ospfv2.areas.TwoNetsArea.html" title="Compound Module TwoNetsArea" alt="" coords="7669,6,7771,34">
+<area shape="rect" id="node110" href="inet.nodes.wireless.WirelessAP.html" title="Compound Module WirelessAP" alt="" coords="7795,6,7885,34">
+<area shape="rect" id="node112" href="inet.nodes.wireless.WirelessAPSimplified.html" title="Compound Module WirelessAPSimplified" alt="" coords="7909,6,8056,34">
+<area shape="rect" id="node114" href="inet.nodes.wireless.WirelessAPWithEth.html" title="Compound Module WirelessAPWithEth" alt="" coords="8080,6,8219,34">
+<area shape="rect" id="node116" href="inet.nodes.wireless.WirelessAPWithEthSimplified.html" title="Compound Module WirelessAPWithEthSimplified" alt="" coords="8243,6,8437,34">
+<area shape="rect" id="node118" href="inet.examples.wireless.throughput.WirelessAPWithSink.html" title="Compound Module WirelessAPWithSink" alt="" coords="8461,6,8605,34">
+<area shape="rect" id="node120" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="8629,6,8731,34">
+<area shape="rect" id="node122" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="8755,6,8912,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="ned.IdealChannel-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.BurstHost.html">BurstHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Definition of an <a href="inet.networklayer.ipv4.IP.html">IP</a> node with a transport generator that connects
+to <a href="inet.networklayer.ipv4.IP.html">IP</a> directly, without <a href="inet.transport.tcp.TCP.html">TCP</a> or <a href="inet.transport.udp.UDP.html">UDP</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost.html">EtherHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An example host with one Ethernet port and traffic generators that
+generate Ethernet traffic directly. This host model does not contain
+higher layer protocols (IP, TCP).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost2.html">EtherHost2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Example host model with one Ethernet port and several traffic generators
+to create traffic in the test network.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ethernet.EthernetInterface.html">EthernetInterface</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface. Complements <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a>
+with an output queue for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ethernet.EthernetInterface2.html">EthernetInterface2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface which supports full-duplex operation only.
+Complements <a href="inet.linklayer.ethernet.EtherMAC2.html">EtherMAC2</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a> with an output queue for QoS and
+RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html">EthernetInterfaceNoQueue</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface. Assumes inifinite queue.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211Nic.html">Ieee80211Nic</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card.
+It can be configured via the mgmtType parameter to act
+as an AP or a STA, or for ad-hoc mode.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicAdhoc.html">Ieee80211NicAdhoc</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card in ad-hoc mode.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">Ieee80211NicAP</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card,
+in an AP, using infrastructure mode.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">Ieee80211NicAPSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an infrastructure mode 802.11 network interface card
+for a wireless Access Point (AP), but using a simplified mgmt module
+that does not support handovers.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">Ieee80211NicSTA</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card,
+in a STA, using infrastructure mode.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html">Ieee80211NicSTASimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an infrastructure mode 802.11 network interface card
+for a host (STA), but using a simplified mgmt module that does not
+support handovers.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.LargeLAN.html">LargeLAN</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Several hosts and an Ethernet hub on a switch. One port of the hub
+connect to a 10Base2 segment.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.LDP_LSR.html">LDP_LSR</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An <a href="inet.networklayer.ldp.LDP.html">LDP</a>-capable router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.MediumLAN.html">MediumLAN</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Several hosts and an Ethernet hub on a switch</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MFMobileHost.html">MFMobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the Mobility Framework's 802.11 implementation, <a href="inet.linklayer.mf80211.Nic80211.html">Nic80211</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be dynamically
+specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MobileHost.html">MobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the new IEEE 802.11 implementation, <a href="inet.linklayer.ieee80211.Ieee80211Nic.html">Ieee80211Nic</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be
+dynamically specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.NetworkLayer.html">NetworkLayer</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Network layer of an IP node.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.NetworkLayer6.html">NetworkLayer6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Represents an <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> network layer (L3).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.Nic80211.html">Nic80211</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an 802.11 network interface card.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.NicCsma.html">NicCsma</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>The CsmaNic contains a csma-like MAC layer.
+The <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> module is used as the mac needs a RadioState to be published.
+However as still the <a href="inet.linklayer.mfcore.BasicDecider.html">BasicDecider</a> is used all messages will be delivered to
+the MAC and no packets get lost</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.base.Nop.html">Nop</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Just lets messages through without any change or delay.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.areas.OneNetArea.html">OneNetArea</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area1.html">OSPF_Area1</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area2.html">OSPF_Area2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.fulltest.OSPF_Area3.html">OSPF_Area3</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.OSPFRouter.html">OSPFRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An OSPFv2 router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ppp.PPPInterface.html">PPPInterface</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
+for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ppp.PPPInterfaceNoQueue.html">PPPInterfaceNoQueue</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Assumes inifinite queue.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html">PPPInterfaceWithDLDuplicatesGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
+for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html">PPPInterfaceWithDLThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
+for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html">PPPInterfaceWithULDropsGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
+for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html">PPPInterfaceWithULThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
+for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An RSVP-TE capable router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.transport.rtp.RTPHost.html">RTPHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.transport.rtp.RTPLayer.html">RTPLayer</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.SmallLAN.html">SmallLAN</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Several hosts on an Ethernet hub</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.SnrNic.html">SnrNic</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This is the easiest nic to implement "real" network behaviour. It uses
+the CsmaMacLayer and the <a href="inet.linklayer.mf80211.phyLayer.decider.SnrDecider.html">SnrDecider</a> and <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> modules.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHost.html">StandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.StandardHost6.html">StandardHost6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IPv6 host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html">StandardHostWithDLDuplicatesGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html">PPPInterfaceWithDLDuplicatesGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLThruputMeter.html">StandardHostWithDLThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html">PPPInterfaceWithDLThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULDropsGenerator.html">StandardHostWithULDropsGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html">PPPInterfaceWithULDropsGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULThruputMeter.html">StandardHostWithULThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html">PPPInterfaceWithULThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.TCPSpoofingHost.html">TCPSpoofingHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.applications.tcpapp.TCPSpoof.html">TCPSpoof</a> in the application layer.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.hosttohost.ThroughputClient.html">ThroughputClient</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.throughput.ThroughputClient.html">ThroughputClient</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.hosttohost.ThroughputServer.html">ThroughputServer</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ospfv2.areas.TwoNetsArea.html">TwoNetsArea</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAP.html">WirelessAP</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point. It can be used in conjunction with
+<a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>, or any other host model containing WirelessNicSTA.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAPSimplified.html">WirelessAPSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point, but using a simplified NIC that does not
+support handovers. It should be used in conjunction with <a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>,
+or any other host model containing WirelessNicSTASimplified.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAPWithEth.html">WirelessAPWithEth</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point with Ethernet ports.
+It can be used in conjunction with <a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>, or any other host model
+containing WirelessNicSTA.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessAPWithEthSimplified.html">WirelessAPWithEthSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a 802.11 Access Point with Ethernet ports, but using a simplified NIC
+that does not support handovers. It can be used in conjunction with
+<a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>, or any other host model containing WirelessNicSTASimplified.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.throughput.WirelessAPWithSink.html">WirelessAPWithSink</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Well, it Models a 802.11 Access Point with a <a href="inet.base.Sink.html">Sink</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a host with one wireless (802.11b) card in infrastructure mode.
+This module is basically a <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> with an <a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">Ieee80211NicSTA</a> added.
+It should be used in conjunction with <a href="inet.nodes.wireless.WirelessAP.html">WirelessAP</a>, or any other AP model
+which contains <a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">Ieee80211NicAP</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a host with one wireless (802.11b) card in infrastructure mode,
+but using a simplified NIC that does not support handovers.
+This module is basically a <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> with an <a href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html">Ieee80211NicSTASimplified</a>
+added. It should be used in conjunction with <a href="inet.nodes.wireless.WirelessAPSimplified.html">WirelessAPSimplified</a>,
+or any other AP model which contains <a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">Ieee80211NicAPSimplified</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.arptest.ARPTest.html">ARPTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.arptest2.ARPTest.html">ARPTest</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.BusLAN.html">BusLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN: four hosts on a bus.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.ethernet.lans.MixedLAN.html">MixedLAN</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+
+<p>Sample Ethernet LAN containing eight hosts, a switch and a bus.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.inet.redtest.REDTestTh.html">REDTestTh</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.emulation.traceroute.Traceroute.html">Traceroute</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>class</td>
+   <td><i>cIdealChannel</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">IdealChannel</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@class</span><span style="color: #000000; ">(</span><span style="color: #000000; ">cIdealChannel</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

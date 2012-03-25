@@ -1,0 +1,196 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ipv6/IPv6ExtensionHeaders.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPv6HopByHopOptionsHeader.html">IPv6HopByHopOptionsHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Hop-by-Hop Options Header.
+RFC 2460 Section 4.3
+Next Header Value: 0</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6RoutingHeader.html">IPv6RoutingHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Routing Header
+RFC 2460 Section 4.4
+Next Header Value: 43</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6FragmentHeader.html">IPv6FragmentHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Fragment Header
+RFC 2460 Section 4.5
+Next Header Value: 44</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6DestinationOptionsHeader.html">IPv6DestinationOptionsHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Destination Options Header
+RFC 2460 Section 4.6
+Next Header Value: 60</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6AuthenticationHeader.html">IPv6AuthenticationHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Authentication Header
+RFC 2402
+Not Implemented</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6EncapsulatingSecurityPayloadHeader.html">IPv6EncapsulatingSecurityPayloadHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Encapsulating Security Payload Header
+RFC 2406
+Not Implemented</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Wei Yang, Ng
+// Copyright (C) 2005 Andras Varga
+// Copyright (C) 2001-2004 CTIE, Monash University
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPv6Address.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPv6Datagram.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Hop-by-Hop Options Header.
+// RFC 2460 Section 4.3
+// Next Header Value: 0
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6HopByHopOptionsHeader</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Routing Header
+// RFC 2460 Section 4.4
+// Next Header Value: 43
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6RoutingHeader</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingType</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">segmentsLeft</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">address</span><span style="color: #000000; ">[];
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Fragment Header
+// RFC 2460 Section 4.5
+// Next Header Value: 44
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6FragmentHeader</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">fragmentOffset</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">identification</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// datagram ID: identifies which datagram this fragment belongs to.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">moreFragments</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//Is this the last fragment?
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Destination Options Header
+// RFC 2460 Section 4.6
+// Next Header Value: 60
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6DestinationOptionsHeader</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Authentication Header
+// RFC 2402
+// Not Implemented
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6AuthenticationHeader</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Encapsulating Security Payload Header
+// RFC 2406
+// Not Implemented
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6EncapsulatingSecurityPayloadHeader</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+}
+</span></pre>
+   </body>
+</html>

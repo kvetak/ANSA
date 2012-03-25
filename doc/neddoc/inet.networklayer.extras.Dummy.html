@@ -1,0 +1,126 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>Dummy</i></h2>
+<b>Package:</b> inet.networklayer.extras<br/><b>File: <a href="src-networklayer-extras-Dummy.ned.html">src/networklayer/extras/Dummy.ned</a></b><br/><p><a href="../doxy/class_dummy.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Implementation of a failed router. Does nothing and simply discards any
+incoming messages.</p>
+<img src="inet.networklayer.extras.Dummy-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.extras.Dummy.html" title="Dummy" alt="Dummy" coords="0,31,95,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.extras.Dummy-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.extras.Dummy.html" title="Simple Module Dummy" alt="" coords="140,83,212,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.FailedRouter.html" title="Compound Module FailedRouter" alt="" coords="5,6,101,34">
+<area shape="rect" id="node4" href="inet.nodes.mpls.LDP_FAILED.html" title="Compound Module LDP_FAILED" alt="" coords="125,6,227,34">
+<area shape="rect" id="node6" href="inet.nodes.mpls.RSVP_FAILED.html" title="Compound Module RSVP_FAILED" alt="" coords="251,6,363,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.extras.Dummy-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.extras.Dummy.html" title="Simple Module Dummy" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.FailedRouter.html">FailedRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>A failed IP router. Simply discards all packets it receives, and that's all.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.LDP_FAILED.html">LDP_FAILED</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Failed router. Discards all incoming traffic and generates nothing. Its
+interface (gates, parameters) is fully compatible with the <a href="inet.nodes.mpls.LDP_LSR.html">LDP_LSR</a> router
+and node failures may thus be simulated by replacing the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+with LDP_FAILED.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.RSVP_FAILED.html">RSVP_FAILED</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Failed router. Discards all incoming traffic and generates nothing. Its
+interface (gates, parameters) is fully compatible with the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a> router
+and node failures may thus be simulated by replacing the <a href="inet.nodes.mpls.RSVP_LSR.html">RSVP_LSR</a>
+with RSVP_FAILED.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>in [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>out [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ethIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ethOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Implementation of a failed router. Does nothing and simply discards any
+// incoming messages.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">Dummy</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">in</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">out</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethIn</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethOut</span><span style="color: #000000; ">[];
+}
+
+</span></pre>
+   </body>
+</html>

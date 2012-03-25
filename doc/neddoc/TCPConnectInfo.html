@@ -1,0 +1,125 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>TCPConnectInfo</i></h2>
+<b>File: <a href="src-transport-contract-TCPCommand.msg.html">src/transport/contract/TCPCommand.msg</a></b><br/>
+<p>Sent with message kind TCP_I_ESTABLISHED, to let the app know
+about the local and remote <a href="inet.networklayer.ipv4.IP.html">IP</a> address and port.</p>
+<p><b>See also:</b> <a href="TcpCommandCode.html">TcpCommandCode</a>, <a href="inet.transport.tcp.TCP.html">TCP</a></p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="TCPConnectInfo-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TCPConnectInfo.html" title="Class TCPConnectInfo" alt="" coords="5,6,125,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="TCPConnectInfo-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TCPConnectInfo.html" title="Class TCPConnectInfo" alt="" coords="5,83,125,111">
+<area shape="rect" id="node2" href="TCPCommand.html" title="Class TCPCommand" alt="" coords="11,6,120,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="TCPCommand.html">TCPCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info for TCP connections. This class is to be set as control info
+(see cMessage::setControlInfo()) on all messages exchanged between <a href="inet.transport.tcp.TCP.html">TCP</a> and
+application, in both directions. Some commands and indications
+(TCP_C_OPEN_xxx, TCP_I_STATUS) use subclasses.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>localAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>remoteAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>localPort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>remotePort</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>connId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>identifies the socket within the application</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>userId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>id than can be freely used by the app</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Sent with message kind TCP_I_ESTABLISHED, to let the app know
+// about the local and remote IP address and port.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TcpCommandCode, TCP
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPConnectInfo</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">localAddr</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPvXAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remoteAddr</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localPort</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">remotePort</span><span style="color: #000000; ">;
+}
+
+
+</span></pre>
+   </body>
+</html>

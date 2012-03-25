@@ -1,0 +1,32 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Ethernet Model -- Start Page</h2>
+<p>The Ethernet model contains a MAC model (<a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>), LLC model (<a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a>) as well
+as a bus (<a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>, for modelling coaxial cable) and a hub (<a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a>) model.
+A switch model (<a href="inet.nodes.ethernet.EtherSwitch.html">EtherSwitch</a>) is also provided.</p>
+<p>A few useful topics:</p>
+  <ul><li><a href="ether-overview.html">model overview</a></li>
+  <li><a href="eth-standards.html">implemented standards</a></li>
+  <li><a href="llc-app.html">communication between LLC and higher layers</a></li>
+  <li><a href="appreg.html">application registration</a></li>
+  <li><a href="physical.html">physical layer messaging</a></li>
+  <li>click <i>selected topics</i> in the navigation frame to see more topics</li></ul>
+<p>If you can't wait to see the model, start here:</p>
+  <ul><li>the <a href="inet.examples.ethernet.lans.MixedLAN.html">MixedLAN</a> model contains hosts, switch, hub and bus;</li>
+  <li>the <a href="largenet.html">LargeNet model</a> contains hundreds of
+   computers, switches and hubs (numbers depend on model configuration in
+   largenet.ini), and mixes all kinds of Ethernet technologies;</li>
+  <li><a href="inet.nodes.ethernet.EtherHost.html">EtherHost</a> is a sample node with an Ethernet NIC;</li>
+  <li><a href="inet.nodes.ethernet.EtherSwitch.html">EtherSwitch</a>, <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>, <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a> model switching hub, repeating hub and
+   the old coxial cable;</li>
+  <li>basic compnents of the model: <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>, <a href="inet.linklayer.ethernet.EtherLLC.html">EtherLLC</a>/<a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a> module types,
+   <a href="inet.linklayer.etherswitch.MACRelayUnit.html">MACRelayUnit</a> (<a href="inet.linklayer.etherswitch.MACRelayUnitNP.html">MACRelayUnitNP</a> and <a href="inet.linklayer.etherswitch.MACRelayUnitPP.html">MACRelayUnitPP</a>), <a href="EtherFrame.html">EtherFrame</a> message type,
+   MACAddress class</li></ul>
+<p>Related documentation:</p>
+  <ul><li><a href="../doxy/index.html" target="_top">C++ source documentation</a></li></ul>
+   </body>
+</html>

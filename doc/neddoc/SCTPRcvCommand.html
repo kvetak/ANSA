@@ -1,0 +1,158 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>SCTPRcvCommand</i></h2>
+<b>File: <a href="src-transport-contract-SCTPCommand.msg.html">src/transport/contract/SCTPCommand.msg</a></b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPRcvCommand-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="SCTPRcvCommand.html" title="Class SCTPRcvCommand" alt="" coords="5,6,147,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPRcvCommand-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="SCTPRcvCommand.html" title="Class SCTPRcvCommand" alt="" coords="5,83,147,111">
+<area shape="rect" id="node2" href="SCTPCommand.html" title="Class SCTPCommand" alt="" coords="17,6,135,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="SCTPCommand.html">SCTPCommand</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control info for <a href="inet.transport.sctp.SCTP.html">SCTP</a> connections. This class is to be set as control info
+(see cMessage::setControlInfo()) on all messages exchanged between <a href="inet.transport.sctp.SCTP.html">SCTP</a> and
+application, in both directions. Some commands and indications
+(SCTP_C_OPEN_xxx, SCTP_I_STATUS) use subclasses.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>ppid</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>tsn</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>cumTsn</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>assocId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>identifies the socket within the application</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>sid</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>numMsgs</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>ssn</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>sendUnordered</td>
+   <td>
+      <i>
+unsigned short</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>lifetime</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>localAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>remoteAddr</td>
+   <td>
+      <i>
+IPvXAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>gate</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPRcvCommand</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPCommand</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">ppid</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">tsn</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">cumTsn</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

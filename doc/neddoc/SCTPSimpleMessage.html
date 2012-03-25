@@ -1,0 +1,86 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Message <i>SCTPSimpleMessage</i></h2>
+<b>File: <a href="src-transport-sctp-SCTPMessage.msg.html">src/transport/sctp/SCTPMessage.msg</a></b><br/><p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPSimpleMessage-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="SCTPSimpleMessage.html" title="Message SCTPSimpleMessage" alt="" coords="5,6,155,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPSimpleMessage-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="SCTPSimpleMessage.html" title="Message SCTPSimpleMessage" alt="" coords="5,6,155,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+cPacket   </td>
+   <td>
+      <i>(unknown -- not in documented files)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>dataLen</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>data</td>
+   <td>
+      <i>
+char[]</i>
+   </td>
+   <td>
+<p>cd</p>
+</td>
+</tr>
+<tr class="local">
+   <td>creationTime</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>encaps</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">message</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPSimpleMessage</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">cPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">dataLen</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">char</span><span style="color: #000000; "> </span><span style="color: #000000; ">data</span><span style="color: #000000; ">[];       </span><span style="color: #808080; font-style: italic; ">//cd
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">creationTime</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">encaps</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,156 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>UDPBasicApp</i></h2>
+<b>Package:</b> inet.applications.udpapp<br/><b>File: <a href="src-applications-udpapp-UDPBasicApp.ned.html">src/applications/udpapp/UDPBasicApp.ned</a></b><br/><p><a href="../doxy/class_u_d_p_basic_app.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Sends UDP packets to the given IP address at the given interval.
+Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+<p>The interval can be a constant or a random value (e.g. exponential(1)).
+If the destAddresses parameter contains more than one address, one
+of them is randomly chosen for each packet. An address may be given in the
+dotted decimal notation, or with the module name. (The IPAddressResolver
+class is used to resolve the address.) To disable the model, set
+destAddresses to "".</p>
+<p>The peer can be <a href="inet.applications.udpapp.UDPSink.html">UDPSink</a> or another <a href="inet.applications.udpapp.UDPBasicApp.html">UDPBasicApp</a> (it handles received packets
+exactly like <a href="inet.applications.udpapp.UDPSink.html">UDPSink</a>).</p>
+<img src="inet.applications.udpapp.UDPBasicApp-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.udpapp.UDPBasicApp.html" title="UDPBasicApp" alt="UDPBasicApp" coords="0,31,131,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.udpapp.UDPBasicApp-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.udpapp.UDPBasicApp.html" title="Simple Module UDPBasicApp" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.udpapp.UDPBasicApp-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.udpapp.UDPBasicApp.html" title="Simple Module UDPBasicApp" alt="" coords="5,83,112,111">
+<area shape="rect" id="node2" href="inet.applications.udpapp.UDPApp.html" title="Module Interface UDPApp" alt="" coords="21,6,96,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>localPort</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>if -1, app doesn't bind in <a href="inet.transport.udp.UDP.html">UDP</a></p>
+   </td>
+</tr>
+<tr class="local">
+   <td>destPort</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>messageLength</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>length of messages to generate, in bytes</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>messageFreq</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>should usually be a random value, e.g. exponential(1)</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>destAddresses</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>""</td>
+   <td>
+<p>list of IP addresses, separated by spaces</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>udpIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>udpOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Sends \UDP packets to the given \IP address at the given interval.
+// Compatible with both IPv4 and IPv6.
+//
+// The interval can be a constant or a random value (e.g. exponential(1)).
+// If the destAddresses parameter contains more than one address, one
+// of them is randomly chosen for each packet. An address may be given in the
+// dotted decimal notation, or with the module name. (The IPAddressResolver
+// class is used to resolve the address.) To disable the model, set
+// destAddresses to &quot;&quot;.
+//
+// The peer can be UDPSink or another UDPBasicApp (it handles received packets
+// exactly like UDPSink).
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPBasicApp</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDPApp</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">localPort</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// if -1, app doesn't bind in UDP
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">destPort</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">messageLength</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;B&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// length of messages to generate, in bytes
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">volatile</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">messageFreq</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// should usually be a random value, e.g. exponential(1)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddresses</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;&quot;</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// list of \IP addresses, separated by spaces
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">udpOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+
+
+</span></pre>
+   </body>
+</html>

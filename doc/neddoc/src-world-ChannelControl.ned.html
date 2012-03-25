@@ -1,0 +1,90 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/world/ChannelControl.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.world.ChannelControl.html">ChannelControl</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p><a href="inet.world.ChannelControl.html">ChannelControl</a> has exactly one instance in every network model that
+contains mobile or wireless nodes. This module gets informed about the
+location and movement of nodes, and determines which nodes are within
+communication or interference distance. This info is then used by the
+radio interfaces of nodes at transmissions.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//***************************************************************************
+// * file:        ChannelControl.ned
+// *
+// * author:      Andras Varga, Steffen Sroka, Daniel Willkomm
+// *
+// * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
+// *              Technische Universitaet Berlin, Germany.
+// *
+// *              This program is free software; you can redistribute it
+// *              and/or modify it under the terms of the GNU General Public
+// *              License as published by the Free Software Foundation; either
+// *              version 2 of the License, or (at your option) any later
+// *              version.
+// *              For further information see file COPYING
+// *              in the top level directory
+// ***************************************************************************
+// * part of:     framework implementation developed by tkn
+// **************************************************************************/
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">world</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ChannelControl has exactly one instance in every network model that
+// contains mobile or wireless nodes. This module gets informed about the
+// location and movement of nodes, and determines which nodes are within
+// communication or interference distance. This info is then used by the
+// radio interfaces of nodes at transmissions.
+//
+// Side effect: updates the containing compound module's display string
+// according to the given playground size (sets </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">&quot;p=0,0;b=$playgroundSizeX,
+// $playgroundSizeY&quot;</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">).
+//
+// This ChannelControl is a different implementation from the one in
+// Mobility Framework 1.0a5: here we use sendDirect(), while the MF version
+// used normal send() and dynamic connections.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga (based on MF's ChannelControl by Steffen Sroka and Daniel Willkomm)
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> BasicMobility
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">ChannelControl</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">coreDebug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch for core framework
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">playgroundSizeX</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">600</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// x size of the playground (in meters)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">playgroundSizeY</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">400</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// y size of the playground (in meters)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">pMax</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;mW&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">20</span><span style="color: #000000; ">mW</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// maximum sending power used for this network (in mW)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">sat</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;dBm&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(-</span><span style="color: #008000; ">110</span><span style="color: #000000; ">dBm</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// signal attenuation threshold (in dBm)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">alpha</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// path loss coefficient
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">carrierFrequency</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;Hz&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">2</span><span style="color: #000000; ">.</span><span style="color: #008000; ">4</span><span style="color: #000000; ">GHz</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// carrier frequency of the channel (in Hz)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">numChannels</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">1</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// number of radio channels (frequencies)
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=misc/sun&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

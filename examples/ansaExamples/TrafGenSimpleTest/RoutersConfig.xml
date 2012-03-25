@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="192.168.3.1"> <!-- R1 -->
+    <Interfaces>
+     <Interface name="ppp0">
+        <IPAddress>192.168.3.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        
+      </Interface>
+      <Interface name="eth0">
+        <IPAddress>172.16.100.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      
+      <Static>
+        <Route>
+          <NetworkAddress>172.16.200.0</NetworkAddress>
+          <NetworkMask>255.255.255.0</NetworkMask>
+          <ExitInterface>ppp0</ExitInterface>
+        </Route>
+      </Static>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.3.2"> <!-- R2 -->
+    <Interfaces>
+     <Interface name="ppp0">
+        <IPAddress>192.168.3.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        
+      </Interface>
+      <Interface name="eth0">
+        <IPAddress>172.16.200.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      
+      <Static>
+        <Route>
+          <NetworkAddress>172.16.100.0</NetworkAddress>
+          <NetworkMask>255.255.255.0</NetworkMask>
+          <NextHopAddress>192.168.3.1</NextHopAddress>
+        </Route>
+      </Static>
+    </Routing>
+  </Router>
+
+</Routers>

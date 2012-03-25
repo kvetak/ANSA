@@ -1,0 +1,131 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/queue/REDQueue.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.queue.REDQueue.html">REDQueue</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>RED (Random Early Detection) queue, to be used in routers' network
+interfaces. Conforms to the <a href="inet.networklayer.queue.OutputQueue.html">OutputQueue</a> interface.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">queue</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// RED (Random Early Detection) queue, to be used in routers' network
+// interfaces. Conforms to the OutputQueue interface.
+//
+// Implements the original RED algorithm from
+// &quot;Random Early Detection Gateways for Congestion Avoidance&quot; by
+// Sally Floyd and Van Jacobson, 1993.
+//
+// The code is based on the algorithm described on p10 of the paper:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">
+// Initialization:
+//    avg &lt;- 0
+//    count &lt;- -1
+// for each packet arrival
+//    calculate the new average queue size avg:
+//        if the queue is nonempty
+//            avg &lt;- (1-wq)*avg + wq*q
+//        else
+//            m &lt;- f(time-q_time)
+//            avg &lt;- (1-wq)^m * avg
+//    if minth &lt;= avg &lt; maxth
+//        increment count
+//        calculate probability pa:
+//            pb &lt;- maxp*(avg-minth) / (maxth-minth)
+//            pa &lt;- pb / (1-count*pb)
+//        with probability pa:
+//            mark the arriving packet
+//            count &lt;- 0
+//    else if maxth &lt;= avg
+//        mark the arriving packet
+//        count &lt;- 0
+//    else count &lt;- -1
+// when queue becomes empty
+//    q_time &lt;- time
+//
+// Saved Variables:
+//    - avg: average queue size
+//    - q_time: start of the queue idle time
+//    - count: packets since last marked packet
+//
+// Fixed parameters:
+//    - wq: queue weight
+//    - minth: minimum threshold for queue
+//    - maxth: maximum threshold for queue
+//    - maxp: maximum value for pb
+//
+// Other:
+//    - pa: current packet-marking probability
+//    - q: current queue size
+//    - time: current time
+//    - f(t): a linear function of the time t
+// </span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The function f() is supposed to estimate the number of packets
+// that could have arrived during the idle interval.
+// We use </span><span style="color: #800000; ">&lt;i&gt;</span><span style="color: #808080; font-style: italic; ">f(t) = pkrate * t</span><span style="color: #800000; ">&lt;/i&gt;</span><span style="color: #808080; font-style: italic; ">, where </span><span style="color: #800000; ">&lt;i&gt;</span><span style="color: #808080; font-style: italic; ">pkrate = 1/s</span><span style="color: #800000; ">&lt;/i&gt;</span><span style="color: #808080; font-style: italic; ">,
+// s being the typical transmission time for a small packet
+// as mentioned in Section 11 of the paper.
+//
+// Example parameter values: wq = 0.002, minth = 5 packets, maxth = 15 packets,
+// maxp = 1/50 = 0.02 and pkrate = 12000 (~1K packets on 100Mbps link).
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">REDQueue</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">OutputQueue</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">wq</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">002</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// queue weight
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">minth</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">5</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// minimum threshold for avg queue length
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">maxth</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">50</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// maximum threshold for avg queue length (=buffer capacity)
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">maxp</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">02</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// maximum value for pb
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">pkrate</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">150</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// arrivals per sec (see comment above)
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/queue&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">in</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">out</span><span style="color: #000000; ">;
+}
+
+
+
+</span></pre>
+   </body>
+</html>

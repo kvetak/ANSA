@@ -1,0 +1,141 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>Ieee80211ACKFrame</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mac-Ieee80211Frame.msg.html">src/linklayer/ieee80211/mac/Ieee80211Frame.msg</a></b><br/>
+<p>Format of the 802.11 ACK frame</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211ACKFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211ACKFrame.html" title="Packet Ieee80211ACKFrame" alt="" coords="5,6,152,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211ACKFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211ACKFrame.html" title="Packet Ieee80211ACKFrame" alt="" coords="27,83,173,111">
+<area shape="rect" id="node2" href="Ieee80211OneAddressFrame.html" title="Packet Ieee80211OneAddressFrame" alt="" coords="5,6,195,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211OneAddressFrame.html">Ieee80211OneAddressFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of a 802.11 frame with address1 present, like ACK and CTS</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>type</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>type and subtype</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>byteLength</td>
+   <td>
+      <i>
+</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>toDS</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>fromDS</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>retry</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>moreFragments</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>duration</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>"duration" in the Duration/ID field (-1=no duration)</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>AID</td>
+   <td>
+      <i>
+short</i>
+   </td>
+   <td>
+<p>"id" (Association ID) in the Duration/ID field (-1=no ID)</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>receiverAddress</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>aka address1</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Format of the 802.11 ACK frame
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211ACKFrame</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211OneAddressFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">type</span><span style="color: #000000; "> = </span><span style="color: #000000; ">ST_ACK</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,28 @@
+ifconfig:
+
+# ethernet card 0 of router - connected to DUT
+name: eth0
+  inet_addr: 192.168.1.6
+  Mask: 255.255.255.252
+  Groups: 224.0.0.5
+  MTU: 1500
+  Metric: 1
+  POINTTOPOINT MULTICAST
+
+# ethernet card 1 of router - connected to Generator
+name: eth1
+  inet_addr: 192.168.1.10
+  Mask: 255.255.255.252
+  Groups: 224.0.0.5
+  MTU: 1500
+  Metric: 1
+  POINTTOPOINT MULTICAST
+
+ifconfigend.
+
+route:
+
+224.0.0.0 * 240.0.0.0   H 0 eth0
+224.0.0.0 * 240.0.0.0   H 0 eth1
+
+routeend.

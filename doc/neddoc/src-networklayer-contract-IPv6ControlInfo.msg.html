@@ -1,0 +1,96 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/contract/IPv6ControlInfo.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPv6ControlInfo.html">IPv6ControlInfo</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Control information for sending/receiving packets over IPv6.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPv6Address.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPProtocolId_m.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Control information for sending/receiving packets over \IPv6.
+//
+// To send a packet over \IPv6, fill in an IPv6ControlInfo object,
+// attach it to the packet with the C++ method setControlInfo(),
+// the send it to the IPv6 module.
+//
+// When sending, the following fields are required:
+// - protocol: a value from IPProtocolId
+// - destAddr
+//
+// Optional fields:
+// - srcAddr: it will be set to the address of the outgoing interface
+// - timeToLive
+//
+// When IPv6 delivers a packet to higher layers, it also attaches an 
+// IPv6ControlInfo to it. It fills in the following fields: 
+//  - srcAddr, destAddr, protocol, hopLimit: values from the original datagram
+//  - interfaceId: the interface on which the datagram arrived, or -1 if it was
+//    created locally
+//
+// IPv6 also puts the original datagram object into the control info, because
+// it may be needed by higher layers.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">protocol</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">);  </span><span style="color: #808080; font-style: italic; ">// transport layer protocol
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddr</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// destination IPv6 address
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddr</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// source IPv6 address
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">hopLimit</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// hop limit
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">interfaceId</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// interface on which the datagram was received, or
+</span><span style="color: #000000; ">                          </span><span style="color: #808080; font-style: italic; ">// should be sent (see InterfaceTable)
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

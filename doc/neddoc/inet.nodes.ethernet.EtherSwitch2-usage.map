@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.nodes.ethernet.EtherSwitch2.html" title="Compound Module EtherSwitch2" alt="" coords="63,83,161,111">
+<area shape="rect" id="node2" href="inet.linklayer.ethernet.EtherMAC2.html" title="Simple Module EtherMAC2" alt="" coords="5,161,96,189">
+<area shape="rect" id="node4" href="inet.linklayer.etherswitch.MACRelayUnit.html" title="Module Interface MACRelayUnit" alt="" coords="120,161,229,189">
+<area shape="rect" id="node6" href="inet.examples.ethernet.lans.SwitchedDuplexLAN.html" title="Network SwitchedDuplexLAN" alt="" coords="41,6,183,34">

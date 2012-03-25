@@ -1,0 +1,162 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Struct <i>TELinkStateInfo</i></h2>
+<b>File: <a href="src-networklayer-ted-TED.msg.html">src/networklayer/ted/TED.msg</a></b><br/>
+<p>Represents a link in the <a href="inet.networklayer.ted.TED.html">TED</a> and in <a href="LinkStateMsg.html">LinkStateMsg</a> packets.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="TELinkStateInfo-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TELinkStateInfo.html" title="Struct TELinkStateInfo" alt="" coords="5,83,120,111">
+<area shape="rect" id="node2" href="LinkStateMsg.html" title="Packet LinkStateMsg" alt="" coords="12,6,113,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="TELinkStateInfo-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TELinkStateInfo.html" title="Struct TELinkStateInfo" alt="" coords="5,6,120,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>advrouter</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td>
+<p>routerId of originator of this link state entry</p>
+</td>
+</tr>
+<tr class="local">
+   <td>linkid</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td>
+<p>identifies link within advrouter; set to peer's address</p>
+</td>
+</tr>
+<tr class="local">
+   <td>local</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td>
+<p>address of local interface of this link</p>
+</td>
+</tr>
+<tr class="local">
+   <td>remote</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td>
+<p>address of "gateway" to peer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>metric</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td>
+<p>link metric</p>
+</td>
+</tr>
+<tr class="local">
+   <td>MaxBandwidth</td>
+   <td>
+      <i>
+double</i>
+   </td>
+   <td>
+<p>maximum bandwidth (bps)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>UnResvBandwidth</td>
+   <td>
+      <i>
+double[8]</i>
+   </td>
+   <td>
+<p>unreserved bandwidths --FIXME indexed by what?</p>
+</td>
+</tr>
+<tr class="local">
+   <td>timestamp</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>time of originating this entry</p>
+</td>
+</tr>
+<tr class="local">
+   <td>sourceId</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td>
+<p>FIXME looks like this is the same as advrouter -- really needed?</p>
+</td>
+</tr>
+<tr class="local">
+   <td>messageId</td>
+   <td>
+      <i>
+unsigned int</i>
+   </td>
+   <td>
+<p>id assigned to originating <a href="LinkStateMsg.html">LinkStateMsg</a> (FIXME or?)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>state</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>false = down, true = up</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Represents a link in the TED and in LinkStateMsg packets.
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">TELinkStateInfo</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">advrouter</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// routerId of originator of this link state entry
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">linkid</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// identifies link within advrouter; set to peer's address
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">local</span><span style="color: #000000; ">;     </span><span style="color: #808080; font-style: italic; ">// address of local interface of this link
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">remote</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// address of &quot;gateway&quot; to peer
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">metric</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// link metric
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">MaxBandwidth</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// maximum bandwidth (bps)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">UnResvBandwidth</span><span style="color: #000000; ">[</span><span style="color: #008000; ">8</span><span style="color: #000000; ">]; </span><span style="color: #808080; font-style: italic; ">// unreserved bandwidths --FIXME indexed by what?
+</span><span style="color: #000000; ">
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">timestamp</span><span style="color: #000000; ">;    </span><span style="color: #808080; font-style: italic; ">// time of originating this entry
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceId</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// FIXME looks like this is the same as advrouter -- really needed?
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">messageId</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// id assigned to originating LinkStateMsg (FIXME or?)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">state</span><span style="color: #000000; ">;             </span><span style="color: #808080; font-style: italic; ">// false = down, true = up
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

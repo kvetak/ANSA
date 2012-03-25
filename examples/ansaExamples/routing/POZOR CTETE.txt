@@ -1,0 +1,5 @@
+Tak snad by u¾ v¹echny simulace mìli jet. Jen je problém s redistribucí, padá 
+to na nìèem s OSPF. Ale asi to bude jen nìjaká kravina, do které nevidím,
+ale i tak je to zvlá¹tní, pøed tím to nedìlalo...
+
+TO OPONENT: funkèní verzi má¹ na DVD, já za tohle fakt nemù¾u :-/

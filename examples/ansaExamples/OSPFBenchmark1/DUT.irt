@@ -1,0 +1,19 @@
+ifconfig:
+
+# ppp card 0 of router - connected to Generator
+name: ppp0
+  inet_addr: 192.168.1.1
+  Mask: 255.255.255.252
+  Groups: 224.0.0.5
+  MTU: 1500
+  Metric: 1
+  POINTTOPOINT MULTICAST
+
+
+ifconfigend.
+
+route:
+
+224.0.0.0 * 240.0.0.0   H 0 ppp0
+
+routeend.

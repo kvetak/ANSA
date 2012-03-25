@@ -1,0 +1,114 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>RoutingTable6</i></h2>
+<b>Package:</b> inet.networklayer.ipv6<br/><b>File: <a href="src-networklayer-ipv6-RoutingTable6.ned.html">src/networklayer/ipv6/RoutingTable6.ned</a></b><br/><p><a href="../doxy/class_routing_table6.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>IPv6 Routing Table and Neighbour Discovery data structures.</p>
+<p><b>See also:</b> <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>, <a href="inet.networklayer.icmpv6.IPv6NeighbourDiscovery.html">IPv6NeighbourDiscovery</a>, <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a></p>
+<img src="inet.networklayer.ipv6.RoutingTable6-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.ipv6.RoutingTable6.html" title="RoutingTable6" alt="RoutingTable6" coords="0,31,131,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv6.RoutingTable6-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv6.RoutingTable6.html" title="Simple Module RoutingTable6" alt="" coords="45,83,152,111">
+<area shape="rect" id="node2" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="5,6,77,34">
+<area shape="rect" id="node4" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="101,6,211,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv6.RoutingTable6-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv6.RoutingTable6.html" title="Simple Module RoutingTable6" alt="" coords="5,6,112,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.Router6.html">Router6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IPv6 router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.StandardHost6.html">StandardHost6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IPv6 host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>routingTableFile</td>
+   <td>
+      <i>xml</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>isRouter</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/table</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \IPv6 Routing Table and Neighbour Discovery data structures.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> IPv6, IPv6NeighbourDiscovery, ICMPv6
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">RoutingTable6</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">xml</span><span style="color: #000000; "> </span><span style="color: #000000; ">routingTableFile</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">isRouter</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/table&quot;</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

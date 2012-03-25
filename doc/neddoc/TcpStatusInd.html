@@ -1,0 +1,46 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Enum <i>TcpStatusInd</i></h2>
+<b>File: <a href="src-transport-contract-TCPCommand.msg.html">src/transport/contract/TCPCommand.msg</a></b><br/>
+<p>TCP indications, sent by <a href="inet.transport.tcp.TCP.html">TCP</a> to the application. <a href="inet.transport.tcp.TCP.html">TCP</a> will set these
+constants as message kind on messages it sends to the application.</p>
+<p><b>See also:</b> <a href="TCPCommand.html">TCPCommand</a>, <a href="TCPStatusInfo.html">TCPStatusInfo</a>, <a href="inet.transport.tcp.TCP.html">TCP</a></p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="TcpStatusInd-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TcpStatusInd.html" title="Enum TcpStatusInd" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="TcpStatusInd-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TcpStatusInd.html" title="Enum TcpStatusInd" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \TCP indications, sent by TCP to the application. TCP will set these
+// constants as message kind on messages it sends to the application.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> TCPCommand, TCPStatusInfo, TCP
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">TcpStatusInd</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">TCP_I_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;              </span><span style="color: #808080; font-style: italic; ">// data packet (set on data packet)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_URGENT_DATA</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// urgent data (set on data packet)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_ESTABLISHED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// connection established
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_PEER_CLOSED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;       </span><span style="color: #808080; font-style: italic; ">// FIN received from remote TCP
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_CLOSED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5</span><span style="color: #000000; ">;            </span><span style="color: #808080; font-style: italic; ">// connection closed normally (via FIN exchange)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_CONNECTION_REFUSED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">6</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// connection refused
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_CONNECTION_RESET</span><span style="color: #000000; "> = </span><span style="color: #008000; ">7</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// connection reset
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_TIMED_OUT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8</span><span style="color: #000000; ">;         </span><span style="color: #808080; font-style: italic; ">// conn-estab timer went off, or max retransm. count reached
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">TCP_I_STATUS</span><span style="color: #000000; "> = </span><span style="color: #008000; ">9</span><span style="color: #000000; ">;            </span><span style="color: #808080; font-style: italic; ">// status info (will carry TCPStatusInfo)
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Package inet.linklayer.radio</h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.radio.GenericRadio.html">GenericRadio</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Generic radio module. The implementation is largely based on the
+Mobility Framework's <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> and Decider modules.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.radio.Ieee80211Radio.html">Ieee80211Radio</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Physical layer for the IEEE 802.11 models. Its external interface
+(including gates and how it communicates with other modules)
+is the same as the <a href="inet.linklayer.radio.Radio.html">Radio</a> module's.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.linklayer.radio.Radio.html">Radio</a>
+   </td>
+   <td>
+<i>module&nbsp;interface</i>
+   </td>
+   <td>
+
+<p>Prototype for radio modules. <a href="inet.linklayer.radio.Radio.html">Radio</a> modules deal with the transmission
+of frames over a wireless medium (the radio channel).</p>
+
+   </td>
+</tr>
+</table>
+   </body>
+</html>

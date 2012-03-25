@@ -1,0 +1,272 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/rsvp_te/IntServ.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="SessionObj_t.html">SessionObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Session Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="RsvpHopObj_t.html">RsvpHopObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: <a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a> HOP Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SenderTemplateObj_t.html">SenderTemplateObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Sender Template Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SenderTspecObj_t.html">SenderTspecObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Sender Tspec Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="FlowSpecObj_t.html">FlowSpecObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Sender Tspec Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="FilterSpecObj_t.html">FilterSpecObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Sender Template Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="LabelRequestObj_t.html">LabelRequestObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Label Request Object Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="SenderDescriptor_t.html">SenderDescriptor_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Sender Descriptor Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EroObj_t.html">EroObj_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Explicit Routing Object Structure</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="FlowDescriptor_t.html">FlowDescriptor_t</a>
+   </td>
+   <td>
+<i>struct</i>
+   </td>
+   <td>
+
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Flow Descriptor Structure</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+// (C) 2003 Xuan Thang Nguyen
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #808080; font-style: italic; ">//
+// This file defines data structures used in IntServ services
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPAddress.h&quot;</span><span style="color: #000000; ">
+</span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">vector</span><span style="color: #000000; ">&lt;</span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; ">&gt; </span><span style="color: #000000; ">IPAddressVector</span><span style="color: #000000; ">;
+</span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">vector</span><span style="color: #000000; ">&lt;</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">EroObj_t</span><span style="color: #000000; ">&gt; </span><span style="color: #000000; ">EroVector</span><span style="color: #000000; ">;
+</span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">vector</span><span style="color: #000000; ">&lt;</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FlowDescriptor_t</span><span style="color: #000000; ">&gt; </span><span style="color: #000000; ">FlowDescriptorVector</span><span style="color: #000000; ">;
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPAddressVector</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">EroVector</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Session Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SessionObj_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">Tunnel_Id</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">Extended_Tunnel_Id</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">DestAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">setupPri</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">holdingPri</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: RSVP HOP Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">RsvpHopObj_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">Next_Hop_Address</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">Logical_Interface_Handle</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Sender Template Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">SrcAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">Lsp_Id</span><span style="color: #000000; "> = -</span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Sender Tspec Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTspecObj_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">req_bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Sender Tspec Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FlowSpecObj_t</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTspecObj_t</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Sender Template Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FilterSpecObj_t</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; ">
+{
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Label Request Object Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">LabelRequestObj_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">// request;
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">prot</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Sender Descriptor Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">Sender_Template_Object</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderTspecObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">Sender_Tspec_Object</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Explicit Routing Object Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">EroObj_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">L</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">node</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Flow Descriptor Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">FlowDescriptor_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">FlowSpecObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">Flowspec_Object</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">FilterSpecObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">Filter_Spec_Object</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPAddressVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">RRO</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">label</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

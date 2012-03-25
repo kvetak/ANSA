@@ -1,0 +1,247 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>IPv6</i></h2>
+<b>Package:</b> inet.networklayer.ipv6<br/><b>File: <a href="src-networklayer-ipv6-IPv6.ned.html">src/networklayer/ipv6/IPv6.ned</a></b><br/><p><a href="../doxy/class_i_pv6.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Implements the IPv6 protocol.</p>
+<p>An overview of the IPv6 implementation in the INET Framework is
+provided <a href="ipv6overview.html">here</a>.</p>
+<p>The IPv6 protocol header is represented by the <a href="IPv6Datagram.html">IPv6Datagram</a> message class.</p>
+<p><b>Interfacing with higher layer protocols</b></p>
+<p>To send a packet over IPv6 from a higher layer protocol, the module should
+fill in an <a href="IPv6ControlInfo.html">IPv6ControlInfo</a> object, attach it to the packet with cMessage's
+setControlInfo() method, the send it to the <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> module.</p>
+<p>When <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> sends up a packet to a higher layer protocol, it will also attach
+an <a href="IPv6ControlInfo.html">IPv6ControlInfo</a> to the packet, with the source and destination IPv6 address,
+etc. of the IPv6 datagram in which the packet arrived.</p>
+<p><a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> can serve several higher-layer protocols. When delivering packets
+to them, the output gate is determined from the Protocol field in the
+IPv6 datagram class. The protocol-to-gateindex mapping must be given
+in the protocolMapping string parameter, in the following format:
+<pre>
+protocolnumber:gateindex, protocolnumber:gateindex, ...
+</pre></p>
+<p>The recommended setting is:</p>
+  <ul><li>TCP (6) : 0</li>
+  <li>UDP (17) : 1</li>
+  <li>RSVP (46) : 2</li>
+  <li>ICMPv6 (89) : 3</li></ul>
+<p>That is, <tt>protocolMapping="6:0,17:1,46:2,89:3"</tt></p>
+<p><b>Routing and interfacing with lower layers</b></p>
+<p>The routing table is stored in the module <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>. When a datagram
+needs to be routed, IPv6 queries <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a> for the output interface
+(or "port") and next hop address of the packet. This is done by directly
+calling C++ methods of <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>. No message exchange with <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>
+takes place.</p>
+<p>Routing protocol implementations can also query and manipulate the route table
+by calling <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>'s methods in C++.</p>
+<p><b>Performance model, QoS</b></p>
+<p>In the current form, <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> contains a FIFO which queues up IPv6 datagrams;
+datagrams are processed in order. The processing time is determined by the
+procDelay module parameter.</p>
+<p><b>See also:</b> <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>, <a href="IPv6ControlInfo.html">IPv6ControlInfo</a>, <a href="inet.networklayer.icmpv6.IPv6NeighbourDiscovery.html">IPv6NeighbourDiscovery</a>, <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a></p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.networklayer.ipv6.IPv6-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.networklayer.ipv6.IPv6.html" title="IPv6" alt="IPv6" coords="0,31,70,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv6.IPv6-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv6.IPv6.html" title="Simple Module IPv6" alt="" coords="24,83,96,111">
+<area shape="rect" id="node2" href="inet.nodes.ipv6.NetworkLayer6.html" title="Compound Module NetworkLayer6" alt="" coords="5,6,115,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.networklayer.ipv6.IPv6-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv6.IPv6.html" title="Simple Module IPv6" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.NetworkLayer6.html">NetworkLayer6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Represents an <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> network layer (L3).</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>protocolMapping</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/network2</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>transportIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>transportOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>queueIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>queueOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>icmpIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>icmpOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ndIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ndOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Implements the \IPv6 protocol.
+//
+// An overview of the \IPv6 implementation in the INET Framework is
+// provided </span><span style="color: #800000; ">&lt;a href=&quot;ipv6overview.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">here</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+//
+// The \IPv6 protocol header is represented by the IPv6Datagram message class.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Interfacing with higher layer protocols</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// To send a packet over \IPv6 from a higher layer protocol, the module should
+// fill in an IPv6ControlInfo object, attach it to the packet with cMessage's
+// setControlInfo() method, the send it to the IPv6 module.
+//
+// When IPv6 sends up a packet to a higher layer protocol, it will also attach
+// an IPv6ControlInfo to the packet, with the source and destination \IPv6 address,
+// etc. of the \IPv6 datagram in which the packet arrived.
+//
+// IPv6 can serve several higher-layer protocols. When delivering packets
+// to them, the output gate is determined from the Protocol field in the
+// \IPv6 datagram class. The protocol-to-gateindex mapping must be given
+// in the protocolMapping string parameter, in the following format:
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">
+// protocolnumber:gateindex, protocolnumber:gateindex, ...
+// </span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The recommended setting is:
+// - \TCP (6) : 0
+// - \UDP (17) : 1
+// - \RSVP (46) : 2
+// - \ICMPv6 (89) : 3
+//
+// That is, </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">protocolMapping=&quot;6:0,17:1,46:2,89:3&quot;</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Routing and interfacing with lower layers</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The routing table is stored in the module RoutingTable6. When a datagram
+// needs to be routed, \IPv6 queries RoutingTable6 for the output interface
+// (or &quot;port&quot;) and next hop address of the packet. This is done by directly
+// calling C++ methods of RoutingTable6. No message exchange with RoutingTable6
+// takes place.
+//
+</span><span style="color: #0000ff; font-style: italic; ">//#</span><span style="color: #000080; ">FIXME</span><span style="color: #0000ff; font-style: italic; "> </span><span style="color: #000080; ">TBD</span><span style="color: #0000ff; font-style: italic; "> describe operation
+</span><span style="color: #808080; font-style: italic; ">//
+// Routing protocol implementations can also query and manipulate the route table
+// by calling RoutingTable6's methods in C++.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Performance model, QoS</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// In the current form, IPv6 contains a FIFO which queues up \IPv6 datagrams;
+// datagrams are processed in order. The processing time is determined by the
+// procDelay module parameter.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RoutingTable6, IPv6ControlInfo, IPv6NeighbourDiscovery, ICMPv6
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">procDelay</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@unit</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;s&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">protocolMapping</span><span style="color: #000000; ">;
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/network2&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">,</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">,</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6Datagram</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6Datagram</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">icmpIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">icmpOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ndIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ndOut</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

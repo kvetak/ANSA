@@ -1,0 +1,92 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">NED File <i>src/networklayer/extras/FailureManager.ned</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.networklayer.extras.FailureManager.html">FailureManager</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Module for managing node failure and recovery in the network. If used,
+it should have exactly one instance in the whole network.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Vojtech Janota
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">package</span><span style="color: #000000; "> </span><span style="color: #000000; ">inet</span><span style="color: #000000; ">.</span><span style="color: #000000; ">networklayer</span><span style="color: #000000; ">.</span><span style="color: #000000; ">extras</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Module for managing node failure and recovery in the network. If used,
+// it should have exactly one instance in the whole network.
+//
+// FailureManager does not send or receive messages, and has no parameters
+// either. Instead, it is invoked from ScenarioManager scripts, for example:
+//
+// </span><span style="color: #800000; ">&lt;pre&gt;</span><span style="color: #808080; font-style: italic; ">&lt;nohtml&gt;
+// &lt;scenario&gt;
+//   &lt;at t=&quot;2&quot;&gt;
+//     &lt;shutdown module=&quot;failureManager&quot; target=&quot;LSR2&quot;/&gt;
+//   &lt;/at&gt;
+//   &lt;at t=&quot;10&quot;&gt;
+//     &lt;startup module=&quot;failureManager&quot; target=&quot;LSR2&quot;/&gt;
+//   &lt;/at&gt;
+// &lt;/scenario&gt;
+// &lt;/nohtml&gt;</span><span style="color: #800000; ">&lt;/pre&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// It is currently only used with MPLS simulations, and supports the following
+// commands:
+//
+// - </span><span style="color: #800000; ">&lt;code&gt;</span><span style="color: #808080; font-style: italic; ">shutdown</span><span style="color: #800000; ">&lt;/code&gt;</span><span style="color: #808080; font-style: italic; ">: replaces a router module named by the </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">target</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> attribute
+//   with another module that represents a failed router. It currently replaces
+//   RSVP_LSR with RSVP_FAILED, LDP_LSR with LDP_FAILED, and QuaggaRouter with
+//   FailedRouter.
+// - </span><span style="color: #800000; ">&lt;code&gt;</span><span style="color: #808080; font-style: italic; ">startup</span><span style="color: #800000; ">&lt;/code&gt;</span><span style="color: #808080; font-style: italic; ">: the inverse of </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">shutdown</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; ">: replaces a </span><span style="color: #800000; ">&lt;i&gt;</span><span style="color: #808080; font-style: italic; ">failed</span><span style="color: #800000; ">&lt;/i&gt;</span><span style="color: #808080; font-style: italic; ">
+//   router model named by the </span><span style="color: #800000; ">&lt;tt&gt;</span><span style="color: #808080; font-style: italic; ">target</span><span style="color: #800000; ">&lt;/tt&gt;</span><span style="color: #808080; font-style: italic; "> attribute with an operational host/router
+//   module type.
+//
+// The operation of FailureManager is likely to get refined and generalized in next
+// versions.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">FailureManager</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">mpls</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/control_s&quot;</span><span style="color: #000000; ">);
+}
+
+
+</span></pre>
+   </body>
+</html>

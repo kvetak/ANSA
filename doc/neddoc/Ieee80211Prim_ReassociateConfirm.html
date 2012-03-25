@@ -1,0 +1,69 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>Ieee80211Prim_ReassociateConfirm</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211Primitives.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211Primitives.msg</a></b><br/>
+<p>MLME-REASSOCIATE.confirm is very similar to MLME-ASSOCIATE.confirm</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211Prim_ReassociateConfirm-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211Prim_ReassociateConfirm.html" title="Class Ieee80211Prim_ReassociateConfirm" alt="" coords="5,6,240,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211Prim_ReassociateConfirm-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211Prim_ReassociateConfirm.html" title="Class Ieee80211Prim_ReassociateConfirm" alt="" coords="5,83,240,111">
+<area shape="rect" id="node2" href="Ieee80211Prim_AssociateConfirm.html" title="Class Ieee80211Prim_AssociateConfirm" alt="" coords="13,6,232,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211Prim_AssociateConfirm.html">Ieee80211Prim_AssociateConfirm</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Losely based on MLME-ASSOCIATE.confirm
+Possible result codes: SUCCESS, INVALID_PARAMETERS, TIMEOUT, REFUSED</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="inherited">
+   <td>resultCode</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// MLME-REASSOCIATE.confirm is very similar to MLME-ASSOCIATE.confirm
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_ReassociateConfirm</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_AssociateConfirm</span><span style="color: #000000; ">
+{
+}
+
+</span></pre>
+   </body>
+</html>

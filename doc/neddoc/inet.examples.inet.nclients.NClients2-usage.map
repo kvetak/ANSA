@@ -1,0 +1,5 @@
+<area shape="rect" id="node1" href="inet.examples.inet.nclients.NClients2.html" title="Network NClients2" alt="" coords="253,6,333,34">
+<area shape="rect" id="node2" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="Simple Module FlatNetworkConfigurator" alt="" coords="5,83,168,111">
+<area shape="rect" id="node4" href="inet.examples.inet.nclients.NClients2.ethernetline2.html" title="Channel ethernetline2" alt="" coords="192,83,288,111">
+<area shape="rect" id="node6" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="312,83,384,111">
+<area shape="rect" id="node8" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="408,83,509,111">

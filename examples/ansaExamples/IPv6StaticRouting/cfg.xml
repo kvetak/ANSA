@@ -1,0 +1,130 @@
+<Devices>
+	<Host id="10.0.0.1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.0.1</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:a::1</DefaultRouter>
+	</Host>
+	
+	<Host id="10.0.0.2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.0.2</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:a::1</DefaultRouter>
+	</Host>
+	
+	<Host id="10.0.0.3">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.0.3</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:a::1</DefaultRouter>
+	</Host>
+	
+	<Host id="10.0.1.1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.1.1</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:b::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:b::1</DefaultRouter>
+	</Host>
+
+	<Router id="192.0.0.1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.0.0.1</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:12::1/64</IPv6Address>
+			</Interface>
+			<Interface name="eth1">
+				<IPv6Address>2001:13::1/64</IPv6Address>
+			</Interface>
+			<Interface name="eth2">
+				<IPv6Address>2001:a::1/64</IPv6Address>
+				<NdpAdvSendAdvertisements>yes</NdpAdvSendAdvertisements>
+				<NdpAdvPrefix valid="2592000" preferred="604800">2001:a::/64</NdpAdvPrefix>
+			</Interface>
+		</Interfaces>
+		
+		<Routing6>
+			<Static>
+				<Route>
+					<NetworkAddress>2001:b::/64</NetworkAddress>
+    				<NextHopAddress>2001:12::2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>2001:b::/64</NetworkAddress>
+    				<NextHopAddress>2001:13::3</NextHopAddress>
+    				<AdministrativeDistance>20</AdministrativeDistance>
+				</Route>
+			</Static>			
+		</Routing6>
+	</Router>
+	
+	<Router id="192.0.0.2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.0.0.2</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:12::2/64</IPv6Address>
+			</Interface>
+			<Interface name="eth1">
+				<IPv6Address>2001:23::2/64</IPv6Address>
+			</Interface>
+			<Interface name="eth2">
+				<IPv6Address>2001:b::1/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<Routing6>
+			<Static>
+				<Route>
+					<NetworkAddress>2001:a::/64</NetworkAddress>
+    				<NextHopAddress>2001:12::1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>2001:a::/64</NetworkAddress>
+    				<NextHopAddress>2001:23::3</NextHopAddress>
+    				<AdministrativeDistance>20</AdministrativeDistance>
+				</Route>
+			</Static>			
+		</Routing6>
+	</Router>
+	
+	<Router id="192.0.0.3">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.0.0.3</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:13::3/64</IPv6Address>
+			</Interface>
+			<Interface name="eth1">
+				<IPv6Address>2001:23::3/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<Routing6>
+			<Static>
+				<Route>
+					<NetworkAddress>2001:a::/64</NetworkAddress>
+    				<NextHopAddress>2001:13::1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>2001:b::/64</NetworkAddress>
+    				<NextHopAddress>2001:23::2</NextHopAddress>
+				</Route>
+			</Static>			
+		</Routing6>
+	</Router>
+</Devices>

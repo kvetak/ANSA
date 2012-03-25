@@ -1,0 +1,64 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>LargeNet model description</h2>
+<p>The <a href="inet.examples.ethernet.lans.LargeNet.html">LargeNet</a> model demonstrates how one can put together models of large
+LANs with little effort, making use of MAC auto-configuration.</p>
+<p><a href="inet.examples.ethernet.lans.LargeNet.html">LargeNet</a> models a large Ethernet campus backbone. As configured in the
+default omnetpp.ini, it contains altogether about 8000 computers
+and 900 switches and hubs. This results in about 165MiB process size
+on my (32-bit) linux box when I run the simulation.
+The model mixes all kinds of Ethernet technology: Gigabit Ethernet,
+100Mb full duplex, 100Mb half duplex, 10Mb UTP, 10Mb bus ("thin Ethernet"),
+switched hubs, repeating hubs.</p>
+<p>The topology is in <a href="inet.examples.ethernet.lans.LargeNet.html">LargeNet</a>.ned, and it looks like this: there's chain
+of n=15 large "backbone" switches (switchBB[]) as well as four more
+large switches (switchA, switchB, switchC, switchD) connected to
+somewhere the middle of the backbone (switchBB[4]). These 15+4 switches
+make up the backbone; the n=15 number is configurable in omnetpp.ini.</p>
+<p>Then there're several smaller LANs hanging off each backbone switch.
+There're three types of LANs: small, medium and large (represented by
+compound module types <a href="inet.examples.ethernet.lans.SmallLAN.html">SmallLAN</a>, <a href="inet.examples.ethernet.lans.MediumLAN.html">MediumLAN</a>, <a href="inet.examples.ethernet.lans.LargeLAN.html">LargeLAN</a>). A small LAN
+consists of a few computers on a hub (100Mb half duplex); a medium
+LAN consists of a smaller switch with a hub on one of its port
+(and computers on both); the large one also has a switch and a hub,
+plus an Ethernet bus hanging of one port of the hub (there's still hubs
+around with one BNC connector besides the UTP ones).
+By default there're 5..15 LANs of each type hanging off each backbone
+switch. (These numbers are also omnetpp.ini parameters like the length
+of the backbone.)</p>
+<p>The application model which generates load on the simulated LAN is
+simple yet powerful. It can be used as a rough model for any
+request-response based protocol such as SMB/CIFS (the Windows file
+sharing protocol), HTTP, or a database client-server protocol.</p>
+<p>Every computer runs a client application (<a href="inet.applications.ethernet.EtherAppCli.html">EtherAppCli</a>) which connects
+to one of the servers. There's one server attached to switches A, B,
+C and D each: serverA, serverB, serverC and serverD -- server selection
+is configured in omnetpp.ini). The servers run <a href="inet.applications.ethernet.EtherAppSrv.html">EtherAppSrv</a>.
+Clients periodically send a request to the server, and the request
+packet contains how many bytes the client wants the server to send back
+(this can mean one or more Ethernet frames, depending on the byte count).
+ Currently the request and reply lengths are configured in omnetpp.ini
+as intuniform(50,1400) and truncnormal(5000,5000).</p>
+<p>The volume of the traffic can most easily be controlled with the
+time period between sending requests; this is currently
+set in omnetpp.ini to exponential(0.50) (that is, average 2
+requests per second). This already causes frames to be dropped
+in some of the backbone switches, so the network is a bit
+overloaded with the current settings.</p>
+<p>The model generates extensive statistics. All MACs (and most other
+modules too) write statistics into omnetpp.sca at the end
+of the simulation: number of frames sent, received, dropped, etc.
+These are only basic statistics, however it still makes the
+scalar file to be several ten megabytes in size. You can use
+the analysis tools provided with OMNeT++ to visualized the data
+in this file. (If the file size is too big, writing statistics
+can be disabled, by putting **.record-scalar=false in the ini file.)
+The model can also record output vectors, but this is currently
+disabled in omnetpp.ini because the generated file can easily reach
+gigabyte sizes.</p>
+   </body>
+</html>

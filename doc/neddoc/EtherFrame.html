@@ -1,0 +1,145 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>EtherFrame</i></h2>
+<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/>
+<p>Common base class for classes representing Ethernet II and 802.3 frame types,
+containing their common header fields.</p>
+<p>This class should never be instantiated by the models, only specific
+subclasses: <a href="EthernetIIFrame.html">EthernetIIFrame</a>, <a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a> and <a href="EtherFrameWithSNAP.html">EtherFrameWithSNAP</a>.</p>
+<p>Source and destination MAC address are stored in data members.
+Other fields include:</p>
+  <ul><li>preamble: not stored (only contributes length)</li>
+  <li>length: stored in cMessage length, not stored explicitly</li>
+  <li>payload: stored a encapsulated packet (cMessage::encapsulate())</li>
+  <li>crc: represented by cMessage::hasBitError()</li></ul>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="EtherFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="EtherFrame.html" title="Packet EtherFrame" alt="" coords="5,6,96,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="EtherFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="EtherFrame.html" title="Packet EtherFrame" alt="" coords="281,6,372,34">
+<area shape="rect" id="node2" href="EtherFrameWithLLC.html" title="Packet EtherFrameWithLLC" alt="" coords="5,83,147,111">
+<area shape="rect" id="node4" href="EtherFrameWithSNAP.html" title="Packet EtherFrameWithSNAP" alt="" coords="171,83,325,111">
+<area shape="rect" id="node6" href="EthernetIIFrame.html" title="Packet EthernetIIFrame" alt="" coords="349,83,464,111">
+<area shape="rect" id="node8" href="EtherPauseFrame.html" title="Packet EtherPauseFrame" alt="" coords="488,83,613,111">
+</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet frame with 802.3 LLC header.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherFrameWithSNAP.html">EtherFrameWithSNAP</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet frame with 802.3 LLC and SNAP headers.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EthernetIIFrame.html">EthernetIIFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet II headers contain a 16-bit <a href="EtherType.html">EtherType</a> to identify
+the encapsulated protocol.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="EtherPauseFrame.html">EtherPauseFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Ethernet frame used by the PAUSE protocol</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>dest</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>src</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>MessageId id; -- uncomment for tracing frames</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Common base class for classes representing Ethernet II and 802.3 frame types,
+// containing their common header fields.
+//
+// This class should never be instantiated by the models, only specific
+// subclasses: EthernetIIFrame, EtherFrameWithLLC and EtherFrameWithSNAP.
+//
+// Source and destination MAC address are stored in data members.
+// Other fields include:
+//  - preamble: not stored (only contributes length)
+//  - length: stored in cMessage length, not stored explicitly
+//  - payload: stored a encapsulated packet (cMessage::encapsulate())
+//  - crc: represented by cMessage::hasBitError()
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">dest</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">src</span><span style="color: #000000; ">;
+        </span><span style="color: #808080; font-style: italic; ">//MessageId id; -- uncomment for tracing frames
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

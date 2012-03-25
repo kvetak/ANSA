@@ -1,0 +1,229 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>TCP_NSC</i></h2>
+<b>Package:</b> inet.transport.tcp_nsc<br/><b>File: <a href="src-transport-tcp_nsc-TCP_NSC.ned.html">src/transport/tcp_nsc/TCP_NSC.ned</a></b><br/><p><a href="../doxy/class_t_c_p___n_s_c.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>TCP model based on the Network Simulation Cradle by Sam Jansen.
+TCP segments are represented by the class <a href="ByteArrayMessage.html">ByteArrayMessage</a> which 
+carries a network byte order packet. Compatible with both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+<p><b>Communication with clients</b></p>
+<p>For communication between client applications and <a href="inet.transport.tcp.TCP.html">TCP</a>, the <a href="TcpCommandCode.html">TcpCommandCode</a>
+and <a href="TcpStatusInd.html">TcpStatusInd</a> enums are used as message kinds, and <a href="TCPCommand.html">TCPCommand</a>
+and its subclasses are used as control info.</p>
+<p>To open a connection from a client app, send a cMessage to <a href="inet.transport.tcp.TCP.html">TCP</a> with
+TCP_C_OPEN_ACTIVE as message kind and a <a href="TCPOpenCommand.html">TCPOpenCommand</a> object filled in
+and attached to it as control info. (The peer <a href="inet.transport.tcp.TCP.html">TCP</a> will have to be LISTENing;
+the server app can achieve this with a similar cMessage but TCP_C_OPEN_PASSIVE
+message kind.) With passive open, there's a possibility to cause the connection
+"fork" on an incoming connection, leaving the original connection LISTENing
+on the port (see the fork field in <a href="TCPOpenCommand.html">TCPOpenCommand</a>).</p>
+<p>The client app can send data by assigning the TCP_C_SEND message kind
+and attaching a <a href="TCPSendCommand.html">TCPSendCommand</a> control info object to the data packet,
+and sending it to <a href="inet.transport.tcp.TCP.html">TCP</a>. The server app will receive data as messages
+with the TCP_I_DATA message kind and <a href="TCPSendCommand.html">TCPSendCommand</a> control info.
+(Whether you'll receive the same or identical messages, or even whether
+you'll receive data in the same sized chunks as sent depends on the
+sendQueueClass and receiveQueueClass used, see below. With
+TCPVirtualDataSendQueue and TCPVirtualDataRcvQueue set, message objects
+and even message boundaries are not preserved.)</p>
+<p>To close, the client sends a cMessage to <a href="inet.transport.tcp.TCP.html">TCP</a> with the TCP_C_CLOSE message kind
+and <a href="TCPCommand.html">TCPCommand</a> control info.</p>
+<p><a href="inet.transport.tcp.TCP.html">TCP</a> sends notifications to the application whenever there's a significant
+change in the state of the connection: established, remote <a href="inet.transport.tcp.TCP.html">TCP</a> closed,
+closed, timed out, connection refused, connection reset, etc. These
+notifications are also cMessages with message kind TCP_I_xxx
+(TCP_I_ESTABLISHED, etc.) and <a href="TCPCommand.html">TCPCommand</a> as control info.</p>
+<p>One <a href="inet.transport.tcp.TCP.html">TCP</a> module can serve several application modules, and several
+connections per application. The <i>k</i>th application connects to <a href="inet.transport.tcp.TCP.html">TCP</a>'s
+from_appl[k] and appOut[k] ports. When talking to applications, a
+connection is identified by the (application port index, connId) pair,
+where connId is assigned by the application in the OPEN call.</p>
+<p><b>Sockets</b></p>
+<p>The TCPSocket C++ class is provided to simplify managing TCP connections
+from applications. TCPSocket handles the job of assembling and sending
+command messages (OPEN, CLOSE, etc) to <a href="inet.transport.tcp.TCP.html">TCP</a>, and it also simplifies
+the task of dealing with packets and notification messages coming from <a href="inet.transport.tcp.TCP.html">TCP</a>.</p>
+<p><b>Communication with the IP layer</b></p>
+<p>The <a href="inet.transport.tcp.TCP.html">TCP</a> model relies on sending and receiving <a href="IPControlInfo.html">IPControlInfo</a> objects
+attached to TCP segment objects as control info
+(see cMessage::setControlInfo()).</p>
+<img src="inet.transport.tcp_nsc.TCP_NSC-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.transport.tcp_nsc.TCP_NSC.html" title="TCP_NSC" alt="TCP_NSC" coords="0,31,102,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.transport.tcp_nsc.TCP_NSC-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.transport.tcp_nsc.TCP_NSC.html" title="Simple Module TCP_NSC" alt="" coords="5,6,91,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.transport.tcp_nsc.TCP_NSC-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.transport.tcp_nsc.TCP_NSC.html" title="Simple Module TCP_NSC" alt="" coords="5,83,91,111">
+<area shape="rect" id="node2" href="inet.transport.tcp.ITCP.html" title="Module Interface ITCP" alt="" coords="12,6,84,34">
+</map>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>stackName</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"liblinux2.6.26.so"</td>
+   <td>
+<p>full library name of the tcp stack implementation</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>stackBufferSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>80000</td>
+   <td>
+<p>the size of buffer used when communicating with the specified NSC stack</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>sendQueueClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCP_NSC_VirtualDataSendQueue"</td>
+   <td>   </td>
+</tr>
+<tr class="local">
+   <td>receiveQueueClass</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"TCP_NSC_VirtualDataReceiveQueue"</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>appIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipv6In</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>appOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipv6Out</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// \TCP model based on the Network Simulation Cradle by Sam Jansen.
+// \TCP segments are represented by the class ByteArrayMessage which 
+// carries a network byte order packet. Compatible with both IPv4 and IPv6.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Communication with clients</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// For communication between client applications and TCP, the TcpCommandCode
+// and TcpStatusInd enums are used as message kinds, and TCPCommand
+// and its subclasses are used as control info.
+//
+// To open a connection from a client app, send a cMessage to TCP with
+// TCP_C_OPEN_ACTIVE as message kind and a TCPOpenCommand object filled in
+// and attached to it as control info. (The peer TCP will have to be LISTENing;
+// the server app can achieve this with a similar cMessage but TCP_C_OPEN_PASSIVE
+// message kind.) With passive open, there's a possibility to cause the connection
+// &quot;fork&quot; on an incoming connection, leaving the original connection LISTENing
+// on the port (see the fork field in TCPOpenCommand).
+//
+// The client app can send data by assigning the TCP_C_SEND message kind
+// and attaching a TCPSendCommand control info object to the data packet,
+// and sending it to TCP. The server app will receive data as messages
+// with the TCP_I_DATA message kind and TCPSendCommand control info.
+// (Whether you'll receive the same or identical messages, or even whether
+// you'll receive data in the same sized chunks as sent depends on the
+// sendQueueClass and receiveQueueClass used, see below. With
+// TCPVirtualDataSendQueue and TCPVirtualDataRcvQueue set, message objects
+// and even message boundaries are not preserved.)
+//
+// To close, the client sends a cMessage to TCP with the TCP_C_CLOSE message kind
+// and TCPCommand control info.
+//
+// TCP sends notifications to the application whenever there's a significant
+// change in the state of the connection: established, remote TCP closed,
+// closed, timed out, connection refused, connection reset, etc. These
+// notifications are also cMessages with message kind TCP_I_xxx
+// (TCP_I_ESTABLISHED, etc.) and TCPCommand as control info.
+//
+// One TCP module can serve several application modules, and several
+// connections per application. The </span><span style="color: #800000; ">&lt;i&gt;</span><span style="color: #808080; font-style: italic; ">k</span><span style="color: #800000; ">&lt;/i&gt;</span><span style="color: #808080; font-style: italic; ">th application connects to TCP's
+// from_appl[k] and appOut[k] ports. When talking to applications, a
+// connection is identified by the (application port index, connId) pair,
+// where connId is assigned by the application in the OPEN call.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Sockets</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The TCPSocket C++ class is provided to simplify managing \TCP connections
+// from applications. TCPSocket handles the job of assembling and sending
+// command messages (OPEN, CLOSE, etc) to TCP, and it also simplifies
+// the task of dealing with packets and notification messages coming from TCP.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Communication with the \IP layer</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The TCP model relies on sending and receiving IPControlInfo objects
+// attached to \TCP segment objects as control info
+// (see cMessage::setControlInfo()).
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">TCP_NSC</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">ITCP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #808080; font-style: italic; ">// full library name of the tcp stack implementation
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">stackName</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@choice</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;liblinux2.6.10.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;liblinux2.6.18.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;liblinux2.6.26.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;liblwip.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;libopenbsd3.5.so&quot;</span><span style="color: #000000; ">,</span><span style="color: #008000; ">&quot;libfreebsd5.3.so&quot;</span><span style="color: #000000; ">) = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;liblinux2.6.26.so&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">stackBufferSize</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">80000</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// the size of buffer used when communicating with the specified NSC stack
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">sendQueueClass</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;TCP_NSC_VirtualDataSendQueue&quot;</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">receiveQueueClass</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;TCP_NSC_VirtualDataReceiveQueue&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">[];
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

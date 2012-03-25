@@ -1,0 +1,76 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>MPLS Operation</h2>
+<p>The following algorithm is carried out by the <a href="inet.networklayer.mpls.MPLS.html">MPLS</a> module:</p>
+<p><pre>
+Step 1: - Check which layer the packet is coming from
+Alternative 1: From layer 3
+    Step 1: Find and check the next hop of this packet
+    Alternative 1: Next hop belongs to this <a href="inet.networklayer.mpls.MPLS.html">MPLS</a> cloud
+        Step 1: Encapsulate the packet in an <a href="inet.networklayer.mpls.MPLS.html">MPLS</a> packet with
+        IP_NATIVE_LABEL label
+        Step 2: Send to the next hop
+        Step 3: Return
+    Alternative 2: Next hop does not belong to this <a href="inet.networklayer.mpls.MPLS.html">MPLS</a> cloud
+        Step 1: Send the packet to the next hop
+Alternative 2: From layer 2
+    Step 1: Record the packet incoming interface
+    Step 2: - Check if the packet is for this LSR
+    Alternative 1: Yes
+        Step 1: Check if the packet has label
+        Alternative 1: Yes
+            Step 1: Strip off all labels and send the packet to L3
+            Step 2: Return
+        Alternative 2: No
+            Step 1: Send the packet to L3
+            Step 2: Return
+    Alternative 2: No
+        Step 1: Continue to the next step
+    Step 3: Check the packet type
+    Alternative 1: The packet is native <a href="inet.networklayer.ipv4.IP.html">IP</a>
+        Step 1: Check the LSR type
+        Alternative 1: The LSR is an Ingress Router
+            Step 1: Look up LIB for outgoing label
+            Alternative 1: Label cannot be found
+                Step 1: Check if the label for this FEC is being requested
+                Alternative 1: Yes
+                    Step 1: Return
+                Alternative 2: No
+                    Step 1: Store the packet with FEC id
+                    Step 2: Do request the signalling component
+                    Step 3: Return
+            Alternative 2: Label found
+                Step 1: Carry out the label operation on the packet
+                Step 2: Forward the packet to the outgoing interface found
+                Step 3: Return
+        Alternative 2: The LSR is not an Ingress Router
+            Step 1: Print out the error
+            Step 2: Delete the packet and return
+    Alternative 2: The packet is <a href="inet.networklayer.mpls.MPLS.html">MPLS</a>
+        Step 1: Check the LSR type
+        Alternative 1: The LSR is an Egress Router
+            Step 1: POP the top label
+            Step 2: Forward the packet to the outgoing interface found
+            Step 3: Return
+        Alternative 2: The LSR is not an Egress Router
+            Step 1: Look up LIB for outgoing label
+            Alternative 1: Label cannot be found
+                Step 1: Check if the label for this FEC is being requested
+                Alternative 1: Yes
+                    Step 1: Return
+                Alternative 2: No
+                    Step 1: Store the packet with FEC id
+                    Step 2: Do request the signalling component
+                    Step 3: Return
+            Alternative 2: Label found
+                Step 1: Carry out the label operation on the packet
+                Step 2: Forward the packet to the outgoing interface found
+                Step 3: Return
+Step 2: Return
+</pre></p>
+   </body>
+</html>

@@ -1,0 +1,148 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>Ieee80211Prim_ScanRequest</i></h2>
+<b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211Primitives.msg.html">src/linklayer/ieee80211/mgmt/Ieee80211Primitives.msg</a></b><br/>
+<p>Losely based on MLME-SCAN.request.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211Prim_ScanRequest-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Ieee80211Prim_ScanRequest.html" title="Class Ieee80211Prim_ScanRequest" alt="" coords="5,6,200,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Ieee80211Prim_ScanRequest-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Ieee80211Prim_ScanRequest.html" title="Class Ieee80211Prim_ScanRequest" alt="" coords="5,83,200,111">
+<area shape="rect" id="node2" href="Ieee80211PrimRequest.html" title="Class Ieee80211PrimRequest" alt="" coords="24,6,181,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="Ieee80211PrimRequest.html">Ieee80211PrimRequest</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>Base class for request primitives</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>BSSType</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>determines type of BSS's to include in the scan</p>
+</td>
+</tr>
+<tr class="local">
+   <td>BSSID</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>specific BSSID to scan for (default: any)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>SSID</td>
+   <td>
+      <i>
+string</i>
+   </td>
+   <td>
+<p>SSID to scan for SSID (default: any)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>activeScan</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td>
+<p>whether to perform active or passive scanning</p>
+</td>
+</tr>
+<tr class="local">
+   <td>probeDelay</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>delay (in &#65533;s) to be used prior to transmitting a Probe frame during active scanning</p>
+</td>
+</tr>
+<tr class="local">
+   <td>channelList</td>
+   <td>
+      <i>
+int[]</i>
+   </td>
+   <td>
+<p>list of channels to scan (default: all channels)</p>
+</td>
+</tr>
+<tr class="local">
+   <td>minChannelTime</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>minimum time to spend on each channel when scanning</p>
+</td>
+</tr>
+<tr class="local">
+   <td>maxChannelTime</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td>
+<p>maximum time to spend on each channel when scanning</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Losely based on MLME-SCAN.request.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Prim_ScanRequest</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211PrimRequest</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">BSSType</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211BSSType</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// determines type of BSS's to include in the scan
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">BSSID</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// specific BSSID to scan for (default: any)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">SSID</span><span style="color: #000000; ">;      </span><span style="color: #808080; font-style: italic; ">// SSID to scan for SSID (default: any)
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">activeScan</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// whether to perform active or passive scanning
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">probeDelay</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// delay (in &#65533;s) to be used prior to transmitting a Probe frame during active scanning
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelList</span><span style="color: #000000; ">[]; </span><span style="color: #808080; font-style: italic; ">// list of channels to scan (default: all channels)
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">minChannelTime</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// minimum time to spend on each channel when scanning
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">maxChannelTime</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// maximum time to spend on each channel when scanning
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

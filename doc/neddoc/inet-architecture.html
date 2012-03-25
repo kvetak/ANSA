@@ -1,0 +1,97 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Architecture of the INET Framework</h2>
+<p>The INET Framework builds upon OMNeT++, and uses the same concept:
+modules communicating by message passing.</p>
+<p><h3>Modules and protocols</h3></p>
+<p>Protocols are represented by simple modules. A simple module's external
+interface (gates [connectors] and parameters) is described in a NED file,
+and the implementation is contained in a C++ class with the same name.
+Some examples: <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.networklayer.ipv4.IP.html">IP</a>.</p>
+<p>These modules can be freely combined to form hosts and other network devices
+with the NED language (no C++ code and no recompilation required).
+Various pre-assembled host, router, switch, access point, etc. models can
+be found in the <code>Nodes/</code> subdirectory (for example: <a href="inet.nodes.inet.StandardHost.html">StandardHost</a>,
+<a href="inet.nodes.inet.Router.html">Router</a>), but you can also create your own ones for tailored to your particular
+simulation scenarios.</p>
+<p>Network interfaces (Ethernet, 802.11, etc) are usually compound modules (i.e.
+assembled from simple modules) themselves, and are being composed of a queue,
+a MAC, and possibly other simple modules. See <a href="inet.linklayer.ethernet.EthernetInterface.html">EthernetInterface</a> as an example.</p>
+<p>Not all modules implement protocols though. There are modules which hold
+data (for example <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>), facilitate communication of modules
+(<a href="inet.base.NotificationBoard.html">NotificationBoard</a>), perform autoconfiguration of a network
+(<a href="inet.networklayer.autorouting.FlatNetworkConfigurator.html">FlatNetworkConfigurator</a>), move a mobile node around (for example
+<a href="inet.mobility.ConstSpeedMobility.html">ConstSpeedMobility</a>), and perform housekeeping associated with radio channels
+in wireless simulations (<a href="inet.world.ChannelControl.html">ChannelControl</a>).</p>
+<p>Protocol headers and packet formats are described in message definition
+files (msg files), which are translated into C++ classes by OMNeT++'s
+<i>opp_msgc</i> tool. The generated message classes subclass from OMNeT++'s
+<code>cMessage</code> class.</p>
+<p><h3>About the documentation</h3></p>
+<p>The INET Framework documentation itself is also comprised of two bodies of HTML pages:
+<i>neddoc</i> generated from NED and MSG files using OMNeT++'s <i>opp_neddoc</i> tool,
+and the documentation of the underlying C++ classes, generated from the source files
+using Doxygen.
+The C++ doc is generated in a way that it contains <b>the full C++ source code</b>
+as HTML pages. It is syntax highlighted, and variable and class names are hyperlinked
+and cross-referenced, which makes it convenient for exploring the code.</p>
+<p><h3>Common modules in hosts and routers</h3></p>
+<p>There are some common modules that appear in all (or many) host, router and device
+models.</p>
+  <ul><li><a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a>. This module contains the table of network interfaces
+  (eth0, wlan0, etc) in the host. This module does not send or receive messages:
+  it is accessed by other modules using standard C++ member function calls.
+  Other modules rely on the interface table submodule within the host to be called
+  <code>interfaceTable</code> to be able to find it. (They obtain a <code>cModule *</code>
+  pointer to it, then cast it to <code>InterfaceTable *</code> to be able to call its
+  functions). Network interfaces get dynamically registered (added to the table)
+  by simple modules implementing the network interface, for example <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>.</li>
+  <li><a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>. This module contains the IP (v4) routing table, and heavily relies
+  on <a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a> for its operation. This module is also accessed from other
+  modules (typically <a href="inet.networklayer.ipv4.IP.html">IP</a>) by calling the public member functions of its C++ class.
+  There are member functions for querying, adding, deleting routes, and
+  finding the best matching route for a given destination IP address.
+  The routing table submodule within the host (router) must be called
+  <code>routingTable</code> for other modules to find it.</li>
+  <li><a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>. This is like <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>, but for <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</li>
+  <li><a href="inet.base.NotificationBoard.html">NotificationBoard</a>. This module makes it possible for several modules to
+  communicate in a publish-subscribe manner. For example, the radio module
+  (<a href="inet.linklayer.radio.Ieee80211Radio.html">Ieee80211Radio</a>) fires a <i>"radio state changed"</i> notification when
+  the state of the radio channel changes (from TRANSMIT to IDLE, for example),
+  and it will be delivered to other modules that have previously subscribed
+  to that notification category. The notification mechanism also works
+  my C++ functions calls, no message sending is involved.
+  The notification board submodule within the host (router) must be called
+  <code>notificationBoard</code> for other modules to find it.</li></ul>
+<p><h3>Common modules at network level</h3></p>
+<p>Some modules have only one instance, at global network level:</p>
+  <ul><li><a href="inet.networklayer.autorouting.FlatNetworkConfigurator.html">FlatNetworkConfigurator</a> assigns <a href="inet.networklayer.ipv4.IP.html">IP</a> addresses to hosts and routers,
+  and sets up static routing.</li>
+  <li><a href="inet.world.ScenarioManager.html">ScenarioManager</a> makes simulations scriptable. Modules can be made to support
+  scripting by implementing the <code>IScriptable</code> C++ interface.</li>
+  <li><a href="inet.world.ChannelControl.html">ChannelControl</a> is required for wireless simulations. It keeps track of which
+  nodes are within interference distance of other nodes.</li></ul>
+<p><h3>Communication between protocol layers</h3></p>
+<p>In the INET Framework, when an upper-layer protocol wants to send a data
+packet over a lower-layer protocol, the upper-layer module just sends the
+message object representing the packet to the lower-layer module, which
+will in turn encapsulate it and send it. The reverse process takes place
+when a lower layer protocol receives a packet and sends it up after
+decapsulation.</p>
+<p>It is often necessary to convey extra information with the packet. For
+example, when an application-layer module wants to send data over <a href="inet.transport.tcp.TCP.html">TCP</a>, some
+connection identifier needs to be specified for <a href="inet.transport.tcp.TCP.html">TCP</a>. When <a href="inet.transport.tcp.TCP.html">TCP</a> sends a
+segment over <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.networklayer.ipv4.IP.html">IP</a> will need a destination address and possibly other
+parameters like TTL. When <a href="inet.networklayer.ipv4.IP.html">IP</a> sends a datagram to an Ethernet interface for
+transmission, a destination MAC address must be specified. This extra
+information is attached to the message object to as <i>control info</i>.</p>
+<p>Control info are small value objects, which are attached to packets
+(message objects) with its <code>setControlInfo()</code> member function.
+Control info only holds auxiliary information for the next protocol layer,
+and is not supposed to be sent over the network to other hosts and routers.</p>
+   </body>
+</html>

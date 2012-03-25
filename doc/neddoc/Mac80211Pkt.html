@@ -1,0 +1,150 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>Mac80211Pkt</i></h2>
+<b>File: <a href="src-linklayer-mf80211-macLayer-Mac80211Pkt.msg.html">src/linklayer/mf80211/macLayer/Mac80211Pkt.msg</a></b><br/>
+<p>Defines all fields of an 802.11 MAC frame</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="Mac80211Pkt-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="Mac80211Pkt.html" title="Packet Mac80211Pkt" alt="" coords="5,6,107,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="Mac80211Pkt-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="Mac80211Pkt.html" title="Packet Mac80211Pkt" alt="" coords="5,83,107,111">
+<area shape="rect" id="node2" href="MacPkt.html" title="Packet MacPkt" alt="" coords="20,6,92,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="MacPkt.html">MacPkt</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>A basic MAC (Media Access Control) packet format definition</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>address3</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>address4</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>duration</td>
+   <td>
+      <i>
+simtime_t</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>fragmentation</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>part of the Frame Control field</p>
+</td>
+</tr>
+<tr class="local">
+   <td>informationDS</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>part of the Frame Control field</p>
+</td>
+</tr>
+<tr class="local">
+   <td>sequenceControl</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>destAddr</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>destination mac address</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>srcAddr</td>
+   <td>
+      <i>
+MACAddress</i>
+   </td>
+   <td>
+<p>source mac address</p>
+</td>
+</tr>
+<tr class="inherited">
+   <td>channelId</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>channel to send / receive on</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Defines all fields of an 802.11 MAC frame
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">Mac80211Pkt</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">MacPkt</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">address3</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">address4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">duration</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">fragmentation</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//part of the Frame Control field
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">informationDS</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//part of the Frame Control field
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">sequenceControl</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

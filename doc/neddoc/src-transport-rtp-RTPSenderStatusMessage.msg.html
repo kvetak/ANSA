@@ -1,0 +1,72 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/transport/rtp/RTPSenderStatusMessage.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="RTPSenderStatusMessage.html">RTPSenderStatusMessage</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Messages of type <a href="RTPSenderStatusMessage.html">RTPSenderStatusMessage</a> are used to send information
+from an rtp sender module to the application. Within this class a status
+string is defined in which the information is stored. This can be "PLAYING",
+"STOPPED" or "FINISHED".
+If a message must provide more information than just a string, a new class
+defining this parameter can derived.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2008 Andras Varga
+// Copyright (C) 2001 Matthias Oppitz, Arndt Buschmann
+//           &lt;matthias.oppitz@gmx.de&gt;, &lt;a.buschmann@gmx.de&gt;
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+}}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Messages of type RTPSenderStatusMessage are used to send information
+// from an rtp sender module to the application. Within this class a status
+// string is defined in which the information is stored. This can be &quot;PLAYING&quot;,
+// &quot;STOPPED&quot; or &quot;FINISHED&quot;.
+// If a message must provide more information than just a string, a new class
+// defining this parameter can derived.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPSenderStatusMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">status</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">timeStamp</span><span style="color: #000000; ">;
+};
+</span></pre>
+   </body>
+</html>

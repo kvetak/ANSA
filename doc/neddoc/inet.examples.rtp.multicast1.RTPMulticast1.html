@@ -1,0 +1,564 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Network <i>RTPMulticast1</i></h2>
+<b>Package:</b> inet.examples.rtp.multicast1<br/><b>File: <a href="examples-rtp-multicast1-multicast1.ned.html">examples/rtp/multicast1/multicast1.ned</a></b><br/><p>(no description)</p><img src="inet.examples.rtp.multicast1.RTPMulticast1-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.transport.rtp.RTPHost.html" title="RTPHost" alt="RTPHost" coords="132,88,176,149">
+<area shape="rect" href="inet.transport.rtp.RTPHost.html" title="RTPHost" alt="RTPHost" coords="232,188,276,249">
+<area shape="rect" href="inet.transport.rtp.RTPHost.html" title="RTPHost" alt="RTPHost" coords="132,288,176,349">
+<area shape="rect" href="inet.transport.rtp.RTPHost.html" title="RTPHost" alt="RTPHost" coords="32,188,76,249">
+<area shape="rect" href="inet.nodes.inet.Router.html" title="Router" alt="Router" coords="129,192,176,245">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.rtp.multicast1.RTPMulticast1-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.examples.rtp.multicast1.RTPMulticast1.html" title="Network RTPMulticast1" alt="" coords="85,6,195,34">
+<area shape="rect" id="node2" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="5,83,77,111">
+<area shape="rect" id="node4" href="inet.transport.rtp.RTPHost.html" title="Compound Module RTPHost" alt="" coords="101,83,179,111">
+<area shape="rect" id="node6" href="inet.examples.rtp.multicast1.RTPMulticast1.ethernet.html" title="Channel ethernet" alt="" coords="203,83,275,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.examples.rtp.multicast1.RTPMulticast1-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.examples.rtp.multicast1.RTPMulticast1.html" title="Network RTPMulticast1" alt="" coords="5,6,115,34">
+</map>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>isNetwork</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.commonName</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionEnterDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStartDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStopDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionLeaveDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host1</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.commonName</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionEnterDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStartDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStopDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionLeaveDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host2</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.commonName</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionEnterDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStartDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStopDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionLeaveDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host3</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.commonName</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionEnterDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStartDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.transmissionStopDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.applications.rtpapp.RTPApplication.html">application</a>.sessionLeaveDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.transport.rtp.RTPHost.html">host4</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.ipv4.IP.html">ip</a>.procDelay</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0s</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>1s</td>
+   <td>
+<p>number seconds <a href="inet.networklayer.arp.ARP.html">ARP</a> waits between retries to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.retryCount</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>3</td>
+   <td>
+<p>number of times <a href="inet.networklayer.arp.ARP.html">ARP</a> will attempt to resolve an IP address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.nodes.inet.NetworkLayer.html">networkLayer</a>.<a href="inet.networklayer.arp.ARP.html">arp</a>.cacheTimeout</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>120s</td>
+   <td>
+<p>number seconds unused entries in the cache will time out</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.linklayer.ppp.PPPInterface.html">ppp</a>.<a href="inet.linklayer.ppp.PPP.html">ppp</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>4470</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.promiscuous</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>if true, all packets are received, otherwise only the
+ones with matching destination MAC address</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.txrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>100Mbps</td>
+   <td>
+<p>maximum data rate supported by this station (bit/s);
+actually chosen speed may be lower due to auto-
+configuration. 0 means fully auto-configured.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.duplexEnabled</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>true</td>
+   <td>
+<p>whether duplex mode can be enabled or not; whether
+MAC will actually use duplex mode depends on the result
+of the auto-configuration process (duplex is only
+possible with DTE-to-DTE connection).</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.nodes.inet.Router.html">router1</a>.<a href="inet.linklayer.ethernet.EthernetInterface.html">eth</a>.<a href="inet.linklayer.ethernet.EtherMAC.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">network</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPMulticast1</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">types</span><span style="color: #000000; ">:
+        </span><span style="color: #800000; font-weight: bold; ">channel</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">DatarateChannel</span><span style="color: #000000; ">
+        {
+            </span><span style="color: #000000; ">delay</span><span style="color: #000000; "> = </span><span style="color: #800080; font-weight: bold; ">normal</span><span style="color: #000000; ">(</span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00015</span><span style="color: #000000; ">s</span><span style="color: #000000; ">, </span><span style="color: #008000; ">0</span><span style="color: #000000; ">.</span><span style="color: #008000; ">00005</span><span style="color: #000000; ">s</span><span style="color: #000000; ">);
+            </span><span style="color: #000000; ">datarate</span><span style="color: #000000; "> = </span><span style="color: #008000; ">10</span><span style="color: #000000; ">Mbps</span><span style="color: #000000; ">;
+        }
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">host1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host1.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,50&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">host2</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host2.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=250,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">host3</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host3.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,250&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">host4</span><span style="color: #000000; ">: </span><span style="color: #000000; ">RTPHost</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">profileName</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;RTPAVProfile&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;225.0.0.1&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">portNumber</span><span style="color: #000000; "> = </span><span style="color: #008000; ">5004</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">bandwidth</span><span style="color: #000000; "> = </span><span style="color: #008000; ">8000</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;host4.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=50,150&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Router</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">routingFile</span><span style="color: #000000; "> = </span><span style="color: #008000; ">&quot;router1.mrt&quot;</span><span style="color: #000000; ">;
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=150,150&quot;</span><span style="color: #000000; ">);
+            </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">4</span><span style="color: #000000; ">];
+
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">host1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host2</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">1</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host3</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">2</span><span style="color: #000000; ">];
+        </span><span style="color: #000000; ">host4</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">0</span><span style="color: #000000; ">] </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">ethernet</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">&lt;--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">router1</span><span style="color: #000000; ">.</span><span style="color: #000000; ">pppg</span><span style="color: #000000; ">[</span><span style="color: #008000; ">3</span><span style="color: #000000; ">];
+
+}
+
+</span></pre>
+   </body>
+</html>

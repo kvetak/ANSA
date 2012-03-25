@@ -1,0 +1,9 @@
+<area shape="rect" id="node1" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="436,83,516,111">
+<area shape="rect" id="node2" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="5,161,104,189">
+<area shape="rect" id="node4" href="inet.applications.generic.IPTrafficGenerator.html" title="Module Interface IPTrafficGenerator" alt="" coords="128,161,256,189">
+<area shape="rect" id="node6" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="280,161,403,189">
+<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="427,161,525,189">
+<area shape="rect" id="node10" href="inet.networklayer.ipv4.RoutingTable.html" title="Simple Module RoutingTable" alt="" coords="549,161,648,189">
+<area shape="rect" id="node12" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="672,161,773,189">
+<area shape="rect" id="node14" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="797,161,901,189">
+<area shape="rect" id="node16" href="inet.examples.inet.routerperf.RouterPerfNetwork.html" title="Network RouterPerfNetwork" alt="" coords="409,6,543,34">

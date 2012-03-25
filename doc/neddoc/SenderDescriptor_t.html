@@ -1,0 +1,60 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Struct <i>SenderDescriptor_t</i></h2>
+<b>File: <a href="src-networklayer-rsvp_te-IntServ.msg.html">src/networklayer/rsvp_te/IntServ.msg</a></b><br/>
+<p>Intserv/<a href="inet.networklayer.rsvp_te.RSVP.html">RSVP</a>: Sender Descriptor Structure</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="SenderDescriptor_t-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="SenderDescriptor_t.html" title="Struct SenderDescriptor_t" alt="" coords="85,83,219,111">
+<area shape="rect" id="node2" href="SenderTspecObj_t.html" title="Struct SenderTspecObj_t" alt="" coords="5,161,136,189">
+<area shape="rect" id="node4" href="SenderTemplateObj_t.html" title="Struct SenderTemplateObj_t" alt="" coords="160,161,307,189">
+<area shape="rect" id="node6" href="RSVPPathError.html" title="Packet RSVPPathError" alt="" coords="27,6,141,34">
+<area shape="rect" id="node8" href="RSVPPathMsg.html" title="Packet RSVPPathMsg" alt="" coords="165,6,275,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="SenderDescriptor_t-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="SenderDescriptor_t.html" title="Struct SenderDescriptor_t" alt="" coords="5,6,139,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>Sender_Template_Object</td>
+   <td>
+      <i>
+<a href="SenderTemplateObj_t.html">SenderTemplateObj_t</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>Sender_Tspec_Object</td>
+   <td>
+      <i>
+<a href="SenderTspecObj_t.html">SenderTspecObj_t</a></i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Intserv/RSVP: Sender Descriptor Structure
+//
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">Sender_Template_Object</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderTspecObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">Sender_Tspec_Object</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

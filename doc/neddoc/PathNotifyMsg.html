@@ -1,0 +1,101 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Message <i>PathNotifyMsg</i></h2>
+<b>File: <a href="src-networklayer-rsvp_te-SignallingMsg.msg.html">src/networklayer/rsvp_te/SignallingMsg.msg</a></b><br/>
+<p>FIXME missing documentation</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="PathNotifyMsg-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="PathNotifyMsg.html" title="Message PathNotifyMsg" alt="" coords="73,6,183,34">
+<area shape="rect" id="node2" href="SessionObj_t.html" title="Struct SessionObj_t" alt="" coords="5,83,104,111">
+<area shape="rect" id="node4" href="SenderTemplateObj_t.html" title="Struct SenderTemplateObj_t" alt="" coords="128,83,275,111">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="PathNotifyMsg-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="PathNotifyMsg.html" title="Message PathNotifyMsg" alt="" coords="5,83,115,111">
+<area shape="rect" id="node2" href="SignallingMsg.html" title="Message SignallingMsg" alt="" coords="9,6,111,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="SignallingMsg.html">SignallingMsg</a>
+   </td>
+   <td>
+<i>message</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>session</td>
+   <td>
+      <i>
+<a href="SessionObj_t.html">SessionObj_t</a></i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>sender</td>
+   <td>
+      <i>
+<a href="SenderTemplateObj_t.html">SenderTemplateObj_t</a></i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>status</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+</td>
+</tr>
+<tr class="local">
+   <td>command</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// FIXME missing documentation
+//
+</span><span style="color: #800000; font-weight: bold; ">message</span><span style="color: #000000; "> </span><span style="color: #000000; ">PathNotifyMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">SignallingMsg</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">SessionObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">session</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">sender</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">status</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">command</span><span style="color: #000000; "> = </span><span style="color: #000000; ">MSG_PATH_NOTIFY</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

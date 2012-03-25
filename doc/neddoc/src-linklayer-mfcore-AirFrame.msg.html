@@ -1,0 +1,86 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/linklayer/mfcore/AirFrame.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="AirFrame.html">AirFrame</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Format of the messages that are sent to the channel</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//**************************************************************************
+// * file:        AirFrame.msg
+// *
+// * author:      Marc Loebbers
+// *
+// * copyright:   (C) 2004 Telecommunication Networks Group (TKN) at
+// *              Technische Universitaet Berlin, Germany.
+// *
+// *              This program is free software; you can redistribute it
+// *              and/or modify it under the terms of the GNU General Public
+// *              License as published by the Free Software Foundation; either
+// *              version 2 of the License, or (at your option) any later
+// *              version.
+// *              For further information see file COPYING
+// *              in the top level directory
+// ***************************************************************************
+// * part of:     framework implementation developed by tkn
+// **************************************************************************/
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;Coord.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">Coord</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Format of the messages that are sent to the channel
+//
+// subclass if you want to create your own AirFrame message class
+//
+// This message format is used to send a packet from a snrEval module
+// to the channel. All other snrEval modules that can 'hear' this
+// message can evaluate noise, interference etc. from the information
+// contained in this message:
+//
+// If you need more fields for whatever reason, please do NOT create
+// your own message! Just extend (subclass) this message format (see Omnet
+// manual,chapter Messages - Inheritance among message classes).
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@todo</span><span style="color: #808080; font-style: italic; "> As soon as opp_msgc also supports pointers we should replace
+// the id with a pointer to the nodes coordinates itself.
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc Loebbers
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">AirFrame</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">pSend</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Power with which this packet is transmitted
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">channelNumber</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Channel on which the packet is sent
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">simtime_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">duration</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// Time it takes to transmit the packet, in seconds
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">double</span><span style="color: #000000; "> </span><span style="color: #000000; ">bitrate</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">Coord</span><span style="color: #000000; "> </span><span style="color: #000000; ">senderPos</span><span style="color: #000000; ">;
+}
+</span></pre>
+   </body>
+</html>

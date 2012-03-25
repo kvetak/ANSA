@@ -1,0 +1,4 @@
+<area shape="rect" id="node1" href="inet.applications.sctpapp.SCTPApp.html" title="Module Interface SCTPApp" alt="" coords="123,6,203,34">
+<area shape="rect" id="node2" href="inet.applications.sctpapp.SCTPClient.html" title="Simple Module SCTPClient" alt="" coords="5,83,96,111">
+<area shape="rect" id="node4" href="inet.applications.sctpapp.SCTPPeer.html" title="Simple Module SCTPPeer" alt="" coords="120,83,205,111">
+<area shape="rect" id="node6" href="inet.applications.sctpapp.SCTPServer.html" title="Simple Module SCTPServer" alt="" coords="229,83,325,111">

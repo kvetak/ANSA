@@ -1,0 +1,159 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>BasicDecider</i></h2>
+<b>Package:</b> inet.linklayer.mfcore<br/><b>File: <a href="src-linklayer-mfcore-BasicDecider.ned.html">src/linklayer/mfcore/BasicDecider.ned</a></b><br/><p><a href="../doxy/class_basic_decider.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Module to decide whether a frame is received correctly or is
+lost due to bit errors, interference...</p>
+<p>The decider module only handles messages from lower layers. All
+messages from upper layers are directly passed to the snrEval layer
+and cannot be processed in the decider module</p>
+<p>This is the basic decider module which does not really decide
+anything. It only provides the basic functionality which all
+decider modules should have, namely message de- &amp;encapsulation
+(For further information about the functionality of the physical
+layer modules and the formats used for communication in between
+them have a look at the manual</p>
+<p>Every own decider module class should be derived from this class
+and only the handle*Msg functions may be redefined for your own
+needs. The other functions should usually NOT be changed.</p>
+<p>All decider modules should assume bits as a unit for the length
+fields.</p>
+<p>This component has been taken over from Mobility Framework 1.0a5.</p>
+<p><b>Author:</b> Marc L&ouml;bbers, Daniel Willkomm</p>
+<img src="inet.linklayer.mfcore.BasicDecider-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.mfcore.BasicDecider.html" title="BasicDecider" alt="BasicDecider" coords="0,31,127,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mfcore.BasicDecider-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.mfcore.BasicDecider.html" title="Simple Module BasicDecider" alt="" coords="5,83,104,111">
+<area shape="rect" id="node2" href="inet.linklayer.mf80211.NicCsma.html" title="Compound Module NicCsma" alt="" coords="16,6,93,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.mfcore.BasicDecider-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.mfcore.BasicDecider.html" title="Simple Module BasicDecider" alt="" coords="5,6,104,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.mf80211.NicCsma.html">NicCsma</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>The CsmaNic contains a csma-like MAC layer.
+The <a href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html">SnrEval</a> module is used as the mac needs a RadioState to be published.
+However as still the <a href="inet.linklayer.mfcore.BasicDecider.html">BasicDecider</a> is used all messages will be delivered to
+the MAC and no packets get lost</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>coreDebug</td>
+   <td>
+      <i>bool</i>
+   </td>
+   <td>false</td>
+   <td>
+<p>debug switch for the core framework</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/process_s</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to MAC layer</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>from snrEval sub-module</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Module to decide whether a frame is received correctly or is
+// lost due to bit errors, interference...
+//
+// The decider module only handles messages from lower layers. All
+// messages from upper layers are directly passed to the snrEval layer
+// and cannot be processed in the decider module
+//
+// This is the basic decider module which does not really decide
+// anything. It only provides the basic functionality which all
+// decider modules should have, namely message de- &amp;encapsulation
+// (For further information about the functionality of the physical
+// layer modules and the formats used for communication in between
+// them have a look at the manual
+//
+// Every own decider module class should be derived from this class
+// and only the handle*Msg functions may be redefined for your own
+// needs. The other functions should usually NOT be changed.
+//
+// All decider modules should assume bits as a unit for the length
+// fields.
+//
+// This component has been taken over from Mobility Framework 1.0a5.
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Marc L&ouml;bbers, Daniel Willkomm
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">BasicDecider</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">coreDebug</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">false</span><span style="color: #000000; ">); </span><span style="color: #808080; font-style: italic; ">// debug switch for the core framework
+</span><span style="color: #000000; ">        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/process_s&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// to MAC layer
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowergateIn</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// from snrEval sub-module
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

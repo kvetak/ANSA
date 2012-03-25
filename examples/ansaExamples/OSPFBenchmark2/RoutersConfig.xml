@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<Routers>
+  <Router id="192.168.1.5"> <!-- DUT -->
+    <Interfaces>
+     <Interface name="ppp0">
+        <IPAddress>192.168.1.1</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth0">
+        <IPAddress>192.168.1.5</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.1.10"> <!-- Collector -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.1.6</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.1.10</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+ 
+  <Router id="192.168.2.1"> <!-- Generator -->
+    <Interfaces>
+     <Interface name="ppp0">
+        <IPAddress>192.168.1.2</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth0">
+        <IPAddress>192.168.1.9</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.2.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfPriority>1</OspfPriority>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+</Routers>

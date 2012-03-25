@@ -1,0 +1,116 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>RTPMpegPacket</i></h2>
+<b>File: <a href="src-transport-rtp-profiles-avprofile-RTPMpegPacket.msg.html">src/transport/rtp/profiles/avprofile/RTPMpegPacket.msg</a></b><br/>
+<p>An <a href="RTPMpegPacket.html">RTPMpegPacket</a> is intended to be capsulated into an RTPPacket when
+transmitting mpeg data with rtp under the rtp audio/video profile.
+It stores information about the mpeg data as described in rfc 2250.
+This implementation doesn't transport real mpeg data. It is intended
+to simulate storing mpeg data by adding length.
+Currently only one header field (picture type) is filled with the right
+value. The values for the other header fields can't be determined by
+reading the gdf file.</p>
+<p><b>See also:</b> <a href="inet.transport.rtp.RTPAVProfilePayload32Sender.html">RTPAVProfilePayload32Sender</a></p>
+<p><b>See also:</b> <a href="inet.transport.rtp.RTPAVProfilePayload32Receiver.html">RTPAVProfilePayload32Receiver</a></p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="RTPMpegPacket-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="RTPMpegPacket.html" title="Packet RTPMpegPacket" alt="" coords="5,6,128,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="RTPMpegPacket-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="RTPMpegPacket.html" title="Packet RTPMpegPacket" alt="" coords="5,6,128,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>headerLength</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>payloadLength</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>size of the mpeg data</p>
+</td>
+</tr>
+<tr class="local">
+   <td>pictureType</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td>
+<p>picture type of the frame the data in this packet belongs to.</p>
+<p>currenrtly unused fields:
+int mzb;
+int two;
+int temporalReference;
+int activeN;
+int newPictureHeader;
+int sequenceHeaderPresent;
+int beginningOfSlice;
+int endOfSlice;
+int fbv;
+int bfc;
+int ffv;
+int ffc;</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// An RTPMpegPacket is intended to be capsulated into an RTPPacket when
+// transmitting mpeg data with rtp under the rtp audio/video profile.
+// It stores information about the mpeg data as described in rfc 2250.
+// This implementation doesn't transport real mpeg data. It is intended
+// to simulate storing mpeg data by adding length.
+// Currently only one header field (picture type) is filled with the right
+// value. The values for the other header fields can't be determined by
+// reading the gdf file.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RTPAVProfilePayload32Sender
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> RTPAVProfilePayload32Receiver
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPMpegPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">headerLength</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">payloadLength</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// size of the mpeg data
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">pictureType</span><span style="color: #000000; ">;   </span><span style="color: #808080; font-style: italic; ">// picture type of the frame the data in this packet belongs to.
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">// currenrtly unused fields:
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int mzb;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int two;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int temporalReference;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int activeN;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int newPictureHeader;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int sequenceHeaderPresent;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int beginningOfSlice;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int endOfSlice;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int fbv;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int bfc;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int ffv;
+</span><span style="color: #000000; ">    </span><span style="color: #808080; font-style: italic; ">//int ffc;
+</span><span style="color: #000000; ">}
+
+
+</span></pre>
+   </body>
+</html>

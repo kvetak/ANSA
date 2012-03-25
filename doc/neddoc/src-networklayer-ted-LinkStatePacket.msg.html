@@ -1,0 +1,72 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ted/LinkStatePacket.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="LinkStateMsg.html">LinkStateMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Packet for disseminating link state information (<a href="TELinkStateInfo.html">TELinkStateInfo</a>[]) by the
+<a href="inet.networklayer.ted.LinkStateRouting.html">LinkStateRouting</a> module which implements a minimalistic link state routing
+protocol.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;TED_m.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #808080; font-style: italic; ">// Represents a link in the TED and in LinkStateMsg packets; from TED.msg.
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">TELinkStateInfo</span><span style="color: #000000; ">;
+
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Packet for disseminating link state information (TELinkStateInfo[]) by the
+// LinkStateRouting module which implements a minimalistic link state routing
+// protocol.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">LinkStateMsg</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">TELinkStateInfo</span><span style="color: #000000; "> </span><span style="color: #000000; ">linkInfo</span><span style="color: #000000; ">[];
+
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">request</span><span style="color: #000000; "> = </span><span style="color: #008000; ">false</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// if true, receiver is expected to send back its own link state database to the sender --FIXME really needed?
+</span><span style="color: #000000; ">        </span><span style="color: #808080; font-style: italic; ">// bool ack = false; -- apparently unused, removed -- TODO check with Vojta
+</span><span style="color: #000000; ">
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">command</span><span style="color: #000000; "> = </span><span style="color: #000000; ">LINK_STATE_MESSAGE</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// FIXME maybe do without this...
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

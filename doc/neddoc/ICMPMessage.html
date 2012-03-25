@@ -1,0 +1,63 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>ICMPMessage</i></h2>
+<b>File: <a href="src-networklayer-ipv4-ICMPMessage.msg.html">src/networklayer/ipv4/ICMPMessage.msg</a></b><br/>
+<p><a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> message class</p>
+<p>Note: receiver MUST NOT decapsulate the datagram from <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> error messages,
+because their contents is conceptually truncated. decapsulate() would result
+in a "length became negative" error; use getEncapsulatedMsg() instead.</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="ICMPMessage-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="ICMPMessage.html" title="Packet ICMPMessage" alt="" coords="5,6,115,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="ICMPMessage-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="ICMPMessage.html" title="Packet ICMPMessage" alt="" coords="5,6,115,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>type</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>code</td>
+   <td>
+      <i>
+int</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// ICMP message class
+//
+// Note: receiver MUST NOT decapsulate the datagram from ICMP error messages,
+// because their contents is conceptually truncated. decapsulate() would result
+// in a &quot;length became negative&quot; error; use getEncapsulatedMsg() instead.
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">type</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ICMPType</span><span style="color: #000000; ">);
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

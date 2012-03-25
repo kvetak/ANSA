@@ -1,0 +1,105 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Message <i>SCTPMessage</i></h2>
+<b>File: <a href="src-transport-sctp-SCTPMessage.msg.html">src/transport/sctp/SCTPMessage.msg</a></b><br/><p><a href="../doxy/class_s_c_t_p_message.html" target="mainframe"><b>C++ definition</b></a></p>
+<p>(no description)</p><h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPMessage-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="SCTPMessage.html" title="Message SCTPMessage" alt="" coords="5,6,115,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="SCTPMessage-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="SCTPMessage.html" title="Message SCTPMessage" alt="" coords="5,6,115,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+cPacket   </td>
+   <td>
+      <i>(unknown -- not in documented files)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>srcPort</td>
+   <td>
+      <i>
+uint16</i>
+   </td>
+   <td>
+<p>Source Port</p>
+</td>
+</tr>
+<tr class="local">
+   <td>destPort</td>
+   <td>
+      <i>
+uint16</i>
+   </td>
+   <td>
+<p>Destination Port</p>
+</td>
+</tr>
+<tr class="local">
+   <td>tag</td>
+   <td>
+      <i>
+uint32</i>
+   </td>
+   <td>
+<p>Verification Tag</p>
+</td>
+</tr>
+<tr class="local">
+   <td>checksumOk</td>
+   <td>
+      <i>
+bool</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>chunks</td>
+   <td>
+      <i>
+cPacketPtr[]</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #800000; font-weight: bold; ">message</span><span style="color: #000000; "> </span><span style="color: #000000; ">SCTPMessage</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">cPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #808080; font-style: italic; ">// Source Port
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint16</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcPort</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">// Destination Port
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint16</span><span style="color: #000000; "> </span><span style="color: #000000; ">destPort</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">// Verification Tag
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">uint32</span><span style="color: #000000; "> </span><span style="color: #000000; ">tag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">checksumOk</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">abstract</span><span style="color: #000000; "> </span><span style="color: #000000; ">cPacketPtr</span><span style="color: #000000; "> </span><span style="color: #000000; ">chunks</span><span style="color: #000000; ">[];
+}
+
+
+</span></pre>
+   </body>
+</html>

@@ -1,0 +1,251 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/icmpv6/IPv6NDMessage.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPv6NDPrefixInformation.html">IPv6NDPrefixInformation</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>IPv6ND Prefix Information
+RFC 2461 Section 4.6.2</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6NDMessage.html">IPv6NDMessage</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Neighbour Discovery for <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.
+RFC 2461</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6RouterSolicitation.html">IPv6RouterSolicitation</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.nodes.inet.Router.html">Router</a> Solicitation Message Format
+RFC 2461 Section 4.1</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6RouterAdvertisement.html">IPv6RouterAdvertisement</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.nodes.inet.Router.html">Router</a> Advertisement Message Format
+RFC 2461 Section 4.2</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6NeighbourSolicitation.html">IPv6NeighbourSolicitation</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Neighbour Solicitation Message Format
+RFC 2461 Section 4.3</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6NeighbourAdvertisement.html">IPv6NeighbourAdvertisement</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Neighbour Advertisement Message Format
+RFC 2461 Section 4.4</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6Redirect.html">IPv6Redirect</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Redirect Message Format
+RFC 2461 Section 4.5</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Wei Yang, Ng
+// Copyright (C) 2005 Andras Varga
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;ICMPv6Message_m.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPv6Address.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;MACAddress.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// IPv6ND Prefix Information
+// RFC 2461 Section 4.6.2
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDPrefixInformation</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">prefixLength</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">onlinkFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">autoAddressConfFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">validLifetime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">preferredLifetime</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">prefix</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Neighbour Discovery for IPv6.
+// RFC 2461
+//
+// ICMP fields inherited from ICMPv6Message:
+//    - Type
+//
+// ICMP fields not implemented:
+//    - Checksum
+//    - Reserved
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//customize=true;
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Router Solicitation Message Format
+// RFC 2461 Section 4.1
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6RouterSolicitation</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//Possible Options
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceLinkLayerAddress</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Router Advertisement Message Format
+// RFC 2461 Section 4.2
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6RouterAdvertisement</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//Additional ICMP fields
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">curHopLimit</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">managedAddrConfFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">otherStatefulConfFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">routerLifetime</span><span style="color: #000000; ">;  </span><span style="color: #808080; font-style: italic; ">// 0 indicates router is not a default router
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">reachableTime</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">retransTimer</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">//Possible Options
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceLinkLayerAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">MTU</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6NDPrefixInformation</span><span style="color: #000000; "> </span><span style="color: #000000; ">prefixInformation</span><span style="color: #000000; ">[];
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Neighbour Solicitation Message Format
+// RFC 2461 Section 4.3
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NeighbourSolicitation</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//Additional ICMP fields
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">targetAddress</span><span style="color: #000000; ">;</span><span style="color: #808080; font-style: italic; ">// MUST NOT be a multicast address.
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">//Possible Options
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">sourceLinkLayerAddress</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Neighbour Advertisement Message Format
+// RFC 2461 Section 4.4
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NeighbourAdvertisement</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//Additional ICMP fields
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">routerFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">solicitedFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">overrideFlag</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">targetAddress</span><span style="color: #000000; ">;</span><span style="color: #808080; font-style: italic; ">// MUST NOT be a multicast address.
+</span><span style="color: #000000; ">
+    </span><span style="color: #808080; font-style: italic; ">//Possible Options
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">targetLinkLayerAddress</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Redirect Message Format
+// RFC 2461 Section 4.5
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6Redirect</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6NDMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #808080; font-style: italic; ">//Additional ICMP fields
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">targetAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">destinationAddress</span><span style="color: #000000; ">;
+
+    </span><span style="color: #808080; font-style: italic; ">//Possible Options
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">MACAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">targetLinkLayerAddress</span><span style="color: #000000; ">;
+        </span><span style="color: #808080; font-style: italic; ">//Redirected Header Encapsulated Msg
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>

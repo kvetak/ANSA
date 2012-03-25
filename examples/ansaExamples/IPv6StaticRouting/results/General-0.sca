@@ -1,0 +1,515 @@
+version 2
+run General-0-20120306-18:48:55-4640
+attr configname General
+attr datetime 20120306-18:48:55
+attr experiment General
+attr inifile /home/student/omnetpp-4.1/samples/ANSAINET/examples/ansaExamples/IPv6StaticRouting/omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network IPv6StaticRouting
+attr processid 4640
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar IPv6StaticRouting.H1.pingApp4 	"Pings sent" 	1
+scalar IPv6StaticRouting.H1.pingApp4 	"Pings dropped" 	0
+scalar IPv6StaticRouting.H1.pingApp4 	"Out-of-order ping arrivals" 	0
+scalar IPv6StaticRouting.H1.pingApp4 	"Pings outstanding at end" 	1
+scalar IPv6StaticRouting.H1.pingApp4 	"Ping drop rate (%)" 	0
+scalar IPv6StaticRouting.H1.pingApp4 	"Ping out-of-order rate (%)" 	0
+statistic IPv6StaticRouting.H1.pingApp4 	"Ping roundtrip delays"
+field count 0
+field mean 0
+field stddev -nan
+field sum 0
+field sqrsum 0
+field min 0
+field max 0
+scalar IPv6StaticRouting.H1.pingApp6 	"Pings sent" 	0
+scalar IPv6StaticRouting.H1.networkLayer.arp 	"ARP requests sent" 	1
+scalar IPv6StaticRouting.H1.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.H1.networkLayer.arp 	"ARP resolutions" 	1
+scalar IPv6StaticRouting.H1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.H1.eth[0].queue 	"packets received by queue" 	3
+scalar IPv6StaticRouting.H1.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.H1.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.H1.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames rcvd" 	8
+scalar IPv6StaticRouting.H1.eth[0].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.H1.eth[0].mac 	"bytes rcvd" 	512
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames from higher layer" 	3
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames passed up to HL" 	8
+scalar IPv6StaticRouting.H1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.H1.eth[0].mac 	"frames/sec rcvd" 	1.5999996928004
+scalar IPv6StaticRouting.H1.eth[0].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.H1.eth[0].mac 	"bits/sec rcvd" 	819.19984271379
+scalar IPv6StaticRouting.H1.eth[0].mac 	"rx channel idle (%)" 	99.999078400177
+scalar IPv6StaticRouting.H1.eth[0].mac 	"rx channel utilization (%)" 	0.00092159982305302
+scalar IPv6StaticRouting.H1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.H1.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.H1.eth[0].encap 	"packets from higher layer" 	3
+scalar IPv6StaticRouting.H1.eth[0].encap 	"frames from MAC" 	8
+scalar IPv6StaticRouting.H2.pingApp4 	"Pings sent" 	0
+scalar IPv6StaticRouting.H2.pingApp6 	"Pings sent" 	0
+scalar IPv6StaticRouting.H2.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6StaticRouting.H2.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.H2.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6StaticRouting.H2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.H2.eth[0].queue 	"packets received by queue" 	2
+scalar IPv6StaticRouting.H2.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.H2.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.H2.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames rcvd" 	8
+scalar IPv6StaticRouting.H2.eth[0].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.H2.eth[0].mac 	"bytes rcvd" 	512
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames from higher layer" 	2
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames passed up to HL" 	8
+scalar IPv6StaticRouting.H2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.H2.eth[0].mac 	"frames/sec rcvd" 	1.5999996928004
+scalar IPv6StaticRouting.H2.eth[0].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.H2.eth[0].mac 	"bits/sec rcvd" 	819.19984271379
+scalar IPv6StaticRouting.H2.eth[0].mac 	"rx channel idle (%)" 	99.999078400177
+scalar IPv6StaticRouting.H2.eth[0].mac 	"rx channel utilization (%)" 	0.00092159982305302
+scalar IPv6StaticRouting.H2.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.H2.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.H2.eth[0].encap 	"packets from higher layer" 	2
+scalar IPv6StaticRouting.H2.eth[0].encap 	"frames from MAC" 	8
+scalar IPv6StaticRouting.H3.pingApp4 	"Pings sent" 	0
+scalar IPv6StaticRouting.H3.pingApp6 	"Pings sent" 	1
+scalar IPv6StaticRouting.H3.pingApp6 	"Pings dropped" 	0
+scalar IPv6StaticRouting.H3.pingApp6 	"Out-of-order ping arrivals" 	0
+scalar IPv6StaticRouting.H3.pingApp6 	"Pings outstanding at end" 	1
+scalar IPv6StaticRouting.H3.pingApp6 	"Ping drop rate (%)" 	0
+scalar IPv6StaticRouting.H3.pingApp6 	"Ping out-of-order rate (%)" 	0
+statistic IPv6StaticRouting.H3.pingApp6 	"Ping roundtrip delays"
+field count 0
+field mean 0
+field stddev -nan
+field sum 0
+field sqrsum 0
+field min 0
+field max 0
+scalar IPv6StaticRouting.H3.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6StaticRouting.H3.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.H3.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6StaticRouting.H3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.H3.eth[0].queue 	"packets received by queue" 	3
+scalar IPv6StaticRouting.H3.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.H3.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.H3.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames rcvd" 	8
+scalar IPv6StaticRouting.H3.eth[0].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.H3.eth[0].mac 	"bytes rcvd" 	512
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames from higher layer" 	3
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames passed up to HL" 	8
+scalar IPv6StaticRouting.H3.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.H3.eth[0].mac 	"frames/sec rcvd" 	1.5999996928004
+scalar IPv6StaticRouting.H3.eth[0].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.H3.eth[0].mac 	"bits/sec rcvd" 	819.19984271379
+scalar IPv6StaticRouting.H3.eth[0].mac 	"rx channel idle (%)" 	99.999078400177
+scalar IPv6StaticRouting.H3.eth[0].mac 	"rx channel utilization (%)" 	0.00092159982305302
+scalar IPv6StaticRouting.H3.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.H3.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.H3.eth[0].encap 	"packets from higher layer" 	3
+scalar IPv6StaticRouting.H3.eth[0].encap 	"frames from MAC" 	8
+scalar IPv6StaticRouting.R1.ospf 	helloPacketSend 	0
+scalar IPv6StaticRouting.R1.ospf 	ospfPacketSend 	0
+scalar IPv6StaticRouting.R1.ospf 	helloPacketReceived 	0
+scalar IPv6StaticRouting.R1.ospf 	ospfPacketReceived 	0
+scalar IPv6StaticRouting.R1.pingApp4 	"Pings sent" 	0
+scalar IPv6StaticRouting.R1.pingApp6 	"Pings sent" 	0
+scalar IPv6StaticRouting.R1.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6StaticRouting.R1.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.R1.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6StaticRouting.R1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.R1.eth[0].queue 	"packets received by queue" 	3
+scalar IPv6StaticRouting.R1.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R1.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R1.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames sent" 	3
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames rcvd" 	3
+scalar IPv6StaticRouting.R1.eth[0].mac 	"bytes sent" 	192
+scalar IPv6StaticRouting.R1.eth[0].mac 	"bytes rcvd" 	192
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames from higher layer" 	3
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames passed up to HL" 	3
+scalar IPv6StaticRouting.R1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames/sec sent" 	0.59999988480014
+scalar IPv6StaticRouting.R1.eth[0].mac 	"frames/sec rcvd" 	0.59999988480014
+scalar IPv6StaticRouting.R1.eth[0].mac 	"bits/sec sent" 	307.19994101767
+scalar IPv6StaticRouting.R1.eth[0].mac 	"bits/sec rcvd" 	307.19994101767
+scalar IPv6StaticRouting.R1.eth[0].mac 	"rx channel idle (%)" 	99.999654400066
+scalar IPv6StaticRouting.R1.eth[0].mac 	"rx channel utilization (%)" 	0.00034559993364488
+scalar IPv6StaticRouting.R1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.R1.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.R1.eth[0].encap 	"packets from higher layer" 	3
+scalar IPv6StaticRouting.R1.eth[0].encap 	"frames from MAC" 	3
+scalar IPv6StaticRouting.R1.eth[1].queue 	"packets received by queue" 	2
+scalar IPv6StaticRouting.R1.eth[1].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R1.eth[1].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R1.eth[1].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames rcvd" 	3
+scalar IPv6StaticRouting.R1.eth[1].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.R1.eth[1].mac 	"bytes rcvd" 	192
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames from higher layer" 	2
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames passed up to HL" 	3
+scalar IPv6StaticRouting.R1.eth[1].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.R1.eth[1].mac 	"frames/sec rcvd" 	0.59999988480014
+scalar IPv6StaticRouting.R1.eth[1].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.R1.eth[1].mac 	"bits/sec rcvd" 	307.19994101767
+scalar IPv6StaticRouting.R1.eth[1].mac 	"rx channel idle (%)" 	99.999654400066
+scalar IPv6StaticRouting.R1.eth[1].mac 	"rx channel utilization (%)" 	0.00034559993364488
+scalar IPv6StaticRouting.R1.eth[1].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	collisions 	0
+scalar IPv6StaticRouting.R1.eth[1].mac 	backoffs 	0
+scalar IPv6StaticRouting.R1.eth[1].encap 	"packets from higher layer" 	2
+scalar IPv6StaticRouting.R1.eth[1].encap 	"frames from MAC" 	3
+scalar IPv6StaticRouting.R1.eth[2].queue 	"packets received by queue" 	4
+scalar IPv6StaticRouting.R1.eth[2].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R1.eth[2].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R1.eth[2].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames sent" 	4
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames rcvd" 	6
+scalar IPv6StaticRouting.R1.eth[2].mac 	"bytes sent" 	256
+scalar IPv6StaticRouting.R1.eth[2].mac 	"bytes rcvd" 	384
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames from higher layer" 	4
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames passed up to HL" 	6
+scalar IPv6StaticRouting.R1.eth[2].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames/sec sent" 	0.79999984640019
+scalar IPv6StaticRouting.R1.eth[2].mac 	"frames/sec rcvd" 	1.1999997696003
+scalar IPv6StaticRouting.R1.eth[2].mac 	"bits/sec sent" 	409.5999213569
+scalar IPv6StaticRouting.R1.eth[2].mac 	"bits/sec rcvd" 	614.39988203535
+scalar IPv6StaticRouting.R1.eth[2].mac 	"rx channel idle (%)" 	99.999308800133
+scalar IPv6StaticRouting.R1.eth[2].mac 	"rx channel utilization (%)" 	0.00069119986728976
+scalar IPv6StaticRouting.R1.eth[2].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	collisions 	0
+scalar IPv6StaticRouting.R1.eth[2].mac 	backoffs 	0
+scalar IPv6StaticRouting.R1.eth[2].encap 	"packets from higher layer" 	4
+scalar IPv6StaticRouting.R1.eth[2].encap 	"frames from MAC" 	6
+scalar IPv6StaticRouting.R2.ospf 	helloPacketSend 	0
+scalar IPv6StaticRouting.R2.ospf 	ospfPacketSend 	0
+scalar IPv6StaticRouting.R2.ospf 	helloPacketReceived 	0
+scalar IPv6StaticRouting.R2.ospf 	ospfPacketReceived 	0
+scalar IPv6StaticRouting.R2.pingApp4 	"Pings sent" 	0
+scalar IPv6StaticRouting.R2.pingApp6 	"Pings sent" 	0
+scalar IPv6StaticRouting.R2.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6StaticRouting.R2.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.R2.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6StaticRouting.R2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.R2.eth[0].queue 	"packets received by queue" 	3
+scalar IPv6StaticRouting.R2.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R2.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R2.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames sent" 	3
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames rcvd" 	3
+scalar IPv6StaticRouting.R2.eth[0].mac 	"bytes sent" 	192
+scalar IPv6StaticRouting.R2.eth[0].mac 	"bytes rcvd" 	192
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames from higher layer" 	3
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames passed up to HL" 	3
+scalar IPv6StaticRouting.R2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames/sec sent" 	0.59999988480014
+scalar IPv6StaticRouting.R2.eth[0].mac 	"frames/sec rcvd" 	0.59999988480014
+scalar IPv6StaticRouting.R2.eth[0].mac 	"bits/sec sent" 	307.19994101767
+scalar IPv6StaticRouting.R2.eth[0].mac 	"bits/sec rcvd" 	307.19994101767
+scalar IPv6StaticRouting.R2.eth[0].mac 	"rx channel idle (%)" 	99.999654400066
+scalar IPv6StaticRouting.R2.eth[0].mac 	"rx channel utilization (%)" 	0.00034559993364488
+scalar IPv6StaticRouting.R2.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.R2.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.R2.eth[0].encap 	"packets from higher layer" 	3
+scalar IPv6StaticRouting.R2.eth[0].encap 	"frames from MAC" 	3
+scalar IPv6StaticRouting.R2.eth[1].queue 	"packets received by queue" 	2
+scalar IPv6StaticRouting.R2.eth[1].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R2.eth[1].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R2.eth[1].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames rcvd" 	2
+scalar IPv6StaticRouting.R2.eth[1].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.R2.eth[1].mac 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames from higher layer" 	2
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.R2.eth[1].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.R2.eth[1].mac 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.R2.eth[1].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.R2.eth[1].mac 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.R2.eth[1].mac 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.R2.eth[1].mac 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.R2.eth[1].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	collisions 	0
+scalar IPv6StaticRouting.R2.eth[1].mac 	backoffs 	0
+scalar IPv6StaticRouting.R2.eth[1].encap 	"packets from higher layer" 	2
+scalar IPv6StaticRouting.R2.eth[1].encap 	"frames from MAC" 	2
+scalar IPv6StaticRouting.R2.eth[2].queue 	"packets received by queue" 	2
+scalar IPv6StaticRouting.R2.eth[2].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R2.eth[2].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R2.eth[2].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames rcvd" 	2
+scalar IPv6StaticRouting.R2.eth[2].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.R2.eth[2].mac 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames from higher layer" 	2
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.R2.eth[2].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.R2.eth[2].mac 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.R2.eth[2].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.R2.eth[2].mac 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.R2.eth[2].mac 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.R2.eth[2].mac 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.R2.eth[2].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	collisions 	0
+scalar IPv6StaticRouting.R2.eth[2].mac 	backoffs 	0
+scalar IPv6StaticRouting.R2.eth[2].encap 	"packets from higher layer" 	2
+scalar IPv6StaticRouting.R2.eth[2].encap 	"frames from MAC" 	2
+scalar IPv6StaticRouting.R3.ospf 	helloPacketSend 	0
+scalar IPv6StaticRouting.R3.ospf 	ospfPacketSend 	0
+scalar IPv6StaticRouting.R3.ospf 	helloPacketReceived 	0
+scalar IPv6StaticRouting.R3.ospf 	ospfPacketReceived 	0
+scalar IPv6StaticRouting.R3.pingApp4 	"Pings sent" 	0
+scalar IPv6StaticRouting.R3.pingApp6 	"Pings sent" 	0
+scalar IPv6StaticRouting.R3.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6StaticRouting.R3.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.R3.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6StaticRouting.R3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.R3.eth[0].queue 	"packets received by queue" 	3
+scalar IPv6StaticRouting.R3.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R3.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R3.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames sent" 	3
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames rcvd" 	2
+scalar IPv6StaticRouting.R3.eth[0].mac 	"bytes sent" 	192
+scalar IPv6StaticRouting.R3.eth[0].mac 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames from higher layer" 	3
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.R3.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames/sec sent" 	0.59999988480014
+scalar IPv6StaticRouting.R3.eth[0].mac 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.R3.eth[0].mac 	"bits/sec sent" 	307.19994101767
+scalar IPv6StaticRouting.R3.eth[0].mac 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.R3.eth[0].mac 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.R3.eth[0].mac 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.R3.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.R3.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.R3.eth[0].encap 	"packets from higher layer" 	3
+scalar IPv6StaticRouting.R3.eth[0].encap 	"frames from MAC" 	2
+scalar IPv6StaticRouting.R3.eth[1].queue 	"packets received by queue" 	2
+scalar IPv6StaticRouting.R3.eth[1].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.R3.eth[1].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.R3.eth[1].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames rcvd" 	2
+scalar IPv6StaticRouting.R3.eth[1].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.R3.eth[1].mac 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames from higher layer" 	2
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.R3.eth[1].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.R3.eth[1].mac 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.R3.eth[1].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.R3.eth[1].mac 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.R3.eth[1].mac 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.R3.eth[1].mac 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.R3.eth[1].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	collisions 	0
+scalar IPv6StaticRouting.R3.eth[1].mac 	backoffs 	0
+scalar IPv6StaticRouting.R3.eth[1].encap 	"packets from higher layer" 	2
+scalar IPv6StaticRouting.R3.eth[1].encap 	"frames from MAC" 	2
+scalar IPv6StaticRouting.S1.pingApp4 	"Pings sent" 	0
+scalar IPv6StaticRouting.S1.pingApp6 	"Pings sent" 	0
+scalar IPv6StaticRouting.S1.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6StaticRouting.S1.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6StaticRouting.S1.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6StaticRouting.S1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6StaticRouting.S1.eth[0].queue 	"packets received by queue" 	2
+scalar IPv6StaticRouting.S1.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.S1.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.S1.eth[0].mac 	"full duplex" 	1
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames sent" 	2
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames rcvd" 	2
+scalar IPv6StaticRouting.S1.eth[0].mac 	"bytes sent" 	128
+scalar IPv6StaticRouting.S1.eth[0].mac 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames from higher layer" 	2
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.S1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames/sec sent" 	0.39999992320009
+scalar IPv6StaticRouting.S1.eth[0].mac 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.S1.eth[0].mac 	"bits/sec sent" 	204.79996067845
+scalar IPv6StaticRouting.S1.eth[0].mac 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.S1.eth[0].mac 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.S1.eth[0].mac 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.S1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	collisions 	0
+scalar IPv6StaticRouting.S1.eth[0].mac 	backoffs 	0
+scalar IPv6StaticRouting.S1.eth[0].encap 	"packets from higher layer" 	2
+scalar IPv6StaticRouting.S1.eth[0].encap 	"frames from MAC" 	2
+scalar IPv6StaticRouting.SW1.relayUnit 	"processed frames" 	10
+scalar IPv6StaticRouting.SW1.relayUnit 	"dropped frames" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.SW1.mac[0] 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.SW1.mac[0] 	"full duplex" 	1
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames sent" 	6
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames rcvd" 	4
+scalar IPv6StaticRouting.SW1.mac[0] 	"bytes sent" 	384
+scalar IPv6StaticRouting.SW1.mac[0] 	"bytes rcvd" 	256
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames from higher layer" 	6
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames passed up to HL" 	4
+scalar IPv6StaticRouting.SW1.mac[0] 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames/sec sent" 	1.1999997696003
+scalar IPv6StaticRouting.SW1.mac[0] 	"frames/sec rcvd" 	0.79999984640019
+scalar IPv6StaticRouting.SW1.mac[0] 	"bits/sec sent" 	614.39988203535
+scalar IPv6StaticRouting.SW1.mac[0] 	"bits/sec rcvd" 	409.5999213569
+scalar IPv6StaticRouting.SW1.mac[0] 	"rx channel idle (%)" 	99.999539200088
+scalar IPv6StaticRouting.SW1.mac[0] 	"rx channel utilization (%)" 	0.00046079991152651
+scalar IPv6StaticRouting.SW1.mac[0] 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	collisions 	0
+scalar IPv6StaticRouting.SW1.mac[0] 	backoffs 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.SW1.mac[1] 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.SW1.mac[1] 	"full duplex" 	1
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames sent" 	8
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames rcvd" 	2
+scalar IPv6StaticRouting.SW1.mac[1] 	"bytes sent" 	512
+scalar IPv6StaticRouting.SW1.mac[1] 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames from higher layer" 	8
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.SW1.mac[1] 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames/sec sent" 	1.5999996928004
+scalar IPv6StaticRouting.SW1.mac[1] 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.SW1.mac[1] 	"bits/sec sent" 	819.19984271379
+scalar IPv6StaticRouting.SW1.mac[1] 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.SW1.mac[1] 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.SW1.mac[1] 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.SW1.mac[1] 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	collisions 	0
+scalar IPv6StaticRouting.SW1.mac[1] 	backoffs 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.SW1.mac[2] 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.SW1.mac[2] 	"full duplex" 	1
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames sent" 	8
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames rcvd" 	2
+scalar IPv6StaticRouting.SW1.mac[2] 	"bytes sent" 	512
+scalar IPv6StaticRouting.SW1.mac[2] 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames from higher layer" 	8
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.SW1.mac[2] 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames/sec sent" 	1.5999996928004
+scalar IPv6StaticRouting.SW1.mac[2] 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.SW1.mac[2] 	"bits/sec sent" 	819.19984271379
+scalar IPv6StaticRouting.SW1.mac[2] 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.SW1.mac[2] 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.SW1.mac[2] 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.SW1.mac[2] 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	collisions 	0
+scalar IPv6StaticRouting.SW1.mac[2] 	backoffs 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	"simulated time" 	5.000000959999
+scalar IPv6StaticRouting.SW1.mac[3] 	"txrate (Mb)" 	100
+scalar IPv6StaticRouting.SW1.mac[3] 	"full duplex" 	1
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames sent" 	8
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames rcvd" 	2
+scalar IPv6StaticRouting.SW1.mac[3] 	"bytes sent" 	512
+scalar IPv6StaticRouting.SW1.mac[3] 	"bytes rcvd" 	128
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames from higher layer" 	8
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames dropped (bit error)" 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames dropped (not for us)" 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames passed up to HL" 	2
+scalar IPv6StaticRouting.SW1.mac[3] 	"PAUSE frames sent" 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	"PAUSE frames rcvd" 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames/sec sent" 	1.5999996928004
+scalar IPv6StaticRouting.SW1.mac[3] 	"frames/sec rcvd" 	0.39999992320009
+scalar IPv6StaticRouting.SW1.mac[3] 	"bits/sec sent" 	819.19984271379
+scalar IPv6StaticRouting.SW1.mac[3] 	"bits/sec rcvd" 	204.79996067845
+scalar IPv6StaticRouting.SW1.mac[3] 	"rx channel idle (%)" 	99.999769600044
+scalar IPv6StaticRouting.SW1.mac[3] 	"rx channel utilization (%)" 	0.00023039995576325
+scalar IPv6StaticRouting.SW1.mac[3] 	"rx channel collision (%)" 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	collisions 	0
+scalar IPv6StaticRouting.SW1.mac[3] 	backoffs 	0

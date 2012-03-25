@@ -1,0 +1,136 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/rsvp_te/RSVPPathMsg.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="RSVPPathMsg.html">RSVPPathMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="RSVPPathTear.html">RSVPPathTear</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="RSVPPathError.html">RSVPPathError</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>FIXME missing documentation</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// (C) 2005 Vojtech Janota
+// (C) 2003 Xuan Thang Nguyen
+//
+// This library is free software, you can redistribute it
+// and/or modify
+// it under  the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation;
+// either version 2 of the License, or any later version.
+// The library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// See the GNU Lesser General Public License for more details.
+//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IntServ.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;RSVPPacket.h&quot;</span><span style="color: #000000; ">
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">RsvpHopObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">LabelRequestObj_t</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">struct</span><span style="color: #000000; "> </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">EroVector</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPacket</span><span style="color: #000000; ">;
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// FIXME missing documentation
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPathMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000000; ">RsvpHopObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">hop</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">LabelRequestObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">label_request</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">sender_descriptor</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">EroVector</span><span style="color: #000000; "> </span><span style="color: #000000; ">ERO</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">color</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">rsvpKind</span><span style="color: #000000; "> = </span><span style="color: #000000; ">PATH_MESSAGE</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// FIXME missing documentation
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPathTear</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000000; ">RsvpHopObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">hop</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderTemplateObj_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">senderTemplate</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">bool</span><span style="color: #000000; "> </span><span style="color: #000000; ">force</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">rsvpKind</span><span style="color: #000000; "> = </span><span style="color: #000000; ">PTEAR_MESSAGE</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// FIXME missing documentation
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPathError</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">RSVPPacket</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">errorNode</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">errorCode</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">SenderDescriptor_t</span><span style="color: #000000; "> </span><span style="color: #000000; ">sender_descriptor</span><span style="color: #000000; ">;
+
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">rsvpKind</span><span style="color: #000000; "> = </span><span style="color: #000000; ">PERROR_MESSAGE</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

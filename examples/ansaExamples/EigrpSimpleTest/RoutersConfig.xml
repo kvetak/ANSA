@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="192.168.3.1"> <!-- R1 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.3.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>10.10.10.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Eigrp>
+        <AutonomousSystems>
+          <AS id="1">
+            <Networks>
+              <Network>
+                <IPAddress>192.168.3.0</IPAddress>
+                <Wildcard>0.0.0.255</Wildcard>
+              </Network>
+            </Networks>
+          </AS>
+          <AS id="2">
+            <Networks>
+              <Network>
+                <IPAddress>10.10.10.0</IPAddress>
+                <Wildcard>0.0.0.255</Wildcard>
+              </Network>
+            </Networks>
+          </AS>
+        </AutonomousSystems>
+      </Eigrp>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.4.2"> <!-- R2 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>10.10.10.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.4.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Eigrp>
+        <AutonomousSystems>
+          <Area id="1">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </AutonomousSystems>
+      </Eigrp>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.3.3"> <!-- R3 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.1.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.3.3</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Eigrp>
+        <AutonomousSystems>
+          <Area id="1">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </AutonomousSystems>
+      </Eigrp>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.4.4"> <!-- R4 -->
+    <Interfaces>
+     <Interface name="eth0">
+        <IPAddress>192.168.4.4</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+      <Interface name="eth1">
+        <IPAddress>192.168.2.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Eigrp>
+        <AutonomousSystems>
+          <AS id="1">
+            <Networks>
+              <Network>
+                <IPAddress>0.0.0.0</IPAddress>
+                <Wildcard>255.255.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </AS>
+        </AutonomousSystems>
+      </Eigrp>
+    </Routing>
+  </Router>
+
+</Routers>

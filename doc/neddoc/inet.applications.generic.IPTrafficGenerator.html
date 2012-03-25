@@ -1,0 +1,80 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Module Interface <i>IPTrafficGenerator</i></h2>
+<b>Package:</b> inet.applications.generic<br/><b>File: <a href="src-applications-generic-IPTrafficGenerator.ned.html">src/applications/generic/IPTrafficGenerator.ned</a></b><br/>
+<p>Prototype for modules that generate traffic directly over <a href="inet.networklayer.ipv4.IP.html">IP</a>.</p>
+<p><b>See also:</b> <a href="inet.applications.generic.IPTrafGen.html">IPTrafGen</a>, <a href="inet.applications.generic.IPTrafSink.html">IPTrafSink</a></p>
+<img src="inet.applications.generic.IPTrafficGenerator-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.applications.generic.IPTrafficGenerator.html" title="IPTrafficGenerator" alt="IPTrafficGenerator" coords="0,31,226,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.generic.IPTrafficGenerator-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.generic.IPTrafficGenerator.html" title="Module Interface IPTrafficGenerator" alt="" coords="5,83,133,111">
+<area shape="rect" id="node2" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="29,6,109,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.applications.generic.IPTrafficGenerator-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.generic.IPTrafficGenerator.html" title="Module Interface IPTrafficGenerator" alt="" coords="36,6,164,34">
+<area shape="rect" id="node2" href="inet.applications.generic.IPTrafGen.html" title="Simple Module IPTrafGen" alt="" coords="5,83,88,111">
+<area shape="rect" id="node4" href="inet.applications.generic.IPTrafSink.html" title="Simple Module IPTrafSink" alt="" coords="112,83,195,111">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.BurstHost.html">BurstHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Definition of an <a href="inet.networklayer.ipv4.IP.html">IP</a> node with a transport generator that connects
+to <a href="inet.networklayer.ipv4.IP.html">IP</a> directly, without <a href="inet.transport.tcp.TCP.html">TCP</a> or <a href="inet.transport.udp.UDP.html">UDP</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/app</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Prototype for modules that generate traffic directly over IP.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> IPTrafGen, IPTrafSink
+//
+</span><span style="color: #800000; font-weight: bold; ">moduleinterface</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPTrafficGenerator</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/app&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

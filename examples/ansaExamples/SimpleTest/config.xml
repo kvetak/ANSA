@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Routers>
+	<Router id="192.168.0.1">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.0.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+      		</Interface>
+    	</Interfaces>
+		<Routing>
+	  	</Routing>
+	</Router>
+</Routers>

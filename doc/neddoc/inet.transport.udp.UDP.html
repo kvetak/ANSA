@@ -1,0 +1,327 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>UDP</i></h2>
+<b>Package:</b> inet.transport.udp<br/><b>File: <a href="src-transport-udp-UDP.ned.html">src/transport/udp/UDP.ned</a></b><br/><p><a href="../doxy/class_u_d_p.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p><a href="inet.transport.udp.UDP.html">UDP</a> protocol implementation, for IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</p>
+<p>The UDP protocol header is represented by the class <a href="UDPPacket.html">UDPPacket</a>.</p>
+<p><b>Communication with clients (applications)</b></p>
+<p>The module can (should) be connected to several applications.
+For sending an UDP packet, the application should attach an <a href="UDPControlInfo.html">UDPControlInfo</a>
+object to the payload, and send it to <a href="inet.transport.udp.UDP.html">UDP</a>.
+<a href="inet.transport.udp.UDP.html">UDP</a> will also attach an <a href="UDPControlInfo.html">UDPControlInfo</a> object to any payload
+message in sends up to the application.</p>
+<p>For receiving UDP packets, the connected applications should first
+"bind" to the given UDP port. This can be done by sending an
+arbitrary message with message kind UDP_C_BIND and an <a href="UDPControlInfo.html">UDPControlInfo</a>
+attached with srcPort filled in.</p>
+<p>If there is only one app which doesn't bind to any port, it will
+receive all packets.</p>
+<p><b>Communication with the IP (IPv4/<a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>) layer</b></p>
+<p>The <a href="inet.transport.udp.UDP.html">UDP</a> model relies on sending and receiving <a href="IPControlInfo.html">IPControlInfo</a>/<a href="IPv6ControlInfo.html">IPv6ControlInfo</a>
+objects attached to <a href="UDPPacket.html">UDPPacket</a> objects as control info
+(see cMessage::setControlInfo()).</p>
+<p><b>See also:</b> <a href="UDPPacket.html">UDPPacket</a>, <a href="UDPControlInfo.html">UDPControlInfo</a>, <a href="UDPCommandCode.html">UDPCommandCode</a></p>
+<img src="inet.transport.udp.UDP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.transport.udp.UDP.html" title="UDP" alt="UDP" coords="0,31,72,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.transport.udp.UDP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.transport.udp.UDP.html" title="Simple Module UDP" alt="" coords="703,83,775,111">
+<area shape="rect" id="node2" href="inet.nodes.mpls.LDP_LSR.html" title="Compound Module LDP_LSR" alt="" coords="5,6,85,34">
+<area shape="rect" id="node4" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="109,6,216,34">
+<area shape="rect" id="node6" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="240,6,328,34">
+<area shape="rect" id="node8" href="inet.transport.rtp.RTPHost.html" title="Compound Module RTPHost" alt="" coords="352,6,429,34">
+<area shape="rect" id="node10" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="453,6,555,34">
+<area shape="rect" id="node12" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="579,6,688,34">
+<area shape="rect" id="node14" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="712,6,976,34">
+<area shape="rect" id="node16" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="1000,6,1221,34">
+<area shape="rect" id="node18" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="1245,6,1483,34">
+<area shape="rect" id="node20" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="1507,6,1728,34">
+<area shape="rect" id="node22" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="1752,6,1853,34">
+<area shape="rect" id="node24" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="1877,6,2035,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.transport.udp.UDP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.transport.udp.UDP.html" title="Simple Module UDP" alt="" coords="5,6,77,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.mpls.LDP_LSR.html">LDP_LSR</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An <a href="inet.networklayer.ldp.LDP.html">LDP</a>-capable router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MFMobileHost.html">MFMobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the Mobility Framework's 802.11 implementation, <a href="inet.linklayer.mf80211.Nic80211.html">Nic80211</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be dynamically
+specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.adhoc.MobileHost.html">MobileHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a mobile host with a wireless (802.11b) card in ad-hoc mode.
+This model contains the new IEEE 802.11 implementation, <a href="inet.linklayer.ieee80211.Ieee80211Nic.html">Ieee80211Nic</a>,
+and <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a> and <a href="inet.transport.udp.UDP.html">UDP</a> protocols. The mobility model can be
+dynamically specified with the mobilityType parameter.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.transport.rtp.RTPHost.html">RTPHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHost.html">StandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ipv6.StandardHost6.html">StandardHost6</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IPv6 host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html">StandardHostWithDLDuplicatesGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html">PPPInterfaceWithDLDuplicatesGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithDLThruputMeter.html">StandardHostWithDLThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html">PPPInterfaceWithDLThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULDropsGenerator.html">StandardHostWithULDropsGenerator</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html">PPPInterfaceWithULDropsGenerator</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.inet.StandardHostWithULThruputMeter.html">StandardHostWithULThruputMeter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.sctp.SCTP.html">SCTP</a>, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications AND <a href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html">PPPInterfaceWithULThruputMeter</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a host with one wireless (802.11b) card in infrastructure mode.
+This module is basically a <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> with an <a href="inet.linklayer.ieee80211.Ieee80211NicSTA.html">Ieee80211NicSTA</a> added.
+It should be used in conjunction with <a href="inet.nodes.wireless.WirelessAP.html">WirelessAP</a>, or any other AP model
+which contains <a href="inet.linklayer.ieee80211.Ieee80211NicAP.html">Ieee80211NicAP</a>.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Models a host with one wireless (802.11b) card in infrastructure mode,
+but using a simplified NIC that does not support handovers.
+This module is basically a <a href="inet.nodes.inet.StandardHost.html">StandardHost</a> with an <a href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html">Ieee80211NicSTASimplified</a>
+added. It should be used in conjunction with <a href="inet.nodes.wireless.WirelessAPSimplified.html">WirelessAPSimplified</a>,
+or any other AP model which contains <a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">Ieee80211NicAPSimplified</a>.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/transport</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>appIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipv6In</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>appOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>ipv6Out</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// UDP protocol implementation, for IPv4 and IPv6.
+//
+// The \UDP protocol header is represented by the class UDPPacket.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Communication with clients (applications)</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The module can (should) be connected to several applications.
+// For sending an \UDP packet, the application should attach an UDPControlInfo
+// object to the payload, and send it to UDP.
+// UDP will also attach an UDPControlInfo object to any payload
+// message in sends up to the application.
+//
+// For receiving \UDP packets, the connected applications should first
+// &quot;bind&quot; to the given \UDP port. This can be done by sending an
+// arbitrary message with message kind UDP_C_BIND and an UDPControlInfo
+// attached with srcPort filled in.
+//
+// If there is only one app which doesn't bind to any port, it will
+// receive all packets.
+//
+// </span><span style="color: #800000; ">&lt;b&gt;</span><span style="color: #808080; font-style: italic; ">Communication with the \IP (IPv4/IPv6) layer</span><span style="color: #800000; ">&lt;/b&gt;</span><span style="color: #808080; font-style: italic; ">
+//
+// The UDP model relies on sending and receiving IPControlInfo/IPv6ControlInfo
+// objects attached to UDPPacket objects as control info
+// (see cMessage::setControlInfo()).
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> UDPPacket, UDPControlInfo, UDPCommandCode
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">UDP</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/transport&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">appIn</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6In</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">appOut</span><span style="color: #000000; ">[] </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">up</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">UDPPacket</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
+}
+
+
+</span></pre>
+   </body>
+</html>

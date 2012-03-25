@@ -1,0 +1,110 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/ipv6/IPv6Datagram.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="IPv6Datagram.html">IPv6Datagram</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> datagram. RFC 2460 Section 3.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="IPv6ExtensionHeader.html">IPv6ExtensionHeader</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>This serves as the base class for all the other extension headers.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2005 Wei Yang, Ng
+// Copyright (C) 2005 Andras Varga
+// Copyright (C) 2001-2004 CTIE, Monash University
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> &lt;</span><span style="color: #000000; ">iostream</span><span style="color: #000000; ">&gt;
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPv6Address.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;IPProtocolId_m.h&quot;</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">;
+</span><span style="color: #000000; ">typedef</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; "> *</span><span style="color: #000000; ">IPv6ExtensionHeaderPtr</span><span style="color: #000000; ">;
+</span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">ostream</span><span style="color: #000000; ">&amp; </span><span style="color: #000000; ">operator</span><span style="color: #000000; ">&lt;&lt;(</span><span style="color: #000000; ">std</span><span style="color: #000000; ">::</span><span style="color: #000000; ">ostream</span><span style="color: #000000; ">&amp; </span><span style="color: #000000; ">os</span><span style="color: #000000; ">, </span><span style="color: #000000; ">IPv6ExtensionHeaderPtr</span><span style="color: #000000; "> </span><span style="color: #000000; ">eh</span><span style="color: #000000; ">);
+}}
+
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; ">;
+
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">noncobject</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeaderPtr</span><span style="color: #000000; ">;
+
+</span><span style="color: #808080; font-style: italic; ">//
+// IPv6 datagram. RFC 2460 Section 3.
+//
+// Header fields not explicitly modelled:
+//    - version (=6): represented by the class name itself
+//    - payload length: will be calculated from encapsulated message length
+//      and extension headers' length
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6Datagram</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+
+    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">srcAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">IPv6Address</span><span style="color: #000000; "> </span><span style="color: #000000; ">destAddress</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">trafficClass</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">flowLabel</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">short</span><span style="color: #000000; "> </span><span style="color: #000000; ">hopLimit</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">transportProtocol</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPProtocolId</span><span style="color: #000000; ">);
+
+    </span><span style="color: #000000; ">IPv6ExtensionHeaderPtr</span><span style="color: #000000; "> </span><span style="color: #000000; ">extensionHeader</span><span style="color: #000000; ">[]; </span><span style="color: #808080; font-style: italic; ">// array of extension headers, subclassed from IPv6ExtensionHeader
+</span><span style="color: #000000; ">}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// This serves as the base class for all the other extension headers.
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">IPv6ExtensionHeader</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; font-weight: bold; ">@customize</span><span style="color: #000000; ">(</span><span style="color: #008000; ">true</span><span style="color: #000000; ">);
+}
+
+</span></pre>
+   </body>
+</html>

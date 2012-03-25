@@ -1,0 +1,23 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2>Specifying IP (IPv6) addresses in module parameters</h2>
+<p>In INET, <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> and all application layer modules work with
+both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>. Internally they use the IPvXAddress C++ class, which
+can represent both IPv4 and <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> addresses.</p>
+<p>Most modules use the IPAddressResolver C++ class to resolve addresses
+specified in module parameters in omnetpp.ini.
+IPAddressResolver accepts the following syntax:</p>
+  <ul><ul><li>literal IPv4 address: "186.54.66.2"</li>
+  <li>literal <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address: "3011:7cd6:750b:5fd6:aba3:c231:e9f9:6a43"</li>
+  <li>module name: "server", "subnet.server[3]"</li>
+  <li>interface of a host or router: "server/eth0", "subnet.server[3]/eth0"</li>
+  <li>IPv4 or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address of a host or router: "server(ipv4)",
+     "subnet.server[3](ipv6)"</li>
+  <li>IPv4 or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> address of an interface of a host or router:
+     "server/eth0(ipv4)", "subnet.server[3]/eth0(ipv6)"</li></ul></ul>
+   </body>
+</html>

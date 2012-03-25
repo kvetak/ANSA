@@ -1,0 +1,186 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>EtherLLC</i></h2>
+<b>Package:</b> inet.linklayer.ethernet<br/><b>File: <a href="src-linklayer-ethernet-EtherLLC.ned.html">src/linklayer/ethernet/EtherLLC.ned</a></b><br/><p><a href="../doxy/class_ether_l_l_c.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Provides Ethernet 802.3 encapsulation/decapsulation and dispatching
+to the appropriate higher layer by DSAP values.</p>
+<p>Expected environment:</p>
+  <ul><li>lowerLayerIn, lowerLayerOut gates should be connected
+  to Ethernet <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a></li>
+  <li>upperLayerIn[], upperLayerOut[] gates should be connected to
+  higher layer protocols or applications</li></ul>
+<p>Functionality:</p>
+<p>Processes commands received from upper layers, as described in
+<a href="llc-app.html">Communication between LLC and higher layers</a>.
+The following commands are supported:</p>
+  <ul><li>IEEE802CTRL_DATA: send a frame.
+  Encapsulates packet into <a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a>. This includes assigning
+  dest address, ssap and dsap from the <a href="Ieee802Ctrl.html">Ieee802Ctrl</a> structure acompanying
+  the message. Src address will be filled in by <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>.</li>
+  <li>IEEE802CTRL_REGISTER_DSAP: register application in LLC, as described in
+  <a href="appreg.html">Application registration</a>.</li>
+  <li>IEEE802CTRL_DEREGISTER_DSAP: deregister application, as described in
+  <a href="appreg.html">Application registration</a>.</li>
+  <li>IEEE802CTRL_SENDPAUSE: send PAUSE frame, as described in
+  <a href="ether-pause.html">PAUSE frames</a>.</li></ul>
+<p>Processing of packets received from the lower layers:</p>
+  <ul><li>decapsulate frames received from <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a></li>
+  <li>sends received frames to corresponding application, based on dsap.</li>
+  <li>only servicetype=0 is implemented (connectionless)</li>
+  <li>reception of non-<a href="EtherFrameWithLLC.html">EtherFrameWithLLC</a> objects (e.g. <a href="EthernetIIFrame.html">EthernetIIFrame</a>,
+  <a href="EtherFrameWithSNAP.html">EtherFrameWithSNAP</a>) will cause a runtime error.</li></ul>
+<img src="inet.linklayer.ethernet.EtherLLC-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ethernet.EtherLLC.html" title="EtherLLC" alt="EtherLLC" coords="0,31,101,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EtherLLC-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherLLC.html" title="Simple Module EtherLLC" alt="" coords="60,83,137,111">
+<area shape="rect" id="node2" href="inet.nodes.ethernet.EtherHost.html" title="Compound Module EtherHost" alt="" coords="5,6,85,34">
+<area shape="rect" id="node4" href="inet.nodes.ethernet.EtherHost2.html" title="Compound Module EtherHost2" alt="" coords="109,6,197,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ethernet.EtherLLC-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EtherLLC.html" title="Simple Module EtherLLC" alt="" coords="5,6,83,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost.html">EtherHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>An example host with one Ethernet port and traffic generators that
+generate Ethernet traffic directly. This host model does not contain
+higher layer protocols (IP, TCP).</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.nodes.ethernet.EtherHost2.html">EtherHost2</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Example host model with one Ethernet port and several traffic generators
+to create traffic in the test network.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/fork</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>upperLayerIn [ ]</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>higher layer protocols or applications</p>
+</td>
+</tr>
+<tr class="local">
+   <td>upperLayerOut [ ]</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>higher layer protocols or applications</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowerLayerIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td>
+<p>to Ethernet MAC</p>
+</td>
+</tr>
+<tr class="local">
+   <td>lowerLayerOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td>
+<p>to Ethernet MAC</p>
+</td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Provides Ethernet 802.3 encapsulation/decapsulation and dispatching
+// to the appropriate higher layer by DSAP values.
+//
+// Expected environment:
+// - lowerLayerIn, lowerLayerOut gates should be connected
+//   to Ethernet EtherMAC
+// - upperLayerIn[], upperLayerOut[] gates should be connected to
+//   higher layer protocols or applications
+//
+// Functionality:
+//
+// Processes commands received from upper layers, as described in
+// </span><span style="color: #800000; ">&lt;a href=&quot;llc-app.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">Communication between LLC and higher layers</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+// The following commands are supported:
+// - IEEE802CTRL_DATA: send a frame.
+//   Encapsulates packet into EtherFrameWithLLC. This includes assigning
+//   dest address, ssap and dsap from the Ieee802Ctrl structure acompanying
+//   the message. Src address will be filled in by EtherMAC.
+// - IEEE802CTRL_REGISTER_DSAP: register application in LLC, as described in
+//   </span><span style="color: #800000; ">&lt;a href=&quot;appreg.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">Application registration</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+// - IEEE802CTRL_DEREGISTER_DSAP: deregister application, as described in
+//   </span><span style="color: #800000; ">&lt;a href=&quot;appreg.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">Application registration</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+// - IEEE802CTRL_SENDPAUSE: send PAUSE frame, as described in
+//   </span><span style="color: #800000; ">&lt;a href=&quot;ether-pause.html&quot;&gt;</span><span style="color: #808080; font-style: italic; ">PAUSE frames</span><span style="color: #800000; ">&lt;/a&gt;</span><span style="color: #808080; font-style: italic; ">.
+//
+// Processing of packets received from the lower layers:
+// - decapsulate frames received from EtherMAC
+// - sends received frames to corresponding application, based on dsap.
+// - only servicetype=0 is implemented (connectionless)
+// - reception of non-EtherFrameWithLLC objects (e.g. EthernetIIFrame,
+//   EtherFrameWithSNAP) will cause a runtime error.
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">EtherLLC</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/fork&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">upperLayerIn</span><span style="color: #000000; ">[];   </span><span style="color: #808080; font-style: italic; ">// higher layer protocols or applications
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">upperLayerOut</span><span style="color: #000000; ">[]; </span><span style="color: #808080; font-style: italic; ">// higher layer protocols or applications
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);     </span><span style="color: #808080; font-style: italic; ">// to Ethernet MAC
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">lowerLayerOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">EtherFrame</span><span style="color: #000000; ">);   </span><span style="color: #808080; font-style: italic; ">// to Ethernet MAC
+</span><span style="color: #000000; ">}
+
+</span></pre>
+   </body>
+</html>

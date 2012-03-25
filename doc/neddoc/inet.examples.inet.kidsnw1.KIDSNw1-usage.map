@@ -1,0 +1,5 @@
+<area shape="rect" id="node1" href="inet.examples.inet.kidsnw1.KIDSNw1.html" title="Network KIDSNw1" alt="" coords="172,6,252,34">
+<area shape="rect" id="node2" href="inet.examples.inet.kidsnw1.KIDSNw1.fiberrouterline.html" title="Channel fiberrouterline" alt="" coords="5,83,104,111">
+<area shape="rect" id="node4" href="inet.examples.inet.kidsnw1.KIDSNw1.ethernet.html" title="Channel ethernet" alt="" coords="128,83,200,111">
+<area shape="rect" id="node6" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="224,83,296,111">
+<area shape="rect" id="node8" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="320,83,421,111">

@@ -1,0 +1,153 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Simple Module <i>Ieee80211MgmtSTASimplified</i></h2>
+<b>Package:</b> inet.linklayer.ieee80211.mgmt<br/><b>File: <a href="src-linklayer-ieee80211-mgmt-Ieee80211MgmtSTASimplified.ned.html">src/linklayer/ieee80211/mgmt/Ieee80211MgmtSTASimplified.ned</a></b><br/><p><a href="../doxy/class_ieee80211_mgmt_s_t_a_simplified.html" target="mainframe"><b>C++ definition</b></a></p>
+
+<p>Used in 802.11 infrastructure mode: handles management frames for a station (STA).
+Relies on the MAC layer (<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">Ieee80211Mac</a>) for reception and transmission of frames.</p>
+<p>This variant is a very simplistic: the AP address and channel is preconfigured,
+there is no scanning, authentication or association. Only data frames are
+understood or sent at any time.</p>
+<p>This module never switches channels, that is, it will operate on the channel
+the physical layer is configured for (see channelNumber in <a href="inet.linklayer.radio.Ieee80211Radio.html">Ieee80211Radio</a>).</p>
+<p><b>Author:</b> Andras Varga</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified.html" title="Ieee80211MgmtSTASimplified" alt="Ieee80211MgmtSTASimplified" coords="0,31,234,71">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified.html" title="Simple Module Ieee80211MgmtSTASimplified" alt="" coords="5,83,203,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html" title="Compound Module Ieee80211NicSTASimplified" alt="" coords="12,6,196,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified.html" title="Simple Module Ieee80211MgmtSTASimplified" alt="" coords="5,83,203,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.mgmt.Ieee80211Mgmt.html" title="Module Interface Ieee80211Mgmt" alt="" coords="47,6,161,34">
+</map>
+<h3 class="subtitle">Used in compound modules:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html">Ieee80211NicSTASimplified</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>This NIC implements an infrastructure mode 802.11 network interface card
+for a host (STA), but using a simplified mgmt module that does not
+support handovers.</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Parameters:</h3>
+<table class="paramstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>accessPointAddress</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td></td>
+   <td>
+<p>MAC address of associate AP</p>
+   </td>
+</tr>
+<tr class="local">
+   <td>frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>display</td>
+   <td><i>i=block/cogwheel</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>uppergateIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>uppergateOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>macIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+<tr class="local">
+   <td>macOut</xsl:if></td>
+   <td><i>output</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Used in 802.11 infrastructure mode: handles management frames for a station (STA).
+// Relies on the MAC layer (Ieee80211Mac) for reception and transmission of frames.
+//
+// This variant is a very simplistic: the AP address and channel is preconfigured,
+// there is no scanning, authentication or association. Only data frames are
+// understood or sent at any time.
+//
+// This module never switches channels, that is, it will operate on the channel
+// the physical layer is configured for (see channelNumber in Ieee80211Radio).
+//
+// </span><span style="color: #000080; ">@author</span><span style="color: #808080; font-style: italic; "> Andras Varga
+//
+</span><span style="color: #800000; font-weight: bold; ">simple</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211MgmtSTASimplified</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">like</span><span style="color: #000000; "> </span><span style="color: #000000; ">Ieee80211Mgmt</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">accessPointAddress</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// MAC address of associate AP
+</span><span style="color: #000000; ">        </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">frameCapacity</span><span style="color: #000000; "> = </span><span style="color: #800000; font-weight: bold; ">default</span><span style="color: #000000; ">(</span><span style="color: #008000; ">100</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=block/cogwheel&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateIn</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">uppergateOut</span><span style="color: #000000; ">;
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">macIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">);
+        </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">macOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">Ieee80211Frame</span><span style="color: #000000; ">);
+}
+</span></pre>
+   </body>
+</html>

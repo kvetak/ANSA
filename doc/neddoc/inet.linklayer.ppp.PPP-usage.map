@@ -1,0 +1,7 @@
+<area shape="rect" id="node1" href="inet.linklayer.ppp.PPP.html" title="Simple Module PPP" alt="" coords="533,83,605,111">
+<area shape="rect" id="node2" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="5,6,104,34">
+<area shape="rect" id="node4" href="inet.linklayer.ppp.PPPInterfaceNoQueue.html" title="Compound Module PPPInterfaceNoQueue" alt="" coords="128,6,283,34">
+<area shape="rect" id="node6" href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html" title="Compound Module PPPInterfaceWithDLDuplicatesGenerator" alt="" coords="307,6,568,34">
+<area shape="rect" id="node8" href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html" title="Compound Module PPPInterfaceWithDLThruputMeter" alt="" coords="592,6,813,34">
+<area shape="rect" id="node10" href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html" title="Compound Module PPPInterfaceWithULDropsGenerator" alt="" coords="837,6,1072,34">
+<area shape="rect" id="node12" href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html" title="Compound Module PPPInterfaceWithULThruputMeter" alt="" coords="1096,6,1317,34">

@@ -1,0 +1,97 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Class <i>OSPFSummaryLSA</i></h2>
+<b>File: <a href="src-networklayer-ospfv2-OSPFPacket.msg.html">src/networklayer/ospfv2/OSPFPacket.msg</a></b><br/>
+<p>Represents an OSPF Summary LSA</p>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFSummaryLSA-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="OSPFSummaryLSA.html" title="Class OSPFSummaryLSA" alt="" coords="33,83,172,111">
+<area shape="rect" id="node2" href="TOSData.html" title="Struct TOSData" alt="" coords="64,161,141,189">
+<area shape="rect" id="node4" href="OSPFLinkStateUpdatePacket.html" title="Packet OSPFLinkStateUpdatePacket" alt="" coords="5,6,200,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="OSPFSummaryLSA-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="OSPFSummaryLSA.html" title="Class OSPFSummaryLSA" alt="" coords="5,83,144,111">
+<area shape="rect" id="node2" href="OSPFLSA.html" title="Class OSPFLSA" alt="" coords="33,6,116,34">
+</map>
+<h3 class="subtitle">Extends:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="OSPFLSA.html">OSPFLSA</a>
+   </td>
+   <td>
+<i>class</i>
+   </td>
+   <td>
+
+<p>common ancestor type for all LSAs</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>networkMask</td>
+   <td>
+      <i>
+IPAddress</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>routeCost</td>
+   <td>
+      <i>
+unsigned long</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>tosData</td>
+   <td>
+      <i>
+<a href="TOSData.html">TOSData</a>[]</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="inherited">
+   <td>header</td>
+   <td>
+      <i>
+<a href="OSPFLSAHeader.html">OSPFLSAHeader</a></i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Represents an OSPF Summary LSA
+//
+</span><span style="color: #800000; font-weight: bold; ">class</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFSummaryLSA</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">OSPFLSA</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000000; ">IPAddress</span><span style="color: #000000; "> </span><span style="color: #000000; ">networkMask</span><span style="color: #000000; ">;
+    </span><span style="color: #000080; font-weight: bold; ">unsigned</span><span style="color: #000000; "> </span><span style="color: #000080; font-weight: bold; ">long</span><span style="color: #000000; "> </span><span style="color: #000000; ">routeCost</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">TOSData</span><span style="color: #000000; "> </span><span style="color: #000000; ">tosData</span><span style="color: #000000; ">[];
+}
+
+</span></pre>
+   </body>
+</html>

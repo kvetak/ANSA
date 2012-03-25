@@ -1,0 +1,92 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Packet <i>RTPSenderControlMessage</i></h2>
+<b>File: <a href="src-transport-rtp-RTPSenderControlMessage.msg.html">src/transport/rtp/RTPSenderControlMessage.msg</a></b><br/>
+<p>A message of the type <a href="RTPSenderControlMessage.html">RTPSenderControlMessage</a> is created by an application to control
+the behavior of an rtp sender module. With this class the application can send a command
+string to the sender module like "PLAY" or "STOP". A message can have up to two float
+parameters.</p>
+<p>Following commands are evaluated in <a href="inet.transport.rtp.RTPPayloadSender.html">RTPPayloadSender</a> (although correct behavior must
+be implemented in modules for certain payload types):</p>
+  <ul><ul><li>PLAY : start playing from current position</li>
+  <li>PAUSE : pause playing, stay at current position</li>
+  <li>STOP : stop playing, go to beginning</li>
+  <li>PLAY_UNTIL_TIME : start playing from current position and play until given temporal position (relative to
+     start of file is reached)</li>
+  <li>PLAY_UNTIL_BYTE : start playing from current position and play until this data byte is reached</li>
+  <li>SEEK_TIME : go to temporal position within the file (not allowed while playing)</li>
+  <li>SEEK_BYTE : go to data byte (not allowed while playing)</li></ul></ul>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="RTPSenderControlMessage-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="RTPSenderControlMessage.html" title="Packet RTPSenderControlMessage" alt="" coords="5,6,189,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="RTPSenderControlMessage-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="RTPSenderControlMessage.html" title="Packet RTPSenderControlMessage" alt="" coords="5,6,189,34">
+</map>
+<h3 class="subtitle">Fields:</h3>
+<table class="fieldstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>command</td>
+   <td>
+      <i>
+string</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>commandParameter1</td>
+   <td>
+      <i>
+float</i>
+   </td>
+   <td></td>
+</tr>
+<tr class="local">
+   <td>commandParameter2</td>
+   <td>
+      <i>
+float</i>
+   </td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// A message of the type RTPSenderControlMessage is created by an application to control
+// the behavior of an rtp sender module. With this class the application can send a command
+// string to the sender module like &quot;PLAY&quot; or &quot;STOP&quot;. A message can have up to two float
+// parameters.
+//
+// Following commands are evaluated in RTPPayloadSender (although correct behavior must
+// be implemented in modules for certain payload types):
+//    - PLAY : start playing from current position
+//    - PAUSE : pause playing, stay at current position
+//    - STOP : stop playing, go to beginning
+//    - PLAY_UNTIL_TIME : start playing from current position and play until given temporal position (relative to
+//      start of file is reached)
+//    - PLAY_UNTIL_BYTE : start playing from current position and play until this data byte is reached
+//    - SEEK_TIME : go to temporal position within the file (not allowed while playing)
+//    - SEEK_BYTE : go to data byte (not allowed while playing)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">RTPSenderControlMessage</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">string</span><span style="color: #000000; "> </span><span style="color: #000000; ">command</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">float</span><span style="color: #000000; "> </span><span style="color: #000000; ">commandParameter1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">float</span><span style="color: #000000; "> </span><span style="color: #000000; ">commandParameter2</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

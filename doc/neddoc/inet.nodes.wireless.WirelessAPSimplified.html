@@ -1,0 +1,335 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Compound Module <i>WirelessAPSimplified</i></h2>
+<b>Package:</b> inet.nodes.wireless<br/><b>File: <a href="src-nodes-wireless-WirelessAPSimplified.ned.html">src/nodes/wireless/WirelessAPSimplified.ned</a></b><br/>
+<p>Models a 802.11 Access Point, but using a simplified NIC that does not
+support handovers. It should be used in conjunction with <a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a>,
+or any other host model containing WirelessNicSTASimplified.</p>
+<p><b>See also:</b> <a href="inet.nodes.wireless.WirelessAP.html">WirelessAP</a>, <a href="inet.nodes.wireless.WirelessAPSimplified.html">WirelessAPSimplified</a>, <a href="inet.nodes.wireless.WirelessAPWithEth.html">WirelessAPWithEth</a>, <a href="inet.nodes.wireless.WirelessAPWithEthSimplified.html">WirelessAPWithEthSimplified</a></p>
+<p><b>See also:</b> <a href="inet.nodes.wireless.WirelessHost.html">WirelessHost</a>, <a href="inet.nodes.wireless.WirelessHostSimplified.html">WirelessHostSimplified</a></p>
+<p><b>See also:</b> <a href="inet.nodes.adhoc.MobileHost.html">MobileHost</a>, <a href="inet.nodes.adhoc.MFMobileHost.html">MFMobileHost</a></p>
+<img src="inet.nodes.wireless.WirelessAPSimplified-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
+<area shape="rect" href="inet.base.NotificationBoard.html" title="NotificationBoard" alt="NotificationBoard" coords="27,94,135,155">
+<area shape="rect" href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html" title="Ieee80211NicAPSimplified" alt="Ieee80211NicAPSimplified" coords="92,199,143,260">
+<area shape="rect" href="inet.mobility.NullMobility.html" title="NullMobility" alt="NullMobility" coords="121,98,171,143">
+</map>
+<h3 class="subtitle">Usage diagram:</h3>
+<p>The following diagram shows usage relationships between types.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.wireless.WirelessAPSimplified-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.nodes.wireless.WirelessAPSimplified.html" title="Compound Module WirelessAPSimplified" alt="" coords="260,83,407,111">
+<area shape="rect" id="node2" href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html" title="Compound Module Ieee80211NicAPSimplified" alt="" coords="5,161,181,189">
+<area shape="rect" id="node4" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="205,161,328,189">
+<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="352,161,451,189">
+<area shape="rect" id="node8" href="inet.mobility.NullMobility.html" title="Simple Module NullMobility" alt="" coords="475,161,565,189">
+<area shape="rect" id="node10" href="inet.examples.wireless.lan80211.Lan80211.html" title="Network Lan80211" alt="" coords="243,6,320,34">
+<area shape="rect" id="node12" href="inet.examples.wireless.hosttohost.Throughput.html" title="Network Throughput" alt="" coords="344,6,429,34">
+</map>
+<h3 class="subtitle">Inheritance diagram:</h3>
+<p>The following diagram shows inheritance relationships for this type.
+Unresolved types are missing from the diagram.</p>
+<img src="inet.nodes.wireless.WirelessAPSimplified-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.nodes.wireless.WirelessAPSimplified.html" title="Compound Module WirelessAPSimplified" alt="" coords="5,6,152,34">
+</map>
+<h3 class="subtitle">Networks:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.lan80211.Lan80211.html">Lan80211</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.examples.wireless.hosttohost.Throughput.html">Throughput</a>
+   </td>
+   <td>
+<i>network</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Properties:</h3>
+<table class="propertiestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="value">Value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>node</td>
+   <td><i></i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>labels</td>
+   <td><i>node</i></td>
+   <td></td>
+</tr>
+<tr>
+   <td>display</td>
+   <td><i>i=device/accesspoint</i></td>
+   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Gates:</h3>
+<table class="gatestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Direction</th>
+      <th class="gatesize">Size</th>
+      <th class="description">Description</th>
+   </tr>
+<tr class="local">
+   <td>radioIn</xsl:if></td>
+   <td><i>input</i></td>
+   <td></td>   <td></td>
+</tr>
+</table>
+<h3 class="subtitle">Unassigned submodule parameters:</h3>
+<table class="deepparamstable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="defaultvalue">Default value</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAPSimplified.html">mgmt</a>.frameCapacity</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>100</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.address</td>
+   <td>
+      <i>string</i>
+   </td>
+   <td>"auto"</td>
+   <td>
+<p>MAC address as hex string (12 hex digits), or
+"auto". "auto" values will be replaced by
+a generated MAC address in init stage 0.</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.maxQueueSize</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td></td>
+   <td>
+<p>max queue length in frames; only used if queueModule==""</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.rtsThresholdBytes</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>2346B</td>
+   <td>
+<p>longer messages will be sent using RTS/CTS</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.retryLimit</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>maximum number of retries per message, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinData</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for normal data frames, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.cwMinBroadcast</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>contention window for broadcast messages, -1 means default</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html">mac</a>.mtu</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>1500</td>
+   <td>   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.channelNumber</td>
+   <td>
+      <i>int</i>
+   </td>
+   <td>0</td>
+   <td>
+<p>channel identifier</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.transmitterPower</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>20mW</td>
+   <td>
+<p>power used for transmission of messages (in mW)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.bitrate</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>(in bits/s)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.thermalNoise</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-110dBm</td>
+   <td>
+<p>base noise level (dBm)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.pathLossAlpha</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>2</td>
+   <td>
+<p>used by the path loss calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.shadowingDeviation</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>0dB</td>
+   <td>
+<p>used by the shadowing model calculation</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.snirThreshold</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>4dB</td>
+   <td>
+<p>if signal-noise ratio is below this threshold, frame is considered noise (in dB)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.linklayer.ieee80211.Ieee80211NicAPSimplified.html">wlan</a>.<a href="inet.linklayer.radio.Ieee80211Radio.html">radio</a>.sensitivity</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td></td>
+   <td>
+<p>received signals with power below sensitivity are ignored</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.mobility.NullMobility.html">mobility</a>.x</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start x coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+<tr>
+   <td><a href="inet.mobility.NullMobility.html">mobility</a>.y</td>
+   <td>
+      <i>double</i>
+   </td>
+   <td>-1</td>
+   <td>
+<p>start y coordinate (-1 = display string position, or random if it's missing)</p>
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Models a 802.11 Access Point, but using a simplified NIC that does not
+// support handovers. It should be used in conjunction with WirelessHostSimplified,
+// or any other host model containing WirelessNicSTASimplified.
+//
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> WirelessAP, WirelessAPSimplified, WirelessAPWithEth, WirelessAPWithEthSimplified
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> WirelessHost, WirelessHostSimplified
+// </span><span style="color: #000080; ">@see</span><span style="color: #808080; font-style: italic; "> MobileHost, MFMobileHost
+//
+</span><span style="color: #800000; font-weight: bold; ">module</span><span style="color: #000000; "> </span><span style="color: #000000; ">WirelessAPSimplified</span><span style="color: #000000; ">
+{
+    </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; font-weight: bold; ">@node</span><span style="color: #000000; ">();
+        </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">node</span><span style="color: #000000; ">,</span><span style="color: #000000; ">wireless</span><span style="color: #000000; ">-</span><span style="color: #000000; ">node</span><span style="color: #000000; ">);
+        </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;i=device/accesspoint&quot;</span><span style="color: #000000; ">);
+    </span><span style="color: #800000; font-weight: bold; ">gates</span><span style="color: #000000; ">:
+        </span><span style="color: #000080; font-weight: bold; ">input</span><span style="color: #000000; "> </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@directIn</span><span style="color: #000000; ">;
+    </span><span style="color: #800000; font-weight: bold; ">submodules</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">notificationBoard</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NotificationBoard</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=79,74&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">: </span><span style="color: #000000; ">Ieee80211NicAPSimplified</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=110,179;q=queue&quot;</span><span style="color: #000000; ">);
+        }
+        </span><span style="color: #000000; ">mobility</span><span style="color: #000000; ">: </span><span style="color: #000000; ">NullMobility</span><span style="color: #000000; "> {
+            </span><span style="color: #800000; font-weight: bold; ">parameters</span><span style="color: #000000; ">:
+                </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;p=144,70&quot;</span><span style="color: #000000; ">);
+        }
+    </span><span style="color: #800000; font-weight: bold; ">connections</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">allowunconnected</span><span style="color: #000000; ">:
+        </span><span style="color: #000000; ">radioIn</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> { </span><span style="color: #000000; font-weight: bold; ">@display</span><span style="color: #000000; ">(</span><span style="color: #008000; ">&quot;m=s&quot;</span><span style="color: #000000; ">); } </span><span style="color: #800000; font-weight: bold; ">--&gt;</span><span style="color: #000000; "> </span><span style="color: #000000; ">wlan</span><span style="color: #000000; ">.</span><span style="color: #000000; ">radioIn</span><span style="color: #000000; ">;
+}
+
+</span></pre>
+   </body>
+</html>

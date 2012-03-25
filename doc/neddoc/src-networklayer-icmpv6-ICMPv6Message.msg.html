@@ -1,0 +1,308 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" type="text/css" href="style.css" />
+   </head>
+   <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
+<h2 class="comptitle">Msg File <i>src/networklayer/icmpv6/ICMPv6Message.msg</i></h2>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="ICMPv6Type.html">ICMPv6Type</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6DEST_UN.html">ICMPv6DEST_UN</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> "codes" for type ICMPv6_DESTINATION_UNREACHABLE</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6_TIME_EX.html">ICMPv6_TIME_EX</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> "codes" for type ICMPv6_TIME_EXCEEDED</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6_PARAMETER_PROB.html">ICMPv6_PARAMETER_PROB</a>
+   </td>
+   <td>
+<i>enum</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> "codes" for type ICMPv6_PARAMETER_PROBLEM</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6Message.html">ICMPv6Message</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Represents an <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> packet.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6DestUnreachableMsg.html">ICMPv6DestUnreachableMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p>Notes:
+  1. As defined in RFC2463: Section 3</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6PacketTooBigMsg.html">ICMPv6PacketTooBigMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6TimeExceededMsg.html">ICMPv6TimeExceededMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6ParamProblemMsg.html">ICMPv6ParamProblemMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6EchoRequestMsg.html">ICMPv6EchoRequestMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> Echo Request packet (RFC2463: Section 4).
+Data is attached through encapsulation (see <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a>.cc)</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="ICMPv6EchoReplyMsg.html">ICMPv6EchoReplyMsg</a>
+   </td>
+   <td>
+<i>packet</i>
+   </td>
+   <td>
+
+<p><a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> Echo Reply packet. Data is attached through encapsulation (see <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a>.cc)</p>
+
+   </td>
+</tr>
+</table>
+<h3 class="subtitle">Source code:</h3>
+<pre class="src"><span style="color: #808080; font-style: italic; ">//
+// Copyright (C) 2001 CTIE, Monash University
+// Copyright (C) 2005 Andras Varga
+// Copyright (C) 2005 Wei Yang, Ng
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program; if not, see &lt;http://www.gnu.org/licenses/&gt;.
+//
+</span><span style="color: #000000; ">
+</span><span style="color: #800000; font-weight: bold; ">cplusplus</span><span style="color: #000000; "> {{
+#</span><span style="color: #000000; ">include</span><span style="color: #000000; "> </span><span style="color: #008000; ">&quot;INETDefs.h&quot;</span><span style="color: #000000; ">
+#</span><span style="color: #000000; ">define</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6_HEADER_BYTES</span><span style="color: #000000; ">  </span><span style="color: #008000; ">8</span><span style="color: #000000; ">
+}}
+
+</span><span style="color: #808080; font-style: italic; ">//
+</span><span style="color: #0000ff; font-style: italic; ">//# </span><span style="color: #000080; ">TODO</span><span style="color: #0000ff; font-style: italic; "> consolidate this file's contents with ICMPMessage.msg
+</span><span style="color: #808080; font-style: italic; ">//
+</span><span style="color: #000000; ">
+
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Type</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">ICMPv6_UNSPECIFIED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_DESTINATION_UNREACHABLE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_PACKET_TOO_BIG</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_TIME_EXCEEDED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_PARAMETER_PROBLEM</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_ECHO_REQUEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">128</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_ECHO_REPLY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">129</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_MLD_QUERY</span><span style="color: #000000; "> = </span><span style="color: #008000; ">130</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_MLD_REPORT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">131</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_MLD_DONE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">132</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_ROUTER_SOL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">133</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_ROUTER_AD</span><span style="color: #000000; "> = </span><span style="color: #008000; ">134</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_NEIGHBOUR_SOL</span><span style="color: #000000; "> = </span><span style="color: #008000; ">135</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_NEIGHBOUR_AD</span><span style="color: #000000; "> = </span><span style="color: #008000; ">136</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_REDIRECT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">137</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ICMPv6_MLDv2_REPORT</span><span style="color: #000000; "> = </span><span style="color: #008000; ">143</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//cplusplus {{
+//typedef int ICMPv6Code;
+//}}
+</span><span style="color: #000000; ">
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 &quot;codes&quot; for type ICMPv6_DESTINATION_UNREACHABLE
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6DEST_UN</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">NO_ROUTE_TO_DEST</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">COMM_WITH_DEST_PROHIBITED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #808080; font-style: italic; ">//2 - NOT ASSIGNED
+</span><span style="color: #000000; ">    </span><span style="color: #000000; ">ADDRESS_UNREACHABLE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">3</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">PORT_UNREACHABLE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">4</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 &quot;codes&quot; for type ICMPv6_TIME_EXCEEDED
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6_TIME_EX</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">ND_HOP_LIMIT_EXCEEDED</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">ND_FRAGMENT_REASSEMBLY_TIME</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 &quot;codes&quot; for type ICMPv6_PARAMETER_PROBLEM
+//
+</span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6_PARAMETER_PROB</span><span style="color: #000000; ">
+{
+
+    </span><span style="color: #000000; ">ERROREOUS_HDR_FIELD</span><span style="color: #000000; "> = </span><span style="color: #008000; ">0</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">UNRECOGNIZED_NEXT_HDR_TYPE</span><span style="color: #000000; "> = </span><span style="color: #008000; ">1</span><span style="color: #000000; ">;
+    </span><span style="color: #000000; ">UNRECOGNIZED_IPV6_OPTION</span><span style="color: #000000; "> = </span><span style="color: #008000; ">2</span><span style="color: #000000; ">;
+}
+
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Represents an ICMPv6 packet.
+//
+// Notes:
+//    1. number of octets excluding the error datagram that is usually appended
+//       in optInfo, i.e. the Type|CODE|CHECKSUM|UNUSED/POINTER/MTU/OTHER
+//       as defined in RFC2463
+//    2. Any ICMP type with MSB set, i.e. &gt;=128 is an Informational ICMP message
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">type</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ICMPv6Type</span><span style="color: #000000; ">);
+        </span><span style="color: #808080; font-style: italic; ">//int code; //TODO: this should be specific to different ICMP types.
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// Notes:
+//   1. As defined in RFC2463: Section 3
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6DestUnreachableMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ICMPv6DEST_UN</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6PacketTooBigMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//Set to 0 by sender and ignored by receiver.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">MTU</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//MTU of next-hop link
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6TimeExceededMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ICMPv6_TIME_EX</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6ParamProblemMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">enum</span><span style="color: #000000; ">(</span><span style="color: #000000; ">ICMPv6_PARAMETER_PROB</span><span style="color: #000000; ">);
+}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 Echo Request packet (RFC2463: Section 4).
+// Data is attached through encapsulation (see ICMPv6.cc)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6EchoRequestMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//set to 0.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">identifier</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// identifier to aid in matching Echo replies. May be Zero
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">seqNumber</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// sequence number to aid in matching Echo replies. May be Zero
+</span><span style="color: #000000; ">        </span><span style="color: #808080; font-style: italic; ">//Data is attached through encapsulation. See ICMPv6.cc
+</span><span style="color: #000000; ">}
+
+</span><span style="color: #808080; font-style: italic; ">//
+// ICMPv6 Echo Reply packet. Data is attached through encapsulation (see ICMPv6.cc)
+//
+</span><span style="color: #800000; font-weight: bold; ">packet</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6EchoReplyMsg</span><span style="color: #000000; "> </span><span style="color: #800000; font-weight: bold; ">extends</span><span style="color: #000000; "> </span><span style="color: #000000; ">ICMPv6Message</span><span style="color: #000000; ">
+{
+    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">code</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">//set to 0.
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">identifier</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// identifier to aid in matching Echo replies. May be Zero
+</span><span style="color: #000000; ">    </span><span style="color: #000080; font-weight: bold; ">int</span><span style="color: #000000; "> </span><span style="color: #000000; ">seqNumber</span><span style="color: #000000; ">; </span><span style="color: #808080; font-style: italic; ">// sequence number to aid in matching Echo replies. May be Zero
+</span><span style="color: #000000; ">}
+</span></pre>
+   </body>
+</html>
