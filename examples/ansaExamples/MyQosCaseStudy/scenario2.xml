@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<scenario>
+	<at t="100.0">
+		<interfacedown module="Praha.interfaceStateManager" int="ppp0"/>
+	</at>
+</scenario>

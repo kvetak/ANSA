@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<trafgen>
+	<flow id="1">
+		<description>VoIP 1</description>
+		<duration>10</duration>
+		<start_time>1</start_time>
+		<ip_header>
+		  <source_ip>172.16.100.2</source_ip>
+		  <destination_ip>172.16.200.2</destination_ip>
+		  <tos>EF</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16384</source_port>
+		  <destination_port>16384</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+  <flow id="2">
+		<description>VoIP 2</description>
+		<duration>10</duration>
+		<start_time>1</start_time>
+		<ip_header>
+		  <source_ip>172.16.100.2</source_ip>
+		  <destination_ip>172.16.200.2</destination_ip>
+		  <tos>EF</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16385</source_port>
+		  <destination_port>16385</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+	<flow id="3">
+		<description>VoIP 3</description>
+		<duration>10</duration>
+		<start_time>1</start_time>
+		<ip_header>
+		  <source_ip>172.16.100.2</source_ip>
+		  <destination_ip>172.16.200.2</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16386</source_port>
+		  <destination_port>16386</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+  	<flow id="4">
+		<description>VoIP 4</description>
+		<duration>10</duration>
+		<start_time>1</start_time>
+		<ip_header>
+		  <source_ip>172.16.100.2</source_ip>
+		  <destination_ip>172.16.200.2</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16387</source_port>
+		  <destination_port>16387</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>  
+  <flow id="5">
+		<description>TCP 1</description>
+		<duration>10</duration>
+		<start_time>1</start_time>
+		<ip_header>
+		  <source_ip>172.16.100.2</source_ip>
+		  <destination_ip>172.16.200.2</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>tcp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>1024</source_port>
+		  <destination_port>80</destination_port>
+		</transport_header>
+		<application type="custom">
+		  <packets_per_second>100</packets_per_second>
+		  <time_distribution>constant</time_distribution>
+		  <packet_size>1000</packet_size>
+		  <size_distribution>constant</size_distribution>
+		</application>
+	</flow>
+</trafgen>

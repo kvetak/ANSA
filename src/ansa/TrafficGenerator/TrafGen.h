@@ -1,5 +1,5 @@
 //
-// Copyright 2010 Martin Danko
+// Copyright 2011 Martin Danko
 //
 // This library is free software, you can redistribute it and/or modify
 // it under  the terms of the GNU Lesser General Public License
@@ -18,23 +18,47 @@
 #include "INETDefs.h"
 #include "IPvXAddress.h"
 #include "ITrafGenApplication.h"
+#include "TCPSocket.h"
+#include "TCPCommand_m.h"
+#include "UDPSocket.h"
+#include "IPControlInfo.h"
+#include "UDPControlInfo_m.h"
+#include "TrafGenPacket_m.h"
+#include "TCPSegment.h"
+#include "UDPPacket.h"
 
 namespace TG {
 
+/* Trieda zaznamenanie casu a velkosti paketu */
+class PktRec
+{
+  private:
+    double time;
+    int length;
+  
+  public:
+    PktRec(double t, int l) {time = t; length = l;}
+    double getTime() {return time;}
+    int getLength() {return length;}
+    
+}; 
 
-class RcvFlowRecord {
-
+/* Trieda pre ukladanie statistik o prijatych paketoch toku */ 
+class RcvFlowRecord
+{
 private:
-    std::string id;
-    double startTime;
-    double endTime;
-    long  totalSentPkts;
-    long  totalRcvPkts;
-    double minDelay;
-    double maxDelay;
-    double totalDelay;
-    double totalJitter;
-    long totalBytes;
+    std::string id;          // identifikator toku
+    double startTime;        // cas prichodu prveho paketu
+    double endTime;          // cas prichodu posledneho paketu
+    long  totalSentPkts;     // celkovy pocet zaslanych paketov
+    long  totalRcvPkts;      // celkovy pocet prijatych paketov
+    double minDelay;         // minimalne onesekorenie
+    double maxDelay;         // maximalne oneskorenie
+    double totalDelay;       // celkove oneskorenie
+    double totalJitter;      // celkovy jitter
+    long totalBytes;         // celkovy pocet prijatych bajtov
+    std::vector<PktRec> actStat; // vektor s paketmi za poslednu sekundu
+    
 
 public:
     RcvFlowRecord();
@@ -60,19 +84,24 @@ public:
     double getTotalDelay() {return totalDelay;}
     double getTotalJitter() {return totalJitter;}
     long getTotalBytes() {return totalBytes;}
+    void updateActVec(double t, int l) {actStat.push_back(PktRec(t,l));}
+    int getActualPacketrate() {actualizeVector(); return actStat.size();} 
+    double getActBitrate();
+    void actualizeVector();
+    
 
 };
 
 typedef std::vector<RcvFlowRecord> RcvStats;
 
-
+/* Trieda pre ukladanie statistik o prijatych paketoch toku */ 
 class SntFlowRecord {
 
 private:
-    std::string id;
-    double startTime;
-    long  totalSentPkts;
-    long totalBytes;
+    std::string id;          // identifikator toku
+    double startTime;        // cas odoslania prveho paketu
+    long  totalSentPkts;     // celkovy pocet zaslanych paketov
+    long totalBytes;         // celkovy pocet zaslanych bajtov
 
 public:
     SntFlowRecord() {totalSentPkts = 0; totalBytes = 0;}
@@ -92,27 +121,30 @@ public:
 
 typedef std::vector<SntFlowRecord> SntStats;  
 
-class FlowRecord {
-
+/* Trieda reprezentujuca zaznam o jedenom toku */ 
+class FlowRecord
+{
 private:
-    std::string id;
-    double startTime;
-    double duration;
-    IPvXAddress srcIP;
-    IPvXAddress dstIP;
-    unsigned char tos;
-    short ttl;
-    short protocol;
-    int srcPort;
-    int dstPort;
+    std::string id;           // identifikator toku
+    double startTime;         // cas sa ma tok zacat generovat 
+    double duration;          // doba generovania toku
+    IPvXAddress srcIP;        // zdrojova IP adresa toku
+    IPvXAddress dstIP;        // cielova IP adresa toku
+    unsigned char tos;        // ToS (type of service)
+    short ttl;                // TTL (time to live)
+    short protocol;           // trasportny protokol
+    int srcPort;              // zdrojovy port
+    int dstPort;              // cielovy port
     
-    std::string appName;
-    ITrafGenApplication *pApplication;
+    std::string appName;                // nazov aplikacie toku
+    ITrafGenApplication *pApplication;  // ukazovatel na objekt aplikacie 
     
-    bool generating;
-    bool analyzing;
+    bool generating;          // urcuje ci dany modul tok generuje
+    bool analyzing;           // urcuje ci dany modul tok analyzuje
     
-    RcvStats::iterator rcvModStatsIt;
+    RcvStats::iterator rcvModStatsIt;   // iterator na statistiky prijemcu
+    
+    TCPSocket *socket;        // TCP socket v pripade pouzitia TCP trasportu 
     
 
 public:
@@ -150,10 +182,22 @@ public:
     
     RcvStats::iterator getRcvModStatsIt() {return rcvModStatsIt;}
     void setRcvModStatsIt(RcvStats::iterator n_it) {rcvModStatsIt = n_it;}
+    
+    void tcpConnect(cGate *toTcp);
+    void tcpClose() {socket->close();}
+    void sendTcpPacket(cMessage *msg) {socket->send(msg);}
+    bool isSocketCreated() {return socket != NULL;}
+    bool isTcpConnected() { return (this->isSocketCreated() && socket->getState() != TCPSocket::CONNECTED); }
+    int getSocketConId() {return socket->getConnectionId();}
+    
 };
 
 typedef std::vector<FlowRecord> Flows;
 
+/*
+ * Pretazenie operatoru "<<" pre vypis statistiky odoslanych paketov 
+ * do grafickeho rozhrania 
+ */
 inline std::ostream& operator<< (std::ostream& ostr, SntFlowRecord& rec)
 {
     double time = simTime().dbl() - rec.getStartTime();
@@ -171,6 +215,10 @@ inline std::ostream& operator<< (std::ostream& ostr, SntFlowRecord& rec)
     return ostr;
 }
 
+/*
+ * Pretazenie operatoru "<<" pre vypis statistiky prijatych paketov 
+ * do grafickeho rozhrania 
+ */
 inline std::ostream& operator<< (std::ostream& ostr, RcvFlowRecord& rec)
 {
     double time = simTime().dbl() - rec.getStartTime();
@@ -192,28 +240,30 @@ inline std::ostream& operator<< (std::ostream& ostr, RcvFlowRecord& rec)
     return ostr;
 }
 
-
 }
 
-/**
-
- */
+/* Trieda reprezentujuca modul generatora datovych tokov */ 
 class INET_API TrafGen : public cSimpleModule
 {
   protected:
   
-    TG::Flows flows;
-    TG::SntStats sentStatistics;
-    TG::RcvStats receivedStatistics;
+    TG::Flows flows;                       // definovane toky
+    TG::SntStats sentStatistics;           // statistiky o generovanych tokoch 
+    TG::RcvStats receivedStatistics;       // statistiky o analyzovanych tokoch
+    std::vector<int> tcpListenPort;        // zoznam tcp nasluchajucich portov
+    std::vector<int> udpListenPort;        // zoznam udp nasluchajucich portov
+    
+    std::map<std::string, cOutVector*> actBitrateVec; //vektory pre zaznam aktualej bitovej rychlosti
+    std::map<std::string, cOutVector*> actPacketrateVec; //vektory pre zaznam aktualej paketovej rychlosti  
   
-    int numSent;
-    int numReceived;
-    int counter;
+    int numSent;           // pocet zaslanych paketov
+    int numReceived;       // pocet prijatych paketov
+    int counter;           // citac
     
     
     cPacket *createPacket(TG::Flows::iterator flowIt);
-    void sendPacket(TG::Flows::iterator flowIt);
-    void processPacket(cPacket *msg);
+    bool sendPacket(TG::Flows::iterator flowIt);
+    void processPacket(cMessage *msg);
     
     bool LoadFlowsFromXML(const char * filename);
     void parseFlow(const cXMLElement& flowConfig);
@@ -224,10 +274,19 @@ class INET_API TrafGen : public cSimpleModule
     void initTimers();
     void bindSockets();
     void initStats();
+    bool isLocalTcpOrig(int id);
+    bool isListening(short prot, int port);
+    void updateActVectorStats();
     
     TG::Flows::iterator getFlowById(std::string s_id);
     TG::SntStats::iterator getSntFlowStatById(std::string s_id);
     TG::RcvStats::iterator getRcvFlowStatById(std::string r_id);
+    
+  public:
+    ~TrafGen();
+    unsigned char getDscpByFlowInfo(IPAddress &srcAdd,IPAddress &destAdd, short prot, int srcPort, int destPort);
+    short getTtlByFlowInfo(IPAddress &srcAdd,IPAddress &destAdd, short prot, int srcPort, int destPort);
+    void updateSentStats(cPacket * payload);
 
 
   protected:

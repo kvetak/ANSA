@@ -16,20 +16,22 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+package inet.ansa.qos;
 
-package inet.ansa.TrafficGenerator;
+import inet.networklayer.queue.OutputQueue;
 
-
-simple TrafGen
+//
+// Definicia modulu AnsaQosSystem obsahujuceho fronty: FIFO, WFQ, PQ, CQ.
+// Kompatibilny s OutputQueue.
+//
+simple AnsaQosSystem like OutputQueue
 {
     parameters:
-        string flowDefFile = default("trafgen.xml");
-        @display("i=block/broadcast");
-
+        string configFile;
     gates:
-        input tcpIn;
-        output tcpOut;
-        input udpIn;
-        output udpOut;
+        input in;
+        output out;
 }
+
+
 

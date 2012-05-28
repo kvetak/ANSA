@@ -17,19 +17,23 @@
 //
 
 
-package inet.ansa.TrafficGenerator;
+#ifndef __ANSA_TRAFGEN_ACCESS_H
+#define __INET_ROUTING_TABLE_ACCESS_H
 
 
-simple TrafGen
+#include <omnetpp.h>
+#include "ModuleAccess.h"
+#include "TrafGen.h"
+
+
+/**
+ * Umozni pristup k modulu TrafGen.
+ */
+class INET_API TrafGenAccess : public ModuleAccess<TrafGen>
 {
-    parameters:
-        string flowDefFile = default("trafgen.xml");
-        @display("i=block/broadcast");
+    public:
+        TrafGenAccess() : ModuleAccess<TrafGen>("trafgen") {}
+};
 
-    gates:
-        input tcpIn;
-        output tcpOut;
-        input udpIn;
-        output udpOut;
-}
+#endif
 

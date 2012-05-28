@@ -20,16 +20,16 @@
 package inet.ansa;
 
 import inet.ansa.TrafficGenerator.TrafGen;
+import inet.ansa.TrafficGenerator.DscpTtlCorrector;
 import inet.applications.pingapp.PingApp;
 import inet.base.NotificationBoard;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
-//import inet.nodes.inet.NetworkLayer;
-import inet.ansa.AnsaNetworkLayer;
+import inet.nodes.inet.NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
 import inet.networklayer.ipv4.RoutingTable;
 import inet.transport.tcp.TCP;
-import inet.ansa.transport.AnsaUDP;
+import inet.transport.udp.UDP;
 import inet.util.NAMTraceWriter;
 
 
@@ -72,7 +72,7 @@ module ANSATrafGenHost
             parameters:
                 @display("p=163,154");
         }
-        udp: AnsaUDP {
+        udp: UDP {
             parameters:
                 @display("p=272,154");
         }
@@ -84,10 +84,10 @@ module ANSATrafGenHost
             parameters:
                 @display("p=343,200");
         }
-        networkLayer: AnsaNetworkLayer {
+        networkLayer: NetworkLayer {
             parameters:
                 proxyARP = false;
-                @display("p=248,247;q=queue");
+                @display("p=219,240;q=queue");
             gates:
                 ifIn[sizeof(pppg)+sizeof(ethg)];
                 ifOut[sizeof(pppg)+sizeof(ethg)];
@@ -98,7 +98,16 @@ module ANSATrafGenHost
         }
         eth[sizeof(ethg)]: EthernetInterface {
             parameters:
-                @display("p=240,350,row,90;q=txQueue");
+                @display("p=219,370,row,90;q=txQueue");
+        }
+        dtc: DscpTtlCorrector {
+            parameters:
+                @display("p=219,300,row;i=block/tx");
+            gates:
+                toNetworkLayerIn[sizeof(pppg)+sizeof(ethg)];
+                toNetworkLayerOut[sizeof(pppg)+sizeof(ethg)];
+                ifIn[sizeof(pppg)+sizeof(ethg)];
+                ifOut[sizeof(pppg)+sizeof(ethg)];
         }
     connections allowunconnected:
 
@@ -106,7 +115,7 @@ module ANSATrafGenHost
         trafgen.tcpIn <-- tcp.appOut++;
 
         tcp.ipOut --> networkLayer.tcpIn;
-        tcp.ipIn <-- networkLayer.TCPOut;
+        tcp.ipIn <-- networkLayer.tcpOut;
 
         trafgen.udpOut --> udp.appIn++;
         trafgen.udpIn <-- udp.appOut++;
@@ -120,14 +129,18 @@ module ANSATrafGenHost
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
-            ppp[i].netwOut --> networkLayer.ifIn[i];
-            ppp[i].netwIn <-- networkLayer.ifOut[i];
+            ppp[i].netwOut --> dtc.ifIn[i];
+            dtc.toNetworkLayerOut[i] --> networkLayer.ifIn[i];
+            ppp[i].netwIn <-- dtc.ifOut[i];
+            dtc.toNetworkLayerIn[i] <-- networkLayer.ifOut[i];
         }
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
-            eth[i].netwOut --> networkLayer.ifIn[sizeof(pppg)+i];
-            eth[i].netwIn <-- networkLayer.ifOut[sizeof(pppg)+i];
+            eth[i].netwOut --> dtc.ifIn[sizeof(pppg)+i];
+            dtc.toNetworkLayerOut[sizeof(pppg)+i] --> networkLayer.ifIn[sizeof(pppg)+i];
+            eth[i].netwIn <-- dtc.ifOut[sizeof(pppg)+i];
+            dtc.toNetworkLayerIn[sizeof(pppg)+i] <-- networkLayer.ifOut[sizeof(pppg)+i];
         }
 }
 

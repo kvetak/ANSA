@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2010 Martin Danko
+// Copyright (C) 2011 Martin Danko
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@
 #include <omnetpp.h>
 #include "INETDefs.h"
 
-
+/* Trieda od ktorej dedia jednotlive definicie aplikacii generacii */ 
 class INET_API ITrafGenApplication : public cPolymorphic
 {
   public:

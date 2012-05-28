@@ -1,0 +1,155 @@
+version 2
+run One-0-20120528-13:37:40-7656
+attr configname One
+attr datetime 20120528-13:37:40
+attr experiment One
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network SimpleTest
+attr processid 7656
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar SimpleTest.R1.ospf 	helloPacketSend 	0
+scalar SimpleTest.R1.ospf 	ospfPacketSend 	0
+scalar SimpleTest.R1.ospf 	helloPacketReceived 	0
+scalar SimpleTest.R1.ospf 	ospfPacketReceived 	0
+scalar SimpleTest.R1.networkLayer.arp 	"ARP requests sent" 	0
+scalar SimpleTest.R1.networkLayer.arp 	"ARP replies sent" 	10
+scalar SimpleTest.R1.networkLayer.arp 	"ARP resolutions" 	0
+scalar SimpleTest.R1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar SimpleTest.R1.ppp[0].queue 	"packets received by queue" 	0
+scalar SimpleTest.R1.ppp[0].queue 	"packets dropped by queue" 	0
+scalar SimpleTest.R1.eth[0].queue 	"packets received by queue" 	10
+scalar SimpleTest.R1.eth[0].queue 	"packets dropped by queue" 	0
+scalar SimpleTest.R1.eth[0].mac 	"simulated time" 	636
+scalar SimpleTest.R1.eth[0].mac 	"txrate (Mb)" 	100
+scalar SimpleTest.R1.eth[0].mac 	"full duplex" 	1
+scalar SimpleTest.R1.eth[0].mac 	"frames sent" 	10
+scalar SimpleTest.R1.eth[0].mac 	"frames rcvd" 	2513
+scalar SimpleTest.R1.eth[0].mac 	"bytes sent" 	640
+scalar SimpleTest.R1.eth[0].mac 	"bytes rcvd" 	532210
+scalar SimpleTest.R1.eth[0].mac 	"frames from higher layer" 	10
+scalar SimpleTest.R1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar SimpleTest.R1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar SimpleTest.R1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar SimpleTest.R1.eth[0].mac 	"frames passed up to HL" 	2513
+scalar SimpleTest.R1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar SimpleTest.R1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar SimpleTest.R1.eth[0].mac 	"frames/sec sent" 	0.015723270440252
+scalar SimpleTest.R1.eth[0].mac 	"frames/sec rcvd" 	3.9512578616352
+scalar SimpleTest.R1.eth[0].mac 	"bits/sec sent" 	8.0503144654088
+scalar SimpleTest.R1.eth[0].mac 	"bits/sec rcvd" 	6694.465408805
+scalar SimpleTest.R1.eth[0].mac 	"rx channel idle (%)" 	99.993052654088
+scalar SimpleTest.R1.eth[0].mac 	"rx channel utilization (%)" 	0.0069473459119497
+scalar SimpleTest.R1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar SimpleTest.R1.eth[0].mac 	collisions 	0
+scalar SimpleTest.R1.eth[0].mac 	backoffs 	0
+scalar SimpleTest.R1.eth[0].encap 	"packets from higher layer" 	10
+scalar SimpleTest.R1.eth[0].encap 	"frames from MAC" 	2513
+scalar SimpleTest.R2.ospf 	helloPacketSend 	0
+scalar SimpleTest.R2.ospf 	ospfPacketSend 	0
+scalar SimpleTest.R2.ospf 	helloPacketReceived 	0
+scalar SimpleTest.R2.ospf 	ospfPacketReceived 	0
+scalar SimpleTest.R2.networkLayer.arp 	"ARP requests sent" 	0
+scalar SimpleTest.R2.networkLayer.arp 	"ARP replies sent" 	0
+scalar SimpleTest.R2.networkLayer.arp 	"ARP resolutions" 	0
+scalar SimpleTest.R2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar SimpleTest.R2.ppp[0].queue 	"packets received by queue" 	0
+scalar SimpleTest.R2.ppp[0].queue 	"packets dropped by queue" 	0
+scalar SimpleTest.R2.eth[0].queue 	"packets received by queue" 	0
+scalar SimpleTest.R2.eth[0].queue 	"packets dropped by queue" 	0
+scalar SimpleTest.R2.eth[0].mac 	"simulated time" 	636
+scalar SimpleTest.R2.eth[0].mac 	"txrate (Mb)" 	100
+scalar SimpleTest.R2.eth[0].mac 	"full duplex" 	1
+scalar SimpleTest.R2.eth[0].mac 	"frames sent" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames rcvd" 	0
+scalar SimpleTest.R2.eth[0].mac 	"bytes sent" 	0
+scalar SimpleTest.R2.eth[0].mac 	"bytes rcvd" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames from higher layer" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames passed up to HL" 	0
+scalar SimpleTest.R2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar SimpleTest.R2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames/sec sent" 	0
+scalar SimpleTest.R2.eth[0].mac 	"frames/sec rcvd" 	0
+scalar SimpleTest.R2.eth[0].mac 	"bits/sec sent" 	0
+scalar SimpleTest.R2.eth[0].mac 	"bits/sec rcvd" 	0
+scalar SimpleTest.R2.eth[0].mac 	"rx channel idle (%)" 	100
+scalar SimpleTest.R2.eth[0].mac 	"rx channel utilization (%)" 	0
+scalar SimpleTest.R2.eth[0].mac 	"rx channel collision (%)" 	0
+scalar SimpleTest.R2.eth[0].mac 	collisions 	0
+scalar SimpleTest.R2.eth[0].mac 	backoffs 	0
+scalar SimpleTest.R2.eth[0].encap 	"packets from higher layer" 	0
+scalar SimpleTest.R2.eth[0].encap 	"frames from MAC" 	0
+scalar SimpleTest.Generator.pingApp 	"Pings sent" 	0
+scalar SimpleTest.Generator.networkLayer.arp 	"ARP requests sent" 	10
+scalar SimpleTest.Generator.networkLayer.arp 	"ARP replies sent" 	0
+scalar SimpleTest.Generator.networkLayer.arp 	"ARP resolutions" 	10
+scalar SimpleTest.Generator.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar SimpleTest.Generator.eth[0].queue 	"packets received by queue" 	2513
+scalar SimpleTest.Generator.eth[0].queue 	"packets dropped by queue" 	0
+scalar SimpleTest.Generator.eth[0].mac 	"simulated time" 	636
+scalar SimpleTest.Generator.eth[0].mac 	"txrate (Mb)" 	100
+scalar SimpleTest.Generator.eth[0].mac 	"full duplex" 	1
+scalar SimpleTest.Generator.eth[0].mac 	"frames sent" 	2513
+scalar SimpleTest.Generator.eth[0].mac 	"frames rcvd" 	10
+scalar SimpleTest.Generator.eth[0].mac 	"bytes sent" 	532210
+scalar SimpleTest.Generator.eth[0].mac 	"bytes rcvd" 	640
+scalar SimpleTest.Generator.eth[0].mac 	"frames from higher layer" 	2513
+scalar SimpleTest.Generator.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar SimpleTest.Generator.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar SimpleTest.Generator.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar SimpleTest.Generator.eth[0].mac 	"frames passed up to HL" 	10
+scalar SimpleTest.Generator.eth[0].mac 	"PAUSE frames sent" 	0
+scalar SimpleTest.Generator.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar SimpleTest.Generator.eth[0].mac 	"frames/sec sent" 	3.9512578616352
+scalar SimpleTest.Generator.eth[0].mac 	"frames/sec rcvd" 	0.015723270440252
+scalar SimpleTest.Generator.eth[0].mac 	"bits/sec sent" 	6694.465408805
+scalar SimpleTest.Generator.eth[0].mac 	"bits/sec rcvd" 	8.0503144654088
+scalar SimpleTest.Generator.eth[0].mac 	"rx channel idle (%)" 	99.999990943396
+scalar SimpleTest.Generator.eth[0].mac 	"rx channel utilization (%)" 	9.0566037735849e-006
+scalar SimpleTest.Generator.eth[0].mac 	"rx channel collision (%)" 	0
+scalar SimpleTest.Generator.eth[0].mac 	collisions 	0
+scalar SimpleTest.Generator.eth[0].mac 	backoffs 	0
+scalar SimpleTest.Generator.eth[0].encap 	"packets from higher layer" 	2513
+scalar SimpleTest.Generator.eth[0].encap 	"frames from MAC" 	10
+scalar SimpleTest.Analyzer.pingApp 	"Pings sent" 	0
+scalar SimpleTest.Analyzer.networkLayer.arp 	"ARP requests sent" 	0
+scalar SimpleTest.Analyzer.networkLayer.arp 	"ARP replies sent" 	0
+scalar SimpleTest.Analyzer.networkLayer.arp 	"ARP resolutions" 	0
+scalar SimpleTest.Analyzer.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar SimpleTest.Analyzer.eth[0].queue 	"packets received by queue" 	0
+scalar SimpleTest.Analyzer.eth[0].queue 	"packets dropped by queue" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"simulated time" 	636
+scalar SimpleTest.Analyzer.eth[0].mac 	"txrate (Mb)" 	100
+scalar SimpleTest.Analyzer.eth[0].mac 	"full duplex" 	1
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames sent" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames rcvd" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"bytes sent" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"bytes rcvd" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames from higher layer" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames passed up to HL" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"PAUSE frames sent" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames/sec sent" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"frames/sec rcvd" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"bits/sec sent" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"bits/sec rcvd" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"rx channel idle (%)" 	100
+scalar SimpleTest.Analyzer.eth[0].mac 	"rx channel utilization (%)" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	"rx channel collision (%)" 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	collisions 	0
+scalar SimpleTest.Analyzer.eth[0].mac 	backoffs 	0
+scalar SimpleTest.Analyzer.eth[0].encap 	"packets from higher layer" 	0
+scalar SimpleTest.Analyzer.eth[0].encap 	"frames from MAC" 	0

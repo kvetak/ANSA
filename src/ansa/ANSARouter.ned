@@ -20,18 +20,17 @@ package inet.ansa;
 
 import inet.base.NotificationBoard;
 import inet.ansa.InterfaceStateManager.InterfaceStateManager;
-import inet.ansa.ethernet.AnsaEthernetInterface;
+import inet.ansa.ethernet.EthernetInterface;
 import inet.ansa.ppp.PPPInterface;
-//import inet.nodes.inet.NetworkLayer;
-import inet.ansa.AnsaNetworkLayer;
+import inet.nodes.inet.NetworkLayer;
 import inet.ansa.routingTable.AnsaInterfaceTable;
 import inet.ansa.routingTable.AnsaRoutingTable;
 import inet.ansa.ospfv2.AnsaOSPFRouting;
 import inet.ansa.rip.RIPRouting;
 import inet.transport.udp.UDP;
 import inet.ansa.acl.acl;
+import inet.ansa.acl.AclContainer;
 
-import inet.ansa.IPGen.AnsaIPTrafGen;
 //
 // \IP router.
 //
@@ -42,7 +41,7 @@ module ANSARouter
         string routingFile = default("");
         string hostname = default("");
         string routerId = default("");
-        @display("i=srouter;bgb=388,338");
+        @display("i=srouter;bgb=430,338");
     gates:
         inout pppg[];
         inout ethg[];
@@ -53,17 +52,21 @@ module ANSARouter
         }
         interfaceStateManager: InterfaceStateManager {
             parameters:
-                @display("p=154,42");
+                @display("p=145,42");
+        }
+        aclContainer: AclContainer {
+            parameters:
+                @display("p=235,42");
         }
         interfaceTable: AnsaInterfaceTable {
             parameters:
-                @display("p=250,42");
+                @display("p=310,42");
         }
         routingTable: AnsaRoutingTable {
             parameters:
                 IPForward = true;
                 routerId = routerId;
-                @display("p=323,42");
+                @display("p=390,42");
         }
         ospf: AnsaOSPFRouting {
             parameters:
@@ -94,7 +97,7 @@ module ANSARouter
                 ifIn[sizeof(pppg)+sizeof(ethg)];
                 ifOut[sizeof(pppg)+sizeof(ethg)];
         }
-        networkLayer: AnsaNetworkLayer {
+        networkLayer: NetworkLayer {
             parameters:
                 @display("p=183,143;q=queue");
             gates:
@@ -105,13 +108,11 @@ module ANSARouter
             parameters:
                 @display("p=115,283,row,110;q=l2queue");
         }
-        eth[sizeof(ethg)]: AnsaEthernetInterface {
+        eth[sizeof(ethg)]: EthernetInterface {
             parameters:
                 @display("p=258,283,row,110;q=l2queue");
         }
-        ipTrafGen: AnsaIPTrafGen {
-            @display("p=297,195");
-        }
+
     connections allowunconnected:
         ospf.ipOut --> networkLayer.ospfIn;
         ospf.ipIn <-- networkLayer.ospfOut;
@@ -122,9 +123,6 @@ module ANSARouter
         udp.ipOut --> networkLayer.udpIn;
         udp.ipIn <-- networkLayer.udpOut;
         
-        ipTrafGen.ipOut --> networkLayer.rsvpIn;
-        ipTrafGen.ipIn <-- networkLayer.rsvpOut;
-
         //eigrp.ipOut --> networkLayer.eigrpIn;
         //eigrp.ipIn <-- networkLayer.eigrpOut;
 

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2010 Martin Danko
+// Copyright (C) 2011 Martin Danko
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,7 +23,12 @@
 
 Register_Class(voice);
 
-
+/*
+ * loadConfig(): 
+ * Funkcia nacita konfiguraciu aplikacie zo XML suboru 
+ * @param appConfig	- XML blok s konfiguraciu generovanej aplikacie 
+ * @return - Vrati true bola konfiguracia spravne nacitana
+ */
 bool voice::loadConfig(const cXMLElement& appConfig)
 {
   
@@ -31,7 +36,7 @@ bool voice::loadConfig(const cXMLElement& appConfig)
 
   element = appConfig.getFirstChildWithTag("codec");
   if(element != NULL)
-  {
+  {// pouzity kodek
     std::string codec = element->getNodeValue();
     if(codec == "g711" || codec == "G.711")
       codecRate = 64000;
@@ -40,7 +45,7 @@ bool voice::loadConfig(const cXMLElement& appConfig)
   }
   
   element = appConfig.getFirstChildWithTag("codec_rate");
-  if(element != NULL)
+  if(element != NULL) // explicitne definavana bitova rychlost
     codecRate =  atoi(element->getNodeValue());
     
   element = appConfig.getFirstChildWithTag("packets_per_second");
@@ -55,32 +60,49 @@ bool voice::loadConfig(const cXMLElement& appConfig)
     
   element = appConfig.getFirstChildWithTag("vad");
   if(element != NULL)
-  {
+  { // technologia VAD bude pouzita
     std::string vadString = element->getNodeValue();
     if(vadString == "true" || vadString == "True" || vadString == "TRUE")
       vad = true;
   }
   
   if(pps == 0.0 || codecRate == 0)
-    return false;
+    return false; // chyba nacitania
   
   return true;
 }
 
+/*
+ * getDefaultPort(): 
+ * Funkcia vracia hodnotu implicitneho portu aplikacie  
+ * @return - Vrati implicitny port VoIP
+ */ 
 int voice::getDefaultPort()
 {
   return 16384;
 }
 
+/*
+ * getNextPacketTime(): 
+ * Funkcia vrati velkost hlaviciek nad ramec transportneho protokolu
+ * U VoIP je to velkost RTP hlavicky   
+ * @return - Vrati velkost RTP hlavicky
+ */ 
 int voice::anotherEncapsulationOverhead()
 {
-  return 12;  // rtp header
+  return 12;  // rtp hlavicka
 }
 
+/*
+ * getNextPacketTime(): 
+ * Funkcia na zaklade poctu paketov za sekundu uci cas za aky
+ * sa bude generovat dalsi paket  
+ * @return - Vrati cas genetovania dalsieho paketu
+ */  
 double voice::getNextPacketTime()
 {
   if(vad)
-  {
+  { // VAD sposobi, ze je generovanych len 70% paketov 
     double time = 1.0/pps;
     while(intuniform(0, 10) > 7)
       time += 1.0/pps;
@@ -89,7 +111,13 @@ double voice::getNextPacketTime()
   }
   return 1.0/pps; 
 }
-    
+
+/*
+ * getPacketSize(): 
+ * Funkcia na zaklade kodeku a poctu paketov za sekundu urci velkost 
+ * generovaneho paketu 
+ * @return - Vrati velkost vygenerovaneho paketu
+ */    
 int voice::getPacketSize()
 {
   return  codecRate/(8 * pps);

@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="192.168.1.1"> <!-- Praha -->
+    <Interfaces>
+      <Interface name="eth0">
+        <IPAddress>192.168.1.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp0">
+        <IPAddress>192.168.0.1</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>10</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp1">
+        <IPAddress>192.168.0.17</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>25</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>192.168.0.0</IPAddress>
+                <Wildcard>0.0.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.0.5"> <!-- Brno -->
+    <Interfaces>
+      <Interface name="ppp0">
+        <IPAddress>192.168.0.2</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>10</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp1">
+        <IPAddress>192.168.0.5</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>10</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>192.168.0.0</IPAddress>
+                <Wildcard>0.0.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.3.1"> <!-- Ostrava -->
+    <Interfaces>
+      <Interface name="eth0">
+        <IPAddress>192.168.3.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp0">
+        <IPAddress>192.168.0.6</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>10</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp1">
+        <IPAddress>192.168.0.9</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>25</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>192.168.0.0</IPAddress>
+                <Wildcard>0.0.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.4.1"> <!-- Olomouc -->
+    <Interfaces>
+      <Interface name="eth0">
+        <IPAddress>192.168.4.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp0">
+        <IPAddress>192.168.0.14</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>25</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp1">
+        <IPAddress>192.168.0.10</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>25</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>192.168.0.0</IPAddress>
+                <Wildcard>0.0.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+  
+  <Router id="192.168.5.1"> <!-- Pardubice -->
+    <Interfaces>
+      <Interface name="eth0">
+        <IPAddress>192.168.5.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OspfNetworkType>broadcast</OspfNetworkType>
+        <OspfCost>1</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp0">
+        <IPAddress>192.168.0.14</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>25</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+      <Interface name="ppp1">
+        <IPAddress>192.168.0.18</IPAddress>
+        <Mask>255.255.255.252</Mask>
+        <OspfNetworkType>point-to-point</OspfNetworkType>
+        <OspfCost>25</OspfCost>
+        <OspfHelloInterval>10</OspfHelloInterval>
+        <OspfDeadInterval>40</OspfDeadInterval>
+        <OspfRetransmissionInterval>5</OspfRetransmissionInterval>
+        <OspfInterfaceTransmissionDelay>1</OspfInterfaceTransmissionDelay>
+        <OspfAuthenticationType>Null</OspfAuthenticationType>
+        <OspfAuthenticationKey>0x00</OspfAuthenticationKey>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      <Ospf>
+        <RFC1583Compatible />
+        <Areas>
+          <Area id="0.0.0.0">
+            <Networks>
+              <Network>
+                <IPAddress>192.168.0.0</IPAddress>
+                <Wildcard>0.0.255.255</Wildcard>
+              </Network>
+            </Networks>
+          </Area>
+        </Areas>
+      </Ospf>
+    </Routing>
+  </Router>
+</Routers>

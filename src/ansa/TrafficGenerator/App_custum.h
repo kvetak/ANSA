@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2010 Martin Danko
+// Copyright (C) 2011 Martin Danko
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,14 +22,14 @@
 
 #include "ITrafGenApplication.h"
 
-
+/* Trieda reprezentujuca obecnu aplikaciu nad TCP/UDP  */ 
 class INET_API custom : public ITrafGenApplication
 {
   private:
-    double pps;
-    int size;
-    std::string tDistr;
-    std::string sDistr;
+    double pps;           // pakety za sekundu
+    int size;             // velkost paketu
+    std::string tDistr;   // retazec casovej ditribucie
+    std::string sDistr;   // retazec distribucie velkosti paketu
 
   public:
     custom() {pps = 0.0; size = 0; tDistr = "constant"; sDistr = "constant";}

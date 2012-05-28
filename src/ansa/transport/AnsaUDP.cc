@@ -46,7 +46,7 @@
 Define_Module( AnsaUDP );
 
 
-static std::ostream & operator<<(std::ostream & os, const AnsaUDP::SockDesc& sd)
+static std::ostream & operator << (std::ostream & os, const AnsaUDP::SockDesc& sd)
 {
     os << "sockId=" << sd.sockId;
     os << " appGateIndex=" << sd.appGateIndex;
@@ -550,6 +550,7 @@ void AnsaUDP::processCommandFromApp(cMessage *msg)
             break;
         default:
             error("unknown command code (message kind) %d received from app", msg->getKind());
+            break;
     }
 
     delete udpCtrl;

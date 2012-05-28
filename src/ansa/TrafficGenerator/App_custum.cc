@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2010 Martin Danko
+// Copyright (C) 2011 Martin Danko
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,7 +23,12 @@
 
 Register_Class(custom);
 
-
+/*
+ * loadConfig(): 
+ * Funkcia nacita konfiguraciu aplikacie zo XML suboru 
+ * @param appConfig	- XML blok s konfiguraciu generovanej aplikacie 
+ * @return - Vrati true bola konfiguracia spravne nacitana
+ */
 bool custom::loadConfig(const cXMLElement& appConfig)
 {
   
@@ -46,21 +51,38 @@ bool custom::loadConfig(const cXMLElement& appConfig)
     sDistr = element->getNodeValue();
   
   if(pps == 0.0 || size == 0)
-    return false;
+    return false; // chyba nacitania
   
   return true;
 }
 
+/*
+ * getDefaultPort(): 
+ * Funkcia vracia hodnotu implicitneho portu aplikacie  
+ * @return - Vrati implicitny port
+ */ 
 int custom::getDefaultPort()
 {
   return 1024;
 }
 
+/*
+ * getNextPacketTime(): 
+ * Funkcia vrati velkost hlaviciek nad ramec transportneho protokolu
+ * V tejto aplikacii nie je ziadna encapsulacia navyse 
+ * @return - Vrati nulu
+ */
 int custom::anotherEncapsulationOverhead()
 {
   return 0;
 }
 
+/*
+ * getNextPacketTime(): 
+ * Funkcia na zaklade definovaneho rozlozenia uci cas za aky
+ * sa bude generovat dalsi paket  
+ * @return - Vrati cas genetovania dalsieho paketu
+ */  
 double custom::getNextPacketTime()
 {
   if(tDistr == "normal")
@@ -75,8 +97,13 @@ double custom::getNextPacketTime()
   {
     return 1.0/pps; 
   }
-}
-    
+} 
+
+/*
+ * getPacketSize(): 
+ * Funkcia podla definovaneho rozlozenia vrati velkost vygenerovaneho paketu
+ * @return - Vrati velkost vygenerovaneho paketu
+ */      
 int custom::getPacketSize()
 {
   if(tDistr == "normal")

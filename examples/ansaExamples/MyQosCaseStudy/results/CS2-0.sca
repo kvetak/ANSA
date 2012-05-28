@@ -1,0 +1,444 @@
+version 2
+run CS2-0-20120528-13:34:50-4488
+attr configname CS2
+attr datetime 20120528-13:34:50
+attr experiment CS2
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network CaseStudyNetwork
+attr processid 4488
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar CaseStudyNetwork.Hub 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Hub 	"messages handled" 	15
+scalar CaseStudyNetwork.Hub 	messages/sec 	0.74999869650249
+scalar CaseStudyNetwork.Praha.ospf 	helloPacketSend 	6
+scalar CaseStudyNetwork.Praha.ospf 	ospfPacketSend 	37
+scalar CaseStudyNetwork.Praha.ospf 	helloPacketReceived 	4
+scalar CaseStudyNetwork.Praha.ospf 	ospfPacketReceived 	33
+scalar CaseStudyNetwork.Praha.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Praha.networkLayer.arp 	"ARP replies sent" 	1
+scalar CaseStudyNetwork.Praha.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Praha.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Praha.ppp[0].queue 	"packets received by queue" 	18
+scalar CaseStudyNetwork.Praha.ppp[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Praha.ppp[1].queue 	"packets received by queue" 	17
+scalar CaseStudyNetwork.Praha.ppp[1].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Praha.eth[0].queue 	"packets received by queue" 	3
+scalar CaseStudyNetwork.Praha.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"full duplex" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames sent" 	3
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames rcvd" 	1
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"bytes sent" 	192
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"bytes rcvd" 	64
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames from higher layer" 	3
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames passed up to HL" 	1
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames/sec sent" 	0.1499997393005
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"frames/sec rcvd" 	0.049999913100166
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"bits/sec sent" 	76.799866521855
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"bits/sec rcvd" 	25.599955507285
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"rx channel idle (%)" 	99.999882200205
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"rx channel utilization (%)" 	0.00011519979978278
+scalar CaseStudyNetwork.Praha.eth[0].mac 	"rx channel collision (%)" 	2.5999954812086e-006
+scalar CaseStudyNetwork.Praha.eth[0].mac 	collisions 	1
+scalar CaseStudyNetwork.Praha.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Praha.eth[0].encap 	"packets from higher layer" 	3
+scalar CaseStudyNetwork.Praha.eth[0].encap 	"frames from MAC" 	1
+scalar CaseStudyNetwork.Brno.ospf 	helloPacketSend 	4
+scalar CaseStudyNetwork.Brno.ospf 	ospfPacketSend 	34
+scalar CaseStudyNetwork.Brno.ospf 	helloPacketReceived 	4
+scalar CaseStudyNetwork.Brno.ospf 	ospfPacketReceived 	34
+scalar CaseStudyNetwork.Brno.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Brno.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Brno.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Brno.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Brno.ppp[0].queue 	"packets received by queue" 	17
+scalar CaseStudyNetwork.Brno.ppp[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Brno.ppp[1].queue 	"packets received by queue" 	17
+scalar CaseStudyNetwork.Brno.ppp[1].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Ostrava.ospf 	helloPacketSend 	6
+scalar CaseStudyNetwork.Ostrava.ospf 	ospfPacketSend 	35
+scalar CaseStudyNetwork.Ostrava.ospf 	helloPacketReceived 	4
+scalar CaseStudyNetwork.Ostrava.ospf 	ospfPacketReceived 	35
+scalar CaseStudyNetwork.Ostrava.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Ostrava.networkLayer.arp 	"ARP replies sent" 	1
+scalar CaseStudyNetwork.Ostrava.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Ostrava.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Ostrava.ppp[0].queue 	"packets received by queue" 	16
+scalar CaseStudyNetwork.Ostrava.ppp[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Ostrava.ppp[1].queue 	"packets received by queue" 	17
+scalar CaseStudyNetwork.Ostrava.ppp[1].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].queue 	"packets received by queue" 	3
+scalar CaseStudyNetwork.Ostrava.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"full duplex" 	1
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames sent" 	3
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames rcvd" 	4
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"bytes sent" 	192
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"bytes rcvd" 	256
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames from higher layer" 	3
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames passed up to HL" 	4
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames/sec sent" 	0.1499997393005
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"frames/sec rcvd" 	0.19999965240066
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"bits/sec sent" 	76.799866521855
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"bits/sec rcvd" 	102.39982202914
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"rx channel idle (%)" 	99.9998848002
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"rx channel utilization (%)" 	0.00011519979978278
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	"rx channel collision (%)" 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	collisions 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Ostrava.eth[0].encap 	"packets from higher layer" 	3
+scalar CaseStudyNetwork.Ostrava.eth[0].encap 	"frames from MAC" 	4
+scalar CaseStudyNetwork.Olomouc.ospf 	helloPacketSend 	6
+scalar CaseStudyNetwork.Olomouc.ospf 	ospfPacketSend 	35
+scalar CaseStudyNetwork.Olomouc.ospf 	helloPacketReceived 	4
+scalar CaseStudyNetwork.Olomouc.ospf 	ospfPacketReceived 	32
+scalar CaseStudyNetwork.Olomouc.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Olomouc.networkLayer.arp 	"ARP replies sent" 	1
+scalar CaseStudyNetwork.Olomouc.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Olomouc.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Olomouc.ppp[0].queue 	"packets received by queue" 	15
+scalar CaseStudyNetwork.Olomouc.ppp[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Olomouc.ppp[1].queue 	"packets received by queue" 	18
+scalar CaseStudyNetwork.Olomouc.ppp[1].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].queue 	"packets received by queue" 	3
+scalar CaseStudyNetwork.Olomouc.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"full duplex" 	1
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames sent" 	3
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames rcvd" 	2
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"bytes sent" 	192
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"bytes rcvd" 	282
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames from higher layer" 	3
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames passed up to HL" 	2
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames/sec sent" 	0.1499997393005
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"frames/sec rcvd" 	0.099999826200332
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"bits/sec sent" 	76.799866521855
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"bits/sec rcvd" 	112.79980395397
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"rx channel idle (%)" 	99.999880800207
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"rx channel utilization (%)" 	0.0001191997928308
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	"rx channel collision (%)" 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	collisions 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Olomouc.eth[0].encap 	"packets from higher layer" 	3
+scalar CaseStudyNetwork.Olomouc.eth[0].encap 	"frames from MAC" 	2
+scalar CaseStudyNetwork.Pardubice.ospf 	helloPacketSend 	6
+scalar CaseStudyNetwork.Pardubice.ospf 	ospfPacketSend 	33
+scalar CaseStudyNetwork.Pardubice.ospf 	helloPacketReceived 	4
+scalar CaseStudyNetwork.Pardubice.ospf 	ospfPacketReceived 	32
+scalar CaseStudyNetwork.Pardubice.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Pardubice.networkLayer.arp 	"ARP replies sent" 	1
+scalar CaseStudyNetwork.Pardubice.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Pardubice.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Pardubice.ppp[0].queue 	"packets received by queue" 	15
+scalar CaseStudyNetwork.Pardubice.ppp[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Pardubice.ppp[1].queue 	"packets received by queue" 	16
+scalar CaseStudyNetwork.Pardubice.ppp[1].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].queue 	"packets received by queue" 	3
+scalar CaseStudyNetwork.Pardubice.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"full duplex" 	1
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames sent" 	3
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames rcvd" 	2
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"bytes sent" 	192
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"bytes rcvd" 	282
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames from higher layer" 	3
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames passed up to HL" 	2
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames/sec sent" 	0.1499997393005
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"frames/sec rcvd" 	0.099999826200332
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"bits/sec sent" 	76.799866521855
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"bits/sec rcvd" 	112.79980395397
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"rx channel idle (%)" 	99.999880800207
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"rx channel utilization (%)" 	0.0001191997928308
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	"rx channel collision (%)" 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	collisions 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Pardubice.eth[0].encap 	"packets from higher layer" 	3
+scalar CaseStudyNetwork.Pardubice.eth[0].encap 	"frames from MAC" 	2
+scalar CaseStudyNetwork.Server1.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Server1.networkLayer.arp 	"ARP requests sent" 	1
+scalar CaseStudyNetwork.Server1.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Server1.networkLayer.arp 	"ARP resolutions" 	1
+scalar CaseStudyNetwork.Server1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Server1.eth[0].queue 	"packets received by queue" 	5
+scalar CaseStudyNetwork.Server1.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"full duplex" 	1
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames sent" 	4
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames rcvd" 	3
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"bytes sent" 	256
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"bytes rcvd" 	192
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames from higher layer" 	5
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames/sec sent" 	0.19999965240066
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"frames/sec rcvd" 	0.1499997393005
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"bits/sec sent" 	102.39982202914
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"bits/sec rcvd" 	76.799866521855
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"rx channel idle (%)" 	99.99991360015
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"rx channel utilization (%)" 	8.6399849837087e-005
+scalar CaseStudyNetwork.Server1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	collisions 	0
+scalar CaseStudyNetwork.Server1.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Server1.eth[0].encap 	"packets from higher layer" 	5
+scalar CaseStudyNetwork.Server1.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Host1.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Host1.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Host1.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Host1.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Host1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Host1.eth[0].queue 	"packets received by queue" 	0
+scalar CaseStudyNetwork.Host1.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"full duplex" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames sent" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames rcvd" 	4
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"bytes sent" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"bytes rcvd" 	256
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames from higher layer" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames dropped (not for us)" 	1
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames/sec sent" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"frames/sec rcvd" 	0.19999965240066
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"bits/sec sent" 	0
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"bits/sec rcvd" 	102.39982202914
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"rx channel idle (%)" 	99.999882200205
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"rx channel utilization (%)" 	0.00011519979978278
+scalar CaseStudyNetwork.Host1.eth[0].mac 	"rx channel collision (%)" 	2.5999954812086e-006
+scalar CaseStudyNetwork.Host1.eth[0].mac 	collisions 	1
+scalar CaseStudyNetwork.Host1.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Host1.eth[0].encap 	"packets from higher layer" 	0
+scalar CaseStudyNetwork.Host1.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Host2.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Host2.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Host2.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Host2.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Host2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Host2.eth[0].queue 	"packets received by queue" 	0
+scalar CaseStudyNetwork.Host2.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"full duplex" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames sent" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames rcvd" 	4
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"bytes sent" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"bytes rcvd" 	256
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames from higher layer" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames dropped (not for us)" 	1
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames/sec sent" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"frames/sec rcvd" 	0.19999965240066
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"bits/sec sent" 	0
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"bits/sec rcvd" 	102.39982202914
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"rx channel idle (%)" 	99.999882200205
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"rx channel utilization (%)" 	0.00011519979978278
+scalar CaseStudyNetwork.Host2.eth[0].mac 	"rx channel collision (%)" 	2.5999954812086e-006
+scalar CaseStudyNetwork.Host2.eth[0].mac 	collisions 	1
+scalar CaseStudyNetwork.Host2.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Host2.eth[0].encap 	"packets from higher layer" 	0
+scalar CaseStudyNetwork.Host2.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Host3.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Host3.networkLayer.arp 	"ARP requests sent" 	0
+scalar CaseStudyNetwork.Host3.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Host3.networkLayer.arp 	"ARP resolutions" 	0
+scalar CaseStudyNetwork.Host3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Host3.eth[0].queue 	"packets received by queue" 	0
+scalar CaseStudyNetwork.Host3.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"full duplex" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames sent" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames rcvd" 	4
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"bytes sent" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"bytes rcvd" 	256
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames from higher layer" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames dropped (not for us)" 	1
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames/sec sent" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"frames/sec rcvd" 	0.19999965240066
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"bits/sec sent" 	0
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"bits/sec rcvd" 	102.39982202914
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"rx channel idle (%)" 	99.999882200205
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"rx channel utilization (%)" 	0.00011519979978278
+scalar CaseStudyNetwork.Host3.eth[0].mac 	"rx channel collision (%)" 	2.5999954812086e-006
+scalar CaseStudyNetwork.Host3.eth[0].mac 	collisions 	1
+scalar CaseStudyNetwork.Host3.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Host3.eth[0].encap 	"packets from higher layer" 	0
+scalar CaseStudyNetwork.Host3.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Phone1.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Phone1.networkLayer.arp 	"ARP requests sent" 	1
+scalar CaseStudyNetwork.Phone1.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Phone1.networkLayer.arp 	"ARP resolutions" 	1
+scalar CaseStudyNetwork.Phone1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].queue 	"packets received by queue" 	1
+scalar CaseStudyNetwork.Phone1.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"full duplex" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames sent" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames rcvd" 	4
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"bytes sent" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"bytes rcvd" 	256
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames from higher layer" 	1
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames dropped (not for us)" 	1
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames/sec sent" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"frames/sec rcvd" 	0.19999965240066
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"bits/sec sent" 	0
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"bits/sec rcvd" 	102.39982202914
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"rx channel idle (%)" 	99.999881200206
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"rx channel utilization (%)" 	0.00011519979978278
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	"rx channel collision (%)" 	3.599993743212e-006
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	collisions 	1
+scalar CaseStudyNetwork.Phone1.eth[0].mac 	backoffs 	1
+scalar CaseStudyNetwork.Phone1.eth[0].encap 	"packets from higher layer" 	1
+scalar CaseStudyNetwork.Phone1.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Phone2.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Phone2.networkLayer.arp 	"ARP requests sent" 	1
+scalar CaseStudyNetwork.Phone2.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Phone2.networkLayer.arp 	"ARP resolutions" 	1
+scalar CaseStudyNetwork.Phone2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].queue 	"packets received by queue" 	2
+scalar CaseStudyNetwork.Phone2.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"full duplex" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames sent" 	2
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames rcvd" 	3
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"bytes sent" 	282
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"bytes rcvd" 	192
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames from higher layer" 	2
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames/sec sent" 	0.099999826200332
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"frames/sec rcvd" 	0.1499997393005
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"bits/sec sent" 	112.79980395397
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"bits/sec rcvd" 	76.799866521855
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"rx channel idle (%)" 	99.999790800364
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"rx channel utilization (%)" 	0.00020559964266788
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	"rx channel collision (%)" 	3.599993743212e-006
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	collisions 	1
+scalar CaseStudyNetwork.Phone2.eth[0].mac 	backoffs 	1
+scalar CaseStudyNetwork.Phone2.eth[0].encap 	"packets from higher layer" 	2
+scalar CaseStudyNetwork.Phone2.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Phone3.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Phone3.networkLayer.arp 	"ARP requests sent" 	1
+scalar CaseStudyNetwork.Phone3.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Phone3.networkLayer.arp 	"ARP resolutions" 	1
+scalar CaseStudyNetwork.Phone3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].queue 	"packets received by queue" 	2
+scalar CaseStudyNetwork.Phone3.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"full duplex" 	1
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames sent" 	2
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames rcvd" 	3
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"bytes sent" 	282
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"bytes rcvd" 	192
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames from higher layer" 	2
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames/sec sent" 	0.099999826200332
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"frames/sec rcvd" 	0.1499997393005
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"bits/sec sent" 	112.79980395397
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"bits/sec rcvd" 	76.799866521855
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"rx channel idle (%)" 	99.99991360015
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"rx channel utilization (%)" 	8.6399849837087e-005
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	"rx channel collision (%)" 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	collisions 	0
+scalar CaseStudyNetwork.Phone3.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Phone3.eth[0].encap 	"packets from higher layer" 	2
+scalar CaseStudyNetwork.Phone3.eth[0].encap 	"frames from MAC" 	3
+scalar CaseStudyNetwork.Phone4.pingApp 	"Pings sent" 	0
+scalar CaseStudyNetwork.Phone4.networkLayer.arp 	"ARP requests sent" 	1
+scalar CaseStudyNetwork.Phone4.networkLayer.arp 	"ARP replies sent" 	0
+scalar CaseStudyNetwork.Phone4.networkLayer.arp 	"ARP resolutions" 	1
+scalar CaseStudyNetwork.Phone4.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].queue 	"packets received by queue" 	2
+scalar CaseStudyNetwork.Phone4.eth[0].queue 	"packets dropped by queue" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"simulated time" 	20.000034759994
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"txrate (Mb)" 	100
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"full duplex" 	1
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames sent" 	2
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames rcvd" 	3
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"bytes sent" 	282
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"bytes rcvd" 	192
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames from higher layer" 	2
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames passed up to HL" 	3
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"PAUSE frames sent" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames/sec sent" 	0.099999826200332
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"frames/sec rcvd" 	0.1499997393005
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"bits/sec sent" 	112.79980395397
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"bits/sec rcvd" 	76.799866521855
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"rx channel idle (%)" 	99.99991360015
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"rx channel utilization (%)" 	8.6399849837087e-005
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	"rx channel collision (%)" 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	collisions 	0
+scalar CaseStudyNetwork.Phone4.eth[0].mac 	backoffs 	0
+scalar CaseStudyNetwork.Phone4.eth[0].encap 	"packets from higher layer" 	2
+scalar CaseStudyNetwork.Phone4.eth[0].encap 	"frames from MAC" 	3

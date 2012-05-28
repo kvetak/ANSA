@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<Routers>
+
+  <Router id="192.168.3.1"> <!-- R1 -->
+    <Interfaces>
+     <Interface name="ppp0">
+        <IPAddress>192.168.3.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OutputQueue type="CQ">
+          <CustomQueueList>10</CustomQueueList>
+        </OutputQueue>
+      </Interface>
+      <Interface name="eth0">
+        <IPAddress>172.16.100.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <CustomQueueLists>
+      <CustomQueueList id="10">
+        <DefaultQueue>2</DefaultQueue>
+        <CustomQueue id="1">
+          <ByteCount>3000</ByteCount>
+          <Classifier type="DSCP">
+            <value>ef</value>
+          </Classifier>
+        </CustomQueue>
+        <CustomQueue id="3">
+          <Lenght>30</Lenght>
+          <Classifier type="ACL">
+            <acl>110</acl>
+          </Classifier>
+        </CustomQueue>
+        <CustomQueue id="2">
+          <Lenght>60</Lenght>
+        </CustomQueue>
+      </CustomQueueList>
+    </CustomQueueLists>
+    <Routing>  
+      <Static>
+        <Route>
+          <NetworkAddress>172.16.200.0</NetworkAddress>
+          <NetworkMask>255.255.255.0</NetworkMask>
+          <ExitInterface>ppp0</ExitInterface>
+        </Route>
+      </Static>
+    </Routing>
+    <ACLs>
+      <ACL no="110">
+        <entry seq_no="10">
+          <action>permit</action>
+          <IP_src>172.16.100.2</IP_src>
+          <IP_dst>172.16.200.0</IP_dst>
+          <WC_src>0.0.0.0</WC_src>
+          <WC_dst>0.0.0.255</WC_dst>
+          <port_op_src></port_op_src>
+          <port_op_dst>eq</port_op_dst>
+          <port_beg_src></port_beg_src>
+          <port_end_src></port_end_src>
+          <port_beg_dst>53</port_beg_dst>
+          <port_end_dst></port_end_dst>
+          <protocol>udp</protocol>
+          <orig>access-list 110 permit udp host 172.16.100.2 172.16.200.0 0.0.0.255 eq 53</orig>
+        </entry>
+      </ACL>
+    </ACLs>
+  </Router>
+  
+  <Router id="192.168.3.2"> <!-- R2 -->
+    <Interfaces>
+     <Interface name="ppp0">
+        <IPAddress>192.168.3.2</IPAddress>
+        <Mask>255.255.255.0</Mask>
+        <OutputQueue type="WFQ">
+          <HoldQueueLength>1000</HoldQueueLength>
+          <CDT>64</CDT>
+          <DynamicQueues>256</DynamicQueues>
+        </OutputQueue>
+      </Interface>
+      <Interface name="eth0">
+        <IPAddress>172.16.200.1</IPAddress>
+        <Mask>255.255.255.0</Mask>
+      </Interface>
+    </Interfaces>
+    <Routing>
+      
+      <Static>
+        <Route>
+          <NetworkAddress>172.16.100.0</NetworkAddress>
+          <NetworkMask>255.255.255.0</NetworkMask>
+          <NextHopAddress>192.168.3.1</NextHopAddress>
+        </Route>
+      </Static>
+    </Routing>
+  </Router>
+
+</Routers>

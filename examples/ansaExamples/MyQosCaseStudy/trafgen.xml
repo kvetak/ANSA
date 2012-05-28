@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<trafgen>
+	<flow id="1">
+		<description>VoIP 1</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.1.21</source_ip>
+		  <destination_ip>192.168.4.23</destination_ip>
+		  <tos>EF</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16384</source_port>
+		  <destination_port>16384</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+  <flow id="2">
+		<description>VoIP 1</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.4.23</source_ip>
+		  <destination_ip>192.168.1.21</destination_ip>
+		  <tos>EF</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16384</source_port>
+		  <destination_port>16384</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+  <flow id="3">
+		<description>VoIP 2</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.1.22</source_ip>
+		  <destination_ip>192.168.5.24</destination_ip>
+		  <tos>EF</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16385</source_port>
+		  <destination_port>16385</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+  <flow id="4">
+		<description>VoIP 2</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.5.24</source_ip>
+		  <destination_ip>192.168.1.22</destination_ip>
+		  <tos>EF</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>16385</source_port>
+		  <destination_port>16385</destination_port>
+		</transport_header>
+		<application type="voice">
+		  <codec>g711</codec>
+		  <packets_per_second>default</packets_per_second>
+		  <vad>false</vad>
+		</application>
+	</flow>
+  <flow id="5">
+		<description>HTTP 1</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.3.2</source_ip>
+		  <destination_ip>192.168.1.11</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>tcp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>80</source_port>
+		  <destination_port>1024</destination_port>
+		</transport_header>
+		<application type="custom">
+		  <packets_per_second>80</packets_per_second>
+		  <time_distribution>exponential</time_distribution>
+		  <packet_size>1000</packet_size>
+		  <size_distribution>normal</size_distribution>
+		</application>
+	</flow>
+  <flow id="6">
+		<description>HTTP 2</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.3.2</source_ip>
+		  <destination_ip>192.168.1.12</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>tcp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>80</source_port>
+		  <destination_port>1025</destination_port>
+		</transport_header>
+		<application type="custom">
+		  <packets_per_second>50</packets_per_second>
+		  <time_distribution>exponential</time_distribution>
+		  <packet_size>500</packet_size>
+		  <size_distribution>normal</size_distribution>
+		</application>
+	</flow>
+  <flow id="7">
+		<description>HTTP 2</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.3.2</source_ip>
+		  <destination_ip>192.168.1.13</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>tcp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>80</source_port>
+		  <destination_port>1026</destination_port>
+		</transport_header>
+		<application type="custom">
+		  <packets_per_second>50</packets_per_second>
+		  <time_distribution>exponential</time_distribution>
+		  <packet_size>500</packet_size>
+		  <size_distribution>normal</size_distribution>
+		</application>
+	</flow>
+  <flow id="8">
+		<description>TFTP 1</description>
+		<duration>100</duration>
+		<start_time>20</start_time>
+		<ip_header>
+		  <source_ip>192.168.3.2</source_ip>
+		  <destination_ip>192.168.1.13</destination_ip>
+		  <tos>0</tos>
+		  <ttl>10</ttl>
+		  <protocol>udp</protocol>
+		</ip_header>
+		<transport_header>
+		  <source_port>69</source_port>
+		  <destination_port>12356</destination_port>
+		</transport_header>
+		<application type="custom">
+		  <packets_per_second>200</packets_per_second>
+		  <time_distribution>constant</time_distribution>
+		  <packet_size>300</packet_size>
+		  <size_distribution>constant</size_distribution>
+		</application>
+	</flow>
+</trafgen>

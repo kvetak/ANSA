@@ -19,17 +19,14 @@
 
 package inet.ansa.TrafficGenerator;
 
-
-simple TrafGen
+simple DscpTtlCorrector
 {
     parameters:
-        string flowDefFile = default("trafgen.xml");
-        @display("i=block/broadcast");
-
+       @display("i=block/tx");  
+       
     gates:
-        input tcpIn;
-        output tcpOut;
-        input udpIn;
-        output udpOut;
+        input ifIn[];
+        output ifOut[];
+        input toNetworkLayerIn[];
+        output toNetworkLayerOut[];
 }
-

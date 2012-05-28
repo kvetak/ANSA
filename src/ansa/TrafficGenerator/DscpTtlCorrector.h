@@ -16,20 +16,28 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+#ifndef __ANSA_DSCPTTLCORRECTOR_H
+#define __ANSA_DSCPTTLCORRECTOR_H
 
-package inet.ansa.TrafficGenerator;
+#include <omnetpp.h>
+#include "TrafGenAccess.h"
 
-
-simple TrafGen
+/* Trieda definujuca modul prekorekciu TTL a DSCP */ 
+class DscpTtlCorrector : public cSimpleModule
 {
-    parameters:
-        string flowDefFile = default("trafgen.xml");
-        @display("i=block/broadcast");
+  private:
+  
+    TrafGen*     tg; // ukazovatel na modul traffic generatoru
+  
+  protected:
+  
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
 
-    gates:
-        input tcpIn;
-        output tcpOut;
-        input udpIn;
-        output udpOut;
-}
+    
+  public:
+  
 
+};
+
+#endif

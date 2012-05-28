@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2010 Martin Danko
+// Copyright (C) 2011 Martin Danko
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,13 +22,13 @@
 
 #include "ITrafGenApplication.h"
 
-
+/* Trieda reprezentujuca obecnu aplikaciu VoIP  */ 
 class INET_API voice : public ITrafGenApplication
 {
   private:
-    double pps;
-    int codecRate;
-    bool vad;
+    double pps;       // pakety za sekundu
+    int codecRate;    // bity za sekundu pouziteho kodeku
+    bool vad;         // pouzitie technologie Voice Activity Detection
 
   public:
     voice() {pps = 0.0; codecRate = 0; vad = false;}
