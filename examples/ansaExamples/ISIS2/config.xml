@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<Routers>
+	<Router id="192.168.12.1">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+      		</Interface>
+      		
+    	</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2001.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.12.2">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+     		</Interface>
+      		
+    	</Interfaces>
+		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2002.00</NET>
+  			</IS-IS>
+  		</Routing>
+
+
+	</Router>
+	
+	<Router id="192.168.12.3">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.3</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2003.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.12.4">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.4</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2004.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>	
+	
+	<Router id="192.168.12.5">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.5</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2005.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>		
+	
+	<Router id="192.168.12.6">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.6</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1-2</IS-Type>
+  				<NET>49.0001.1921.6801.2006.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.12.7">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.7</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-2</IS-Type>
+  				<NET>49.0002.1921.6801.2007.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.12.8">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.8</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2008.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>	
+	
+	<Router id="192.168.12.9">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.12.9</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IS-IS-Priority>100</IS-IS-Priority>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<IS-IS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6801.2009.00</NET>
+  			</IS-IS>
+  		</Routing>
+	</Router>
+		
+</Routers>

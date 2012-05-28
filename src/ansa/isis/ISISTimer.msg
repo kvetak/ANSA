@@ -1,0 +1,37 @@
+// Author: Matej Hrncirik
+// FIT VUT 2012
+//
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+//
+
+
+enum ISISTimerType
+{
+   HELLO_TIMER = 1;
+   NEIGHBOUR_DEAD = 2;
+   L1LSP_REFRESH = 3;
+   L1LSP_DEAD = 4;
+   CSNP_TIMER = 5;
+};
+
+
+message ISISTimer extends cMessage
+{
+      char 		timerKind enum(ISISTimerType) = HELLO_TIMER;
+      unsigned char	sysID[6];	//for specific timers eg. neighbour timeout
+      unsigned short isType;	//L1 / L2
+      unsigned char areaID[3];	//areaID; relevant for L2 dead timer
+      unsigned char LSPid[8];	//for use as LSP dead timer
+};
