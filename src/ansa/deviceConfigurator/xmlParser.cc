@@ -208,3 +208,20 @@ bool xmlParser::Str2Bool(bool *ret, const char *str){
 
    return false;
 }
+
+
+/* Check if IS-IS is enabled in XML config.
+ * Return NULL if not presented, otherwise return main IS-IS element
+ */
+cXMLElement * xmlParser::GetIsisRouting(cXMLElement * device)
+{
+    if(device == NULL)
+        return NULL;
+
+    cXMLElement *routing = device->getFirstChildWithTag("Routing");
+    if(routing == NULL)
+        return  NULL;
+
+    cXMLElement * isis = routing->getFirstChildWithTag("IS-IS");
+    return isis;
+}

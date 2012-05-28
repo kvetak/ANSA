@@ -31,21 +31,34 @@ void IpSplitter::handleMessage(cMessage *msg){
 	int gateIndex = gate->getIndex();
 
 	// packet coming from network layer modules within the router
-	if (gateName == "ipv4In" || gateName == "ipv6In"){
+	if (gateName == "ipv4In" || gateName == "ipv6In" || gateName == "isisIn")
+	{
 
 		// send packet to out interface
 		this->send(msg, "ifOut", gateIndex);
 
 	// packet coming from in interfaces
-	}else{
+	}
+	else
+	{
 
 		// IPv6 datagram, send it to networkLayer6 via ipv6Out
-		if (dynamic_cast<IPv6Datagram *>(msg)){
+		if (dynamic_cast<IPv6Datagram *>(msg))
+		{
 			this->send(msg, "ipv6Out", gateIndex);
+		}
+		else
+		{
+		    if(dynamic_cast<ISISMessage *>(msg))
+		    {
+		        this->send(msg, "isisOut", gateIndex);
+		    }
 
-		// other (IPv4), send it to networkLayer via ipv4Out
-		}else{
-			this->send(msg, "ipv4Out", gateIndex);
+		    // other (IPv4), send it to networkLayer via ipv4Out
+		    else
+		    {
+		        this->send(msg, "ipv4Out", gateIndex);
+		    }
 		}
 	}
 }

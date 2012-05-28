@@ -21,6 +21,7 @@
 
 #include <omnetpp.h>
 #include "IPv6Datagram.h"
+#include "ISIS.h"
 
 class IpSplitter : public cSimpleModule
 {

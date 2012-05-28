@@ -34,6 +34,7 @@ import inet.ansa.routingTable.AnsaInterfaceTable;
 import inet.ansa.routingTable.AnsaRoutingTable;
 import inet.ansa.AnsaNetworkLayer;
 import inet.ansa.pim.pim;
+import inet.ansa.isis.ISIS;
 
 import inet.applications.pingapp.PingApp;
 import inet.base.NotificationBoard;
@@ -162,6 +163,8 @@ module AnsaDualStackRouter
                 ipv4Out[sizeof(pppg)+sizeof(ethg)];
                 ipv6In[sizeof(pppg)+sizeof(ethg)];
                 ipv6Out[sizeof(pppg)+sizeof(ethg)];
+                isisIn[sizeof(pppg)+sizeof(ethg)];
+                isisOut[sizeof(pppg)+sizeof(ethg)];
         }
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
@@ -170,6 +173,17 @@ module AnsaDualStackRouter
         eth[sizeof(ethg)]: AnsaEthernetInterface {
             parameters:
                 @display("p=284,342,row,110;q=l2queue");
+        }
+
+        isis: ISIS {
+            parameters:
+                deviceId = deviceId;
+                deviceType = "Router";
+                configFile = configFile;
+                @display("p=333,286");
+            gates:
+                ifIn[sizeof(pppg)+sizeof(ethg)];
+                ifOut[sizeof(pppg)+sizeof(ethg)];
         }
     connections allowunconnected:
         ospf.ipOut --> networkLayer.ospfIn;
@@ -201,6 +215,7 @@ module AnsaDualStackRouter
 
         pingApp6.pingOut --> networkLayer6.pingIn;
         pingApp6.pingIn <-- networkLayer6.pingOut;
+		
 
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
@@ -217,6 +232,9 @@ module AnsaDualStackRouter
 
             ipSplitter.ipv6Out[i] --> networkLayer6.ifIn[i];
             ipSplitter.ipv6In[i] <-- networkLayer6.ifOut[i];
+            
+            ipSplitter.isisOut[i] --> isis.ifIn[i];
+        	ipSplitter.isisIn[i] <-- isis.ifOut[i];
         }
 
         for i=0..sizeof(ethg)-1 {
@@ -233,6 +251,9 @@ module AnsaDualStackRouter
 
             ipSplitter.ipv6Out[sizeof(pppg)+i] --> networkLayer6.ifIn[i];
             ipSplitter.ipv6In[sizeof(pppg)+i] <-- networkLayer6.ifOut[i];
+            
+            ipSplitter.isisOut[i] --> isis.ifIn[i];
+        	ipSplitter.isisIn[i] <-- isis.ifOut[i];
         }
 }
 

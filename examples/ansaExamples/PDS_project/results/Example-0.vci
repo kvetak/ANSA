@@ -1,6 +1,6 @@
-file 12607 1313658212                                           
+                                                                
 version 2
-run Example-0-20110818-11:00:40-1581
+file 12607 1338193122run Example-0-20110818-11:00:40-1581
 attr configname Example
 attr datetime 20110818-11:00:40
 attr experiment Example
@@ -15,98 +15,97 @@ attr replication #0
 attr resultdir results
 attr runnumber 0
 attr seedset 0
-
 vector 64  example.Host1.eth[0].mac  framesSent  ETV
-vector 66  example.Host1.eth[0].mac  bytesSent  ETV
-vector 1  example.ansaSwitch.mac[0]  framesReceivedOK  ETV
-vector 3  example.ansaSwitch.mac[0]  bytesReceivedOK  ETV
-vector 7  example.ansaSwitch.mac[0]  framesPassedToHL  ETV
-vector 12  example.ansaSwitch.mac[1]  framesSent  ETV
-vector 14  example.ansaSwitch.mac[1]  bytesSent  ETV
-vector 81  example.Host2.eth[0].mac  framesReceivedOK  ETV
-vector 83  example.Host2.eth[0].mac  bytesReceivedOK  ETV
-vector 87  example.Host2.eth[0].mac  framesPassedToHL  ETV
-vector 24  example.ansaSwitch.mac[2]  framesSent  ETV
-vector 26  example.ansaSwitch.mac[2]  bytesSent  ETV
-vector 97  example.Host3.eth[0].mac  framesReceivedOK  ETV
-vector 99  example.Host3.eth[0].mac  bytesReceivedOK  ETV
-vector 103  example.Host3.eth[0].mac  framesPassedToHL  ETV
-vector 36  example.ansaSwitch.mac[3]  framesSent  ETV
-vector 38  example.ansaSwitch.mac[3]  bytesSent  ETV
-vector 113  example.Host4.eth[0].mac  framesReceivedOK  ETV
-vector 115  example.Host4.eth[0].mac  bytesReceivedOK  ETV
-vector 119  example.Host4.eth[0].mac  framesPassedToHL  ETV
-vector 48  example.ansaSwitch.mac[4]  framesSent  ETV
-vector 50  example.ansaSwitch.mac[4]  bytesSent  ETV
-vector 129  example.Host5.eth[0].mac  framesReceivedOK  ETV
-vector 131  example.Host5.eth[0].mac  bytesReceivedOK  ETV
-vector 135  example.Host5.eth[0].mac  framesPassedToHL  ETV
-vector 128  example.Host5.eth[0].mac  framesSent  ETV
-vector 130  example.Host5.eth[0].mac  bytesSent  ETV
-vector 49  example.ansaSwitch.mac[4]  framesReceivedOK  ETV
-vector 51  example.ansaSwitch.mac[4]  bytesReceivedOK  ETV
-vector 55  example.ansaSwitch.mac[4]  framesPassedToHL  ETV
-vector 0  example.ansaSwitch.mac[0]  framesSent  ETV
-vector 2  example.ansaSwitch.mac[0]  bytesSent  ETV
-vector 65  example.Host1.eth[0].mac  framesReceivedOK  ETV
-vector 67  example.Host1.eth[0].mac  bytesReceivedOK  ETV
-vector 71  example.Host1.eth[0].mac  framesPassedToHL  ETV
-vector 60  example.Host1.pingApp  pingRTT  ETV
-vector 96  example.Host3.eth[0].mac  framesSent  ETV
-vector 98  example.Host3.eth[0].mac  bytesSent  ETV
-vector 25  example.ansaSwitch.mac[2]  framesReceivedOK  ETV
-vector 27  example.ansaSwitch.mac[2]  bytesReceivedOK  ETV
-vector 31  example.ansaSwitch.mac[2]  framesPassedToHL  ETV
-vector 112  example.Host4.eth[0].mac  framesSent  ETV
-vector 114  example.Host4.eth[0].mac  bytesSent  ETV
-vector 37  example.ansaSwitch.mac[3]  framesReceivedOK  ETV
-vector 39  example.ansaSwitch.mac[3]  bytesReceivedOK  ETV
-vector 43  example.ansaSwitch.mac[3]  framesPassedToHL  ETV
-vector 92  example.Host3.pingApp  pingRTT  ETV
-0	3091 212 81 566 19.208519460644 95.031651214003 9 1 9 45 285
-1	3303 167 32 656 19.208489300647 124.208489300647 7 1 7 28 140
-2	3470 231 81 566 19.208519460644 95.031651214003 9 64 1266 6330 5739300
-3	3701 182 32 656 19.208489300647 124.208489300647 7 64 1138 4552 3879920
-7	3883 167 32 656 19.208489300647 124.208489300647 7 1 7 28 140
-12	4050 175 46 670 19.208496020646 124.208496020646 7 1 7 28 140
-14	4225 188 46 670 19.208496020646 124.208496020646 7 64 448 1792 573440
-24	4413 251 50 674 19.208496020646 124.208496020646 10 1 10 55 385
-25	4664 141 136 613 25.031644494004 95.031709774 6 1 6 21 91
-26	4805 271 50 674 19.208496020646 124.208496020646 10 64 1330 6970 6590500
-27	5076 153 136 613 25.031644494004 95.031709774 6 64 1074 3414 2584876
-31	5229 141 136 613 25.031644494004 95.031709774 6 1 6 21 91
-36	5370 251 54 678 19.208496020646 124.208496020646 10 1 10 55 385
-37	5621 150 180 633 25.031667934002 95.031780013998 6 1 6 21 91
-38	5771 271 54 678 19.208496020646 124.208496020646 10 64 1330 6970 6590500
-39	6042 162 180 633 25.031667934002 95.031780013998 6 64 1074 3414 2584876
-43	6204 150 180 633 25.031667934002 95.031780013998 6 1 6 21 91
-48	6354 250 58 682 19.208496020646 124.208496020646 10 1 10 55 385
-49	6604 175 76 700 19.208512740645 124.208512740645 7 1 7 28 140
-50	6779 271 58 682 19.208496020646 124.208496020646 10 64 1330 7660 7508200
-51	7050 190 76 700 19.208512740645 124.208512740645 7 64 1138 4552 3879920
-55	7240 175 76 700 19.208512740645 124.208512740645 7 1 7 28 140
-60	7415 111 124 540 19.20865994064 89.20865994064 3 0.000187359992 0.000187359992 0.000562079976 1.0531129980672e-07
 64	7526 174 31 655 19.208489300647 124.208489300647 7 1 7 28 140
-65	7700 221 82 567 19.208519460644 95.031651214003 9 1 9 45 285
+vector 66  example.Host1.eth[0].mac  bytesSent  ETV
 66	7921 189 31 655 19.208489300647 124.208489300647 7 64 1138 4552 3879920
-67	8110 240 82 567 19.208519460644 95.031651214003 9 64 1266 6330 5739300
-71	8350 221 82 567 19.208519460644 95.031651214003 9 1 9 45 285
+vector 1  example.ansaSwitch.mac[0]  framesReceivedOK  ETV
+1	3303 167 32 656 19.208489300647 124.208489300647 7 1 7 28 140
+vector 3  example.ansaSwitch.mac[0]  bytesReceivedOK  ETV
+3	3701 182 32 656 19.208489300647 124.208489300647 7 64 1138 4552 3879920
+vector 7  example.ansaSwitch.mac[0]  framesPassedToHL  ETV
+7	3883 167 32 656 19.208489300647 124.208489300647 7 1 7 28 140
+vector 12  example.ansaSwitch.mac[1]  framesSent  ETV
+12	4050 175 46 670 19.208496020646 124.208496020646 7 1 7 28 140
+vector 14  example.ansaSwitch.mac[1]  bytesSent  ETV
+14	4225 188 46 670 19.208496020646 124.208496020646 7 64 448 1792 573440
+vector 81  example.Host2.eth[0].mac  framesReceivedOK  ETV
 81	8571 175 47 671 19.208496020646 124.208496020646 7 1 7 28 140
+vector 83  example.Host2.eth[0].mac  bytesReceivedOK  ETV
 83	8746 188 47 671 19.208496020646 124.208496020646 7 64 448 1792 573440
+vector 87  example.Host2.eth[0].mac  framesPassedToHL  ETV
 87	8934 175 47 671 19.208496020646 124.208496020646 7 1 7 28 140
-92	9109 114 228 644 25.031815133997 95.031815133997 3 0.000187359992 0.000187359992 0.000562079976 1.0531129980672e-07
-96	9223 141 135 612 25.031644494004 95.031709774 6 1 6 21 91
+vector 24  example.ansaSwitch.mac[2]  framesSent  ETV
+24	4413 251 50 674 19.208496020646 124.208496020646 10 1 10 55 385
+vector 26  example.ansaSwitch.mac[2]  bytesSent  ETV
+26	4805 271 50 674 19.208496020646 124.208496020646 10 64 1330 6970 6590500
+vector 97  example.Host3.eth[0].mac  framesReceivedOK  ETV
 97	9364 251 51 675 19.208496020646 124.208496020646 10 1 10 55 385
-98	9615 153 135 612 25.031644494004 95.031709774 6 64 1074 3414 2584876
+vector 99  example.Host3.eth[0].mac  bytesReceivedOK  ETV
 99	9768 271 51 675 19.208496020646 124.208496020646 10 64 1330 6970 6590500
+vector 103  example.Host3.eth[0].mac  framesPassedToHL  ETV
 103	10039 261 51 675 19.208496020646 124.208496020646 10 1 10 55 385
-112	10300 156 179 632 25.031667934002 95.031780013998 6 1 6 21 91
+vector 36  example.ansaSwitch.mac[3]  framesSent  ETV
+36	5370 251 54 678 19.208496020646 124.208496020646 10 1 10 55 385
+vector 38  example.ansaSwitch.mac[3]  bytesSent  ETV
+38	5771 271 54 678 19.208496020646 124.208496020646 10 64 1330 6970 6590500
+vector 113  example.Host4.eth[0].mac  framesReceivedOK  ETV
 113	10456 261 55 679 19.208496020646 124.208496020646 10 1 10 55 385
-114	10717 168 179 632 25.031667934002 95.031780013998 6 64 1074 3414 2584876
+vector 115  example.Host4.eth[0].mac  bytesReceivedOK  ETV
 115	10885 281 55 679 19.208496020646 124.208496020646 10 64 1330 6970 6590500
+vector 119  example.Host4.eth[0].mac  framesPassedToHL  ETV
 119	11166 261 55 679 19.208496020646 124.208496020646 10 1 10 55 385
-128	11427 182 75 699 19.208512740645 124.208512740645 7 1 7 28 140
+vector 48  example.ansaSwitch.mac[4]  framesSent  ETV
+48	6354 250 58 682 19.208496020646 124.208496020646 10 1 10 55 385
+vector 50  example.ansaSwitch.mac[4]  bytesSent  ETV
+50	6779 271 58 682 19.208496020646 124.208496020646 10 64 1330 7660 7508200
+vector 129  example.Host5.eth[0].mac  framesReceivedOK  ETV
 129	11609 260 59 683 19.208496020646 124.208496020646 10 1 10 55 385
-130	11869 197 75 699 19.208512740645 124.208512740645 7 64 1138 4552 3879920
+vector 131  example.Host5.eth[0].mac  bytesReceivedOK  ETV
 131	12066 281 59 683 19.208496020646 124.208496020646 10 64 1330 7660 7508200
+vector 135  example.Host5.eth[0].mac  framesPassedToHL  ETV
 135	12347 260 59 683 19.208496020646 124.208496020646 10 1 10 55 385
+vector 128  example.Host5.eth[0].mac  framesSent  ETV
+128	11427 182 75 699 19.208512740645 124.208512740645 7 1 7 28 140
+vector 130  example.Host5.eth[0].mac  bytesSent  ETV
+130	11869 197 75 699 19.208512740645 124.208512740645 7 64 1138 4552 3879920
+vector 49  example.ansaSwitch.mac[4]  framesReceivedOK  ETV
+49	6604 175 76 700 19.208512740645 124.208512740645 7 1 7 28 140
+vector 51  example.ansaSwitch.mac[4]  bytesReceivedOK  ETV
+51	7050 190 76 700 19.208512740645 124.208512740645 7 64 1138 4552 3879920
+vector 55  example.ansaSwitch.mac[4]  framesPassedToHL  ETV
+55	7240 175 76 700 19.208512740645 124.208512740645 7 1 7 28 140
+vector 0  example.ansaSwitch.mac[0]  framesSent  ETV
+0	3091 212 81 566 19.208519460644 95.031651214003 9 1 9 45 285
+vector 2  example.ansaSwitch.mac[0]  bytesSent  ETV
+2	3470 231 81 566 19.208519460644 95.031651214003 9 64 1266 6330 5739300
+vector 65  example.Host1.eth[0].mac  framesReceivedOK  ETV
+65	7700 221 82 567 19.208519460644 95.031651214003 9 1 9 45 285
+vector 67  example.Host1.eth[0].mac  bytesReceivedOK  ETV
+67	8110 240 82 567 19.208519460644 95.031651214003 9 64 1266 6330 5739300
+vector 71  example.Host1.eth[0].mac  framesPassedToHL  ETV
+71	8350 221 82 567 19.208519460644 95.031651214003 9 1 9 45 285
+vector 60  example.Host1.pingApp  pingRTT  ETV
+60	7415 111 124 540 19.20865994064 89.20865994064 3 0.000187359992 0.000187359992 0.000562079976 1.0531129980672e-007
+vector 96  example.Host3.eth[0].mac  framesSent  ETV
+96	9223 141 135 612 25.031644494004 95.031709774 6 1 6 21 91
+vector 98  example.Host3.eth[0].mac  bytesSent  ETV
+98	9615 153 135 612 25.031644494004 95.031709774 6 64 1074 3414 2584876
+vector 25  example.ansaSwitch.mac[2]  framesReceivedOK  ETV
+25	4664 141 136 613 25.031644494004 95.031709774 6 1 6 21 91
+vector 27  example.ansaSwitch.mac[2]  bytesReceivedOK  ETV
+27	5076 153 136 613 25.031644494004 95.031709774 6 64 1074 3414 2584876
+vector 31  example.ansaSwitch.mac[2]  framesPassedToHL  ETV
+31	5229 141 136 613 25.031644494004 95.031709774 6 1 6 21 91
+vector 112  example.Host4.eth[0].mac  framesSent  ETV
+112	10300 156 179 632 25.031667934002 95.031780013998 6 1 6 21 91
+vector 114  example.Host4.eth[0].mac  bytesSent  ETV
+114	10717 168 179 632 25.031667934002 95.031780013998 6 64 1074 3414 2584876
+vector 37  example.ansaSwitch.mac[3]  framesReceivedOK  ETV
+37	5621 150 180 633 25.031667934002 95.031780013998 6 1 6 21 91
+vector 39  example.ansaSwitch.mac[3]  bytesReceivedOK  ETV
+39	6042 162 180 633 25.031667934002 95.031780013998 6 64 1074 3414 2584876
+vector 43  example.ansaSwitch.mac[3]  framesPassedToHL  ETV
+43	6204 150 180 633 25.031667934002 95.031780013998 6 1 6 21 91
+vector 92  example.Host3.pingApp  pingRTT  ETV
+92	9109 114 228 644 25.031815133997 95.031815133997 3 0.000187359992 0.000187359992 0.000562079976 1.0531129980672e-007
