@@ -107,7 +107,7 @@ void AclContainer::andIpWithMask(TRule* rule)
  */
 IPAddress AclContainer::negateWildcard(IPAddress wc)
 {
-	return (IPAddress::IPAddress(~(wc.getInt())));
+	return (IPAddress(~(wc.getInt())));
 }
 
 /*
@@ -322,13 +322,13 @@ bool AclContainer::loadConfigFromXML(const char* fileName)
 				else if (strcmp(tagName, "IP_src") == 0)
 					rule.source.ipAddr.set(value);
 				else if (strcmp(tagName, "WC_src") == 0)
-					rule.source.netmask = negateWildcard(IPAddress::IPAddress(value));
+					rule.source.netmask = negateWildcard(IPAddress(value));
 				else if (strcmp(tagName, "protocol") == 0)
 					getProtocol(value, &rule);
 				else if (strcmp(tagName, "IP_dst") == 0)
 					rule.dest.ipAddr.set(value);
 				else if (strcmp(tagName, "WC_dst") == 0)
-					rule.dest.netmask = negateWildcard(IPAddress::IPAddress(value));
+					rule.dest.netmask = negateWildcard(IPAddress(value));
 				else if (strcmp(tagName, "port_op_src") == 0)
 					src_port_op = value;
 				else if (strcmp(tagName, "port_beg_src") == 0)
@@ -401,7 +401,7 @@ bool AclContainer::loadConfigFromXML(const char* fileName)
  */
 TRULES* AclContainer::getRulesByAclName(std::string name)
 {
-	for (TACL_it it = this->acls.begin(); it != this->acls.end(); it++)
+	for (TACL_itc it = this->acls.begin(); it != this->acls.end(); it++)
 	{
     if(it->aclName == name)
       return &it->rules;

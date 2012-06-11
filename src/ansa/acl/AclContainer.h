@@ -81,7 +81,7 @@ struct TACL
 	TRULES rules;
 };
 
-typedef std::list<TACL>::iterator TACL_it;
+typedef std::list<TACL>::iterator TACL_itc;
 
 class Stat
 {
