@@ -16,6 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
+
 #include "ISIS.h"
 
 Define_Module(ISIS);
@@ -1734,7 +1735,7 @@ void ISIS::sendL1CSNP()
     myTLV.length = this->L1LSP.size()*14;
     myTLV.value = new unsigned char[myTLV.length];
     /*
-     * Value— Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
+     * Valueï¿½ Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
      * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
      * 2 bytes smaller.
      */
@@ -1821,7 +1822,7 @@ void ISIS::handleL1CSNP(ISISMessage * inMsg)
         {
 
             /*
-             * TLV Value— Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
+             * TLV Valueï¿½ Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
              * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
              * 2 bytes smaller, which give us 14 bytes of data per LSP entry.
              */
@@ -1943,7 +1944,7 @@ void ISIS::sendL1PSNP(std::vector<unsigned char *> * LSPlist, int gateIndex)
     myTLV.length = LSPlist->size()*14;
     myTLV.value = new unsigned char[myTLV.length];
     /*
-     * Value— Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
+     * Valueï¿½ Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
      * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
      * 2 bytes smaller.
      */
@@ -2013,7 +2014,7 @@ void ISIS::handleL1PSNP(ISISMessage * inMsg)
         {
 
             /*
-             * TLV Value— Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
+             * TLV Valueï¿½ Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
              * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
              * 2 bytes smaller, which give us 14 bytes of data per LSP entry.
              */
