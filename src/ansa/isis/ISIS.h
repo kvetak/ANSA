@@ -19,6 +19,7 @@
 #ifndef ISIS_H_
 #define ISIS_H_
 
+#include <stdlib.h>
 #include <omnetpp.h>
 #include <string>
 #include <vector>
@@ -38,6 +39,7 @@
 #include "xmlParser.h"
 #include "ISIStypes.h"
 #include <cmessage.h>
+#include <crng.h>
 
 /**
  * Single class providing all functionality of whole module.
@@ -60,10 +62,42 @@ private:
     short isType;                               /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
     std::vector<LSPrecord> L1LSP;               /*!< L1 LSP database */
     std::vector<LSPrecord> L2LSP;               /*!< L2 LSP database */
+    int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+    int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+    short L1HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
+    short L2HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
+
     unsigned long helloCounter;                 /*!< my hax hello counter to sync DIS/non-DIS hellos */
 
+    void initHandshake();       // initiates handshake
+    ISISadj* getAdjByGateIndex(int gateIndex);  // return something corresponding to adjacency on specified link
+    ISISadj* getAdjBySystemID(unsigned char *systemID, short circuitType, int gateIndex = -1);
+    ISISinterface* getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
+    unsigned short getHoldTime(int interfaceIndex, short circuitType = L1_TYPE);
+    double getHelloInterval(int interfaceIndex, short circuitType); //return hello interval for specified interface and circuitType. For DIS interface returns only 1/3 of actual value;
+    bool amIL1DIS(int interfaceIndex);  //returns true if specified interface is DIS
+    bool amIL2DIS(int interfaceIndex);  //returns true if specified interface is DIS
+    void sendBroadcastHelloMsg(int interfaceIndex, short circuitType);
+    void sendPTPHelloMsg(int interfaceIndex, short circuitType);
+    void schedule(ISISTimer* timer);
+    void handlePTPHelloMsg(ISISMessage *inMsg);  //
+    bool isAdjBySystemID(unsigned char *systemID, short circuitType); //do we have adjacency for systemID on specified circuitType
+    ISISadj* getAdj(ISISMessage *inMsg, short circuitType = L1_TYPE);//returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
+    unsigned char* getSysID(ISISMessage *msg);
+    unsigned char* getSysID(ISISL1HelloPacket *msg);
+    unsigned char* getSysID(ISISL2HelloPacket *msg);
+    unsigned char* getSysID(ISISPTPHelloPacket *msg);
+    TLV_t* getTLVByType(ISISMessage *inMsg,enum TLVtypes tlvType, int offset = 0);
+    TLV_t* getTLVByType(ISISL1HelloPacket *msg,enum TLVtypes tlvType, int offset = 0);
+    TLV_t* getTLVByType(ISISL2HelloPacket *msg,enum TLVtypes tlvType, int offset = 0);
+    TLV_t* getTLVByType(ISISPTPHelloPacket *msg,enum TLVtypes tlvType, int offset = 0);
+    bool isMessageOK(ISISMessage *inMsg);
+    bool isAreaIDOK(TLV_t* areaAddressTLV, unsigned char *compare = NULL);//if compare is NULL then use this->areaId for comparison
+    int getIfaceIndex(ISISinterface *interface); //returns index to ISISIft
+
+
     void insertIft(InterfaceEntry *entry, cXMLElement *device);          //insert new interface to vector
-    void sendHelloMsg();                         // send hello messages
+    void sendHelloMsg(ISISTimer* timer);                         // send hello messages
     bool parseNetAddr();                         // validate and parse net address format
     void handleL1HelloMsg(ISISMessage *inMsg);   // handle L1 hello messages
     void handleL2HelloMsg(ISISMessage *inMsg);   // handle L2 hello messages
@@ -88,6 +122,8 @@ private:
     bool checkDuplicateSysID(ISISMessage * msg);  //check sysId field from received hello packet for duplicated sysId
     void removeDeadLSP(ISISTimer *msg);           //remove expired LSP
     void updateMyLSP();                           //create or update my own LSPs
+
+
 
 
 protected:

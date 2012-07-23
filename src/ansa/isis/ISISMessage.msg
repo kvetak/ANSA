@@ -87,6 +87,8 @@ enum TLVtypes
 	IP_ADDRESS = 132;			// IP address of the outgoing interface  
 	AUTH_INFO_RFC = 133;  		//IS-IS packet authentication (similar to Type 10, but doesn't define authentication Type 255)  
 	// -------------------------------------------------------
+	
+	PTP_HELLO_STATE = 240; // RFC5303 Adjacency state for 3-way handshake on point-to-point link
 }
 
 

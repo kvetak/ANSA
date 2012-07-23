@@ -1,140 +1,46 @@
-file 13209 1339408225                                           
+                                                                
 version 2
-run General-0-20120611-11:50:12-6636
+run General-0-20120713-05:44:52-6339
 attr configname General
-attr datetime 20120611-11:50:12
+attr datetime 20120713-05:44:52
 attr experiment General
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvars2 $repetition=0
 attr measurement ""
 attr network inet.examples.ansaExamples.ISIS.ISIStest1
-attr processid 6636
+attr processid 6339
 attr repetition 0
 attr replication #0
 attr resultdir results
 attr runnumber 0
 attr seedset 0
 
-vector 2  ISIStest1.router1.eth[0].mac  framesSent  ETV
-vector 4  ISIStest1.router1.eth[0].mac  bytesSent  ETV
-vector 16  ISIStest1.router2.eth[0].mac  framesSent  ETV
-vector 18  ISIStest1.router2.eth[0].mac  bytesSent  ETV
-vector 30  ISIStest1.router2.eth[1].mac  framesSent  ETV
-vector 32  ISIStest1.router2.eth[1].mac  bytesSent  ETV
-vector 44  ISIStest1.router3.eth[0].mac  framesSent  ETV
-vector 46  ISIStest1.router3.eth[0].mac  bytesSent  ETV
-vector 95  ISIStest1.router4.eth[0].mac  framesSent  ETV
-vector 97  ISIStest1.router4.eth[0].mac  bytesSent  ETV
-vector 109  ISIStest1.router4.eth[1].mac  framesSent  ETV
-vector 111  ISIStest1.router4.eth[1].mac  bytesSent  ETV
-vector 123  ISIStest1.router5.eth[0].mac  framesSent  ETV
-vector 125  ISIStest1.router5.eth[0].mac  bytesSent  ETV
-vector 137  ISIStest1.router5.eth[1].mac  framesSent  ETV
-vector 139  ISIStest1.router5.eth[1].mac  bytesSent  ETV
-vector 151  ISIStest1.router6.eth[0].mac  framesSent  ETV
-vector 153  ISIStest1.router6.eth[0].mac  bytesSent  ETV
-vector 58  ISIStest1.etherSwitch.mac[0]  framesReceivedOK  ETV
-vector 60  ISIStest1.etherSwitch.mac[0]  bytesReceivedOK  ETV
-vector 64  ISIStest1.etherSwitch.mac[0]  framesPassedToHL  ETV
-vector 70  ISIStest1.etherSwitch.mac[1]  framesReceivedOK  ETV
-vector 72  ISIStest1.etherSwitch.mac[1]  bytesReceivedOK  ETV
-vector 76  ISIStest1.etherSwitch.mac[1]  framesPassedToHL  ETV
-vector 96  ISIStest1.router4.eth[0].mac  framesReceivedOK  ETV
-vector 98  ISIStest1.router4.eth[0].mac  bytesReceivedOK  ETV
-vector 102  ISIStest1.router4.eth[0].mac  framesPassedToHL  ETV
-vector 82  ISIStest1.etherSwitch.mac[2]  framesReceivedOK  ETV
-vector 84  ISIStest1.etherSwitch.mac[2]  bytesReceivedOK  ETV
-vector 88  ISIStest1.etherSwitch.mac[2]  framesPassedToHL  ETV
-vector 31  ISIStest1.router2.eth[1].mac  framesReceivedOK  ETV
-vector 33  ISIStest1.router2.eth[1].mac  bytesReceivedOK  ETV
-vector 37  ISIStest1.router2.eth[1].mac  framesPassedToHL  ETV
-vector 124  ISIStest1.router5.eth[0].mac  framesReceivedOK  ETV
-vector 126  ISIStest1.router5.eth[0].mac  bytesReceivedOK  ETV
-vector 130  ISIStest1.router5.eth[0].mac  framesPassedToHL  ETV
-vector 110  ISIStest1.router4.eth[1].mac  framesReceivedOK  ETV
-vector 112  ISIStest1.router4.eth[1].mac  bytesReceivedOK  ETV
-vector 116  ISIStest1.router4.eth[1].mac  framesPassedToHL  ETV
-vector 152  ISIStest1.router6.eth[0].mac  framesReceivedOK  ETV
-vector 154  ISIStest1.router6.eth[0].mac  bytesReceivedOK  ETV
-vector 158  ISIStest1.router6.eth[0].mac  framesPassedToHL  ETV
-vector 138  ISIStest1.router5.eth[1].mac  framesReceivedOK  ETV
-vector 140  ISIStest1.router5.eth[1].mac  bytesReceivedOK  ETV
-vector 144  ISIStest1.router5.eth[1].mac  framesPassedToHL  ETV
-vector 56  ISIStest1.etherSwitch.relayUnit  "buffer level"  ETV
-vector 69  ISIStest1.etherSwitch.mac[1]  framesSent  ETV
-vector 71  ISIStest1.etherSwitch.mac[1]  bytesSent  ETV
-vector 81  ISIStest1.etherSwitch.mac[2]  framesSent  ETV
-vector 83  ISIStest1.etherSwitch.mac[2]  bytesSent  ETV
-vector 57  ISIStest1.etherSwitch.mac[0]  framesSent  ETV
-vector 59  ISIStest1.etherSwitch.mac[0]  bytesSent  ETV
-vector 17  ISIStest1.router2.eth[0].mac  framesReceivedOK  ETV
-vector 19  ISIStest1.router2.eth[0].mac  bytesReceivedOK  ETV
-vector 23  ISIStest1.router2.eth[0].mac  framesPassedToHL  ETV
-vector 45  ISIStest1.router3.eth[0].mac  framesReceivedOK  ETV
-vector 47  ISIStest1.router3.eth[0].mac  bytesReceivedOK  ETV
-vector 51  ISIStest1.router3.eth[0].mac  framesPassedToHL  ETV
-vector 3  ISIStest1.router1.eth[0].mac  framesReceivedOK  ETV
-vector 5  ISIStest1.router1.eth[0].mac  bytesReceivedOK  ETV
-vector 9  ISIStest1.router1.eth[0].mac  framesPassedToHL  ETV
-2	4167 0 85 655 1.000006719999 14.320006719999 5 1 5 15 55
-3	4288 0 144 615 1.000013639998 10.990020359997 8 1 8 36 204
-4	4482 0 85 655 1.000006719999 14.320006719999 5 64 320 960 225280
-5	4612 0 144 615 1.000013639998 10.990020359997 8 64 512 2304 835584
-9	4821 0 144 615 1.000013639998 10.990020359997 8 1 8 36 204
-16	5015 0 86 536 1.000006719999 10.990006719999 4 1 4 10 30
-17	5115 0 142 613 1.000013639998 10.990020359997 8 1 8 36 204
-18	5317 0 86 536 1.000006719999 10.990006719999 4 64 256 640 122880
-19	5424 0 142 613 1.000013639998 10.990020359997 8 64 512 2304 835584
-23	5641 0 142 613 1.000013639998 10.990020359997 8 1 8 36 204
-30	5843 0 87 537 1.000006719999 10.990006719999 4 1 4 10 30
-31	5943 0 98 660 1.000006819999 14.320006819999 5 1 5 15 55
-32	6069 0 87 537 1.000006719999 10.990006719999 4 64 256 640 122880
-33	6176 0 98 660 1.000006819999 14.320006819999 5 64 320 960 225280
-37	6311 0 98 660 1.000006819999 14.320006819999 5 1 5 15 55
-44	6437 0 88 538 1.000006719999 10.990006719999 4 1 4 10 30
-45	6537 0 143 614 1.000013639998 10.990020359997 8 1 8 36 204
-46	6739 0 88 538 1.000006719999 10.990006719999 4 64 256 640 122880
-47	6846 0 143 614 1.000013639998 10.990020359997 8 64 512 2304 835584
-51	7063 0 143 614 1.000013639998 10.990020359997 8 1 8 36 204
-56	7265 0 103 667 1.000006819999 14.320006819999 26 0 192 2368 315392
-57	7956 0 141 612 1.000013539998 10.990020259997 8 1 8 36 204
-58	8158 0 94 659 1.000006819999 14.320006819999 5 1 5 15 55
-59	8284 0 141 612 1.000013539998 10.990020259997 8 64 512 2304 835584
-60	8501 0 94 659 1.000006819999 14.320006819999 5 64 320 960 225280
-64	8636 0 94 659 1.000006819999 14.320006819999 5 1 5 15 55
-69	8762 0 139 610 1.000013539998 10.990020259997 8 1 8 36 204
-70	8964 0 95 545 1.000006819999 10.990006819999 4 1 4 10 30
-71	9064 0 139 610 1.000013539998 10.990020259997 8 64 512 2304 835584
-72	9281 0 95 545 1.000006819999 10.990006819999 4 64 256 640 122880
-76	9388 0 95 545 1.000006819999 10.990006819999 4 1 4 10 30
-81	9488 0 140 611 1.000013539998 10.990020259997 8 1 8 36 204
-82	9690 0 97 547 1.000006819999 10.990006819999 4 1 4 10 30
-83	9790 0 140 611 1.000013539998 10.990020259997 8 64 512 2304 835584
-84	10007 0 97 547 1.000006819999 10.990006819999 4 64 256 640 122880
-88	10114 0 97 547 1.000006819999 10.990006819999 4 1 4 10 30
-95	10214 0 89 656 1.000006719999 14.320006719999 5 1 5 15 55
-96	10340 0 96 546 1.000006819999 10.990006819999 4 1 4 10 30
-97	10440 0 89 656 1.000006719999 14.320006719999 5 64 320 960 225280
-98	10575 0 96 546 1.000006819999 10.990006819999 4 64 256 640 122880
-102	10682 0 96 546 1.000006819999 10.990006819999 4 1 4 10 30
-109	10786 0 90 540 1.000006719999 10.990006719999 4 1 4 10 30
-110	10890 0 100 661 1.000006819999 14.320006819999 5 1 5 15 55
-111	11022 0 90 540 1.000006719999 10.990006719999 4 64 256 640 122880
-112	11133 0 100 661 1.000006819999 14.320006819999 5 64 320 960 225280
-116	11274 0 100 661 1.000006819999 14.320006819999 5 1 5 15 55
-123	11406 0 91 657 1.000006719999 14.320006719999 5 1 5 15 55
-124	11537 0 99 549 1.000006819999 10.990006819999 4 1 4 10 30
-125	11641 0 91 657 1.000006719999 14.320006719999 5 64 320 960 225280
-126	11781 0 99 549 1.000006819999 10.990006819999 4 64 256 640 122880
-130	11892 0 99 549 1.000006819999 10.990006819999 4 1 4 10 30
-137	11996 0 92 542 1.000006719999 10.990006719999 4 1 4 10 30
-138	12100 0 102 662 1.000006819999 14.320006819999 5 1 5 15 55
-139	12232 0 92 542 1.000006719999 10.990006719999 4 64 256 640 122880
-140	12343 0 102 662 1.000006819999 14.320006819999 5 64 320 960 225280
-144	12484 0 102 662 1.000006819999 14.320006819999 5 1 5 15 55
-151	12616 0 93 658 1.000006719999 14.320006719999 5 1 5 15 55
-152	12747 0 101 551 1.000006819999 10.990006819999 4 1 4 10 30
-153	12852 0 93 658 1.000006719999 14.320006719999 5 64 320 960 225280
-154	12992 0 101 551 1.000006819999 10.990006819999 4 64 256 640 122880
-158	13104 0 101 551 1.000006819999 10.990006819999 4 1 4 10 30
+vector 165  ISIStest1.router1.eth[0].mac  framesSent  ETV
+vector 167  ISIStest1.router1.eth[0].mac  bytesSent  ETV
+vector 179  ISIStest1.router2.eth[0].mac  framesSent  ETV
+vector 181  ISIStest1.router2.eth[0].mac  bytesSent  ETV
+vector 221  ISIStest1.etherSwitch.mac[0]  framesReceivedOK  ETV
+vector 223  ISIStest1.etherSwitch.mac[0]  bytesReceivedOK  ETV
+vector 227  ISIStest1.etherSwitch.mac[0]  framesPassedToHL  ETV
+vector 233  ISIStest1.etherSwitch.mac[1]  framesReceivedOK  ETV
+vector 235  ISIStest1.etherSwitch.mac[1]  bytesReceivedOK  ETV
+vector 239  ISIStest1.etherSwitch.mac[1]  framesPassedToHL  ETV
+vector 219  ISIStest1.etherSwitch.relayUnit  "buffer level"  ETV
+vector 232  ISIStest1.etherSwitch.mac[1]  framesSent  ETV
+vector 234  ISIStest1.etherSwitch.mac[1]  bytesSent  ETV
+vector 244  ISIStest1.etherSwitch.mac[2]  framesSent  ETV
+vector 246  ISIStest1.etherSwitch.mac[2]  bytesSent  ETV
+vector 220  ISIStest1.etherSwitch.mac[0]  framesSent  ETV
+vector 222  ISIStest1.etherSwitch.mac[0]  bytesSent  ETV
+vector 180  ISIStest1.router2.eth[0].mac  framesReceivedOK  ETV
+vector 182  ISIStest1.router2.eth[0].mac  bytesReceivedOK  ETV
+vector 186  ISIStest1.router2.eth[0].mac  framesPassedToHL  ETV
+vector 208  ISIStest1.router3.eth[0].mac  framesReceivedOK  ETV
+vector 210  ISIStest1.router3.eth[0].mac  bytesReceivedOK  ETV
+vector 214  ISIStest1.router3.eth[0].mac  framesPassedToHL  ETV
+vector 166  ISIStest1.router1.eth[0].mac  framesReceivedOK  ETV
+vector 168  ISIStest1.router1.eth[0].mac  bytesReceivedOK  ETV
+vector 172  ISIStest1.router1.eth[0].mac  framesPassedToHL  ETV
+vector 163  ISIStest1.router1.eth[0].queue  "queue length"  ETV
+vector 177  ISIStest1.router2.eth[0].queue  "queue length"  ETV

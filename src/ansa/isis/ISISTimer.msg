@@ -30,8 +30,10 @@ enum ISISTimerType
 message ISISTimer extends cMessage
 {
       char 		timerKind enum(ISISTimerType) = HELLO_TIMER;
+      int		interfaceIndex; //index to ISISIft maybe change to gateway index CHANGED TO gateIndex
       unsigned char	sysID[6];	//for specific timers eg. neighbour timeout
       unsigned short isType;	//L1 / L2
       unsigned char areaID[3];	//areaID; relevant for L2 dead timer
       unsigned char LSPid[8];	//for use as LSP dead timer
+      
 };
