@@ -222,6 +222,6 @@ cXMLElement * xmlParser::GetIsisRouting(cXMLElement * device)
     if(routing == NULL)
         return  NULL;
 
-    cXMLElement * isis = routing->getFirstChildWithTag("IS-IS");
+    cXMLElement * isis = routing->getFirstChildWithTag("ISIS");
     return isis;
 }

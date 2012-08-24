@@ -19,17 +19,27 @@
 
 enum ISISTimerType
 {
+   
    HELLO_TIMER = 1;
-   NEIGHBOUR_DEAD = 2;
-   L1LSP_REFRESH = 3;
-   L1LSP_DEAD = 4;
+   NEIGHBOUR_DEAD = 2; //hello timer expired
+   LSP_REFRESH = 3;
+   LSP_DEAD = 4;
    CSNP_TIMER = 5;
+   LSP_DELETE = 6;
+   //L2LSP_DEAD = 7;
+   PERIODIC_SEND = 8;
+   //LSP_REFRESH = 9;
+   PSNP_TIMER = 10;
+   GENERATE_LSP_TIMER = 11;
+   ISIS_START = 12;
+   
+   
 };
 
 
 message ISISTimer extends cMessage
 {
-      char 		timerKind enum(ISISTimerType) = HELLO_TIMER;
+      char 		timerKind enum(ISISTimerType);
       int		interfaceIndex; //index to ISISIft maybe change to gateway index CHANGED TO gateIndex
       unsigned char	sysID[6];	//for specific timers eg. neighbour timeout
       unsigned short isType;	//L1 / L2

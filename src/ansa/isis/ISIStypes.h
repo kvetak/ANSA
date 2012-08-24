@@ -22,6 +22,8 @@
 #include "MACAddress.h"
 #include "InterfaceEntry.h"
 #include "ISISTimer_m.h"
+#include "ISISMessage_m.h"
+#include "ISIS.h"
 
 
 #define ISIS_DIS_PRIORITY 64 /*!< Default priority to become DIS*/
@@ -30,7 +32,16 @@
 #define ISIS_HELLO_MULTIPLIER 3 /*!< Default hello multiplier value.*/
 #define ISIS_SYSTEM_ID 6 /*!< Length of System-ID.*/
 #define ISIS_MAX_AREAS 3 /*!< Default value for Maximum Areas.*/
-#define ISIS_AREA_ID 3
+#define ISIS_AREA_ID 3 /*!< Length of Area-ID.*/
+#define ISIS_LSP_INTERVAL 33 /*!< Minimum delay in ms between sending two successive LSPs. */
+#define ISIS_LSP_REFRESH_INTERVAL 150 /*!< Interval in seconds at which LSPs are refreshed (1 to 65535). This value SHOULD be less than ISIS_LSP_MAX_LIFETIME*/
+#define ISIS_LSP_MAX_LIFETIME 200 /*!< Interval in seconds during which is specified LSP valid. This value SHOULD be more than ISIS_LSP_REFRESH_INTERVAL */
+#define ISIS_LSP_GEN_INTERVAL 5 /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
+#define ISIS_LSP_INIT_WAIT 50 /*!< Initial wait interval in ms before generating first LSP.*/
+#define ISIS_CSNP_INTERVAL 10 /*!< Interval in seconds between generating CSNP message.*/
+#define ISIS_PSNP_INTERVAL 2 /*!< Interval in seconds between generating CSNP message.*/
+#define ISIS_LSP_MAX_SIZE 1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
+#define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
 
 //class InterfaceEntr;
 //class MACAddress;
@@ -58,6 +69,11 @@ struct ISISinterface
     int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
     short L1HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
     short L2HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
+    int lspInterval;                            /*!< Minimum delay in ms between sending two successive LSPs.*/
+    int L1CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
+    int L2CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
+    int L1PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
+    int L2PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
 
     InterfaceEntry *entry;    /*!< other interface info*/
 };
@@ -73,6 +89,38 @@ struct ISISadj
     bool state;                         /*!<adjacency state has to be 2-way; 0 = only 1 way, 1 = 2-way (hello received from adj router)*/
     ISISTimer *timer;                   /*!<timer set to hold time and reseted every time hello from neighbour is received*/
     int gateIndex;                      /*!<index of gate, which is neighbour connected to*/
+    bool network;                       /*!<network type, true = broadcast, false = point-to-point*/
+
+    //bool operator for sorting
+    bool operator<(const ISISadj& adj2) const {
+
+        for (unsigned int j = 0; j < ISIS_AREA_ID; j++){
+            if(areaID[j] < adj2.areaID[j]){
+                return true; //first is smaller, so return true
+            }else if(areaID[j] > adj2.areaID[j]){
+                return false; //first is bigger, so return false
+            }
+            //if it's equal then continue to next one
+        }
+        //AreaIDs match, so compare system IDs
+
+        for (unsigned int i = 0; i < ISIS_SYSTEM_ID; i++){
+            if(sysID[i] < adj2.sysID[i]){
+                return true; //first is smaller, so return true
+            }else if(sysID[i] > adj2.sysID[i]){
+                return false; //first is bigger, so return false
+            }
+            //if it's equal then continue to next one
+        }
+
+        //if the first MAC address is smaller, return true
+        if(mac.compareTo(adj2.mac) < 0){
+            return true;
+        }
+
+        //if they're equal, return false
+        return false;
+    }
 };
 
 /**
@@ -102,6 +150,69 @@ struct LSPrecord
     unsigned char LSPid[8];             //ID of LSP
     unsigned long seq;                  //sequence number
     ISISTimer *deadTimer;               //dead timer - 1200s
+};
+
+struct LSPRecord
+{
+        ISISLSPPacket* LSP; //link-state protocol data unit
+        ISISTimer *deadTimer; //dead timer
+        std::vector<bool> SRMflags;
+        std::vector<bool> SSNflags;
+        double simLifetime; /*!< specify deadTi */
+
+/*        LSPRecord(){
+            for (std::vector<ISISinterface>::iterator intIt = this->ISISIft.begin(); intIt != this->ISISIft.end(); ++intIt)
+            {
+
+                this->SRMflags.push_back(false);
+                this->SSNflags.push_back(false);
+
+            }
+        }*/
+
+        ~LSPRecord(){
+
+/*            for (unsigned int i = 0; i < this->LSP->getTLVArraySize(); i++)
+            {
+                if(this->LSP->getTLV(i).value != NULL){
+                    delete this->LSP->getTLV(i).value;
+                }
+            }*/
+            this->LSP->setTLVArraySize(0);
+            if(this->LSP != NULL){
+                delete this->LSP;
+            }
+//            if(this->deadTimer != NULL){
+//                drop(this->deadTimer);
+//                delete this->deadTimer;
+//            }
+            this->SRMflags.clear();
+            this->SSNflags.clear();
+        }
+
+        //bool operator for sorting
+         bool operator<(const LSPRecord& lspRec2) const {
+
+             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
+                 if(this->LSP->getLspID(i) < lspRec2.LSP->getLspID(i)){
+                     return true; //first is smaller, so return true
+                 }else if(this->LSP->getLspID(i) > lspRec2.LSP->getLspID(i)){
+                     return false; //first is bigger, so return false
+                 }
+                 //if it's equal then continue to next one
+             }
+
+             //if they're equal, return false
+             return false;
+         }
+
+};
+
+struct FlagRecord
+{
+        LSPRecord *lspRec;
+        int index;
+        //destructor!!
 };
 
 /*

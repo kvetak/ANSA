@@ -37,7 +37,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildArguments</key>
-					<value>MODE=debug CONFIGNAME=${ConfigName} -k</value>
+					<value>MODE=debug CONFIGNAME=${ConfigName} -k -j4</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildCommand</key>

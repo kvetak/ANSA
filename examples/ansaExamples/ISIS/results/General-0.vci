@@ -1,46 +1,72 @@
-                                                                
+file 65006 1342745099                                           
 version 2
-run General-0-20120713-05:44:52-6339
+run General-0-20120720-02:44:50-7988
 attr configname General
-attr datetime 20120713-05:44:52
+attr datetime 20120720-02:44:50
 attr experiment General
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvars2 $repetition=0
 attr measurement ""
 attr network inet.examples.ansaExamples.ISIS.ISIStest1
-attr processid 6339
+attr processid 7988
 attr repetition 0
 attr replication #0
 attr resultdir results
 attr runnumber 0
 attr seedset 0
 
-vector 165  ISIStest1.router1.eth[0].mac  framesSent  ETV
-vector 167  ISIStest1.router1.eth[0].mac  bytesSent  ETV
-vector 179  ISIStest1.router2.eth[0].mac  framesSent  ETV
-vector 181  ISIStest1.router2.eth[0].mac  bytesSent  ETV
-vector 221  ISIStest1.etherSwitch.mac[0]  framesReceivedOK  ETV
-vector 223  ISIStest1.etherSwitch.mac[0]  bytesReceivedOK  ETV
-vector 227  ISIStest1.etherSwitch.mac[0]  framesPassedToHL  ETV
-vector 233  ISIStest1.etherSwitch.mac[1]  framesReceivedOK  ETV
-vector 235  ISIStest1.etherSwitch.mac[1]  bytesReceivedOK  ETV
-vector 239  ISIStest1.etherSwitch.mac[1]  framesPassedToHL  ETV
-vector 219  ISIStest1.etherSwitch.relayUnit  "buffer level"  ETV
-vector 232  ISIStest1.etherSwitch.mac[1]  framesSent  ETV
-vector 234  ISIStest1.etherSwitch.mac[1]  bytesSent  ETV
-vector 244  ISIStest1.etherSwitch.mac[2]  framesSent  ETV
-vector 246  ISIStest1.etherSwitch.mac[2]  bytesSent  ETV
-vector 220  ISIStest1.etherSwitch.mac[0]  framesSent  ETV
-vector 222  ISIStest1.etherSwitch.mac[0]  bytesSent  ETV
-vector 180  ISIStest1.router2.eth[0].mac  framesReceivedOK  ETV
-vector 182  ISIStest1.router2.eth[0].mac  bytesReceivedOK  ETV
-vector 186  ISIStest1.router2.eth[0].mac  framesPassedToHL  ETV
-vector 208  ISIStest1.router3.eth[0].mac  framesReceivedOK  ETV
-vector 210  ISIStest1.router3.eth[0].mac  bytesReceivedOK  ETV
-vector 214  ISIStest1.router3.eth[0].mac  framesPassedToHL  ETV
-vector 166  ISIStest1.router1.eth[0].mac  framesReceivedOK  ETV
-vector 168  ISIStest1.router1.eth[0].mac  bytesReceivedOK  ETV
-vector 172  ISIStest1.router1.eth[0].mac  framesPassedToHL  ETV
-vector 163  ISIStest1.router1.eth[0].queue  "queue length"  ETV
-vector 177  ISIStest1.router2.eth[0].queue  "queue length"  ETV
+vector 2  ISIStest1.router1.eth[0].mac  framesSent  ETV
+vector 4  ISIStest1.router1.eth[0].mac  bytesSent  ETV
+vector 16  ISIStest1.router2.eth[0].mac  framesSent  ETV
+vector 18  ISIStest1.router2.eth[0].mac  bytesSent  ETV
+vector 58  ISIStest1.etherSwitch.mac[0]  framesReceivedOK  ETV
+vector 60  ISIStest1.etherSwitch.mac[0]  bytesReceivedOK  ETV
+vector 64  ISIStest1.etherSwitch.mac[0]  framesPassedToHL  ETV
+vector 70  ISIStest1.etherSwitch.mac[1]  framesReceivedOK  ETV
+vector 72  ISIStest1.etherSwitch.mac[1]  bytesReceivedOK  ETV
+vector 76  ISIStest1.etherSwitch.mac[1]  framesPassedToHL  ETV
+vector 56  ISIStest1.etherSwitch.relayUnit  "buffer level"  ETV
+vector 69  ISIStest1.etherSwitch.mac[1]  framesSent  ETV
+vector 71  ISIStest1.etherSwitch.mac[1]  bytesSent  ETV
+vector 81  ISIStest1.etherSwitch.mac[2]  framesSent  ETV
+vector 83  ISIStest1.etherSwitch.mac[2]  bytesSent  ETV
+vector 57  ISIStest1.etherSwitch.mac[0]  framesSent  ETV
+vector 59  ISIStest1.etherSwitch.mac[0]  bytesSent  ETV
+vector 17  ISIStest1.router2.eth[0].mac  framesReceivedOK  ETV
+vector 19  ISIStest1.router2.eth[0].mac  bytesReceivedOK  ETV
+vector 23  ISIStest1.router2.eth[0].mac  framesPassedToHL  ETV
+vector 45  ISIStest1.router3.eth[0].mac  framesReceivedOK  ETV
+vector 47  ISIStest1.router3.eth[0].mac  bytesReceivedOK  ETV
+vector 51  ISIStest1.router3.eth[0].mac  framesPassedToHL  ETV
+vector 3  ISIStest1.router1.eth[0].mac  framesReceivedOK  ETV
+vector 5  ISIStest1.router1.eth[0].mac  bytesReceivedOK  ETV
+vector 9  ISIStest1.router1.eth[0].mac  framesPassedToHL  ETV
+vector 0  ISIStest1.router1.eth[0].queue  "queue length"  ETV
+0	2023 35 325 335 15 15.000006719999 2 0 1 1 1
+2	2058 1980 43 3919 1.000006719999 187.480006719999 76 1 76 2926 149226
+3	4038 1507 66 3942 1.000013639998 187.480013639998 58 1 58 1711 66729
+4	5545 2125 43 3919 1.000006719999 187.480006719999 76 64 4864 187264 611229696
+5	7670 1616 66 3942 1.000013639998 187.480013639998 58 64 3712 109504 273321984
+9	9286 1507 66 3942 1.000013639998 187.480013639998 58 1 58 1711 66729
+16	10793 1565 44 3920 1.000006719999 187.480006719999 58 1 58 1711 66729
+17	12358 2057 64 3940 1.000013639998 187.480013639998 76 1 76 2926 149226
+18	14415 1674 44 3920 1.000006719999 187.480006719999 58 64 3712 109504 273321984
+19	16089 2202 64 3940 1.000013639998 187.480013639998 76 64 4864 187264 611229696
+23	18291 2057 64 3940 1.000013639998 187.480013639998 76 1 76 2926 149226
+45	20348 3666 65 3955 1.000013639998 187.480020359997 134 1 134 9045 811035
+47	24014 3892 65 3955 1.000013639998 187.480020359997 134 64 8576 578880 3321999360
+51	27906 3666 65 3955 1.000013639998 187.480020359997 134 1 134 9045 811035
+56	31572 7261 47 3928 1.000006819999 187.480006819999 268 0 128 16000 1499136
+57	38833 1565 63 3939 1.000013539998 187.480013539998 58 1 58 1711 66729
+58	40398 2056 45 3921 1.000006819999 187.480006819999 76 1 76 2926 149226
+59	42454 1674 63 3939 1.000013539998 187.480013539998 58 64 3712 109504 273321984
+60	44128 2201 45 3921 1.000006819999 187.480006819999 76 64 4864 187264 611229696
+64	46329 2056 45 3921 1.000006819999 187.480006819999 76 1 76 2926 149226
+69	48385 2057 61 3937 1.000013539998 187.480013539998 76 1 76 2926 149226
+70	50442 1565 46 3922 1.000006819999 187.480006819999 58 1 58 1711 66729
+71	52007 2202 61 3937 1.000013539998 187.480013539998 76 64 4864 187264 611229696
+72	54209 1674 46 3922 1.000006819999 187.480006819999 58 64 3712 109504 273321984
+76	55883 1565 46 3922 1.000006819999 187.480006819999 58 1 58 1711 66729
+81	57448 3666 62 3954 1.000013539998 187.480020259997 134 1 134 9045 811035
+83	61114 3892 62 3954 1.000013539998 187.480020259997 134 64 8576 578880 3321999360
