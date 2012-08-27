@@ -23,7 +23,7 @@
 #include "InterfaceEntry.h"
 #include "ISISTimer_m.h"
 #include "ISISMessage_m.h"
-#include "ISIS.h"
+//#include "ISIS.h"
 
 
 #define ISIS_DIS_PRIORITY 64 /*!< Default priority to become DIS*/
@@ -42,7 +42,7 @@
 #define ISIS_PSNP_INTERVAL 2 /*!< Interval in seconds between generating CSNP message.*/
 #define ISIS_LSP_MAX_SIZE 1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
 #define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
-
+#define ISIS_SPF_FULL_INTERVAL 50
 //class InterfaceEntr;
 //class MACAddress;
 
@@ -213,7 +213,56 @@ struct FlagRecord
         LSPRecord *lspRec;
         int index;
         //destructor!!
+        ~FlagRecord(){
+
+        }
 };
+
+
+struct ISISNeighbour
+{
+        unsigned char *id;
+        //uint32_t metric;
+        bool type; //should represent whether it's a leaf node; true = leaf
+
+
+};
+
+typedef std::vector<ISISNeighbour*> ISISNeighbours_t;
+
+struct ISISPath
+{
+        unsigned char *to;
+        uint32_t metric;
+        ISISNeighbours_t from;
+        //bool operator for sorting
+         bool operator<(const ISISPath& path2) const {
+
+             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
+                 if(this->metric < path2.metric){
+                     return true; //first is smaller, so return true
+                 }else{
+                     return false; //first is bigger, so return false
+                 }
+                 //if it's equal then continue to next one
+             }
+
+             //if they're equal, return false
+             return false;
+         }
+};
+
+typedef std::vector<ISISPath*> ISISPaths_t;
+typedef std::vector<LSPRecord *> ISISLspDb_t;
+
+struct ISISCon
+{
+        unsigned char *from;
+        unsigned char *to;
+        uint32_t metric;
+        bool type;
+};
+typedef std::vector<ISISCon*> ISISCons_t;
 
 /*
  * Adjacency states for 3-way handshake on point-to-point links

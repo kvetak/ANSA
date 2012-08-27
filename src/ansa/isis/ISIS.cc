@@ -128,9 +128,9 @@ ISIS::~ISIS()
         for(; qIt != this->L1SSNBQueue->end(); ++qIt){
             std::vector<FlagRecord*>::iterator it = (*qIt)->begin();
             for(; it != (*qIt)->end(); ++it){
-                if((*it) != NULL){
-                    delete (*it);
-                }
+
+                delete (*it);
+
             }
             (*qIt)->clear();
             delete (*qIt);
@@ -508,7 +508,9 @@ void ISIS::initialize(int stage) {
             this->L2SSNPTPQueue->push_back(new std::vector<FlagRecord *>);
         }
 
-
+        //TODO
+        this->L1SPFFullInterval = ISIS_SPF_FULL_INTERVAL;
+        this->L2SPFFullInterval = ISIS_SPF_FULL_INTERVAL;
 
 
     }else if(stage == 4){
@@ -754,6 +756,7 @@ void ISIS::initISIS()
     this->initPeriodicSend();
     this->initCsnp(); //this could be called within initRefresh();
     this->initPsnp(); //see above
+    this->initSPF();
 
 /*
     ISISTimer *periodicSendL1 = new ISISTimer("Periodic send L1", PERIODIC_SEND);
@@ -975,6 +978,31 @@ void ISIS::initPsnp()
 }
 
 
+void ISIS::initSPF()
+{
+    ISISTimer *timerMsg;
+
+    if (this->isType == L1L2_TYPE)
+    {
+        timerMsg = new ISISTimer("L1 SPF Full");
+        timerMsg->setTimerKind(SPF_FULL);
+        timerMsg->setIsType(L1_TYPE);
+        this->schedule(timerMsg);
+
+        timerMsg = new ISISTimer("L2 SPF Full");
+        timerMsg->setTimerKind(SPF_FULL);
+        timerMsg->setIsType(L2_TYPE);
+        this->schedule(timerMsg);
+    }
+    else
+    {
+        timerMsg = new ISISTimer("SPF Full");
+        timerMsg->setTimerKind(SPF_FULL);
+        timerMsg->setIsType(this->isType);
+        this->schedule(timerMsg);
+    }
+}
+
 
 /**
  * Handle incoming messages: Method differs between self messages and external messages
@@ -1031,10 +1059,12 @@ void ISIS::handleMessage(cMessage* msg)
                 else if (timer->getIsType() == L2_TYPE)
                 {
                     EV << "ISIS: Warning: Discarding CSNP_TIMER for level 2" << endl;
+                    delete timer;
                 }
                 else
                 {
                     EV << "ISIS: Warning: Discarding CSNP_TIMER for L1L2." << endl;
+                    delete timer;
                 }
                 break;
 
@@ -1045,10 +1075,12 @@ void ISIS::handleMessage(cMessage* msg)
                 }
                 else if (timer->getIsType() == L2_TYPE)
                 {
+                    delete timer;
                     EV << "ISIS: Warning: Discarding PSNP_TIMER for level 2" << endl;
                 }
                 else
                 {
+                    delete timer;
                     EV << "ISIS: Warning: Discarding PSNP_TIMER for L1L2." << endl;
                 }
                 break;
@@ -1056,6 +1088,10 @@ void ISIS::handleMessage(cMessage* msg)
             case (PERIODIC_SEND):
                 this->periodicSend(timer, timer->getIsType());
                 break;
+
+            case (SPF_FULL):
+                    this->fullSPF(timer);
+            break;
 
             default:
                 EV<< "ISIS: Warning: Received unsupported Timer type in handleMessage" <<endl;
@@ -1200,7 +1236,7 @@ void ISIS::handleMessage(cMessage* msg)
             default:
                 EV  << "deviceId " << deviceId << ": ISIS: WARNING: Discarding unknown message type. Msg id: "
                                 << inMsg->getId() << endl;
-                //delete inMsg;
+                delete inMsg;
                 break;
 
         }
@@ -1688,6 +1724,18 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
 
             break;
+
+        case (SPF_FULL):
+                if(timer->getIsType() == L1_TYPE){
+                   timeAt = this->L1SPFFullInterval;
+                }else if(timer->getIsType() == L2_TYPE){
+                    timeAt = this->L2SPFFullInterval;
+                }else{
+                    EV<<"ISIS: Error Unsupported IS-Type in SPF_FULL timer" <<endl;
+                }
+                randomTime = uniform(0, 0.25 * timeAt);
+                this->scheduleAt(simTime() + timeAt - randomTime, timer);
+                break;
 
         default:
             EV << "ISIS: ERROR: Unsupported timer type in schedule" << endl;
@@ -2870,7 +2918,8 @@ void ISIS::printLSPDB()
         EV << "\t0x";
 
         //print sequence number
-        EV << setfill('0') << setw(8) << hex << (*it)->LSP->getSeqNumber() << endl;
+        EV << setfill('0') << setw(8) << hex << (*it)->LSP->getSeqNumber();
+        EV<< "\t" << setfill('0') << setw(5) << dec << (*it)->LSP->getRemLifeTime() <<endl;
         //EV <<"SeqNum: " << (*it)->LSP->getSeqNumber()<<endl;
 
         TLV_t *tmpTlv;
@@ -2878,20 +2927,20 @@ void ISIS::printLSPDB()
         //print neighbours
         for (unsigned int k = 0; (tmpTlv = this->getTLVByType((*it)->LSP, IS_NEIGHBOURS_LSP, k)) != NULL; k++)
         {
-            for (unsigned int m = 0; m + 11 < tmpTlv->length; m += 11)
+            for (unsigned int m = 1; m + 11 <= tmpTlv->length; m += 11)
             {
                 EV << "\t\t";
                 for (unsigned int l = 0; l < 7; l++)
                 {
                     //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
-                    EV << setfill('0') << setw(2) << dec << (unsigned int) tmpTlv->value[1 + m + 4 + l];
+                    EV << setfill('0') << setw(2) << dec << (unsigned int) tmpTlv->value[m + 4 + l];
                     if (l % 2 == 1)
                         EV << ".";
                 }
 
                 EV
                         << "\tmetric: " << setfill('0') << setw(2) << dec
-                                << (unsigned int) tmpTlv->value[1 + m + 0] << endl;
+                                << (unsigned int) tmpTlv->value[m + 0] << endl;
             }
 
         }
@@ -2975,7 +3024,7 @@ void ISIS::printLSP(ISISLSPPacket *lsp, char *from){
     std::cout << "seqNum: " << lsp->getSeqNumber() <<endl;
     std::cout << "Length of TLVarray: " << lsp->getTLVArraySize()<<endl;
     std:: cout << "TLV: " <<endl;
-    for(int i = 0; i < lsp->getTLVArraySize(); i++){
+    for(unsigned int i = 0; i < lsp->getTLVArraySize(); i++){
         std::cout<< "Type: "<< (unsigned short) lsp->getTLV(i).type <<endl;
         std::cout<< "Length: "<< (unsigned short) lsp->getTLV(i).length <<endl;
     }
@@ -3718,6 +3767,8 @@ void ISIS::handleL1Lsp(ISISLSPPacket *lsp){
                 //TODO set new remaining lifetime
                 //TODO reschedule deadTimer
 
+
+
             }else{
 
                 delete lsp;
@@ -3750,7 +3801,8 @@ void ISIS::handleL1Lsp(ISISLSPPacket *lsp){
 
                 /* 7.3.15.1 e) 2) i. */
                 this->clearSRMflag(lspRec, gateIndex, circuitType);
-                if (this->ISISIft.at(gateIndex).network)
+
+                if (!this->ISISIft.at(gateIndex).network)
                 {
                     /* 7.3.15.1 e) 2) ii. */
                     this->setSSNflag(lspRec, gateIndex, circuitType);
@@ -3769,7 +3821,7 @@ void ISIS::handleL1Lsp(ISISLSPPacket *lsp){
 
 
     }
-
+    delete lsp;
     delete lspID;
 }
 
@@ -4070,7 +4122,7 @@ void ISIS::sendL1Psnp(ISISTimer *timer){
     //send only on interface specified in timer
     send(packet, "ifOut", timer->getInterfaceIndex());
 
-
+    this->schedule(timer);
 }
 
 void ISIS::handleL1Psnp(ISISPSNPPacket *psnp){
@@ -4226,7 +4278,7 @@ void ISIS::handleL1Csnp(ISISCSNPPacket *csnp){
             {
                 while (memcmp(lspRange->front(), tmpLspID, ISIS_SYSTEM_ID + 2) < 0)
                 {
-                    setSRMflag(this->getLSPFromDbByID(lspRange->front(), circuitType), gateIndex, circuitType);
+                    this->setSRMflag(this->getLSPFromDbByID(lspRange->front(), circuitType), gateIndex, circuitType);
                     delete lspRange->front();
                     lspRange->erase(lspRange->begin());
                 }
@@ -4298,7 +4350,7 @@ void ISIS::handleL1Csnp(ISISCSNPPacket *csnp){
     }
 
     while(!lspRange->empty()){
-        setSRMflag(this->getLSPFromDbByID(lspRange->front(), circuitType), gateIndex, circuitType);
+        this->setSRMflag(this->getLSPFromDbByID(lspRange->front(), circuitType), gateIndex, circuitType);
         delete lspRange->front();
         lspRange->erase(lspRange->begin());
 
@@ -4847,7 +4899,7 @@ void ISIS::periodicSend(ISISTimer* timer, short circuitType)
                //this->printLspId(this->getLspID((*itRec)->lspRec->LSP));
 
                this->sendLSP((*itRec)->lspRec, (*itRec)->index);
-               this->clearSSNflag((*itRec)->lspRec, (*itRec)->index, circuitType);
+               
            //DON'T clear SRMflag for PtP
 
            /* when the below code is commented:
@@ -5248,7 +5300,7 @@ void ISIS::refreshLSP(short circuitType)
     unsigned char *lspId;
     for(; it != lspDb->end(); ++it){
         lspId = this->getLspID((*it)->LSP);
-        if(this->compareArrays(lspId, (unsigned char *) this->sysId, ISIS_SYSTEM_ID) && (*it)->deadTimer->getTimerKind() != LSP_DELETE){
+        if(this->compareArrays(lspId, (unsigned char *) this->sysId, ISIS_SYSTEM_ID) && (*it)->deadTimer->getTimerKind() != LSP_DELETE && (*it)->LSP->getRemLifeTime() != 0 ){
             //this->printLSP((*it)->LSP, "print from refreshLSP");
             //std::cout<<"RefreshLSP: seqNum: " <<(*it)->LSP->getSeqNumber() << endl;
             (*it)->LSP->setSeqNumber((*it)->LSP->getSeqNumber() + 1);
@@ -5260,7 +5312,7 @@ void ISIS::refreshLSP(short circuitType)
 
             this->setSRMflags((*it), circuitType);
             //TODO what about SSNflags?
-            this->clearSSNflags((*it), circuitType);
+            //this->clearSSNflags((*it), circuitType);
 
             (*it)->simLifetime = simTime().dbl() + (*it)->LSP->getRemLifeTime();
 
@@ -5432,8 +5484,11 @@ void ISIS::purgeLSP(unsigned char *lspId, short circuitType){
     LSPRecord * lspRec;
     if((lspRec = this->getLSPFromDbByID(lspId, circuitType)) != NULL){
         //std::cout<<"purgeLSP seqNum: " << lspRec->LSP->getSeqNumber() <<endl;
-        lspRec->LSP->setSeqNumber(0);
+        //lspRec->LSP->setSeqNumber(0);
+        //TODO do we need to increment seqNum or equal seqNum with remLife == 0 will replace that LSP?
+        //lspRec->LSP->setSeqNumber(lspRec->LSP->getSeqNumber() + 1);
         //std::cout<<"purgeLSP seqNum: " << lspRec->LSP->getSeqNumber() <<endl;
+        /* 7.3.16.4.  */
         lspRec->LSP->setRemLifeTime(0);
         //delete all TLV from lspRec-LSP and set TLVArraySize = 0
         //TODO check if area address TLV is necessary
@@ -5828,14 +5883,14 @@ void ISIS::setSSNflag(LSPRecord * lspRec, int index, short circuitType)
         tmpSSNRec->lspRec = lspRec;
         tmpSSNRec->index = index;
         SSNQueue->push_back(tmpSSNRec);
-        if (this->ISISIft.at(index).network)
-        {
-            this->L1SSNBQueue->at(index)->push_back(tmpSSNRec);
-        }
-        else
-        {
-            this->L1SSNPTPQueue->at(index)->push_back(tmpSSNRec);
-        }
+//        if (this->ISISIft.at(index).network)
+//        {
+//            this->L1SSNBQueue->at(index)->push_back(tmpSSNRec);
+//        }
+//        else
+//        {
+//            this->L1SSNPTPQueue->at(index)->push_back(tmpSSNRec);
+//        }
     }
 
 }
@@ -5946,11 +6001,12 @@ void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitTyp
 
     //increase sequence number
     //std::cout<<"replaceLSP seqNum: "<< lspRecord->LSP->getSeqNumber() <<endl;
-    if(lsp->getSeqNumber() < lspRecord->LSP->getSeqNumber()){
+    /*if(lsp->getSeqNumber() < lspRecord->LSP->getSeqNumber()){
         lsp->setSeqNumber(lspRecord->LSP->getSeqNumber() + 1);
     }else{
         lsp->setSeqNumber(lsp->getSeqNumber() + 1);
-    }
+    }*/
+    lsp->setSeqNumber(lspRecord->LSP->getSeqNumber() + 1);
     //now we can delete the previous LSP
 
     delete lspRecord->LSP;
@@ -5975,15 +6031,24 @@ void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitTyp
     /* need to check  this for replacing LSP from genLSP */
     if(lsp->getArrivalGate() != NULL){
         //received so don't set SRM flag on that interface
+//        int gateIndex = lsp->getArrivalGate()->getIndex();
+//        /* 7.3.15.1 e) 1) ii. and iii. */ /* 7.3.16.4 b) 1) ii. and iii. */
+//        this->setSRMflagsBut(lspRecord, gateIndex , circuitType);
+//        /* 7.3.16.4 b) 1) v.  MODIFIED*/
+//        this->clearSSNflags(lspRecord, circuitType);
+//        //for non-broadcast /* 7.3.16.4 b) 1) iv. */
+//        if(!this->ISISIft.at(gateIndex).network){
+//            this->setSSNflag(lspRecord, gateIndex, circuitType);
+//        }
+        //received so don't set SRM flag on that interface
         int gateIndex = lsp->getArrivalGate()->getIndex();
-        /* 7.3.15.1 e) 1) ii. and iii. */ /* 7.3.16.4 b) 1) ii. and iii. */
         this->setSRMflagsBut(lspRecord, gateIndex , circuitType);
-        /* 7.3.16.4 b) 1) v.  MODIFIED*/
-        this->clearSSNflags(lspRecord, circuitType);
         //for non-broadcast /* 7.3.16.4 b) 1) iv. */
         if(!this->ISISIft.at(gateIndex).network){
             this->setSSNflag(lspRecord, gateIndex, circuitType);
         }
+        /* 7.3.16.4 b) 1) v. */
+        this->clearSSNflagsBut(lspRecord, gateIndex, circuitType);
 
 
 
@@ -5992,7 +6057,7 @@ void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitTyp
         //generated -> set SRM on all interfaces
         this->setSRMflags(lspRecord, circuitType);
         //TODO what with SSN?
-        this->clearSSNflags(lspRecord, circuitType);
+        //this->clearSSNflags(lspRecord, circuitType);
     }
 
 
@@ -6008,6 +6073,11 @@ void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitTyp
 void ISIS::addFlags(LSPRecord *lspRec, short circuitType){
 
     //add flags
+    if(!lspRec->SRMflags.empty() || !lspRec->SSNflags.empty()){
+        EV <<"ISIS: Warning: Adding *flags to non-empty vectors." <<endl;
+        return;
+
+    }
     for (std::vector<ISISinterface>::iterator intIt = this->ISISIft.begin(); intIt != this->ISISIft.end(); ++intIt)
     {
 
@@ -6059,7 +6129,7 @@ LSPRecord * ISIS::installLSP(ISISLSPPacket *lsp, short circuitType)
             this->setSRMflags(tmpLSPRecord, circuitType);
         }
         //TODO what about SSNflags?
-        this->clearSSNflags(tmpLSPRecord, circuitType);
+        //this->clearSSNflags(tmpLSPRecord, circuitType);
     }
 
 
@@ -7196,4 +7266,408 @@ bool ISIS::isAdjUp(ISISMessage *msg, short circuitType)
     return false;
 }
 
+
+void ISIS::fullSPF(ISISTimer *timer){
+
+    ISISCons_t initial;
+    ISISPaths_t ISISPaths;
+    ISISPaths_t ISISTent;
+    ISISPath * tmpPath;
+
+    //let's fill up the initial paths with supported-protocol's reachability informations
+
+    //fill ISO
+    bool result;
+    result = this->extractISO(&initial, timer->getIsType());
+    if(!result){
+        //there was an error during extraction so cancel SPF
+        //todo reschedule
+        this->schedule(timer);
+        //TODO clean
+        return;
+    }
+
+    //put myself (this IS) on TENT list
+    unsigned char *lspId = this->getLSPID();//returns sysId + 00
+
+
+    tmpPath = new ISISPath;
+    tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+    this->copyArrayContent(lspId, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
+
+    tmpPath->metric = 0;
+
+    ISISNeighbour *neighbour = new ISISNeighbour;
+    neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+    this->copyArrayContent(lspId, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+    neighbour->type = false; //not a leaf
+    tmpPath->from.push_back(neighbour);
+
+    ISISTent.push_back(tmpPath);
+
+
+//    ISISCons_t *cons = this->getCons(&initial, lspId);
+//    if(cons->empty()){
+//        EV <<"ISIS: Error during SPF. Didn't find my own LSP"<<endl;
+//        //TODO clean
+//        delete cons;
+//        return;
+//    }
+//
+
+
+    //add my connections as a starting point
+  /*  for(ISISCons_t::iterator it = cons->begin(); it != cons->end(); ++it){
+        if ((tmpPath = this->getPath(&(ISISTent), (*it)->to)) == NULL)
+        {
+            //path to this destination doesn't exist, co create new
+            tmpPath = new ISISPath;
+            tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+            this->copyArrayContent((*it)->to, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
+            tmpPath->metric = (*it)->metric;
+
+            ISISNeighbour *neighbour = new ISISNeighbour;
+            neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+            this->copyArrayContent((*it)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+            neighbour->type = false; //not a leaf
+            tmpPath->from.push_back(neighbour);
+
+            ISISTent.push_back(tmpPath);
+        }
+        else
+        {
+            if(tmpPath->metric >= (*it)->metric){
+                if(tmpPath->metric > (*it)->metric){
+                    //we got better metric so clear "from" neighbours
+                    tmpPath->from.clear();
+                }
+                //append
+                tmpPath->metric = (*it)->metric;
+                ISISNeighbour *neighbour = new ISISNeighbour;
+                neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+                this->copyArrayContent((*it)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+                neighbour->type = false; //not a leaf
+                tmpPath->from.push_back(neighbour);
+
+            }
+
+        }
+
+    }*/
+
+    //TODO shoudn't i put myself in PATH list?
+
+    for(;!ISISTent.empty();)
+    {
+        //tmpPath = this->getBestPath(&(this->ISISTent));
+
+        //this->moveToPath(tmpPath);
+        this->bestToPath(&initial, &ISISTent, &ISISPaths);
+
+    }
+
+    this->printPaths(&ISISPaths);
+
+    //find shortest metric in TENT
+
+
+    this->schedule(timer);
+}
+
+void ISIS::printPaths(ISISPaths_t *paths){
+
+
+        std::cout << "Best paths of IS: ";
+        //print area id
+            for (unsigned int i = 0; i < 3; i++)
+            {
+                std::cout << setfill('0') << setw(2) << dec << (unsigned int) this->areaId[i];
+                if (i % 2 == 0)
+                    std::cout << ".";
+
+            }
+
+            //print system id
+            for (unsigned int i = 0; i < 6; i++)
+            {
+                std::cout << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+                if (i % 2 == 1)
+                    std::cout << ".";
+            }
+
+            //print NSEL
+            std::cout
+                    << setfill('0') << setw(2) << dec << (unsigned int) this->NSEL[0] << "\tNo. of paths: "
+                            << paths->size() << endl;
+    for(ISISPaths_t::iterator it = paths->begin(); it != paths->end(); ++it){
+        this->printSysId((*it)->to);
+        std::cout << setfill('0') << setw(2) << dec <<(unsigned short)(*it)->to[6]<< endl;;
+        std::cout <<"\t\t metric: "<< (*it)->metric <<"\t via:"<<endl;;
+        for(ISISNeighbours_t::iterator nIt = (*it)->from.begin(); nIt != (*it)->from.end(); ++nIt){
+            std::cout<<"\t\t\t\t\t";
+            this->printSysId((*nIt)->id);
+            std::cout  << setfill('0') << setw(2) << dec <<(unsigned short)(*nIt)->id[6]<< endl;;
+        }
+    }
+}
+
+/*void ISIS::moveToPath(ISISPath* path){
+
+    std::sort(this->ISISTent.begin(), this->ISISTent.end());
+    //move connections from init to tent, as a "from" put path->to
+    this->moveToTent(&(this->ISISInit), path->to, path->metric);
+
+
+}*/
+void ISIS::bestToPath(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths){
+
+    ISISPath *path;
+    ISISPath *tmpPath;
+    //sort it
+    std::sort(ISISTent->begin(), ISISTent->end());
+    //save best in path
+    path = ISISTent->front();
+    //mov
+    this->moveToTent(init, path->to, path->metric, ISISTent);
+
+    ISISTent->erase(ISISTent->begin());
+
+    if ((tmpPath = this->getPath(ISISPaths, path->to)) == NULL)
+    {
+        //path to this destination doesn't exist, so simply push
+
+        ISISPaths->push_back(path);
+    }
+    else
+    {
+        if (tmpPath->metric >= path->metric)
+        {
+            if (tmpPath->metric > path->metric)
+            {
+                EV <<"ISIS: Error during SPF. We got better metric than the one PATHS."<<endl;
+                //we got better metric so clear "from" neighbours
+                tmpPath->from.clear();
+            }
+            EV <<"ISIS: Error during SPF. I think we shouldn't have neither same metric."<<endl;
+            //append
+            tmpPath->metric = path->metric;
+            for(ISISNeighbours_t::iterator it = path->from.begin(); it != path->from.end(); ++it){
+                tmpPath->from.push_back((*it));
+            }
+
+
+        }
+
+    }
+
+
+
+    //
+
+}
+
+void ISIS::moveToTent(ISISCons_t *initial, unsigned char *from, uint32_t metric, ISISPaths_t *ISISTent){
+
+    ISISPath *tmpPath;
+    ISISCons_t *cons = this->getCons(initial, from);
+/*       if(cons->empty()){
+           EV <<"ISIS: Error during SPF. Didn't find my own LSP"<<endl;
+           //TODO clean
+//           delete cons;
+  //         return;
+       }*/
+
+
+       //add my connections as a starting point
+       for(ISISCons_t::iterator it = cons->begin(); it != cons->end(); ++it){
+           if ((tmpPath = this->getPath(ISISTent, (*it)->to)) == NULL)
+           {
+               //path to this destination doesn't exist, co create new
+               tmpPath = new ISISPath;
+               tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+               this->copyArrayContent((*it)->to, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
+               tmpPath->metric = (*it)->metric + metric;
+
+               ISISNeighbour *neighbour = new ISISNeighbour;
+
+               neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+               if(this->compareArrays((*it)->from,(unsigned char *) this->sysId, ISIS_SYSTEM_ID)){
+                   this->copyArrayContent((*it)->to, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+               }else{
+                   this->copyArrayContent((*it)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+               }
+               neighbour->type = false; //not a leaf
+               tmpPath->from.push_back(neighbour);
+
+               ISISTent->push_back(tmpPath);
+           }
+           else
+           {
+               if(tmpPath->metric >= (*it)->metric + metric){
+                   if(tmpPath->metric > (*it)->metric + metric){
+                       //we got better metric so clear "from" neighbours
+                       tmpPath->from.clear();
+                   }
+                   //append
+                   tmpPath->metric = (*it)->metric + metric;
+                   ISISNeighbour *neighbour = new ISISNeighbour;
+                   neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+                   this->copyArrayContent((*it)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+                   neighbour->type = false; //not a leaf
+                   tmpPath->from.push_back(neighbour);
+
+               }
+
+           }
+
+       }
+}
+
+
+
+ISISPath * ISIS::getBestPath(ISISPaths_t *paths){
+
+    std::sort(paths->begin(), paths->end());
+    return paths->front();
+
+}
+
+
+void ISIS::getBestMetric(ISISPaths_t *paths){
+
+    for(ISISPaths_t::iterator it = paths->begin(); it != paths->end(); ++it){
+
+    }
+}
+
+
+
+bool ISIS::extractISO(ISISCons_t *initial, short circuitType){
+
+    ISISLspDb_t *lspDb = this->getLSPDb(circuitType);
+    unsigned char *lspId;
+
+    ISISCon* connection;
+
+    for(ISISLspDb_t::iterator it = lspDb->begin(); it != lspDb->end(); ++it){
+        //getLspId
+        lspId = this->getLspID((*it)->LSP);
+
+        //check if it's zero-th fragment. if not try to find it -> getLspFromDbByID
+
+        if(lspId[ISIS_SYSTEM_ID + 1] != 0){
+            unsigned char backup = lspId[ISIS_SYSTEM_ID + 1];
+            lspId[ISIS_SYSTEM_ID + 1] = 0;
+            //if doesn't exist -> continue to next lsp
+            if(this->getLSPFromDbByID(lspId, circuitType) == NULL){
+                continue;
+            }
+            lspId[ISIS_SYSTEM_ID + 1] = backup;
+
+        }
+        //else
+        else{
+            //try to find id in "initial"
+            //if found
+//            if((path = this->getPath(initial, lspId)) == NULL){
+//               path = new ISISPath;
+//               path->neighbour.id = lspId;
+//               path->neighbour.metric = 0;
+//               path->neighbour.type = false;
+//
+//               initial->push_back(path);//put path to initial paths
+//            }
+
+            TLV_t *tmpTLV;
+            for(int offset = 0; (tmpTLV = this->getTLVByType((*it)->LSP, IS_NEIGHBOURS_LSP, offset)) != NULL; offset++){
+                for(unsigned int i = 1; i + 11 <= tmpTLV->length; i += 11)
+                {
+                    connection = new ISISCon;
+                    connection->from = new unsigned char [ISIS_SYSTEM_ID + 2];
+                    this->copyArrayContent(lspId, connection->from, ISIS_SYSTEM_ID + 1, 0, 0);
+                    connection->from[ISIS_SYSTEM_ID + 1] = 0;
+                    connection->to = new unsigned char [ISIS_SYSTEM_ID + 2];
+                    this->copyArrayContent(tmpTLV->value, connection->to, ISIS_SYSTEM_ID +1, i + 4, 0);
+                    connection->to[ISIS_SYSTEM_ID + 1] = 0;
+                    connection->metric = tmpTLV->value[i];//default metric
+                    connection->type = false;//it's not a leaf
+
+                    initial->push_back(connection);
+                    //path->neighbours.push_back(neighbour);
+                }
+
+
+            }
+
+
+
+            //add information
+
+
+            //else
+                //create new record in initial and add information from lsp
+                //..scan TLVs and process information like in printLSPDb
+                //so far just TLV_ENTRIES with lsp-id and metric
+        }
+    }
+
+    /*TODO perform two-way check (it should be done later when moving node from
+     * initial conns to TENT paths, but it shoudn't affect the algorithm
+     */
+    this->twoWayCheck(initial);
+
+    return true;
+}
+
+void ISIS::twoWayCheck(ISISCons_t *cons){
+    ISISCons_t *tmpCons;
+    for(ISISCons_t::iterator it = cons->begin(); it != cons->end(); ){
+        //if there is not reverse connection
+        //TODO is this enough? there could be two one-way connections between two ISs
+        if(!this->isCon(cons, (*it)->to, (*it)->from)){
+            it = cons->erase(it);
+        }else{
+            ++it;
+        }
+    }
+}
+
+ISISCons_t * ISIS::getCons(ISISCons_t *cons, unsigned char *from){
+
+    ISISCons_t *retCon = new ISISCons_t;
+    for(ISISCons_t::iterator it = cons->begin(); it != cons->end(); ){
+        if(this->compareArrays((*it)->from, from, 8)){
+            retCon->push_back((*it));
+            it = cons->erase(it);
+        }else{
+            ++it;
+        }
+    }
+
+    return retCon;
+}
+
+bool ISIS::isCon(ISISCons_t *cons, unsigned char *from, unsigned char *to){
+
+    for (ISISCons_t::iterator it = cons->begin(); it != cons->end(); ++it)
+    {
+        if(this->compareArrays((*it)->from, from, ISIS_SYSTEM_ID + 2) && this->compareArrays((*it)->to, to, ISIS_SYSTEM_ID + 2)){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+ISISPath * ISIS::getPath(ISISPaths_t *paths, unsigned char *id){
+
+    for(ISISPaths_t::iterator it = paths->begin(); it != paths->end(); ++it){
+        if(this->compareArrays((*it)->to, id, 8)){
+            return (*it);
+        }
+    }
+
+    return NULL;
+}
 

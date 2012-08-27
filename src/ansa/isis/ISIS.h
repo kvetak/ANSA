@@ -55,20 +55,20 @@ class ISIS : public cSimpleModule
 
         IInterfaceTable *ift; /*!< pointer to interface table */
         std::vector<ISISinterface> ISISIft; /*!< vector of available interfaces */
-    const char *deviceType;                     /*!< device type specified in .ned when using this module */
-    const char *deviceId;                       /*!< device ID */
-    const char *configFile;                     /*!< config file specified in simulation */
-    const char *netAddr;                        /*!<  OSI network address in simplified NSAP format */
-    const unsigned char *areaId;                /*!< first 3Bytes of netAddr as area ID */
-    const unsigned char *sysId;                 /*!< next 6Bytes of NetAddr as system ID */
-    const unsigned char *NSEL;                  /*!< last 1Byte of Netaddr as NSEL identifier */
-    std::vector<ISISadj> adjL1Table;            /*!< table of L1 adjacencies */
-    std::vector<ISISadj> adjL2Table;            /*!< table of L2 adjacencies */
-    short isType;                               /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
-    std::vector<LSPrecord> L1LSP;               /*!< L1 LSP database */
-    std::vector<LSPrecord> L2LSP;               /*!< L2 LSP database */
-    std::vector<LSPRecord *> *L1LSPDb;       /*!< L1 LSP database */
-    std::vector<LSPRecord *> *L2LSPDb; /*!< L2 LSP database */
+        const char *deviceType;                     /*!< device type specified in .ned when using this module */
+        const char *deviceId;                       /*!< device ID */
+        const char *configFile;                     /*!< config file specified in simulation */
+        const char *netAddr;                        /*!<  OSI network address in simplified NSAP format */
+        const unsigned char *areaId;                /*!< first 3Bytes of netAddr as area ID */
+        const unsigned char *sysId;                 /*!< next 6Bytes of NetAddr as system ID */
+        const unsigned char *NSEL;                  /*!< last 1Byte of Netaddr as NSEL identifier */
+        std::vector<ISISadj> adjL1Table;            /*!< table of L1 adjacencies */
+        std::vector<ISISadj> adjL2Table;            /*!< table of L2 adjacencies */
+        short isType;                               /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
+        std::vector<LSPrecord> L1LSP;               /*!< L1 LSP database */
+        std::vector<LSPrecord> L2LSP;               /*!< L2 LSP database */
+        std::vector<LSPRecord *> *L1LSPDb;       /*!< L1 LSP database */
+        std::vector<LSPRecord *> *L2LSPDb; /*!< L2 LSP database */
         std::vector<std::vector<FlagRecord*> *> *L1SRMBQueue; /*!< Vector with vector for each interface containing LSPRecords with SRMflag set */
         std::vector<std::vector<FlagRecord*> *> *L1SRMPTPQueue;
         std::vector<std::vector<FlagRecord*> *> *L2SRMBQueue; /*!< Vector with vector for each interface containing LSPRecords with SRMflag set */
@@ -79,27 +79,46 @@ class ISIS : public cSimpleModule
         std::vector<std::vector<FlagRecord*> *> *L2SSNBQueue; /*!< Vector with vector for each interface containing LSPRecords with SSNflag set */
         std::vector<std::vector<FlagRecord*> *> *L2SSNPTPQueue;
 
-
-    int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
-    int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
-    short L1HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
-    short L2HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
-    int lspInterval;                            /*!< Minimum delay in ms between sending two successive LSPs.*/
-    int lspRefreshInterval;                     /*!< Interval in seconds in at which LSPs are refreshed (1 to 65535). This value SHOULD be less than ISIS_LSP_MAX_LIFETIME*/
-    int lspMaxLifetime;                         /*!< Interval in seconds during which is specified LSP valid. This value SHOULD be more than ISIS_LSP_REFRESH_INTERVAL */
-    int L1LspGenInterval;                       /*!< Interval in seconds at which LSPs are generated.*/
-    int L2LspGenInterval;                       /*!< Interval in seconds at which LSPs are generated.*/
-    int L1LspSendInterval;                       /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
-    int L2LspSendInterval;                       /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
-    int L1LspInitWait;                            /*!< Initial wait interval in ms before generating first LSP.*/
-    int L2LspInitWait;                            /*!< Initial wait interval in ms before generating first LSP.*/
-    int L1CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
-    int L2CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
-    int L1PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
-    int L2PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
-    unsigned long helloCounter;                 /*!< my hax hello counter to sync DIS/non-DIS hellos. This variable is deprecated, but is kept for sentimental reasons. */
+        //ISISPaths_t ISISPaths;
+        //ISISPaths_t ISISTent;
+        //ISISCons_t ISISInit;
 
 
+
+        int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+        int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+        short L1HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
+        short L2HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
+        int lspInterval;                            /*!< Minimum delay in ms between sending two successive LSPs.*/
+        int lspRefreshInterval;                     /*!< Interval in seconds in at which LSPs are refreshed (1 to 65535). This value SHOULD be less than ISIS_LSP_MAX_LIFETIME*/
+        int lspMaxLifetime;                         /*!< Interval in seconds during which is specified LSP valid. This value SHOULD be more than ISIS_LSP_REFRESH_INTERVAL */
+        int L1LspGenInterval;                       /*!< Interval in seconds at which LSPs are generated.*/
+        int L2LspGenInterval;                       /*!< Interval in seconds at which LSPs are generated.*/
+        int L1LspSendInterval;                       /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
+        int L2LspSendInterval;                       /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
+        int L1LspInitWait;                            /*!< Initial wait interval in ms before generating first LSP.*/
+        int L2LspInitWait;                            /*!< Initial wait interval in ms before generating first LSP.*/
+        int L1CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
+        int L2CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
+        int L1PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
+        int L2PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
+        int L1SPFFullInterval;
+        int L2SPFFullInterval;
+        unsigned long helloCounter;                 /*!< my hax hello counter to sync DIS/non-DIS hellos. This variable is deprecated, but is kept for sentimental reasons. */
+
+
+        void fullSPF(ISISTimer *timer);
+        bool extractISO(ISISCons_t *initial, short circuitType); /*!< Extracts ISO informations from lspDb needed to perform SPF calculation. > */
+        ISISPath * getPath(ISISPaths_t *paths, unsigned char* id);
+        ISISCons_t * getCons(ISISCons_t *cons, unsigned char* from);
+        void getBestMetric(ISISPaths_t *paths);
+        ISISPath * getBestPath(ISISPaths_t *paths);
+        void twoWayCheck(ISISCons_t *cons);
+        bool isCon(ISISCons_t *cons, unsigned char *from, unsigned char *to);
+        void bestToPath(ISISCons_t *cons, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
+        void moveToTent(ISISCons_t *initial, unsigned char *from, uint32_t metric, ISISPaths_t *ISISTent);
+        void moveToPath(ISISPath *path);
+        void printPaths(ISISPaths_t *paths);
     void initISIS();       // main init
     void initHello();
     void initGenerate();
@@ -107,6 +126,8 @@ class ISIS : public cSimpleModule
     void initPeriodicSend();
     void initCsnp();
     void initPsnp();
+    void initSPF();
+
     ISISadj* getAdjByGateIndex(int gateIndex, short circuitType, int offset = 0);  // return something corresponding to adjacency on specified link
     ISISadj* getAdjBySystemID(unsigned char *systemID, short circuitType, int gateIndex = -1);
     ISISinterface* getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex

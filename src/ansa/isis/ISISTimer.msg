@@ -32,6 +32,7 @@ enum ISISTimerType
    PSNP_TIMER = 10;
    GENERATE_LSP_TIMER = 11;
    ISIS_START = 12;
+   SPF_FULL = 13; //fortunately it's not friday
    
    
 };
