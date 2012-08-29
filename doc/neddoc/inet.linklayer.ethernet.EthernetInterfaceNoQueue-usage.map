@@ -1,4 +1,0 @@
-<area shape="rect" id="node1" href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html" title="Compound Module EthernetInterfaceNoQueue" alt="" coords="81,6,257,34">
-<area shape="rect" id="node2" href="inet.linklayer.ethernet.EtherEncap.html" title="Simple Module EtherEncap" alt="" coords="5,83,96,111">
-<area shape="rect" id="node4" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="120,83,219,111">
-<area shape="rect" id="node6" href="inet.linklayer.ethernet.EtherMAC.html" title="Simple Module EtherMAC" alt="" coords="243,83,325,111">

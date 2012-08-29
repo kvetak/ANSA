@@ -1,5 +1,0 @@
-<area shape="rect" id="node1" href="inet.examples.wireless.hosttohost.Throughput.html" title="Network Throughput" alt="" coords="263,6,348,34">
-<area shape="rect" id="node2" href="inet.nodes.wireless.WirelessAPSimplified.html" title="Compound Module WirelessAPSimplified" alt="" coords="5,83,152,111">
-<area shape="rect" id="node4" href="inet.examples.wireless.hosttohost.ThroughputClient.html" title="Compound Module ThroughputClient" alt="" coords="176,83,296,111">
-<area shape="rect" id="node6" href="inet.world.ChannelControl.html" title="Simple Module ChannelControl" alt="" coords="320,83,432,111">
-<area shape="rect" id="node8" href="inet.examples.wireless.hosttohost.ThroughputServer.html" title="Compound Module ThroughputServer" alt="" coords="456,83,581,111">

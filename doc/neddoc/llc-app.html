@@ -17,7 +17,7 @@ IEEE802CTRL_DEREGISTER_DSAP (deregister higher layer) and IEEE802CTRL_SENDPAUSE
 <p>The arguments to the command are NOT inside the data packet but
 in a "control info" data structure of class <a href="Ieee802Ctrl.html">Ieee802Ctrl</a>, attached to
 the packet. See controlInfo() method of cMessage (OMNeT++ 3.0).</p>
-<p>For example, to send a packet to a given MAC address and protocol
+<p>For example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), to send a packet to a given MAC address and protocol
 identifier, the application sets the data packet's message kind
 to ETH_DATA ("please send this data packet" command),
 fills in the <a href="Ieee802Ctrl.html">Ieee802Ctrl</a> structure with the destination MAC address and
@@ -41,5 +41,6 @@ the higher layer and be reused for every packet.</p>
 <p>It may also appear to be more intuitive in Tkenv because one can observe
 data packets travelling between the higher layer and Ethernet
 modules -- as opposed to "interface" packets.</p>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

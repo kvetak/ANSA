@@ -1,6 +1,0 @@
-<area shape="rect" id="node1" href="OSPFPacket.html" title="Packet OSPFPacket" alt="" coords="484,6,583,34">
-<area shape="rect" id="node2" href="OSPFDatabaseDescriptionPacket.html" title="Packet OSPFDatabaseDescriptionPacket" alt="" coords="5,83,227,111">
-<area shape="rect" id="node4" href="OSPFHelloPacket.html" title="Packet OSPFHelloPacket" alt="" coords="251,83,379,111">
-<area shape="rect" id="node6" href="OSPFLinkStateAcknowledgementPacket.html" title="Packet OSPFLinkStateAcknowledgementPacket" alt="" coords="403,83,664,111">
-<area shape="rect" id="node8" href="OSPFLinkStateRequestPacket.html" title="Packet OSPFLinkStateRequestPacket" alt="" coords="688,83,891,111">
-<area shape="rect" id="node10" href="OSPFLinkStateUpdatePacket.html" title="Packet OSPFLinkStateUpdatePacket" alt="" coords="915,83,1109,111">

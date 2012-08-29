@@ -13,29 +13,6 @@ must implement (i.e. subclass from) IPassiveQueue, and should
 send a packet whenever the L2 module asks for one by calling the
 requestPacket() method.</p>
 <p><b>See also:</b> <a href="inet.networklayer.queue.DropTailQueue.html">DropTailQueue</a>, <a href="inet.networklayer.queue.DropTailQoSQueue.html">DropTailQoSQueue</a>, <a href="inet.networklayer.queue.REDQueue.html">REDQueue</a></p>
-<img src="inet.networklayer.queue.OutputQueue-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.networklayer.queue.OutputQueue.html" title="OutputQueue" alt="OutputQueue" coords="0,31,200,71">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.queue.OutputQueue-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.queue.OutputQueue.html" title="Module Interface OutputQueue" alt="" coords="508,83,607,111">
-<area shape="rect" id="node2" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="5,6,128,34">
-<area shape="rect" id="node4" href="inet.linklayer.ethernet.EthernetInterface2.html" title="Compound Module EthernetInterface2" alt="" coords="152,6,280,34">
-<area shape="rect" id="node6" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="304,6,403,34">
-<area shape="rect" id="node8" href="inet.linklayer.ppp.PPPInterfaceWithDLDuplicatesGenerator.html" title="Compound Module PPPInterfaceWithDLDuplicatesGenerator" alt="" coords="427,6,688,34">
-<area shape="rect" id="node10" href="inet.linklayer.ppp.PPPInterfaceWithDLThruputMeter.html" title="Compound Module PPPInterfaceWithDLThruputMeter" alt="" coords="712,6,933,34">
-<area shape="rect" id="node12" href="inet.linklayer.ppp.PPPInterfaceWithULDropsGenerator.html" title="Compound Module PPPInterfaceWithULDropsGenerator" alt="" coords="957,6,1192,34">
-<area shape="rect" id="node14" href="inet.linklayer.ppp.PPPInterfaceWithULThruputMeter.html" title="Compound Module PPPInterfaceWithULThruputMeter" alt="" coords="1216,6,1437,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.queue.OutputQueue-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.queue.OutputQueue.html" title="Module Interface OutputQueue" alt="" coords="168,6,267,34">
-<area shape="rect" id="node2" href="inet.networklayer.queue.DropTailQoSQueue.html" title="Simple Module DropTailQoSQueue" alt="" coords="5,83,139,111">
-<area shape="rect" id="node4" href="inet.networklayer.queue.DropTailQueue.html" title="Simple Module DropTailQueue" alt="" coords="163,83,272,111">
-<area shape="rect" id="node6" href="inet.networklayer.queue.REDQueue.html" title="Simple Module REDQueue" alt="" coords="296,83,384,111">
-</map>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -43,6 +20,34 @@ Unresolved types are missing from the diagram.</p>
       <th class="type">Type</th>
       <th class="description">Description</th>
    </tr>
+<tr>
+   <td>
+<a href="inet.ansa.ethernet.AnsaEthernetInterface.html">AnsaEthernetInterface</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface. Complements <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a>
+with an output queue for QoS and RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.ethernet.EthernetInterface.html">EthernetInterface</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>Ethernet network interface. Complements <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a>
+with an output queue for QoS and RED support.</p>
+
+   </td>
+</tr>
 <tr>
    <td>
 <a href="inet.linklayer.ethernet.EthernetInterface.html">EthernetInterface</a>
@@ -69,6 +74,20 @@ with an output queue for QoS and RED support.</p>
 <p>Ethernet network interface which supports full-duplex operation only.
 Complements <a href="inet.linklayer.ethernet.EtherMAC2.html">EtherMAC2</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a> with an output queue for QoS and
 RED support.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.ppp.PPPInterface.html">PPPInterface</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
+for QoS and RED support.</p>
 
    </td>
 </tr>
@@ -178,5 +197,6 @@ for QoS and RED support.</p>
 }
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

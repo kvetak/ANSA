@@ -5,12 +5,13 @@
    </head>
    <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
 <h2 class="comptitle">Packet <i>EtherAutoconfig</i></h2>
-<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/>
+<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/><p><a href="../doxy/class_ether_autoconfig.html" target="mainframe"><b>C++ definition</b></a></p>
+
 <p>Ethernet model components (<a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>, <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a> and <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>) send this
 message at the beginning of the simulation, so that "auto"-valued "txrate"
 and "duplex" parameters of <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> can be initialized. The purpose is
 similar to Ethernet Auto-Negotiation; however this is NOT meant to be
-the model of that Ethernet feature. (For example, <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a> also sends
+the model of that Ethernet feature. (For example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a> also sends
 an <a href="EtherAutoconfig.html">EtherAutoconfig</a> message in the model, which obviously does not happen in
 a real Ethernet.)</p>
   <ul><li>txrate: <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> with non-auto txrate send configured txrate value;
@@ -19,16 +20,6 @@ a real Ethernet.)</p>
   <li>halfDuplex: <a href="inet.linklayer.ethernet.EtherHub.html">EtherHub</a>, <a href="inet.linklayer.ethernet.EtherBus.html">EtherBus</a>, plus <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> with duplexEnabled=false setting
   send true. Duplex operation only chosen by a MAC if nobody vetoed it by sending
   halfDuplex=true.</li></ul>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="EtherAutoconfig-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="EtherAutoconfig.html" title="Packet EtherAutoconfig" alt="" coords="5,6,120,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="EtherAutoconfig-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="EtherAutoconfig.html" title="Packet EtherAutoconfig" alt="" coords="5,6,120,34">
-</map>
 <h3 class="subtitle">Fields:</h3>
 <table class="fieldstable">
    <tr>
@@ -78,5 +69,6 @@ bool</i>
 
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

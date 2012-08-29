@@ -27,27 +27,13 @@ refused by <a href="inet.transport.tcp.TCP.html">TCP</a> (it will send RST) for 
 <p>The time of opening the connection is in the tOpen parameter.</p>
 <p><b>Sending data</b></p>
 <p>Regardless of the type of OPEN, the application can be made to send
-data. One way of specifying sending is via the tSend, sendBytes
+data. <a href="inet.examples.ansaExamples.switchtest.One.html">One</a> way of specifying sending is via the tSend, sendBytes
 parameters, the other way is sendScript. With the former, sendBytes
 bytes will be sent at tSend. With sendScript, the format is
 "&lt;time&gt; &lt;numBytes&gt;;&lt;time&gt; &lt;numBytes&gt;;..."</p>
 <p><b>Closing the connection</b></p>
 <p>The application will issue a TCP CLOSE at time tClose. If tClose=-1, no
 CLOSE will be issued.</p>
-<img src="inet.applications.tcpapp.TCPSessionApp-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.applications.tcpapp.TCPSessionApp.html" title="TCPSessionApp" alt="TCPSessionApp" coords="0,31,142,71">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.applications.tcpapp.TCPSessionApp-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.applications.tcpapp.TCPSessionApp.html" title="Simple Module TCPSessionApp" alt="" coords="5,6,123,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.applications.tcpapp.TCPSessionApp-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.applications.tcpapp.TCPSessionApp.html" title="Simple Module TCPSessionApp" alt="" coords="5,83,123,111">
-<area shape="rect" id="node2" href="inet.applications.tcpapp.TCPApp.html" title="Module Interface TCPApp" alt="" coords="28,6,100,34">
-</map>
 <h3 class="subtitle">Parameters:</h3>
 <table class="paramstable">
    <tr>
@@ -229,5 +215,6 @@ Unresolved types are missing from the diagram.</p>
 }
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

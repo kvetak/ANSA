@@ -5,30 +5,14 @@
    </head>
    <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
 <h2 class="comptitle">Packet <i>ICMPv6Message</i></h2>
-<b>File: <a href="src-networklayer-icmpv6-ICMPv6Message.msg.html">src/networklayer/icmpv6/ICMPv6Message.msg</a></b><br/>
+<b>File: <a href="src-networklayer-icmpv6-ICMPv6Message.msg.html">src/networklayer/icmpv6/ICMPv6Message.msg</a></b><br/><p><a href="../doxy/class_i_c_m_pv6_message.html" target="mainframe"><b>C++ definition</b></a></p>
+
 <p>Represents an <a href="inet.networklayer.icmpv6.ICMPv6.html">ICMPv6</a> packet.</p>
 <p>Notes:
    1. number of octets excluding the error datagram that is usually appended
       in optInfo, i.e. the Type|CODE|CHECKSUM|UNUSED/POINTER/MTU/OTHER
       as defined in RFC2463
    2. Any <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> type with MSB set, i.e. &gt;=128 is an Informational <a href="inet.networklayer.ipv4.ICMP.html">ICMP</a> message</p>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="ICMPv6Message-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="ICMPv6Message.html" title="Packet ICMPv6Message" alt="" coords="5,6,128,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="ICMPv6Message-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="ICMPv6Message.html" title="Packet ICMPv6Message" alt="" coords="629,6,752,34">
-<area shape="rect" id="node2" href="ICMPv6DestUnreachableMsg.html" title="Packet ICMPv6DestUnreachableMsg" alt="" coords="5,83,200,111">
-<area shape="rect" id="node4" href="ICMPv6EchoReplyMsg.html" title="Packet ICMPv6EchoReplyMsg" alt="" coords="224,83,381,111">
-<area shape="rect" id="node6" href="ICMPv6EchoRequestMsg.html" title="Packet ICMPv6EchoRequestMsg" alt="" coords="405,83,579,111">
-<area shape="rect" id="node8" href="ICMPv6PacketTooBigMsg.html" title="Packet ICMPv6PacketTooBigMsg" alt="" coords="603,83,779,111">
-<area shape="rect" id="node10" href="ICMPv6ParamProblemMsg.html" title="Packet ICMPv6ParamProblemMsg" alt="" coords="803,83,984,111">
-<area shape="rect" id="node12" href="ICMPv6TimeExceededMsg.html" title="Packet ICMPv6TimeExceededMsg" alt="" coords="1008,83,1189,111">
-<area shape="rect" id="node14" href="IPv6NDMessage.html" title="Packet IPv6NDMessage" alt="" coords="1213,83,1336,111">
-</map>
 <h3 class="subtitle">Known subclasses:</h3>
 <table class="typestable">
    <tr>
@@ -160,5 +144,6 @@ int</i>
 </span><span style="color: #000000; ">}
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

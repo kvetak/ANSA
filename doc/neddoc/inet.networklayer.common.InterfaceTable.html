@@ -9,7 +9,7 @@
 
 <p>Keeps the table of network interfaces.</p>
 <p>Interfaces are dynamically registered by the corresponding L2 modules, e.g.
-<a href="inet.linklayer.ppp.PPPInterface.html">PPPInterface</a>. In addition to registered interfaces, a loopback interface
+PPPInterface(<a href="inet.ansa.ppp.PPPInterface.html">1</a>,<a href="inet.linklayer.ppp.PPPInterface.html">2</a>). In addition to registered interfaces, a loopback interface
 will also be created. This table only contains protocol-independent
 properties of interfaces -- <a href="inet.networklayer.ipv4.IP.html">IP</a> or <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a> specific per-interface data
 (addresses etc) are kept in <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a> and <a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>.</p>
@@ -17,38 +17,6 @@ properties of interfaces -- <a href="inet.networklayer.ipv4.IP.html">IP</a> or <
 functions of the C++ module class. For detailed info, please see the C++
 documentation of the class (Doxygen).</p>
 <p><b>Author:</b>: Andras Varga</p>
-<img src="inet.networklayer.common.InterfaceTable-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.networklayer.common.InterfaceTable.html" title="InterfaceTable" alt="InterfaceTable" coords="0,31,132,71">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.common.InterfaceTable-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="973,83,1077,111">
-<area shape="rect" id="node2" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="5,6,85,34">
-<area shape="rect" id="node4" href="inet.nodes.inet.ExtRouter.html" title="Compound Module ExtRouter" alt="" coords="109,6,189,34">
-<area shape="rect" id="node6" href="inet.nodes.mpls.LDP_LSR.html" title="Compound Module LDP_LSR" alt="" coords="213,6,293,34">
-<area shape="rect" id="node8" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="317,6,424,34">
-<area shape="rect" id="node10" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="448,6,536,34">
-<area shape="rect" id="node12" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="560,6,656,34">
-<area shape="rect" id="node14" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="680,6,752,34">
-<area shape="rect" id="node16" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="776,6,848,34">
-<area shape="rect" id="node18" href="inet.nodes.mpls.RSVP_LSR.html" title="Compound Module RSVP_LSR" alt="" coords="872,6,963,34">
-<area shape="rect" id="node20" href="inet.transport.rtp.RTPHost.html" title="Compound Module RTPHost" alt="" coords="987,6,1064,34">
-<area shape="rect" id="node22" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="1088,6,1189,34">
-<area shape="rect" id="node24" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="1213,6,1323,34">
-<area shape="rect" id="node26" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="1347,6,1611,34">
-<area shape="rect" id="node28" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="1635,6,1856,34">
-<area shape="rect" id="node30" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="1880,6,2117,34">
-<area shape="rect" id="node32" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="2141,6,2363,34">
-<area shape="rect" id="node34" href="inet.nodes.inet.TCPSpoofingHost.html" title="Compound Module TCPSpoofingHost" alt="" coords="2387,6,2515,34">
-<area shape="rect" id="node36" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="2539,6,2640,34">
-<area shape="rect" id="node38" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="2664,6,2821,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.common.InterfaceTable-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.common.InterfaceTable.html" title="Simple Module InterfaceTable" alt="" coords="5,6,109,34">
-</map>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -56,6 +24,56 @@ Unresolved types are missing from the diagram.</p>
       <th class="type">Type</th>
       <th class="description">Description</th>
    </tr>
+<tr>
+   <td>
+<a href="inet.ansa.AnsaDualStackHost.html">AnsaDualStackHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.ANSATrafGenHost.html">ANSATrafGenHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP Traffic generator</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.ARouter.html">ARouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.AStandardHost.html">AStandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
 <tr>
    <td>
 <a href="inet.nodes.inet.BurstHost.html">BurstHost</a>
@@ -138,6 +156,45 @@ dynamically specified with the mobilityType parameter.</p>
    <td>
 
 <p>An OSPFv2 router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RedistrRouter.html">RedistrRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RIPGenRouter.html">RIPGenRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RIPRouter.html">RIPRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
 
    </td>
 </tr>
@@ -352,5 +409,6 @@ or any other AP model which contains <a href="inet.linklayer.ieee80211.Ieee80211
 }
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

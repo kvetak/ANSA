@@ -21,7 +21,7 @@ network simulation file.</p>
   <li>&lt;route&gt;&lt;/route&gt; specifies the explicit route. This is a comma-separated
   list of <a href="inet.networklayer.ipv4.IP.html">IP</a>-address, hop-type pairs (also separated by comma).
   A hop type has a value of 1 if the hop is a loose hop and 0 otherwise.</li></ul>
-<p>The following presents an example file:</p>
+<p>The following presents an example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) file:</p>
 <p><pre>
 &lt;?xml version="1.0"?&gt;
 &lt;!-- Example of traffic control file --&gt;
@@ -44,9 +44,9 @@ network simulation file.</p>
    &lt;/conn&gt;
 &lt;/traffic&gt;
 </pre></p>
-<p>An example of using RSVP-TE as signaling protocol can be found in
+<p>An example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) of using RSVP-TE as signaling protocol can be found in
 ExplicitRouting folder distributed with the simulation. In this
-example, a network similar to the network in <a href="inet.networklayer.ldp.LDP.html">LDP</a>-<a href="inet.networklayer.mpls.MPLS.html">MPLS</a> example is
+example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), a network similar to the network in <a href="inet.networklayer.ldp.LDP.html">LDP</a>-<a href="inet.networklayer.mpls.MPLS.html">MPLS</a> example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) is
 setup. Instead of using <a href="inet.networklayer.ldp.LDP.html">LDP</a>, "signaling" parameter is set to 2 (value
 of RSVP-TE handler). The following xml file is used for traffic
 control. Note the explicit routes specified in the second connection.
@@ -78,5 +78,6 @@ hop types are 0. The route defined is 10.0.0.1 -&gt; 1.0.0.1 -&gt;
     &lt;/conn&gt;
 &lt;/traffic&gt;
 </pre></p>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

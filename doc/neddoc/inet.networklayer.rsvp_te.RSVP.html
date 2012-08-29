@@ -13,7 +13,7 @@ along LSP paths.</p>
 <p>Paths can be specified statically in an XML config file ("traffic"
 parameter), or can be set up and torn down dynamically with <a href="inet.world.ScenarioManager.html">ScenarioManager</a>
 commands.</p>
-<p>An example traffic.xml file:</p>
+<p>An example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) traffic.xml file:</p>
 <p><pre>
 &lt;?xml version="1.0"?&gt;
 &lt;sessions&gt;
@@ -43,7 +43,7 @@ commands. The contents of the &lt;add-session&gt; element can be the same
 as the &lt;session&gt; element for the traffic.xml above.
 The &lt;del-command&gt; element syntax is also similar, but only
 &lt;endpoint&gt;, &lt;tunnel_id&gt; and &lt;lspid&gt; needs to be specified.</p>
-<p>The following is an example scenario.xml file:</p>
+<p>The following is an example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) scenario.xml file:</p>
 <p><pre>
 &lt;?xml version="1.0"?&gt;
 &lt;scenario&gt;
@@ -73,20 +73,6 @@ The &lt;del-command&gt; element syntax is also similar, but only
 <a href="RSVPPathTear.html">RSVPPathTear</a>, <a href="RSVPPathError.html">RSVPPathError</a>, <a href="RSVPResvMsg.html">RSVPResvMsg</a> and <a href="RSVPHelloMsg.html">RSVPHelloMsg</a>.</p>
 <p>RSVP-TE communicates with the following components in the system:
 <a href="inet.networklayer.ted.TED.html">TED</a>, <a href="inet.networklayer.mpls.MPLS.html">MPLS</a>, and may receive commands from <a href="inet.world.ScenarioManager.html">ScenarioManager</a>.</p>
-<img src="inet.networklayer.rsvp_te.RSVP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.networklayer.rsvp_te.RSVP.html" title="RSVP" alt="RSVP" coords="0,31,78,71">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.rsvp_te.RSVP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.rsvp_te.RSVP.html" title="Simple Module RSVP" alt="" coords="15,83,87,111">
-<area shape="rect" id="node2" href="inet.nodes.mpls.RSVP_LSR.html" title="Compound Module RSVP_LSR" alt="" coords="5,6,96,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.rsvp_te.RSVP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.rsvp_te.RSVP.html" title="Simple Module RSVP" alt="" coords="5,6,77,34">
-</map>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -293,5 +279,6 @@ Unresolved types are missing from the diagram.</p>
 }
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

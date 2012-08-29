@@ -1,6 +1,0 @@
-<area shape="rect" id="node1" href="inet.linklayer.ieee80211.mgmt.Ieee80211Mgmt.html" title="Module Interface Ieee80211Mgmt" alt="" coords="376,6,491,34">
-<area shape="rect" id="node2" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAdhoc.html" title="Simple Module Ieee80211MgmtAdhoc" alt="" coords="5,83,157,111">
-<area shape="rect" id="node4" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAP.html" title="Simple Module Ieee80211MgmtAP" alt="" coords="181,83,315,111">
-<area shape="rect" id="node6" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAPSimplified.html" title="Simple Module Ieee80211MgmtAPSimplified" alt="" coords="339,83,528,111">
-<area shape="rect" id="node8" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTA.html" title="Simple Module Ieee80211MgmtSTA" alt="" coords="552,83,693,111">
-<area shape="rect" id="node10" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtSTASimplified.html" title="Simple Module Ieee80211MgmtSTASimplified" alt="" coords="717,83,915,111">

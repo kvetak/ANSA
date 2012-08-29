@@ -1,5 +1,0 @@
-<area shape="rect" id="node1" href="inet.linklayer.mf80211.NicCsma.html" title="Compound Module NicCsma" alt="" coords="207,6,284,34">
-<area shape="rect" id="node2" href="inet.linklayer.mfcore.BasicDecider.html" title="Simple Module BasicDecider" alt="" coords="5,83,104,111">
-<area shape="rect" id="node4" href="inet.linklayer.mf80211.macLayer.CSMAMacLayer.html" title="Simple Module CSMAMacLayer" alt="" coords="128,83,245,111">
-<area shape="rect" id="node6" href="inet.linklayer.mf80211.phyLayer.snrEval.SnrEval.html" title="Simple Module SnrEval" alt="" coords="269,83,341,111">
-<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="365,83,464,111">

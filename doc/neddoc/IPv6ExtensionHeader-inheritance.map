@@ -1,7 +1,0 @@
-<area shape="rect" id="node1" href="IPv6ExtensionHeader.html" title="Class IPv6ExtensionHeader" alt="" coords="603,6,752,34">
-<area shape="rect" id="node2" href="IPv6AuthenticationHeader.html" title="Class IPv6AuthenticationHeader" alt="" coords="5,83,179,111">
-<area shape="rect" id="node4" href="IPv6DestinationOptionsHeader.html" title="Class IPv6DestinationOptionsHeader" alt="" coords="203,83,405,111">
-<area shape="rect" id="node6" href="IPv6EncapsulatingSecurityPayloadHeader.html" title="Class IPv6EncapsulatingSecurityPayloadHeader" alt="" coords="429,83,696,111">
-<area shape="rect" id="node8" href="IPv6FragmentHeader.html" title="Class IPv6FragmentHeader" alt="" coords="720,83,867,111">
-<area shape="rect" id="node10" href="IPv6HopByHopOptionsHeader.html" title="Class IPv6HopByHopOptionsHeader" alt="" coords="891,83,1091,111">
-<area shape="rect" id="node12" href="IPv6RoutingHeader.html" title="Class IPv6RoutingHeader" alt="" coords="1115,83,1251,111">

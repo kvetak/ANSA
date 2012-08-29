@@ -1,6 +1,0 @@
-<area shape="rect" id="node1" href="ned.DelayChannel.html" title="Channel DelayChannel" alt="" coords="205,83,309,111">
-<area shape="rect" id="node2" href="inet.examples.ethernet.lans.HubLAN.html" title="Network HubLAN" alt="" coords="5,6,77,34">
-<area shape="rect" id="node4" href="inet.examples.ethernet.lans.MixedLAN.html" title="Network MixedLAN" alt="" coords="101,6,184,34">
-<area shape="rect" id="node6" href="inet.examples.ospfv2.fulltest.OSPF_Area2.html" title="Compound Module OSPF_Area2" alt="" coords="208,6,307,34">
-<area shape="rect" id="node8" href="inet.examples.ospfv2.areas.OSPF_AreaTest.html" title="Network OSPF_AreaTest" alt="" coords="331,6,448,34">
-<area shape="rect" id="node10" href="inet.examples.ethernet.lans.TwoHosts.html" title="Network TwoHosts" alt="" coords="472,6,555,34">

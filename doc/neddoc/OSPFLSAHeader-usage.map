@@ -1,5 +1,0 @@
-<area shape="rect" id="node1" href="OSPFLSAHeader.html" title="Class OSPFLSAHeader" alt="" coords="319,83,444,111">
-<area shape="rect" id="node2" href="OSPFOptions.html" title="Struct OSPFOptions" alt="" coords="331,161,432,189">
-<area shape="rect" id="node4" href="OSPFDatabaseDescriptionPacket.html" title="Packet OSPFDatabaseDescriptionPacket" alt="" coords="5,6,227,34">
-<area shape="rect" id="node6" href="OSPFLinkStateAcknowledgementPacket.html" title="Packet OSPFLinkStateAcknowledgementPacket" alt="" coords="251,6,512,34">
-<area shape="rect" id="node8" href="OSPFLSA.html" title="Class OSPFLSA" alt="" coords="536,6,619,34">

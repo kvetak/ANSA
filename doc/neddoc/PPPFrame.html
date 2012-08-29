@@ -5,23 +5,14 @@
    </head>
    <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
 <h2 class="comptitle">Packet <i>PPPFrame</i></h2>
-<b>File: <a href="src-linklayer-ppp-PPPFrame.msg.html">src/linklayer/ppp/PPPFrame.msg</a></b><br/>
+<b>File: <a href="src-linklayer-ppp-PPPFrame.msg.html">src/linklayer/ppp/PPPFrame.msg</a></b><br/><p><a href="../doxy/class_p_p_p_frame.html" target="mainframe"><b>C++ definition</b></a></p>
+
 <p><a href="inet.linklayer.ppp.PPP.html">PPP</a> frame.</p>
 <p>Constant-value header fields are not modelled:
 Flag (=0x7e), address (=0xff), control (=0x03), CRC (bitError())</p>
 <p>CRC is modelled only via cMessage's bit error attribute.</p>
 <p>Protocol field is not modelled because types of encapsulated messages
 wil be determined from their class (using C++ dynamic_cast).</p>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="PPPFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="PPPFrame.html" title="Packet PPPFrame" alt="" coords="5,6,91,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="PPPFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="PPPFrame.html" title="Packet PPPFrame" alt="" coords="5,6,91,34">
-</map>
 <h3 class="subtitle">Source code:</h3>
 <pre class="src"><span style="color: #808080; font-style: italic; ">//
 // PPP frame.
@@ -40,5 +31,6 @@ Unresolved types are missing from the diagram.</p>
 
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

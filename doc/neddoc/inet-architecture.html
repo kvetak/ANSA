@@ -15,16 +15,16 @@ Some examples: <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.netw
 <p>These modules can be freely combined to form hosts and other network devices
 with the NED language (no C++ code and no recompilation required).
 Various pre-assembled host, router, switch, access point, etc. models can
-be found in the <code>Nodes/</code> subdirectory (for example: <a href="inet.nodes.inet.StandardHost.html">StandardHost</a>,
+be found in the <code>Nodes/</code> subdirectory (for example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>): <a href="inet.nodes.inet.StandardHost.html">StandardHost</a>,
 <a href="inet.nodes.inet.Router.html">Router</a>), but you can also create your own ones for tailored to your particular
 simulation scenarios.</p>
 <p>Network interfaces (Ethernet, 802.11, etc) are usually compound modules (i.e.
 assembled from simple modules) themselves, and are being composed of a queue,
-a MAC, and possibly other simple modules. See <a href="inet.linklayer.ethernet.EthernetInterface.html">EthernetInterface</a> as an example.</p>
+a MAC, and possibly other simple modules. See EthernetInterface(<a href="inet.ansa.ethernet.EthernetInterface.html">1</a>,<a href="inet.linklayer.ethernet.EthernetInterface.html">2</a>) as an example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>).</p>
 <p>Not all modules implement protocols though. There are modules which hold
-data (for example <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>), facilitate communication of modules
+data (for example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>), facilitate communication of modules
 (<a href="inet.base.NotificationBoard.html">NotificationBoard</a>), perform autoconfiguration of a network
-(<a href="inet.networklayer.autorouting.FlatNetworkConfigurator.html">FlatNetworkConfigurator</a>), move a mobile node around (for example
+(<a href="inet.networklayer.autorouting.FlatNetworkConfigurator.html">FlatNetworkConfigurator</a>), move a mobile node around (for example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>)
 <a href="inet.mobility.ConstSpeedMobility.html">ConstSpeedMobility</a>), and perform housekeeping associated with radio channels
 in wireless simulations (<a href="inet.world.ChannelControl.html">ChannelControl</a>).</p>
 <p>Protocol headers and packet formats are described in message definition
@@ -49,7 +49,7 @@ models.</p>
   <code>interfaceTable</code> to be able to find it. (They obtain a <code>cModule *</code>
   pointer to it, then cast it to <code>InterfaceTable *</code> to be able to call its
   functions). Network interfaces get dynamically registered (added to the table)
-  by simple modules implementing the network interface, for example <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>.</li>
+  by simple modules implementing the network interface, for example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>) <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a>.</li>
   <li><a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>. This module contains the IP (v4) routing table, and heavily relies
   on <a href="inet.networklayer.common.InterfaceTable.html">InterfaceTable</a> for its operation. This module is also accessed from other
   modules (typically <a href="inet.networklayer.ipv4.IP.html">IP</a>) by calling the public member functions of its C++ class.
@@ -59,9 +59,9 @@ models.</p>
   <code>routingTable</code> for other modules to find it.</li>
   <li><a href="inet.networklayer.ipv6.RoutingTable6.html">RoutingTable6</a>. This is like <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>, but for <a href="inet.networklayer.ipv6.IPv6.html">IPv6</a>.</li>
   <li><a href="inet.base.NotificationBoard.html">NotificationBoard</a>. This module makes it possible for several modules to
-  communicate in a publish-subscribe manner. For example, the radio module
+  communicate in a publish-subscribe manner. For example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), the radio module
   (<a href="inet.linklayer.radio.Ieee80211Radio.html">Ieee80211Radio</a>) fires a <i>"radio state changed"</i> notification when
-  the state of the radio channel changes (from TRANSMIT to IDLE, for example),
+  the state of the radio channel changes (from TRANSMIT to IDLE, for example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>)),
   and it will be delivered to other modules that have previously subscribed
   to that notification category. The notification mechanism also works
   my C++ functions calls, no message sending is involved.
@@ -83,7 +83,7 @@ will in turn encapsulate it and send it. The reverse process takes place
 when a lower layer protocol receives a packet and sends it up after
 decapsulation.</p>
 <p>It is often necessary to convey extra information with the packet. For
-example, when an application-layer module wants to send data over <a href="inet.transport.tcp.TCP.html">TCP</a>, some
+example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), when an application-layer module wants to send data over <a href="inet.transport.tcp.TCP.html">TCP</a>, some
 connection identifier needs to be specified for <a href="inet.transport.tcp.TCP.html">TCP</a>. When <a href="inet.transport.tcp.TCP.html">TCP</a> sends a
 segment over <a href="inet.networklayer.ipv4.IP.html">IP</a>, <a href="inet.networklayer.ipv4.IP.html">IP</a> will need a destination address and possibly other
 parameters like TTL. When <a href="inet.networklayer.ipv4.IP.html">IP</a> sends a datagram to an Ethernet interface for
@@ -93,5 +93,6 @@ information is attached to the message object to as <i>control info</i>.</p>
 (message objects) with its <code>setControlInfo()</code> member function.
 Control info only holds auxiliary information for the next protocol layer,
 and is not supposed to be sent over the network to other hosts and routers.</p>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

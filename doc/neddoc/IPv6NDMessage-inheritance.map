@@ -1,7 +1,0 @@
-<area shape="rect" id="node1" href="IPv6NDMessage.html" title="Packet IPv6NDMessage" alt="" coords="404,83,527,111">
-<area shape="rect" id="node4" href="IPv6NeighbourAdvertisement.html" title="Packet IPv6NeighbourAdvertisement" alt="" coords="5,161,197,189">
-<area shape="rect" id="node6" href="IPv6NeighbourSolicitation.html" title="Packet IPv6NeighbourSolicitation" alt="" coords="221,161,392,189">
-<area shape="rect" id="node8" href="IPv6Redirect.html" title="Packet IPv6Redirect" alt="" coords="416,161,515,189">
-<area shape="rect" id="node10" href="IPv6RouterAdvertisement.html" title="Packet IPv6RouterAdvertisement" alt="" coords="539,161,709,189">
-<area shape="rect" id="node12" href="IPv6RouterSolicitation.html" title="Packet IPv6RouterSolicitation" alt="" coords="733,161,885,189">
-<area shape="rect" id="node2" href="ICMPv6Message.html" title="Packet ICMPv6Message" alt="" coords="404,6,527,34">

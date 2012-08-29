@@ -1,5 +1,0 @@
-<area shape="rect" id="node1" href="inet.examples.wireless.lan80211.Lan80211.html" title="Network Lan80211" alt="" coords="299,6,376,34">
-<area shape="rect" id="node2" href="inet.nodes.wireless.WirelessAPSimplified.html" title="Compound Module WirelessAPSimplified" alt="" coords="5,83,152,111">
-<area shape="rect" id="node4" href="inet.networklayer.autorouting.FlatNetworkConfigurator.html" title="Simple Module FlatNetworkConfigurator" alt="" coords="176,83,339,111">
-<area shape="rect" id="node6" href="inet.world.ChannelControl.html" title="Simple Module ChannelControl" alt="" coords="363,83,475,111">
-<area shape="rect" id="node8" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="499,83,656,111">

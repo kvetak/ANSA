@@ -1,7 +1,0 @@
-<area shape="rect" id="node1" href="inet.transport.tcp.ITCP.html" title="Module Interface ITCP" alt="" coords="493,83,565,111">
-<area shape="rect" id="node2" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="5,6,107,34">
-<area shape="rect" id="node4" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="131,6,240,34">
-<area shape="rect" id="node6" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="264,6,528,34">
-<area shape="rect" id="node8" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="552,6,773,34">
-<area shape="rect" id="node10" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="797,6,1035,34">
-<area shape="rect" id="node12" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="1059,6,1280,34">

@@ -1,7 +1,0 @@
-<area shape="rect" id="node1" href="inet.examples.wireless.throughput.ThroughputClient.html" title="Compound Module ThroughputClient" alt="" coords="329,83,449,111">
-<area shape="rect" id="node2" href="inet.applications.ethernet.EtherAppCli.html" title="Simple Module EtherAppCli" alt="" coords="5,161,96,189">
-<area shape="rect" id="node4" href="inet.linklayer.ieee80211.Ieee80211NicSTASimplified.html" title="Compound Module Ieee80211NicSTASimplified" alt="" coords="120,161,304,189">
-<area shape="rect" id="node6" href="inet.base.NotificationBoard.html" title="Simple Module NotificationBoard" alt="" coords="328,161,451,189">
-<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="475,161,573,189">
-<area shape="rect" id="node10" href="inet.mobility.NullMobility.html" title="Simple Module NullMobility" alt="" coords="597,161,688,189">
-<area shape="rect" id="node12" href="inet.examples.wireless.throughput.Throughput.html" title="Network Throughput" alt="" coords="347,6,432,34">

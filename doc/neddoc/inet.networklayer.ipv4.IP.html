@@ -40,7 +40,7 @@ No message exchange with <a href="inet.networklayer.ipv4.RoutingTable.html">Rout
 <a href="IPRoutingDecision.html">IPRoutingDecision</a> control info object attached which contains
 next hop address and interface number. queueOut is expected to be
 connected to <a href="inet.networklayer.arp.ARP.html">ARP</a>.</p>
-<p>Routing protocol implementations (e.g. OSPF and ISIS) can also query
+<p>Routing protocol implementations (e.g. OSPF and <a href="inet.ansa.isis.ISIS.html">ISIS</a>) can also query
 and manipulate the route table by calling <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>'s methods in C++.</p>
 <p><b>Performance model, QoS</b></p>
 <p>In the current form, <a href="inet.networklayer.ipv4.IP.html">IP</a> contains a FIFO which queues up IP datagrams;
@@ -53,20 +53,25 @@ method which determines processing time for a packet, or (2) use a
 different base class.</p>
 <p><b>See also:</b> <a href="inet.networklayer.ipv4.RoutingTable.html">RoutingTable</a>, <a href="IPControlInfo.html">IPControlInfo</a>, <a href="IPRoutingDecision.html">IPRoutingDecision</a>, <a href="inet.networklayer.arp.ARP.html">ARP</a></p>
 <p><b>Author:</b> Andras Varga</p>
-<img src="inet.networklayer.ipv4.IP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.networklayer.ipv4.IP.html" title="IP" alt="IP" coords="0,31,55,71">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.ipv4.IP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv4.IP.html" title="Simple Module IP" alt="" coords="20,83,92,111">
-<area shape="rect" id="node2" href="inet.nodes.inet.NetworkLayer.html" title="Compound Module NetworkLayer" alt="" coords="5,6,107,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.networklayer.ipv4.IP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.networklayer.ipv4.IP.html" title="Simple Module IP" alt="" coords="5,6,77,34">
-</map>
+<h3 class="subtitle">Known subclasses:</h3>
+<table class="typestable">
+   <tr>
+      <th class="name">Name</th>
+      <th class="type">Type</th>
+      <th class="description">Description</th>
+   </tr>
+<tr>
+   <td>
+<a href="inet.ansa.ipv4.AnsaIP.html">AnsaIP</a>
+   </td>
+   <td>
+<i>simple&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+</table>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -259,5 +264,6 @@ Unresolved types are missing from the diagram.</p>
         </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">queueOut</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">IPDatagram</span><span style="color: #000000; ">);
 }
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

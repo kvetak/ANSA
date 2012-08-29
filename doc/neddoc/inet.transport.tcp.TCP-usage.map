@@ -1,6 +1,0 @@
-<area shape="rect" id="node1" href="inet.transport.tcp.TCP.html" title="Simple Module TCP" alt="" coords="248,83,320,111">
-<area shape="rect" id="node2" href="inet.nodes.mpls.LDP_LSR.html" title="Compound Module LDP_LSR" alt="" coords="5,6,85,34">
-<area shape="rect" id="node4" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="109,6,216,34">
-<area shape="rect" id="node6" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="240,6,328,34">
-<area shape="rect" id="node8" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="352,6,453,34">
-<area shape="rect" id="node10" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="477,6,635,34">

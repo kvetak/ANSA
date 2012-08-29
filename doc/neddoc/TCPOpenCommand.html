@@ -5,7 +5,8 @@
    </head>
    <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
 <h2 class="comptitle">Class <i>TCPOpenCommand</i></h2>
-<b>File: <a href="src-transport-contract-TCPCommand.msg.html">src/transport/contract/TCPCommand.msg</a></b><br/>
+<b>File: <a href="src-transport-contract-TCPCommand.msg.html">src/transport/contract/TCPCommand.msg</a></b><br/><p><a href="../doxy/class_t_c_p_open_command.html" target="mainframe"><b>C++ definition</b></a></p>
+
 <p>Control info to be used for active or passive <a href="inet.transport.tcp.TCP.html">TCP</a> open.</p>
 <p>localAddr, remoteAddr, localPort, remotePort should be self-explanatory.
 localAddr is optional because <a href="inet.transport.tcp.TCP.html">TCP</a> can learn it from <a href="inet.networklayer.ipv4.IP.html">IP</a> when a packet
@@ -25,17 +26,6 @@ With fork=false, all the above does not happen: the first connection
 is accepted (with the original connId), and further incoming connections
 will be refused by <a href="inet.transport.tcp.TCP.html">TCP</a> by sending an RST segment.</p>
 <p><b>See also:</b> <a href="TcpCommandCode.html">TcpCommandCode</a>, <a href="inet.transport.tcp.TCP.html">TCP</a></p>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="TCPOpenCommand-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="TCPOpenCommand.html" title="Class TCPOpenCommand" alt="" coords="5,6,144,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="TCPOpenCommand-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="TCPOpenCommand.html" title="Class TCPOpenCommand" alt="" coords="5,83,144,111">
-<area shape="rect" id="node2" href="TCPCommand.html" title="Class TCPCommand" alt="" coords="20,6,129,34">
-</map>
 <h3 class="subtitle">Extends:</h3>
 <table class="typestable">
    <tr>
@@ -208,5 +198,6 @@ int</i>
 
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

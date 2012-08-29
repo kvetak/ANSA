@@ -1,8 +1,0 @@
-<area shape="rect" id="node1" href="inet.applications.tcpapp.TCPApp.html" title="Module Interface TCPApp" alt="" coords="476,6,548,34">
-<area shape="rect" id="node2" href="inet.applications.tcpapp.TCPBasicClientApp.html" title="Simple Module TCPBasicClientApp" alt="" coords="5,83,144,111">
-<area shape="rect" id="node4" href="inet.applications.tcpapp.TCPEchoApp.html" title="Simple Module TCPEchoApp" alt="" coords="168,83,269,111">
-<area shape="rect" id="node6" href="inet.applications.tcpapp.TCPGenericSrvApp.html" title="Simple Module TCPGenericSrvApp" alt="" coords="293,83,429,111">
-<area shape="rect" id="node8" href="inet.applications.tcpapp.TCPSessionApp.html" title="Simple Module TCPSessionApp" alt="" coords="453,83,571,111">
-<area shape="rect" id="node10" href="inet.applications.tcpapp.TCPSinkApp.html" title="Simple Module TCPSinkApp" alt="" coords="595,83,693,111">
-<area shape="rect" id="node12" href="inet.applications.tcpapp.TCPSrvHostApp.html" title="Simple Module TCPSrvHostApp" alt="" coords="717,83,837,111">
-<area shape="rect" id="node14" href="inet.applications.tcpapp.TelnetApp.html" title="Simple Module TelnetApp" alt="" coords="861,83,941,111">

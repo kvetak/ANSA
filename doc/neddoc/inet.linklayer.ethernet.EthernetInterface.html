@@ -9,39 +9,6 @@
 <p>Ethernet network interface. Complements <a href="inet.linklayer.ethernet.EtherMAC.html">EtherMAC</a> and <a href="inet.linklayer.ethernet.EtherEncap.html">EtherEncap</a>
 with an output queue for QoS and RED support.</p>
 <p><b>See also:</b> <a href="inet.linklayer.ethernet.EthernetInterface2.html">EthernetInterface2</a>, <a href="inet.linklayer.ethernet.EthernetInterfaceNoQueue.html">EthernetInterfaceNoQueue</a></p>
-<img src="inet.linklayer.ethernet.EthernetInterface-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.networklayer.queue.OutputQueue.html" title="OutputQueue" alt="OutputQueue" coords="74,91,125,152">
-<area shape="rect" href="inet.linklayer.ethernet.EtherMAC.html" title="EtherMAC" alt="EtherMAC" coords="98,251,142,312">
-<area shape="rect" href="inet.linklayer.ethernet.EtherEncap.html" title="EtherEncap" alt="EtherEncap" coords="98,171,142,232">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.linklayer.ethernet.EthernetInterface-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="751,83,873,111">
-<area shape="rect" id="node2" href="inet.linklayer.ethernet.EtherEncap.html" title="Simple Module EtherEncap" alt="" coords="587,161,677,189">
-<area shape="rect" id="node4" href="inet.networklayer.queue.OutputQueue.html" title="Module Interface OutputQueue" alt="" coords="701,161,800,189">
-<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="824,161,923,189">
-<area shape="rect" id="node8" href="inet.linklayer.ethernet.EtherMAC.html" title="Simple Module EtherMAC" alt="" coords="947,161,1029,189">
-<area shape="rect" id="node10" href="inet.nodes.inet.ExtRouter.html" title="Compound Module ExtRouter" alt="" coords="5,6,85,34">
-<area shape="rect" id="node12" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="109,6,205,34">
-<area shape="rect" id="node14" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="229,6,301,34">
-<area shape="rect" id="node16" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="325,6,397,34">
-<area shape="rect" id="node18" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="421,6,523,34">
-<area shape="rect" id="node20" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="547,6,656,34">
-<area shape="rect" id="node22" href="inet.nodes.inet.StandardHostWithDLDuplicatesGenerator.html" title="Compound Module StandardHostWithDLDuplicatesGenerator" alt="" coords="680,6,944,34">
-<area shape="rect" id="node24" href="inet.nodes.inet.StandardHostWithDLThruputMeter.html" title="Compound Module StandardHostWithDLThruputMeter" alt="" coords="968,6,1189,34">
-<area shape="rect" id="node26" href="inet.nodes.inet.StandardHostWithULDropsGenerator.html" title="Compound Module StandardHostWithULDropsGenerator" alt="" coords="1213,6,1451,34">
-<area shape="rect" id="node28" href="inet.nodes.inet.StandardHostWithULThruputMeter.html" title="Compound Module StandardHostWithULThruputMeter" alt="" coords="1475,6,1696,34">
-<area shape="rect" id="node30" href="inet.nodes.inet.TCPSpoofingHost.html" title="Compound Module TCPSpoofingHost" alt="" coords="1720,6,1848,34">
-<area shape="rect" id="node32" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="1872,6,1973,34">
-<area shape="rect" id="node34" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="1997,6,2155,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.linklayer.ethernet.EthernetInterface-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ethernet.EthernetInterface.html" title="Compound Module EthernetInterface" alt="" coords="7,83,129,111">
-<area shape="rect" id="node2" href="inet.linklayer.INetworkInterface.html" title="Module Interface INetworkInterface" alt="" coords="5,6,131,34">
-</map>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -49,6 +16,45 @@ Unresolved types are missing from the diagram.</p>
       <th class="type">Type</th>
       <th class="description">Description</th>
    </tr>
+<tr>
+   <td>
+<a href="inet.ansa.ANSATrafGenHost.html">ANSATrafGenHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP Traffic generator</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.ARouter.html">ARouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.AStandardHost.html">AStandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
 <tr>
    <td>
 <a href="inet.nodes.inet.ExtRouter.html">ExtRouter</a>
@@ -72,6 +78,32 @@ Unresolved types are missing from the diagram.</p>
    <td>
 
 <p>An OSPFv2 router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RedistrRouter.html">RedistrRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RIPRouter.html">RIPRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
 
    </td>
 </tr>
@@ -386,5 +418,6 @@ possible with DTE-to-DTE connection).</p>
 }
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

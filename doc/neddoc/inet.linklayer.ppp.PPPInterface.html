@@ -9,36 +9,6 @@
 <p>PPP interface. Complements the <a href="inet.linklayer.ppp.PPP.html">PPP</a> module with an output queue
 for QoS and RED support.</p>
 <p><b>See also:</b> <a href="inet.linklayer.ppp.PPPInterfaceNoQueue.html">PPPInterfaceNoQueue</a></p>
-<img src="inet.linklayer.ppp.PPPInterface-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.networklayer.queue.OutputQueue.html" title="OutputQueue" alt="OutputQueue" coords="42,105,93,166">
-<area shape="rect" href="inet.linklayer.ppp.PPP.html" title="PPP" alt="PPP" coords="70,185,114,246">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.linklayer.ppp.PPPInterface-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="625,83,724,111">
-<area shape="rect" id="node2" href="inet.linklayer.ppp.PPP.html" title="Simple Module PPP" alt="" coords="529,161,601,189">
-<area shape="rect" id="node4" href="inet.networklayer.queue.OutputQueue.html" title="Module Interface OutputQueue" alt="" coords="625,161,724,189">
-<area shape="rect" id="node6" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="748,161,847,189">
-<area shape="rect" id="node8" href="inet.nodes.inet.BurstHost.html" title="Compound Module BurstHost" alt="" coords="5,6,85,34">
-<area shape="rect" id="node10" href="inet.nodes.inet.ExtRouter.html" title="Compound Module ExtRouter" alt="" coords="109,6,189,34">
-<area shape="rect" id="node12" href="inet.nodes.mpls.LDP_LSR.html" title="Compound Module LDP_LSR" alt="" coords="213,6,293,34">
-<area shape="rect" id="node14" href="inet.nodes.inet.OSPFRouter.html" title="Compound Module OSPFRouter" alt="" coords="317,6,413,34">
-<area shape="rect" id="node16" href="inet.nodes.inet.Router.html" title="Compound Module Router" alt="" coords="437,6,509,34">
-<area shape="rect" id="node18" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="533,6,605,34">
-<area shape="rect" id="node20" href="inet.nodes.mpls.RSVP_LSR.html" title="Compound Module RSVP_LSR" alt="" coords="629,6,720,34">
-<area shape="rect" id="node22" href="inet.transport.rtp.RTPHost.html" title="Compound Module RTPHost" alt="" coords="744,6,821,34">
-<area shape="rect" id="node24" href="inet.nodes.inet.StandardHost.html" title="Compound Module StandardHost" alt="" coords="845,6,947,34">
-<area shape="rect" id="node26" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="971,6,1080,34">
-<area shape="rect" id="node28" href="inet.nodes.inet.TCPSpoofingHost.html" title="Compound Module TCPSpoofingHost" alt="" coords="1104,6,1232,34">
-<area shape="rect" id="node30" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="1256,6,1357,34">
-<area shape="rect" id="node32" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="1381,6,1539,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.linklayer.ppp.PPPInterface-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.linklayer.ppp.PPPInterface.html" title="Compound Module PPPInterface" alt="" coords="5,6,104,34">
-</map>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -46,6 +16,56 @@ Unresolved types are missing from the diagram.</p>
       <th class="type">Type</th>
       <th class="description">Description</th>
    </tr>
+<tr>
+   <td>
+<a href="inet.ansa.AnsaDualStackHost.html">AnsaDualStackHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.ANSATrafGenHost.html">ANSATrafGenHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP Traffic generator</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.ARouter.html">ARouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.AStandardHost.html">AStandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
 <tr>
    <td>
 <a href="inet.nodes.inet.BurstHost.html">BurstHost</a>
@@ -96,6 +116,45 @@ to <a href="inet.networklayer.ipv4.IP.html">IP</a> directly, without <a href="in
    <td>
 
 <p>An OSPFv2 router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RedistrRouter.html">RedistrRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RIPGenRouter.html">RIPGenRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.rip.RIPRouter.html">RIPRouter</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP router.</p>
 
    </td>
 </tr>
@@ -329,5 +388,6 @@ or any other AP model which contains <a href="inet.linklayer.ieee80211.Ieee80211
 
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

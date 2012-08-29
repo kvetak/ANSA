@@ -5,23 +5,13 @@
    </head>
    <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
 <h2 class="comptitle">Packet <i>EtherFrameWithSNAP</i></h2>
-<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/>
+<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/><p><a href="../doxy/class_ether_frame_with_s_n_a_p.html" target="mainframe"><b>C++ definition</b></a></p>
+
 <p>Ethernet frame with 802.3 LLC and SNAP headers.</p>
 <p>The fields ssap, dsap and control are not included in the class because
 they are always set to fixed values: 0xAA, 0xAA, 0x03.</p>
 <p>Header length: src(6)+dest(6)+length(2)+ssap(1)+dsap(1)+control(1)+
 orgCode(3)+localCode(2) = 22 bytes</p>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="EtherFrameWithSNAP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="EtherFrameWithSNAP.html" title="Packet EtherFrameWithSNAP" alt="" coords="5,6,160,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="EtherFrameWithSNAP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="EtherFrameWithSNAP.html" title="Packet EtherFrameWithSNAP" alt="" coords="5,83,160,111">
-<area shape="rect" id="node2" href="EtherFrame.html" title="Packet EtherFrame" alt="" coords="37,6,128,34">
-</map>
 <h3 class="subtitle">Extends:</h3>
 <table class="typestable">
    <tr>
@@ -108,5 +98,6 @@ MACAddress</i>
 
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

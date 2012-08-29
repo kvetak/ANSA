@@ -50,7 +50,7 @@ change in the state of the connection: established, remote <a href="inet.transpo
 closed, timed out, connection refused, connection reset, etc. These
 notifications are also cMessages with message kind TCP_I_xxx
 (TCP_I_ESTABLISHED, etc.) and <a href="TCPCommand.html">TCPCommand</a> as control info.</p>
-<p>One <a href="inet.transport.tcp.TCP.html">TCP</a> module can serve several application modules, and several
+<p><a href="inet.examples.ansaExamples.switchtest.One.html">One</a> <a href="inet.transport.tcp.TCP.html">TCP</a> module can serve several application modules, and several
 connections per application. The <i>k</i>th application connects to <a href="inet.transport.tcp.TCP.html">TCP</a>'s
 appIn[k] and appOut[k] ports. When talking to applications, a
 connection is identified by the (application port index, connId) pair,
@@ -72,11 +72,11 @@ Currently you have two choices:</p>
      These classes manage "virtual bytes", that is, only byte counts are
      transmitted over the TCP connection and no actual data. cMessage
      contents, and even message boundaries are not preserved with these
-     classes: for example, if the client sends a single cMessage with
+     classes: for example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), if the client sends a single cMessage with
      length = 1 megabyte over <a href="inet.transport.tcp.TCP.html">TCP</a>, the receiver-side client will see a
      sequence of MSS-sized messages.</li></ol>
 <p>It depends on the client (app) modules which sendQueue/rcvQueue they require.
-For example, <a href="inet.applications.tcpapp.TCPGenericSrvApp.html">TCPGenericSrvApp</a> needs message-based sendQueue/rcvQueue,
+For example(<a href="inet.examples.ansaExamples.PDS_project.example.html">1</a>,<a href="inet.examples.ansaExamples.switchtest.example.html">2</a>), <a href="inet.applications.tcpapp.TCPGenericSrvApp.html">TCPGenericSrvApp</a> needs message-based sendQueue/rcvQueue,
 while <a href="inet.applications.tcpapp.TCPEchoApp.html">TCPEchoApp</a> or <a href="inet.applications.tcpapp.TCPSinkApp.html">TCPSinkApp</a> can work with any (but <a href="inet.applications.tcpapp.TCPEchoApp.html">TCPEchoApp</a> will
 display different behaviour with both!) In the future, other send queue
 and receive queue classes may be implemented, e.g. to allow transmission
@@ -179,25 +179,6 @@ next iteration. Also, other TCPAlgorithms will be added.</p>
 <p>There are automated test cases (*.test files) for <a href="inet.transport.tcp.TCP.html">TCP</a> -- see the Test
 directory in the source distribution.</p>
 <p>Please also see ChangeLog.</p>
-<img src="inet.transport.tcp.TCP-type.png" ismap="yes" usemap="#type-diagram"/><map name="type-diagram">
-<area shape="rect" href="inet.transport.tcp.TCP.html" title="TCP" alt="TCP" coords="0,31,67,71">
-</map>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.transport.tcp.TCP-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="inet.transport.tcp.TCP.html" title="Simple Module TCP" alt="" coords="248,83,320,111">
-<area shape="rect" id="node2" href="inet.nodes.mpls.LDP_LSR.html" title="Compound Module LDP_LSR" alt="" coords="5,6,85,34">
-<area shape="rect" id="node4" href="inet.nodes.adhoc.MFMobileHost.html" title="Compound Module MFMobileHost" alt="" coords="109,6,216,34">
-<area shape="rect" id="node6" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="240,6,328,34">
-<area shape="rect" id="node8" href="inet.nodes.wireless.WirelessHost.html" title="Compound Module WirelessHost" alt="" coords="352,6,453,34">
-<area shape="rect" id="node10" href="inet.nodes.wireless.WirelessHostSimplified.html" title="Compound Module WirelessHostSimplified" alt="" coords="477,6,635,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="inet.transport.tcp.TCP-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="inet.transport.tcp.TCP.html" title="Simple Module TCP" alt="" coords="5,83,77,111">
-<area shape="rect" id="node2" href="inet.transport.tcp.ITCP.html" title="Module Interface ITCP" alt="" coords="5,6,77,34">
-</map>
 <h3 class="subtitle">Used in compound modules:</h3>
 <table class="typestable">
    <tr>
@@ -205,6 +186,43 @@ Unresolved types are missing from the diagram.</p>
       <th class="type">Type</th>
       <th class="description">Description</th>
    </tr>
+<tr>
+   <td>
+<a href="inet.ansa.AnsaDualStackHost.html">AnsaDualStackHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+<i>(no description)</i>
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.ANSATrafGenHost.html">ANSATrafGenHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP Traffic generator</p>
+
+   </td>
+</tr>
+<tr>
+   <td>
+<a href="inet.ansa.nodes.AStandardHost.html">AStandardHost</a>
+   </td>
+   <td>
+<i>compound&nbsp;module</i>
+   </td>
+   <td>
+
+<p>IP host with <a href="inet.transport.tcp.TCP.html">TCP</a>, <a href="inet.transport.udp.UDP.html">UDP</a> layers and applications.</p>
+
+   </td>
+</tr>
 <tr>
    <td>
 <a href="inet.nodes.mpls.LDP_LSR.html">LDP_LSR</a>
@@ -707,5 +725,6 @@ or any other AP model which contains <a href="inet.linklayer.ieee80211.Ieee80211
         </span><span style="color: #000080; font-weight: bold; ">output</span><span style="color: #000000; "> </span><span style="color: #000000; ">ipv6Out</span><span style="color: #000000; "> </span><span style="color: #000000; font-weight: bold; ">@labels</span><span style="color: #000000; ">(</span><span style="color: #000000; ">TCPSegment</span><span style="color: #000000; ">,</span><span style="color: #000000; ">IPv6ControlInfo</span><span style="color: #000000; ">/</span><span style="color: #000000; ">down</span><span style="color: #000000; ">);
 }
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>

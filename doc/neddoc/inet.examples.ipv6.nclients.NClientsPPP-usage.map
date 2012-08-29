@@ -1,5 +1,0 @@
-<area shape="rect" id="node1" href="inet.examples.ipv6.nclients.NClientsPPP.html" title="Network NClientsPPP" alt="" coords="173,6,272,34">
-<area shape="rect" id="node2" href="inet.nodes.ipv6.StandardHost6.html" title="Compound Module StandardHost6" alt="" coords="5,83,115,111">
-<area shape="rect" id="node4" href="inet.examples.ipv6.nclients.NClientsPPP.fiberline.html" title="Channel fiberline" alt="" coords="139,83,211,111">
-<area shape="rect" id="node6" href="inet.nodes.ipv6.Router6.html" title="Compound Module Router6" alt="" coords="235,83,307,111">
-<area shape="rect" id="node8" href="inet.networklayer.autorouting.FlatNetworkConfigurator6.html" title="Simple Module FlatNetworkConfigurator6" alt="" coords="331,83,501,111">

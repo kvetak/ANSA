@@ -1,8 +1,0 @@
-<area shape="rect" id="node1" href="RSVPPacket.html" title="Packet RSVPPacket" alt="" coords="353,83,452,111">
-<area shape="rect" id="node4" href="RSVPPathError.html" title="Packet RSVPPathError" alt="" coords="5,161,120,189">
-<area shape="rect" id="node6" href="RSVPPathMsg.html" title="Packet RSVPPathMsg" alt="" coords="144,161,253,189">
-<area shape="rect" id="node8" href="RSVPPathTear.html" title="Packet RSVPPathTear" alt="" coords="277,161,389,189">
-<area shape="rect" id="node10" href="RSVPResvError.html" title="Packet RSVPResvError" alt="" coords="413,161,531,189">
-<area shape="rect" id="node12" href="RSVPResvMsg.html" title="Packet RSVPResvMsg" alt="" coords="555,161,669,189">
-<area shape="rect" id="node14" href="RSVPResvTear.html" title="Packet RSVPResvTear" alt="" coords="693,161,808,189">
-<area shape="rect" id="node2" href="RSVPMessage.html" title="Packet RSVPMessage" alt="" coords="347,6,459,34">

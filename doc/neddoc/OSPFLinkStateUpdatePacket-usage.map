@@ -1,5 +1,0 @@
-<area shape="rect" id="node1" href="OSPFLinkStateUpdatePacket.html" title="Packet OSPFLinkStateUpdatePacket" alt="" coords="201,6,396,34">
-<area shape="rect" id="node2" href="OSPFRouterLSA.html" title="Class OSPFRouterLSA" alt="" coords="5,83,128,111">
-<area shape="rect" id="node4" href="OSPFNetworkLSA.html" title="Class OSPFNetworkLSA" alt="" coords="152,83,283,111">
-<area shape="rect" id="node6" href="OSPFASExternalLSA.html" title="Class OSPFASExternalLSA" alt="" coords="307,83,456,111">
-<area shape="rect" id="node8" href="OSPFSummaryLSA.html" title="Class OSPFSummaryLSA" alt="" coords="480,83,619,111">

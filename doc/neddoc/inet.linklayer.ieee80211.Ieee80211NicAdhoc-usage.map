@@ -1,6 +1,0 @@
-<area shape="rect" id="node1" href="inet.linklayer.ieee80211.Ieee80211NicAdhoc.html" title="Compound Module Ieee80211NicAdhoc" alt="" coords="236,83,375,111">
-<area shape="rect" id="node2" href="inet.linklayer.ieee80211.mgmt.Ieee80211MgmtAdhoc.html" title="Simple Module Ieee80211MgmtAdhoc" alt="" coords="5,161,157,189">
-<area shape="rect" id="node4" href="inet.linklayer.radio.Ieee80211Radio.html" title="Simple Module Ieee80211Radio" alt="" coords="181,161,296,189">
-<area shape="rect" id="node6" href="inet.linklayer.ieee80211.mac.Ieee80211Mac.html" title="Simple Module Ieee80211Mac" alt="" coords="320,161,427,189">
-<area shape="rect" id="node8" href="ned.IdealChannel.html" title="Channel IdealChannel" alt="" coords="451,161,549,189">
-<area shape="rect" id="node10" href="inet.nodes.adhoc.MobileHost.html" title="Compound Module MobileHost" alt="" coords="261,6,349,34">

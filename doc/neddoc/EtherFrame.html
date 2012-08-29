@@ -5,7 +5,8 @@
    </head>
    <body onload="if (top.frames['componentsframe'] == undefined) { s = window.location.toString(); window.location = 'index.html?p=' + s.substring(s.lastIndexOf('/')+1); }">
 <h2 class="comptitle">Packet <i>EtherFrame</i></h2>
-<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/>
+<b>File: <a href="src-linklayer-ethernet-EtherFrame.msg.html">src/linklayer/ethernet/EtherFrame.msg</a></b><br/><p><a href="../doxy/class_ether_frame.html" target="mainframe"><b>C++ definition</b></a></p>
+
 <p>Common base class for classes representing Ethernet II and 802.3 frame types,
 containing their common header fields.</p>
 <p>This class should never be instantiated by the models, only specific
@@ -16,20 +17,6 @@ Other fields include:</p>
   <li>length: stored in cMessage length, not stored explicitly</li>
   <li>payload: stored a encapsulated packet (cMessage::encapsulate())</li>
   <li>crc: represented by cMessage::hasBitError()</li></ul>
-<h3 class="subtitle">Usage diagram:</h3>
-<p>The following diagram shows usage relationships between types.
-Unresolved types are missing from the diagram.</p>
-<img src="EtherFrame-usage.png" ismap="yes" usemap="#usage-diagram"/><map name="usage-diagram"><area shape="rect" id="node1" href="EtherFrame.html" title="Packet EtherFrame" alt="" coords="5,6,96,34">
-</map>
-<h3 class="subtitle">Inheritance diagram:</h3>
-<p>The following diagram shows inheritance relationships for this type.
-Unresolved types are missing from the diagram.</p>
-<img src="EtherFrame-inheritance.png" ismap="yes" usemap="#inheritance-diagram"/><map name="inheritance-diagram"><area shape="rect" id="node1" href="EtherFrame.html" title="Packet EtherFrame" alt="" coords="281,6,372,34">
-<area shape="rect" id="node2" href="EtherFrameWithLLC.html" title="Packet EtherFrameWithLLC" alt="" coords="5,83,147,111">
-<area shape="rect" id="node4" href="EtherFrameWithSNAP.html" title="Packet EtherFrameWithSNAP" alt="" coords="171,83,325,111">
-<area shape="rect" id="node6" href="EthernetIIFrame.html" title="Packet EthernetIIFrame" alt="" coords="349,83,464,111">
-<area shape="rect" id="node8" href="EtherPauseFrame.html" title="Packet EtherPauseFrame" alt="" coords="488,83,613,111">
-</map>
 <h3 class="subtitle">Known subclasses:</h3>
 <table class="typestable">
    <tr>
@@ -141,5 +128,6 @@ MACAddress</i>
 
 
 </span></pre>
+   <hr><p class="footer"><a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top"><img src="by-sa.png"></a> This documentation is released under the <a href="http://creativecommons.org/licenses/by-sa/3.0" target="_top">Creative Commons license</a></p>
    </body>
 </html>
