@@ -114,7 +114,6 @@ packet ISISMessage extends cPacket
     unsigned char version2 = 0x01;		//This is also set to 1.
     unsigned char reserved = 0x00;		//Future use
     unsigned char maxAreas = 0x00;		//Specifies the number of areas permitted.  value 0 = default = 3 areas
-    string test;
     TLV_t TLV[];
 };
 

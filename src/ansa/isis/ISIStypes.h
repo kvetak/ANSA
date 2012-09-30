@@ -62,8 +62,8 @@ struct ISISinterface
     unsigned char priority;   /*!<interface priority for being designated IS*/
     unsigned char L1DISpriority;    /*!<priority of current L1 DIS*/
     unsigned char L2DISpriority;    /*!<priority of currend L2 DIS*/
-    unsigned char L1DIS[7];   /*!<L1 designated router ID for ift*/
-    unsigned char L2DIS[7];   /*!<L2 designated router ID for ift*/
+    unsigned char L1DIS[ISIS_SYSTEM_ID + 1];   /*!<L1 designated router ID for ift*/
+    unsigned char L2DIS[ISIS_SYSTEM_ID + 1];   /*!<L2 designated router ID for ift*/
     unsigned char metric;     /*!<interface metric (default 10)*/
     int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
     int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
@@ -122,6 +122,8 @@ struct ISISadj
         return false;
     }
 };
+
+typedef std::vector<ISISadj> AdjTab_t;
 
 /**
  * Strucure for storing of narrow metrics of interface
@@ -207,6 +209,7 @@ struct LSPRecord
          }
 
 };
+typedef std::vector<LSPRecord *> LSPRecQ_t;
 
 struct FlagRecord
 {
@@ -217,14 +220,33 @@ struct FlagRecord
 
         }
 };
-
-
+typedef std::vector<FlagRecord*> FlagRecQ_t;
+typedef std::vector<std::vector<FlagRecord*> *> FlagRecQQ_t;
 struct ISISNeighbour
 {
         unsigned char *id;
         //uint32_t metric;
         bool type; //should represent whether it's a leaf node; true = leaf
 
+        ISISNeighbour(){
+
+        }
+
+        ISISNeighbour(unsigned char * id, bool type){
+            this->id = new unsigned char [ISIS_SYSTEM_ID + 2];
+            memcpy(this->id, id, ISIS_SYSTEM_ID + 2);
+            type = false;
+        }
+
+        ~ISISNeighbour(){
+            delete id;
+        }
+
+        ISISNeighbour *copy(){
+            ISISNeighbour *neighbour = new ISISNeighbour(this->id, this->type);
+
+            return neighbour;
+        }
 
 };
 
@@ -253,6 +275,8 @@ struct ISISPath
 };
 
 typedef std::vector<ISISPath*> ISISPaths_t;
+
+
 typedef std::vector<LSPRecord *> ISISLspDb_t;
 
 struct ISISCon
