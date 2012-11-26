@@ -1,71 +1,587 @@
-/*
- * pim.cc
- *
- *  Created on: 3.12.2011
- *      Author: Haczek
+/**
+ * @file PimSplitter.cc
+ * @brief File contains implementation of PIMSplitter.
+ * @date 3.12.2011
+ * @author Veronika Rybova
+ * @details Splitter is common for all PIM modes. It is used to resent all PIM messages to
+ *  correct PIM mode module. It also does work which is same for all modes, e.g.
+ *  it send Hello messages and it manages table of PIM interfaces.
  */
 
-#include "pimSplitter.h"
+#include "PimSplitter.h"
 
 using namespace std;
 
-Define_Module(pimSplitter);
+Define_Module(PimSplitter);
 
-void pimSplitter::handleMessage(cMessage *msg)
+
+/**
+ * CREATE HELLO PACKET
+ *
+ * The method creates new PIM Hello Packet and sets all necessary info.
+ *
+ * @param iftID ID of interface to which the packet has to be sent
+ * @return Return PIMHello message, which is ready to be sent.
+ * @see PIMHello
+ */
+PIMHello* PimSplitter::createHelloPkt(int iftID)
 {
-	EV << "PIM::handleMessage" << endl;
+	PIMHello *msg = new PIMHello();
+	msg->setName("PIMHello");
 
-	// vlastni zprava, tj. nektery z casovacu
+	IPControlInfo *ctrl = new IPControlInfo();
+	IPAddress ga1("224.0.0.13");
+	ctrl->setDestAddr(ga1);
+	//ctrl->setProtocol(IP_PROT_PIM);
+	ctrl->setProtocol(103);
+	ctrl->setTimeToLive(1);
+	ctrl->setInterfaceId(iftID);
+	msg->setControlInfo(ctrl);
+
+	return msg;
+}
+
+/**
+ * SEND HELLO PACKET
+ *
+ * The method goes through all PIM interfaces and sends Hello
+ * packet to each of them. It also schedule next sending of
+ * Hello packets (sets Hello Timer).
+ *
+ * @see createHelloPkt()
+ */
+void PimSplitter::sendHelloPkt()
+{
+	EV << "PIM::sendHelloPkt" << endl;
+	int intID;
+	PIMHello* msg;
+
+	// send to all PIM interfaces
+	for (int i = 0; i < pimIft->getNumInterface(); i++)
+	{
+		intID = pimIft->getInterface(i)->getInterfaceID();
+		msg = createHelloPkt(intID);
+		send(msg, "transportOut");
+	}
+
+	// start Hello timer
+	PIMTimer *timer = new PIMTimer("Hello");
+	timer->setTimerKind(HelloTimer);
+	scheduleAt(simTime() + HT, timer);
+}
+
+/**
+ * PROCESS HELLO PACKET
+ *
+ * The method processes new coming Hello packet from any of its
+ * neighbor. It reads info about neighbor from the packet and
+ * tries to find neighbor in PimNeighborTable. If neighbor is
+ * not in the table, method adds him and sets Neighbor Liveness Timer for
+ * the record. If neighbor is already in PimNeighborTable it
+ * refreshes Neighbor Liveness Timer
+ *
+ * @param msg Pointer to incoming Hello packet
+ * @see PimNeighbor
+ * @see PIMnlt
+ */
+void PimSplitter::processHelloPkt(PIMPacket *msg)
+{
+	EV << "PIM::processHelloPkt" << endl;
+
+	IPControlInfo *ctrl = dynamic_cast<IPControlInfo *>(msg->getControlInfo());
+	PimNeighbor newEntry;
+	PIMnlt *nlt;
+
+	// get information about neighbor from Hello packet
+	newEntry.setAddr(ctrl->getSrcAddr());
+	newEntry.setInterfaceID(ctrl->getInterfaceId());
+	newEntry.setInterfacePtr(ift->getInterfaceById(ctrl->getInterfaceId()));
+	newEntry.setVersion(msg->getVersion());
+
+
+	// new neighbor (it is not in PIM neighbor table)
+	// insert new neighbor to table
+	// set Neighbor Livness Timer
+	if (!pimNbt->isInTable(newEntry))
+	{
+		nlt = new PIMnlt("NeighborLivenessTimer");
+		nlt->setTimerKind(NeighborLivenessTimer);
+		nlt->setNtId(pimNbt->getIdCounter());
+		scheduleAt(simTime() + 3.5*HT, nlt);
+
+		newEntry.setNlt(nlt);
+		pimNbt->addNeighbor(newEntry);
+		EV << "PimSplitter::New Entry was added: addr = " << newEntry.getAddr() << ", iftID = " << newEntry.getInterfaceID() << ", ver = " << newEntry.getVersion() << endl;
+	}
+	// neighbor is already in PIM neighbor table
+	// refresh Neighbor Livness Timer
+	else
+	{
+		nlt = pimNbt->findNeighbor(ctrl->getInterfaceId(), ctrl->getSrcAddr())->getNlt();
+		cancelEvent(nlt);
+		scheduleAt(simTime() + 3.5*HT, nlt);
+	}
+
+	delete msg;
+}
+
+/**
+ * PROCESS NEIGHBOR LIVENESS TIMER
+ *
+ * The method process Neighbor Liveness Timer. After its expiration neighbor is removed
+ * from PimNeighborTable.
+ *
+ * @param timer PIM Neighbor Liveness Timer.
+ * @see PimNeighbor
+ * @see PIMnlt()
+ */
+void PimSplitter::processNLTimer(PIMTimer *timer)
+{
+	EV << "PIM::processNLTimer"<< endl;
+	PIMnlt *nlt = check_and_cast <PIMnlt *> (timer);
+	int id = nlt->getNtId();
+	IPAddress neighbor;
+
+	// if neighbor exists store its IP address
+	if (pimNbt->getNeighborsByID(id) != NULL)
+		neighbor = pimNbt->getNeighborsByID(id)->getAddr();
+
+	// Record in PIM Neighbor Table was found, can be deleted.
+	if (pimNbt->deleteNeighbor(id))
+		EV << "PIM::processNLTimer: Neighbor " << neighbor << "was removed from PIM neighbor table." << endl;
+
+	delete nlt;
+}
+
+/**
+ * PROCESS PIM PACKET
+ *
+ * The method processes new coming PIM packet. It has to find out
+ * where packet has to be sent to. It looks to interface from which
+ * packet is coming. According to interface ID, method findes record
+ * in PIM Interface Table and gets info about PIM mode. According to mode
+ * it send to appropriate PIM model.
+ *
+ * @param pkt New coming PIM packet.
+ * @see PimInterface
+ */
+void PimSplitter::processPIMPkt(PIMPacket *pkt)
+{
+	EV << "PIM::processPIMPkt" << endl;
+
+	IPControlInfo *ctrl = dynamic_cast<IPControlInfo *>(pkt->getControlInfo());
+	int intID = ctrl->getInterfaceId();
+	int mode = 0;
+
+	// find information about interface where packet came from
+	PimInterface *pimInt = pimIft->getInterfaceByIntID(intID);
+	if (pimInt != NULL)
+		mode = pimInt->getMode();
+
+	// according to interface PIM mode send packet to appropriate PIM module
+	switch(mode)
+	{
+		case Dense:
+			send(pkt, "pimDMOut");
+			break;
+		case Sparse:
+			send(pkt, "pimSMOut");
+			break;
+		default:
+			EV << "PIM::processPIMPkt: PIM is not enabled on interface number: "<< intID << endl;
+			delete pkt;
+	}
+}
+
+/**
+ * HANDLE MESSAGE
+ *
+ * The method handles new coming message and process it according to
+ * its type. Self message is timer. Other messages should be PIM packets.
+ *
+ * @param msg Pointer to message which has came to the module.
+ * @see PIMTimer
+ * @see sendHelloPkt()
+ * @see processNLTimer()
+ * @see PIMPacket
+ * @see processHelloPkt()
+ * @see processPIMPkt()
+ */
+void PimSplitter::handleMessage(cMessage *msg)
+{
+	EV << "PimSplitter::handleMessage" << endl;
+
+	// self message (timer)
    if (msg->isSelfMessage())
    {
 	   PIMTimer *timer = check_and_cast <PIMTimer *> (msg);
+	   if (timer->getTimerKind() == HelloTimer)
+	   {
+		   EV << "PIM::HelloTimer" << endl;
+		   sendHelloPkt();
+		   delete timer;
+	   }
+	   else if (timer->getTimerKind() == NeighborLivenessTimer)
+	   {
+		   EV << "PIM::NeighborLivnessTimer" << endl;
+		   processNLTimer(timer);
+	   }
    }
-   else if (dynamic_cast<PIMPacket *>(msg))
+
+   // PIM packet from network layer
+   else if (dynamic_cast<PIMPacket *>(msg) && (strcmp(msg->getArrivalGate()->getName(), "transportIn") == 0))
    {
 	   PIMPacket *pkt = check_and_cast<PIMPacket *>(msg);
-	   EV << "Verze: " << pkt->getVersion() << ", typ: " << pkt->getType() << endl;
+
+	   if (pkt->getType() == Hello)
+		   processHelloPkt(pkt);
+	   else
+		   processPIMPkt(pkt);
    }
+
+   // PIM packet from PIM mode, send to network layer
+   else if (dynamic_cast<PIMPacket *>(msg))
+	   send(msg, "transportOut");
+
    else
-	   EV << "PIM: spatna zprava" << endl;
+	   EV << "PIM:ERROR - bad type of message" << endl;
 }
 
-void pimSplitter::initialize(int stage)
+/**
+ * INITIALIZE
+ *
+ * The method initialize ale structures (tables) which will use. It
+ * subscribes to appropriate events of Notification Board. If there is
+ * no PIM interface, PIM stops working. Otherwise it schedule Hello Timer.
+ *
+ * @param stage Stage of initialization.
+ * @see MulticastRoutingTable
+ * @see PIMTimer
+ */
+void PimSplitter::initialize(int stage)
 {
-	// v stage 2 se registruji interfacy
-	if (stage == 3)
+	// in stage 2 interfaces are registered
+	// in stage 3 table pimInterfaces is built
+	if (stage == 4)
 	{
-		EV << "PIM::sendPacket" << endl;
+		EV << "PimSplitter::initialize" << endl;
+		hostname = par("hostname");
 
+		// Pointer to routing tables, interface tables, notification board
 		rt = RoutingTableAccess().get();
-		ift = InterfaceTableAccess().get();
+		mrt = MulticastRoutingTableAccess().get();
+		ift = AnsaInterfaceTableAccess().get();
+		nb = NotificationBoardAccess().get();
+		pimIft = PimInterfaceTableAccess().get();
+		pimNbt = PimNeighborTableAccess().get();
 
-		EV << "Posilam zpravu na adresu: 224.0.0.13" << endl;
+		// subscribtion of notifications (future use)
+		nb->subscribe(this, NF_IPv4_NEW_MULTICAST);
+		nb->subscribe(this, NF_INTERFACE_IPv4CONFIG_CHANGED);
 
-		PIMPacket *msg = new PIMPacket();
-		msg->setVersion(2);
-		msg->setType(Hello);
-		msg->setName("PIMmessage");
+		// is PIM enabled?
+		if (pimIft->getNumInterface() == 0)
+			return;
+		else
+			EV << "PIM is enabled on device " << hostname << endl;
 
-		int intID;
-		IInterfaceTable *ift;
-		ift = InterfaceTableAccess().get();
-		for (int i = 0; i < ift->getNumInterfaces(); i++)
-		{
-			if (!ift->getInterface(i)->isLoopback())
-			{
-				intID = ift->getInterface(i)->getInterfaceId();
-				break;
-			}
-		}
-
-		IPControlInfo *ctrl = new IPControlInfo();
-		IPAddress ga1("224.0.0.13");
-		ctrl->setDestAddr(ga1);
-		ctrl->setProtocol(IP_PROT_PIM);
-		ctrl->setTimeToLive(1);
-		ctrl->setInterfaceId(intID);
-		msg->setControlInfo(ctrl);
-
-		send(msg, "transportOut");
+		// send Hello packets to PIM neighbors (224.0.0.13)
+		PIMTimer *timer = new PIMTimer("Hello");
+		timer->setTimerKind(HelloTimer);
+		scheduleAt(simTime() + uniform(0,5), timer);
 	}
+}
+
+
+/**
+ * RECEIVE CHANGE NOTIFICATION
+ *
+ * The method from class Notification Board is used to catch its events.
+ *
+ * @param category Category of notification.
+ * @param details Additional information for notification.
+ * @see newMulticast()
+ * @see igmpChange()
+ */
+void PimSplitter::receiveChangeNotification(int category, const cPolymorphic *details)
+{
+	// ignore notifications during initialize
+	if (simulation.getContextType()==CTX_INITIALIZE)
+		return;
+
+	// PIM needs details
+	if (details == NULL)
+		return;
+
+	Enter_Method_Silent();
+	printNotificationBanner(category, details);
+
+	// according to category of event...
+	switch (category)
+	{
+		// new multicast data appears in router
+		case NF_IPv4_NEW_MULTICAST:
+			EV <<  "PimSplitter::receiveChangeNotification - NEW MULTICAST" << endl;
+			IPControlInfo *ctrl;
+			ctrl = (IPControlInfo *)(details);
+			newMulticast(ctrl->getDestAddr(), ctrl->getSrcAddr());
+			break;
+
+		// configuration of interface changed, it means some change from IGMP
+		case NF_INTERFACE_IPv4CONFIG_CHANGED:
+			EV << "PimSplitter::receiveChangeNotification - IGMP change" << endl;
+			InterfaceEntry * interface = (InterfaceEntry *)(details);
+			igmpChange(interface);
+			break;
+	}
+}
+
+/**
+ * IGMP CHANGE
+ *
+ * The method is used to process notification about IGMP change. Splitter will find out which IP address
+ * were added or removed from interface and will send them to appropriate PIM mode.
+ *
+ * @param interface Pointer to interface where IP address changed.
+ * @see addRemoveAddr
+ */
+void PimSplitter::igmpChange(InterfaceEntry *interface)
+{
+	EV << "PimSplitter::igmpChange" << endl;
+	int intId = interface->getInterfaceId();
+	PimInterface * pimInt = pimIft->getInterfaceByIntID(intId);
+
+	// save old and new set of multicast IP address assigned to interface
+	vector<IPAddress> multicastAddrsOld = pimInt->getIntMulticastAddresses();
+	vector<IPAddress> multicastAddrsNew = pimInt->deleteLocalIPs(interface->ipv4Data()->getMulticastGroups());
+
+	// vectors of new and removed multicast addresses
+	vector<IPAddress> add;
+	vector<IPAddress> remove;
+
+	// which address was removed from interface
+	for (unsigned int i = 0; i < multicastAddrsOld.size(); i++)
+	{
+		unsigned int j;
+		for (j = 0; j < multicastAddrsNew.size(); j++)
+		{
+			if (multicastAddrsOld[i] == multicastAddrsNew[j])
+				break;
+		}
+		if (j == multicastAddrsNew.size())
+		{
+			EV << "Multicast address " << multicastAddrsOld[i] << " was removed from the interface " << intId << endl;
+			remove.push_back(multicastAddrsOld[i]);
+		}
+	}
+
+	// which address was added to interface
+	for (unsigned int i = 0; i < multicastAddrsNew.size(); i++)
+	{
+		unsigned int j;
+		for (j = 0; j < multicastAddrsOld.size(); j++)
+		{
+			if (multicastAddrsNew[i] == multicastAddrsOld[j])
+				break;
+		}
+		if (j == multicastAddrsOld.size())
+		{
+			EV << "Multicast address " << multicastAddrsNew[i] << " was added to the interface " << intId <<endl;
+			add.push_back(multicastAddrsNew[i]);
+		}
+	}
+
+	// notification about removed multicast address to PIM modules
+	addRemoveAddr *addr = new addRemoveAddr();
+	if (remove.size() > 0)
+	{
+		// remove new address
+		for(unsigned int i = 0; i < remove.size(); i++)
+			pimInt->removeIntMulticastAddress(remove[i]);
+
+		// send notification
+		addr->setAddr(remove);
+		addr->setInt(pimInt);
+		nb->fireChangeNotification(NF_IPv4_NEW_IGMP_REMOVED, addr);
+	}
+
+	// notification about new multicast address to PIM modules
+	if (add.size() > 0)
+	{
+		// add new address
+		for(unsigned int i = 0; i < add.size(); i++)
+			pimInt->addIntMulticastAddress(add[i]);
+
+		// send notification
+		addr->setAddr(add);
+		addr->setInt(pimInt);
+		nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED, addr);
+	}
+}
+
+/**
+ * NEW MULTICAST
+ *
+ * The method process notification about new coming multicast data. According to
+ * IP addresses it find all necessary info to create new entry for multicast
+ * table.
+ *
+ * @param destAddr Destination IP address = multicast group IP address.
+ * @param srcAddr Source IP address.
+ * @see MulticastIPRoute
+ */
+void PimSplitter::newMulticast(IPAddress destAddr, IPAddress srcAddr)
+{
+	EV << "PimSplitter::newMulticast - group: " << destAddr << ", source: " << srcAddr << endl;
+
+	// find RPF interface for new multicast stream
+	InterfaceEntry *inInt = rt->getInterfaceForDestAddr(srcAddr);
+	if (inInt == NULL)
+	{
+		EV << "ERROR: PimSplitter::newMulticast(): cannot find RPF interface, routing information is missing.";
+		return;
+	}
+	int rpfId = inInt->getInterfaceId();
+	PimInterface *pimInt = pimIft->getInterfaceByIntID(rpfId);
+
+	// if it is interface configured with PIM, create new route
+	if (pimInt != NULL)
+	{
+		// create new multicast route
+		MulticastIPRoute *newRoute = new MulticastIPRoute();
+		newRoute->setGroup(destAddr);
+		newRoute->setSource(srcAddr);
+
+		// Directly connected routes to source does not have next hop
+		// RPF neighbor is source of packet
+		IPAddress rpf;
+		const IPRoute *routeToSrc = rt->findBestMatchingRoute(srcAddr);
+		if (routeToSrc->getSource() == IPRoute::IFACENETMASK)
+		{
+			newRoute->addFlag(A);
+			rpf = srcAddr;
+		}
+		// Not directly connected, next hop address is saved in routing table
+		else
+			rpf = rt->getGatewayForDestAddr(srcAddr);
+
+		newRoute->setInInt(inInt, inInt->getInterfaceId(), rpf);
+
+		// notification for PIM module about new multicast route
+		if (pimInt->getMode() == Dense)
+			nb->fireChangeNotification(NF_IPv4_NEW_MULTICAST_DENSE, newRoute);
+	}
+}
+
+/**
+ * LOAD CONFIG FROM XML
+ *
+ * The method is not used now. Config is loaded by class DeviceConfigurator.
+ *
+ * The method provides loading of configuration for protocol PIM from
+ * configuration file. The main information is if router has enabled
+ * multicast and on which interfaces which mode of PIM is set up.
+ *
+ * <Routing>
+ * <Multicast enable="1"></Multicast>
+ * </Routing>
+ * <Interfaces>
+ * <Interface name="eth0">
+ * <Pim>
+ * <Mode>dense-mode</Mode>
+ * </Pim>
+ * </Interface>
+ * </Interfaces>
+ *
+ * @param filename Name of configuration file.
+ * @return Return true, if loading was successful, or false.
+ * @see DeviceConfigurator
+ */
+bool PimSplitter::LoadConfigFromXML(const char *filename)
+{
+	// file loading
+	cXMLElement* asConfig = ev.getXMLDocument(filename);
+	if (asConfig == NULL)
+	   return false;
+
+	// first element <Router id="192.168.10.7">
+	std::string routerXPath("Router[@id='");
+	IPAddress routerId = rt->getRouterId();
+	routerXPath += routerId.str();
+	routerXPath += "']";
+
+	cXMLElement* routerNode = asConfig->getElementByPath(routerXPath.c_str());
+	if (routerNode == NULL)
+	{
+		error("No configuration for Router ID: %s", routerId.str().c_str());
+	   return false;
+	}
+
+	// Routing element
+	cXMLElement* routingNode = routerNode->getElementByPath("Routing");
+	if (routingNode == NULL)
+		 return false;
+
+	// Multicast element
+	cXMLElement* multicastNode = routingNode->getElementByPath("Multicast");
+	if (multicastNode == NULL)
+	   return false;
+
+
+	// Multicast has to be enabled
+	const char* enableAtt = multicastNode->getAttribute("enable");
+	if (strcmp(enableAtt, "1"))
+		return false;
+
+
+	// Where is PIM protocol enabled?
+	// Interfaces element
+	cXMLElement* iftNode = routerNode->getElementByPath("Interfaces");
+	if (iftNode == NULL)
+		 return false;
+
+   // list of interfaces, where PIM is enabled
+   cXMLElementList childrenNodes = iftNode->getChildrenByTagName("Interface");
+   //EV << "PimSplitter::Interface" << endl;
+   if (childrenNodes.size() > 0)
+   {
+	   //EV << "PimSplitter::Interface size: " << childrenNodes.size() << endl;
+	  for (cXMLElementList::iterator node = childrenNodes.begin(); node != childrenNodes.end(); node++)
+	  {
+		  cXMLElement* pimNode = (*node)->getElementByPath("Pim");
+		  if (pimNode == NULL)
+			  continue;
+		  //EV << "PimSplitter::PIM interface" << endl;
+		  // get ID of PIM interface
+		  InterfaceEntry *interface = ift->getInterfaceByName((*node)->getAttribute("name"));
+
+		  // create new PIM interface
+		  PimInterface newentry;
+		  newentry.setInterfaceID(interface->getInterfaceId());
+		  newentry.setInterfacePtr(interface);
+
+		  // register pim multicast address 224.0.0.13 on pim interface
+		  vector<IPAddress> intMulticastAddresses = interface->ipv4Data()->getMulticastGroups();
+		  intMulticastAddresses.push_back("224.0.0.13");
+		  interface->ipv4Data()->setMulticastGroups(intMulticastAddresses);
+
+		  // get PIM mode for interface
+		  cXMLElement* pimMode = pimNode->getElementByPath("Mode");
+		  if (pimMode == NULL)
+			  return false;
+
+		  const char *mode = pimMode->getNodeValue();
+		  //EV << "PimSplitter::PIM interface mode = "<< mode << endl;
+		  if (!strcmp(mode, "dense-mode"))
+			  newentry.setMode(Dense);
+		  else if (!strcmp(mode, "sparse-mode"))
+			  newentry.setMode(Sparse);
+		  else
+			  return false;
+		  pimIft->addInterface(newentry);
+	  }
+   }
+   else
+	  return false;
+   return true;
 }

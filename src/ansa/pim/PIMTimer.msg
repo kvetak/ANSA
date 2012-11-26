@@ -20,6 +20,7 @@ cplusplus {{
 
 //struct IPAddress;
 class noncobject IPAddress;
+//class pimSplitter extends void;
 
 enum PIMTimerType
 {
@@ -28,7 +29,7 @@ enum PIMTimerType
    TriggeredHelloDelay = 2;
    
    // timers for each interface and each neighbor (N,I)
-   NeighborLivnessTimer = 3;
+   NeighborLivenessTimer = 3;
    
    // timers for each interface and each source-group pair (S,G,I)
    AssertTimer = 4;
@@ -36,7 +37,7 @@ enum PIMTimerType
    PrunePendingTimer = 6;
    
    // timers for each source-group pair (S,G)
-   GrafRetryTimer = 7;
+   GraftRetryTimer = 7;
    UpstreamOverrideTimer = 8;
    PruneLimitTimer = 9;
    SourceActiveTimer = 10;
@@ -47,5 +48,45 @@ enum PIMTimerType
 // Represents an PIM Timer
 packet PIMTimer extends cMessage
 {
-      char 		timerKind enum(PIMTimerType);
+      char 				timerKind enum(PIMTimerType);
+}
+
+// Represents an PIM Neighbor Livness Timer
+packet PIMnlt extends PIMTimer
+{
+    timerKind = NeighborLivenessTimer;
+    int 				ntId;          	// Identification of entry in Neigbor table
+}
+
+// represents PIM Prune Timer
+packet PIMpt extends PIMTimer
+{
+    timerKind = PruneTimer;
+    IPAddress 			source;          	// Source of multicast
+    IPAddress			group;				// Multicast group address
+    int					intId;				// ID of interface
+}
+
+// represents PIM Graft Retry Timer
+packet PIMgrt extends PIMTimer
+{
+    timerKind = GraftRetryTimer;
+    IPAddress 			source;          	// Source of multicast
+    IPAddress			group;				// Multicast group address
+}
+
+// represents PIM Source Active Timer
+packet PIMsat extends PIMTimer
+{
+    timerKind = SourceActiveTimer;
+    IPAddress 			source;          	// Source of multicast
+    IPAddress			group;				// Multicast group address
+}
+
+// represents PIM State Refresh Timer
+packet PIMsrt extends PIMTimer
+{
+    timerKind = StateRefreshTimer;
+    IPAddress 			source;          	// Source of multicast
+    IPAddress			group;				// Multicast group address
 }

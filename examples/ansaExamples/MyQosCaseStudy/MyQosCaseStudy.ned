@@ -132,9 +132,9 @@ network CaseStudyNetwork
 
         Praha.pppg[0] <--> {  delay = 10ms; datarate = 2Mbps; } <--> Brno.pppg[0];
         Brno.pppg[1] <--> {  delay = 10ms; datarate = 2Mbps; } <--> Ostrava.pppg[0];
-        Ostrava.pppg[1] <--> {  delay = 10ms; datarate = 512kbps; } <--> Olomouc.pppg[1];
-        Olomouc.pppg[0] <--> {  delay = 10ms; datarate = 512kbps; } <--> Pardubice.pppg[0];
-        Praha.pppg[1] <--> {  delay = 10ms; datarate = 512kbps; } <--> Pardubice.pppg[1];
+        Ostrava.pppg[1] <--> {  delay = 10ms; datarate = 512Kbps; } <--> Olomouc.pppg[1];
+        Olomouc.pppg[0] <--> {  delay = 10ms; datarate = 512Kbps; } <--> Pardubice.pppg[0];
+        Praha.pppg[1] <--> {  delay = 10ms; datarate = 512Kbps; } <--> Pardubice.pppg[1];
         Praha.ethg[0] <--> C <--> Hub.ethg[0];
         Host1.ethg[0] <--> C <--> Hub.ethg[1];
         Host2.ethg[0] <--> C <--> Hub.ethg[2];

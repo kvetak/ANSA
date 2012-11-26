@@ -22,10 +22,12 @@
 package inet.ansa.pim;
 
 
-simple pimSplitter
+simple PimSplitter
 {
     parameters:
     	@display("i=block/dispatch");
+    	string configFile;
+        string hostname;
     gates:
         input pimDMIn;
         input pimSMIn;

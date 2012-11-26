@@ -21,6 +21,8 @@ package inet.examples.ansaExamples.IPv6Ospf;
 
 import inet.ansa.AnsaDualStackRouter;
 import inet.nodes.ethernet.EtherSwitch;
+import inet.nodes.inet.ExtRouter;
+
 
 network IPv6Ospf
 {

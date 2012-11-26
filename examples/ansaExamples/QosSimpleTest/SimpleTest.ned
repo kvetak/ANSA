@@ -52,7 +52,7 @@ network SimpleTest
         }
     connections:
         
-        R1.pppg[0] <--> {  delay = 10ms; datarate = 10Kbps; } <--> R2.pppg[0];
+        R1.pppg[0] <--> {  delay = 10ms; datarate = 10kbps; } <--> R2.pppg[0];
         R1.ethg[0] <--> C <--> H1.ethg[0];
         R2.ethg[0] <--> C <--> H2.ethg[0];
         

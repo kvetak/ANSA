@@ -52,7 +52,7 @@ network SimpleTest
         }
     connections:
         
-        R1.pppg[0] <--> {  delay = 1ms; datarate = 512kbps; } <--> R2.pppg[0];
+        R1.pppg[0] <--> {  delay = 1ms; datarate = 512Kbps; } <--> R2.pppg[0];
         R1.ethg[0] <--> C <--> Generator.ethg[0];
         R2.ethg[0] <--> C <--> Analyzer.ethg[0];
         

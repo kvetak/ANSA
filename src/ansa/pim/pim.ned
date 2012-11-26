@@ -15,19 +15,28 @@
 
 package inet.ansa.pim;
 
+import inet.ansa.pim.modes.pimDM;
+import inet.ansa.pim.modes.pimSM;
+import inet.ansa.pim.tables.PimInterfaceTable;
+import inet.ansa.pim.tables.PimNeighborTable;
+
 module pim
 {
     parameters:
         // pim-mode
-        @display("i=block/network2;bgl=4;bgb=255,207");
+        @display("i=block/network2;bgl=4;bgb=425,196");
+        string configFile;
+        string hostname;
     gates:
         input networkLayerIn;
         output networkLayerOut;
 
     submodules:
-        pimSplitter: pimSplitter {
+        pimSplitter: PimSplitter {
             parameters:
-                @display("p=85,95;q=queue;i=block/dispatch");
+                hostname = hostname;
+                configFile = configFile;
+                @display("p=144,67;q=queue;i=block/dispatch");
             gates:
                 pimDMIn;
                 pimSMIn;
@@ -39,7 +48,7 @@ module pim
 
         pimDM: pimDM {
             parameters:
-                @display("p=181,142;q=queue;i=block/network2");
+                @display("p=268,150;q=queue;i=block/network2");
             gates:
                 splitterIn;
                 spiltterOut;
@@ -47,10 +56,20 @@ module pim
 
         pimSM: pimSM {
             parameters:
-                @display("p=181,56;q=queue;i=block/network2");
+                @display("p=183,150;q=queue;i=block/network2");
             gates:
                 splitterIn;
                 spiltterOut;
+        }
+
+        pimInterfaceTable: PimInterfaceTable {
+            parameters:
+                @display("p=357,126");
+        }
+
+        pimNeighborTable: PimNeighborTable {
+            parameters:
+                @display("p=357,57");
         }
 
     connections:

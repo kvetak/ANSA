@@ -52,7 +52,6 @@ class MulticastGroup
 }
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Header
 packet PIMPacket 
@@ -92,7 +91,7 @@ packet PIMAssert extends PIMPacket
 	int				metricPreference;   
 }
 
-// Graft message
+// Graft message, only message send by unicast
 // DM
 packet PIMGraft extends PIMJoinPrune
 {
@@ -102,10 +101,9 @@ packet PIMGraft extends PIMJoinPrune
 
 // GraftAck message
 // DM
-packet PIMGraftAck extends PIMJoinPrune
+packet PIMGraftAck extends PIMGraft
 {
 	short 			type enum(PIMPacketType) = GraftAck;	
-	int				holdTime = 0; 
 }
 
 // State Refresh message

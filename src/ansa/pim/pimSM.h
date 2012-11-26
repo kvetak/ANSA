@@ -3,7 +3,8 @@
 #define HLIDAC_PIMDM
 
 #include <omnetpp.h>
-
+#include "PIMPacket_m.h"
+#include "PIMTimer_m.h"
 
 
 class pimSM : public cSimpleModule
