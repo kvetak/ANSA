@@ -1,0 +1,51 @@
+                                                                
+version 2
+file 4082 1339405292run One-0-20120611-12:01:27-7496
+attr configname One
+attr datetime 20120611-12:01:27
+attr experiment One
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network SimpleTest
+attr processid 7496
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+vector 64  SimpleTest.Analyzer.trafgen  "Flow 1 actual birate"  ETV
+64	4016 11 20 20 1 1 1 0 0 0 0
+vector 65  SimpleTest.Analyzer.trafgen  "Flow 1 actual packetrate"  ETV
+65	4027 11 20 20 1 1 1 0 0 0 0
+vector 66  SimpleTest.Analyzer.trafgen  "Flow 2 actual birate"  ETV
+66	4038 11 20 20 1 1 1 0 0 0 0
+vector 67  SimpleTest.Analyzer.trafgen  "Flow 2 actual packetrate"  ETV
+67	4049 11 20 20 1 1 1 0 0 0 0
+vector 68  SimpleTest.Analyzer.trafgen  "Flow 3 actual birate"  ETV
+68	4060 11 20 20 1 1 1 0 0 0 0
+vector 69  SimpleTest.Analyzer.trafgen  "Flow 3 actual packetrate"  ETV
+69	4071 11 20 20 1 1 1 0 0 0 0
+vector 36  SimpleTest.Generator.eth[0].mac  framesSent  ETV
+36	3102 403 36 276 1.000006719999 1.050042559998 16 1 16 136 1496
+vector 38  SimpleTest.Generator.eth[0].mac  bytesSent  ETV
+38	3529 438 36 276 1.000006719999 1.050042559998 16 64 3250 25840 56478784
+vector 5  SimpleTest.R1.eth[0].mac  framesReceivedOK  ETV
+5	1490 387 37 277 1.000006819999 1.050042659998 16 1 16 136 1496
+vector 7  SimpleTest.R1.eth[0].mac  bytesReceivedOK  ETV
+7	1901 422 37 277 1.000006819999 1.050042659998 16 64 3250 25840 56478784
+vector 11  SimpleTest.R1.eth[0].mac  framesPassedToHL  ETV
+11	2323 403 37 277 1.000006819999 1.050042659998 16 1 16 136 1496
+vector 4  SimpleTest.R1.eth[0].mac  framesSent  ETV
+4	1467 23 48 48 1.000013539998 1.000013539998 1 1 1 1 1
+vector 6  SimpleTest.R1.eth[0].mac  bytesSent  ETV
+6	1877 24 48 48 1.000013539998 1.000013539998 1 64 64 64 4096
+vector 37  SimpleTest.Generator.eth[0].mac  framesReceivedOK  ETV
+37	3505 24 49 49 1.000013639998 1.000013639998 1 1 1 1 1
+vector 39  SimpleTest.Generator.eth[0].mac  bytesReceivedOK  ETV
+39	3967 25 49 49 1.000013639998 1.000013639998 1 64 64 64 4096
+vector 43  SimpleTest.Generator.eth[0].mac  framesPassedToHL  ETV
+43	3992 24 49 49 1.000013639998 1.000013639998 1 1 1 1 1
+vector 34  SimpleTest.Generator.eth[0].queue  "queue length"  ETV
+34	2726 376 58 266 1.000013639998 1.050021279999 18 0 2 15 21

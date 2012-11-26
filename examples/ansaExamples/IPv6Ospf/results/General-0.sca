@@ -1,0 +1,319 @@
+version 2
+run General-0-20120730-09:31:34-5896
+attr configname General
+attr datetime 20120730-09:31:34
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network inet.examples.ansaExamples.IPv6Ospf.IPv6Ospf
+attr processid 5896
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar IPv6Ospf.R1.ospf 	helloPacketSend 	0
+scalar IPv6Ospf.R1.ospf 	ospfPacketSend 	0
+scalar IPv6Ospf.R1.ospf 	helloPacketReceived 	0
+scalar IPv6Ospf.R1.ospf 	ospfPacketReceived 	0
+scalar IPv6Ospf.R1.pingApp4 	"Pings sent" 	0
+scalar IPv6Ospf.R1.pingApp6 	"Pings sent" 	0
+scalar IPv6Ospf.R1.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6Ospf.R1.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6Ospf.R1.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6Ospf.R1.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6Ospf.R1.eth[0].queue 	"packets received by queue" 	4
+scalar IPv6Ospf.R1.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.R1.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6Ospf.R1.eth[0].mac 	"full duplex" 	1
+scalar IPv6Ospf.R1.eth[0].mac 	"frames sent" 	4
+scalar IPv6Ospf.R1.eth[0].mac 	"frames rcvd" 	15
+scalar IPv6Ospf.R1.eth[0].mac 	"bytes sent" 	256
+scalar IPv6Ospf.R1.eth[0].mac 	"bytes rcvd" 	960
+scalar IPv6Ospf.R1.eth[0].mac 	"frames from higher layer" 	4
+scalar IPv6Ospf.R1.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	"frames passed up to HL" 	15
+scalar IPv6Ospf.R1.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	"frames/sec sent" 	2.3121625116416
+scalar IPv6Ospf.R1.eth[0].mac 	"frames/sec rcvd" 	8.670609418656
+scalar IPv6Ospf.R1.eth[0].mac 	"bits/sec sent" 	1183.8272059605
+scalar IPv6Ospf.R1.eth[0].mac 	"bits/sec rcvd" 	4439.3520223519
+scalar IPv6Ospf.R1.eth[0].mac 	"rx channel idle (%)" 	99.995005728975
+scalar IPv6Ospf.R1.eth[0].mac 	"rx channel utilization (%)" 	0.0049942710251459
+scalar IPv6Ospf.R1.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.R1.eth[0].mac 	collisions 	0
+scalar IPv6Ospf.R1.eth[0].mac 	backoffs 	0
+scalar IPv6Ospf.R1.eth[0].encap 	"packets from higher layer" 	4
+scalar IPv6Ospf.R1.eth[0].encap 	"frames from MAC" 	15
+scalar IPv6Ospf.R2.ospf 	helloPacketSend 	0
+scalar IPv6Ospf.R2.ospf 	ospfPacketSend 	0
+scalar IPv6Ospf.R2.ospf 	helloPacketReceived 	0
+scalar IPv6Ospf.R2.ospf 	ospfPacketReceived 	0
+scalar IPv6Ospf.R2.pingApp4 	"Pings sent" 	0
+scalar IPv6Ospf.R2.pingApp6 	"Pings sent" 	0
+scalar IPv6Ospf.R2.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6Ospf.R2.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6Ospf.R2.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6Ospf.R2.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6Ospf.R2.eth[0].queue 	"packets received by queue" 	3
+scalar IPv6Ospf.R2.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.R2.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6Ospf.R2.eth[0].mac 	"full duplex" 	1
+scalar IPv6Ospf.R2.eth[0].mac 	"frames sent" 	3
+scalar IPv6Ospf.R2.eth[0].mac 	"frames rcvd" 	16
+scalar IPv6Ospf.R2.eth[0].mac 	"bytes sent" 	192
+scalar IPv6Ospf.R2.eth[0].mac 	"bytes rcvd" 	1024
+scalar IPv6Ospf.R2.eth[0].mac 	"frames from higher layer" 	3
+scalar IPv6Ospf.R2.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	"frames passed up to HL" 	16
+scalar IPv6Ospf.R2.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	"frames/sec sent" 	1.7341218837312
+scalar IPv6Ospf.R2.eth[0].mac 	"frames/sec rcvd" 	9.2486500465664
+scalar IPv6Ospf.R2.eth[0].mac 	"bits/sec sent" 	887.87040447038
+scalar IPv6Ospf.R2.eth[0].mac 	"bits/sec rcvd" 	4735.308823842
+scalar IPv6Ospf.R2.eth[0].mac 	"rx channel idle (%)" 	99.994672777573
+scalar IPv6Ospf.R2.eth[0].mac 	"rx channel utilization (%)" 	0.0053272224268223
+scalar IPv6Ospf.R2.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.R2.eth[0].mac 	collisions 	0
+scalar IPv6Ospf.R2.eth[0].mac 	backoffs 	0
+scalar IPv6Ospf.R2.eth[0].encap 	"packets from higher layer" 	3
+scalar IPv6Ospf.R2.eth[0].encap 	"frames from MAC" 	16
+scalar IPv6Ospf.R3.ospf 	helloPacketSend 	0
+scalar IPv6Ospf.R3.ospf 	ospfPacketSend 	0
+scalar IPv6Ospf.R3.ospf 	helloPacketReceived 	0
+scalar IPv6Ospf.R3.ospf 	ospfPacketReceived 	0
+scalar IPv6Ospf.R3.pingApp4 	"Pings sent" 	0
+scalar IPv6Ospf.R3.pingApp6 	"Pings sent" 	0
+scalar IPv6Ospf.R3.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6Ospf.R3.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6Ospf.R3.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6Ospf.R3.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6Ospf.R3.eth[0].queue 	"packets received by queue" 	4
+scalar IPv6Ospf.R3.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.R3.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6Ospf.R3.eth[0].mac 	"full duplex" 	1
+scalar IPv6Ospf.R3.eth[0].mac 	"frames sent" 	4
+scalar IPv6Ospf.R3.eth[0].mac 	"frames rcvd" 	15
+scalar IPv6Ospf.R3.eth[0].mac 	"bytes sent" 	256
+scalar IPv6Ospf.R3.eth[0].mac 	"bytes rcvd" 	960
+scalar IPv6Ospf.R3.eth[0].mac 	"frames from higher layer" 	4
+scalar IPv6Ospf.R3.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	"frames passed up to HL" 	15
+scalar IPv6Ospf.R3.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	"frames/sec sent" 	2.3121625116416
+scalar IPv6Ospf.R3.eth[0].mac 	"frames/sec rcvd" 	8.670609418656
+scalar IPv6Ospf.R3.eth[0].mac 	"bits/sec sent" 	1183.8272059605
+scalar IPv6Ospf.R3.eth[0].mac 	"bits/sec rcvd" 	4439.3520223519
+scalar IPv6Ospf.R3.eth[0].mac 	"rx channel idle (%)" 	99.995005728975
+scalar IPv6Ospf.R3.eth[0].mac 	"rx channel utilization (%)" 	0.0049942710251459
+scalar IPv6Ospf.R3.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.R3.eth[0].mac 	collisions 	0
+scalar IPv6Ospf.R3.eth[0].mac 	backoffs 	0
+scalar IPv6Ospf.R3.eth[0].encap 	"packets from higher layer" 	4
+scalar IPv6Ospf.R3.eth[0].encap 	"frames from MAC" 	15
+scalar IPv6Ospf.R4.ospf 	helloPacketSend 	0
+scalar IPv6Ospf.R4.ospf 	ospfPacketSend 	0
+scalar IPv6Ospf.R4.ospf 	helloPacketReceived 	0
+scalar IPv6Ospf.R4.ospf 	ospfPacketReceived 	0
+scalar IPv6Ospf.R4.pingApp4 	"Pings sent" 	0
+scalar IPv6Ospf.R4.pingApp6 	"Pings sent" 	0
+scalar IPv6Ospf.R4.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6Ospf.R4.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6Ospf.R4.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6Ospf.R4.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6Ospf.R4.eth[0].queue 	"packets received by queue" 	4
+scalar IPv6Ospf.R4.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.R4.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6Ospf.R4.eth[0].mac 	"full duplex" 	1
+scalar IPv6Ospf.R4.eth[0].mac 	"frames sent" 	4
+scalar IPv6Ospf.R4.eth[0].mac 	"frames rcvd" 	15
+scalar IPv6Ospf.R4.eth[0].mac 	"bytes sent" 	256
+scalar IPv6Ospf.R4.eth[0].mac 	"bytes rcvd" 	960
+scalar IPv6Ospf.R4.eth[0].mac 	"frames from higher layer" 	4
+scalar IPv6Ospf.R4.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	"frames passed up to HL" 	15
+scalar IPv6Ospf.R4.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	"frames/sec sent" 	2.3121625116416
+scalar IPv6Ospf.R4.eth[0].mac 	"frames/sec rcvd" 	8.670609418656
+scalar IPv6Ospf.R4.eth[0].mac 	"bits/sec sent" 	1183.8272059605
+scalar IPv6Ospf.R4.eth[0].mac 	"bits/sec rcvd" 	4439.3520223519
+scalar IPv6Ospf.R4.eth[0].mac 	"rx channel idle (%)" 	99.995005728975
+scalar IPv6Ospf.R4.eth[0].mac 	"rx channel utilization (%)" 	0.0049942710251459
+scalar IPv6Ospf.R4.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.R4.eth[0].mac 	collisions 	0
+scalar IPv6Ospf.R4.eth[0].mac 	backoffs 	0
+scalar IPv6Ospf.R4.eth[0].encap 	"packets from higher layer" 	4
+scalar IPv6Ospf.R4.eth[0].encap 	"frames from MAC" 	15
+scalar IPv6Ospf.R5.ospf 	helloPacketSend 	0
+scalar IPv6Ospf.R5.ospf 	ospfPacketSend 	0
+scalar IPv6Ospf.R5.ospf 	helloPacketReceived 	0
+scalar IPv6Ospf.R5.ospf 	ospfPacketReceived 	0
+scalar IPv6Ospf.R5.pingApp4 	"Pings sent" 	0
+scalar IPv6Ospf.R5.pingApp6 	"Pings sent" 	0
+scalar IPv6Ospf.R5.networkLayer.arp 	"ARP requests sent" 	0
+scalar IPv6Ospf.R5.networkLayer.arp 	"ARP replies sent" 	0
+scalar IPv6Ospf.R5.networkLayer.arp 	"ARP resolutions" 	0
+scalar IPv6Ospf.R5.networkLayer.arp 	"failed ARP resolutions" 	0
+scalar IPv6Ospf.R5.eth[0].queue 	"packets received by queue" 	4
+scalar IPv6Ospf.R5.eth[0].queue 	"packets dropped by queue" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.R5.eth[0].mac 	"txrate (Mb)" 	100
+scalar IPv6Ospf.R5.eth[0].mac 	"full duplex" 	1
+scalar IPv6Ospf.R5.eth[0].mac 	"frames sent" 	4
+scalar IPv6Ospf.R5.eth[0].mac 	"frames rcvd" 	15
+scalar IPv6Ospf.R5.eth[0].mac 	"bytes sent" 	256
+scalar IPv6Ospf.R5.eth[0].mac 	"bytes rcvd" 	960
+scalar IPv6Ospf.R5.eth[0].mac 	"frames from higher layer" 	4
+scalar IPv6Ospf.R5.eth[0].mac 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	"frames passed up to HL" 	15
+scalar IPv6Ospf.R5.eth[0].mac 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	"frames/sec sent" 	2.3121625116416
+scalar IPv6Ospf.R5.eth[0].mac 	"frames/sec rcvd" 	8.670609418656
+scalar IPv6Ospf.R5.eth[0].mac 	"bits/sec sent" 	1183.8272059605
+scalar IPv6Ospf.R5.eth[0].mac 	"bits/sec rcvd" 	4439.3520223519
+scalar IPv6Ospf.R5.eth[0].mac 	"rx channel idle (%)" 	99.995005728975
+scalar IPv6Ospf.R5.eth[0].mac 	"rx channel utilization (%)" 	0.0049942710251459
+scalar IPv6Ospf.R5.eth[0].mac 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.R5.eth[0].mac 	collisions 	0
+scalar IPv6Ospf.R5.eth[0].mac 	backoffs 	0
+scalar IPv6Ospf.R5.eth[0].encap 	"packets from higher layer" 	4
+scalar IPv6Ospf.R5.eth[0].encap 	"frames from MAC" 	14
+scalar IPv6Ospf.SW.relayUnit 	"processed frames" 	19
+scalar IPv6Ospf.SW.relayUnit 	"dropped frames" 	0
+scalar IPv6Ospf.SW.mac[0] 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.SW.mac[0] 	"txrate (Mb)" 	100
+scalar IPv6Ospf.SW.mac[0] 	"full duplex" 	1
+scalar IPv6Ospf.SW.mac[0] 	"frames sent" 	15
+scalar IPv6Ospf.SW.mac[0] 	"frames rcvd" 	4
+scalar IPv6Ospf.SW.mac[0] 	"bytes sent" 	960
+scalar IPv6Ospf.SW.mac[0] 	"bytes rcvd" 	256
+scalar IPv6Ospf.SW.mac[0] 	"frames from higher layer" 	15
+scalar IPv6Ospf.SW.mac[0] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.SW.mac[0] 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.SW.mac[0] 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.SW.mac[0] 	"frames passed up to HL" 	4
+scalar IPv6Ospf.SW.mac[0] 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.SW.mac[0] 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.SW.mac[0] 	"frames/sec sent" 	8.670609418656
+scalar IPv6Ospf.SW.mac[0] 	"frames/sec rcvd" 	2.3121625116416
+scalar IPv6Ospf.SW.mac[0] 	"bits/sec sent" 	4439.3520223519
+scalar IPv6Ospf.SW.mac[0] 	"bits/sec rcvd" 	1183.8272059605
+scalar IPv6Ospf.SW.mac[0] 	"rx channel idle (%)" 	99.998668194393
+scalar IPv6Ospf.SW.mac[0] 	"rx channel utilization (%)" 	0.0013318056067056
+scalar IPv6Ospf.SW.mac[0] 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.SW.mac[0] 	collisions 	0
+scalar IPv6Ospf.SW.mac[0] 	backoffs 	0
+scalar IPv6Ospf.SW.mac[1] 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.SW.mac[1] 	"txrate (Mb)" 	100
+scalar IPv6Ospf.SW.mac[1] 	"full duplex" 	1
+scalar IPv6Ospf.SW.mac[1] 	"frames sent" 	16
+scalar IPv6Ospf.SW.mac[1] 	"frames rcvd" 	3
+scalar IPv6Ospf.SW.mac[1] 	"bytes sent" 	1024
+scalar IPv6Ospf.SW.mac[1] 	"bytes rcvd" 	192
+scalar IPv6Ospf.SW.mac[1] 	"frames from higher layer" 	16
+scalar IPv6Ospf.SW.mac[1] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.SW.mac[1] 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.SW.mac[1] 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.SW.mac[1] 	"frames passed up to HL" 	3
+scalar IPv6Ospf.SW.mac[1] 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.SW.mac[1] 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.SW.mac[1] 	"frames/sec sent" 	9.2486500465664
+scalar IPv6Ospf.SW.mac[1] 	"frames/sec rcvd" 	1.7341218837312
+scalar IPv6Ospf.SW.mac[1] 	"bits/sec sent" 	4735.308823842
+scalar IPv6Ospf.SW.mac[1] 	"bits/sec rcvd" 	887.87040447038
+scalar IPv6Ospf.SW.mac[1] 	"rx channel idle (%)" 	99.999001145795
+scalar IPv6Ospf.SW.mac[1] 	"rx channel utilization (%)" 	0.00099885420502918
+scalar IPv6Ospf.SW.mac[1] 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.SW.mac[1] 	collisions 	0
+scalar IPv6Ospf.SW.mac[1] 	backoffs 	0
+scalar IPv6Ospf.SW.mac[2] 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.SW.mac[2] 	"txrate (Mb)" 	100
+scalar IPv6Ospf.SW.mac[2] 	"full duplex" 	1
+scalar IPv6Ospf.SW.mac[2] 	"frames sent" 	15
+scalar IPv6Ospf.SW.mac[2] 	"frames rcvd" 	4
+scalar IPv6Ospf.SW.mac[2] 	"bytes sent" 	960
+scalar IPv6Ospf.SW.mac[2] 	"bytes rcvd" 	256
+scalar IPv6Ospf.SW.mac[2] 	"frames from higher layer" 	15
+scalar IPv6Ospf.SW.mac[2] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.SW.mac[2] 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.SW.mac[2] 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.SW.mac[2] 	"frames passed up to HL" 	4
+scalar IPv6Ospf.SW.mac[2] 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.SW.mac[2] 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.SW.mac[2] 	"frames/sec sent" 	8.670609418656
+scalar IPv6Ospf.SW.mac[2] 	"frames/sec rcvd" 	2.3121625116416
+scalar IPv6Ospf.SW.mac[2] 	"bits/sec sent" 	4439.3520223519
+scalar IPv6Ospf.SW.mac[2] 	"bits/sec rcvd" 	1183.8272059605
+scalar IPv6Ospf.SW.mac[2] 	"rx channel idle (%)" 	99.998668194393
+scalar IPv6Ospf.SW.mac[2] 	"rx channel utilization (%)" 	0.0013318056067056
+scalar IPv6Ospf.SW.mac[2] 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.SW.mac[2] 	collisions 	0
+scalar IPv6Ospf.SW.mac[2] 	backoffs 	0
+scalar IPv6Ospf.SW.mac[3] 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.SW.mac[3] 	"txrate (Mb)" 	100
+scalar IPv6Ospf.SW.mac[3] 	"full duplex" 	1
+scalar IPv6Ospf.SW.mac[3] 	"frames sent" 	15
+scalar IPv6Ospf.SW.mac[3] 	"frames rcvd" 	4
+scalar IPv6Ospf.SW.mac[3] 	"bytes sent" 	960
+scalar IPv6Ospf.SW.mac[3] 	"bytes rcvd" 	256
+scalar IPv6Ospf.SW.mac[3] 	"frames from higher layer" 	15
+scalar IPv6Ospf.SW.mac[3] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.SW.mac[3] 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.SW.mac[3] 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.SW.mac[3] 	"frames passed up to HL" 	4
+scalar IPv6Ospf.SW.mac[3] 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.SW.mac[3] 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.SW.mac[3] 	"frames/sec sent" 	8.670609418656
+scalar IPv6Ospf.SW.mac[3] 	"frames/sec rcvd" 	2.3121625116416
+scalar IPv6Ospf.SW.mac[3] 	"bits/sec sent" 	4439.3520223519
+scalar IPv6Ospf.SW.mac[3] 	"bits/sec rcvd" 	1183.8272059605
+scalar IPv6Ospf.SW.mac[3] 	"rx channel idle (%)" 	99.998668194393
+scalar IPv6Ospf.SW.mac[3] 	"rx channel utilization (%)" 	0.0013318056067056
+scalar IPv6Ospf.SW.mac[3] 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.SW.mac[3] 	collisions 	0
+scalar IPv6Ospf.SW.mac[3] 	backoffs 	0
+scalar IPv6Ospf.SW.mac[4] 	"simulated time" 	1.72998220491
+scalar IPv6Ospf.SW.mac[4] 	"txrate (Mb)" 	100
+scalar IPv6Ospf.SW.mac[4] 	"full duplex" 	1
+scalar IPv6Ospf.SW.mac[4] 	"frames sent" 	15
+scalar IPv6Ospf.SW.mac[4] 	"frames rcvd" 	4
+scalar IPv6Ospf.SW.mac[4] 	"bytes sent" 	960
+scalar IPv6Ospf.SW.mac[4] 	"bytes rcvd" 	256
+scalar IPv6Ospf.SW.mac[4] 	"frames from higher layer" 	15
+scalar IPv6Ospf.SW.mac[4] 	"frames from higher layer dropped (iface down)" 	0
+scalar IPv6Ospf.SW.mac[4] 	"frames dropped (bit error)" 	0
+scalar IPv6Ospf.SW.mac[4] 	"frames dropped (not for us)" 	0
+scalar IPv6Ospf.SW.mac[4] 	"frames passed up to HL" 	4
+scalar IPv6Ospf.SW.mac[4] 	"PAUSE frames sent" 	0
+scalar IPv6Ospf.SW.mac[4] 	"PAUSE frames rcvd" 	0
+scalar IPv6Ospf.SW.mac[4] 	"frames/sec sent" 	8.670609418656
+scalar IPv6Ospf.SW.mac[4] 	"frames/sec rcvd" 	2.3121625116416
+scalar IPv6Ospf.SW.mac[4] 	"bits/sec sent" 	4439.3520223519
+scalar IPv6Ospf.SW.mac[4] 	"bits/sec rcvd" 	1183.8272059605
+scalar IPv6Ospf.SW.mac[4] 	"rx channel idle (%)" 	99.998668194393
+scalar IPv6Ospf.SW.mac[4] 	"rx channel utilization (%)" 	0.0013318056067056
+scalar IPv6Ospf.SW.mac[4] 	"rx channel collision (%)" 	0
+scalar IPv6Ospf.SW.mac[4] 	collisions 	0
+scalar IPv6Ospf.SW.mac[4] 	backoffs 	0
