@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<scenario>
+	<at t="10">
+		<disconnect src-module="R2" src-gate="ethg[2]"/>
+	</at>
+	<at t="85">
+		<connect src-module="R2" src-gate="ethg[2]" 
+             dest-module="Host2" dest-gate="ethg[0]"
+             channel-type="inet.nodes.ethernet.Eth100M"/>
+	</at>
+</scenario>

@@ -1,0 +1,237 @@
+<Devices>
+	<Switch id="hq1"> 
+		<Interfaces>
+			<Interface id="0">
+				<Name>hq1-hq2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>hq1-hq3</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>hq1-branch1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="3">
+				<Name>hq1-branch2</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Accounting</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Tagged>2</Tagged>
+				<Nountagged>0</Nountagged>
+				<Nountagged>1</Nountagged>
+				<Nountagged>2</Nountagged>
+				<Nountagged>3</Nountagged>
+			</VLAN>
+			<VLAN id="2">
+				<Name>Development</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Tagged>3</Tagged>
+				<Nountagged>2</Nountagged>
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id="1">
+				<BridgePriority>16000</BridgePriority>
+			</Instance>
+			<Instance id="2">
+				<BridgePriority>16000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	
+	
+	<Switch id="hq2"> 
+		<Interfaces>
+			<Interface id="0">
+				<Name>hq2-hq1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>hq2-hq3</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>hq2-branch1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="3">
+				<Name>hq2-server1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="4">
+				<Name>hq2-server3</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Accounting</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Tagged>2</Tagged>
+				<Nountagged>0</Nountagged>
+				<Nountagged>1</Nountagged>
+				<Nountagged>2</Nountagged>
+				<Untagged>3</Untagged>
+				<Nountagged>4</Nountagged>
+			</VLAN>
+			<VLAN id="2">
+				<Name>Development</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Untagged>4</Untagged>
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id="1">
+				<BridgePriority>32000</BridgePriority>
+			</Instance>
+			<Instance id="2">
+				<BridgePriority>32000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	
+	
+	
+	
+		<Switch id="hq3"> 
+				<Interfaces>
+			<Interface id="0">
+				<Name>hq3-hq1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>hq3-hq2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>hq3-branch2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="3">
+				<Name>hq3-server3</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="4">
+				<Name>hq3-server4</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Accounting</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Nountagged>0</Nountagged>
+				<Nountagged>1</Nountagged>
+				<Nountagged>2</Nountagged>
+				<Nountagged>4</Nountagged>
+				<Untagged>3</Untagged>
+			</VLAN>
+			<VLAN id="2">
+				<Name>Development</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Tagged>2</Tagged>
+				<Untagged>4</Untagged>
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id="1">
+				<BridgePriority>32000</BridgePriority>
+			</Instance>
+			<Instance id="2">
+				<BridgePriority>32000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	
+	
+	
+	<Switch id="branch1"> 
+		<Interfaces>
+			<Interface id="0">
+				<Name>branch1-hq1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>branch1-hq2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>branch1-office1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Accounting</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Untagged>2</Untagged>
+				<Nountagged>0</Nountagged>
+				<Nountagged>1</Nountagged>
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id="1">
+				<BridgePriority>64000</BridgePriority>
+			</Instance>
+			<Instance id="2">
+				<BridgePriority>64000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	
+	
+	
+	
+	<Switch id="branch2"> 
+		<ClearConfig />
+		<Interfaces>
+			<Interface id="0">
+				<Name>branch2-hq1</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>branch2-hq3</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>branch2-office2</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="2">
+				<Name>Development</Name>
+				<Tagged>0</Tagged>
+				<Tagged>1</Tagged>
+				<Untagged>2</Untagged>
+				<Nountagged>0</Nountagged>
+				<Nountagged>1</Nountagged>
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id="1">
+				<BridgePriority>64000</BridgePriority>
+			</Instance>
+			<Instance id="2">
+				<BridgePriority>64000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	
+	
+	
+	
+</Devices>

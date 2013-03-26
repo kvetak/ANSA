@@ -1,0 +1,31 @@
+<!-- Interfaces IDs is same as these in .ned, so use the ethg[0] not ethg++ for transparency -->
+<Devices>
+	<Switch id=""> <!-- MANDATORY, used for parsing config, and further use -->
+		<Hostname></Hostname> <!-- optional, not used yet -->
+		<Interfaces>
+			<Interface id=""> <!-- optional -->
+				<Name></Name> <!-- optional, not used yet -->
+				<VLAN></VLAN> <!-- received _UNTAGGED_ frame will belongs to this VLAN (PortVID) (CISCO ACCESS VLAN) -->
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<!-- Please assume default config: all interfaces is in VLAN 1, and set to UNTAGGED -->
+			<VLAN id=""> <!-- optional -->
+				<Name></Name> <!-- optional, not used yet -->
+				<Tagged></Tagged> <!-- optional, frames sent via this interface, will be _TAGGED_ by this VID (CISCO VLAN TRUNK) --> 
+				<Untagged></Untagged> <!-- optional, frames sent via this interface, will _NOT_ be _TAGGED_ -->
+				<Nountagged></Nountagged> <!-- optional, frames will _NOT_ be sent via this interface -->
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id=""> <!-- 'id' is matching VLAN within given Instance operate -->
+				<BridgePriority></BridgePriority>
+				<HelloTimer></HelloTimer>
+				<ForwardTimer></ForwardTimer>
+				<MaxAge></MaxAge>
+				<PortPriority id=""></PortPriority>
+				<LinkCost id=""></LinkCost>
+			</Instance>
+		</STP>
+	</Switch>
+</Devices>

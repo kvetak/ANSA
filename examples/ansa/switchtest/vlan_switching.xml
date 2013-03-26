@@ -1,0 +1,117 @@
+<Devices>
+	<Switch id="Switch1">
+		<Hostname>Foo</Hostname>
+		<Interfaces>
+			<Interface id="0">
+				<Name>SW2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>host 1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>host 2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="3">
+				<Name>host 3</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Study</Name>
+				<Tagged>0</Tagged>
+				<Nountagged>3</Nountagged>
+			</VLAN>
+			<VLAN id="2">
+				<Name>Employee</Name>
+				<Tagged>0</Tagged>
+				<Untagged>3</Untagged>
+			</VLAN>
+		</VLANs>
+	</Switch>
+	<Switch id="Switch2">
+		<Hostname>Bar</Hostname>
+		<Interfaces>
+			<Interface id="0">
+				<Name>SW1</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>SW3</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>host 4</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="3">
+				<Name>host 5</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+			<Interface id="4">
+				<Name>host 6</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Study</Name>
+				<Tagged>0,1</Tagged>
+				<Nountagged>3</Nountagged>
+				<Nountagged>4</Nountagged>
+			</VLAN>
+			<VLAN id="2">
+				<Name>Employee</Name>
+				<Tagged>0,1,</Tagged>
+				<Untagged>3</Untagged>
+				<Untagged>4</Untagged>
+			</VLAN>
+		</VLANs>
+		<STP>
+			<Instance id="1">
+				<BridgePriority>16000</BridgePriority>
+			</Instance>
+			<Instance id="2">
+				<BridgePriority>16000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	<Switch id="Switch3">
+		<Hostname>redrum</Hostname>
+		<ClearConfig />
+		<Interfaces>
+			<Interface id="0">
+				<Name>SW2</Name>
+				<VLAN>1</VLAN>
+			</Interface>
+			<Interface id="1">
+				<Name>host 7</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+			<Interface id="2">
+				<Name>host 8</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+			<Interface id="3">
+				<Name>host 9</Name>
+				<VLAN>2</VLAN>
+			</Interface>
+		</Interfaces>
+		<VLANs>
+			<VLAN id="1">
+				<Name>Study</Name>
+				<Tagged>0</Tagged>
+			</VLAN>
+			<VLAN id="2">
+				<Name>Employee</Name>
+				<Tagged>0</Tagged>
+				<Untagged>1</Untagged>
+				<Untagged>2</Untagged>
+				<Untagged>3</Untagged>
+			</VLAN>
+		</VLANs>
+	</Switch>
+</Devices>
