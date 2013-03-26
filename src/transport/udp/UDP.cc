@@ -580,7 +580,7 @@ UDP::SockDesc *UDP::findSocketByLocalAddress(const IPvXAddress& localAddr, ushor
     for (SockDescList::iterator it = list.begin(); it != list.end(); ++it)
     {
         SockDesc *sd = *it;
-        if (sd->localAddr.isUnspecified() || sd->localAddr == localAddr)
+        if (sd->localAddr == localAddr)
             return sd;
     }
     return NULL;
