@@ -27,7 +27,7 @@ import inet.nodes.ipv6.NetworkLayer6;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.base.NotificationBoard;
-import inet.transport.udp.UDP;
+import inet.ansa.transport.udp.ANSAUDP;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
 import inet.linklayer.IWiredNic;
@@ -72,7 +72,7 @@ module RIPngRouter
         }
 
         // transort layer
-        udp: UDP {
+        udp: ANSAUDP {
             parameters:
                 @display("p=290,172;i=block/transport");
             gates:

@@ -172,8 +172,11 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
                 routingTableEntry->setMetric(newMetric);
                 routingTableEntry->setChangeFlag();
 
-                if (routingTableEntryInGlobalRT != NULL)
-                    routingTableEntryInGlobalRT->setMetric(newMetric);
+                if (routingTableEntryInGlobalRT != NULL);
+                    rt->updateRoute(routingTableEntryInGlobalRT,
+                            routingTableEntryInGlobalRT->getInterfaceId(),
+                            routingTableEntryInGlobalRT->getNextHop(),
+                            newMetric);
 
                 bSendTriggeredUpdateMessage = true;
             }
@@ -198,9 +201,10 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
             }
             else if (routingTableEntryInGlobalRT != NULL)
             {
-                routingTableEntryInGlobalRT->setMetric(newMetric);
-                routingTableEntryInGlobalRT->setNextHop(sourceAddr);
-                routingTableEntryInGlobalRT->setInterfaceId(sourceIntId);
+                rt->updateRoute(routingTableEntryInGlobalRT,
+                        sourceIntId,
+                        sourceAddr,
+                        newMetric);
             }
             routingTableEntry->setChangeFlag();
 
@@ -590,7 +594,7 @@ void RIPngRouting::handleMessage(RIPngMessage *msg)
         return;
     }
 
-    EV << "Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
+    EV << "RIPng: Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
     int command = msg->getCommand();
     int version = msg->getVersion();
     if (version != 1)
@@ -1045,6 +1049,7 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
                            (*it)->setChangeFlag();
                            // directly connected routes have to remain in the RIPng routing table
                            // if the interface will go up again
+                           //TODO: set bSendTriggeredUpdateMessage
                        }
                        else
                        {//act as route timeout just expired
@@ -1064,7 +1069,6 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
        }
        else if (!interfaceEntry->isDown())
        {
-           // delete interface from ripng interfaces
            bool alreadyEnabled = false;
            int size = getEnabledInterfacesCount();
            RIPng::Interface* ripngInterface;
@@ -1096,6 +1100,7 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
                        {// "renew" directly connected
                            (*it)->setMetric(connNetworkMetric);
                            (*it)->setChangeFlag();
+                           //TODO: set bSendTriggeredUpdateMessage
                        }
                    }
                }

@@ -22,6 +22,7 @@ class InterfaceEntry;
 
 /**
  * Extends IPv6Route by administrative distance.
+ * TODO: watch this class and changes in INET! - especially IPv6Route class
  * @see IPv6Route
  */
 class ANSAIPv6Route : public IPv6Route
@@ -65,6 +66,7 @@ class ANSAIPv6Route : public IPv6Route
 
 /**
  * Extends RoutingTable6 by administrative distance.
+ * TODO: watch this class and changes in INET! - especially RoutingTable6 class
  * @see RoutingTable6
  */
 class ANSARoutingTable6 : public RoutingTable6
@@ -85,6 +87,7 @@ class ANSARoutingTable6 : public RoutingTable6
     /**
      * Prepares routing table for adding new route.
      * e.g. removes route with the same prefix, prefix length and lower administrative distance
+     * and purge destination cache
      * @return true, if it is safe to add route,
      *         false otherwise
      */
@@ -113,6 +116,22 @@ class ANSARoutingTable6 : public RoutingTable6
      * @see prepareForAddRoute
      */
     virtual void addRoutingProtocolRoute(ANSAIPv6Route *route);
+
+    /**
+     * Must be used every time, if some of the route information should be
+     * updated. You should never update/change the route directly.
+     */
+    virtual void updateRoute(ANSAIPv6Route *route, int newInterfaceID, const IPv6Address &newNextHop, int newMetric);
+
+    /**
+     * Must be reimplemented because of cache handling.
+     */
+    virtual void removeRoute(ANSAIPv6Route *route);
+
+    /**
+     * Must be reimplemented because of cache handling.
+     */
+    virtual void receiveChangeNotification(int category, const cObject *details);
 };
 
 #endif

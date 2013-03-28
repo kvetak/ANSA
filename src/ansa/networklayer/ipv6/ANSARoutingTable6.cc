@@ -83,15 +83,24 @@ bool ANSARoutingTable6::prepareForAddRoute(ANSAIPv6Route *route)
     if (routeInTable != NULL)
     {
         if (routeInTable->getAdminDist() > route->getAdminDist())
+        {
             removeRoute(routeInTable);
+        }
         else if(routeInTable->getAdminDist() == route->getAdminDist())
         {
             if (routeInTable->getMetric() > route->getMetric())
                 removeRoute(routeInTable);
         }
         else
+        {
             return false;
+        }
     }
+
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that all entries will use the latest
+     route information.*/
+    purgeDestCache();
 
     return true;
 }
@@ -226,4 +235,94 @@ void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
     updateDisplayString();
 
     nb->fireChangeNotification(NF_IPv6_ROUTE_ADDED, route);
+}
+
+void ANSARoutingTable6::updateRoute(ANSAIPv6Route *route, int newInterfaceID, const IPv6Address &newNextHop, int newMetric)
+{
+    ASSERT(route != NULL);
+
+    bool bPurgeDestCache = false;
+    bool bRouteChanged = false;
+
+    if ((newInterfaceID != route->getInterfaceId()) || (newNextHop != route->getNextHop()))
+        bPurgeDestCache = true;
+
+    if (bPurgeDestCache || (route->getMetric() != newMetric))
+        bRouteChanged = true;
+
+    route->setInterfaceId(newInterfaceID);
+    route->setNextHop(newNextHop);
+    route->setMetric(newMetric);
+
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that all entries will use the latest
+     route information.*/
+    if (bPurgeDestCache)
+        purgeDestCache();
+
+    if (bRouteChanged)
+        nb->fireChangeNotification(NF_IPv6_ROUTE_CHANGED, route);
+}
+
+
+void ANSARoutingTable6::removeRoute(ANSAIPv6Route *route)
+{
+    RouteList::iterator it = std::find(routeList.begin(), routeList.end(), route);
+    ASSERT(it!=routeList.end());
+
+    nb->fireChangeNotification(NF_IPv6_ROUTE_DELETED, route); // rather: going to be deleted
+
+    routeList.erase(it);
+
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that all entries using the next-hop from
+     the deleted route perform next-hop determination again rather than continue
+     sending traffic using that deleted route next-hop.*/
+    purgeDestCache();
+
+    delete route;
+
+    updateDisplayString();
+}
+
+void ANSARoutingTable6::receiveChangeNotification(int category, const cObject *details)
+{
+    if (simulation.getContextType()==CTX_INITIALIZE)
+        return;  // ignore notifications during initialize
+
+    Enter_Method_Silent();
+    printNotificationBanner(category, details);
+
+    if (category==NF_INTERFACE_CREATED)
+    {
+        //TODO something like this:
+        //InterfaceEntry *ie = check_and_cast<InterfaceEntry*>(details);
+        //configureInterfaceForIPv6(ie);
+    }
+    else if (category==NF_INTERFACE_DELETED)
+    {
+        //TODO remove all routes that point to that interface (?)
+        InterfaceEntry *interfaceEntry = check_and_cast<InterfaceEntry*>(details);
+        int interfaceEntryId = interfaceEntry->getInterfaceId();
+        purgeDestCacheForInterfaceID(interfaceEntryId);
+    }
+    else if (category==NF_INTERFACE_STATE_CHANGED)
+    {
+        InterfaceEntry *interfaceEntry = check_and_cast<InterfaceEntry*>(details);
+        int interfaceEntryId = interfaceEntry->getInterfaceId();
+
+        // an interface went down
+        if (interfaceEntry->isDown())
+        {
+            purgeDestCacheForInterfaceID(interfaceEntryId);
+        }
+    }
+    else if (category==NF_INTERFACE_CONFIG_CHANGED)
+    {
+        //TODO invalidate routing cache (?)
+    }
+    else if (category==NF_INTERFACE_IPv6CONFIG_CHANGED)
+    {
+        //TODO
+    }
 }

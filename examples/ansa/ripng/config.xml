@@ -96,6 +96,33 @@
                 <IPv6Address>2001:23::3/64</IPv6Address>
                 <RIPngInterfaceStatus>enable</RIPngInterfaceStatus>
             </Interface>
+            <Interface name="eth4">
+                <IPAddress>34.34.34.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:34::3/64</IPv6Address>
+                <RIPngInterfaceStatus>enable</RIPngInterfaceStatus>
+            </Interface>
+        </Interfaces>
+        
+        <Routing6>    
+        </Routing6>
+    </Router>
+    
+    <Router id="2001:34::4">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>34.34.34.4</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:34::4/64</IPv6Address>
+                <RIPngInterfaceStatus>enable</RIPngInterfaceStatus>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>7.7.7.7</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:7:7:7::7/64</IPv6Address>
+                <RIPngInterfaceStatus>enable</RIPngInterfaceStatus>
+                <RIPngPassiveInterface>enable</RIPngPassiveInterface>
+            </Interface>
         </Interfaces>
         
         <Routing6>    
@@ -111,6 +138,15 @@
 		<DefaultRouter>2001:3:3:3::3</DefaultRouter>
 	</Host>
 	
+	<Host id="2001:4:4:4::10">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:4:4:4::10/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:4:4:4::4</DefaultRouter>
+	</Host>
+	
 	<Host id="2001:6:6:6::10">
 		<Interfaces>
 			<Interface name="eth0">
@@ -118,5 +154,14 @@
 			</Interface>
 		</Interfaces>
 		<DefaultRouter>2001:6:6:6::6</DefaultRouter>
+	</Host>
+	
+	<Host id="2001:7:7:7::10">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:7:7:7::10/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>2001:7:7:7::7</DefaultRouter>
 	</Host>
 </Devices>
