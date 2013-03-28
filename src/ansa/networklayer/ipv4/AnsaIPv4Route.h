@@ -29,12 +29,12 @@
 #include "PIMTimer_m.h"
 #include "InterfaceEntry.h"
 
-
 /**
  * Route flags. Added to each route.
  */
 enum flag
 {
+    NO_FLAG,
     D,              /**< Dense */
     S,              /**< Sparse */
     C,              /**< Connected */
@@ -153,6 +153,7 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         void setFlags(std::vector<flag> flags)  {this->flags = flags;}      /**< Set vector of flags (flag) */
         bool isFlagSet(flag fl);                                            /**< Returns if flag is set to entry or not*/
         void addFlag(flag fl);                                              /**< Add flag to ineterface */
+        void addFlags(flag fl1, flag fl2, flag fl3,flag fl4);               /**< Add flags to ineterface */
         void removeFlag(flag fl);                                           /**< Remove flag from ineterface */
 
         void setInInt(InterfaceEntry *interfacePtr, int intId, IPv4Address nextHop) {this->inInt.intPtr = interfacePtr; this->inInt.intId = intId; this->inInt.nextHop = nextHop;}    /**< Set information about incoming interface*/
@@ -160,6 +161,10 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
 
         void setOutInt(InterfaceVector outInt) {EV << "MulticastIPRoute: New OutInt" << endl; this->outInt = outInt;}   /**< Set list of outgoing interfaces*/
         void addOutInt(outInterface outInt) {this->outInt.push_back(outInt);}                                           /**< Add interface to list of outgoing interfaces*/
+        void addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode, PIMpt *pruneTimer, AssertState assert, RegisterState regState);
+
+        void setAddresses(IPv4Address multOrigin, IPv4Address multGroup, IPv4Address RP);
+
         void setRegStatus(int intId, RegisterState regState);                                                           /**< set register status to given interface*/
         RegisterState getRegStatus(int intId);
 

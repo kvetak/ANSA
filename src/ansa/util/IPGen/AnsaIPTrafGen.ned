@@ -55,6 +55,7 @@ simple AnsaIPTrafGen like AnsaIPTrafficGenerator
         int protocol = default(46); // value for IPDatagram protocol field
         volatile int packetLength @unit("B") = default(100B); // in bytes (changed 2005-11-04)
         string destAddresses = default(""); // list of \IP addresses, separated by spaces
+        string packetName = default("appData");
     gates:
         input ipIn;
         input ipv6In;

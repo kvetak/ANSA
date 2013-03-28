@@ -20,12 +20,10 @@
 
 cplusplus {{
 #include "IPv4Address.h"
-#include "IPv4Datagram.h"
 }}
 
 //struct IPAddress;
 class noncobject IPv4Address;
-class noncobject IPv4Datagram;
 
 enum PIMPacketType 
 {
@@ -57,11 +55,11 @@ class MulticastGroup
 	IPv4Address 	prunedSourceAddress[]; 
 }
 
-// Abstract structure for Multicast packet
-class MultPacket
+// abstract structure for multicast data
+packet MultData
 {
-	IPv4Address 	multSource;
-	IPv4Address 	multGroup;
+	IPv4Address multOrigin;
+	IPv4Address multGroup;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,8 +138,7 @@ packet PIMRegister extends PIMPacket
 	short 			type enum(PIMPacketType) = Register;	
 	bool			B;
 	bool			N;
-	IPv4Datagram	multDatagram;
-	
+	MultData		encapsulatedData;
 }
 
 // Register-Stop message

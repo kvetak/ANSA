@@ -254,11 +254,10 @@ void PimSplitter::handleMessage(cMessage *msg)
    }
 
    // PIM packet from PIM mode, send to network layer
-   else if (dynamic_cast<PIMPacket *>(msg))
+   else if (dynamic_cast<PIMPacket *>(msg) || dynamic_cast<MultData *>(msg))
    {
 	   send(msg, "transportOut");
    }
-
    else
 	   EV << "PIM:ERROR - bad type of message" << endl;
 }
