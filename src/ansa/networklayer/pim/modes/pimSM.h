@@ -43,6 +43,18 @@
 #define JT 60.0                         /**< Join Timer */
 #define REGISTER_PROBE_TIME 5.0
 #define HOLDTIME 210.0                  /**< Holdtime for Expiry Timer */
+#define ALL_PIM_ROUTERS "224.0.0.13"
+#define MAX_TTL 255
+
+
+struct multDataInfo
+{
+    IPv4Address origin;
+    IPv4Address group;
+    unsigned interface_id;
+    IPv4Address srcAddr;
+};
+
 
 
 /**
@@ -79,16 +91,19 @@ class pimSM : public cSimpleModule, protected INotifiable
         PIMjt*  createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr);
 
         // pim messages
-        void sendPIMRegister(IPv4Datagram *datagram);
+        void sendPIMRegister(IPv4ControlInfo *ctrl);
         void sendPIMRegisterStop(IPv4Address source, IPv4Address dest, IPv4Address multGroup, IPv4Address multSource);
         void sendPIMRegisterNull(IPv4Address multSource, IPv4Address multDest);
         void sendPIMJoin(IPv4Address multGroup, IPv4Address joinIPaddr, IPv4Address upstreamNbr);
+        void sendPIMJoinTowardSource(multDataInfo *info);
+        void forwardMulticastData(multDataInfo *info);
 
         // process PIM messages
         void processPIMPkt(PIMPacket *pkt);
         void processRegisterPacket(PIMRegister *pkt);
         void processRegisterStopPacket(PIMRegisterStop *pkt);
-        void processJoinPrunePacket(PIMJoinPrune *pkt);
+        void processJoinPacket(PIMJoinPrune *pkt);
+        void processSGJoin(IPv4Address multOrigin, IPv4Address multGroup);
 
     public:
         //PIM-SM clear implementation
@@ -96,8 +111,9 @@ class pimSM : public cSimpleModule, protected INotifiable
         void setSPTthreshold(std::string address);
         IPv4Address getRPAddress () {return RPAddress;}
         std::string getSPTthreshold () {return SPTthreshold;}
-        bool IamRP ();
+        virtual bool IamRP (IPv4Address RPaddress);
         bool IamDR (IPv4Address sourceAddr);
+        IPv4ControlInfo *setCtrlForMessage (IPv4Address destAddr,IPv4Address srcAddr,int protocol, int interfaceId, int TTL);
 
 	protected:
 		virtual int numInitStages() const  {return 5;}

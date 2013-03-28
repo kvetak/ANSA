@@ -132,7 +132,9 @@ IPvXAddress AnsaIPTrafGen::chooseDestAddr()
 void AnsaIPTrafGen::sendPacket()
 {
     char msgName[32];
-    sprintf(msgName,"appData-%d", counter++);
+    //sprintf(msgName,"appData-%d", counter++);
+    const char *name = par("packetName").stringValue();
+    sprintf(msgName,name,counter++);
 
     cPacket *payload = new cPacket(msgName);
     payload->setByteLength(msgByteLength);

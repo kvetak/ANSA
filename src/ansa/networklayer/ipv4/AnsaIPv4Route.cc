@@ -158,3 +158,39 @@ bool AnsaIPv4MulticastRoute::isOilistNull()
     }
     return olistNull;
 }
+
+void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode,
+                                                PIMpt *pruneTimer, AssertState assert, RegisterState regState)
+{
+    outInterface outIntf;
+
+    outIntf.intId = intId;
+    outIntf.intPtr = intPtr;
+    outIntf.forwarding = forwading;
+    outIntf.mode = mode;
+    outIntf.pruneTimer = NULL;
+    outIntf.pruneTimer = pruneTimer;
+    outIntf.regState = regState;
+    outIntf.assert = assert;
+
+    this->outInt.push_back(outIntf);
+}
+
+void AnsaIPv4MulticastRoute::addFlags(flag fl1, flag fl2, flag fl3,flag fl4)
+{
+    if (fl1 != NO_FLAG && !isFlagSet(fl1))
+        flags.push_back(fl1);
+    if (fl2 != NO_FLAG && !isFlagSet(fl2))
+        flags.push_back(fl2);
+    if (fl3 != NO_FLAG && !isFlagSet(fl3))
+        flags.push_back(fl3);
+    if (fl4 != NO_FLAG && !isFlagSet(fl4))
+        flags.push_back(fl4);
+}
+
+void AnsaIPv4MulticastRoute::setAddresses(IPv4Address multOrigin, IPv4Address multGroup, IPv4Address RP)
+{
+    this->RP = RP;
+    this->setMulticastGroup(multGroup);
+    this->setOrigin(multOrigin);
+}

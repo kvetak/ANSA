@@ -93,6 +93,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         }
     }
 
+
     // remove control info, but keep the one on the last fragment of DSR and MANET datagrams
     if (datagram->getTransportProtocol()!=IP_PROT_DSR && datagram->getTransportProtocol()!=IP_PROT_MANET
             && !datagram->getDestAddress().isMulticast() && datagram->getTransportProtocol()!=IP_PROT_PIM)
@@ -144,7 +145,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         }
 
 
-        //PIM-DM send PIM packet to PIM module
+        //PIM send PIM packet to PIM module
         if (datagram->getTransportProtocol() == IP_PROT_PIM)
         {
             cPacket *packet = decapsulate(datagram);
@@ -169,7 +170,6 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         if (manetRouting)
             sendRouteUpdateMessageToManet(datagram);
 #endif
-
         InterfaceEntry *broadcastIE = NULL;
 
         // check for local delivery; we must accept also packets coming from the interfaces that
@@ -369,7 +369,25 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
         if (route == NULL)
             outInt = routeG->getOutInt();
         else
+        {
             outInt = route->getOutInt();
+            // RP recieve native multicast data -> set T flag
+            if (datagram->getDestAddress() == route->getMulticastGroup())
+            {
+                //for (int i=0; i<ift->getNumInterfaces();i++)
+                //{
+                    //InterfaceEntry *intf = ift->getInterface(i);
+                    //if (intf->ipv4Data()->getIPAddress() == route->getRP())
+                    //{
+                        if (!route->isFlagSet(T))
+                        {
+                            route->addFlag(T);
+                            rt->generateShowIPMroute();         // refresh output in MRT
+                        }
+                    //}
+                //}
+            }
+        }
 
         // send packet to all outgoing interfaces of route (oilist)
         for (unsigned int i=0; i<outInt.size(); i++)
@@ -395,10 +413,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
             if (route->isFlagSet(F))
             {
                 EV << "AnsaIPv4:PIM-SM encapsulating data packet to unicast packet and send them to RP" << endl;
-
-                IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
-                datagramCopy->setControlInfo(ctrl);
-                nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, datagramCopy);
+                nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
             }
         }
     }
@@ -691,4 +706,41 @@ IPv4Datagram *AnsaIPv4::encapsulate(cPacket *transportPacket, IPv4ControlInfo *c
     // setting IPv4 options is currently not supported
 
     return datagram;
+}
+
+/* Choose the outgoing interface for the muticast datagram:
+ *   1. use the interface specified by MULTICAST_IF socket option (received in the control info)
+ *   2. lookup the destination address in the routing table
+ *   3. if no route, choose the interface according to the source address
+ *   4. or if the source address is unspecified, choose the first MULTICAST interface
+ */
+InterfaceEntry *AnsaIPv4::determineOutgoingInterfaceForMulticastDatagram(IPv4Datagram *datagram, InterfaceEntry *multicastIFOption)
+{
+    InterfaceEntry *ie = NULL;
+    if (multicastIFOption)
+    {
+        ie = multicastIFOption;
+        EV << "multicast packet routed by socket option via output interface " << ie->getName() << "\n";
+    }
+    if (!ie)
+    {
+        IPv4Route *route = rt->findBestMatchingRoute(datagram->getDestAddress());
+        if (route)
+            ie = route->getInterface();
+        if (ie)
+            EV << "multicast packet routed by routing table via output interface " << ie->getName() << "\n";
+    }
+    if (!ie)
+    {
+        ie = rt->getInterfaceByAddress(datagram->getSrcAddress());
+        if (ie)
+            EV << "multicast packet routed by source address via output interface " << ie->getName() << "\n";
+    }
+    if (!ie)
+    {
+        ie = ift->getFirstMulticastInterface();
+        if (ie)
+            EV << "multicast packet routed via the first multicast interface " << ie->getName() << "\n";
+    }
+    return ie;
 }

@@ -18,7 +18,7 @@
 // @author: Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
 // @brief Topology with PIM network
 
-package inet.examples.ansa.pimSM;
+package inet.examples.ansa.pimSM.test1;
 
 import inet.ansa.networklayer.pim.PIMRouter;
 import inet.ansa.nodes.inet.AnsaHost;

@@ -75,6 +75,8 @@ class INET_API AnsaIPv4 : public IPv4
         virtual void routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, IPv4Address destNextHopAddr);
         virtual void handleMessageFromHL(cPacket *msg);
         virtual void reassembleAndDeliver(IPv4Datagram *datagram);
+        virtual InterfaceEntry *determineOutgoingInterfaceForMulticastDatagram(IPv4Datagram *datagram, InterfaceEntry *multicastIFOption);
+
 
     public:
         AnsaIPv4() {}
