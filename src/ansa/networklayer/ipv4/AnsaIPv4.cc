@@ -135,12 +135,11 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         if (datagram->getTransportProtocol() == IP_PROT_IGMP)
         {
             EV << "AnsaIPv4::handlePacketFromNetwork - IGMP packet received" << endl;
-            //IPv4ControlInfo *igmpCtrl = (IPv4ControlInfo*)(datagram->removeControlInfo());
-            IPv4ControlInfo *igmpCtrl = (IPv4ControlInfo *) datagram->getControlInfo();
-            igmpCtrl->setSrcAddr(datagram->getSrcAddress());
-            igmpCtrl->setDestAddr(datagram->getDestAddress());
-            igmpCtrl->setInterfaceId(getSourceInterfaceFrom(datagram)->getInterfaceId());
-            nb->fireChangeNotification(NF_IPv4_NEW_IGMP, igmpCtrl);
+
+            if (fromIE->ipv4Data()->hasMulticastListener(datagram->getDestAddress()))
+                fromIE->ipv4Data()->removeMulticastListener(datagram->getDestAddress());
+            else
+                fromIE->ipv4Data()->addMulticastListener(datagram->getDestAddress());
             return;
         }
 

@@ -75,7 +75,7 @@ class pimSM : public cSimpleModule, protected INotifiable
     private:
         void receiveChangeNotification(int category, const cPolymorphic *details);
         void newMulticastRegisterDR(AnsaIPv4MulticastRoute *newRoute);
-        void newMulticastReciever(IPv4ControlInfo *igmpCtrl);
+        void newMulticastReciever(addRemoveAddr *members);
 
         // process timers
         void processPIMTimer(PIMTimer *timer);

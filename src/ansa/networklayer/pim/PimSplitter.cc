@@ -414,7 +414,10 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 		// send notification
 		addr->setAddr(remove);
 		addr->setInt(pimInt);
-		nb->fireChangeNotification(NF_IPv4_NEW_IGMP_REMOVED, addr);
+        if (pimInt->getMode() == Dense)
+            nb->fireChangeNotification(NF_IPv4_NEW_IGMP_REMOVED, addr);
+        if (pimInt->getMode() == Sparse)
+            nb->fireChangeNotification(NF_IPv4_NEW_IGMP_REMOVED_PIMSM, addr);
 	}
 
 	// notification about new multicast address to PIM modules
@@ -427,7 +430,10 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 		// send notification
 		addr->setAddr(add);
 		addr->setInt(pimInt);
-		nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED, addr);
+		if (pimInt->getMode() == Dense)
+		    nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED, addr);
+		if (pimInt->getMode() == Sparse)
+		    nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED_PISM, addr);
 	}
 }
 

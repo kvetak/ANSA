@@ -33,7 +33,7 @@
 
 /**
  * @file TRILL.cc
- * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka, .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 2011
  * @brief
  * @detail
@@ -729,6 +729,7 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // register pim multicast address 224.0.0.13 (all PIM routers) on Pim interface
         std::vector<IPv4Address> intMulticastAddresses;
 
+        //FIXME only for PIM-DM testing purposes
         cXMLElement* IPaddress = iface->getElementByPath("IPAddress");                  //Register 226.1.1.1 to R2 router
         std::string intfToRegister = IPaddress->getNodeValue();
 

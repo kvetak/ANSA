@@ -1,0 +1,323 @@
+<?xml version="1.0"?>
+
+<Devices>
+	<!-- Hosts -->
+	<!-- Source1 -->
+	<Router id="172.16.40.100">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>172.16.40.100</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>172.16.40.1</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Router>
+	<!-- Host1 -->
+	<Router id="172.16.30.100">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>172.16.30.100</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>172.16.30.1</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Router>
+	<!-- Host2 -->
+	<Router id="172.16.20.100">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>172.16.20.100</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>172.16.20.1</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Router>
+
+	<!-- R0 -->
+	<Router id="192.168.0.1">
+		<Routing>
+			<Multicast enable="1">
+				<Pim>
+					<RPAddress>
+						<IPAddress>192.168.23.1</IPAddress>
+					</RPAddress>
+					<SPTthreshold>infinity</SPTthreshold>
+				</Pim>
+			</Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>192.168.12.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.23.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>172.16.30.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.1.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+
+	<!-- Routers -->
+	<!-- R1 -->
+	<Router id="192.168.11.1">
+		<Routing>
+			<Multicast enable="1">
+				<Pim>
+					<RPAddress>
+						<IPAddress>192.168.23.1</IPAddress>
+					</RPAddress>
+					<SPTthreshold>infinity</SPTthreshold>
+				</Pim>
+			</Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>172.16.30.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>172.16.40.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.23.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.2</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+			<Interface name="eth0">
+        		<IPAddress>192.168.1.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+     		<Interface name="eth1">
+        		<IPAddress>192.168.13.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth2">
+        		<IPAddress>192.168.12.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth3">
+        		<IPAddress>172.16.20.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+	
+	<!-- R2 -->
+	<Router id="192.168.12.2">
+		<Routing>
+			<Multicast enable="1">
+				<Pim>
+					<RPAddress>
+						<IPAddress>192.168.23.1</IPAddress>
+					</RPAddress>
+					<SPTthreshold>infinity</SPTthreshold>
+				</Pim>
+			</Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>172.16.40.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.34.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>172.16.30.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.13.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.1.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.1</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.23.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.12.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+	
+	<!-- R3 -->
+	<Router id="192.168.13.3">
+		<Routing>
+			<Multicast enable="1">
+				<Pim>
+					<RPAddress>
+						<IPAddress>192.168.23.1</IPAddress>
+					</RPAddress>
+					<SPTthreshold>infinity</SPTthreshold>
+				</Pim>
+			</Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>172.16.30.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>172.16.40.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.1.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.12.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.1</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.34.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.13.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth2">
+        		<IPAddress>192.168.23.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+	<!-- R4 -->
+	<Router id="192.168.14.4">
+		<Routing>
+			<Multicast enable="1">
+				<Pim>
+					<RPAddress>
+						<IPAddress>192.168.23.1</IPAddress>
+					</RPAddress>
+					<SPTthreshold>infinity</SPTthreshold>
+				</Pim>
+			</Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>192.168.23.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.12.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.1.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>172.16.40.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.34.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<Pim>
+					<Mode>sparse-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+</Devices>
