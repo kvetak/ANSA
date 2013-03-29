@@ -235,7 +235,7 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
      *  Handle a RIPng message
      *  @param msg [in] message to process
      */
-    void handleMessage(RIPngMessage *msg);
+    void handleRIPngMessage(RIPngMessage *msg);
 
     //-- RESPONSE PROCESSING
     /**
