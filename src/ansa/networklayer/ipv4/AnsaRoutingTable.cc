@@ -224,7 +224,16 @@ bool AnsaRoutingTable::deleteMulticastRoute(const AnsaIPv4MulticastRoute *entry)
             cancelEvent(entry->getEt());
             delete entry->getEt();
         }
-
+        if (entry->getJt())
+        {
+            cancelEvent(entry->getJt());
+            delete entry->getJt();
+        }
+        if (entry->getPpt())
+        {
+            cancelEvent(entry->getPpt());
+            delete entry->getPpt();
+        }
         // delete timers from outgoing interfaces
         InterfaceVector outInt = entry->getOutInt();
         for (unsigned int j = 0;j < outInt.size(); j++)

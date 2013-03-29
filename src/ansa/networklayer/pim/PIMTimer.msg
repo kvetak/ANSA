@@ -15,7 +15,7 @@
 //
 // @file PIMTimer.msg
 // @date 29.10.2011
-// @author: Veronika Rybova, Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @author: Veronika Rybova, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
 // @brief File implements structures for PIM timers
 
 
@@ -132,4 +132,12 @@ packet PIMjt extends PIMTimer
     IPv4Address			group;				// Multicast group address
 	IPv4Address			JoinPruneAddr;		// Joined or Pruned IP Address
 	IPv4Address			upstreamNbr;			// Address of upstream neigbor
+}
+
+packet PIMppt extends PIMTimer
+{
+	timerKind = PrunePendingTimer;
+	IPv4Address			group;				// Multicast group address
+	IPv4Address			JoinPruneAddr;		// Joined or Pruned IP Address
+	IPv4Address			upstreamNbr;		// Address of upstream neigbor
 }

@@ -34,6 +34,7 @@ AnsaIPv4MulticastRoute::AnsaIPv4MulticastRoute()
     kat = NULL;
     et = NULL;
     jt = NULL;
+    ppt = NULL;
 
     RP = IPv4Address::UNSPECIFIED_ADDRESS;
     showOutInt = true;
@@ -134,15 +135,15 @@ int AnsaIPv4MulticastRoute::getOutIdByIntId(int intId)
     return i;
 }
 
-outInterface AnsaIPv4MulticastRoute::getOutIntByIntId(int intId)
+bool AnsaIPv4MulticastRoute::outIntExist(int intId)
 {
     unsigned int i;
     for (i = 0; i < outInt.size(); i++)
     {
         if (outInt[i].intId == intId)
-            break;
+            return true;
     }
-    return outInt[i];
+    return false;
 }
 
 bool AnsaIPv4MulticastRoute::isOilistNull()

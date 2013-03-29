@@ -123,6 +123,7 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         PIMrst                      *rst;                   /**< Pointer to Register-stop timer for PIM-SM*/
         PIMet                       *et;                    /**< Pointer to Expiry timer for PIM-SM*/
         PIMjt                       *jt;                    /**< Pointer to Join timer*/
+        PIMppt                      *ppt;                   /**< Pointer to Prune Pending Timer*/
         // interfaces
         inInterface                 inInt;                  /**< Incoming interface */
         InterfaceVector             outInt;                 /**< Outgoing interface */
@@ -149,6 +150,7 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         void setRst (PIMrst *rst)   {this->rst = rst;}                      /**< Set pointer to RegisterStopTimer */
         void setEt  (PIMet *et)     {this->et = et;}                        /**< Set pointer to ExpiryTimer */
         void setJt  (PIMjt *jt)     {this->jt = jt;}                        /**< Set pointer to JoinTimer */
+        void setPpt  (PIMppt *ppt)  {this->ppt = ppt;}                      /**< Set pointer to PrunePendingTimer */
 
         void setFlags(std::vector<flag> flags)  {this->flags = flags;}      /**< Set vector of flags (flag) */
         bool isFlagSet(flag fl);                                            /**< Returns if flag is set to entry or not*/
@@ -179,6 +181,7 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         PIMrst*     getRst() const {return rst;}                            /**< Get pointer to RegisterStopTimer */
         PIMet*      getEt()  const {return et;}                             /**< Get pointer to ExpiryTimer */
         PIMjt*      getJt()  const {return jt;}                             /**< Get pointer to JoinTimer */
+        PIMppt*     getPpt()  const {return ppt;}                           /**< Get pointer to PrunePendingTimer */
         std::vector<flag> getFlags() const {return flags;}                  /**< Get list of route flags */
 
         // get incoming interface
@@ -189,8 +192,8 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
 
         // get outgoing interface
         InterfaceVector getOutInt() const {return outInt;}                  /**< Get list of outgoing interfaces*/
-        outInterface    getOutIntByIntId(int intId);                        /**< Get outgoing interface with given interface ID*/
         int             getOutIdByIntId(int intId);                         /**< Get sequence number of outgoing interface with given interface ID*/
+        bool            outIntExist(int intId);                             /**< Return true if interface intId exist, otherwise return false*/
 
         void            setOutShowIntStatus(bool status) {showOutInt = status;}
         bool            getOutShowIntStatus() const {return showOutInt;}
