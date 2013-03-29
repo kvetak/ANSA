@@ -47,14 +47,17 @@ class RoutingTableEntry : public ANSAIPv6Route
     RoutingTableEntry *_copy;      ///< If this RTE is stored in the "RIPng routing table", this is reference to the RTE in the "global routing table" and vice versa
 
   public:
-    bool isChangeFlagSet() { return _changeFlag; }
+    virtual std::string info() const;
+    virtual std::string detailedInfo() const;
+
+    bool isChangeFlagSet() const { return _changeFlag; }
     void setChangeFlag() { _changeFlag = true; }
     void clearChangeFlag() { _changeFlag = false; }
 
-    RIPngTimer *getTimer() { return _timeout; }
-    RIPngTimer *getGCTimer() { return _GCTimeout; }
-    unsigned short int getRouteTag() { return _routeTag; }
-    RoutingTableEntry *getCopy() { return _copy; }
+    RIPngTimer *getTimer() const { return _timeout; }
+    RIPngTimer *getGCTimer() const { return _GCTimeout; }
+    unsigned short int getRouteTag() const { return _routeTag; }
+    RoutingTableEntry *getCopy() const { return _copy; }
 
     void setTimer(RIPngTimer *t) { _timeout = t; }
     void setGCTimer(RIPngTimer *t) { _GCTimeout = t; }

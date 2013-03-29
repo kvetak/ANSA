@@ -23,6 +23,8 @@
 
 #include "omnetpp.h"
 
+#include "InterfaceTableAccess.h"
+
 namespace RIPng
 {
 
@@ -51,6 +53,33 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
 
 RoutingTableEntry::~RoutingTableEntry()
 {
+}
+
+std::string RoutingTableEntry::info() const
+{
+    std::stringstream out;
+
+    if (isChangeFlagSet())
+        out << "C";
+
+    RIPngTimer *GCTimer = getGCTimer();
+    if (GCTimer != NULL && GCTimer->isScheduled())
+    //Route deletion process is in progress
+        out << "D ";
+    else
+        out << " ";
+
+    out << getDestPrefix() << "/" << getPrefixLength();
+    out << " [" << getAdminDist() << "/" << getMetric() << "]";
+    out << " via " << getNextHop();
+    out << ", " << ift->getInterfaceById(getInterfaceId())->getName();
+
+    return out.str();
+}
+
+std::string RoutingTableEntry::detailedInfo() const
+{
+    return std::string();
 }
 
 } /* namespace RIPng */
