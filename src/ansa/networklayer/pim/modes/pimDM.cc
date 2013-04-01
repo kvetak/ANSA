@@ -54,10 +54,12 @@ void pimDM::sendPimJoinPrune(IPv4Address nextHop, IPv4Address src, IPv4Address g
 
 	// set multicast groups
 	MulticastGroup *group = new MulticastGroup();
+    EncodedAddress address;
 	group->setGroupAddress(grp);
 	group->setJoinedSourceAddressArraySize(0);
 	group->setPrunedSourceAddressArraySize(1);
-	group->setPrunedSourceAddress(0, src);
+	address.IPaddress = src;
+	group->setPrunedSourceAddress(0, address);
 	msg->setMulticastGroups(0, *group);
 
 	// set IP Control info
@@ -126,10 +128,12 @@ void pimDM::sendPimGraft(IPv4Address nextHop, IPv4Address src, IPv4Address grp, 
 
 	// set multicast groups
 	MulticastGroup *group = new MulticastGroup();
+	EncodedAddress address;
 	group->setGroupAddress(grp);
 	group->setJoinedSourceAddressArraySize(1);
 	group->setPrunedSourceAddressArraySize(0);
-	group->setJoinedSourceAddress(0, src);
+    address.IPaddress = src;
+	group->setJoinedSourceAddress(0, address);
 	msg->setMulticastGroups(0, *group);
 
 	// set IP Control info
@@ -472,7 +476,7 @@ void pimDM::processJoinPruneGraftPacket(PIMJoinPrune *pkt, PIMPacketType type)
 		//EV << "JoinedSourceAddressArraySize: " << group.getJoinedSourceAddressArraySize() << endl;
 		for (unsigned int j = 0; j < group.getJoinedSourceAddressArraySize(); j++)
 		{
-			IPv4Address source = group.getJoinedSourceAddress(j);
+			IPv4Address source = (group.getJoinedSourceAddress(j)).IPaddress;
 			AnsaIPv4MulticastRoute *route = rt->getRouteFor(groupAddr, source);
 
 			if (type == JoinPrune)
@@ -495,7 +499,7 @@ void pimDM::processJoinPruneGraftPacket(PIMJoinPrune *pkt, PIMPacketType type)
 			//EV << "JoinedPrunedAddressArraySize: " << group.getPrunedSourceAddressArraySize() << endl;
 			for(unsigned int k = 0; k < group.getPrunedSourceAddressArraySize(); k++)
 			{
-				IPv4Address source = group.getPrunedSourceAddress(k);
+				IPv4Address source = (group.getPrunedSourceAddress(k)).IPaddress;
 				AnsaIPv4MulticastRoute *route = rt->getRouteFor(groupAddr, source);
 
 				if (source != route->getOrigin())

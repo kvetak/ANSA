@@ -120,7 +120,7 @@ PimNeighbor *PimNeighborTable::getNeighborByIntID(int intId)
 {
     for(int i = 0; i < getNumNeighbors(); i++)
     {
-        int iddd = getNeighbor(i)->getInterfaceID();
+        //int iddd = getNeighbor(i)->getInterfaceID();
         if(intId == getNeighbor(i)->getInterfaceID())
         {
             return getNeighbor(i);

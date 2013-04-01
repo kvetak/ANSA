@@ -62,6 +62,13 @@ enum joinPruneMsg
     PruneMsg = 1
 };
 
+enum JPMsgType
+{
+    G = 0,
+    SG = 1,
+    SGrpt = 2
+};
+
 
 /**
  * @brief Class implements PIM-SM (sparse mode).
@@ -103,7 +110,7 @@ class pimSM : public cSimpleModule, protected INotifiable
         void sendPIMRegister(IPv4ControlInfo *ctrl);
         void sendPIMRegisterStop(IPv4Address source, IPv4Address dest, IPv4Address multGroup, IPv4Address multSource);
         void sendPIMRegisterNull(IPv4Address multSource, IPv4Address multDest);
-        void sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr, IPv4Address upstreamNbr, joinPruneMsg msgType);
+        void sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr, IPv4Address upstreamNbr, joinPruneMsg JoinPrune, JPMsgType JPtype);
         void sendPIMJoinTowardSource(multDataInfo *info);
         void forwardMulticastData(multDataInfo *info);
 
@@ -111,8 +118,8 @@ class pimSM : public cSimpleModule, protected INotifiable
         void processPIMPkt(PIMPacket *pkt);
         void processRegisterPacket(PIMRegister *pkt);
         void processRegisterStopPacket(PIMRegisterStop *pkt);
-        void processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, IPv4Address  joinAddr);
-        void processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, IPv4Address  pruneAddr);
+        void processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
+        void processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
         void processJoinPrunePacket(PIMJoinPrune *pkt);
         void processSGJoin(IPv4Address multOrigin, IPv4Address multGroup);
 

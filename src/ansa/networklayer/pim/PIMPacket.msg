@@ -46,13 +46,21 @@ struct HelloEntry
 	short Value;	   
 }
 
+struct EncodedAddress
+{
+	IPv4Address IPaddress;
+	bool 		S;				
+	bool		W;				//WC bit
+	bool		R;				//RPT bit
+}
+
 // Record for Join/Prune message
 // in structure it is not possible to use dynamic arrays, iit is needed to use class
 class MulticastGroup
 {
 	IPv4Address 	groupAddress;
-	IPv4Address 	joinedSourceAddress[]; 
-	IPv4Address 	prunedSourceAddress[]; 
+	EncodedAddress 	joinedSourceAddress[]; 
+	EncodedAddress 	prunedSourceAddress[]; 
 }
 
 // abstract structure for multicast data
