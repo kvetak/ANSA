@@ -161,7 +161,7 @@ bool AnsaIPv4MulticastRoute::isOilistNull()
 }
 
 void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode,
-                                                PIMpt *pruneTimer, AssertState assert, RegisterState regState)
+                                                PIMpt *pruneTimer, PIMet *expiryTimer, AssertState assert, RegisterState regState)
 {
     outInterface outIntf;
 
@@ -171,6 +171,7 @@ void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, in
     outIntf.mode = mode;
     outIntf.pruneTimer = NULL;
     outIntf.pruneTimer = pruneTimer;
+    outIntf.expiryTimer = expiryTimer;
     outIntf.regState = regState;
     outIntf.assert = assert;
 

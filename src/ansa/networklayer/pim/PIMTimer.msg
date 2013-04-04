@@ -123,6 +123,8 @@ packet PIMet extends PIMTimer
 {
     timerKind = ExpiryTimer;
     IPv4Address			group;				// Multicast group address
+    IPv4Address			source;
+    int					StateType;
 }
 
 // represents PIM Join timer
@@ -132,6 +134,7 @@ packet PIMjt extends PIMTimer
     IPv4Address			group;				// Multicast group address
 	IPv4Address			JoinPruneAddr;		// Joined or Pruned IP Address
 	IPv4Address			upstreamNbr;			// Address of upstream neigbor
+	int					JoinType;				
 }
 
 packet PIMppt extends PIMTimer

@@ -64,9 +64,9 @@ enum joinPruneMsg
 
 enum JPMsgType
 {
-    G = 0,
-    SG = 1,
-    SGrpt = 2
+    G = 1,
+    SG = 2,
+    SGrpt = 3
 };
 
 
@@ -102,8 +102,8 @@ class pimSM : public cSimpleModule, protected INotifiable
         // set timers
         PIMkat* createKeepAliveTimer(IPv4Address source, IPv4Address group);
         PIMrst* createRegisterStopTimer(IPv4Address source, IPv4Address group);
-        PIMet*  createExpiryTimer(int holdtime, IPv4Address group);
-        PIMjt*  createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr);
+        PIMet*  createExpiryTimer(int holdtime, IPv4Address group, IPv4Address source, int StateType);
+        PIMjt*  createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, int JoinType);
         PIMppt*  createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr);
 
         // pim messages
@@ -121,7 +121,7 @@ class pimSM : public cSimpleModule, protected INotifiable
         void processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
         void processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
         void processJoinPrunePacket(PIMJoinPrune *pkt);
-        void processSGJoin(IPv4Address multOrigin, IPv4Address multGroup);
+        void processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address multGroup);
 
     public:
         //PIM-SM clear implementation

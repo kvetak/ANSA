@@ -98,6 +98,7 @@ struct outInterface
     intState                forwarding;         /**< Forward or Pruned */
     intState                mode;               /**< Dense, Sparse, ... */
     PIMpt                   *pruneTimer;        /**< Pointer to PIM Prune Timer*/
+    PIMet                   *expiryTimer;       /**< Pointer to PIM Expiry Timer*/
     AssertState             assert;             /**< Assert state. */
     RegisterState           regState;           /**< Register state. */
 };
@@ -163,7 +164,8 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
 
         void setOutInt(InterfaceVector outInt) {EV << "MulticastIPRoute: New OutInt" << endl; this->outInt = outInt;}   /**< Set list of outgoing interfaces*/
         void addOutInt(outInterface outInt) {this->outInt.push_back(outInt);}                                           /**< Add interface to list of outgoing interfaces*/
-        void addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode, PIMpt *pruneTimer, AssertState assert, RegisterState regState);
+        void addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode,
+                            PIMpt *pruneTimer, PIMet *expiryTimer, AssertState assert, RegisterState regState);
 
         void setAddresses(IPv4Address multOrigin, IPv4Address multGroup, IPv4Address RP);
 
