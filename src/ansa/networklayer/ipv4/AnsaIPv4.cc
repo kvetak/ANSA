@@ -364,29 +364,16 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     }
     if (intfMode == Sparse)
     {
-        InterfaceVector outInt;
+        InterfaceVector outInt;                 //set outgoing interfaces
         if (route == NULL)
             outInt = routeG->getOutInt();
         else
-        {
             outInt = route->getOutInt();
-            // RP recieve native multicast data -> set T flag
-            if (datagram->getDestAddress() == route->getMulticastGroup())
-            {
-                //for (int i=0; i<ift->getNumInterfaces();i++)
-                //{
-                    //InterfaceEntry *intf = ift->getInterface(i);
-                    //if (intf->ipv4Data()->getIPAddress() == route->getRP())
-                    //{
-                        if (!route->isFlagSet(T))
-                        {
-                            route->addFlag(T);
-                            rt->generateShowIPMroute();         // refresh output in MRT
-                        }
-                    //}
-                //}
-            }
-        }
+
+        if (route)
+            nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, route);
+        if (routeG)
+            nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, routeG);
 
         // send packet to all outgoing interfaces of route (oilist)
         for (unsigned int i=0; i<outInt.size(); i++)
@@ -409,7 +396,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
 
         if (route != NULL)
         {
-            if (route->isFlagSet(F))
+            if (route->isFlagSet(P) && route->isFlagSet(F))
             {
                 EV << "AnsaIPv4:PIM-SM encapsulating data packet to unicast packet and send them to RP" << endl;
                 nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
@@ -417,6 +404,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
         }
     }
 
+    rt->generateShowIPMroute();         // refresh output in MRT
     // only copies sent, delete original datagram
     delete datagram;
 }

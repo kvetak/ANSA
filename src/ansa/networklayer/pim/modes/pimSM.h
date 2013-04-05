@@ -46,6 +46,7 @@
 #define PPT 3.0                         /**< value for Prune-Pending Timer*/
 #define ALL_PIM_ROUTERS "224.0.0.13"
 #define MAX_TTL 255
+#define NO_INT_TIMER -1
 
 
 struct multDataInfo
@@ -91,6 +92,7 @@ class pimSM : public cSimpleModule, protected INotifiable
         void newMulticastReciever(addRemoveAddr *members);
         void removeMulticastReciever(addRemoveAddr *members);
 
+
         // process timers
         void processPIMTimer(PIMTimer *timer);
         void processKeepAliveTimer(PIMkat *timer);
@@ -99,12 +101,16 @@ class pimSM : public cSimpleModule, protected INotifiable
         void processJoinTimer(PIMjt *timer);
         void processPrunePendingTimer(PIMppt *timer);
 
+
+        void restartExpiryTimer(AnsaIPv4MulticastRoute *route, InterfaceEntry *originIntf, int holdTime);
+        void dataOnRpf(AnsaIPv4MulticastRoute *route);
+
         // set timers
         PIMkat* createKeepAliveTimer(IPv4Address source, IPv4Address group);
         PIMrst* createRegisterStopTimer(IPv4Address source, IPv4Address group);
-        PIMet*  createExpiryTimer(int holdtime, IPv4Address group, IPv4Address source, int StateType);
+        PIMet*  createExpiryTimer(int intID, int holdtime, IPv4Address group, IPv4Address source, int StateType);
         PIMjt*  createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, int JoinType);
-        PIMppt*  createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr);
+        PIMppt* createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr);
 
         // pim messages
         void sendPIMRegister(IPv4ControlInfo *ctrl);
@@ -122,6 +128,7 @@ class pimSM : public cSimpleModule, protected INotifiable
         void processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
         void processJoinPrunePacket(PIMJoinPrune *pkt);
         void processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address multGroup);
+        void processJoinRouteGexistOnRP(IPv4Address multGroup, IPv4Address packetOrigin, int msgHoldtime);
 
     public:
         //PIM-SM clear implementation

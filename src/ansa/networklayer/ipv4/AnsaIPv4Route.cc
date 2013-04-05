@@ -38,6 +38,7 @@ AnsaIPv4MulticastRoute::AnsaIPv4MulticastRoute()
 
     RP = IPv4Address::UNSPECIFIED_ADDRESS;
     showOutInt = true;
+    sequencenumber = 0;
 
     this->setRoutingTable(NULL);
     this->setParent(NULL);

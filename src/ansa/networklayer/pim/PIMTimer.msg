@@ -125,6 +125,7 @@ packet PIMet extends PIMTimer
     IPv4Address			group;				// Multicast group address
     IPv4Address			source;
     int					StateType;
+    int					intId;				// ID of interface
 }
 
 // represents PIM Join timer
