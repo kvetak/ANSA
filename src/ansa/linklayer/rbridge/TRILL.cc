@@ -20,7 +20,7 @@
  * @date 7.3.2013
  * @brief
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #include "TRILL.h"
@@ -107,7 +107,7 @@ void TRILL::handleMessage(cMessage *msg) {
                 switch(cat = classify(frameDesc)){
                     case TRILL::TRILL_L2_CONTROL:
                         //process L2 control frame like register VLAN etc
-                        //TODO
+                        //TODO B1
                         break;
 
                     case TRILL::TRILL_NATIVE:
@@ -123,6 +123,7 @@ void TRILL::handleMessage(cMessage *msg) {
                         break;
 
                     case TRILL::TRILL_CONTROL:
+                        //TODO B1
                         EV <<"Error: L2_ISIS frame shoudn't get send to TRILL (for NOW)" <<endl;
                         //send("toISIS", gateIndex);
                         break;
@@ -652,7 +653,7 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
         case RBMACTable::EST_LOCAL_PROCESS:
             //process localy
             //i guess send it back to rBridgeSplitter?
-            //TODO
+            //TODO A2
             break;
 
         case RBMACTable::EST_LOCAL_PORT:
@@ -696,7 +697,7 @@ bool TRILL::isNativeAllowed(tFrameDescriptor &frameDesc){
         return false;
     }
 
-    if(!d->isAppointedForwarder(frameDesc.VID) || d->isInhibited()){
+    if(!d->isAppointedForwarder(frameDesc.VID, this->isis->getNickname()) || d->isInhibited()){
         return false;
     }
     return true;

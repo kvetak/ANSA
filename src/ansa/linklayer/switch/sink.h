@@ -24,7 +24,7 @@
 #include "AnsaEtherFrame_m.h"
 
 /**
- * TODO - Generated class
+ * TODO G - Generated class
  */
 class sink : public cSimpleModule
 {

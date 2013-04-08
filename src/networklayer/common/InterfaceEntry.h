@@ -35,6 +35,7 @@ class InterfaceProtocolData;
 class IPv4InterfaceData;
 class IPv6InterfaceData;
 class TRILLInterfaceData;
+class ISISInterfaceData;
 
 class INET_API MacEstimateCostProcess
 {
@@ -100,6 +101,7 @@ class INET_API InterfaceEntry : public cNamedObject
     IPv6InterfaceData *ipv6data;   ///< IPv6-specific interface info (IPv6 addresses, etc)
     InterfaceProtocolData *protocol3data; ///< extension point: data for a 3rd network-layer protocol
     InterfaceProtocolData *protocol4data; ///< extension point: data for a 4th network-layer protocol
+    ISISInterfaceData *isisdata; ///< ISIS-specific interface info
     TRILLInterfaceData *trilldata; ///< TRILL-specific interface info
     std::vector<MacEstimateCostProcess *> estimateCostProcessArray;
 
@@ -173,6 +175,7 @@ class INET_API InterfaceEntry : public cNamedObject
     InterfaceProtocolData *getProtocol3Data() const {return protocol3data;}
     InterfaceProtocolData *getProtocol4Data() const {return protocol4data;}
     TRILLInterfaceData *trillData() const {return trilldata;}
+    ISISInterfaceData *isisData() const {return isisdata;}
     //@}
 
     /** @name Installing protocol-specific interface data */
@@ -182,6 +185,7 @@ class INET_API InterfaceEntry : public cNamedObject
     virtual void setProtocol3Data(InterfaceProtocolData *p)  {protocol3data = p; configChanged();}
     virtual void setProtocol4Data(InterfaceProtocolData *p)  {protocol4data = p; configChanged();}
     virtual void setTRILLInterfaceData(TRILLInterfaceData *p) {trilldata = p; configChanged();}
+    virtual void setISISInterfaceData(ISISInterfaceData *p) {isisdata = p; configChanged();}
     //@}
 
     /** @name access to the cost process estimation  */

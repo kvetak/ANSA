@@ -31,7 +31,8 @@
 #define ISIS_HELLO_INTERVAL 10 /*!< Default hello interval in seconds*/
 #define ISIS_HELLO_MULTIPLIER 3 /*!< Default hello multiplier value.*/
 #define ISIS_SYSTEM_ID 6 /*!< Length of System-ID.*/
-#define ISIS_MAX_AREAS 3 /*!< Default value for Maximum Areas.*/
+#define ISIS_LAN_ID ISIS_SYSTEM_ID + 1 /*!< Length of LAN-ID.*/
+#define ISIS_MAX_AREAS 1 /*!< Default value for Maximum Areas.*/
 #define ISIS_AREA_ID 3 /*!< Length of Area-ID.*/
 #define ISIS_LSP_INTERVAL 33 /*!< Minimum delay in ms between sending two successive LSPs. */
 #define ISIS_LSP_REFRESH_INTERVAL 150 /*!< Interval in seconds at which LSPs are refreshed (1 to 65535). This value SHOULD be less than ISIS_LSP_MAX_LIFETIME*/
@@ -43,6 +44,7 @@
 #define ISIS_LSP_MAX_SIZE 1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
 #define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
 #define ISIS_SPF_FULL_INTERVAL 50
+#define ISIS_TRILL_MAX_HELLO_SIZE 1470
 //class InterfaceEntr;
 //class MACAddress;
 
@@ -79,6 +81,15 @@ struct ISISinterface
 };
 typedef std::vector<ISISinterface> ISISInterTab_t;
 
+/* Adjacency state types according to TRILL specs in RFC6327 3.2
+ *
+ */
+typedef enum{
+    ISIS_ADJ_DOWN, //doesn't exist
+    ISIS_ADJ_DETECT, // FALSE
+    ISIS_ADJ_2WAY , // semiFALSE (this state is skipped in L3_ISIS)
+    ISIS_ADJ_REPORT // previously represented as TRUE
+}ISISAdjState;
 
 /**
  * Structure for storing info about neighbours
@@ -88,12 +99,13 @@ struct ISISadj
     unsigned char sysID[6];             /*!<system ID of neighbour*/
     unsigned char areaID[3];            /*!<neighbour areaID*/
     MACAddress mac;                     /*!<mac address of neighbour*/
-    bool state;                         /*!<adjacency state has to be 2-way; 0 = only 1 way, 1 = 2-way (hello received from adj router)*/
-    ISISTimer *timer;                   /*!<timer set to hold time and reseted every time hello from neighbour is received*/
+    ISISAdjState state;                         /*!<adjacency state has to be 2-way; 0 = only 1 way, 1 = 2-way (hello received from adj router)*/
+    ISISTimer *timer;                   /*!<timer set to hold time and reseted every time hello from neighbour is received. For L2_MODE works as designated VLAN holding timer*/
+    ISISTimer *nonDesTimer;              /*!< nonDesignated VLAN holding timer */
     int gateIndex;                      /*!<index of gate, which is neighbour connected to*/
     bool network;                       /*!<network type, true = broadcast, false = point-to-point*/
-    ISISTimer *desVLANTimer;
-    ISISTimer *nonDesVLANTimer;
+//    ISISTimer *desVLANTimer;  //see above
+//    ISISTimer *nonDesVLANTimer;
     int priority; //priority of the neighbour to be the DRB
     int desiredDesVLAN; // neighbour's desired VLAN to the designated VLAN
 
@@ -315,6 +327,22 @@ enum PTP_HELLO_ADJ_STATE
 /*
  *
  */
+
+typedef enum
+{
+    ISIS_NETWORK_P2P,
+    ISIS_NETWORK_BROADCAST
+
+} ISISNetworkType;
+
+typedef enum
+{
+    ISIS_CIRCUIT_RESERVED,
+    ISIS_CIRCUIT_L1,
+    ISIS_CIRCUIT_L2,
+    ISIS_CIRCUIT_L1L2
+} ISISCircuitType;
+
 
 
 

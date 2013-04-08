@@ -37,7 +37,7 @@
  * @date 2011
  * @brief
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #include "deviceConfigurator.h"
@@ -770,10 +770,10 @@ void DeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMo
 
     }else if(isisMode == ISIS::L3_ISIS_MODE){
         //IPv4
-        //TODO
+        //TODO C2
 
         //IPv6
-        //TODO
+        //TODO C2
 
     }else{
         throw cRuntimeError("Unsupported IS-IS mode");
@@ -931,15 +931,15 @@ void DeviceConfigurator::loadISISInterfacesConfig(ISIS *isisModule){
 //    InterfaceEntry *entryIFT = new InterfaceEntry(this); //TODO added "this" -> experimental
     for (int i = 0; i < ift->getNumInterfaces(); i++)
     {
-        InterfaceEntry *entryIFT = ift->getInterface(i);
+        InterfaceEntry *ie = ift->getInterface(i);
         if (interfaces == NULL)
         {
-            this->loadISISInterfaceDefaultConfig(isisModule, entryIFT);
+            this->loadISISInterfaceDefaultConfig(isisModule, ie);
         }
         else
         {
-            this->loadISISInterfaceConfig(isisModule, entryIFT,
-                    interfaces->getFirstChildWithAttribute("Interface", "name", entryIFT->getName()));
+            this->loadISISInterfaceConfig(isisModule, ie,
+                    interfaces->getFirstChildWithAttribute("Interface", "name", ie->getName()));
 
         }
     }
@@ -955,6 +955,9 @@ void DeviceConfigurator::loadISISCoreDefaultConfig(ISIS *isisModule){
       //IS type {L1(L2_ISIS_MODE) | L2 | L1L2 default for L3_ISIS_MODE}
 
       isisModule->setIsType(L1_TYPE);
+
+      //set Attach flag
+      isisModule->setAtt(false);
 
 
       //L1 Hello interval
@@ -1016,87 +1019,109 @@ void DeviceConfigurator::loadISISCoreDefaultConfig(ISIS *isisModule){
 }
 
 
-void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *entry){
+void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *ie){
 
+    ISISInterfaceData *d = new ISISInterfaceData();
         ISISinterface newIftEntry;
-        newIftEntry.intID = entry->getInterfaceId();
+        newIftEntry.intID = ie->getInterfaceId();
+        d->setIfaceId(ie->getInterfaceId());
 
-        newIftEntry.gateIndex = entry->getNetworkLayerGateIndex();
+        newIftEntry.gateIndex = ie->getNetworkLayerGateIndex();
+        d->setGateIndex(ie->getNetworkLayerGateIndex());
         EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " <<newIftEntry.gateIndex <<endl;
 
         //set interface priority
         newIftEntry.priority = ISIS_DIS_PRIORITY;  //default value
+        d->setPriority(ISIS_DIS_PRIORITY);
 
         /* Interface is NOT enabled by default. If ANY IS-IS related property is configured on interface then it's enabled. */
         newIftEntry.ISISenabled = false;
+        d->setIsisEnabled(false);
         if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
             newIftEntry.ISISenabled = true;
+            d->setIsisEnabled(true);
         }
 
         //set network type (point-to-point vs. broadcast)
-
         newIftEntry.network = true; //default value means broadcast TODO check with TRILL default values
+        d->setNetwork(ISIS_NETWORK_BROADCAST);
 
         //set interface metric
 
         newIftEntry.metric = ISIS_METRIC;    //default value
+        d->setMetric(ISIS_METRIC);
 
         //set interface type according to global router configuration
         newIftEntry.circuitType = isisModule->getIsType();
+        d->setCircuitType((ISISCircuitType)isisModule->getIsType()); //TODO B1
 
 
         //set L1 hello interval in seconds
         newIftEntry.L1HelloInterval = isisModule->getL1HelloInterval();
-
+        d->setL1HelloInterval(isisModule->getL1HelloInterval());
 
         //set L1 hello multiplier
         newIftEntry.L1HelloMultiplier = isisModule->getL1HelloMultiplier();
+        d->setL1HelloMultiplier(isisModule->getL1HelloMultiplier());
 
 
         //set L2 hello interval in seconds
         newIftEntry.L2HelloInterval = isisModule->getL2HelloInterval();
-
+        d->setL2HelloInterval(isisModule->getL2HelloInterval());
 
         //set L2 hello multiplier
         newIftEntry.L2HelloMultiplier = isisModule->getL2HelloMultiplier();
+        d->setL2HelloMultiplier(isisModule->getL2HelloMultiplier());
 
         //set lspInterval
         newIftEntry.lspInterval = isisModule->getLspInterval();
+        d->setLspInterval(isisModule->getLspInterval());
 
         //set L1CsnpInterval
         newIftEntry.L1CsnpInterval = isisModule->getL1CsnpInterval();
+        d->setL1CsnpInterval(isisModule->getL1CsnpInterval());
 
         //set L2CsnpInterval
         newIftEntry.L2CsnpInterval = isisModule->getL2CsnpInterval();
+        d->setL2CsnpInterval(isisModule->getL2CsnpInterval());
 
         //set L1PsnpInterval
         newIftEntry.L1PsnpInterval = isisModule->getL1PsnpInterval();
+        d->setL1PsnpInterval(isisModule->getL1PsnpInterval());
 
         //set L2PsnpInterval
         newIftEntry.L2PsnpInterval = isisModule->getL2PsnpInterval();
+        d->setL2PsnpInterval(isisModule->getL2PsnpInterval());
 
         // priority is not needed for point-to-point, but it won't hurt
         // set priority of current DIS = me at start
         newIftEntry.L1DISpriority = newIftEntry.priority;
+        d->setL1DisPriority(d->getPriority());
         newIftEntry.L2DISpriority = newIftEntry.priority;
+        d->setL2DisPriority(d->getPriority());
 
         //set initial designated IS as himself
 
         memcpy(newIftEntry.L1DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
         //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
-        //newIftEntry.L1DIS[6] = entry->getInterfaceId() - 99;
+        //newIftEntry.L1DIS[6] = ie->getInterfaceId() - 99;
         newIftEntry.L1DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
+
+        d->setL1Dis(newIftEntry.L1DIS);
         //do the same for L2 DIS
 
         memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
-        //newIftEntry.L2DIS[6] = entry->getInterfaceId() - 99;
+        //newIftEntry.L2DIS[6] = ie->getInterfaceId() - 99;
         newIftEntry.L2DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
+        d->setL2Dis(newIftEntry.L2DIS);
 
         newIftEntry.passive = false;
-        newIftEntry.entry = entry;
+        d->setPassive(false);
+        newIftEntry.entry = ie;
 
     //    this->ISISIft.push_back(newIftEntry);
         isisModule->appendISISInterface(newIftEntry);
+        ie->setISISInterfaceData(d);
 }
 
 

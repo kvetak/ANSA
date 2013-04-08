@@ -21,18 +21,18 @@ enum ISISTimerType
 {
    
    HELLO_TIMER = 1;
-   NEIGHBOUR_DEAD = 2; //hello timer expired
-   LSP_REFRESH = 3;
-   LSP_DEAD = 4;
+   NEIGHBOUR_DEAD_TIMER = 2; //hello timer expired
+   LSP_REFRESH_TIMER = 3;
+   LSP_DEAD_TIMER = 4;
    CSNP_TIMER = 5;
-   LSP_DELETE = 6;
+   LSP_DELETE_TIMER = 6;
    //L2LSP_DEAD = 7;
-   PERIODIC_SEND = 8;
+   PERIODIC_SEND_TIMER = 8;
    //LSP_REFRESH = 9;
    PSNP_TIMER = 10;
    GENERATE_LSP_TIMER = 11;
-   ISIS_START = 12;
-   SPF_FULL = 13; //fortunately it's not friday
+   ISIS_START_TIMER = 12;
+   SPF_FULL_TIMER = 13; //fortunately it's not friday
    TRILL_HELLO_TIMER = 14;
    
    

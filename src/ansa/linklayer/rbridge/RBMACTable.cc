@@ -20,7 +20,7 @@
  * @date 19.3.2013
  * @brief
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #include "RBMACTable.h"
@@ -245,7 +245,7 @@ void RBMACTable::resetAging() {
 
 
 void RBMACTable::initDefaults() {
-  addressTableSize = 1024; // TODO
+  addressTableSize = 1024; // TODO B2
 
   /* by IEEE 802.1D-1998
    * " The Bridges then use a short value

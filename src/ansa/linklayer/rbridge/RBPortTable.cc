@@ -20,7 +20,7 @@
  * @date 20.3.2013
  * @brief
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #include "RBPortTable.h"
@@ -92,7 +92,7 @@ void RBPortTable::initialize(int stage){
             port.setInterfaceId(ifaceEntry->getInterfaceId());
             port.setGateIndex(ifaceEntry->getNetworkLayerGateIndex());
 
-            //TODO
+            //TODO B1
             //port.initDefaults();
 
             portTable.push_back(port);

@@ -20,7 +20,7 @@
  * @date 7.3.2013
  * @brief Based on Zdenek Kraus's AnsaSwitchCore
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #ifndef TRILL_H_

@@ -34,11 +34,11 @@
 
 /**
  * @file TRILL.cc
- * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka, .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka, etc ... DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 2011
  * @brief
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #ifndef __ANSAINET_CONFIGLOADER_H_

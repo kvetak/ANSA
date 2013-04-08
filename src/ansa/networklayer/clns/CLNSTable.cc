@@ -211,7 +211,7 @@ void CLNSTable::receiveChangeNotification(int category, const cObject *details)
 
 void CLNSTable::addRecord(CLNSRoute *route)
 {
-    //TODO
+    //TODO B1
 //    this->routeVector.push_back(route);
 //    return;
     for (std::vector<CLNSRoute*>::iterator it = this->routeVector.begin(); it != this->routeVector.end(); ++it)

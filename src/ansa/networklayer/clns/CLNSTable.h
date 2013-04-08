@@ -94,7 +94,7 @@ protected:
 
     virtual int numInitStages() const  {return 5;}
     virtual void initialize(int stage);
-    /* TODO */
+    /* TODO B1 */
     virtual void parseXMLConfigFile();
 
     /**

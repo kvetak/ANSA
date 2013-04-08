@@ -38,6 +38,7 @@
 #include "CLNSTable.h"
 #include "CLNSTableAccess.h"
 #include "ISISMessage_m.h"
+#include "ISISInterfaceData.h"
 //#include "ISISLSPPacket.h"
 #include "Ieee802Ctrl_m.h"
 #include "MACAddress.h"
@@ -86,6 +87,7 @@ private:
     unsigned char *areaId; /*!< first 3Bytes of netAddr as area ID */
     unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
     unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
+    int nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
     AdjTab_t adjL1Table; /*!< table of L1 adjacencies */
     AdjTab_t adjL2Table; /*!< table of L2 adjacencies */
     short isType; /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
@@ -142,6 +144,9 @@ private:
     /* Hello */
     void handlePTPHelloMsg(ISISMessage *inMsg); //
     void sendHelloMsg(ISISTimer *timer); // send hello messages
+    void handleL1HelloMsg(ISISMessage *inMsg); // handle L1 hello messages
+    void handleL2HelloMsg(ISISMessage *inMsg); // handle L2 hello messages
+    void handleTRILLHelloMsg(ISISMessage *inMsg); // handles TRILL hello messages
     void sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short  circuitType);
     void sendPTPHelloMsg(int interfaceIndex, int gateIndex, short  circuitType);
     void sendTRILLHelloMsg(ISISTimer *timer); //mimic the sendHelloMsg functionality
@@ -160,6 +165,8 @@ private:
     bool amIDIS(int interfaceIndex, short  circuitType);
     void electDIS(ISISLANHelloPacket *msg);
     std::vector<ISISadj> *getAdjTab(short  circuitType);
+
+    void genTRILLHello(int interfaceId, ISISCircuitType circuitType); //generates Hello(s) for specified interface and places them into ISISInterfaceData
 
     /* LSP */
     unsigned char *getLanID(ISISLANHelloPacket *msg);
@@ -248,11 +255,12 @@ private:
     /* TLV */
     void addTLV(ISISMessage *inMsg, enum TLVtypes tlvType, short  circuitType, int gateIndex = -1); //generate and add this tlvType LSP to message
     void addTLV(ISISMessage *inMsg, TLV_t *tlv); //add this TLV in message
-    void addTLV(std::vector<TLV_t*> *tlvtable, enum TLVtypes tlvType, short  circuitType, unsigned char nsel = 0);
-    TLV_t *genTLV(enum TLVtypes tlvType, short  circuitType, int gateIndex = -1);
+    void addTLV(std::vector<TLV_t*> *tlvtable, enum TLVtypes tlvType, short  circuitType, InterfaceEntry *ie = NULL);
+    std::vector<TLV_t *>genTLV(enum TLVtypes tlvType, short  circuitType, int gateIndex = -1, enum TLVtypes subTLVType = TLV_RESERVED, InterfaceEntry *ie = NULL);
     bool isAdjUp(short  circuitType); //returns true if ANY adjacency is up on specified circuit level
     bool isAdjUp(ISISMessage *msg, short  circuitType);
     TLV_t *getTLVByType(ISISMessage *inMsg, enum TLVtypes tlvType, int offset = 0);
+    unsigned char *getSubTLVByType(TLV_t *tlv, enum TLVtypes subTLVType, int offset = 0);
     /*    TLV_t* getTLVByType(ISISL1HelloPacket *msg,enum TLVtypes tlvType, int offset = 0);
          TLV_t* getTLVByType(ISISL2HelloPacket *msg,enum TLVtypes tlvType, int offset = 0);
          TLV_t* getTLVByType(ISISPTPHelloPacket *msg,enum TLVtypes tlvType, int offset = 0);*/
@@ -265,8 +273,7 @@ private:
 
 
     bool parseNetAddr(); // validate and parse net address format
-    void handleL1HelloMsg(ISISMessage *inMsg); // handle L1 hello messages
-    void handleL2HelloMsg(ISISMessage *inMsg); // handle L2 hello messages
+
     void removeDeadNeighbour(ISISTimer *msg); //remove dead neighbour when timer message arrives
     void electL1DesignatedIS(ISISL1HelloPacket *msg); //starts election of L1 designated intermediate system
     void electL2DesignatedIS(ISISL2HelloPacket *msg); //starts election of L2 designated intermediate system
@@ -355,6 +362,8 @@ public:
     void setL2PsnpInterval(int l2PsnpInterval);
     ISIS_MODE getMode() const;
     int getISISIftSize();
+        void setAtt(bool att);
+        int getNickname() const;
 };
 
 

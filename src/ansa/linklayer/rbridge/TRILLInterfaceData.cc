@@ -1,26 +1,33 @@
+// Copyright (C) 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
+
+/**
+ * @file TRILLInterfaceData.cc
+ * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 24.3.2013
+ * @brief
+ * @detail
+ * @todo Z9
+ */
 
 #include "TRILLInterfaceData.h"
 
 TRILLInterfaceData::TRILLInterfaceData()
 {
     // TODO Auto-generated constructor stub
-
-
-
 
 }
 
@@ -52,6 +59,10 @@ void TRILLInterfaceData::setDefaults(void){
     this->vlanId = 1;
 
     this->inhibited = false;
+
+    this->desigVLAN = 1;
+
+    this->vlanMapping = false;
 }
 
 int TRILLInterfaceData::getVlanId() const
@@ -120,17 +131,89 @@ bool TRILLInterfaceData::isInhibited() const
     return inhibited;
 }
 
+int TRILLInterfaceData::getDesigVlan() const
+{
+    return desigVLAN;
+}
+
+bool TRILLInterfaceData::isVlanMapping() const
+{
+    return vlanMapping;
+}
+
+int TRILLInterfaceData::getDesiredDesigVlan() const
+{
+    return desiredDesigVLAN;
+}
+
+void TRILLInterfaceData::setDesiredDesigVlan(int desiredDesigVlan)
+{
+    desiredDesigVLAN = desiredDesigVlan;
+}
+
+void TRILLInterfaceData::setVlanMapping(bool vlanMapping)
+{
+    this->vlanMapping = vlanMapping;
+}
+
+void TRILLInterfaceData::setDesigVlan(int desigVlan)
+{
+    desigVLAN = desigVlan;
+}
+
 void TRILLInterfaceData::setInhibited(bool inhibited)
 {
     this->inhibited = inhibited;
 }
 
-bool TRILLInterfaceData::isAppointedForwarder(int vlanId){
-    for(VLANVector::iterator iter = appointedForwarder.begin(); iter != appointedForwarder.end(); ++iter){
-        if(vlanId == (*iter)){
+bool TRILLInterfaceData::isAppointedForwarder(int vlanId, int nickname){
+
+    //TODO A2
+//    if(nickname == 0){
+//        nickname = getNicknameOfThisRBridge();
+//    }
+    std::map<int, int>::iterator it = this->appointedForwarder.find(vlanId);
+    if(it != this->appointedForwarder.end()){
+        if((*it).second == nickname){
             return true;
         }
+    }else{
+        return false;
     }
+//    for(VLANVector::iterator iter = appointedForwarder.begin(); iter != appointedForwarder.end(); ++iter){
+//        if(vlanId == (*iter)){
+//            return true;
+//        }
+//    }
 
     return false;
+}
+
+void TRILLInterfaceData::setAppointedForwarder(int vlanId, int nickname)
+{
+    this->appointedForwarder.clear();
+    this->appointedForwarder.insert(std::make_pair(vlanId, nickname));
+}
+
+void TRILLInterfaceData::addAppointedForwarder(int vlanId, int nickname)
+{
+    this->appointedForwarder.insert(std::make_pair(vlanId, nickname));
+}
+
+void TRILLInterfaceData::clearAppointedForwarder(){
+    this->appointedForwarder.clear();
+}
+
+/*
+ * TODO B2 To be determined if nickname has to match too.
+ */
+void TRILLInterfaceData::removeAppointedFowrwarder(int vlanId, int nickname)
+{
+    std::map<int, int>::iterator it = this->appointedForwarder.find(vlanId);
+    if(it != this->appointedForwarder.end()){
+
+        this->appointedForwarder.erase(it);
+    }else{
+//        return false;
+    }
 }

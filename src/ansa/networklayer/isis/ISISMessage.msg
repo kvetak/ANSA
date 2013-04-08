@@ -72,6 +72,7 @@ enum CIRCUIT_TYPES
 //TLV TYPES
 enum TLVtypes
 {
+    TLV_RESERVED = 0;
 	// Types 1 to 10 are defined in  ISO 10589 
 	// -------------------------------------------------------
 	AREA_ADDRESS = 1; 		// Area address(es) of source node  
@@ -96,7 +97,17 @@ enum TLVtypes
 	AUTH_INFO_RFC = 133;  		//IS-IS packet authentication (similar to Type 10, but doesn't define authentication Type 255)  
 	// -------------------------------------------------------
 	
-	//RFC 6326
+	//RFC 6165 *********************************************
+	TLV_MT_PORT_CAP = 143; //Multi-topology-aware port capability
+	//and it's subTLVs
+	//RFC 6326 2.2.1 The Special VLANs and Flags Sub-TLV
+	TLV_MT_PORT_CAP_VLAN_FLAG = 1;
+	
+	
+	//*****************************************************
+	
+	
+	//RFC 6326 2.5. TRILL Neighbor TLV
 	TLV_TRILL_NEIGHBOR = 145;
 	
 	
@@ -118,7 +129,7 @@ packet ISISMessage extends cPacket
     unsigned char type enum(PDU_Type);	//Specifies the type of packet.
     unsigned char version2 = 0x01;		//This is also set to 1.
     unsigned char reserved = 0x00;		//Future use
-    unsigned char maxAreas = 0x00;		//Specifies the number of areas permitted.  value 0 = default = 3 areas
+    unsigned char maxAreas = 0x01;		//Specifies the number of areas permitted.  value 0 = default = 3 areas
     TLV_t TLV[];
 };
 

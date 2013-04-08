@@ -20,7 +20,7 @@
  * @date 19.3.2013
  * @brief
  * @detail
- * @todo
+ * @todo Z9
  */
 
 #ifndef RBMACTABLE_H_
@@ -162,11 +162,11 @@ private:
   void addStatic(MACAddress addr, tPortList ports);
 
   /* mCast */
-  void addGroup(MACAddress addr, tPortList ports); // TODO
-  void addGroupPort(MACAddress addr, int port); // TODO
-  void removeGroup(MACAddress addr); // TODO
-  void removeGroupPort(MACAddress addr, int port); // TODO
-  void alterGroup(MACAddress addr, tPortList ports); // TODO
+  void addGroup(MACAddress addr, tPortList ports); // TODO B2
+  void addGroupPort(MACAddress addr, int port); // TODO B2
+  void removeGroup(MACAddress addr); // TODO B2
+  void removeGroupPort(MACAddress addr, int port); // TODO B2
+  void alterGroup(MACAddress addr, tPortList ports); // TODO B2
 
 protected:
   ESTable eSTable; //end station table
@@ -180,8 +180,8 @@ protected:
   unsigned int uAgingTime;        // user defined value (or default) for STP aging reset
   simtime_t fasterAging;      // for STP topology change faster Aging
 
-  virtual void initialize(); // TODO
-  virtual void finish(); // TODO
+  virtual void initialize(); // TODO B2
+  virtual void finish(); // TODO B2
 
 
 };
