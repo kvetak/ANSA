@@ -370,7 +370,7 @@ bool TRILL::dispatchNativeLocalPort(TRILL::tFrameDescriptor& frame) {
     }
     RBVLANTable::tVIDPortList::iterator it;
     for (it = frame.portList.begin(); it != frame.portList.end(); it++) {
-        if (it->port >= portCount) {
+        if (it->port >= portCount || it->port == frame.rPort) {// do not send on received port
             continue;
         }
 //        if (spanningTree->forwarding(it->port, frame.VID) == false) {
@@ -643,7 +643,7 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
     }
 
     if(!frameDesc.dest.isBroadcast() && !frameDesc.dest.isMulticast()){
-        //unicast RFC 6325 4.6.1.1
+        //TODO A0 unicast RFC 6325 4.6.1.1
     }
 //    rbMACTable->get
     RBMACTable::ESTRecord record = rbMACTable->getESTRecordByESTKey(std::make_pair(MACAddress(frameDesc.dest), frameDesc.VID));
@@ -681,8 +681,15 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
             break;
 
         case RBMACTable::EST_EMPTY:
-            //not found ->treat as
+            //not found ->treat as ... broadcast i guess?
+
+            //TODO A! to be continued
+            frameDesc.portList.clear();
+            frameDesc.portList = vlanTable->getPorts(frameDesc.VID);
+            return dispatchNativeLocalPort(frameDesc);
             break;
+        default:
+            EV << "TRILL: ERRROR: ProcessNative unrecognised type" <<endl;
     }
 
     return true;

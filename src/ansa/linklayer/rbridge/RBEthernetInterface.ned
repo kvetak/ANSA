@@ -42,6 +42,7 @@ module RBEthernetInterface  like IWiredNic
             parameters:
                 queueModule = "queue";
                 txQueueLimit = 1; // queue sends one packet at a time
+                promiscuous = true;
                 @display("p=116,231");
         }
 //        encap: EtherEncap {

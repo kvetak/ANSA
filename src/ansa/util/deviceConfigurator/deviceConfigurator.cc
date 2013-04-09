@@ -1115,6 +1115,11 @@ void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, Interf
         newIftEntry.L2DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
         d->setL2Dis(newIftEntry.L2DIS);
 
+        /* By this time the trillData should be initialized.
+         * So set the intial appointedForwaders to itself for configured VLAN(s).
+         * TODO B5 add RFC reference and do some magic with vlanId, desiredVlanId, enabledVlans, ... */
+        ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
+
         newIftEntry.passive = false;
         d->setPassive(false);
         newIftEntry.entry = ie;
