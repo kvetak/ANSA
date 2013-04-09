@@ -20,7 +20,7 @@
 // * @date 1.3.2013
 // * @brief
 // * @detail
-// * @todo
+// * @todo 
 // */
 package inet.ansa;
 
