@@ -102,6 +102,7 @@ enum TLVtypes
 	//and it's subTLVs
 	//RFC 6326 2.2.1 The Special VLANs and Flags Sub-TLV
 	TLV_MT_PORT_CAP_VLAN_FLAG = 1;
+	TLV_MT_PORT_CAP_APP_FWD = 3;
 	
 	
 	//*****************************************************
