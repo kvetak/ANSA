@@ -29,7 +29,8 @@ Define_Module(ANSARoutingTable6);
 ANSAIPv6Route::ANSAIPv6Route(IPv6Address destPrefix, int length, RouteSrc src)
     : IPv6Route(destPrefix, length, src)
 {
-    _adminDist = Unknown;
+    _adminDist = dUnknown;
+    _routingProtocolSource = pUnknown;
 
     ift = InterfaceTableAccess().get();
 }
@@ -38,10 +39,14 @@ std::string ANSAIPv6Route::info() const
 {
     std::stringstream out;
 
-    out << routeSrcName(getSrc());
+    out << getRouteSrcName();
     out << " " << getDestPrefix() << "/" << getPrefixLength();
     out << " [" << getAdminDist() << "/" << getMetric() << "]";
-    out << " via " << getNextHop();
+    out << " via ";
+    if (getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+        out << "::";
+    else
+        out << getNextHop();
     out << ", " << ift->getInterfaceById(getInterfaceId())->getName();
     if (getExpiryTime()>0)
         out << " exp:" << getExpiryTime();
@@ -52,6 +57,46 @@ std::string ANSAIPv6Route::info() const
 std::string ANSAIPv6Route::detailedInfo() const
 {
     return std::string();
+}
+
+const char *ANSAIPv6Route::getRouteSrcName() const
+{
+    switch (getSrc())
+    {
+        case FROM_RA:
+            return "ND";  //Neighbor Discovery
+
+        case OWN_ADV_PREFIX:
+            return "C";
+
+        case STATIC:
+            if (getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+                return "C";
+            return "S";
+
+        case ROUTING_PROT:
+            switch(getRoutingProtocolSource())
+            {
+                case pRIP: return "R";
+                case pBGP: return "B";
+                case pISIS1: return "I1";
+                case pISIS2: return "I2";
+                case pISISinterarea: return "IA";
+                case pISISsum: return "IS";
+                case pOSPFintra: return "O";
+                case pOSPFinter: return "OI";
+                case pOSPFext1: return "OE1";
+                case pOSPFext2: return "OE2";
+                case pOSPFNSSAext1: return "ON1";
+                case pOSPFNSSAext2: return "ON2";
+                case pEIGRP: return "D";
+                case pEIGRPext: return "EX";
+                default: return "?";
+            }
+
+        default:
+            return "?";
+    }
 }
 
 ANSARoutingTable6::ANSARoutingTable6()
@@ -126,7 +171,7 @@ void ANSARoutingTable6::addOrUpdateOnLinkPrefix(const IPv6Address& destPrefix, i
         route->setInterfaceId(interfaceId);
         route->setExpiryTime(expiryTime);
         route->setMetric(0);
-        route->setAdminDist(ANSAIPv6Route::DirectlyConnected);
+        route->setAdminDist(ANSAIPv6Route::dDirectlyConnected);
 
         // then add it
         addRoute(route);
@@ -166,7 +211,7 @@ void ANSARoutingTable6::addOrUpdateOwnAdvPrefix(const IPv6Address& destPrefix, i
         route->setInterfaceId(interfaceId);
         route->setExpiryTime(expiryTime);
         route->setMetric(0);
-        route->setAdminDist(ANSAIPv6Route::DirectlyConnected);
+        route->setAdminDist(ANSAIPv6Route::dDirectlyConnected);
 
         // then add it
         addRoute(route);
@@ -194,7 +239,7 @@ void ANSARoutingTable6::addStaticRoute(const IPv6Address& destPrefix, int prefix
     if (metric==0)
         metric = 10; // TBD should be filled from interface metric
     route->setMetric(metric);
-    route->setAdminDist(ANSAIPv6Route::Static);
+    route->setAdminDist(ANSAIPv6Route::dStatic);
 
     // then add it
     addRoute(route);
@@ -208,7 +253,7 @@ void ANSARoutingTable6::addDefaultRoute(const IPv6Address& nextHop, unsigned int
     route->setInterfaceId(ifID);
     route->setNextHop(nextHop);
     route->setMetric(10); //FIXME:should be filled from interface metric
-    route->setAdminDist(ANSAIPv6Route::Static);
+    route->setAdminDist(ANSAIPv6Route::dStatic);
 
 #ifdef WITH_xMIPv6
     route->setExpiryTime(routerLifetime); // lifetime useful after transitioning to new AR // 27.07.08 - CB

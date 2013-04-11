@@ -29,39 +29,63 @@ class ANSAIPv6Route : public IPv6Route
 {
   public:
 
-    /** Cisco like administrative distances */
+    /** Should be set if route source is a "routing protocol" **/
+    enum RoutingProtocolSource
+    {
+        pUnknown = 0,
+        pRIP,            //RIPng
+        pBGP,            //BGP
+        pISIS1,          //ISIS L1
+        pISIS2,          //ISIS L2
+        pISISinterarea,  //ISIS interarea
+        pISISsum,        //ISIS summary
+        pOSPFintra,      //OSPF intra
+        pOSPFinter,      //OSPF inter
+        pOSPFext1,       //OSPF ext 1
+        pOSPFext2,       //OSPF ext 2
+        pOSPFNSSAext1,   //OSPF NSSA ext 1
+        pOSPFNSSAext2,   //OSPF NSSA ext 2
+        pEIGRP,          //EIGRP
+        pEIGRPext        //EIGRP external
+    };
+
+    /** Cisco like administrative distances (includes IPv4 protocols)*/
     enum RouteAdminDist
     {
-        DirectlyConnected = 0,
-        Static = 1,
-        EIGRPSummary = 5,
-        BGPExternal = 20,
-        EIGRPInternal = 90,
-        IGRP = 100,
-        OSPF = 110,
-        ISIS = 115,
-        RIP = 120,
-        EGP = 140,
-        ODR = 160,
-        EIGRPExternal = 170,
-        BGPInternal = 200,
-        DHCPlearned = 254,
-        Unknown = 255,
+        dDirectlyConnected = 0,
+        dStatic = 1,
+        dEIGRPSummary = 5,
+        dBGPExternal = 20,
+        dEIGRPInternal = 90,
+        dIGRP = 100,
+        dOSPF = 110,
+        dISIS = 115,
+        dRIP = 120,
+        dEGP = 140,
+        dODR = 160,
+        dEIGRPExternal = 170,
+        dBGPInternal = 200,
+        dDHCPlearned = 254,
+        dUnknown = 255
     };
 
   protected:
     IInterfaceTable *ift; // cached pointer
     RouteAdminDist _adminDist;
+    RoutingProtocolSource _routingProtocolSource;
 
   public:
     ANSAIPv6Route(IPv6Address destPrefix, int length, RouteSrc src);
 
     virtual std::string info() const;
     virtual std::string detailedInfo() const;
+    virtual const char *getRouteSrcName() const;
 
-    void setAdminDist(RouteAdminDist adminDist)  {_adminDist = adminDist;}
+    void setAdminDist(RouteAdminDist adminDist)  {_adminDist = adminDist; }
+    void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) { _routingProtocolSource = routingProtocolSource; }
 
-    RouteAdminDist getAdminDist() const  {return _adminDist;}
+    RouteAdminDist getAdminDist() const  { return _adminDist; }
+    RoutingProtocolSource getRoutingProtocolSource() const { return _routingProtocolSource; }
 };
 
 /**

@@ -61,7 +61,6 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
     simtime_t   regularUpdateTimeout;
     IPv6Address RIPngAddress;
     int         RIPngPort;
-    int         adminDist;
 
     RIPngTimer *regularUpdateTimer;
     RIPngTimer *triggeredUpdateTimer;
@@ -90,7 +89,6 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
     simtime_t getRegularUpdateTimeout() { return regularUpdateTimeout; }
     IPv6Address getRIPngAddress() { return RIPngAddress; }
     int getRIPngPort() { return RIPngPort; }
-    int getAdminDist() { return adminDist; }
 
     //-- RIPNG ROUTING TABLE METHODS
     typedef RoutingTable::iterator RoutingTableIt;

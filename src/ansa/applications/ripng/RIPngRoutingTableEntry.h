@@ -19,8 +19,8 @@
 * @detail
 */
 
-#ifndef ROUTINGTABLEENTRY_H_
-#define ROUTINGTABLEENTRY_H_
+#ifndef RIPNGROUTINGTABLEENTRY_H_
+#define RIPNGROUTINGTABLEENTRY_H_
 
 #include "ANSARoutingTable6.h"
 
@@ -47,8 +47,12 @@ class RoutingTableEntry : public ANSAIPv6Route
     RoutingTableEntry *_copy;      ///< If this RTE is stored in the "RIPng routing table", this is reference to the RTE in the "global routing table" and vice versa
 
   public:
-    virtual std::string info() const;
-    virtual std::string detailedInfo() const;
+    /**
+     * For printing RIPng route information
+     * virtual info() or virtual detailedInfo() can't be redefined,
+     * because of consistency of printed route information in ANSARoutingTable6
+     */
+    virtual std::string RIPngInfo() const;
 
     bool isChangeFlagSet() const { return _changeFlag; }
     void setChangeFlag() { _changeFlag = true; }
@@ -67,4 +71,4 @@ class RoutingTableEntry : public ANSAIPv6Route
 
 } /* namespace RIPng */
 
-#endif /* ROUTINGTABLEENTRY_H_ */
+#endif /* RIPNGROUTINGTABLEENTRY_H_ */
