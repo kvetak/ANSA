@@ -336,7 +336,8 @@ void AnsaRoutingTable::generateShowIPMroute()
         os << "(";
         if (ipr->getOrigin().isUnspecified()) os << "*, "; else os << ipr->getOrigin() << ",  ";
         os << ipr->getMulticastGroup() << "), ";
-        if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
+        if (ipr->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)
+            if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
         os << "flags: ";
         std::vector<flag> flags = ipr->getFlags();
         for (unsigned int j = 0; j < flags.size(); j++)
@@ -364,7 +365,8 @@ void AnsaRoutingTable::generateShowIPMroute()
                 case T:
                     os << "T";
                     break;
-                //FIXME next flags for PIM-SM
+                case NO_FLAG:
+                    break;
             }
         }
         os << endl;

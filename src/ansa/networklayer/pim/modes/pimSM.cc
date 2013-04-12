@@ -164,14 +164,14 @@ PIMrst* pimSM::createRegisterStopTimer(IPv4Address source, IPv4Address group)
  */
 PIMet* pimSM::createExpiryTimer(int intID, int holdtime, IPv4Address group, IPv4Address source, int StateType)
 {
+    EV << "Creating ET timer " << group << " , " << source << " : " << intID << " : " << StateType << endl;
+
     PIMet *timer = new PIMet();
     timer->setName("PIMExpiryTimer");
     timer->setIntId(intID);
     timer->setGroup(group);
     timer->setSource(source);
     timer->setStateType(StateType);
-
-//    std::cout << "Vytvarim ET casovac: " << group << " , " << source << " : " << intID << " : " << StateType << endl;
 
     scheduleAt(simTime() + holdtime, timer);
     return timer;
@@ -212,7 +212,7 @@ PIMjt* pimSM::createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address
  * @return Pointer to new PrunePending Timer
  * @see PIMppt()
  */
-PIMppt* pimSM::createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr)
+PIMppt* pimSM::createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, JPMsgType JPtype)
 {
     PIMppt *timer = new PIMppt();
     timer->setName("PIMPrunePendingTimer");
@@ -220,6 +220,7 @@ PIMppt* pimSM::createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IP
     timer->setGroup(group);
     timer->setJoinPruneAddr(JPaddr);
     timer->setUpstreamNbr(upstreamNbr);
+    timer->setJoinPruneType(JPtype);
 
     scheduleAt(simTime() + PPT, timer);
     return timer;
@@ -241,12 +242,12 @@ void pimSM::dataOnRpf(AnsaIPv4MulticastRoute *route)
         cancelEvent(route->getKat());
         if (route->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)     // (*,G) route
         {
-            scheduleAt(simTime() + 2*KAT, route->getKat());
+            scheduleAt(simTime() + KAT2+KAT, route->getKat());
             EV << "PIMSM::dataOnRpf: restart (*,G) KAT" << endl;
         }
         else                                                            // (S,G) route
         {
-            scheduleAt(simTime() + KAT, route->getKat());
+            scheduleAt(simTime() + KAT2, route->getKat());
             EV << "PIMSM::dataOnRpf: restart (S,G) KAT" << endl;
             if (!route->isFlagSet(T))
                 route->addFlag(T);
@@ -386,6 +387,14 @@ void pimSM::processKeepAliveTimer(PIMkat *timer)
         }
     }
 
+    // only for RP, when KAT for (S,G) expire, set KAT for (*,G)
+    if (IamRP(this->getRPAddress()) && route->getOrigin() != IPv4Address::UNSPECIFIED_ADDRESS)
+    {
+        AnsaIPv4MulticastRoute *routeG = rt->getRouteFor(timer->getGroup(), IPv4Address::UNSPECIFIED_ADDRESS);
+        if (routeG && !routeG->getKat())
+            routeG->setKat(createKeepAliveTimer(IPv4Address::UNSPECIFIED_ADDRESS, timer->getGroup()));
+    }
+
     delete timer;
     route->setKat(NULL);
     rt->deleteMulticastRoute(route);
@@ -419,7 +428,7 @@ void pimSM::processRegisterStopTimer(PIMrst *timer)
  */
 void pimSM::processExpiryTimer(PIMet *timer)
 {
-    EV << "pimSM::processExpiryTimer: ";
+    EV << "pimSM::processExpiryTimer: " << endl;
 
     AnsaIPv4MulticastRoute *route = rt->getRouteFor(timer->getGroup(), timer->getSource());
     PimNeighbor *RPFneighbor = pimNbt->getNeighborByIntID(route->getInIntId());
@@ -477,7 +486,15 @@ void pimSM::processExpiryTimer(PIMet *timer)
                 outVect.erase(outVect.begin() + i);
             }
         }
-        rt->deleteMulticastRoute(route);
+        if (IamRP(this->getRPAddress()) && msgType == G)
+        {
+            EV << "ET for (*,G) route on RP expires - go to stopped" << endl;
+            cancelEvent (route->getEt());
+            delete route->getEt();
+            route->setEt(NULL);
+        }
+        else
+            rt->deleteMulticastRoute(route);
     }
     rt->generateShowIPMroute();
 }
@@ -537,8 +554,10 @@ void pimSM::processPrunePendingTimer(PIMppt *timer)
 {
     EV << "pimSM::processPrunePendingTimer:" << endl;
 
-    if (!IamRP(this->getRPAddress()))
+    if (!IamRP(this->getRPAddress()) && timer->getJoinPruneType() == G)
         sendPIMJoinPrune(timer->getGroup(),timer->getJoinPruneAddr(),timer->getUpstreamNbr(),PruneMsg,G);
+    if (timer->getJoinPruneType() == SG)
+        sendPIMJoinPrune(timer->getGroup(),timer->getJoinPruneAddr(),timer->getUpstreamNbr(),PruneMsg,SG);
 
     AnsaIPv4MulticastRoute *route = rt->getRouteFor(timer->getGroup(), IPv4Address::UNSPECIFIED_ADDRESS);
     if (route->getPpt())
@@ -546,41 +565,60 @@ void pimSM::processPrunePendingTimer(PIMppt *timer)
     delete timer;
 }
 
+/**
+ * RESTART EXPIRY TIMER
+ *
+ * The method is used to restart ET. ET is used for outgoing interfaces
+ * and whole route in router. After ET expires, outgoing interface is
+ * removed or if there aren't any outgoing interface, route is removed
+ * after ET expires.
+ *
+ * @param route Pointer to multicast route.
+ * @param originIntf Pointer to origin interface to packet
+ * @param holdTime time for ET
+ * @see getEt
+ * @see setEt
+ */
 void pimSM::restartExpiryTimer(AnsaIPv4MulticastRoute *route, InterfaceEntry *originIntf, int holdTime)
 {
-    EV << "pimSM::restartExpiryTimer: next ET @ " << simTime() + holdTime << " for ";
+    EV << "pimSM::restartExpiryTimer: next ET @ " << simTime() + holdTime << " for type: ";
 
     if (route)
     {
+        // ET for route
         if (route->getEt())
         {
             cancelEvent(route->getEt());
             scheduleAt(simTime() + holdTime, route->getEt());
         }
-        if (route->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)
-            EV <<  " (*,G)" << endl;
-        else
-            EV <<  " (S,G)" << endl;
 
+        // ET for outgoing interfaces
         InterfaceVector outIntVect = route->getOutInt();
         for (unsigned i=0; i< outIntVect.size(); i++)
-        {
-            if (outIntVect[i].intId == originIntf->getInterfaceId())
+        {   // if exist ET and for given interface
+            if (outIntVect[i].expiryTimer && (outIntVect[i].intId == originIntf->getInterfaceId()))
             {
-                if (outIntVect[i].expiryTimer)
-                {
-                    PIMet *timer = outIntVect[i].expiryTimer;
-                    std::cout << "RESTARTUJI ET casovac: " << timer->getGroup() << " , " << timer->getSource() << " : " << timer->getIntId() << " : " << timer->getStateType() << endl;
-                    cancelEvent(timer);
-                    scheduleAt(simTime() + holdTime, timer);
-                    break;
-                }
+                PIMet *timer = outIntVect[i].expiryTimer;
+                EV << timer->getStateType() << " , " << timer->getGroup() << " , " << timer->getSource() << ", int: " << timer->getIntId() << endl;
+                cancelEvent(timer);
+                scheduleAt(simTime() + holdTime, timer);
+                break;
             }
         }
     }
 }
 
-
+/**
+ * PROCESS JOIN/PRUNE PACKET
+ *
+ * The method is used to process Join or Prune packet. Joining and Pruning
+ * addresses are carried in one PIM packet. This method determine which
+ * type (Join/Prune) will be processed.
+ *
+ * @param pkt Pointer to PIM Join/Prune paket.
+ * @see getJoinedSourceAddressArraySize()
+ * @see getPrunedSourceAddressArraySize()
+ */
 void pimSM::processJoinPrunePacket(PIMJoinPrune *pkt)
 {
     EV <<  "pimSM::processJoinPrunePacket" << endl;
@@ -613,6 +651,20 @@ void pimSM::processJoinPrunePacket(PIMJoinPrune *pkt)
     }
 }
 
+/**
+ * PROCESS PRUNE PACKET
+ *
+ * The method is used to process Prune packet from downstream router.
+ * If Prune is received, outgoing interface is removed from multicast route.
+ * If multicast route doesn't have any  outgoing interface, Prune message is
+ * send to upstream neighbor.
+ *
+ * @param pkt Pointer to PIM Join/Prune paket.
+ * @param multgroup Address for multicast group
+ * @param encodedAddr Encoded address format
+ * @see sendPIMJoinPrune()
+ * @see encodedAddr
+ */
 void pimSM::processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr)
 {
     EV <<  "pimSM::processPrunePacket: ";
@@ -639,6 +691,11 @@ void pimSM::processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, Encoded
                     delete (outIntSG[k].expiryTimer);
                 }
                 outIntSG.erase(outIntSG.begin() + k);
+
+                InterfaceEntry *newInIntG = rt->getInterfaceForDestAddr(this->getRPAddress());
+                routeSG->addOutIntFull(newInIntG,newInIntG->getInterfaceId(),Pruned,Sparsemode,NULL,NULL,NoInfo,Join);      // create "virtual" outgoing interface to RP
+                routeSG->setOutShowIntStatus(false);                   //we need to set register state to output interface, but output interface has to be null for now
+                break;
             }
         }
         routeSG->setOutInt(outIntSG);
@@ -646,18 +703,25 @@ void pimSM::processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, Encoded
         if (routeSG->isOilistNull())
         {
             routeSG->addFlag(P);
-            if (routeSG->getJt())                                                                                         // if is JT set, delete it
+            if (routeSG->getJt())                           // if is JT set, delete it
             {
                 cancelEvent(routeSG->getJt());
                 delete routeSG->getJt();
                 routeSG->setJt(NULL);
             }
             if (!IamDR(routeSG->getOrigin()))
+            {
+#if CISCO_SPEC_SIM == 1
                 sendPIMJoinPrune(multGroup,encodedAddr.IPaddress,RPFnbr->getAddr(),PruneMsg,SG);
+#else
+                PIMppt* timerPpt = createPrunePendingTimer(multGroup, encodedAddr.IPaddress, RPFnbr->getAddr(), SG);
+                routeSG->setPpt(timerPpt);
+#endif
+            }
         }
 
     }
-    if (encodedAddr.R && encodedAddr.W && encodedAddr.S)                                                // (*,G) Prune
+    if (encodedAddr.R && encodedAddr.W && encodedAddr.S)    // (*,G) Prune
     {
         EV << "(*,G) Prune processing" << endl;
         vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);
@@ -682,30 +746,57 @@ void pimSM::processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, Encoded
             }
             route->setOutInt(outInt);
 
-            if (route->isOilistNull())                                          // there is no receiver of multicast, prune the router from the multicast tree
+            // there is no receiver of multicast, prune the router from the multicast tree
+            if (route->isOilistNull())
             {
                 route->removeFlag(C);
                 route->addFlag(P);
-                if (route->getJt())                                                                                         // if is JT set, delete it
+                if (route->getJt())                     // if is JT set, delete it
                 {
                     cancelEvent(route->getJt());
                     delete route->getJt();
                     route->setJt(NULL);
                 }
-
+                // send Prune message
                 PimNeighbor *RPFnbr = pimNbt->getNeighborByIntID(route->getInIntId());
-                if (!IamRP(this->getRPAddress()) && (multOrigin == IPv4Address::UNSPECIFIED_ADDRESS))                      // only for non-RP routers in RPT
-                    sendPIMJoinPrune(multGroup,this->getRPAddress(),RPFnbr->getAddr(),PruneMsg,G);
-                else if (IamRP(this->getRPAddress()) && (multOrigin != IPv4Address::UNSPECIFIED_ADDRESS))                  // send from RP only if (S,G) is available
-                    sendPIMJoinPrune(multGroup,multOrigin,RPFnbr->getAddr(),PruneMsg,SG);
+                if (!IamRP(this->getRPAddress()) && (multOrigin == IPv4Address::UNSPECIFIED_ADDRESS))
+                {
+#if CISCO_SPEC_SIM == 1
+                    sendPIMJoinPrune(multGroup,this->getRPAddress(),RPFnbr->getAddr(),PruneMsg,G);      // only for non-RP routers in RPT
+#else
+                    PIMppt* timerPpt = createPrunePendingTimer(multGroup, this->getRPAddress(), RPFnbr->getAddr(),G);
+                    route->setPpt(timerPpt);
+#endif
+                }
+                else if (IamRP(this->getRPAddress()) && (multOrigin != IPv4Address::UNSPECIFIED_ADDRESS))
+                {
+#if CISCO_SPEC_SIM == 1
+                    sendPIMJoinPrune(multGroup,multOrigin,RPFnbr->getAddr(),PruneMsg,SG);               // send from RP only if (S,G) is available
+#else
+                    PIMppt* timerPpt = createPrunePendingTimer(multGroup, multOrigin, RPFnbr->getAddr(), SG);
+                    route->setPpt(timerPpt);
+#endif
+                }
             }
         }
     }
-
     rt->generateShowIPMroute();
 }
 
-void pimSM::processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address multGroup)
+/**
+ * PROCESS PROCESS SG JOIN
+ *
+ * The method is used to process (S,G) Join PIM message. SG Join is process in
+ * source tree between RP and source DR. If (S,G) route doesn't exist is created
+ * along with (*,G) route. Otherwise outgoing interface and JT are created.
+ *
+ * @param pkt Pointer to PIM Join/Prune packet.
+ * @param multgroup Address for multicast group
+ * @param multOrigin Address for multicast source
+ * @see sendPIMJoinPrune()
+ * @see getRouteFor()
+ */
+void pimSM::processSGJoin(PIMJoinPrune *pkt, IPv4Address multOrigin, IPv4Address multGroup)
 {
     AnsaIPv4MulticastRoute *newRouteSG = new AnsaIPv4MulticastRoute();
     IPv4ControlInfo *ctrl = (IPv4ControlInfo *) pkt->getControlInfo();
@@ -719,7 +810,7 @@ void pimSM::processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address 
     {
         AnsaIPv4MulticastRoute *newRouteG = new AnsaIPv4MulticastRoute();
         routePointer = newRouteG;
-        if (!(newRouteG = rt->getRouteFor(multGroup, IPv4Address::UNSPECIFIED_ADDRESS)))                // create (*,G) route between RP and source DR
+        if (!(newRouteG = rt->getRouteFor(multGroup, IPv4Address::UNSPECIFIED_ADDRESS)))        // create (*,G) route between RP and source DR
         {
             InterfaceEntry *newInIntG = rt->getInterfaceForDestAddr(this->RPAddress);
             PimNeighbor *neighborToRP = pimNbt->getNeighborByIntID(newInIntG->getInterfaceId());
@@ -734,7 +825,7 @@ void pimSM::processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address 
     }
 
     routePointer = newRouteSG;
-    if (!(newRouteSG = rt->getRouteFor(multGroup, multOrigin)))                                         // create (S,G) route between RP and source DR
+    if (!(newRouteSG = rt->getRouteFor(multGroup, multOrigin)))         // create (S,G) route between RP and source DR
     {
         newRouteSG = routePointer;
         // set source, mult. group, etc...
@@ -743,20 +834,26 @@ void pimSM::processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address 
 
         // set outgoing and incoming interface and ET
         InterfaceEntry *outInt = rt->getInterfaceForDestAddr(this->getRPAddress());
-        newRouteSG->setInInt(newInIntSG, newInIntSG->getInterfaceId(), neighborToSrcDR->getAddr());
-        PIMet *timerEt = createExpiryTimer(outInt->getInterfaceId(), holdTime, multGroup,multOrigin,SG);
-        newRouteSG->addOutIntFull(outInt,outInt->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
 
-        if (!IamDR(multOrigin))
-            newRouteSG->setJt(createJoinTimer(multGroup, multOrigin, neighborToSrcDR->getAddr(),SG));
+        // RPF check
+        if (newInIntSG->getInterfaceId() != outInt->getInterfaceId())
+        {
+            newRouteSG->setInInt(newInIntSG, newInIntSG->getInterfaceId(), neighborToSrcDR->getAddr());
+            PIMet *timerEt = createExpiryTimer(outInt->getInterfaceId(), holdTime, multGroup,multOrigin,SG);
+            newRouteSG->addOutIntFull(outInt,outInt->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
 
-        rt->addMulticastRoute(newRouteSG);
+            if (!IamDR(multOrigin))
+                newRouteSG->setJt(createJoinTimer(multGroup, multOrigin, neighborToSrcDR->getAddr(),SG));
 
-        if (!IamDR(multOrigin))
-            sendPIMJoinPrune(multGroup,multOrigin,neighborToSrcDR->getAddr(),JoinMsg,SG);       // triggered join except DR
+            rt->addMulticastRoute(newRouteSG);
+
+            if (!IamDR(multOrigin))
+                sendPIMJoinPrune(multGroup,multOrigin,neighborToSrcDR->getAddr(),JoinMsg,SG);       // triggered join except DR
+        }
     }
     else
     {
+        // on source DR isn't RPF check - DR doesn't have incoming interface
         if (IamDR(multOrigin) && (newRouteSG->getSequencenumber() == 0))
         {
             InterfaceVector outIntVect = newRouteSG->getOutInt();
@@ -764,7 +861,8 @@ void pimSM::processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address 
             PIMet *timerEt = createExpiryTimer(outIntf->getInterfaceId(), holdTime, multGroup,multOrigin,SG);
 
             newRouteSG->removeFlag(P);
-            for (unsigned j=0; j < outIntVect.size(); j++)                                                                      // update interfaces to forwarding state
+            // update interfaces to forwarding state
+            for (unsigned j=0; j < outIntVect.size(); j++)
             {
                 outIntVect[j].forwarding = Forward;
                 outIntVect[j].expiryTimer = timerEt;
@@ -786,37 +884,38 @@ void pimSM::processJoinRouteGexistOnRP(IPv4Address multGroup, IPv4Address packet
     AnsaIPv4MulticastRoute *routePointer;
     IPv4Address multOrigin;
 
-    std::vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);                               // get all mult. routes at RP
+    std::vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);       // get all mult. routes at RP
     for (unsigned i=0; i<routes.size();i++)
     {
         routePointer = routes[i];
-        if (routePointer->getSequencenumber() == 0)                                                         // only check if route was installed
+        if (routePointer->getSequencenumber() == 0)                                 // only check if route was installed
         {
             multOrigin = routePointer->getOrigin();
-            if (multOrigin != IPv4Address::UNSPECIFIED_ADDRESS)                                         // for (S,G) route
+            if (multOrigin != IPv4Address::UNSPECIFIED_ADDRESS)                     // for (S,G) route
             {
-                routePointer->removeFlag(P);                                                                                // update flags
+                // update flags
+                routePointer->removeFlag(P);
                 routePointer->addFlag(T);
-                routePointer->setJt(createJoinTimer(multGroup, multOrigin, routePointer->getInIntNextHop(),SG));               // set JT
+                routePointer->setJt(createJoinTimer(multGroup, multOrigin, routePointer->getInIntNextHop(),SG));
 
                 InterfaceVector outIntVect = routePointer->getOutInt();
-                if (outIntVect.size() == 0)                                                                                         // Has route any outgoing interface?
-                {                                                                                                                       // any interface available
+                if (outIntVect.size() == 0)                                         // Has route any outgoing interface?
+                {
                     InterfaceEntry *interface = rt->getInterfaceForDestAddr(packetOrigin);
                     PIMet *timerEt = createExpiryTimer(interface->getInterfaceId(),msgHoldtime, multGroup,multOrigin,SG);
-                    routePointer->addOutIntFull(interface,interface->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);         // add outgoing interface for (S,G)
+                    routePointer->addOutIntFull(interface,interface->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
                     sendPIMJoinPrune(multGroup, multOrigin, routePointer->getInIntNextHop(),JoinMsg,SG);
                 }
                 routePointer->setSequencenumber(1);
             }
-            else                                                                                                // for (*,G) route
+            else                                                                    // for (*,G) route
             {
                 if (routePointer->isFlagSet(P) || routePointer->isFlagSet(F))
                 {
                     routePointer->removeFlag(P);
                     routePointer->removeFlag(F);
                 }
-                if (routePointer->getKat())                                                                     // remove KAT and set ET to (*,G)
+                if (routePointer->getKat())                                         // remove KAT and set ET to (*,G)
                 {
                     cancelEvent(routePointer->getKat());
                     delete routePointer->getKat();
@@ -841,8 +940,11 @@ void pimSM::processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedA
     IPv4ControlInfo *ctrl = (IPv4ControlInfo *) pkt->getControlInfo();
     AnsaIPv4MulticastRoute *newRouteG = new AnsaIPv4MulticastRoute();
     AnsaIPv4MulticastRoute *routePointer;
+    int msgHoldTime = pkt->getHoldTime();
     IPv4Address pktSource = ctrl->getSrcAddr();
+    InterfaceEntry *JoinIncomingInt = rt->getInterfaceForDestAddr(pktSource);
     IPv4Address multOrigin;
+
 
     if (!encodedAddr.R && !encodedAddr.W && encodedAddr.S)                                              // (S,G) Join
     {
@@ -857,47 +959,53 @@ void pimSM::processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedA
             newRouteG = routePointer;
             InterfaceEntry *newInIntG = rt->getInterfaceForDestAddr(this->RPAddress);                                       // incoming interface
             PimNeighbor *neighborToRP = pimNbt->getNeighborByIntID(newInIntG->getInterfaceId());                            // RPF neighbor
-            InterfaceEntry *outIntf = rt->getInterfaceForDestAddr(pktSource);                                      // outgoing interface
+            InterfaceEntry *outIntf = JoinIncomingInt;                                      // outgoing interface
 
-            newRouteG->setAddresses(IPv4Address::UNSPECIFIED_ADDRESS,multGroup,this->getRPAddress());                       // set source, mult. group, etc...
-            newRouteG->addFlag(S);
-
-            if (!IamRP(this->getRPAddress()))
+            if (JoinIncomingInt->getInterfaceId() != newInIntG->getInterfaceId())
             {
-                newRouteG->setInInt(newInIntG, newInIntG->getInterfaceId(), neighborToRP->getAddr());                       //  (*,G) route hasn't incoming interface at RP
-                newRouteG->setJt(createJoinTimer(multGroup, this->getRPAddress(), neighborToRP->getAddr(),G));              // periodic Join (*,G)
+                newRouteG->setAddresses(IPv4Address::UNSPECIFIED_ADDRESS,multGroup,this->getRPAddress());                       // set source, mult. group, etc...
+                newRouteG->addFlag(S);
+
+                if (!IamRP(this->getRPAddress()))
+                {
+                    newRouteG->setInInt(newInIntG, newInIntG->getInterfaceId(), neighborToRP->getAddr());                       //  (*,G) route hasn't incoming interface at RP
+                    newRouteG->setJt(createJoinTimer(multGroup, this->getRPAddress(), neighborToRP->getAddr(),G));              // periodic Join (*,G)
+                }
+
+                PIMet *timerEt = createExpiryTimer(outIntf->getInterfaceId(),msgHoldTime, multGroup,IPv4Address::UNSPECIFIED_ADDRESS,G);
+                PIMet *timerEtNI = createExpiryTimer(NO_INT_TIMER,msgHoldTime, multGroup,IPv4Address::UNSPECIFIED_ADDRESS,G);
+                newRouteG->addOutIntFull(outIntf,outIntf->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
+                newRouteG->setEt(timerEtNI);
+                rt->addMulticastRoute(newRouteG);
+
+                if (!IamRP(this->getRPAddress()))
+                    sendPIMJoinPrune(multGroup,this->getRPAddress(),neighborToRP->getAddr(),JoinMsg,G);                         // triggered Join (*,G)
             }
-
-            PIMet *timerEt = createExpiryTimer(outIntf->getInterfaceId(),pkt->getHoldTime(), multGroup,IPv4Address::UNSPECIFIED_ADDRESS,G);
-            PIMet *timerEtNI = createExpiryTimer(NO_INT_TIMER,pkt->getHoldTime(), multGroup,IPv4Address::UNSPECIFIED_ADDRESS,G);
-            newRouteG->addOutIntFull(outIntf,outIntf->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
-            newRouteG->setEt(timerEtNI);
-            rt->addMulticastRoute(newRouteG);
-
-            if (!IamRP(this->getRPAddress()))
-                sendPIMJoinPrune(multGroup,this->getRPAddress(),neighborToRP->getAddr(),JoinMsg,G);                         // triggered Join (*,G)
         }
         else            // (*,G) route exist
         {
-            if (IamRP(this->getRPAddress()))
-                processJoinRouteGexistOnRP(multGroup, pktSource,pkt->getHoldTime());
-            else        // (*,G) route exist somewhere in RPT
+            if (!newRouteG->isRpf(JoinIncomingInt->getInterfaceId()))
             {
-                InterfaceEntry *interface = rt->getInterfaceForDestAddr(pktSource);
-                if (!newRouteG->outIntExist(interface->getInterfaceId()))
+                if (IamRP(this->getRPAddress()))
+                    processJoinRouteGexistOnRP(multGroup, pktSource,msgHoldTime);
+                else        // (*,G) route exist somewhere in RPT
                 {
-                    PIMet *timerEt = createExpiryTimer(interface->getInterfaceId(),pkt->getHoldTime(), multGroup,IPv4Address::UNSPECIFIED_ADDRESS,G);
-                    newRouteG->addOutIntFull(interface,interface->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
+                    InterfaceEntry *interface = JoinIncomingInt;
+                    if (!newRouteG->outIntExist(interface->getInterfaceId()))
+                    {
+                        PIMet *timerEt = createExpiryTimer(interface->getInterfaceId(),msgHoldTime, multGroup,IPv4Address::UNSPECIFIED_ADDRESS,G);
+                        newRouteG->addOutIntFull(interface,interface->getInterfaceId(),Forward,Sparsemode,NULL,timerEt,NoInfo,NoInfoRS);
+                    }
                 }
-            }
-            // restart ET for given interface - for (*,G) and also (S,G)
-            restartExpiryTimer(newRouteG,rt->getInterfaceForDestAddr(pktSource), pkt->getHoldTime());
-            std::vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);
-            for (unsigned i=0; i<routes.size();i++)
-            {
-                routePointer = routes[i];
-                if (routePointer->getOrigin() != IPv4Address::UNSPECIFIED_ADDRESS)
-                    restartExpiryTimer(routePointer,rt->getInterfaceForDestAddr(pktSource), pkt->getHoldTime());
+                // restart ET for given interface - for (*,G) and also (S,G)
+                restartExpiryTimer(newRouteG,JoinIncomingInt, msgHoldTime);
+                std::vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);
+                for (unsigned i=0; i<routes.size();i++)
+                {
+                    routePointer = routes[i];
+                    if (routePointer->getOrigin() != IPv4Address::UNSPECIFIED_ADDRESS)
+                        restartExpiryTimer(routePointer,JoinIncomingInt, msgHoldTime);
+                }
             }
         }
     }
@@ -1032,7 +1140,6 @@ void pimSM::sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr,
     EncodedAddress encodedAddr;
 
     // set PIM packet
-    msg->setName("PIMJoin/Prune");
     msg->setType(JoinPrune);
     msg->setUpstreamNeighborAddress(upstreamNbr);
     msg->setHoldTime(HOLDTIME);
@@ -1058,6 +1165,7 @@ void pimSM::sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr,
     if (msgType == JoinMsg)
     {
         EV << "Join" << endl;
+        msg->setName("PIMJoin/Prune(Join)");
         group->setJoinedSourceAddressArraySize(1);
         group->setPrunedSourceAddressArraySize(0);
         group->setJoinedSourceAddress(0,encodedAddr);
@@ -1065,6 +1173,7 @@ void pimSM::sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr,
     if (msgType == PruneMsg)
     {
         EV << "Prune" << endl;
+        msg->setName("PIMJoin/Prune(Prune)");
         group->setJoinedSourceAddressArraySize(0);
         group->setPrunedSourceAddressArraySize(1);
         EncodedAddress PruneAddress;
@@ -1091,7 +1200,7 @@ void pimSM::sendPIMRegisterNull(IPv4Address multSource, IPv4Address multDest)
     if (rt->getRouteFor(multDest,multSource))
     {
         // set fields for PIM Register packet
-        msg->setName("PIMRegisterNull");
+        msg->setName("PIMRegister(Null)");
         msg->setType(Register);
         msg->setN(true);
         msg->setB(false);
@@ -1112,7 +1221,7 @@ void pimSM::sendPIMRegisterNull(IPv4Address multSource, IPv4Address multDest)
 
 void pimSM::sendPIMRegister(IPv4ControlInfo *ctrl)
 {
-    EV << "pimSM::sendPIMRegister" << endl;
+    EV << "pimSM::sendPIMRegister - encapsulating data packet into Register packet and sending to RP" << endl;
 
     IPv4Address multGroup = ctrl->getDestAddr();
     IPv4Address multOrigin = ctrl->getSrcAddr();
@@ -1240,31 +1349,35 @@ void pimSM::newMulticastRegisterDR(AnsaIPv4MulticastRoute *newRoute)
     EV << "pimSM::newMulticastRegisterDR" << endl;
 
     AnsaIPv4MulticastRoute *newRouteG = new AnsaIPv4MulticastRoute();
-
-    // Set Keep Alive timer for routes
-    PIMkat* timerKat = createKeepAliveTimer(newRoute->getOrigin(), newRoute->getMulticastGroup());
-    PIMkat* timerKatG = createKeepAliveTimer(IPv4Address::UNSPECIFIED_ADDRESS, newRoute->getMulticastGroup());
-    newRoute->setKat(timerKat);
-    newRouteG->setKat(timerKatG);
-
-    //TODO Could register?
-
-    //Create (*,G) state
+    PimInterface *rpfInt = pimIft->getInterfaceByIntID(newRoute->getInIntId());
     InterfaceEntry *newInIntG = rt->getInterfaceForDestAddr(this->getRPAddress());
-    newRouteG->setInInt(newInIntG, newInIntG->getInterfaceId(), this->getRPAddress());
-    newRouteG->setAddresses(IPv4Address::UNSPECIFIED_ADDRESS,newRoute->getMulticastGroup(),this->getRPAddress());
-    newRouteG->addFlags(S,P,F,NO_FLAG);
 
-    //Create (S,G) state - set flags and Register state, other is set by  PimSplitter
-    newRoute->addFlags(P,F,T,NO_FLAG);
-    newRoute->addOutIntFull(newInIntG,newInIntG->getInterfaceId(),Pruned,Sparsemode,NULL,NULL,NoInfo,Join);      // create new outgoing interface to RP
-    newRoute->setRP(this->getRPAddress());
-    newRoute->setOutShowIntStatus(false);                   //we need to set register state to output interface, but output interface has to be null for now
+    // RPF check and check if I am DR for given address
+    if ((newInIntG->getInterfaceId() != rpfInt->getInterfaceID()) && IamDR(newRoute->getOrigin()))
+    {
+        // Set Keep Alive timer for routes
+        PIMkat* timerKat = createKeepAliveTimer(newRoute->getOrigin(), newRoute->getMulticastGroup());
+        PIMkat* timerKatG = createKeepAliveTimer(IPv4Address::UNSPECIFIED_ADDRESS, newRoute->getMulticastGroup());
+        newRoute->setKat(timerKat);
+        newRouteG->setKat(timerKatG);
 
-    rt->addMulticastRoute(newRouteG);
-    rt->addMulticastRoute(newRoute);
+        //Create (*,G) state
+        PimNeighbor *RPFnbr = pimNbt->getNeighborByIntID(newInIntG->getInterfaceId());                            // RPF neighbor
+        newRouteG->setInInt(newInIntG, newInIntG->getInterfaceId(), RPFnbr->getAddr());
+        newRouteG->setAddresses(IPv4Address::UNSPECIFIED_ADDRESS,newRoute->getMulticastGroup(),this->getRPAddress());
+        newRouteG->addFlags(S,P,F,NO_FLAG);
 
-    EV << "pimSM::newMulticast: New routes was added to the multicast routing table." << endl;
+        //Create (S,G) state - set flags and Register state, other is set by  PimSplitter
+        newRoute->addFlags(P,F,T,NO_FLAG);
+        newRoute->addOutIntFull(newInIntG,newInIntG->getInterfaceId(),Pruned,Sparsemode,NULL,NULL,NoInfo,Join);      // create new outgoing interface to RP
+        newRoute->setRP(this->getRPAddress());
+        newRoute->setOutShowIntStatus(false);                   //we need to set register state to output interface, but output interface has to be null for now
+
+        rt->addMulticastRoute(newRouteG);
+        rt->addMulticastRoute(newRoute);
+
+        EV << "pimSM::newMulticast: New routes was added to the multicast routing table." << endl;
+    }
 }
 
 void pimSM::removeMulticastReciever(addRemoveAddr *members)

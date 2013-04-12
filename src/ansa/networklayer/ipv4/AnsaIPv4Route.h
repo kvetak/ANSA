@@ -129,7 +129,7 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         inInterface                 inInt;                  /**< Incoming interface */
         InterfaceVector             outInt;                 /**< Outgoing interface */
 
-        bool                        showOutInt;             /**< indicate if it is necessary to show out interface in show ip mroute */
+        bool                        showOutInt;             /**< indicate if it is necessary to show out interface in show IP mroute */
 
 
         //Originated from destination.Ensures loop freeness.
