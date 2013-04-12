@@ -202,6 +202,7 @@ private:
     LSPRecord *installLSP(ISISLSPPacket *lsp, short  circuitType); //install lsp into local LSP database
     void updateAtt(bool action); /*!< Action specify whether this method has been called to set (true - new adjacency) or clear (false - removing adjacency) Attached flag. */
     void setClosestAtt(void); /*!< Find and set the closest L1L2 attached IS */
+    std::map<unsigned char*, int> getAllSystemIdsFromLspDb(short circuitType);
 
     /* SPF */
     void fullSPF(ISISTimer *timer);
@@ -217,6 +218,10 @@ private:
     void moveToPath(ISISPath *path);
     void extractAreas(ISISPaths_t *paths, ISISPaths_t *areas, short  circuitType);
     ISISPaths_t *getPathsISO(short  circuitType);
+
+    void spfDistribTrees(ISISTimer *timer); //L2_ISIS_MODE related -> computes distribution trees for forwarding TRILL multicast
+    void moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from, uint32_t metric, ISISPaths_t *ISISTent);
+    void bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
 
     /* Flags */
     FlagRecQQ_t *getSRMPTPQueue(short  circuitType);

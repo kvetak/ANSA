@@ -9254,12 +9254,288 @@ bool ISIS::isAdjUp(ISISMessage *msg, short circuitType)
     return false;
 }
 
+
+void ISIS::spfDistribTrees(ISISTimer *timer){
+
+    std::map<int, ISISPaths_t *> distribTrees;
+    //    std::vector<unsigned char *> idVector;
+
+        std::map<unsigned char*, int> systemIdVector;  //vector of all ISs's systemId
+
+    systemIdVector = this->getAllSystemIdsFromLspDb(timer->getIsType());
+
+    for (std::map<unsigned char *, int>::iterator iter = systemIdVector.begin(); iter != systemIdVector.end(); ++iter)
+    {
+
+        ISISCons_t initial;
+        ISISPaths_t *ISISPaths = new ISISPaths_t; //best paths
+        ISISPaths_t ISISTent; //
+        ISISPath * tmpPath;
+        short circuitType;
+
+        //let's fill up the initial paths with supported-protocol's reachability informations
+
+        //fill ISO
+        bool result;
+        circuitType = timer->getIsType();
+        result = this->extractISO(&initial, circuitType);
+        if (!result)
+        {
+            //there was an error during extraction so cancel SPF
+            //TODO B5 reschedule
+            this->schedule(timer);
+            //TODO B5 clean
+            return;
+        }
+
+        //put current systemId from systemIdVector on TENT list
+        unsigned char *lspId = iter->first; //returns sysId + 00
+
+        tmpPath = new ISISPath;
+        tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+        this->copyArrayContent(lspId, tmpPath->to, ISIS_SYSTEM_ID, 0, 0);
+        tmpPath->to[ISIS_SYSTEM_ID] = 0;
+        tmpPath->to[ISIS_SYSTEM_ID + 1] = 0;
+
+        tmpPath->metric = 0;
+
+        ISISNeighbour *neighbour = new ISISNeighbour;
+        neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+        this->copyArrayContent(lspId, neighbour->id, ISIS_SYSTEM_ID, 0, 0);
+        neighbour->id[ISIS_SYSTEM_ID] = 0;
+        neighbour->id[ISIS_SYSTEM_ID + 1] = 0;
+        neighbour->type = false; //not a leaf
+        tmpPath->from.push_back(neighbour);
+
+        ISISTent.push_back(tmpPath);
+
+
+
+        //TODO shoudn't i put myself in PATH list directly?
+        for (; !ISISTent.empty();)
+        {
+            //tmpPath = this->getBestPath(&(this->ISISTent));
+
+            //this->moveToPath(tmpPath);
+            this->bestToPath(&initial, &ISISTent, ISISPaths);
+
+        }
+        std::sort(ISISPaths->begin(), ISISPaths->end(), ISISPath());
+
+        distribTrees.insert(std::make_pair(lspId[ISIS_SYSTEM_ID - 1] + lspId[ISIS_SYSTEM_ID - 2] * 0xFF, ISISPaths));
+
+    }
+}
+
+
+
+/*
+ * Moves best path from ISISTent to ISISPaths and initiate move of appropriate connections from init to ISISTent
+ * @param initial is set of connections
+ * @param ISISTent is set of tentative paths
+ * @param ISISPaths is set of best paths from this IS
+ */
+void ISIS::bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths)
+{
+
+    ISISPath *path;
+    ISISPath *tmpPath;
+    //sort it
+    std::sort(ISISTent->begin(), ISISTent->end(), ISISPath());
+    //save best in path
+    path = ISISTent->front();
+    //mov
+    this->moveToTentDT(init, path, path->to, path->metric, ISISTent);
+
+    ISISTent->erase(ISISTent->begin());
+
+    if ((tmpPath = this->getPath(ISISPaths, path->to)) == NULL)
+    {
+        //path to this destination doesn't exist, so simply push
+
+        ISISPaths->push_back(path);
+    }
+    else
+    {
+        if (tmpPath->metric >= path->metric)
+        {
+            if (tmpPath->metric > path->metric)
+            {
+                EV<< "ISIS: Error during SPF. We got better metric than the one PATHS." << endl;
+                //we got better metric so clear "from" neighbours
+                tmpPath->from.clear();
+            }
+            EV << "ISIS: Error during SPF. I think we shouldn't have neither same metric." << endl;
+            //append
+            tmpPath->metric = path->metric;
+            cout << "pathb metric: " << tmpPath->metric << endl;
+            for (ISISNeighbours_t::iterator it = path->from.begin(); it != path->from.end(); ++it)
+            {
+                tmpPath->from.push_back((*it));
+            }
+
+        }
+    }
+
+}
+
+/* Moves connections with matching "from" from init to Tent
+ * @param initial is set of connections
+ * @param from specify which connections to move
+ * @param metric is metric to get to "from" node
+ * @param ISISTent is set of tentative paths
+ */
+void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from, uint32_t metric, ISISPaths_t *ISISTent)
+{
+
+    ISISPath *tmpPath;
+    ISISCons_t *cons = this->getCons(initial, from);
+    /*       if(cons->empty()){
+     EV <<"ISIS: Error during SPF. Didn't find my own LSP"<<endl;
+     //TODO clean
+     //           delete cons;
+     //         return;
+     }*/
+
+    for (ISISCons_t::iterator consIt = cons->begin(); consIt != cons->end(); ++consIt)
+    {
+        if ((tmpPath = this->getPath(ISISTent, (*consIt)->to)) == NULL)
+        {
+            //path to this destination doesn't exist, so create new
+            tmpPath = new ISISPath;
+            tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+            this->copyArrayContent((*consIt)->to, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
+            tmpPath->metric = (*consIt)->metric + metric;
+//               cout << "patha metric: " << tmpPath->metric << endl;
+
+            ISISNeighbour *neighbour = new ISISNeighbour;
+            neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+            this->copyArrayContent((*consIt)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+            neighbour->entry = (*consIt)->entry;
+            tmpPath->from.push_back(neighbour);
+            ////// END
+            /* if @param from is THIS IS then next hop (neighbour->id) will be that next hop */
+//            if (this->compareArrays((*consIt)->from, (unsigned char *) this->sysId, ISIS_SYSTEM_ID)
+//                    && (*consIt)->from[ISIS_SYSTEM_ID] == 0)
+//            {
+//                this->copyArrayContent((*consIt)->to, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+//                neighbour->entry = (*consIt)->entry;
+////                ASSERT(neighbour->entry != NULL);
+//                tmpPath->from.push_back(neighbour);
+//            }
+//            else
+//            {
+//                //TODO neighbour must be THIS IS or next hop, therefore we need to check whether directly connected
+////                   this->copyArrayContent(path->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+//                for (ISISNeighbours_t::iterator nIt = path->from.begin(); nIt != path->from.end(); ++nIt)
+//                {
+//                    //if nextHop (from) should be pseudonode, set nextHop as the "to" identifier
+//                    if ((*nIt)->id[ISIS_SYSTEM_ID] != 0)
+//                    {
+//
+//                        ISISNeighbour *neigh = (*nIt)->copy();
+//                        memcpy(neigh->id, (*consIt)->to, ISIS_SYSTEM_ID + 2);
+//                        tmpPath->from.push_back(neigh);
+//                    }
+//                    else
+//                    {
+////                       if(this->compareArrays((*nIt)->id, neighbour->id, ISIS_SYSTEM_ID + 2)){
+//                        //this neighbour is already there
+////                           delete neighbour;
+//                        tmpPath->from.push_back((*nIt)->copy());
+////                           return;
+////                       }
+//                    }
+//                }
+//            }
+            neighbour->type = false; //not a leaf
+//               tmpPath->from = neighbour;
+
+            ISISTent->push_back(tmpPath);
+        }
+        else
+        {
+            if (tmpPath->metric >= (*consIt)->metric + metric)
+            {
+                if (tmpPath->metric > (*consIt)->metric + metric)
+                {
+                    //we got better metric so clear "from" neighbours
+                    tmpPath->from.clear();
+                }
+                //append
+                tmpPath->metric = (*consIt)->metric + metric;
+                cout << "path metric: " << tmpPath->metric << endl;
+                   ISISNeighbour *neighbour = new ISISNeighbour;
+                   neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
+                   this->copyArrayContent((*consIt)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
+                   neighbour->type = false; //not a leaf
+
+                   for(ISISNeighbours_t::iterator nIt = tmpPath->from.begin(); nIt != tmpPath->from.end(); ++nIt){
+                       if(this->compareArrays((*nIt)->id, neighbour->id, ISIS_SYSTEM_ID + 2)){
+                           //this neighbour is already there
+                           delete neighbour;
+                           return;
+                       }
+                   }
+                   tmpPath->from.push_back(neighbour);
+
+//                for (ISISNeighbours_t::iterator nIt = path->from.begin(); nIt != path->from.end(); ++nIt)
+//                {
+//                    bool found = false;
+//                    for (ISISNeighbours_t::iterator neIt = tmpPath->from.begin(); neIt != tmpPath->from.end(); ++neIt)
+//                    {
+//                        //is such nextHop with matching ID AND entry (we may have adjacency with same IS over multiple interfaces)
+//                        if (this->compareArrays((*neIt)->id, (*nIt)->id, ISIS_SYSTEM_ID + 2)
+//                                && (*neIt)->entry == (*nIt)->entry)
+//                        {
+//                            //this neighbour is already there
+////                             delete neighbour;
+////                             continue;
+//                            found = true;
+//                            break;
+//                        }
+//
+//                    }
+//                    if (!found)
+//                    {
+//                        //if such nextHop from @param path is not already present (not found), add it to nextHops(from)
+//                        tmpPath->from.push_back((*nIt)->copy());
+//                    }
+//
+////
+//                }
+
+            }
+
+        }
+
+    }
+}
+
+
+
+
+std::map<unsigned char*, int> ISIS::getAllSystemIdsFromLspDb(short circuitType){
+    LSPRecQ_t * lspDb = this->getLSPDb(circuitType);
+    std::map<unsigned char*, int> systemIdMap;
+    for(LSPRecQ_t::iterator it = lspDb->begin(); it!=lspDb->end(); ++it){
+        unsigned char *systemId;
+        systemId = this->getSysID((*it)->LSP);
+        systemIdMap[systemId] = 1;
+    }
+
+    return systemIdMap;
+}
+
 /*
  * Performs full run of SPF algorithm.
  * @param timer is initiating timer.
  */
 void ISIS::fullSPF(ISISTimer *timer)
 {
+    if(this->mode == L2_ISIS_MODE){
+        this->spfDistribTrees(timer);
+    }
 
     ISISCons_t initial;
     ISISPaths_t *ISISPaths = new ISISPaths_t; //best paths
@@ -9276,9 +9552,9 @@ void ISIS::fullSPF(ISISTimer *timer)
     if (!result)
     {
         //there was an error during extraction so cancel SPF
-        //TODO reschedule
+        //TODO B5 reschedule
         this->schedule(timer);
-        //TODO clean
+        //TODO B5 clean
         return;
     }
 
@@ -9357,6 +9633,9 @@ void ISIS::fullSPF(ISISTimer *timer)
 
     }
     std::sort(ISISPaths->begin(), ISISPaths->end(), ISISPath());
+
+
+
     this->printPaths(ISISPaths);
 
     //find shortest metric in TENT
@@ -9404,7 +9683,7 @@ void ISIS::fullSPF(ISISTimer *timer)
         this->setClosestAtt();
     }
 //    this->clnsTable->dropTable();
-    //TODO rewrite this mess
+    //TODO B1 rewrite this mess
 
     for (ISISPaths_t::iterator it = ISISPaths->begin(); it != ISISPaths->end(); ++it)
     {
@@ -9681,12 +9960,12 @@ void ISIS::bestToPath(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISIS
 
 }
 
-                /* Moves connections with matching "from" from init to Tent
-                 * @param initial is set of connections
-                 * @param from specify which connections to move
-                 * @param metric is metric to get to "from" node
-                 * @param ISISTent is set of tentative paths
-                 */
+/* Moves connections with matching "from" from init to Tent
+ * @param initial is set of connections
+ * @param from specify which connections to move
+ * @param metric is metric to get to "from" node
+ * @param ISISTent is set of tentative paths
+ */
 void ISIS::moveToTent(ISISCons_t *initial, ISISPath *path, unsigned char *from, uint32_t metric, ISISPaths_t *ISISTent)
 {
 
