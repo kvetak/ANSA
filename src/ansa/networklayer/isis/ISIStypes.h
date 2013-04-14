@@ -37,10 +37,10 @@
 #define ISIS_LSP_INTERVAL 33 /*!< Minimum delay in ms between sending two successive LSPs. */
 #define ISIS_LSP_REFRESH_INTERVAL 150 /*!< Interval in seconds at which LSPs are refreshed (1 to 65535). This value SHOULD be less than ISIS_LSP_MAX_LIFETIME*/
 #define ISIS_LSP_MAX_LIFETIME 200 /*!< Interval in seconds during which is specified LSP valid. This value SHOULD be more than ISIS_LSP_REFRESH_INTERVAL */
-#define ISIS_LSP_GEN_INTERVAL 5 /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
-#define ISIS_LSP_INIT_WAIT 50 /*!< Initial wait interval in ms before generating first LSP.*/
-#define ISIS_CSNP_INTERVAL 10 /*!< Interval in seconds between generating CSNP message.*/
-#define ISIS_PSNP_INTERVAL 2 /*!< Interval in seconds between generating CSNP message.*/
+#define ISIS_LSP_GEN_INTERVAL 1 //TODO A! change back to 5 /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
+#define ISIS_LSP_INIT_WAIT 3 //TODO A! change back to 50 /*!< Initial wait interval in ms before generating first LSP.*/
+#define ISIS_CSNP_INTERVAL 3 //TODO A! change back to 10 /*!< Interval in seconds between generating CSNP message.*/
+#define ISIS_PSNP_INTERVAL 2 /*!< Interval in seconds between generating PSNP message.*/
 #define ISIS_LSP_MAX_SIZE 1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
 #define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
 #define ISIS_SPF_FULL_INTERVAL 50
@@ -294,6 +294,21 @@ struct ISISPath
 
             //if they're equal, return false
             return false;
+        }
+        ISISPath(){
+
+        }
+        ISISPath(unsigned char *to, uint32_t metric, ISISNeighbours_t from){
+            this->to = new unsigned char [ISIS_SYSTEM_ID + 2];
+            memcpy(this->to, to, ISIS_SYSTEM_ID + 1);
+            this->metric = metric;
+            for(ISISNeighbours_t::iterator it = from.begin(); it != from.end(); ++it){
+                this->from.push_back((*it)->copy());
+            }
+//            this->from = from;
+        }
+        ISISPath* copy(){
+            return new ISISPath(this->to, this->metric, this->from);
         }
 
 };
