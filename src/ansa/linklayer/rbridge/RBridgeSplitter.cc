@@ -85,13 +85,6 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
             }
             frame->setControlInfo(ctrl->dup());
 
-
-
-
-
-
-
-
             this->send(frame, "lowerLayerOut", gateIndex);
 
 
@@ -100,11 +93,29 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
         {
 
             //set ethertype L2_ISIS
+            ///
+            InterfaceEntry *ie = ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
+            Ieee802Ctrl *ctrl = (Ieee802Ctrl *) msg->getControlInfo();
+            msg->removeControlInfo();
+            ctrl->setEtherType(ETHERTYPE_L2_ISIS);
+            ctrl->setDest(MACAddress(ALL_IS_IS_RBRIDGES)); //ALL-IS-IS-RBridges
+            ctrl->setSrc(ie->getMacAddress());
 
-            ((Ieee802Ctrl *)msg->getControlInfo())->setEtherType(ETHERTYPE_L2_ISIS);
-            ((Ieee802Ctrl *)msg->getControlInfo())->setDest(MACAddress(ALL_IS_IS_RBRIDGES));
+            EthernetIIFrame *frame = new EthernetIIFrame(msg->getName());
+            frame->setKind(msg->getKind());
+            frame->setSrc(ie->getMacAddress());
+            frame->setDest(MACAddress(ALL_IS_IS_RBRIDGES));
+            frame->setByteLength(ETHER_MAC_FRAME_BYTES);
+//            frame->setVlan(vlanId);
+            frame->setEtherType(ETHERTYPE_L2_ISIS);
+            frame->encapsulate((ISISMessage *) msg);
+            if(frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES) {
+                frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
+            }
+            frame->setControlInfo(ctrl->dup());
+
             // send packet to out interface
-            this->send(msg, "lowerLayerOut", gateIndex);
+            this->send(frame, "lowerLayerOut", gateIndex);
 
 
         }

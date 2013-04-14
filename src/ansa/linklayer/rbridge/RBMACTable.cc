@@ -192,7 +192,7 @@ RBMACTable::tPortList& RBMACTable::getPorts(MACAddress& addr) {
     return iter->second.portList;
 }
 
-RBMACTable::ESTRecord& RBMACTable::getESTRecordByESTKey(ESTKey eSTKey){
+RBMACTable::ESTRecord RBMACTable::getESTRecordByESTKey(ESTKey eSTKey){
 
     Enter_Method_Silent();
 
@@ -257,7 +257,7 @@ void RBMACTable::initDefaults() {
   agingTime = uAgingTime; // renew of user defined value, is triggered by STP process and receiving bpdu
 
 
-  this->emptyESRecord.type == RBMACTable::EST_EMPTY;
+  this->emptyESRecord.type = RBMACTable::EST_EMPTY;
   return;
 }
 

@@ -46,6 +46,7 @@
 #include "RBMACTable.h"
 #include "RBVLANTable.h"
 #include "TRILLInterfaceData.h"
+#include "TRILLFrame.h"
 
 //#include "stp/stp.h"
 //#include "ISIS.h"
@@ -53,11 +54,19 @@ class ISIS;
 
 class TRILL : public cSimpleModule
 {
+        friend class ISIS;
     public:
         TRILL();
         virtual ~TRILL();
 
-
+        typedef enum e_frame_category {
+            TRILL_L2_CONTROL, //such as Bridge PDUs (BPDUs)
+            TRILL_NATIVE, //non-TRILL-encapsulated data frames
+            TRILL_DATA, //TRILL-encapsulated data fremes
+            TRILL_CONTROL,
+            TRILL_OTHER,
+            TRILL_NONE //for detecting misclassification
+        }FrameCategory;
 
         /* switch core frame descriptor for internal representation unpacked frame */
         typedef struct s_frame_descriptor {
@@ -70,17 +79,12 @@ class TRILL : public cSimpleModule
           int etherType; // EtherType from EthernetIIFrame
           std::string name; // for simulation frame name
           RBMACTable::ESTRecord record;
+          TRILLInterfaceData *d;
+          TRILL::FrameCategory category;
         } tFrameDescriptor;
 
 
-        typedef enum e_frame_category {
-            TRILL_L2_CONTROL, //such as Bridge PDUs (BPDUs)
-            TRILL_NATIVE, //non-TRILL-encapsulated data frames
-            TRILL_DATA, //TRILL-encapsulated data fremes
-            TRILL_CONTROL,
-            TRILL_OTHER,
-            TRILL_NONE //for detecting misclassification
-        }FrameCategory;
+
 
         MACAddress getBridgeAddress();
 
@@ -154,9 +158,13 @@ class TRILL : public cSimpleModule
       /* NEW */
       FrameCategory classify(tFrameDescriptor &frameDesc);
       bool processNative(tFrameDescriptor &frameDesc);
+      bool processNativeMultiDest(tFrameDescriptor &frameDesc);
       bool isNativeAllowed(tFrameDescriptor &frameDesc);
       bool dispatchNativeLocalPort(tFrameDescriptor &frameDesc);
+      bool dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc);
 
+      bool egressNativeLocal(tFrameDescriptor &frameDesc);//returns false when after removing redundant ports etc there is none to send it onto.
+      bool egressNativeMulticastRemote(tFrameDescriptor &frameDesc);
 
       /* end of NEW */
 

@@ -146,7 +146,7 @@ public:
   void enableFasterAging(); // Aging ~ Ageing by Longman dictionary of contemporary english http://ldoceonline.com/
   void resetAging();
 
-  ESTRecord& getESTRecordByESTKey(ESTKey eSTKey);
+  ESTRecord getESTRecordByESTKey(ESTKey eSTKey);
 
   const AddressTable * getTable();
 

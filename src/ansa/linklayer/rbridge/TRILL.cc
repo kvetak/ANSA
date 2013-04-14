@@ -100,6 +100,8 @@ void TRILL::handleMessage(cMessage *msg) {
             /* Messages from network */
             bool processResult;
             if(reception(frameDesc, msg)){
+
+
                 //frame received on port's allowed VLAN and successfully parsed
                 //now determine the proper type
                 //getTRILL_Type
@@ -120,6 +122,7 @@ void TRILL::handleMessage(cMessage *msg) {
 
                     case TRILL::TRILL_DATA:
                         //processTRILL encapsulated
+                        EV << "TRILL-encapsulated data received" << std::endl;
                         break;
 
                     case TRILL::TRILL_CONTROL:
@@ -136,7 +139,7 @@ void TRILL::handleMessage(cMessage *msg) {
                 }
 
                 if(processResult){
-//                    eg
+
 
                 }else{
                     delete msg;
@@ -269,6 +272,7 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPo
     tmp.src = frame->getSrc();
     tmp.dest = frame->getDest();
     tmp.etherType = frame->getEtherType();
+    tmp.d = this->ift->getInterfaceByNetworkLayerGateIndex(rPort)->trillData();
 
     // VLAN Allowed
     if (vlanTable->isAllowed(frame->getVlan(), rPort) == false) {
@@ -291,6 +295,66 @@ void TRILL::egress(TRILL::tFrameDescriptor& frame) {
         }
     }
 
+}
+/**
+ * Returns false when there is no port to send it to.
+ */
+bool TRILL::egressNativeLocal(TRILL::tFrameDescriptor& frameDesc){
+    /*
+     * Probably rename it to egressNativeLocal or move switch from processNative here, because
+     * we might receive native frame on port "1" and send it through that same port but
+     * TRILL-encapsulated. It we handle it the same way as NativeLocalDispatch we would
+     * remove such port because of the "don't send it on received port" rule. The same
+     * thing might apply in the opposite direction when we receive TRILL-encapsulated frame
+     * and as App Fwd send it on the same interface but in native form.
+     * In conclusion this rule seems to apply only in case of receiving native frame from local
+     * port and forwarding it again in native form.
+     */
+
+    //minimize out ports
+    //set tag actions
+
+
+    RBVLANTable::tVIDPortList tmp = frameDesc.portList;
+    frameDesc.portList.clear();
+
+    for (unsigned int i = 0; i < tmp.size(); i++) {
+        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(tmp.at(i).port)->trillData();
+        if (d->isEnabled(frameDesc.VID) && tmp.at(i).port != frameDesc.rPort && d->isAppointedForwarder(frameDesc.VID, this->isis->getNickname())) {
+            frameDesc.portList.push_back(tmp.at(i));
+        }
+    }
+
+    return !frameDesc.portList.empty();
+
+
+}
+
+bool TRILL::egressNativeMulticastRemote(TRILL::tFrameDescriptor &frameDesc){
+    //determine distribution tree (this->isis->getNickname)
+
+    //get every path with "from" or "to" this RBridge System-ID
+    //actually when I'm the root it should be enough just to get all path with matching "from"
+    ISISPaths_t *treePaths = this->isis->getPathsFromTree(this->isis->getNickname(), this->isis->getSysId());
+
+
+
+    //for each path determine output interface (if it's not already built-in in path
+    //since we are the source.RBridge we don't have to deal with any multi-dest check
+
+    for(ISISPaths_t::iterator it = treePaths->begin(); it != treePaths->end(); ++it){
+        RBVLANTable::tVIDPort portAction;
+        ISISadj * adj = this->isis->getAdjBySystemID((*it)->to, L1_TYPE);
+        if(adj == NULL){
+            EV << "TRILL: Error in egressNativeMulticastRemote: can't find adjacency for systemId"<< (*it)->to <<std::endl;
+            continue;
+        }
+        portAction.port = adj->gateIndex;
+//        portAction.action = this->vlanTable->getTag()//vlanId will be determined in dispatch (designated Vlan)
+        frameDesc.portList.push_back(portAction);
+    }
+
+    return !frameDesc.portList.empty();
 }
 
 void TRILL::dispatch(TRILL::tFrameDescriptor& frame) {
@@ -389,9 +453,97 @@ bool TRILL::dispatchNativeLocalPort(TRILL::tFrameDescriptor& frame) {
 }
 
 
+bool TRILL::dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc){
+
+//    EthernetIIFrame * untaggedFrame = new EthernetIIFrame(frameDesc.name.c_str());
+    AnsaEtherFrame * innerFrame = new AnsaEtherFrame(frameDesc.name.c_str());
+
+    innerFrame->setKind(frameDesc.payload->getKind());
+    innerFrame->setSrc(frameDesc.src);
+    innerFrame->setDest(frameDesc.dest);
+    innerFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
+    innerFrame->setVlan(frameDesc.VID);
+    innerFrame->setEtherType(frameDesc.etherType);
+    //TODO A! comment the section below or not?
+    innerFrame->encapsulate(frameDesc.payload->dup());
+    if (innerFrame->getByteLength() < MIN_ETHERNET_FRAME_BYTES) {
+        innerFrame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
+    }
+
+
+    TRILLFrame *trillFrame = new TRILLFrame(frameDesc.name.c_str());
+    trillFrame->setEthertype(frameDesc.etherType);
+    trillFrame->setVersion(0);
+    trillFrame->setReserved(0);
+    trillFrame->setMultiDest(true);
+    trillFrame->setOpLength(0);
+    trillFrame->setHopCount(3);// TODO A1 fix
+    trillFrame->setEgressRBNickname(this->isis->getNickname()); //TODO A1 check/change
+    trillFrame->setIngressRBNickname(this->isis->getNickname());
+    //TODO A1 set options
+    trillFrame->encapsulate(innerFrame->dup());
+
+
+    EthernetIIFrame * untaggedFrame = new EthernetIIFrame(frameDesc.name.c_str());
+    AnsaEtherFrame * taggedFrame = new AnsaEtherFrame(frameDesc.name.c_str());
+
+    taggedFrame->setKind(frameDesc.payload->getKind());
+//    taggedFrame->setSrc(frameDesc.src); ////will be set by underlying MAC module
+    taggedFrame->setDest(MACAddress(ALL_RBRIDGES));
+    taggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
+//    taggedFrame->setVlan(frameDesc.VID);//vlanId is set below during send
+    taggedFrame->setEtherType(ETHERTYPE_TRILL);
+
+    taggedFrame->encapsulate(trillFrame->dup());
+    if (taggedFrame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
+    {
+        taggedFrame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
+    }
+
+    untaggedFrame->setKind(frameDesc.payload->getKind());
+//    untaggedFrame->setSrc(frameDesc.src);//will be set by underlying MAC module
+    untaggedFrame->setDest(MACAddress(ALL_RBRIDGES));
+    untaggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
+    untaggedFrame->setEtherType(ETHERTYPE_TRILL);
+
+    untaggedFrame->encapsulate(trillFrame->dup());
+    if (untaggedFrame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
+    {
+        untaggedFrame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
+    }
+
+
+    RBVLANTable::tVIDPortList::iterator it;
+    for (it = frameDesc.portList.begin(); it != frameDesc.portList.end(); it++) {
+        if (it->port >= portCount) {//TODO A! remove the second part // do not send on received port
+            continue;
+        }
+//        if (spanningTree->forwarding(it->port, frameDesc.VID) == false) {
+//            continue;
+//        }
+
+
+        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
+        it->action = vlanTable->getTag(d->getDesigVlan(), it->port);
+        if (it->action == RBVLANTable::INCLUDE) {
+
+            taggedFrame->setVlan(d->getDesigVlan());
+            send(taggedFrame->dup(), "lowerLayerOut", it->port);
+        } else {
+            send(untaggedFrame->dup(), "lowerLayerOut", it->port);
+        }
+    }
+
+    delete innerFrame;
+    delete trillFrame;
+    delete untaggedFrame;
+    delete taggedFrame;
+    return true;
+}
+
 
 /*
- * ByGate means that the input interface is identified by gateId
+ * ByGate means that the input interface is identified by gateIndex
  */
 
 bool TRILL::isAllowedByGate(int vlanID, int gateIndex){
@@ -418,9 +570,9 @@ void TRILL::learn(EthernetIIFrame *frame){
 }
 
 void TRILL::learn(TRILL::tFrameDescriptor& frame) {
-//    if (spanningTree->learning(frame.rPort, frame.VID) == true) {
-      rbMACTable->update(frame.src, frame.rPort);
-//    }
+    if (!frame.src.isBroadcast() && !frame.src.isMulticast()) {
+      rbMACTable->update(frame.src, frame.VID, frame.rPort);
+    }
 }
 
 
@@ -619,17 +771,23 @@ EthernetIIFrame * TRILL::untagMsg(AnsaEtherFrame * _frame) {
 TRILL::FrameCategory TRILL::classify(tFrameDescriptor &frameDesc){
 
     if(frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-00")) >=0 && frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-21")) <=0){
+        frameDesc.category = TRILL_L2_CONTROL;
         return TRILL::TRILL_L2_CONTROL;
     }else if (frameDesc.etherType != ETHERTYPE_L2_ISIS && frameDesc.etherType != ETHERTYPE_TRILL &&
             (frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-40")) < 0 || frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-4F")) > 0)){
+        frameDesc.category = TRILL_NATIVE;
         return TRILL::TRILL_NATIVE;
     }else if(frameDesc.etherType == ETHERTYPE_TRILL){
+        frameDesc.category = TRILL_DATA;
         return TRILL::TRILL_DATA;
     }else if(frameDesc.etherType == ETHERTYPE_L2_ISIS){
+        frameDesc.category = TRILL_CONTROL;
         return TRILL::TRILL_CONTROL;
     }else if (frameDesc.dest.compareTo(MACAddress(ALL_IS_IS_RBRIDGES)) > 0 && frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-4F")) <= 0){
+        frameDesc.category = TRILL_OTHER;
         return TRILL::TRILL_OTHER; //these will get discarded
     }else{
+        frameDesc.category = TRILL_NONE;
         return TRILL::TRILL_NONE;
     }
 
@@ -644,12 +802,12 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
 
     if(!frameDesc.dest.isBroadcast() && !frameDesc.dest.isMulticast()){
         //TODO A0 unicast RFC 6325 4.6.1.1
-    }
-//    rbMACTable->get
-    RBMACTable::ESTRecord record = rbMACTable->getESTRecordByESTKey(std::make_pair(MACAddress(frameDesc.dest), frameDesc.VID));
-    frameDesc.record = record;
 
-    switch(record.type){
+//    rbMACTable->get
+    frameDesc.record = rbMACTable->getESTRecordByESTKey(std::make_pair(MACAddress(frameDesc.dest), frameDesc.VID));
+
+
+    switch(frameDesc.record.type){
         case RBMACTable::EST_LOCAL_PROCESS:
             //process localy
             //i guess send it back to rBridgeSplitter?
@@ -658,7 +816,7 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
 
         case RBMACTable::EST_LOCAL_PORT:
             //TODO multiple ports? (guess not, that's what MULTICAST is for)
-            if(record.portList.at(0) == frameDesc.rPort){
+            if(frameDesc.record.portList.at(0) == frameDesc.rPort){
                 //RFC 6325 4.6.1.1.2.
                 //frame received on the same link that it should get sent to so discard
                 return false;
@@ -669,8 +827,9 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
                 RBVLANTable::s_vid_port vid_port = RBVLANTable::s_vid_port();
                 //TODO always remove tag for native frames?
                 vid_port.action = RBVLANTable::REMOVE;
-                vid_port.port = record.portList.at(0);
+                vid_port.port = frameDesc.record.portList.at(0);
                 frameDesc.portList.push_back(vid_port);
+
                 return dispatchNativeLocalPort(frameDesc);
 //                return true;
             }
@@ -689,11 +848,38 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
             return dispatchNativeLocalPort(frameDesc);
             break;
         default:
-            EV << "TRILL: ERRROR: ProcessNative unrecognised type" <<endl;
+            EV << "TRILL: ERROR: ProcessNative unrecognized type" <<endl;
+    }
+    }else{
+        //egress and dispatch are called within processNativeMultiDest
+        return this->processNativeMultiDest(frameDesc);
     }
 
     return true;
 }
+/*
+ * Process native (non-TRILL encapsulated) frame with multi-destination Outer.MacDA.
+ */
+bool TRILL::processNativeMultiDest(tFrameDescriptor &frameDesc){
+    /*
+     * I don't plan to fully complete this method within my master's thesis, so it will remain in
+     * to be continued... state until further notice ;).
+     */
+
+    //send it to all local ports in native form on which i am app fwd (app fwd check can be in egress method)
+    frameDesc.portList.clear(); //clear output ports (obviously)
+    frameDesc.portList = this->vlanTable->getPorts(frameDesc.VID); //set it to
+    //minimize output ports
+    this->egressNativeLocal(frameDesc);
+    dispatchNativeLocalPort(frameDesc);
+
+
+    //send it to all ports with RBridge Adjacency as TRILL-encapsulated
+    egressNativeMulticastRemote(frameDesc);
+    return dispatchNativeMultiDestRemote(frameDesc);
+
+}
+
 
 bool TRILL::isNativeAllowed(tFrameDescriptor &frameDesc){
 
@@ -704,8 +890,9 @@ bool TRILL::isNativeAllowed(tFrameDescriptor &frameDesc){
         return false;
     }
 
-    if(!d->isAppointedForwarder(frameDesc.VID, this->isis->getNickname()) || d->isInhibited()){
-        return false;
+    if(d->isAppointedForwarder(frameDesc.VID, this->isis->getNickname()) && !d->isInhibited()){
+        this->learn(frameDesc);
+        return true;
     }
-    return true;
+    return false;
 }
