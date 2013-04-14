@@ -144,4 +144,5 @@ packet PIMppt extends PIMTimer
 	IPv4Address			group;				// Multicast group address
 	IPv4Address			JoinPruneAddr;		// Joined or Pruned IP Address
 	IPv4Address			upstreamNbr;		// Address of upstream neigbor
+	int					JoinPruneType;	
 }

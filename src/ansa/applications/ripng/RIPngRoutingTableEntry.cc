@@ -33,6 +33,8 @@ RoutingTableEntry::RoutingTableEntry(IPv6Address destPrefix, int length) :
     _changeFlag(false),
     _routeTag(0)
 {
+    setRoutingProtocolSource(pRIP);
+    setAdminDist(dRIP);
     setTimer(NULL);
     setGCTimer(NULL);
     setCopy(NULL);
@@ -40,14 +42,16 @@ RoutingTableEntry::RoutingTableEntry(IPv6Address destPrefix, int length) :
 
 RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
     ANSAIPv6Route(entry.getDestPrefix(), entry.getPrefixLength(), IPv6Route::ROUTING_PROT),
-    _changeFlag(false),
-    _routeTag(0)
+    _changeFlag(false)
 {
+    setRoutingProtocolSource(entry.getRoutingProtocolSource());
+    setAdminDist(entry.getAdminDist());
     setTimer(NULL);
     setGCTimer(NULL);
     setNextHop(entry.getNextHop());
     setInterfaceId(entry.getInterfaceId());
     setMetric(entry.getMetric());
+    setRouteTag(entry.getRouteTag());
     setCopy(&entry);
 }
 
@@ -55,31 +59,46 @@ RoutingTableEntry::~RoutingTableEntry()
 {
 }
 
-std::string RoutingTableEntry::info() const
+std::string RoutingTableEntry::RIPngInfo() const
 {
+    simtime_t timerLen;
+    std::string expTime;
     std::stringstream out;
 
-    if (isChangeFlagSet())
-        out << "C";
-
-    RIPngTimer *GCTimer = getGCTimer();
-    if (GCTimer != NULL && GCTimer->isScheduled())
-    //Route deletion process is in progress
-        out << "D ";
-    else
-        out << " ";
-
     out << getDestPrefix() << "/" << getPrefixLength();
-    out << " [" << getAdminDist() << "/" << getMetric() << "]";
-    out << " via " << getNextHop();
+    out << ", metric " << getMetric();
+    if (getCopy() != NULL)
+        out << ", installed";
+
+    if (getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS)
+    {//Not directly connected
+        RIPngTimer *timer = getTimer();
+        if (timer != NULL && timer->isScheduled())
+        {
+            timerLen = timer->getArrivalTime() - simTime();
+            expTime = timerLen.str();
+            expTime = expTime.substr(0, expTime.find_first_of(".,"));
+            out << ", expires in " << expTime << " secs";
+        }
+        else
+        {//Route expired
+            out << ", expired";
+            RIPngTimer *GCTimer = getGCTimer();
+            if (GCTimer != NULL && GCTimer->isScheduled())
+            {
+                timerLen = GCTimer->getArrivalTime() - simTime();
+                expTime = timerLen.str();
+                expTime = expTime.substr(0, expTime.find_first_of(".,"));
+                out << ", [advertise " << expTime << "]";
+            }
+        }
+    }
+
     out << ", " << ift->getInterfaceById(getInterfaceId())->getName();
+    if (getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS)
+        out << "/" << getNextHop();
 
     return out.str();
-}
-
-std::string RoutingTableEntry::detailedInfo() const
-{
-    return std::string();
 }
 
 } /* namespace RIPng */

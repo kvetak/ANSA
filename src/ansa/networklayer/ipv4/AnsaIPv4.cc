@@ -131,7 +131,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
                 (rt->isMulticastForwardingEnabled() && datagram->getTransportProtocol() == IP_PROT_IGMP))
             reassembleAndDeliver(datagram->dup());
 
-        //FIXME temporary hack to catch "IGMP" for initialization PIM Join (*,G) PIM-SM
+        //FIXME temporary hack to catch "IGMP" for initialization PIM Join/Prune (*,G) PIM-SM
         if (datagram->getTransportProtocol() == IP_PROT_IGMP)
         {
             EV << "AnsaIPv4::handlePacketFromNetwork - IGMP packet received" << endl;
@@ -142,7 +142,6 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
                 fromIE->ipv4Data()->addMulticastListener(datagram->getDestAddress());
             return;
         }
-
 
         //PIM send PIM packet to PIM module
         if (datagram->getTransportProtocol() == IP_PROT_PIM)
@@ -325,88 +324,99 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
         return;
     }
 
-
+    //routing for selected mode
     if (intfMode == Dense)
-    {
-        nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF, route);
-
-        // data won't be sent because there is no outgoing interface and/or route is pruned
-        InterfaceVector outInt = route->getOutInt();
-        if (outInt.size() == 0 || route->isFlagSet(P))
-        {
-            EV << "Route does not have any outgoing interface or it is pruned." << endl;
-            if(ctrl != NULL)
-            {
-                if (!route->isFlagSet(A))
-                    nb->fireChangeNotification(NF_IPv4_DATA_ON_PRUNED_INT, ctrl);
-            }
-            delete datagram;
-            return;
-        }
-
-        // send packet to all outgoing interfaces of route (oilist)
-        for (unsigned int i=0; i<outInt.size(); i++)
-        {
-            // do not send to pruned interface
-            if (outInt[i].forwarding == Pruned)
-                continue;
-
-            InterfaceEntry *destIE = outInt[i].intPtr;
-            IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
-
-            // set datagram source address if not yet set
-            if (datagramCopy->getSrcAddress().isUnspecified())
-                datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
-
-            // send
-            fragmentAndSend(datagramCopy, destIE, destAddr);
-        }
-    }
+        routePimDM(route, datagram, ctrl);
     if (intfMode == Sparse)
-    {
-        InterfaceVector outInt;                 //set outgoing interfaces
-        if (route == NULL)
-            outInt = routeG->getOutInt();
-        else
-            outInt = route->getOutInt();
+        routePimSM(route, routeG, datagram, ctrl);
 
-        if (route)
-            nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, route);
-        if (routeG)
-            nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, routeG);
-
-        // send packet to all outgoing interfaces of route (oilist)
-        for (unsigned int i=0; i<outInt.size(); i++)
-        {
-            // do not send to pruned interface
-            if (outInt[i].forwarding == Pruned)
-                continue;
-
-            InterfaceEntry *destIE = outInt[i].intPtr;
-            IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
-
-            // set datagram source address if not yet set
-            if (datagramCopy->getSrcAddress().isUnspecified())
-                datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
-
-            // send
-            EV << "sending datagram to out interface" << endl;
-            fragmentAndSend(datagramCopy, destIE, destAddr);
-        }
-
-        if (route != NULL)
-        {
-            if (route->isFlagSet(P) && route->isFlagSet(F))
-            {
-                EV << "AnsaIPv4:PIM-SM encapsulating data packet to unicast packet and send them to RP" << endl;
-                nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
-            }
-        }
-    }
-
-    rt->generateShowIPMroute();         // refresh output in MRT
+    // refresh output in MRT
+    rt->generateShowIPMroute();
     // only copies sent, delete original datagram
     delete datagram;
+}
+
+void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
+{
+    IPv4Address destAddr = datagram->getDestAddress();
+
+    nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF, route);
+
+    // data won't be sent because there is no outgoing interface and/or route is pruned
+    InterfaceVector outInt = route->getOutInt();
+    if (outInt.size() == 0 || route->isFlagSet(P))
+    {
+        EV << "Route does not have any outgoing interface or it is pruned." << endl;
+        if(ctrl != NULL)
+        {
+            if (!route->isFlagSet(A))
+                nb->fireChangeNotification(NF_IPv4_DATA_ON_PRUNED_INT, ctrl);
+        }
+        delete datagram;
+        return;
+    }
+
+    // send packet to all outgoing interfaces of route (oilist)
+    for (unsigned int i=0; i<outInt.size(); i++)
+    {
+        // do not send to pruned interface
+        if (outInt[i].forwarding == Pruned)
+            continue;
+
+        InterfaceEntry *destIE = outInt[i].intPtr;
+        IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
+
+        // set datagram source address if not yet set
+        if (datagramCopy->getSrcAddress().isUnspecified())
+            datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
+        fragmentAndSend(datagramCopy, destIE, destAddr);    // send
+    }
+}
+
+void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute *routeG, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
+{
+
+    IPv4Address destAddr = datagram->getDestAddress();
+    InterfaceEntry *rpfInt = rt->getInterfaceForDestAddr(datagram->getSrcAddress());
+    AnsaIPv4MulticastRoute *routePtr = NULL;
+    InterfaceEntry *intToRP = NULL;
+
+    //if (S,G) route exist, prefer (S,G) olist
+    if (routeG)
+    {
+        //outInt = routeG->getOutInt();
+        routePtr = routeG;
+        nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, routeG);
+    }
+    if (route)
+    {
+        //outInt = route->getOutInt();
+        routePtr = route;
+        intToRP = rt->getInterfaceForDestAddr(routePtr->getRP());
+        nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, route);
+    }
+
+    InterfaceVector outInt = routePtr->getOutInt();
+    // send packet to all outgoing interfaces of route (oilist)
+    for (unsigned int i=0; i<outInt.size(); i++)
+    {
+        // do not send to pruned interface
+        if (outInt[i].forwarding == Pruned)
+            continue;
+        // RPF check before datagram sending
+        if (outInt[i].intId == rpfInt->getInterfaceId())
+            continue;
+        InterfaceEntry *destIE = outInt[i].intPtr;
+        IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
+
+        // set datagram source address if not yet set
+        if (datagramCopy->getSrcAddress().isUnspecified())
+            datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
+        fragmentAndSend(datagramCopy, destIE, destAddr);
+    }
+
+    if (route && route->isFlagSet(F) && route->isFlagSet(P) && (route->getRegStatus(intToRP->getInterfaceId()) == Join))
+        nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
 }
 
 void AnsaIPv4::reassembleAndDeliver(IPv4Datagram *datagram)

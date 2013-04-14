@@ -38,15 +38,17 @@
 #include "AnsaIPv4Route.h"
 #include "AnsaIPv4.h"
 
-#define KAT 180.0                       /**< Cisco has 180s, RFC4601 KAT = 210s after that, route is flushed */
+#define KAT 180.0                       /**< Keep alive timer, if RPT is disconnect */
+#define KAT2 210.0                      /**< Keep alive timer, if RPT is connect */
 #define RST 60.0                        /**< Register-stop Timer*/
 #define JT 60.0                         /**< Join Timer */
-#define REGISTER_PROBE_TIME 5.0
+#define REGISTER_PROBE_TIME 5.0         /**< Register Probe Time */
 #define HOLDTIME 210.0                  /**< Holdtime for Expiry Timer */
 #define PPT 3.0                         /**< value for Prune-Pending Timer*/
-#define ALL_PIM_ROUTERS "224.0.0.13"
-#define MAX_TTL 255
+#define ALL_PIM_ROUTERS "224.0.0.13"    /**< Multicast address for PIM routers */
+#define MAX_TTL 255                     /**< Maximum TTL */
 #define NO_INT_TIMER -1
+#define CISCO_SPEC_SIM 1                /**< Enable Cisco specific simulation; 1 = enable, 0 = disable */
 
 
 struct multDataInfo
@@ -110,7 +112,7 @@ class pimSM : public cSimpleModule, protected INotifiable
         PIMrst* createRegisterStopTimer(IPv4Address source, IPv4Address group);
         PIMet*  createExpiryTimer(int intID, int holdtime, IPv4Address group, IPv4Address source, int StateType);
         PIMjt*  createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, int JoinType);
-        PIMppt* createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr);
+        PIMppt* createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, JPMsgType JPtype);
 
         // pim messages
         void sendPIMRegister(IPv4ControlInfo *ctrl);

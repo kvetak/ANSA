@@ -82,6 +82,11 @@
 					<NetworkMask>255.255.255.0</NetworkMask>
 					<NextHopAddress>192.168.1.2</NextHopAddress>
 				</Route>
+				<Route>
+					<NetworkAddress>172.16.40.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
 			</Static>
 		</Routing>
 		<Interfaces>

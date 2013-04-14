@@ -30,7 +30,7 @@ Define_Module(RIPngRouting);
 
 std::ostream& operator<<(std::ostream& os, const RIPng::RoutingTableEntry& e)
 {
-    os << e.info();
+    os << e.RIPngInfo();
     return os;
 };
 
@@ -154,25 +154,27 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
 {
     const IPv6Address &nextHop = routingTableEntry->getNextHop();
     int newMetric = rte.getMetric();
-    if (newMetric < infinityMetric)
-        ++newMetric;
+    ++newMetric;
+    int oldMetric = routingTableEntry->getMetric();
 
     RIPng::RoutingTableEntry *routingTableEntryInGlobalRT = routingTableEntry->getCopy();
 
     if (nextHop == sourceAddr)
     {// RTE is from the same router
         RIPngTimer *routeTimer = routingTableEntry->getTimer();
-        resetTimer(routeTimer, routeTimeout);
 
-        if (newMetric != routingTableEntry->getMetric())
+        if (newMetric < infinityMetric)
+            resetTimer(routeTimer, routeTimeout);
+
+        if (newMetric != oldMetric)
         {
-            if (newMetric == infinityMetric)
-            {
+            if (newMetric >= infinityMetric && oldMetric < infinityMetric)
+            {//Invalidate route if isn't already invalidated
                 // bSendTriggeredUpdateMessage is set in startRouteDeletionProcess() function
                 cancelTimer(routeTimer);
                 startRouteDeletionProcess(routingTableEntry);
             }
-            else
+            else if (newMetric < infinityMetric)
             {
                 // route is from the same router, always set the metric and the change flag
                 routingTableEntry->setMetric(newMetric);
@@ -201,7 +203,7 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
     }
     else
     {
-        if (newMetric < routingTableEntry->getMetric())
+        if (newMetric < oldMetric)
         {
             routingTableEntry->setMetric(newMetric);
             routingTableEntry->setNextHop(sourceAddr);
@@ -358,7 +360,6 @@ void RIPngRouting::setInterfacePoisonReverse(RIPng::Interface *RIPngInterface, b
 void RIPngRouting::addRoutingTableEntryToGlobalRT(RIPng::RoutingTableEntry* entry)
 {
     RIPng::RoutingTableEntry *newEntry = new RIPng::RoutingTableEntry(*entry);
-    newEntry->setAdminDist(ANSAIPv6Route::RIP);
     if (rt->prepareForAddRoute(newEntry))
     {
         rt->addRoutingProtocolRoute(newEntry);
@@ -708,18 +709,20 @@ void RIPngRouting::processRTE(RIPngRTE &rte, int sourceIntId, IPv6Address &sourc
     else
     {// Create and add new Routing Table Entry
         int metric = rte.getMetric();
+        ++metric;
+
         if (metric < infinityMetric)
-            ++metric;
+        {
+            RIPng::RoutingTableEntry *route = new RIPng::RoutingTableEntry(prefix, prefixLen);
+            route->setInterfaceId(sourceIntId);
+            route->setNextHop(sourceAddr);
+            route->setMetric(metric);
+            route->setChangeFlag();
 
-        RIPng::RoutingTableEntry *route = new RIPng::RoutingTableEntry(prefix, prefixLen);
-        route->setInterfaceId(sourceIntId);
-        route->setNextHop(sourceAddr);
-        route->setMetric(metric);
-        route->setChangeFlag();
+            addRoutingTableEntry(route);
 
-        addRoutingTableEntry(route);
-
-        bSendTriggeredUpdateMessage = true;
+            bSendTriggeredUpdateMessage = true;
+        }
     }
 }
 
@@ -967,7 +970,6 @@ void RIPngRouting::initialize(int stage)
 
     connNetworkMetric = par("connectedNetworkMetric");
     infinityMetric = par("infinityMetric");
-    adminDist = par("adminDist");
 
     routeTimeout = par("routeTimeout").doubleValue();
     routeGarbageCollectionTimeout = par("routeGarbageCollectionTimeout").doubleValue();
@@ -1163,4 +1165,6 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
                addRoutingTableEntryToGlobalRT(routingTableEntryInRIPngRT);
        }
    }
+
+   //observing route_changed is not necessarily, each protocol has its own metric
 }

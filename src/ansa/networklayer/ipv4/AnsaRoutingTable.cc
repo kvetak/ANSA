@@ -79,7 +79,7 @@ void AnsaRoutingTable::updateDisplayString()
         return;
 
     char buf[80];
-    sprintf(buf, "%d routes", multicastRoutes.size());
+    sprintf(buf, "%ld routes", multicastRoutes.size());
     getDisplayString().setTagArg("t",0,buf);
 }
 
@@ -336,7 +336,8 @@ void AnsaRoutingTable::generateShowIPMroute()
         os << "(";
         if (ipr->getOrigin().isUnspecified()) os << "*, "; else os << ipr->getOrigin() << ",  ";
         os << ipr->getMulticastGroup() << "), ";
-        if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
+        if (ipr->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)
+            if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
         os << "flags: ";
         std::vector<flag> flags = ipr->getFlags();
         for (unsigned int j = 0; j < flags.size(); j++)
@@ -364,7 +365,8 @@ void AnsaRoutingTable::generateShowIPMroute()
                 case T:
                     os << "T";
                     break;
-                //FIXME next flags for PIM-SM
+                case NO_FLAG:
+                    break;
             }
         }
         os << endl;
@@ -380,18 +382,18 @@ void AnsaRoutingTable::generateShowIPMroute()
         if (all.size() == 0)
             os << "Null" << endl;
         else
-            if (ipr->getOutShowIntStatus())                         // hack for PIM-SM output - problem with register state and outgoing interface
+            for (unsigned int k = 0; k < all.size(); k++)
             {
-                for (unsigned int k = 0; k < all.size(); k++)
+                if ((all[k].mode == Sparsemode && all[k].shRegTun == true) || all[k].mode == Densemode)
                 {
                     os << all[k].intPtr->getName() << ", ";
                     if (all[k].forwarding == Forward) os << "Forward/"; else os << "Pruned/";
                     if (all[k].mode == Densemode) os << "Dense"; else os << "Sparse";
                     os << endl;
                 }
+                else
+                    os << "Null" << endl;
             }
-            else
-                os << "Null" << endl;
         showMRoute.push_back(os.str());
     }
     std::stringstream out;
