@@ -32,7 +32,7 @@ class InterfaceEntry;
 /* It will get rename to CLNPRoute or RoutingTable under CLNP */
 
 class CLNSRoute: public cObject {
-
+friend class CLNSTable;
 private:
 
     unsigned char *destPrefix; //system-ID, in future maybe even area-id
@@ -84,6 +84,7 @@ public:
 };
 
 class CLNSTable: public cSimpleModule, protected INotifiable {
+        friend class CLNSRoute;
 protected:
     IInterfaceTable *ift; // cached pointer
     NotificationBoard *nb; // cached pointer
@@ -111,6 +112,8 @@ public:
     void addRecord(CLNSRoute *route);
     /* delete all entries in routeVector */
     void dropTable(void);
+    int getGateIndexBySystemID(unsigned char *systemID);
+    unsigned char *getNextHopSystemIDBySystemID(unsigned char *systemID);
 };
 
 #endif /* CLNSTABLE_H_ */

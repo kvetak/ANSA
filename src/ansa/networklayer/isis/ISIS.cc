@@ -3488,11 +3488,26 @@ ISISadj *ISIS::getAdjBySystemID(unsigned char *systemID, short circuitType, int 
     return NULL;
 }
 
-        /*
-         * Extract System-ID from message.
-         * @param msg incomming msg
-         * @return newly allocated system-id
-         */
+ISISadj *ISIS::getAdjByMAC(const MACAddress &address, short circuitType, int gateIndex){
+
+    std::vector<ISISadj> *adjTab = this->getAdjTab(circuitType);
+
+    for(std::vector<ISISadj>::iterator it = adjTab->begin(); it != adjTab->end(); ++it){
+        if((*it).mac.compareTo(address) == 0){
+            if(gateIndex == -1 || gateIndex == (*it).gateIndex){
+                return &(*it);
+            }
+        }
+    }
+
+    return NULL;
+}
+
+/*
+ * Extract System-ID from message.
+ * @param msg incomming msg
+ * @return newly allocated system-id
+ */
 unsigned char * ISIS::getSysID(ISISMessage *msg)
 {
 
@@ -9602,9 +9617,40 @@ void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from
     }
 }
 
-ISISPaths_t *ISIS::getPathsFromTree(int nickname, const unsigned char *systemId){
+std::vector<unsigned char *> *ISIS::getSystemIDsFromTreeOnlySource(int nickname, const unsigned char *systemId){
 
-    ISISPaths_t* treePaths = new ISISPaths_t;
+    std::vector<unsigned char *> *systemIDs = this->getSystemIDsFromTree(nickname, systemId);
+
+
+
+//    it = this->distribTrees.find(nickname);
+
+        for(std::vector<unsigned char *>::iterator it = systemIDs->begin(); it != systemIDs->end();){
+            if(memcmp((*it), systemId, ISIS_SYSTEM_ID) == 0){
+                it = systemIDs->erase(it);
+            }else{
+                ++it;
+            }
+//            for(ISISNeighbours_t::iterator neighIt = (*pathIt)->from.begin(); neighIt != (*pathIt)->from.end(); ++neighIt){
+//                if (memcmp(systemId, (*neighIt)->id, ISIS_SYSTEM_ID) == 0)
+//                {
+//                    treePaths->push_back((*pathIt)->copy());
+//                    break;
+//                }
+//            }
+
+
+        }
+
+
+        return systemIDs;
+
+}
+
+
+std::vector<unsigned char *> *ISIS::getSystemIDsFromTree(int nickname, const unsigned char *systemId){
+
+    std::vector<unsigned char *> *systemIDs = new std::vector<unsigned char *>;
 
     std::map<int, ISISPaths_t *>::iterator it;
     if(this->distribTrees.find(nickname) == this->distribTrees.end()){
@@ -9614,13 +9660,28 @@ ISISPaths_t *ISIS::getPathsFromTree(int nickname, const unsigned char *systemId)
     it = this->distribTrees.find(nickname);
     if(it != this->distribTrees.end()){
         for(ISISPaths_t::iterator pathIt = it->second->begin(); pathIt != it->second->end(); ++pathIt){
+            //if destination match -> push_back
             if(memcmp((*pathIt)->to, systemId, ISIS_SYSTEM_ID) == 0){
+                for (ISISNeighbours_t::iterator neighIt = (*pathIt)->from.begin(); neighIt != (*pathIt)->from.end();
+                        ++neighIt)
+                {
+                    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
+                    memcpy(tmpSysId, (*neighIt)->id, ISIS_SYSTEM_ID);
+                    systemIDs->push_back(tmpSysId);
+
+
+                }
+
                 continue;
             }
+            //if at least one "from" match -> push_back (actually there should be only one "from")
             for(ISISNeighbours_t::iterator neighIt = (*pathIt)->from.begin(); neighIt != (*pathIt)->from.end(); ++neighIt){
                 if (memcmp(systemId, (*neighIt)->id, ISIS_SYSTEM_ID) == 0)
                 {
-                    treePaths->push_back((*pathIt)->copy());
+                    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
+                    memcpy(tmpSysId, (*pathIt)->to, ISIS_SYSTEM_ID);
+                    systemIDs->push_back(tmpSysId);
+
                     break;
                 }
             }
@@ -9629,7 +9690,7 @@ ISISPaths_t *ISIS::getPathsFromTree(int nickname, const unsigned char *systemId)
         }
 
     }
-        return treePaths;
+        return systemIDs;
 
 }
 

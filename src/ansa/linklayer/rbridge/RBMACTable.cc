@@ -57,7 +57,10 @@ const RBMACTable::AddressTable * RBMACTable::getTable() {
 
 
 /* NEW */
-void RBMACTable::update(MACAddress& addr, int vlanId, int port){
+/*
+ * This method is used to learn the triplet from native frame
+ */
+void RBMACTable::updateNative(MACAddress& addr, int vlanId, int port){
 
     Enter_Method_Silent();
 
@@ -97,11 +100,60 @@ void RBMACTable::update(MACAddress& addr, int vlanId, int port){
                 entry.portList.push_back(port);
             }
         }
+
+
+        if(entry.type != EST_LOCAL_PORT){
+            EV << "RBMACTable: ERROR: Discovered different entry type during updating entry. It indicates move of MAC address or wrong frames handling";
+        }
     }
 
     return;
 }
+/*
+ * This method is used to learn triplet of innerFrame within TRILL-encapsulated frame
+ */
+void RBMACTable::updateTRILLData(MACAddress &addr, int vlanId, int ingressNickname){
+    Enter_Method_Silent();
 
+    flushAged();
+    ESTable::iterator iter;
+
+    iter = this->eSTable.find(std::make_pair(addr, vlanId));
+    if(iter == this->eSTable.end()){
+        if(this->addressTableSize != 0 && this->eSTable.size() == (unsigned int) this->addressTableSize){
+            EV << "Making room in Addres Table by throwing out aged entries. \n";
+            if(this->eSTable.size() == (unsigned int)addressTableSize){
+                removeOldest();
+            }
+        }
+        //Add entry to table
+        EV << "Adding entry to Address Table: "<< addr << ": VLAN: " << vlanId << " ingressNickname: " << ingressNickname << "\n";
+
+        ESTRecord entry;
+        //entry.portList.push_back();
+        entry.insertTime = simTime();
+        entry.inputType = ESR_DYNAMIC;
+        entry.type = EST_RBRIDGE;
+        entry.address = addr;
+        entry.vlanId = vlanId;
+        entry.ingressNickname = ingressNickname;
+
+        this->eSTable[std::make_pair(addr,vlanId)] = entry;
+    }else{
+        //update existing entry
+        EV << "Updating existing entry in Address Table: "<< addr << ": VLAN: " << vlanId << " ingressNickname: " << ingressNickname << "\n";
+        ESTRecord entry = iter->second;
+
+        if(entry.inputType == ESR_DYNAMIC && entry.type == EST_RBRIDGE){
+            entry.insertTime = simTime();
+            if(entry.ingressNickname != ingressNickname){
+                entry.ingressNickname = ingressNickname;
+                EV << "RBMACTable: ERROR: Discovered different entry type during updating entry. It indicates move of MAC address or wrong frames handling";
+            }
+        }
+
+    }
+}
 void RBMACTable::update(MACAddress& addr, int port) {
     Enter_Method_Silent();
 

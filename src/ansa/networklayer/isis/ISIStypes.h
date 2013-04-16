@@ -43,7 +43,7 @@
 #define ISIS_PSNP_INTERVAL 2 /*!< Interval in seconds between generating PSNP message.*/
 #define ISIS_LSP_MAX_SIZE 1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
 #define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
-#define ISIS_SPF_FULL_INTERVAL 50
+#define ISIS_SPF_FULL_INTERVAL 29 //TODO A! change back to 50
 #define ISIS_TRILL_MAX_HELLO_SIZE 1470
 //class InterfaceEntr;
 //class MACAddress;

@@ -245,5 +245,8 @@ void TRILLFrame::setOptions(unsigned int k, uint32_t options)
     this->options_var[k] = options;
 }
 
+void TRILLFrame::decHopCount(int amount){
+    this->hopCount_var -= amount;
+}
 
 

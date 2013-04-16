@@ -27,6 +27,9 @@
 
 TRILLInterfaceData::TRILLInterfaceData()
 {
+
+
+
     // TODO Auto-generated constructor stub
 
 }

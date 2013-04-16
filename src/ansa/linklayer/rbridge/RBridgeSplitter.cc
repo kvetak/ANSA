@@ -149,16 +149,19 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
                                 cPacket *packet = frame->decapsulate()->dup();
                                 packet->setControlInfo(ctrl->dup());
                                 this->send(packet, "isisOut", gateIndex);
+                                delete msg;
                 }else{
                     EV <<" Warning L2_ISIS frame with not-allowed vlan tag" << endl;
-                    delete msg;
+
                 }
+
                 return;
             }
             //
             else{
                 this->send(msg,"trillOut", gateIndex);
             }
+
         }
         //
         else if (dynamic_cast<EthernetIIFrame *>(msg))
@@ -204,31 +207,6 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
 
 
 
-//        if (dynamic_cast<ISISMessage *>(msg))
-//        {
-//            this->send(msg, "isisOut", gateIndex);
-//            return;
-//        }
-
-
-        // IPv6 datagram, send it to networkLayer6 via ipv6Out
-//        if (dynamic_cast<IPv6Datagram *>(msg))
-//        {
-//            this->send(msg, "ipv6Out", gateIndex);
-//        }
-//        else
-//        {
-//            if(dynamic_cast<ISISMessage *>(msg))
-//            {
-//                this->send(msg, "isisOut", gateIndex);
-//            }
-//
-//            // other (IPv4), send it to networkLayer via ipv4Out
-//            else
-//            {
-//                this->send(msg, "ipv4Out", gateIndex);
-//            }
-//        }
     }
 }
 
