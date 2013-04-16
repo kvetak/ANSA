@@ -184,8 +184,8 @@ class INET_API InterfaceEntry : public cNamedObject
     virtual void setIPv6Data(IPv6InterfaceData *p);
     virtual void setProtocol3Data(InterfaceProtocolData *p)  {protocol3data = p; configChanged();}
     virtual void setProtocol4Data(InterfaceProtocolData *p)  {protocol4data = p; configChanged();}
-    virtual void setTRILLInterfaceData(TRILLInterfaceData *p) {trilldata = p; configChanged();}
-    virtual void setISISInterfaceData(ISISInterfaceData *p) {isisdata = p; configChanged();}
+    virtual void setTRILLInterfaceData(TRILLInterfaceData *p);// {trilldata = p; p->ownerp = this; configChanged();}
+    virtual void setISISInterfaceData(ISISInterfaceData *p);// {isisdata = p; p->ownerp = this; configChanged();}
     //@}
 
     /** @name access to the cost process estimation  */

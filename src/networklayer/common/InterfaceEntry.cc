@@ -35,6 +35,9 @@
 #include "IPv6InterfaceData.h"
 #endif
 
+#include "TRILLInterfaceData.h"
+#include "ISISInterfaceData.h"
+
 
 void InterfaceProtocolData::changed(int category)
 {
@@ -161,8 +164,26 @@ void InterfaceEntry::setIPv6Data(IPv6InterfaceData *p)
     p->ownerp = this;
     configChanged();
 #else
-    throw cRuntimeError(this, "setIPv4Data(): INET was compiled without IPv6 support");
+    throw cRuntimeError(this, "setIPv6Data(): INET was compiled without IPv6 support");
 #endif
+}
+
+void InterfaceEntry::setTRILLInterfaceData(TRILLInterfaceData *p)
+{
+
+    trilldata = p;
+    p->ownerp = this;
+    configChanged();
+
+}
+
+void InterfaceEntry::setISISInterfaceData(ISISInterfaceData *p)
+{
+
+    isisdata = p;
+    p->ownerp = this;
+    configChanged();
+
 }
 
 bool InterfaceEntry::setEstimateCostProcess(int position, MacEstimateCostProcess *p)
