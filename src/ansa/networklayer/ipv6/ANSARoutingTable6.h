@@ -19,6 +19,7 @@
 
 class IInterfaceTable;
 class InterfaceEntry;
+class ANSARoutingTable6;
 
 /**
  * Extends IPv6Route by administrative distance.
@@ -69,23 +70,55 @@ class ANSAIPv6Route : public IPv6Route
         dUnknown = 255
     };
 
+    enum ChangeCodes // field codes for changed() - IPv4Route-like
+    {
+        F_NEXTHOP,
+        F_IFACE,
+        F_METRIC,
+        F_ADMINDIST,
+        F_ROUTINGPROTSOURCE
+    };
+
   protected:
-    IInterfaceTable *ift; // cached pointer
+    IInterfaceTable *ift;     ///< cached pointer
+    ANSARoutingTable6 *rt;    ///< the routing table in which this route is inserted, or NULL
     RouteAdminDist _adminDist;
+    /** Should be set if route source is a "routing protocol" **/
     RoutingProtocolSource _routingProtocolSource;
+
+    void changed(int fieldCode);
+    void changedSilent(int fieldCode);
 
   public:
     ANSAIPv6Route(IPv6Address destPrefix, int length, RouteSrc src);
+
+    /** To be called by the routing table when this route is added or removed from it */
+    virtual void setRoutingTable(ANSARoutingTable6 *rt) {this->rt = rt;}
+    ANSARoutingTable6 *getRoutingTable() const {return rt;}
 
     virtual std::string info() const;
     virtual std::string detailedInfo() const;
     virtual const char *getRouteSrcName() const;
 
-    void setAdminDist(RouteAdminDist adminDist)  {_adminDist = adminDist; }
-    void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) { _routingProtocolSource = routingProtocolSource; }
-
     RouteAdminDist getAdminDist() const  { return _adminDist; }
     RoutingProtocolSource getRoutingProtocolSource() const { return _routingProtocolSource; }
+    const char *getInterfaceName() const;
+
+    virtual void setAdminDist(RouteAdminDist adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changed(F_ADMINDIST);} }
+    virtual void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) {  if (routingProtocolSource != _routingProtocolSource) { _routingProtocolSource = routingProtocolSource; changed(F_ROUTINGPROTSOURCE);} }
+    virtual void setInterfaceId(int interfaceId)  { if (interfaceId != _interfaceID) { _interfaceID = interfaceId; changed(F_IFACE);} }
+    virtual void setNextHop(const IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changed(F_NEXTHOP);} }
+    virtual void setMetric(int metric)  { if (metric != _metric) { _metric = metric; changed(F_METRIC);} }
+
+    /**
+     * Silent versions of the setters. Used if more than one route information is changed.
+     * Silent versions do not fire "route changed notification".
+     */
+    virtual void setAdminDistSilent(RouteAdminDist adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changedSilent(F_ADMINDIST);} }
+    virtual void setRoutingProtocolSourceSilent(RoutingProtocolSource routingProtocolSource) {  if (routingProtocolSource != _routingProtocolSource) { _routingProtocolSource = routingProtocolSource; changedSilent(F_ROUTINGPROTSOURCE);} }
+    virtual void setInterfaceIdSilent(int interfaceId)  { if (interfaceId != _interfaceID) { _interfaceID = interfaceId; changedSilent(F_IFACE);} }
+    virtual void setNextHopSilent(const IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changedSilent(F_NEXTHOP);} }
+    virtual void setMetricSilent(int metric)  { if (metric != _metric) { _metric = metric; changedSilent(F_METRIC);} }
 };
 
 /**
@@ -142,15 +175,22 @@ class ANSARoutingTable6 : public RoutingTable6
     virtual void addRoutingProtocolRoute(ANSAIPv6Route *route);
 
     /**
-     * Must be used every time, if some of the route information should be
-     * updated. You should never update/change the route directly.
-     */
-    virtual void updateRoute(ANSAIPv6Route *route, int newInterfaceID, const IPv6Address &newNextHop, int newMetric);
-
-    /**
      * Must be reimplemented because of cache handling.
      */
     virtual void removeRoute(ANSAIPv6Route *route);
+
+    /**
+     * To be called from route objects whenever a field changes. Used for
+     * maintaining internal data structures and firing "routing table changed"
+     * notifications.
+     */
+    virtual void routeChanged(ANSAIPv6Route *entry, int fieldCode);
+
+    /**
+     * Same as routeChanged, except route changed notification is not fired.
+     * @see routeChanged
+     */
+    virtual void routeChangedSilent(ANSAIPv6Route *entry, int fieldCode);
 
     /**
      * Must be reimplemented because of cache handling.

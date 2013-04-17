@@ -191,10 +191,7 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
                 }
                 else if (routingTableEntryInGlobalRT != NULL)
                 {
-                    rt->updateRoute(routingTableEntryInGlobalRT,
-                            sourceIntId,
-                            sourceAddr,
-                            newMetric);
+                    routingTableEntryInGlobalRT->setMetric(newMetric);
                 }
 
                 bSendTriggeredUpdateMessage = true;
@@ -220,10 +217,9 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
             }
             else if (routingTableEntryInGlobalRT != NULL)
             {
-                rt->updateRoute(routingTableEntryInGlobalRT,
-                        sourceIntId,
-                        sourceAddr,
-                        newMetric);
+                routingTableEntryInGlobalRT->setInterfaceIdSilent(sourceIntId);
+                routingTableEntryInGlobalRT->setNextHopSilent(sourceAddr);
+                routingTableEntryInGlobalRT->setMetric(newMetric);
             }
             routingTableEntry->setChangeFlag();
 
