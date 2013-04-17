@@ -119,6 +119,7 @@ class INET_API TRILLFrame : public TRILLFrame_Base
     virtual unsigned int getOptionsArraySize() const;
     virtual uint32_t getOptions(unsigned int k) const;
     virtual void setOptions(unsigned int k, uint32_t options);
+    virtual void decHopCount(int amount = 1); //decrement hop count
 };
 
 inline void doPacking(cCommBuffer *b, TRILLFrame& obj) {obj.parsimPack(b);}

@@ -67,6 +67,7 @@ class TRILL;
  */
 class ISIS : public cSimpleModule, protected INotifiable
 {
+        friend class TRILL;
     public:
         enum ISIS_MODE
         {
@@ -130,6 +131,9 @@ private:
     int L2SPFFullInterval;
     unsigned long helloCounter; /*!< my hax hello counter to sync DIS/non-DIS hellos. This variable is deprecated, but is kept for sentimental reasons. */
 
+    /* TRILL related */
+    std::map<int, ISISPaths_t *> distribTrees;
+
     /* Init */
     void initISIS(); // main init
     void initHello();
@@ -157,6 +161,7 @@ private:
     ISISadj *getAdjByGateIndex(int gateIndex, short  circuitType, int offset = 0); // return something corresponding to adjacency on specified link
     ISISadj *getAdjBySystemID(unsigned char *systemID, short  circuitType, int gateIndex = -1);
     ISISadj *getAdj(ISISMessage *inMsg, short  circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
+    ISISadj *getAdjByMAC(const MACAddress &address, short circuitType, int gateIndex = -1);
     ISISinterface *getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
     bool isAdjBySystemID(unsigned char *systemID, short  circuitType); //do we have adjacency for systemID on specified circuitType
     bool isUp(int gateIndex, short  circuitType); //returns true if ISISInterface specified by the corresponding gateIndex have at least one adjacency in state UP
@@ -202,6 +207,7 @@ private:
     LSPRecord *installLSP(ISISLSPPacket *lsp, short  circuitType); //install lsp into local LSP database
     void updateAtt(bool action); /*!< Action specify whether this method has been called to set (true - new adjacency) or clear (false - removing adjacency) Attached flag. */
     void setClosestAtt(void); /*!< Find and set the closest L1L2 attached IS */
+    std::map<std::string, int> getAllSystemIdsFromLspDb(short circuitType);
 
     /* SPF */
     void fullSPF(ISISTimer *timer);
@@ -217,6 +223,14 @@ private:
     void moveToPath(ISISPath *path);
     void extractAreas(ISISPaths_t *paths, ISISPaths_t *areas, short  circuitType);
     ISISPaths_t *getPathsISO(short  circuitType);
+
+    void spfDistribTrees(short int circuitType); //L2_ISIS_MODE related -> computes distribution trees for forwarding TRILL multicast
+    void moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from, uint32_t metric, ISISPaths_t *ISISTent);
+    void bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
+
+    std::vector<unsigned char *> *getSystemIDsFromTreeOnlySource(int nickname,const unsigned char *systemId);
+    std::vector<unsigned char *> *getSystemIDsFromTree(int nickname,const unsigned char *systemId);
+
 
     /* Flags */
     FlagRecQQ_t *getSRMPTPQueue(short  circuitType);
@@ -364,6 +378,8 @@ public:
     int getISISIftSize();
         void setAtt(bool att);
         int getNickname() const;
+
+
 };
 
 

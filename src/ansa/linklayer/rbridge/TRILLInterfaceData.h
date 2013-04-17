@@ -54,6 +54,7 @@ class TRILLInterfaceData : public InterfaceProtocolData
         void setTrunk(bool trunk);
         void setVlanId(int vlanId);
         bool isAppointedForwarder(int vlanId, int nickname); //port is gateIndex
+        bool isEnabled(int vlanId);
         bool isInhibited() const;
         void setInhibited(bool inhibited);
         int getDesigVlan() const;

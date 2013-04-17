@@ -172,6 +172,7 @@ struct outInterface
     PIMet                   *expiryTimer;       /**< Pointer to PIM Expiry Timer*/
     AssertState             assert;             /**< Assert state. */
     RegisterState           regState;           /**< Register state. */
+    bool                    shRegTun;           /**< Show interface which is also register tunnel interface*/
 };
 
 /**
@@ -199,9 +200,6 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         // interfaces
         inInterface                 inInt;                  /**< Incoming interface */
         InterfaceVector             outInt;                 /**< Outgoing interface */
-
-        bool                        showOutInt;             /**< indicate if it is necessary to show out interface in show ip mroute */
-
 
         //Originated from destination.Ensures loop freeness.
         unsigned int sequencenumber;
@@ -236,7 +234,7 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         void setOutInt(InterfaceVector outInt) {EV << "MulticastIPRoute: New OutInt" << endl; this->outInt = outInt;}   /**< Set list of outgoing interfaces*/
         void addOutInt(outInterface outInt) {this->outInt.push_back(outInt);}                                           /**< Add interface to list of outgoing interfaces*/
         void addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode,
-                            PIMpt *pruneTimer, PIMet *expiryTimer, AssertState assert, RegisterState regState);
+                            PIMpt *pruneTimer, PIMet *expiryTimer, AssertState assert, RegisterState regState, bool show);
 
         void setAddresses(IPv4Address multOrigin, IPv4Address multGroup, IPv4Address RP);
 
@@ -267,9 +265,6 @@ class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
         InterfaceVector getOutInt() const {return outInt;}                  /**< Get list of outgoing interfaces*/
         int             getOutIdByIntId(int intId);                         /**< Get sequence number of outgoing interface with given interface ID*/
         bool            outIntExist(int intId);                             /**< Return true if interface intId exist, otherwise return false*/
-
-        void            setOutShowIntStatus(bool status) {showOutInt = status;}
-        bool            getOutShowIntStatus() const {return showOutInt;}
 
         simtime_t getInstallTime() const {return installtime;}
         void setInstallTime(simtime_t time) {installtime = time;}

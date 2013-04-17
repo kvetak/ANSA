@@ -71,7 +71,8 @@ public:
 
   typedef struct  {
           std::vector<int> portList; //vector is inteded for group addresses (multicast)
-          unsigned char systemID[6]; //Egress RBridge System ID
+          unsigned char systemID[6]; //Use ingressNickname instead  ... //Egress RBridge System ID
+          int ingressNickname; //ingressNickname
           ESTRecordType type; //how to handle record type
           ESTInputType inputType; //specify inserting method
           SimTime insertTime;
@@ -139,14 +140,15 @@ public:
 
   /* PUBLIC METHODS */
   void update(MACAddress& addr, int port);
-  void update(MACAddress& addr, int vlanId, int gateId);
+  void updateNative(MACAddress& addr, int vlanId, int gateId);
+  void updateTRILLData(MACAddress& addr, int vlanId, int ingressNickname);
   tSpec getSpec(MACAddress& addr);
   tPortList& getPorts(MACAddress& addr);
   void flush();
   void enableFasterAging(); // Aging ~ Ageing by Longman dictionary of contemporary english http://ldoceonline.com/
   void resetAging();
 
-  ESTRecord& getESTRecordByESTKey(ESTKey eSTKey);
+  ESTRecord getESTRecordByESTKey(ESTKey eSTKey);
 
   const AddressTable * getTable();
 

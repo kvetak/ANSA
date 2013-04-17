@@ -96,7 +96,6 @@ AnsaIPv4MulticastRoute::AnsaIPv4MulticastRoute()
     ppt = NULL;
 
     RP = IPv4Address::UNSPECIFIED_ADDRESS;
-    showOutInt = true;
     sequencenumber = 0;
 
     this->setRoutingTable(NULL);
@@ -220,8 +219,8 @@ bool AnsaIPv4MulticastRoute::isOilistNull()
     return olistNull;
 }
 
-void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode,
-                                                PIMpt *pruneTimer, PIMet *expiryTimer, AssertState assert, RegisterState regState)
+void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode, PIMpt *pruneTimer,
+                                                PIMet *expiryTimer, AssertState assert, RegisterState regState, bool show)
 {
     outInterface outIntf;
 
@@ -234,6 +233,7 @@ void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, in
     outIntf.expiryTimer = expiryTimer;
     outIntf.regState = regState;
     outIntf.assert = assert;
+    outIntf.shRegTun = show;
 
     this->outInt.push_back(outIntf);
 }
