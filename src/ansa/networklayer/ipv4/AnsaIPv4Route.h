@@ -15,7 +15,7 @@
 /**
  * @file AnsaIPv4Route.cc
  * @date 25.1.2013
- * @author Veronika Rybova, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz),
+ * @author Veronika Rybova, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), Jiri Trhlik (mailto:JiriTM@gmail.com)
  * Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @brief Inherited class from IPv4Route for PIM purposes
  * @detail File implements new functions for IPv4Route which are needed for PIM
@@ -28,6 +28,77 @@
 
 #include "PIMTimer_m.h"
 #include "InterfaceEntry.h"
+
+/**
+ * ANSAIPv4 unicast route in IRoutingTable.
+ */
+class ANSAIPv4Route : public IPv4Route
+{
+    public:
+        /** Should be set if route source is a "routing protocol" **/
+        enum RoutingProtocolSource
+        {
+            pUnknown = 0,
+            pIGRP,           //IGRP derived  - I
+            pRIP,            //RIP           - R
+            pEGP,            //EGP derived   - E
+            pBGP,            //BGP derived   - B
+            pISISderived,    //IS-IS derived - i
+            pISIS,           //IS-IS         - ia
+            pOSPF,           //OSPF derived                    - O
+            pOSPFinter,      //OSPF inter area route           - IA
+            pOSPFext1,       //OSPF external type 1 route      - E1
+            pOSPFext2,       //OSPF external type 2 route      - E2
+            pOSPFNSSAext1,   //OSPF NSSA external type 1 route - N1
+            pOSPFNSSAext2,   //OSPF NSSA external type 2 route - N2
+            pEIGRP,          //EIGRP          - D
+            pEIGRPext        //EIGRP external - EX
+        };
+
+        /** Cisco like administrative distances */
+        enum RouteAdminDist
+        {
+            dDirectlyConnected = 0,
+            dStatic = 1,
+            dEIGRPSummary = 5,
+            dBGPExternal = 20,
+            dEIGRPInternal = 90,
+            dIGRP = 100,
+            dOSPF = 110,
+            dISIS = 115,
+            dRIP = 120,
+            dEGP = 140,
+            dODR = 160,
+            dEIGRPExternal = 170,
+            dBGPInternal = 200,
+            dDHCPlearned = 254,
+            dUnknown = 255
+        };
+
+    protected:
+        RouteAdminDist _adminDist;
+        /** Should be set if route source is a "routing protocol" **/
+        RoutingProtocolSource _routingProtocolSource;
+
+    public:
+        ANSAIPv4Route() : IPv4Route() {}
+        virtual ~ANSAIPv4Route() {}
+        virtual std::string info() const;
+        virtual std::string detailedInfo() const;
+
+        void setAdminDist(RouteAdminDist adminDist)  {_adminDist = adminDist; }
+        void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) { _routingProtocolSource = routingProtocolSource; }
+
+        virtual const char *getRouteSrcName() const;
+        RouteAdminDist getAdminDist() const  { return _adminDist; }
+        RoutingProtocolSource getRoutingProtocolSource() const { return _routingProtocolSource; }
+
+};
+
+
+/**
+ * ANSAIPv4 multicast route in IRoutingTable.
+ */
 
 /**
  * Route flags. Added to each route.
