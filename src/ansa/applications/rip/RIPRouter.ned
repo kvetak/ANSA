@@ -23,16 +23,16 @@ package inet.ansa.applications.rip;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.applications.rip.RIPRouting;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.nodes.inet.NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
-import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
+import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.base.NotificationBoard;
 import inet.ansa.transport.udp.ANSAUDP;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
 import inet.linklayer.IWiredNic;
 
-module RIPngRouter
+module RIPRouter
 {
     parameters:
         @display("i=abstract/router");
@@ -81,12 +81,12 @@ module RIPngRouter
         }
 
         // network layer
-        networkLayer: NetworkLayer6 {
+        networkLayer: NetworkLayer {
             parameters:
                 @display("p=204,240;q=queue");
         }
 
-        routingTable6: ANSARoutingTable6 {
+        routingTable: AnsaRoutingTable {
             parameters:
                 @display("p=290,38");
                 isRouter = IPForward;
