@@ -93,7 +93,6 @@ void pimSM::initialize(int stage)
         // subscribe for notifications
         nb->subscribe(this, NF_IPv4_NEW_MULTICAST_SPARSE);
         nb->subscribe(this, NF_IPv4_MDATA_REGISTER);
-        nb->subscribe(this, NF_IPv4_REC_REGISTER_STOP);
         nb->subscribe(this, NF_IPv4_NEW_IGMP_ADDED_PISM);
         nb->subscribe(this, NF_IPv4_NEW_IGMP_REMOVED_PIMSM);
         nb->subscribe(this, NF_IPv4_DATA_ON_RPF_PIMSM);
@@ -1036,6 +1035,7 @@ void pimSM::processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedA
                 for (unsigned i=0; i<routes.size();i++)
                 {
                     routePointer = routes[i];
+                    //restart ET for (S,G)
                     if (routePointer->getOrigin() != IPv4Address::UNSPECIFIED_ADDRESS)
                         restartExpiryTimer(routePointer,JoinIncomingInt, msgHoldTime);
                 }
@@ -1264,7 +1264,7 @@ void pimSM::sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr,
 /**
  * SEND PIM REGISTER NULL
  *
- * The method is used for creating and sending of PIM Register Null message
+ * The method is used for creating and sending of PIM Register Null message.
  *
  * @param multGroup Address of multicast group for which Join/Prune message is created.
  * @param multOrigin Address of multicast source.
@@ -1305,6 +1305,16 @@ void pimSM::sendPIMRegisterNull(IPv4Address multOrigin, IPv4Address multGroup)
     }
 }
 
+/**
+ * SEND PIM REGISTER
+ *
+ * The method is used for creating and sending of PIM Register message.
+ *
+ * @param multGroup Pointer to control info.
+ * @see setCtrlForMessage()
+ * @see setKat()
+ * @see getRouteFor()
+ */
 void pimSM::sendPIMRegister(IPv4ControlInfo *ctrl)
 {
     EV << "pimSM::sendPIMRegister - encapsulating data packet into Register packet and sending to RP" << endl;
@@ -1351,9 +1361,12 @@ void pimSM::sendPIMRegister(IPv4ControlInfo *ctrl)
         msg->setEncapsulatedData(*encapData);
 
         // set IP Control info
-        InterfaceEntry *interfaceToRP = rt->getInterfaceForDestAddr(RPAddress);
-        IPv4ControlInfo *ctrl = setCtrlForMessage(RPAddress,interfaceToRP->ipv4Data()->getIPAddress(),
-                                                    IP_PROT_PIM,interfaceToRP->getInterfaceId(),MAX_TTL);
+        //InterfaceEntry *interfaceToRP = rt->getInterfaceForDestAddr(RPAddress);
+        //IPv4ControlInfo *ctrl = setCtrlForMessage(RPAddress,interfaceToRP->ipv4Data()->getIPAddress(),
+        //                                            IP_PROT_PIM,interfaceToRP->getInterfaceId(),MAX_TTL);
+
+        IPv4ControlInfo *ctrl = setCtrlForMessage(this->getRPAddress(),intToRP->ipv4Data()->getIPAddress(),
+                                                    IP_PROT_PIM,intToRP->getInterfaceId(),MAX_TTL);
         msg->setControlInfo(ctrl);
         send(msg, "spiltterOut");
     }
@@ -1361,6 +1374,17 @@ void pimSM::sendPIMRegister(IPv4ControlInfo *ctrl)
         EV << "PIM-SM:sendPIMRegister - register tunnel is disconnect." << endl;
 }
 
+/**
+ * SEND PIM JOIN TOWARD SOURCE
+ *
+ * The method is used for send triggered Join toward source of multicast
+ * in the processRegisterPacket() method.
+ *
+ * @param multGroup Pointer to controll info.
+ * @see setCtrlForMessage()
+ * @see setKat()
+ * @see getRouteFor()
+ */
 void pimSM::sendPIMJoinTowardSource(multDataInfo *info)
 {
     EV << "pimSM::sendPIMJoinTowardSource" << endl;
@@ -1370,6 +1394,19 @@ void pimSM::sendPIMJoinTowardSource(multDataInfo *info)
     sendPIMJoinPrune(info->group,info->origin, rpfNBR,JoinMsg,SG);
 }
 
+/**
+ * SEND PIM REGISTER STOP
+ *
+ * The method is used for sending PIM Register-Stop message, which is delivered
+ * to DR of multicast source. Register-Stop message stop process of multicast
+ * data encapsulation.
+ *
+ * @param source Address of RP.
+ * @param dest Address of source DR.
+ * @param multGroup Address of multicast group.
+ * @param multSource Address of multicast source.
+ * @see getInterfaceForDestAddr()
+ */
 void pimSM::sendPIMRegisterStop(IPv4Address source, IPv4Address dest, IPv4Address multGroup, IPv4Address multSource)
 {
     EV << "pimSM::sendPIMRegisterStop" << endl;
@@ -1396,7 +1433,16 @@ void pimSM::sendPIMRegisterStop(IPv4Address source, IPv4Address dest, IPv4Addres
     send(msg, "spiltterOut");
 }
 
-
+/**
+ * FORWARD MULTICAST DATA
+ *
+ * The method is used as abstraction for encapsulation multicast data to Register packet.
+ * The method create message MultData with multicast source address and multicast group address
+ * and send the message from RP to RPT.
+ *
+ * @param info Pointer to structure, which keep all information for creating and sending message.
+ * @see MultData()
+ */
 void pimSM::forwardMulticastData(multDataInfo *info)
 {
     EV << "pimSM::forwardMulticastData" << endl;
@@ -1423,12 +1469,13 @@ void pimSM::forwardMulticastData(multDataInfo *info)
 }
 
 /**
- * NEW MULTICAST
+ * NEW MULTICAST REGISTER DR
  *
- * The method process notification about new multicast data stream.
+ * The method process notification about new multicast data stream at DR.
  *
  * @param newRoute Pointer to new entry in the multicast routing table.
- * @see
+ * @see addOutIntFull()
+ * @see setKat()
  */
 void pimSM::newMulticastRegisterDR(AnsaIPv4MulticastRoute *newRoute)
 {
@@ -1466,6 +1513,17 @@ void pimSM::newMulticastRegisterDR(AnsaIPv4MulticastRoute *newRoute)
     }
 }
 
+/**
+ * REMOVE MULTICAST RECEIVER
+ *
+ * The method remove outgoing interface to multicast  listener.
+ * If outgoing interface is become null after removing interface,
+ * Prune message has to be sent.
+ *
+ * @param members Pointer to addRemoveAddr class.
+ * @see addRemoveAddr
+ * @see sendPIMJoinPrune()
+ */
 void pimSM::removeMulticastReciever(addRemoveAddr *members)
 {
     EV << "pimSM::removeMulticastReciever" << endl;

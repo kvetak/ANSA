@@ -77,8 +77,8 @@ module PIMRouter
         networkLayer: ansaNetworkLayer {
             parameters:
                 @display("p=204,240;q=queue");
-        }    
-        		
+        }
+
         routingTable: AnsaRoutingTable {
             parameters:
                 @display("p=305,38");
@@ -90,7 +90,7 @@ module PIMRouter
         // linklayer
         interfaceTable: InterfaceTable {
             parameters:
-                @display("p=204,38");
+                @display("p=191,38");
         }
 
 
@@ -106,11 +106,7 @@ module PIMRouter
         interfaceStateManager: InterfaceStateManager {
             @display("p=80,210");
         }
-//        routingTable6: RoutingTable6 {
-//            @display("p=304,110");
-//            isRouter = IPForward;
-//           	routingTable = routingTable;
-//        }
+
     connections allowunconnected:
         PIM.networkLayerOut --> networkLayer.pimIn;
         PIM.networkLayerIn <-- networkLayer.pimOut;

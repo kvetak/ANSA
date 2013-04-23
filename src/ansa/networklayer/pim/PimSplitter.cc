@@ -488,10 +488,7 @@ void PimSplitter::newMulticast(IPv4Address destAddr, IPv4Address srcAddr)
             newRoute->setInInt(inInt, inInt->getInterfaceId(), rpf);
 		}
 		if (pimInt->getMode() == Sparse)
-		{
 		    newRoute->setInInt(inInt, inInt->getInterfaceId(), IPv4Address("0.0.0.0"));
-		}
-
 
 		// notification for PIM module about new multicast route
 		if (pimInt->getMode() == Dense)

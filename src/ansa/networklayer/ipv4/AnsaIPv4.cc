@@ -301,6 +301,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     EV << "AnsaIPv4::routeMulticastPacket - Multicast routing." << endl;
 
     //PIM mode specific behavior
+    //FIXME better is outgoing interface
     PIMmode intfMode = pimIft->getInterfaceByIntID(fromIE->getInterfaceId())->getMode();
 
     // multicast group is not in multicast routing table and has to be added
