@@ -89,7 +89,6 @@ module RIPRouter
         routingTable: AnsaRoutingTable {
             parameters:
                 @display("p=290,38");
-                isRouter = IPForward;
                 routingTable = routingTable;
         }
 
