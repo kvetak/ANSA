@@ -266,6 +266,74 @@ const char *xmlParser::getRIPngInterfacePoisonReverse(cXMLElement *iface)
     return getNodeParamConfig(iface, "RIPngPoisonReverse", "disable");
 }
 
+//
+//
+//- configuration for RIP
+//
+//
+
+cXMLElement *xmlParser::getRIPNetwork(cXMLElement *network, cXMLElement *device)
+{
+    // initial call of the method - find <Routing> -> <RIP>
+    // and then get first "Network" child node
+    if (device != NULL){
+
+       cXMLElement *routing = device->getFirstChildWithTag("Routing");
+       if (routing == NULL)
+          return NULL;
+
+       cXMLElement *RIP = routing->getFirstChildWithTag("RIP");
+       if (routing == NULL)
+          return NULL;
+
+       network = RIP->getFirstChildWithTag("Network");
+
+    // repeated call - get another "Network" sibling node
+    }else if (network != NULL){
+        network = network->getNextSiblingWithTag("Network");
+    }else{
+        network = NULL;
+    }
+
+    return network;
+}
+
+cXMLElement *xmlParser::getRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device)
+{
+    // initial call of the method - find <Routing> -> <RIP>
+    // and then get first "Passive-interface" child node
+    if (device != NULL){
+
+      cXMLElement *routing = device->getFirstChildWithTag("Routing");
+      if (routing == NULL)
+         return NULL;
+
+      cXMLElement *RIP = routing->getFirstChildWithTag("RIP");
+      if (routing == NULL)
+         return NULL;
+
+      passiveInterface = RIP->getFirstChildWithTag("Passive-interface");
+
+    // repeated call - get another "Passive-interface" sibling node
+    }else if (passiveInterface != NULL){
+        passiveInterface = passiveInterface->getNextSiblingWithTag("Passive-interface");
+    }else{
+        passiveInterface = NULL;
+    }
+
+    return passiveInterface;
+}
+
+const char *xmlParser::getRIPInterfaceSplitHorizon(cXMLElement *iface)
+{
+    return getNodeParamConfig(iface, "RIPSplitHorizon", "enable");
+}
+
+const char *xmlParser::getRIPInterfacePoisonReverse(cXMLElement *iface)
+{
+    return getNodeParamConfig(iface, "RIPPoisonReverse", "disable");
+}
+
 bool xmlParser::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element

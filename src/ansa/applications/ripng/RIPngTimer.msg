@@ -26,10 +26,10 @@ class noncobject IPv6Address;
 
 enum RIPngTimerType
 {
-    GENERAL_UPDATE = 0;
-    TRIGGERED_UPDATE = 1;
-    ROUTE_TIMEOUT = 2;
-    ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
+    RIPNG_GENERAL_UPDATE = 0;
+    RIPNG_TRIGGERED_UPDATE = 1;
+    RIPNG_ROUTE_TIMEOUT = 2;
+    RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
 }
 
 //
@@ -40,7 +40,7 @@ enum RIPngTimerType
 //
 packet RIPngTimer 
 {
-    char timerKind enum(RIPngTimerType) = GENERAL_UPDATE;
-    IPv6Address IPv6Prefix;                                //meaning in the case of ROUTE_TIMEOUT and ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char prefixLen;                                        //meaning in the case of ROUTE_TIMEOUT and ROUTE_GARBAGE_COLECTION_TIMEOUT
+    char timerKind enum(RIPngTimerType) = RIPNG_GENERAL_UPDATE;
+    IPv6Address IPv6Prefix;                                //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
+    char prefixLen;                                        //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }

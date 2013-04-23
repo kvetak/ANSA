@@ -13,40 +13,40 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
-* @file RIPngInterface.cc
+* @file RIPRouting.cc
 * @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
 * @brief
 * @detail
 */
 
-#include "RIPngRouting.h"
+#include "RIPRouting.h"
 
-#include "IPv6InterfaceData.h"
-#include "IPv6ControlInfo.h"
+#include "IPv4InterfaceData.h"
+#include "IPv4ControlInfo.h"
 
 #include "deviceConfigurator.h"
 
-Define_Module(RIPngRouting);
+Define_Module(RIPRouting);
 
-std::ostream& operator<<(std::ostream& os, const RIPng::RoutingTableEntry& e)
+std::ostream& operator<<(std::ostream& os, const RIP::RoutingTableEntry& e)
 {
-    os << e.RIPngInfo();
+    os << e.RIPInfo();
     return os;
 };
 
-RIPngRouting::RIPngRouting()
+RIPRouting::RIPRouting()
 {
     regularUpdateTimer = NULL;
     triggeredUpdateTimer = NULL;
 }
 
-RIPngRouting::~RIPngRouting()
+RIPRouting::~RIPRouting()
 {
     deleteTimer(regularUpdateTimer);
     deleteTimer(triggeredUpdateTimer);
 
     //removeAllRoutingTableEntries();
-    RIPng::RoutingTableEntry *routingTableEntry;
+    RIP::RoutingTableEntry *routingTableEntry;
     for (RoutingTableIt it = routingTable.begin(); it != routingTable.end(); it++)
     {
         routingTableEntry = (*it);
@@ -69,15 +69,15 @@ RIPngRouting::~RIPngRouting()
 
 //
 //
-//-- RIPNG ROUTING TABLE METHODS
+//-- RIP ROUTING TABLE METHODS
 //
 //
-RIPng::RoutingTableEntry* RIPngRouting::getRoutingTableEntry(const IPv6Address &prefix, int prefixLength)
+RIP::RoutingTableEntry* RIPRouting::getRoutingTableEntry(const IPv4Address &network, const IPv4Address &netmask)
 {
-    RIPng::RoutingTableEntry *route = NULL;
+    RIP::RoutingTableEntry *route = NULL;
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
     {
-        if ((*it)->getDestPrefix()==prefix && (*it)->getPrefixLength()==prefixLength)
+        if ((*it)->getDestination()==network && (*it)->getNetmask()==netmask)
         {
             route = (*it);
             break;
@@ -87,18 +87,18 @@ RIPng::RoutingTableEntry* RIPngRouting::getRoutingTableEntry(const IPv6Address &
     return route;
 }
 
-void RIPngRouting::addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool createTimers)
+void RIPRouting::addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool createTimers)
 {
     if (createTimers == true)
     {
-        RIPngTimer *timer = createAndStartTimer(RIPNG_ROUTE_TIMEOUT, routeTimeout);
-        timer->setIPv6Prefix(entry->getDestPrefix());
-        timer->setPrefixLen(entry->getPrefixLength());
+        RIPTimer *timer = createAndStartTimer(RIP_ROUTE_TIMEOUT, routeTimeout);
+        timer->setIPv4Address(entry->getDestination());
+        timer->setNetmask(entry->getNetmask().getNetmaskLength());
         entry->setTimer(timer);
 
-        RIPngTimer *GCTimer = createTimer(RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT);
-        GCTimer->setIPv6Prefix(entry->getDestPrefix());
-        GCTimer->setPrefixLen(entry->getPrefixLength());
+        RIPTimer *GCTimer = createTimer(RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT);
+        GCTimer->setIPv4Address(entry->getDestination());
+        GCTimer->setNetmask(entry->getNetmask().getNetmaskLength());
         entry->setGCTimer(GCTimer);
     }
 
@@ -107,11 +107,11 @@ void RIPngRouting::addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool cr
 
     ++numRoutes;
 }
-void RIPngRouting::removeRoutingTableEntry(IPv6Address &prefix, int prefixLength)
+void RIPRouting::removeRoutingTableEntry(IPv4Address &network, int netmask)
 {
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
     {
-        if ((*it)->getDestPrefix()==prefix && (*it)->getPrefixLength()==prefixLength)
+        if ((*it)->getDestination()==network && (*it)->getNetmask().getNetmaskLength()==netmask)
         {
             removeRoutingTableEntry(it);
             break;
@@ -119,7 +119,7 @@ void RIPngRouting::removeRoutingTableEntry(IPv6Address &prefix, int prefixLength
     }
 }
 
-void RIPngRouting::removeRoutingTableEntry(RoutingTableIt it)
+void RIPRouting::removeRoutingTableEntry(RoutingTableIt it)
 {
     ASSERT(it != routingTable.end());
 
@@ -134,9 +134,9 @@ void RIPngRouting::removeRoutingTableEntry(RoutingTableIt it)
     --numRoutes;
 }
 
-void RIPngRouting::removeAllRoutingTableEntries()
+void RIPRouting::removeAllRoutingTableEntries()
 {
-    RIPng::RoutingTableEntry *routingTableEntry;
+    RIP::RoutingTableEntry *routingTableEntry;
 
     for (RoutingTableIt it = routingTable.begin(); it != routingTable.end(); it++)
     {
@@ -150,18 +150,18 @@ void RIPngRouting::removeAllRoutingTableEntries()
     routingTable.clear();
 }
 
-void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTableEntry, RIPngRTE &rte, int sourceIntId, IPv6Address &sourceAddr)
+void RIPRouting::updateRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry, RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr)
 {
-    const IPv6Address &nextHop = routingTableEntry->getNextHop();
-    int newMetric = rte.getMetric();
+    const IPv4Address &nextHop = routingTableEntry->getGateway();
+    unsigned int newMetric = rte.getMetric();
     ++newMetric;
-    int oldMetric = routingTableEntry->getMetric();
+    unsigned int oldMetric = routingTableEntry->getMetric();
 
-    RIPng::RoutingTableEntry *routingTableEntryInGlobalRT = routingTableEntry->getCopy();
+    RIP::RoutingTableEntry *routingTableEntryInGlobalRT = routingTableEntry->getCopy();
 
     if (nextHop == sourceAddr)
     {// RTE is from the same router
-        RIPngTimer *routeTimer = routingTableEntry->getTimer();
+        RIPTimer *routeTimer = routingTableEntry->getTimer();
 
         if (newMetric < infinityMetric)
             resetTimer(routeTimer, routeTimeout);
@@ -181,7 +181,7 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
                 routingTableEntry->setChangeFlag();
 
                 // stop garbage collection timer
-                RIPngTimer *GCTimer = routingTableEntry->getGCTimer();
+                RIPTimer *GCTimer = routingTableEntry->getGCTimer();
                 ASSERT(GCTimer != NULL);
                 if (GCTimer->isScheduled())
                 {
@@ -203,11 +203,11 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
         if (newMetric < oldMetric)
         {
             routingTableEntry->setMetric(newMetric);
-            routingTableEntry->setNextHop(sourceAddr);
-            routingTableEntry->setInterfaceId(sourceIntId);
+            routingTableEntry->setGateway(sourceAddr);
+            routingTableEntry->setInterface(ift->getInterfaceById(sourceIntId));
             resetTimer(routingTableEntry->getTimer(), routeTimeout);
             // stop garbage collection timer
-            RIPngTimer *GCTimer = routingTableEntry->getGCTimer();
+            RIPTimer *GCTimer = routingTableEntry->getGCTimer();
             ASSERT(GCTimer != NULL);
             if (GCTimer->isScheduled())
             {
@@ -217,8 +217,9 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
             }
             else if (routingTableEntryInGlobalRT != NULL)
             {
-                routingTableEntryInGlobalRT->setInterfaceIdSilent(sourceIntId);
-                routingTableEntryInGlobalRT->setNextHopSilent(sourceAddr);
+                //TODO: silent methods - RIPng-like
+                routingTableEntryInGlobalRT->setInterface(ift->getInterfaceById(sourceIntId));
+                routingTableEntryInGlobalRT->setGateway(sourceAddr);
                 routingTableEntryInGlobalRT->setMetric(newMetric);
             }
             routingTableEntry->setChangeFlag();
@@ -231,23 +232,41 @@ void RIPngRouting::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTabl
 
 //
 //
-//-- RIPNG INTERFACES METHODS
+//-- RIP INTERFACES METHODS
 //
 //
-int RIPngRouting::getEnabledInterfaceIndexById(int id)
+RIP::Interface *RIPRouting::getEnabledInterfaceByName(const char *interfaceName)
+{
+    RIP::Interface *enabledRIPInterface = NULL;
+
+    InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
+    if (interface != NULL)
+    {
+        int interfaceId = interface->getInterfaceId();
+        int RIPInterfaceIndex = getEnabledInterfaceIndexById(interfaceId);
+        if (RIPInterfaceIndex != -1)
+        {
+            enabledRIPInterface = getEnabledInterface(RIPInterfaceIndex);
+        }
+    }
+
+    return enabledRIPInterface;
+}
+
+int RIPRouting::getEnabledInterfaceIndexById(int id)
 {
     int i = 0, size = getEnabledInterfacesCount();
     while (i < size && getEnabledInterface(i)->getId() != id) i++;
     return i == size ? -1 : i;
 }
 
-void RIPngRouting::addEnabledInterface(RIPng::Interface *interface)
+void RIPRouting::addEnabledInterface(RIP::Interface *interface)
 {
     enabledInterfaces.push_back(interface);
     sockets.push_back(createAndSetSocketForInt(interface));
 }
 
-void RIPngRouting::removeEnabledInterface(unsigned long i)
+void RIPRouting::removeEnabledInterface(unsigned long i)
 {
     delete enabledInterfaces[i];
     enabledInterfaces.erase(enabledInterfaces.begin() + i);
@@ -256,10 +275,10 @@ void RIPngRouting::removeEnabledInterface(unsigned long i)
     sockets.erase(sockets.begin() + i);
 
     //if (i == 0)
-        //sockets[0]->joinMulticastGroup(RIPngAddress, -1);
+        //sockets[0]->joinMulticastGroup(RIPAddress, -1);
 }
 
-void RIPngRouting::removeAllEnabledInterfaces()
+void RIPRouting::removeAllEnabledInterfaces()
 {
     unsigned long intCount = getEnabledInterfacesCount();
     for (unsigned long i = 0; i < intCount; ++i)
@@ -277,10 +296,10 @@ void RIPngRouting::removeAllEnabledInterfaces()
 //-- GENERAL METHODS
 //
 //
-void RIPngRouting::showRoutingTable()
+void RIPRouting::showRoutingTable()
 {
     RoutingTableIt it;
-    RIPng::RoutingTableEntry *routingTableEntry;
+    RIP::RoutingTableEntry *routingTableEntry;
 
     ev << routerText << endl;
 
@@ -291,20 +310,20 @@ void RIPngRouting::showRoutingTable()
     }
 }
 
-RIPngMessage *RIPngRouting::createMessage()
+RIPMessage *RIPRouting::createMessage()
 {
-    char msgName[32] = "RIPngMessage";
+    char msgName[32] = "RIPMessage";
 
-    RIPngMessage *msg = new RIPngMessage(msgName);
+    RIPMessage *msg = new RIPMessage(msgName);
     return msg;
 }
 
-UDPSocket *RIPngRouting::createAndSetSocketForInt(RIPng::Interface* interface)
+UDPSocket *RIPRouting::createAndSetSocketForInt(RIP::Interface* interface)
 {
     UDPSocket *socket = new UDPSocket();
     socket->setOutputGate(gate("udpOut"));
-    //so every RIPng message sent from RIPng interface uses correct link-local source address
-    socket->bind(ift->getInterfaceById(interface->getId())->ipv6Data()->getLinkLocalAddress(), RIPngPort);
+    //so every RIP message sent from RIP interface uses correct source address
+    socket->bind(ift->getInterfaceById(interface->getId())->ipv4Data()->getIPAddress(), RIPPort);
 
     int timeToLive = par("timeToLive");
     if (timeToLive != -1)
@@ -313,52 +332,58 @@ UDPSocket *RIPngRouting::createAndSetSocketForInt(RIPng::Interface* interface)
     return socket;
 }
 
-RIPng::Interface *RIPngRouting::enableRIPngOnInterface(const char *interfaceName)
+RIP::Interface *RIPRouting::enableRIPOnInterface(const char *interfaceName)
 {
-    ev << "Enabling RIPng on " << interfaceName << routerText << endl;
-
     InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
     int interfaceId = interface->getInterfaceId();
-    RIPng::Interface *RIPngInterface = new RIPng::Interface(interfaceId);
-    // add interface to local RIPng interface table
-    addEnabledInterface(RIPngInterface);
 
-    return RIPngInterface;
+    return enableRIPOnInterface(interfaceId);
 }
 
-void RIPngRouting::setInterfacePassiveStatus(RIPng::Interface *RIPngInterface, bool status)
+RIP::Interface *RIPRouting::enableRIPOnInterface(int interfaceId)
+{
+    ev << "Enabling RIP on " << interfaceId << routerText << endl;
+
+    RIP::Interface *RIPInterface = new RIP::Interface(interfaceId);
+    // add interface to local RIP interface table
+    addEnabledInterface(RIPInterface);
+
+    return RIPInterface;
+}
+
+void RIPRouting::setInterfacePassiveStatus(RIP::Interface *RIPInterface, bool status)
 {
     if (status == true)
-        ev << "Setting RIPng passive interface (interface id: " << RIPngInterface->getId() << ")." << routerText << endl;
+        ev << "Setting RIP passive interface (interface id: " << RIPInterface->getId() << ")." << routerText << endl;
 
     if (status)
-        RIPngInterface->enablePassive();
+        RIPInterface->enablePassive();
     else
-        RIPngInterface->disablePassive();
+        RIPInterface->disablePassive();
 }
 
-void RIPngRouting::setInterfaceSplitHorizon(RIPng::Interface *RIPngInterface, bool status)
+void RIPRouting::setInterfaceSplitHorizon(RIP::Interface *RIPInterface, bool status)
 {
     if (status)
-        RIPngInterface->enableSplitHorizon();
+        RIPInterface->enableSplitHorizon();
     else
-        RIPngInterface->disableSplitHorizon();
+        RIPInterface->disableSplitHorizon();
 }
 
-void RIPngRouting::setInterfacePoisonReverse(RIPng::Interface *RIPngInterface, bool status)
+void RIPRouting::setInterfacePoisonReverse(RIP::Interface *RIPInterface, bool status)
 {
     if (status)
-        RIPngInterface->enablePoisonReverse();
+        RIPInterface->enablePoisonReverse();
     else
-        RIPngInterface->disablePoisonReverse();
+        RIPInterface->disablePoisonReverse();
 }
 
-void RIPngRouting::addRoutingTableEntryToGlobalRT(RIPng::RoutingTableEntry* entry)
+void RIPRouting::addRoutingTableEntryToGlobalRT(RIP::RoutingTableEntry* entry)
 {
-    RIPng::RoutingTableEntry *newEntry = new RIPng::RoutingTableEntry(*entry);
+    RIP::RoutingTableEntry *newEntry = new RIP::RoutingTableEntry(*entry);
     if (rt->prepareForAddRoute(newEntry))
     {
-        rt->addRoutingProtocolRoute(newEntry);
+        rt->addRoute(newEntry);
         entry->setCopy(newEntry);
     }
     else
@@ -367,10 +392,10 @@ void RIPngRouting::addRoutingTableEntryToGlobalRT(RIPng::RoutingTableEntry* entr
     }
 }
 
-void RIPngRouting::removeRoutingTableEntryFromGlobalRT(RIPng::RoutingTableEntry* entry)
+void RIPRouting::removeRoutingTableEntryFromGlobalRT(RIP::RoutingTableEntry* entry)
 {
     if (entry->getCopy() != NULL)
-    // corresponding route from "global routing table" to the entry from "RIPng routing table"
+    // corresponding route from "global routing table" to the entry from "RIP routing table"
         rt->removeRoute(entry->getCopy());
 }
 
@@ -379,12 +404,12 @@ void RIPngRouting::removeRoutingTableEntryFromGlobalRT(RIPng::RoutingTableEntry*
 //-- OUTPUT PROCESSING
 //
 //
-void RIPngRouting::sendRegularUpdateMessage()
+void RIPRouting::sendRegularUpdateMessage()
 {
     int numInterfaces = getEnabledInterfacesCount();
-    RIPng::Interface *interface;
+    RIP::Interface *interface;
 
-    // sent update on every interface, where is enabled RIPng and that interface is not passive
+    // sent update on every interface, where is enabled RIP and that interface is not passive
     for (int i = 0; i < numInterfaces; i++)
     {
         interface = getEnabledInterface(i);
@@ -392,10 +417,10 @@ void RIPngRouting::sendRegularUpdateMessage()
             // do not send updates out of the passive interface
             continue;
 
-        RIPngMessage *msg = makeUpdateMessageForInterface(interface, false);
+        RIPMessage *msg = makeUpdateMessageForInterface(interface, false);
         if (msg != NULL)
         // no rtes to send
-            sendMessage(msg, RIPngAddress, RIPngPort, i, false);
+            sendMessage(msg, RIPAddress, RIPPort, i, false);
     }
 
     //reset Route Change Flags
@@ -404,7 +429,7 @@ void RIPngRouting::sendRegularUpdateMessage()
     bSendTriggeredUpdateMessage = false;
 }
 
-void RIPngRouting::sendTriggeredUpdateMessage()
+void RIPRouting::sendTriggeredUpdateMessage()
 {
     if (triggeredUpdateTimer->isScheduled())
     // method will be called again when regularUpdateTimer expired
@@ -417,9 +442,9 @@ void RIPngRouting::sendTriggeredUpdateMessage()
        return;
 
     int numInterfaces = getEnabledInterfacesCount();
-    RIPng::Interface *interface;
+    RIP::Interface *interface;
 
-    // sent update on every interface, where is enabled RIPng and that interface is not passive
+    // sent update on every interface, where is enabled RIP and that interface is not passive
     for (int i = 0; i < numInterfaces; i++)
     {
         interface = getEnabledInterface(i);
@@ -427,9 +452,9 @@ void RIPngRouting::sendTriggeredUpdateMessage()
             // do not send updates out of the passive interface
             continue;
 
-        RIPngMessage *msg = makeUpdateMessageForInterface(interface, true);
+        RIPMessage *msg = makeUpdateMessageForInterface(interface, true);
         if (msg != NULL)
-            sendMessage(msg, RIPngAddress, RIPngPort, i, false);
+            sendMessage(msg, RIPAddress, RIPPort, i, false);
     }
 
     //reset Route Change Flags
@@ -440,7 +465,7 @@ void RIPngRouting::sendTriggeredUpdateMessage()
     resetTimer(triggeredUpdateTimer, uniform(1, 5));
 }
 
-void RIPngRouting::sendDelayedTriggeredUpdateMessage()
+void RIPRouting::sendDelayedTriggeredUpdateMessage()
 {
     // we are using delayed triggered update message because if one route went down,
     // more than one route (with the next hop using that unavailable route) TIMEOUT can EXPIRE in the same time -
@@ -458,10 +483,10 @@ void RIPngRouting::sendDelayedTriggeredUpdateMessage()
     // else - do nothing, a triggered update is already planned
 }
 
-RIPngMessage *RIPngRouting::makeUpdateMessageForInterface(RIPng::Interface *interface, bool changed)
+RIPMessage *RIPRouting::makeUpdateMessageForInterface(RIP::Interface *interface, bool changed)
 {
     int size;
-    std::vector<RIPngRTE> rtes;
+    std::vector<RIPRTE> rtes;
 
     getRTEs(rtes, interface, changed);
 
@@ -470,8 +495,8 @@ RIPngMessage *RIPngRouting::makeUpdateMessageForInterface(RIPng::Interface *inte
         // there's no RTE to send from this interface (no message will be created)
         return NULL;
 
-    RIPngMessage *msg = createMessage();
-    msg->setCommand(RIPngResponse);
+    RIPMessage *msg = createMessage();
+    msg->setCommand(RIPResponse);
     msg->setRtesArraySize(size);
     // set RTEs to response
     for(int j = 0; j < size; j++)
@@ -480,7 +505,7 @@ RIPngMessage *RIPngRouting::makeUpdateMessageForInterface(RIPng::Interface *inte
     return msg;
 }
 
-void RIPngRouting::sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress)
+void RIPRouting::sendMessage(RIPMessage *msg, IPv4Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress)
 {
     ASSERT(enabledInterfaceIndex < getEnabledInterfacesCount());
     int outInterface = getEnabledInterface(enabledInterfaceIndex)->getId();
@@ -494,18 +519,18 @@ void RIPngRouting::sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, u
     }
 }
 
-void RIPngRouting::sendAllRoutesRequest()
+void RIPRouting::sendAllRoutesRequest()
 {
     int numInterfaces = getEnabledInterfacesCount();
-    RIPng::Interface *interface;
+    RIP::Interface *interface;
 
-    RIPngRTE rte = RIPngRTE();
-    rte.setIPv6Prefix(IPv6Address()); // IPv6 Address ::0
+    RIPRTE rte = RIPRTE();
+    rte.setIPv4Address(IPv4Address()); // IPv4 Address 0.0.0.0
     rte.setMetric(16);
-    rte.setPrefixLen(0);
+    rte.setNetMask(0);
     rte.setRouteTag(0);
 
-    // sent update on every interface, where is enabled RIPng and that interface is not passive
+    // send update on every interface, where is enabled RIP and that interface is not passive
     for (int i = 0; i < numInterfaces; i++)
     {
         interface = getEnabledInterface(i);
@@ -513,19 +538,19 @@ void RIPngRouting::sendAllRoutesRequest()
             // do not send request out of the passive interface
             continue;
 
-        RIPngMessage *msg = createMessage();
+        RIPMessage *msg = createMessage();
 
-        msg->setCommand(RIPngRequest);
+        msg->setCommand(RIPRequest);
         msg->setRtesArraySize(1);
         msg->setRtes(0, rte);
 
-        sendMessage(msg, RIPngAddress, RIPngPort, i, false);
+        sendMessage(msg, RIPAddress, RIPPort, i, false);
     }
 }
 
-void RIPngRouting::clearRouteChangeFlags()
+void RIPRouting::clearRouteChangeFlags()
 {
-    RIPng::RoutingTableEntry *routingTableEntry;
+    RIP::RoutingTableEntry *routingTableEntry;
     RoutingTableIt it;
 
     for (it = routingTable.begin(); it != routingTable.end(); it++)
@@ -535,9 +560,9 @@ void RIPngRouting::clearRouteChangeFlags()
     }
 }
 
-void RIPngRouting::getRTEs(std::vector<RIPngRTE> &rtes, RIPng::Interface *interface, bool onlyChanged)
+void RIPRouting::getRTEs(std::vector<RIPRTE> &rtes, RIP::Interface *interface, bool onlyChanged)
 {
-    RIPng::RoutingTableEntry *routingTableEntry;
+    RIP::RoutingTableEntry *routingTableEntry;
     RoutingTableIt it;
     bool splitHorizon = false;
     bool poisonReverse = false;
@@ -556,7 +581,7 @@ void RIPngRouting::getRTEs(std::vector<RIPngRTE> &rtes, RIPng::Interface *interf
     {
         setInfMetric = false;
         routingTableEntry = (*it);
-        if (splitHorizon && (routingTableEntry->getInterfaceId() == interfaceId))
+        if (splitHorizon && (routingTableEntry->getInterface()->getInterfaceId() == interfaceId))
         {
             if (poisonReverse)
             // split horizon with poison reverse
@@ -568,7 +593,7 @@ void RIPngRouting::getRTEs(std::vector<RIPngRTE> &rtes, RIPng::Interface *interf
 
         if (!onlyChanged || (onlyChanged && routingTableEntry->isChangeFlagSet()))
         {
-            RIPngRTE rte = makeRTEFromRoutingTableEntry(routingTableEntry);
+            RIPRTE rte = makeRTEFromRoutingTableEntry(routingTableEntry);
             if (setInfMetric)
                 rte.setMetric(infinityMetric);
             rtes.push_back(rte);
@@ -576,12 +601,12 @@ void RIPngRouting::getRTEs(std::vector<RIPngRTE> &rtes, RIPng::Interface *interf
     }
 }
 
-RIPngRTE RIPngRouting::makeRTEFromRoutingTableEntry(RIPng::RoutingTableEntry *routingTableEntry)
+RIPRTE RIPRouting::makeRTEFromRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry)
 {
-    RIPngRTE rte;
+    RIPRTE rte;
     // create RTE for message to neighbor
-    rte.setPrefixLen(routingTableEntry->getPrefixLength());
-    rte.setIPv6Prefix(routingTableEntry->getDestPrefix());
+    rte.setNetMask(routingTableEntry->getNetmask().getNetmaskLength());
+    rte.setIPv4Address(routingTableEntry->getDestination());
     rte.setMetric(routingTableEntry->getMetric());
     rte.setRouteTag(routingTableEntry->getRouteTag());
 
@@ -593,32 +618,32 @@ RIPngRTE RIPngRouting::makeRTEFromRoutingTableEntry(RIPng::RoutingTableEntry *ro
 //-- INPUT PROCESSING
 //
 //
-void RIPngRouting::handleRIPngMessage(RIPngMessage *msg)
+void RIPRouting::handleRIPMessage(RIPMessage *msg)
 {
     UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
-    IPv6Address sourceAddr = controlInfo->getSrcAddr().get6();
-    IPv6Address destAddr = controlInfo->getDestAddr().get6();
+    IPv4Address sourceAddr = controlInfo->getSrcAddr().get4();
+    IPv4Address destAddr = controlInfo->getDestAddr().get4();
     int sourcePort = controlInfo->getSrcPort();
     int sourceInterfaceId = controlInfo->getInterfaceId();
 
-    int ripngIntInd = getEnabledInterfaceIndexById(sourceInterfaceId);
-    if (ripngIntInd < 0)
-    {//message is from an interface with disabled RIPng
+    int RIPIntInd = getEnabledInterfaceIndexById(sourceInterfaceId);
+    if (RIPIntInd < 0)
+    {//message is from an interface with disabled RIP
         delete msg;
         return;
     }
 
-    EV << "RIPng: Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
+    EV << "RIP: Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
     int command = msg->getCommand();
     int version = msg->getVersion();
     if (version != 1)
-        EV << "This implementation of RIPng does not support version '" << version << "' of this protocol." << endl;
+        EV << "This implementation of RIP does not support version '" << version << "' of this protocol." << endl;
 
-    if (command == RIPngRequest)
+    if (command == RIPRequest)
     {
-        handleRequest(msg, sourcePort, sourceAddr, destAddr, ripngIntInd);
+        handleRequest(msg, sourcePort, sourceAddr, destAddr, RIPIntInd);
     }
-    else if (command == RIPngResponse)
+    else if (command == RIPResponse)
     {
         handleResponse(msg, sourceInterfaceId, sourceAddr);
     }
@@ -631,27 +656,23 @@ void RIPngRouting::handleRIPngMessage(RIPngMessage *msg)
 //-- RESPONSE PROCESSING
 //
 //
-void RIPngRouting::handleResponse(RIPngMessage *response, int srcInt, IPv6Address &srcAddr)
+void RIPRouting::handleResponse(RIPMessage *response, int srcInt, IPv4Address &srcAddr)
 {
     if (!checkMessageValidity(response))
         return;
-    EV << "RIPng message: RIPng - Response" << endl;
+    EV << "RIP message: RIP - Response" << endl;
     processRTEs(response, srcInt, srcAddr);
 }
 
-bool RIPngRouting::checkMessageValidity(RIPngMessage *response)
+bool RIPRouting::checkMessageValidity(RIPMessage *response)
 {
     UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(response->getControlInfo());
 
-    // is from RIPng port
-    if (controlInfo->getSrcPort() != RIPngPort)
+    // is from RIP port
+    if (controlInfo->getSrcPort() != RIPPort)
         return false;
 
-    // source addr. is link-local
-    IPv6Address sourceAddr = controlInfo->getSrcAddr().get6();
-    if (!sourceAddr.isLinkLocal())
-        return false;
-
+    IPv4Address sourceAddr = controlInfo->getSrcAddr().get4();
     // source addr. is not from this device
     if (rt->isLocalAddress(sourceAddr))
         return false;
@@ -663,10 +684,10 @@ bool RIPngRouting::checkMessageValidity(RIPngMessage *response)
     return true;
 }
 
-void RIPngRouting::processRTEs(RIPngMessage *response, int sourceIntId, IPv6Address &sourceAddr)
+void RIPRouting::processRTEs(RIPMessage *response, int sourceIntId, IPv4Address &sourceAddr)
 {
     unsigned int rtesSize = response->getRtesArraySize();
-    RIPngRTE rte;
+    RIPRTE rte;
 
     // if startRouteDeletionProcess() was called we dont want to call sendTriggeredUpdateMessage() in that function,
     // so we'll call sendTriggeredUpdateMessage() after "all startRouteDeletionProcess()"
@@ -676,7 +697,7 @@ void RIPngRouting::processRTEs(RIPngMessage *response, int sourceIntId, IPv6Addr
     for (unsigned int i = 0; i < rtesSize; i++)
     {
         rte = response->getRtes(i);
-        EV << "RTE [" << i << "]: " << rte.getIPv6Prefix() << "/" << int(rte.getPrefixLen()) << endl;
+        EV << "RTE [" << i << "]: " << rte.getIPv4Address() << "/" << int(rte.getNetMask()) << endl;
         processRTE(rte, sourceIntId, sourceAddr);
     }
 
@@ -688,15 +709,15 @@ void RIPngRouting::processRTEs(RIPngMessage *response, int sourceIntId, IPv6Addr
     bBlockTriggeredUpdateMessage = false;
 }
 
-void RIPngRouting::processRTE(RIPngRTE &rte, int sourceIntId, IPv6Address &sourceAddr)
+void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr)
 {
     checkAndLogRTE(rte, sourceAddr);
 
-    IPv6Address prefix = rte.getIPv6Prefix();
-    int prefixLen = rte.getPrefixLen();
+    IPv4Address &network = rte.getIPv4Address();
+    IPv4Address netmask = IPv4Address::makeNetmask(rte.getNetMask());
 
     // Check if a route with the prefix exists
-    RIPng::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(prefix, prefixLen);
+    RIP::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(network, netmask);
 
     if (routingTableEntry != NULL)
     {// Update Routing Table Entry
@@ -704,14 +725,14 @@ void RIPngRouting::processRTE(RIPngRTE &rte, int sourceIntId, IPv6Address &sourc
     }
     else
     {// Create and add new Routing Table Entry
-        int metric = rte.getMetric();
+        unsigned int metric = rte.getMetric();
         ++metric;
 
         if (metric < infinityMetric)
         {
-            RIPng::RoutingTableEntry *route = new RIPng::RoutingTableEntry(prefix, prefixLen);
-            route->setInterfaceId(sourceIntId);
-            route->setNextHop(sourceAddr);
+            RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(network, netmask);
+            route->setInterface(ift->getInterfaceById(sourceIntId));
+            route->setGateway(sourceAddr);
             route->setMetric(metric);
             route->setChangeFlag();
 
@@ -722,13 +743,11 @@ void RIPngRouting::processRTE(RIPngRTE &rte, int sourceIntId, IPv6Address &sourc
     }
 }
 
-bool RIPngRouting::checkAndLogRTE(RIPngRTE &rte, IPv6Address &sourceAddr)
+bool RIPRouting::checkAndLogRTE(RIPRTE &rte, IPv4Address &sourceAddr)
 {
-    // prefix is valid (not multicast, link-local)
-    // prefix len. is valid (0-128)
+    // netmask is valid (0-32)
     // metric is valid (0-16)
-    if (!rte.getIPv6Prefix().isGlobal() ||
-         rte.getPrefixLen() > 128 ||
+    if ( rte.getNetMask() > 32 ||
          rte.getMetric() > 16)
     {
         EV << "Bad RTE from: " << sourceAddr << endl;
@@ -743,35 +762,35 @@ bool RIPngRouting::checkAndLogRTE(RIPngRTE &rte, IPv6Address &sourceAddr)
 //-- REQUEST PROCESSING
 //
 //
-void RIPngRouting::handleRequest(RIPngMessage *request, int srcPort, IPv6Address &srcAddr, IPv6Address &destAddr, unsigned long ripngIntInd)
+void RIPRouting::handleRequest(RIPMessage *request, int srcPort, IPv4Address &srcAddr, IPv4Address &destAddr, unsigned long RIPIntInd)
 {
-    ASSERT(ripngIntInd < getEnabledInterfacesCount());
-    RIPng::Interface *ripngInt = getEnabledInterface(ripngIntInd);
+    ASSERT(RIPIntInd < getEnabledInterfacesCount());
+    RIP::Interface *RIPInt = getEnabledInterface(RIPIntInd);
 
     unsigned int rteNum = request->getRtesArraySize();
-    std::vector<RIPngRTE> responseRtes;
+    std::vector<RIPRTE> responseRtes;
 
     if (rteNum == 1)
     {// could be a request for all routes
-        EV << "RIPng message: RIPng - General Request" << endl;
-        RIPngRTE &rte = request->getRtes(0);
-        if (rte.getIPv6Prefix() == IPv6Address::UNSPECIFIED_ADDRESS &&
-            rte.getPrefixLen() == 0 &&
+        EV << "RIP message: RIP - General Request" << endl;
+        RIPRTE &rte = request->getRtes(0);
+        if (rte.getIPv4Address() == IPv4Address::UNSPECIFIED_ADDRESS &&
+            rte.getNetMask() == 0 &&
             rte.getMetric() == infinityMetric &&
             rte.getRouteTag() == 0)
         {
-            getRTEs(responseRtes, ripngInt, false);
+            getRTEs(responseRtes, RIPInt, false);
         }
     }
     else
     {
-        RIPng::RoutingTableEntry *routingTableEntry;
-        EV << "RIPng message: RIPng - Request" << endl;
+        RIP::RoutingTableEntry *routingTableEntry;
+        EV << "RIP message: RIP - Request" << endl;
         for (unsigned int i = 0; i < rteNum; i++)
         {
-            RIPngRTE rte = request->getRtes(i);
-            routingTableEntry = getRoutingTableEntry(rte.getIPv6Prefix(), rte.getPrefixLen());
-            EV << "RTE [" << i << "]: " << rte.getIPv6Prefix() << "/" << int(rte.getPrefixLen()) << endl;
+            RIPRTE rte = request->getRtes(i);
+            routingTableEntry = getRoutingTableEntry(rte.getIPv4Address(), IPv4Address::makeNetmask(rte.getNetMask()));
+            EV << "RTE [" << i << "]: " << rte.getIPv4Address() << "/" << int(rte.getNetMask()) << endl;
             if (routingTableEntry != NULL)
             {// match for the requested rte
                 responseRtes.push_back(makeRTEFromRoutingTableEntry(routingTableEntry));
@@ -788,17 +807,17 @@ void RIPngRouting::handleRequest(RIPngMessage *request, int srcPort, IPv6Address
     //if (size <= 0)
         //break;
 
-    RIPngMessage *response = createMessage();
-    response->setCommand(RIPngResponse);
+    RIPMessage *response = createMessage();
+    response->setCommand(RIPResponse);
     response->setRtesArraySize(size);
     // set RTEs to response
     for(int j = 0; j < size; j++)
         response->setRtes(j, responseRtes[j]);
 
-    if (destAddr == RIPngAddress && srcPort == RIPngPort)
-        sendMessage(response, srcAddr, srcPort, ripngIntInd, false);
+    if (destAddr == RIPAddress && srcPort == RIPPort)
+        sendMessage(response, srcAddr, srcPort, RIPIntInd, false);
     else
-        sendMessage(response, srcAddr, srcPort, ripngIntInd, true);
+        sendMessage(response, srcAddr, srcPort, RIPIntInd, true);
 }
 
 //
@@ -806,24 +825,24 @@ void RIPngRouting::handleRequest(RIPngMessage *request, int srcPort, IPv6Address
 //-- TIMEOUTS
 //
 //
-RIPngTimer *RIPngRouting::createTimer(int timerKind)
+RIPTimer *RIPRouting::createTimer(int timerKind)
 {
-    RIPngTimer *timer = new RIPngTimer();
+    RIPTimer *timer = new RIPTimer();
     timer->setTimerKind(timerKind);
 
     return timer;
 }
 
-RIPngTimer *RIPngRouting::createAndStartTimer(int timerKind, simtime_t timerLen)
+RIPTimer *RIPRouting::createAndStartTimer(int timerKind, simtime_t timerLen)
 {
-    RIPngTimer *timer = createTimer(timerKind);
+    RIPTimer *timer = createTimer(timerKind);
 
     scheduleAt(simTime() + timerLen, timer);
 
     return timer;
 }
 
-void RIPngRouting::resetTimer(RIPngTimer *timer, simtime_t timerLen)
+void RIPRouting::resetTimer(RIPTimer *timer, simtime_t timerLen)
 {
     ASSERT(timer != NULL);
     if (timer->isScheduled())
@@ -832,7 +851,7 @@ void RIPngRouting::resetTimer(RIPngTimer *timer, simtime_t timerLen)
     scheduleAt(simTime() + timerLen, timer);
 }
 
-void RIPngRouting::cancelTimer(RIPngTimer *timer)
+void RIPRouting::cancelTimer(RIPTimer *timer)
 {
     if (timer != NULL)
     {
@@ -841,7 +860,7 @@ void RIPngRouting::cancelTimer(RIPngTimer *timer)
     }
 }
 
-void RIPngRouting::deleteTimer(RIPngTimer *timer)
+void RIPRouting::deleteTimer(RIPTimer *timer)
 {
     if (timer != NULL)
     {
@@ -852,22 +871,22 @@ void RIPngRouting::deleteTimer(RIPngTimer *timer)
     }
 }
 
-void RIPngRouting::handleTimer(RIPngTimer *msg)
+void RIPRouting::handleTimer(RIPTimer *msg)
 {
     int type = msg->getTimerKind();
 
     switch (type)
     {
-        case RIPNG_GENERAL_UPDATE :
+        case RIP_GENERAL_UPDATE :
             handleRegularUpdateTimer();
             break;
-        case RIPNG_TRIGGERED_UPDATE :
+        case RIP_TRIGGERED_UPDATE :
             handleTriggeredUpdateTimer();
             break;
-        case RIPNG_ROUTE_TIMEOUT :
+        case RIP_ROUTE_TIMEOUT :
             startRouteDeletionProcess(msg);
             break;
-        case RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT :
+        case RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT :
             deleteRoute(msg);
             break;
         default:
@@ -875,7 +894,7 @@ void RIPngRouting::handleTimer(RIPngTimer *msg)
     }
 }
 
-void RIPngRouting::handleRegularUpdateTimer()
+void RIPRouting::handleRegularUpdateTimer()
 {
      // send regular update message
     sendRegularUpdateMessage();
@@ -883,28 +902,28 @@ void RIPngRouting::handleRegularUpdateTimer()
     resetTimer(regularUpdateTimer, regularUpdateTimeout);
 }
 
-void RIPngRouting::handleTriggeredUpdateTimer()
+void RIPRouting::handleTriggeredUpdateTimer()
 {
     if (bSendTriggeredUpdateMessage)
         sendTriggeredUpdateMessage();
 }
 
-void RIPngRouting::startRouteDeletionProcess(RIPngTimer *timer)
+void RIPRouting::startRouteDeletionProcess(RIPTimer *timer)
 {
-    IPv6Address &prefix = timer->getIPv6Prefix();
-    int prefixLen = timer->getPrefixLen();
-    RIPng::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(prefix, prefixLen);
+    IPv4Address &network = timer->getIPv4Address();
+    IPv4Address netmask = IPv4Address::makeNetmask(timer->getNetmask());
+    RIP::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(network, netmask);
 
     startRouteDeletionProcess(routingTableEntry);
 }
 
-void RIPngRouting::startRouteDeletionProcess(RIPng::RoutingTableEntry *routingTableEntry)
+void RIPRouting::startRouteDeletionProcess(RIP::RoutingTableEntry *routingTableEntry)
 {
     ASSERT(routingTableEntry != NULL);
     routingTableEntry->setMetric(infinityMetric);
     routingTableEntry->setChangeFlag();
 
-    RIPngTimer *GCTimer = routingTableEntry->getGCTimer();
+    RIPTimer *GCTimer = routingTableEntry->getGCTimer();
     // (re)set the timer
     resetTimer(GCTimer, routeGarbageCollectionTimeout);
 
@@ -917,12 +936,12 @@ void RIPngRouting::startRouteDeletionProcess(RIPng::RoutingTableEntry *routingTa
         sendDelayedTriggeredUpdateMessage();
 }
 
-void RIPngRouting::deleteRoute(RIPngTimer *timer)
+void RIPRouting::deleteRoute(RIPTimer *timer)
 {
-    IPv6Address &prefix = timer->getIPv6Prefix();
-    int prefixLen = timer->getPrefixLen();
+    IPv4Address &network = timer->getIPv4Address();
+    int netmask = timer->getNetmask();
 
-    removeRoutingTableEntry(prefix, prefixLen);
+    removeRoutingTableEntry(network, netmask);
 }
 
 //
@@ -930,7 +949,7 @@ void RIPngRouting::deleteRoute(RIPngTimer *timer)
 //-- OVERRIDDEN METHODS
 //
 //
-void RIPngRouting::initialize(int stage)
+void RIPRouting::initialize(int stage)
 {
     if (stage != 3)
         return;
@@ -948,21 +967,21 @@ void RIPngRouting::initialize(int stage)
     bBlockTriggeredUpdateMessage = false;
 
     // access to the routing and interface table
-    rt = ANSARoutingTable6Access().get();
+    rt = AnsaRoutingTableAccess().get();
     ift = InterfaceTableAccess().get();
     // subscribe for changes in the device
     nb = NotificationBoardAccess().get();
     nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-    nb->subscribe(this, NF_IPv6_ROUTE_DELETED);
+    nb->subscribe(this, NF_IPv4_ROUTE_DELETED);
 
     numRoutes = 0;
     WATCH(numRoutes);
 
     WATCH_PTRVECTOR(routingTable);
 
-    const char *RIPngAddressString = par("RIPngAddress");
-    RIPngAddress = IPv6Address(RIPngAddressString);
-    RIPngPort = par("RIPngPort");
+    const char *RIPAddressString = par("RIPAddress");
+    RIPAddress = IPv4Address(RIPAddressString);
+    RIPPort = par("RIPPort");
 
     connNetworkMetric = par("connectedNetworkMetric");
     infinityMetric = par("infinityMetric");
@@ -974,30 +993,30 @@ void RIPngRouting::initialize(int stage)
     // get deviceId
     deviceId = par("deviceId");
 
-    // read the RIPng process configuration
+    // read the RIP process configuration
     DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    devConf->loadRIPngConfig(this);
+    devConf->loadRIPConfig(this);
 
     globalSocket.setOutputGate(gate("udpOut"));
-    globalSocket.bind(RIPngPort);
-    globalSocket.joinMulticastGroup(RIPngAddress, -1);
+    globalSocket.bind(RIPPort);
+    globalSocket.joinMulticastGroup(RIPAddress, -1);
 
     // start REGULAR UPDATE TIMER
-    regularUpdateTimer = createAndStartTimer(RIPNG_GENERAL_UPDATE, regularUpdateTimeout);
-    triggeredUpdateTimer = createTimer(RIPNG_TRIGGERED_UPDATE);
+    regularUpdateTimer = createAndStartTimer(RIP_GENERAL_UPDATE, regularUpdateTimeout);
+    triggeredUpdateTimer = createTimer(RIP_TRIGGERED_UPDATE);
 
     sendAllRoutesRequest();
 }
 
-void RIPngRouting::handleMessage(cMessage *msg)
+void RIPRouting::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {// timers
-        handleTimer(check_and_cast<RIPngTimer*> (msg));
+        handleTimer(check_and_cast<RIPTimer*> (msg));
     }
     else if (msg->getKind() == UDP_I_DATA)
     {// process incoming message
-        handleRIPngMessage(check_and_cast<RIPngMessage*> (msg));
+        handleRIPMessage(check_and_cast<RIPMessage*> (msg));
     }
     else if (msg->getKind() == UDP_I_ERROR)
     {
@@ -1017,7 +1036,7 @@ void RIPngRouting::handleMessage(cMessage *msg)
     }
 }
 
-void RIPngRouting::receiveChangeNotification(int category, const cObject *details)
+void RIPRouting::receiveChangeNotification(int category, const cObject *details)
 {
    // ignore notifications during initialization
    if (simulation.getContextType() == CTX_INITIALIZE)
@@ -1034,15 +1053,15 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
        // an interface went down
        if (interfaceEntry->isDown())
        {
-           // delete interface from ripng interfaces
+           // delete interface from RIP interfaces
            int size = getEnabledInterfacesCount();
-           RIPng::Interface* ripngInterface;
+           RIP::Interface* RIPInterface;
            bool alreadyDisabled = true;
 
            for (int i = 0; i < size; i++)
            {
-               ripngInterface = getEnabledInterface(i);
-               if (ripngInterface->getId() == interfaceEntryId)
+               RIPInterface = getEnabledInterface(i);
+               if (RIPInterface->getId() == interfaceEntryId)
                {
                    alreadyDisabled = false;
                    removeEnabledInterface(i);
@@ -1054,17 +1073,17 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
            {
                bBlockTriggeredUpdateMessage = true;
 
-               // delete associated routes from ripng routing table
+               // delete associated routes from RIP routing table
                RoutingTableIt it;
                for (it = routingTable.begin(); it != routingTable.end(); ++it)
                {
-                   if ((*it)->getInterfaceId() == interfaceEntryId)
+                   if ((*it)->getInterface()->getInterfaceId() == interfaceEntryId)
                    {
-                       if ((*it)->getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+                       if ((*it)->getGateway() == IPv4Address::UNSPECIFIED_ADDRESS)
                        {// directly connected
                            (*it)->setMetric(infinityMetric);
                            (*it)->setChangeFlag();
-                           /* XXX: directly connected routes have to remain in the RIPng routing table
+                           /* XXX: directly connected routes have to remain in the RIP routing table
                             if the interface will go up again (should be changed in the future --
                             route should be deleted and added when the interface go up --, but right now,
                             the INET interface do not provide length of the prefix for the IPv6
@@ -1091,12 +1110,12 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
        {
            bool alreadyEnabled = false;
            int size = getEnabledInterfacesCount();
-           RIPng::Interface* ripngInterface;
+           RIP::Interface* RIPInterface;
 
            for (int i = 0; i < size; i++)
            {
-               ripngInterface = getEnabledInterface(i);
-               if (ripngInterface->getId() == interfaceEntryId)
+               RIPInterface = getEnabledInterface(i);
+               if (RIPInterface->getId() == interfaceEntryId)
                {
                    alreadyEnabled = true;
                    break;
@@ -1105,18 +1124,18 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
 
            if (!alreadyEnabled)
            {
-               // add interface to ripng interfaces
-               enableRIPngOnInterface(interfaceEntry->getName());
+               // add interface to RIP interfaces
+               enableRIPOnInterface(interfaceEntry->getName());
 
                bBlockTriggeredUpdateMessage = true;
 
-               // delete associated routes from ripng routing table
+               // delete associated routes from RIP routing table
                RoutingTableIt it;
                for (it = routingTable.begin(); it != routingTable.end(); ++it)
                {
-                   if ((*it)->getInterfaceId() == interfaceEntryId)
+                   if ((*it)->getInterface()->getInterfaceId() == interfaceEntryId)
                    {
-                       if ((*it)->getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+                       if ((*it)->getGateway() == IPv4Address::UNSPECIFIED_ADDRESS)
                        {// "renew" directly connected
                            (*it)->setMetric(connNetworkMetric);
                            (*it)->setChangeFlag();
@@ -1139,26 +1158,26 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
    }
 
 
-   if (category == NF_IPv6_ROUTE_DELETED)
+   if (category == NF_IPv4_ROUTE_DELETED)
    {
-       // if route from other routing protocol was deleted, check "RIPng routing table"
-       IPv6Route *route = check_and_cast<IPv6Route *>(details);
+       // if route from other routing protocol was deleted, check "RIP routing table"
+       IPv4Route *route = check_and_cast<IPv4Route *>(details);
 
-       RIPng::RoutingTableEntry *routingTableEntryInRIPngRT;
-       RIPng::RoutingTableEntry *RIPngRoute = dynamic_cast<RIPng::RoutingTableEntry *>(route);
+       RIP::RoutingTableEntry *routingTableEntryInRIPRT;
+       RIP::RoutingTableEntry *RIPRoute = dynamic_cast<RIP::RoutingTableEntry *>(route);
 
-       if (RIPngRoute != NULL)
-       {// notification about RIPng route
-           routingTableEntryInRIPngRT = RIPngRoute->getCopy();
-           ASSERT(routingTableEntryInRIPngRT != NULL);
+       if (RIPRoute != NULL)
+       {// notification about RIP route
+           routingTableEntryInRIPRT = RIPRoute->getCopy();
+           ASSERT(routingTableEntryInRIPRT != NULL);
 
-           routingTableEntryInRIPngRT->setCopy(NULL);
+           routingTableEntryInRIPRT->setCopy(NULL);
        }
        else
-       {// check if RIPng has that route and install it
-           routingTableEntryInRIPngRT = getRoutingTableEntry(route->getDestPrefix(), route->getPrefixLength());
-           if (routingTableEntryInRIPngRT != NULL)
-               addRoutingTableEntryToGlobalRT(routingTableEntryInRIPngRT);
+       {// check if RIP has that route and install it
+           routingTableEntryInRIPRT = getRoutingTableEntry(route->getDestination(), route->getNetmask());
+           if (routingTableEntryInRIPRT != NULL)
+               addRoutingTableEntryToGlobalRT(routingTableEntryInRIPRT);
        }
    }
 

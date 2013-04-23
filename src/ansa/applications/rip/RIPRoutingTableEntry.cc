@@ -33,6 +33,9 @@ RoutingTableEntry::RoutingTableEntry(IPv4Address network, IPv4Address netMask) :
     _changeFlag(false),
     _routeTag(0)
 {
+    setDestination(network);
+    setNetmask(netMask);
+
     setRoutingProtocolSource(pRIP);
     setAdminDist(dRIP);
     setTimer(NULL);
@@ -44,6 +47,9 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
     ANSAIPv4Route(),
     _changeFlag(false)
 {
+    setDestination(entry.getDestination());
+    setNetmask(entry.getNetmask());
+
     setRoutingTable(NULL);
 
     setRoutingProtocolSource(entry.getRoutingProtocolSource());

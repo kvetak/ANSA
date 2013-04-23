@@ -26,10 +26,10 @@ class noncobject IPv4Address;
 
 enum RIPTimerType
 {
-    GENERAL_UPDATE = 0;
-    TRIGGERED_UPDATE = 1;
-    ROUTE_TIMEOUT = 2;
-    ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
+    RIP_GENERAL_UPDATE = 0;
+    RIP_TRIGGERED_UPDATE = 1;
+    RIP_ROUTE_TIMEOUT = 2;
+    RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
 }
 
 //
@@ -40,7 +40,7 @@ enum RIPTimerType
 //
 packet RIPTimer 
 {
-    char timerKind enum(RIPTimerType) = GENERAL_UPDATE;
-    IPv4Address IPv4Address;                                //meaning in the case of ROUTE_TIMEOUT and ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char netmask;                                           //meaning in the case of ROUTE_TIMEOUT and ROUTE_GARBAGE_COLECTION_TIMEOUT
+    char timerKind enum(RIPTimerType) = RIP_GENERAL_UPDATE;
+    IPv4Address IPv4Address;                                //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
+    char netmask;                                           //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }

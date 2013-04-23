@@ -43,6 +43,44 @@ AnsaRoutingTable::~AnsaRoutingTable()
         delete multicastRoutes[i];
 }
 
+ANSAIPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Address& netmask)
+{
+    ANSAIPv4Route *route = NULL;
+    for (RouteVector::const_iterator it = routes.begin(); it != routes.end(); ++it)
+    {
+        if ((*it)->getDestination()==network && (*it)->getNetmask()==netmask) // match
+        {
+            route = dynamic_cast<ANSAIPv4Route *>(*it);
+            break;
+        }
+    }
+
+    return route;
+}
+
+bool AnsaRoutingTable::prepareForAddRoute(ANSAIPv4Route *route)
+{
+    ANSAIPv4Route *routeInTable = findRoute(route->getDestination(), route->getNetmask());
+    if (routeInTable != NULL)
+    {
+        if (routeInTable->getAdminDist() > route->getAdminDist())
+        {
+            removeRoute(routeInTable);
+        }
+        else if(routeInTable->getAdminDist() == route->getAdminDist())
+        {
+            if (routeInTable->getMetric() > route->getMetric())
+                removeRoute(routeInTable);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 /**
  * GET NUMBER OF ROUTES
  *

@@ -21,7 +21,7 @@ import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.world.scenario.ScenarioManager;
 
 
-network RIPngTestNetwork
+network RIPTestNetwork
 {
     @display("bgb=376,240");
     types:
