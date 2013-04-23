@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<scenario>
+  <at t="20">
+    <disconnect src-module="router2" src-gate="ethg[1]"/>
+  </at>
+  <at t="370">
+    <connect src-module="router2" src-gate="ethg[1]" 
+             dest-module="router3" dest-gate="ethg[1]"
+             channel-type="inet.nodes.ethernet.Eth100M"/>
+  </at>
+</scenario>

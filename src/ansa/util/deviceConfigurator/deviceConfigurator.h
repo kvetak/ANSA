@@ -55,6 +55,7 @@
 #include "AnsaRoutingTable.h"
 
 #include "RIPngRouting.h"
+#include "RIPRouting.h"
 #include "pimSM.h"
 
 /* TRILL */
@@ -73,14 +74,24 @@ class DeviceConfigurator : public cSimpleModule {
       const char *configFile;
       cXMLElement *device;
 
+   protected:
+      IInterfaceTable *ift;
+      RoutingTable6 *rt6;
+      IRoutingTable *rt;
+      PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
 
+      virtual int numInitStages() const {return 4;}
+      virtual void initialize(int stage);
+      virtual void handleMessage(cMessage *msg);
+
+   private:
       void loadDefaultRouter(cXMLElement *gateway);
       void loadInterfaceConfig(cXMLElement *iface);
       void loadStaticRouting(cXMLElement *route);
 
       // Load IPv4 configuration
-      bool readRoutingTableFromXml (const char *filename, const char *RouterId);
+      bool readRoutingTableFromXml (cXMLElement* device);
       void readInterfaceFromXml(cXMLElement* Node);
       void readStaticRouteFromXml(cXMLElement* Node);
 
@@ -110,22 +121,9 @@ class DeviceConfigurator : public cSimpleModule {
       int getISISL2PSNPInterval(cXMLElement *isisRouting);
       int getISISL1SPFFullInterval(cXMLElement *isisRouting);
       int getISISL2SPFFullInterval(cXMLElement *isisRouting);
-
-
-
       /* END of ISIS related */
+
    protected:
-
-      IInterfaceTable *ift;
-      RoutingTable6 *rt6;
-      AnsaRoutingTable *rt;
-      PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
-
-
-      virtual int numInitStages() const {return 4;}
-      virtual void initialize(int stage);
-      virtual void handleMessage(cMessage *msg);
-
 
       //configuration for PIM
       void loadPimInterfaceConfig(cXMLElement *iface);
@@ -148,6 +146,20 @@ class DeviceConfigurator : public cSimpleModule {
        * @see InterfaceTable
        */
       void loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface);
+
+      /**
+       * Loads configuration for RIPModule
+       * @param RIPModule [in]
+       */
+      void loadRIPConfig(RIPRouting *RIPModule);
+
+      // configuration for RIP
+      /**
+       * Adds networks obtained from the interface configuration to the RIPRouting table
+       * @param RIPModule [in]
+       * @param interface [in] interface, from which should be added networks
+       */
+      void loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface);
 
       /*
        * Loads configuraion for IS-IS module.

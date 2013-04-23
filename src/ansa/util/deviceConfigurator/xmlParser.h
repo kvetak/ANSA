@@ -52,6 +52,12 @@ class xmlParser {
       static const char *getRIPngInterfacePassiveStatus(cXMLElement *iface);
       static const char *getRIPngInterfaceSplitHorizon(cXMLElement *iface);
       static const char *getRIPngInterfacePoisonReverse(cXMLElement *iface);
+
+      // configuration for RIP
+      static cXMLElement *getRIPNetwork(cXMLElement *network, cXMLElement *device);
+      static cXMLElement *getRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device);
+      static const char *getRIPInterfaceSplitHorizon(cXMLElement *iface);
+      static const char *getRIPInterfacePoisonReverse(cXMLElement *iface);
 };
 
 #endif /* XMLPARSER_H_ */
