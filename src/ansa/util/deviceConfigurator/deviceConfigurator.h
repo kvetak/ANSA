@@ -55,6 +55,7 @@
 #include "AnsaRoutingTable.h"
 
 #include "RIPngRouting.h"
+#include "RIPRouting.h"
 #include "pimSM.h"
 
 /* TRILL */
@@ -148,6 +149,20 @@ class DeviceConfigurator : public cSimpleModule {
        * @see InterfaceTable
        */
       void loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface);
+
+      /**
+       * Loads configuration for RIPModule
+       * @param RIPModule [in]
+       */
+      void loadRIPConfig(RIPRouting *RIPModule);
+
+      // configuration for RIP
+      /**
+       * Adds networks obtained from the interface configuration to the RIPRouting table
+       * @param RIPModule [in]
+       * @param interface [in] interface, from which should be added networks
+       */
+      void loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface);
 
       /*
        * Loads configuraion for IS-IS module.

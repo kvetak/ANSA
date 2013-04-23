@@ -238,3 +238,25 @@ void CLNSTable::dropTable(void){
 
     this->routeVector.clear();
 }
+
+int CLNSTable::getGateIndexBySystemID(unsigned char *systemID){
+    for (std::vector<CLNSRoute*>::iterator it = this->routeVector.begin(); it != this->routeVector.end(); ++it){
+        if(memcmp((*it)->destPrefix, systemID, ISIS_SYSTEM_ID) == 0 ){
+            return (*it)->nextHop.at(0)->entry->getNetworkLayerGateIndex();
+        }
+    }
+
+    return -1;
+}
+
+unsigned char *CLNSTable::getNextHopSystemIDBySystemID(unsigned char *systemID){
+    for (std::vector<CLNSRoute*>::iterator it = this->routeVector.begin(); it != this->routeVector.end(); ++it){
+        if(memcmp((*it)->destPrefix, systemID, ISIS_SYSTEM_ID) == 0 ){
+            unsigned char *tmpSysId = new unsigned char [ISIS_SYSTEM_ID];
+            memcpy(tmpSysId, (*it)->nextHop.front()->id, ISIS_SYSTEM_ID);
+            return tmpSysId;
+        }
+    }
+
+    return NULL;
+}

@@ -27,6 +27,9 @@
 
 TRILLInterfaceData::TRILLInterfaceData()
 {
+
+
+
     // TODO Auto-generated constructor stub
 
 }
@@ -129,6 +132,16 @@ void TRILLInterfaceData::setVlanId(int vlanId)
 bool TRILLInterfaceData::isInhibited() const
 {
     return inhibited;
+}
+
+bool TRILLInterfaceData::isEnabled(int vlanId)
+{
+    for(VLANVector::iterator it = this->enabledgSet.begin(); it != this->enabledgSet.end(); ++it){
+        if((*it) == vlanId){
+            return true;
+        }
+    }
+    return false;
 }
 
 int TRILLInterfaceData::getDesigVlan() const

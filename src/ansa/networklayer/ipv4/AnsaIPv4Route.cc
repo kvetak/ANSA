@@ -23,6 +23,65 @@
 
 #include "AnsaIPv4Route.h"
 
+std::string ANSAIPv4Route::info() const
+{
+    std::stringstream out;
+
+    out << getRouteSrcName();
+    out << " " << getDestination() << "/" << getNetmask();
+
+    if (getGateway().isUnspecified())
+    {
+        out << " is directly connected";
+    }
+    else
+    {
+        out << " [" << getAdminDist() << "/" << getMetric() << "]";
+        out << " via ";
+        out << getGateway();
+    }
+
+    out << ", " << getInterfaceName();
+
+    return out.str();
+}
+
+std::string ANSAIPv4Route::detailedInfo() const
+{
+    return std::string();
+}
+
+const char *ANSAIPv4Route::getRouteSrcName() const
+{
+    switch (getSource())
+    {
+        case MANUAL:
+            if (getGateway().isUnspecified())
+                return "C";
+            return "S";
+
+        default:
+            switch(getRoutingProtocolSource())
+            {
+                case pIGRP: return "I";
+                case pRIP: return "R";
+                case pEGP: return "E";
+                case pBGP: return "B";
+                case pISISderived: return "i";
+                case pISIS: return "ia";
+                case pOSPF: return "O";
+                case pOSPFinter: return "IA";
+                case pOSPFext1: return "E1";
+                case pOSPFext2: return "E2";
+                case pOSPFNSSAext1: return "N1";
+                case pOSPFNSSAext2: return "N2";
+                case pEIGRP: return "D";
+                case pEIGRPext: return "EX";
+                default: return "?";
+            }
+    }
+}
+
 
 AnsaIPv4MulticastRoute::AnsaIPv4MulticastRoute()
 {

@@ -13,34 +13,34 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-// @file RIPngTimer.msg
+// @file RIPTimer.msg
 // @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
 // @brief
 // @detail
 
 cplusplus {{
-#include "IPv6Address.h"
+#include "IPv4Address.h"
 }}
 
-class noncobject IPv6Address;
+class noncobject IPv4Address;
 
-enum RIPngTimerType
+enum RIPTimerType
 {
-    RIPNG_GENERAL_UPDATE = 0;
-    RIPNG_TRIGGERED_UPDATE = 1;
-    RIPNG_ROUTE_TIMEOUT = 2;
-    RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
+    RIP_GENERAL_UPDATE = 0;
+    RIP_TRIGGERED_UPDATE = 1;
+    RIP_ROUTE_TIMEOUT = 2;
+    RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
 }
 
 //
-// RIPng Timers
+// RIP Timers
 // For General Update Message,
 // Route Timeout and
 // Garbage-Collection Time.
 //
-packet RIPngTimer 
+packet RIPTimer 
 {
-    char timerKind enum(RIPngTimerType) = RIPNG_GENERAL_UPDATE;
-    IPv6Address IPv6Prefix;                                //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char prefixLen;                                        //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
+    char timerKind enum(RIPTimerType) = RIP_GENERAL_UPDATE;
+    IPv4Address IPv4Address;                                //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
+    char netmask;                                           //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }

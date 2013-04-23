@@ -44,6 +44,7 @@
 
 #include "IPv6Address.h"
 #include "IPv6InterfaceData.h"
+#include "IPv4Address.h"
 #include "xmlParser.h"
 
 Define_Module(DeviceConfigurator);
@@ -626,7 +627,7 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngM
             // check if it's a valid IPv6 address string with prefix and get prefix
             if (!ipv6address.tryParseAddrWithPrefix(sIpv6address.c_str(), prefixLen))
             {
-               throw cRuntimeError("Unable to set IPv6 network address %s for static route", sIpv6address.c_str());
+               throw cRuntimeError("Unable to set IPv6 network address %s for RIPng route", sIpv6address.c_str());
             }
 
             if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast())
@@ -643,6 +644,117 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngM
 
             eIpv6address = xmlParser::GetIPv6Address(eIpv6address, NULL);
         }
+}
+
+
+void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
+{
+    ASSERT(RIPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    // interfaces config
+    cXMLElement *networkElement;
+    const char *networkString;
+
+    RIP::Interface *RIPInterface;
+
+    int numInterfaces = ift->getNumInterfaces();
+    InterfaceEntry *interface;
+    int interfaceId;
+    const char *interfaceName;
+
+    networkElement = xmlParser::getRIPNetwork(NULL, device);
+    while (networkElement != NULL)
+    {// process all RIP Network "command"
+
+        networkString = networkElement->getNodeValue();
+        if (networkString == NULL)
+            continue;
+
+        IPv4Address network = IPv4Address(networkString);
+
+        for (int i = 0; i < numInterfaces; ++i)
+        {
+            interface = ift->getInterface(i);
+            interfaceId = interface->getInterfaceId();
+            if (network.prefixMatches(interface->ipv4Data()->getIPAddress(), interface->ipv4Data()->getNetmask().getNetmaskLength()))
+            {// IP address of the interface match the network
+                //check if the interface is not in the rip interfaces
+                if (RIPModule->getEnabledInterfaceIndexById(interfaceId) == -1)
+                {
+                    RIPInterface = RIPModule->enableRIPOnInterface(interfaceId);
+                    // add networks from the interface to the RIP database
+                    loadNetworksFromInterfaceToRIPRT(RIPModule, interface);
+                }
+            }
+        }
+
+        //next Network element
+        networkElement = xmlParser::getRIPNetwork(networkElement, NULL);
+    }
+
+    //PASSIVE-INTERFACE
+    cXMLElement *passiveInterfaceElem;
+    passiveInterfaceElem = xmlParser::getRIPPassiveInterface(NULL, device);
+    while(passiveInterfaceElem != NULL)
+    {
+        RIPInterface = RIPModule->getEnabledInterfaceByName(passiveInterfaceElem->getNodeValue());
+        RIPModule->setInterfacePassiveStatus(RIPInterface, true);
+
+        // next passive-interface command
+        passiveInterfaceElem = xmlParser::getRIPPassiveInterface(passiveInterfaceElem, NULL);
+    }
+
+    std::string RIPInterfaceSplitHorizon;
+    std::string RIPInterfacePoisonReverse;
+
+    cXMLElement *interfaceElem;
+    interfaceElem = xmlParser::GetInterface(NULL, device);
+    while (interfaceElem != NULL)
+    {
+        interfaceName = interfaceElem->getAttribute("name");
+        RIPInterfaceSplitHorizon = xmlParser::getRIPInterfaceSplitHorizon(interfaceElem);
+        RIPInterface = RIPModule->getEnabledInterfaceByName(interfaceName);
+
+        if (RIPInterface != NULL)
+        {
+            if (RIPInterfaceSplitHorizon == "disable")
+            {// disable Split Horizon on the interface (Split Horizon is enabled by default)
+                RIPModule->setInterfaceSplitHorizon(RIPInterface, false);
+            }
+
+            RIPInterfacePoisonReverse = xmlParser::getRIPInterfacePoisonReverse(interfaceElem);
+            if (RIPInterfacePoisonReverse == "enable")
+            {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
+                RIPModule->setInterfacePoisonReverse(RIPInterface, true);
+            }
+        }
+
+        //next interface
+        interfaceElem = xmlParser::GetInterface(interfaceElem, NULL);
+    }
+}
+
+void DeviceConfigurator::loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface)
+{
+    // make directly connected route
+    RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(interface->ipv4Data()->getIPAddress(), interface->ipv4Data()->getNetmask());
+    route->setInterface(interface);
+    route->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);  // means directly connected network
+    route->setMetric(RIPModule->getConnNetworkMetric());
+    RIPModule->addRoutingTableEntry(route, false);
+
+    // directly connected routes do not need a RIPng route timer
 }
 
 void DeviceConfigurator::loadPimGlobalConfig(pimSM *pimSMModule)
@@ -739,7 +851,7 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         interface->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.13"));
         intMulticastAddresses = interface->ipv4Data()->getReportedMulticastGroups();
 
-        for(int i = 0; i < (intMulticastAddresses.size()); i++)
+        for(unsigned int i = 0; i < (intMulticastAddresses.size()); i++)
             EV << intMulticastAddresses[i] << ", ";
         EV << endl;
 

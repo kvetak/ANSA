@@ -24,6 +24,7 @@ package inet.ansa.networklayer.ipv4;
 simple AnsaRoutingTable
 {
     parameters:
+        xml routingTable = default(xml("<routingTable/>"));
         string routerId = default("auto"); // for routers, the router id using IPv4 address dotted
                           // notation; specify "auto" to select the highest
                           // interface address; should be left empty ("") for hosts

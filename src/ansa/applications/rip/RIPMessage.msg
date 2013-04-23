@@ -13,34 +13,47 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-// @file RIPngTimer.msg
+// @file RIPMessage.msg
 // @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
 // @brief
 // @detail
 
+
 cplusplus {{
-#include "IPv6Address.h"
+#include "IPv4Address.h"
 }}
 
-class noncobject IPv6Address;
+class noncobject IPv4Address;
 
-enum RIPngTimerType
+//
+//  RIP command
+//
+enum RIPCommand
 {
-    RIPNG_GENERAL_UPDATE = 0;
-    RIPNG_TRIGGERED_UPDATE = 1;
-    RIPNG_ROUTE_TIMEOUT = 2;
-    RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT = 3;
+    RIPRequest = 1;
+    RIPResponse = 2;  
 }
 
 //
-// RIPng Timers
-// For General Update Message,
-// Route Timeout and
-// Garbage-Collection Time.
+// Routing table entry structure
 //
-packet RIPngTimer 
+class RIPRTE
 {
-    char timerKind enum(RIPngTimerType) = RIPNG_GENERAL_UPDATE;
-    IPv6Address IPv6Prefix;                                //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char prefixLen;                                        //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
+    uint16_t	AFI  = 2;      //Address Family Identifier (2 for IP) 2 bytes 
+    uint16_t	routeTag = 0;  //2 bytes
+    IPv4Address IPv4Address;   //4 bytes
+    uint32_t    netMask;       //4 bytes
+    uint32_t    nextHop;       //4 bytes
+    uint32_t    metric;        //4 byte
+}
+
+//
+// Represents a RIP message
+//
+packet RIPMessage 
+{
+    char     command enum(RIPCommand);   //1 byte
+    char     version = 2;                //1 byte
+    uint16_t mustBeZero  = 0;            //2 bytes
+    RIPRTE   rtes[];                     //Routing Table Entries
 }

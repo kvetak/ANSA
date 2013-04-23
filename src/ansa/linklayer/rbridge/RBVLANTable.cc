@@ -184,8 +184,8 @@ void RBVLANTable::addPortVID(int _port, int _VID) {
     tmp.push_back(_port);
     extendTable(_VID);
     //FIX
-    addUntagged(_VID, tmp);
-//    addTagged(_VID,tmp);
+//    addUntagged(_VID, tmp);
+    addTagged(_VID,tmp);
 
 }
 

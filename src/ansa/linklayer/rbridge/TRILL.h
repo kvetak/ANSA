@@ -25,6 +25,7 @@
 
 #ifndef TRILL_H_
 #define TRILL_H_
+#define TRILL_VERSION 0
 #define ALL_RBRIDGES "01-80-C2-00-00-40"
 #define ALL_IS_IS_RBRIDGES "01-80-C2-00-00-41"
 #define ALL_ESADI_RBRIGES "01-80-C2-00-00-42"
@@ -46,6 +47,9 @@
 #include "RBMACTable.h"
 #include "RBVLANTable.h"
 #include "TRILLInterfaceData.h"
+#include "TRILLFrame.h"
+
+#include "CLNSTableAccess.h"
 
 //#include "stp/stp.h"
 //#include "ISIS.h"
@@ -53,11 +57,19 @@ class ISIS;
 
 class TRILL : public cSimpleModule
 {
+        friend class ISIS;
     public:
         TRILL();
         virtual ~TRILL();
 
-
+        typedef enum e_frame_category {
+            TRILL_L2_CONTROL, //such as Bridge PDUs (BPDUs)
+            TRILL_NATIVE, //non-TRILL-encapsulated data frames
+            TRILL_DATA, //TRILL-encapsulated data fremes
+            TRILL_CONTROL,
+            TRILL_OTHER,
+            TRILL_NONE //for detecting misclassification
+        }FrameCategory;
 
         /* switch core frame descriptor for internal representation unpacked frame */
         typedef struct s_frame_descriptor {
@@ -70,17 +82,14 @@ class TRILL : public cSimpleModule
           int etherType; // EtherType from EthernetIIFrame
           std::string name; // for simulation frame name
           RBMACTable::ESTRecord record;
+          TRILLInterfaceData *d;
+          TRILL::FrameCategory category;
+//          std::vector<unsigned char *> systemIDs; //for forwarding TRILL MultiDest (maybe even TRILL unicast)
+//          InterfaceEntry *ie
         } tFrameDescriptor;
 
 
-        typedef enum e_frame_category {
-            TRILL_L2_CONTROL, //such as Bridge PDUs (BPDUs)
-            TRILL_NATIVE, //non-TRILL-encapsulated data frames
-            TRILL_DATA, //TRILL-encapsulated data fremes
-            TRILL_CONTROL,
-            TRILL_OTHER,
-            TRILL_NONE //for detecting misclassification
-        }FrameCategory;
+
 
         MACAddress getBridgeAddress();
 
@@ -113,6 +122,7 @@ class TRILL : public cSimpleModule
       RBVLANTable * vlanTable;
 //      Stp * spanningTree;
       ISIS* isis;
+      CLNSTable *clnsTable;
       IInterfaceTable *ift;
 
       cMessage * currentMsg;
@@ -153,9 +163,28 @@ class TRILL : public cSimpleModule
 
       /* NEW */
       FrameCategory classify(tFrameDescriptor &frameDesc);
+
+      void learnTRILLData(tFrameDescriptor &innerFrameDesc, int ingressNickname);
+
       bool processNative(tFrameDescriptor &frameDesc);
+      bool processNativeMultiDest(tFrameDescriptor &frameDesc);
+      bool processTRILLData(tFrameDescriptor &frameDesc);
+      bool processTRILLDataMultiDest(tFrameDescriptor &frameDesc);
+      bool processTRILLDataUnicast(tFrameDescriptor &frameDesc);
+
       bool isNativeAllowed(tFrameDescriptor &frameDesc);
+
       bool dispatchNativeLocalPort(tFrameDescriptor &frameDesc);
+      bool dispatchNativeRemote(tFrameDescriptor &frameDesc);
+      bool dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc);
+      bool dispatchTRILLDataMultiDestRemote(tFrameDescriptor &frameDesc);
+      bool dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc);
+
+      bool egressNativeLocal(tFrameDescriptor &frameDesc);//returns false when after removing redundant ports etc there is none to send it onto.
+      bool egressNativeMulticastRemote(tFrameDescriptor &frameDesc);
+      bool egressTRILLDataMultiDestNative(tFrameDescriptor &innerFrameDesc);
+      bool egressTRILLDataMultiDestRemote(tFrameDescriptor &innerFrameDesc);
+
 
 
       /* end of NEW */

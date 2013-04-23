@@ -33,6 +33,7 @@ ANSAIPv6Route::ANSAIPv6Route(IPv6Address destPrefix, int length, RouteSrc src)
     _routingProtocolSource = pUnknown;
 
     ift = InterfaceTableAccess().get();
+    rt = NULL;
 }
 
 std::string ANSAIPv6Route::info() const
@@ -47,7 +48,7 @@ std::string ANSAIPv6Route::info() const
         out << "::";
     else
         out << getNextHop();
-    out << ", " << ift->getInterfaceById(getInterfaceId())->getName();
+    out << ", " << getInterfaceName();
     if (getExpiryTime()>0)
         out << " exp:" << getExpiryTime();
 
@@ -97,6 +98,25 @@ const char *ANSAIPv6Route::getRouteSrcName() const
         default:
             return "?";
     }
+}
+
+const char *ANSAIPv6Route::getInterfaceName() const
+{
+    ASSERT(ift);
+    InterfaceEntry *interface = ift->getInterfaceById(_interfaceID);
+    return interface ? interface->getName() : "";
+}
+
+void ANSAIPv6Route::changed(int fieldCode)
+{
+    if (rt)
+        rt->routeChanged(this, fieldCode);
+}
+
+void ANSAIPv6Route::changedSilent(int fieldCode)
+{
+    if (rt)
+        rt->routeChangedSilent(this, fieldCode);
 }
 
 ANSARoutingTable6::ANSARoutingTable6()
@@ -271,6 +291,7 @@ void ANSARoutingTable6::addRoutingProtocolRoute(ANSAIPv6Route *route)
 
 void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
 {
+    route->setRoutingTable(this);
     routeList.push_back(route);
 
     // we keep entries sorted by prefix length in routeList, so that we can
@@ -281,34 +302,6 @@ void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
 
     nb->fireChangeNotification(NF_IPv6_ROUTE_ADDED, route);
 }
-
-void ANSARoutingTable6::updateRoute(ANSAIPv6Route *route, int newInterfaceID, const IPv6Address &newNextHop, int newMetric)
-{
-    ASSERT(route != NULL);
-
-    bool bPurgeDestCache = false;
-    bool bRouteChanged = false;
-
-    if ((newInterfaceID != route->getInterfaceId()) || (newNextHop != route->getNextHop()))
-        bPurgeDestCache = true;
-
-    if (bPurgeDestCache || (route->getMetric() != newMetric))
-        bRouteChanged = true;
-
-    route->setInterfaceId(newInterfaceID);
-    route->setNextHop(newNextHop);
-    route->setMetric(newMetric);
-
-    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
-     the Destination Cache in such a way that all entries will use the latest
-     route information.*/
-    if (bPurgeDestCache)
-        purgeDestCache();
-
-    if (bRouteChanged)
-        nb->fireChangeNotification(NF_IPv6_ROUTE_CHANGED, route);
-}
-
 
 void ANSARoutingTable6::removeRoute(ANSAIPv6Route *route)
 {
@@ -326,6 +319,32 @@ void ANSARoutingTable6::removeRoute(ANSAIPv6Route *route)
     purgeDestCache();
 
     delete route;
+
+    updateDisplayString();
+}
+
+void ANSARoutingTable6::routeChanged(ANSAIPv6Route *entry, int fieldCode)
+{
+    ASSERT(entry != NULL);
+
+    routeChangedSilent(entry, fieldCode);
+
+    nb->fireChangeNotification(NF_IPv6_ROUTE_CHANGED, entry); // TODO include fieldCode in the notification
+}
+
+void ANSARoutingTable6::routeChangedSilent(ANSAIPv6Route *entry, int fieldCode)
+{
+    ASSERT(entry != NULL);
+
+    /*if (fieldCode==ANSAIPv6Route::F_NEXTHOP || fieldCode==ANSAIPv6Route::F_METRIC || fieldCode==ANSAIPv6Route::F_IFACE
+            || fieldCode==ANSAIPv6Route::F_ADMINDIST || fieldCode==ANSAIPv6Route::F_ROUTINGPROTSOURCE
+            )*/
+
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that all entries will use the latest
+     route information.*/
+    if (fieldCode==ANSAIPv6Route::F_NEXTHOP || fieldCode==ANSAIPv6Route::F_IFACE)
+        purgeDestCache();
 
     updateDisplayString();
 }
