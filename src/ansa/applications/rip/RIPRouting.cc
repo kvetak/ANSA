@@ -997,6 +997,11 @@ void RIPRouting::initialize(int stage)
     DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     devConf->loadRIPConfig(this);
 
+    //Multicast must be enabled on every interface because of globalSocket.joinMulticastGroup(RIPAddress, -1);
+    //else IGMP module in the network layer will end up with ASSERT error
+    for (int i=0; i < ift->getNumInterfaces(); ++i)
+        ift->getInterface(i)->setMulticast(true);
+
     globalSocket.setOutputGate(gate("udpOut"));
     globalSocket.bind(RIPPort);
     globalSocket.joinMulticastGroup(RIPAddress, -1);

@@ -100,11 +100,37 @@ cXMLElement * xmlParser::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
 cXMLElement * xmlParser::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
-   // initial call of the method - find <Routing6> -> <Static>
+   // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
    if (device != NULL){
 
       cXMLElement *routing = device->getFirstChildWithTag("Routing6");
+      if (routing == NULL)
+         return NULL;
+
+      cXMLElement *staticRouting = routing->getFirstChildWithTag("Static");
+      if (staticRouting == NULL)
+         return NULL;
+
+      route = staticRouting->getFirstChildWithTag("Route");
+
+   // repeated call - get another "Route" sibling node
+   }else if (route != NULL){
+      route = route->getNextSiblingWithTag("Route");
+   }else{
+      route = NULL;
+   }
+
+   return route;
+}
+
+cXMLElement * xmlParser::GetStaticRoute(cXMLElement *route, cXMLElement *device){
+
+   // initial call of the method - find <Routing6> -> <Static>
+   // and then get first "Route" child node
+   if (device != NULL){
+
+      cXMLElement *routing = device->getFirstChildWithTag("Routing");
       if (routing == NULL)
          return NULL;
 

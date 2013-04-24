@@ -42,7 +42,7 @@ class INET_API AnsaRoutingTable : public RoutingTable {
     protected:
         // displays summary above the icon
         virtual void updateDisplayString();
-        void initialize(int stage);
+        virtual void initialize(int stage);
 
     public:
       AnsaRoutingTable(){};

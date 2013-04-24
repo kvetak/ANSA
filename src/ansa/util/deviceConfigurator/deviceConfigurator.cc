@@ -59,114 +59,128 @@ void DeviceConfigurator::initialize(int stage){
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /* doesn't need to be performed anywhere else,
+        /*
+         * doesn't need to be performed anywhere else,
          * if it's NULL then behaviour depends on device type
          */
         device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-
-    }
-
-
-
-   // interfaces and routing table are not ready before stage 2
-    if (stage == 2){
-
-        // get table of interfaces of this device
-        ift = InterfaceTableAccess().get();
-        if (ift == NULL){
-           throw cRuntimeError("InterfaceTable not found");
-        }
-        // get routing table of this device
-        rt = AnsaRoutingTableAccess().getIfExists();
-        if (rt != NULL){
-           //throw cRuntimeError("AnsaRoutingTable not found");
-
-            for (int i=0; i<ift->getNumInterfaces(); ++i)
-                rt->configureInterfaceForIPv4(ift->getInterface(i));
-
-            const char *routerIdStr = par("deviceId").stringValue();
-            this->readRoutingTableFromXml(configFile, routerIdStr);
-        }
-
-      // get routing table of this device
-      rt6 = RoutingTable6Access().getIfExists();
-      if (rt6 != NULL){
-          //throw cRuntimeError("RoutingTable6 not found");
-
-          // RFC 4861 specifies that sending RAs should be disabled by default
-          for (int i = 0; i < ift->getNumInterfaces(); i++){
-             ift->getInterface(i)->ipv6Data()->setAdvSendAdvertisements(false);
-          }
-
-          device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-          if (device == NULL){
-             ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-             return;
-          }
-
-          // configure interfaces - addressing
-          cXMLElement *iface = xmlParser::GetInterface(NULL, device);
-          if (iface == NULL){
-             ev << "No interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-          }else{
-             loadInterfaceConfig(iface);
-          }
-
-
-          // configure static routing
-          cXMLElement *route = xmlParser::GetStaticRoute6(NULL, device);
-          if (route == NULL && strcmp(deviceType, "Router") == 0){
-             ev << "No static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-          }else{
-             loadStaticRouting(route);
-          }
-
-          // Adding default route requires routing table lookup to pick the right output
-          // interface. This needs to be performed when all IPv6 addresses are already assigned
-          // and there are matching records in the routing table.
-          cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
-          if (gateway == NULL && strcmp(deviceType, "Host") == 0){
-             ev << "No default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-          }else{
-             loadDefaultRouter(gateway);
-          }
-      }
-   }
-   else if(stage == 3)
-     {
-         device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-         if (device == NULL){
+        if (device == NULL)
+        {
             ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             return;
-         }
+        }
+    }
+    else if (stage == 2)
+    {// interfaces and routing table are not ready before stage 2
+        // get table of interfaces of this device
+        ift = InterfaceTableAccess().get();
+        if (ift == NULL)
+            throw cRuntimeError("InterfaceTable not found");
 
-         if (xmlParser::isMulticastEnabled(device))
-         {
-             // get PIM interface table of this device
-             pimIft = PimInterfaceTableAccess().get();
-             if (pimIft == NULL){
-                 throw cRuntimeError("PimInterfaces not found");
-             }
+        //////////////////////////
+        /// IPv4 Configuration ///
+        //////////////////////////
+        // get routing table of this device
+        rt = RoutingTableAccess().getIfExists();
+        if (rt != NULL)
+        {
+            for (int i=0; i<ift->getNumInterfaces(); ++i)
+            {
+                //ift->getInterface(i)->setMulticast(true);
+                rt->configureInterfaceForIPv4(ift->getInterface(i));
+            }
 
-             // is multicast routing enabled on the device?
-             if (!xmlParser::isMulticastEnabled(device))
-             {
-                 EV<< "Multicast routing is not enable for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-             }
-             else
-             {
-                 // fill pim interfaces table from config file
-                 cXMLElement *iface = xmlParser::GetInterface(NULL, device);
-                 if (iface != NULL)
-                     loadPimInterfaceConfig(iface);
-                 else
-                     EV<< "No PIM interface is configured for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-             }
-         }
-     }
+            if (device != NULL)
+            {
+                cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+                if (iface == NULL)
+                    ev << "No IPv4 interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+                else
+                    loadInterfaceConfig(iface);
+
+                // configure static routing
+                cXMLElement *route = xmlParser::GetStaticRoute(NULL, device);
+                if (route == NULL && strcmp(deviceType, "Router") == 0)
+                    ev << "No IPv4 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+                else
+                    loadStaticRouting(route);
+
+                // Adding default route requires routing table lookup to pick the right output
+                // interface. This needs to be performed when all IPv4 addresses are already assigned
+                // and there are matching records in the routing table.
+                cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
+                if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+                    ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+                else
+                    loadDefaultRouter(gateway);
+            }
+        }
+
+        //////////////////////////
+        /// IPv6 Configuration ///
+        //////////////////////////
+        // get routing table of this device
+        rt6 = RoutingTable6Access().getIfExists();
+        if (rt6 != NULL)
+        {
+            // RFC 4861 specifies that sending RAs should be disabled by default
+            for (int i = 0; i < ift->getNumInterfaces(); i++)
+                ift->getInterface(i)->ipv6Data()->setAdvSendAdvertisements(false);
+
+            if (device == NULL)
+                return;
+
+            // configure interfaces - addressing
+            cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+            if (iface == NULL)
+                ev << "No IPv6 interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            else
+                loadInterfaceConfig6(iface);
+
+            // configure static routing
+            cXMLElement *route = xmlParser::GetStaticRoute6(NULL, device);
+            if (route == NULL && strcmp(deviceType, "Router") == 0)
+                ev << "No IPv6 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            else
+                loadStaticRouting6(route);
+
+            // Adding default route requires routing table lookup to pick the right output
+            // interface. This needs to be performed when all IPv6 addresses are already assigned
+            // and there are matching records in the routing table.
+            cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter6");
+            if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+                ev << "No IPv6 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            else
+                loadDefaultRouter6(gateway);
+        }
+    }
+    else if(stage == 3)
+    {
+        if (device == NULL)
+            return;
+
+        if (xmlParser::isMulticastEnabled(device))
+        {
+            // get PIM interface table of this device
+            pimIft = PimInterfaceTableAccess().get();
+            if (pimIft == NULL)
+                throw cRuntimeError("PimInterfaces not found");
+
+            // fill pim interfaces table from config file
+            cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+            if (iface != NULL)
+                loadPimInterfaceConfig(iface);
+            else
+                EV<< "No PIM interface is configured for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        }
+        else
+        {
+            EV<< "Multicast routing is not enable for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        }
+    }
 }
 
-void DeviceConfigurator::loadInterfaceConfig(cXMLElement *iface){
+void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
    while (iface != NULL){
@@ -300,7 +314,7 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement *iface){
 }
 
 
-void DeviceConfigurator::loadStaticRouting(cXMLElement *route){
+void DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
    while (route != NULL){
@@ -365,7 +379,7 @@ void DeviceConfigurator::loadStaticRouting(cXMLElement *route){
 }
 
 
-void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway){
+void DeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
       return;
@@ -390,156 +404,140 @@ void DeviceConfigurator::handleMessage(cMessage *msg){
    delete msg;
 }
 
-bool DeviceConfigurator::readRoutingTableFromXml(const char *filename, const char *RouterId)
+void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
-    cXMLElement* routerConfig = ev.getXMLDocument(filename);
-    if (routerConfig == NULL) {
-        return false;
-    }
-
-    // load information on this router
-    std::string routerXPath("Router[@id='");
-    routerXPath += RouterId;
-    routerXPath += "']";
-
-    cXMLElement* routerNode = routerConfig->getElementByPath(routerXPath.c_str());
-    if (routerNode == NULL)
-        opp_error("No configuration for Router ID: %s", RouterId);
-
-    cXMLElement* IntNode = routerNode->getFirstChildWithTag("Interfaces");
-    if (IntNode)
-        readInterfaceFromXml(IntNode);
-
-    cXMLElement* routingNode = routerNode->getFirstChildWithTag("Routing");
-    if (routingNode){
-       cXMLElement* staticNode = routingNode->getFirstChildWithTag("Static");
-       if (staticNode)
-          readStaticRouteFromXml(staticNode);
-    }
-    return true;
-}
-
-void DeviceConfigurator::readInterfaceFromXml(cXMLElement* Node)
-{
-    InterfaceEntry* ie;
-
-    cXMLElementList intConfig = Node->getChildren();
-    for (cXMLElementList::iterator intConfigIt = intConfig.begin(); intConfigIt != intConfig.end(); intConfigIt++)
+    while (iface != NULL)
     {
-      std::string nodeName = (*intConfigIt)->getTagName();
-      if (nodeName == "Interface" && (*intConfigIt)->getAttribute("name"))
-      {
-        std::string intName=(*intConfigIt)->getAttribute("name");
-        std::string typeName=intName.substr(0,3);
+        // get interface name and find matching interface in interface table
+        const char *ifaceName = iface->getAttribute("name");
+        InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
+        if (ie == NULL)
+           throw cRuntimeError("No interface called %s on this device", ifaceName);
 
-        ie=ift->getInterfaceByName(intName.c_str());
-
-        if (!ie)
-          opp_error("Error in routing file: interface name `%s' not registered by any L2 module", intName.c_str());
+        std::string ifaceType = std::string(ifaceName).substr(0,3);
 
         //implicitne nastavenia
-        if (typeName=="eth")
-              ie->setBroadcast(true);
-        if (typeName=="ppp")
-              ie->setPointToPoint(true);
+        if (ifaceType=="eth")
+            ie->setBroadcast(true);
+        if (ifaceType=="ppp")
+            ie->setPointToPoint(true);
 
         //register multicast groups
         ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
-        ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
+        if (strcmp("Router", deviceType) == 0)
+            ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
 
         ie->ipv4Data()->setMetric(1);
         ie->setMtu(1500);
 
-        cXMLElementList ifDetails = (*intConfigIt)->getChildren();
+        cXMLElementList ifDetails = iface->getChildren();
         for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
         {
-          std::string nodeName = (*ifElemIt)->getTagName();
+            std::string nodeName = (*ifElemIt)->getTagName();
 
-          if (nodeName=="IPAddress")
-          {
-            ie->ipv4Data()->setIPAddress(IPv4Address((*ifElemIt)->getNodeValue()));
-          }
+            if (nodeName=="IPAddress")
+                ie->ipv4Data()->setIPAddress(IPv4Address((*ifElemIt)->getNodeValue()));
 
-          if (nodeName=="Mask")
-          {
-            ie->ipv4Data()->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
-          }
+            if (nodeName=="Mask")
+                ie->ipv4Data()->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
 
-          if (nodeName=="MTU")
-          {
-            ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
-          }
-
+            if (nodeName=="MTU")
+                ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
         }
 
-      }
+        iface = xmlParser::GetInterface(iface, NULL);
     }
 }
 
-void DeviceConfigurator::readStaticRouteFromXml(cXMLElement* Node)
+void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
-  cXMLElementList intConfig = Node->getChildren();
-  for (cXMLElementList::iterator intConfigIt = intConfig.begin(); intConfigIt != intConfig.end(); intConfigIt++)
-  {
-    std::string nodeName = (*intConfigIt)->getTagName();
-    if (nodeName == "Route")
+    while (route != NULL)
     {
         IPv4Route *e = new IPv4Route();
-        cXMLElementList ifDetails = (*intConfigIt)->getChildren();
+
+        cXMLElementList ifDetails = route->getChildren();
         for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
         {
-          std::string nodeName = (*ifElemIt)->getTagName();
+            std::string nodeName = (*ifElemIt)->getTagName();
 
-          if (nodeName=="NetworkAddress")
-          {
-            e->setDestination(IPv4Address((*ifElemIt)->getNodeValue()));
-            EV << "Address = " << e->getDestination() << endl;
-          }
-
-          if (nodeName=="NetworkMask")
-          {
-            e->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
-            EV << "NetworkMask = " << e->getNetmask() << endl;
-          }
-
-          if (nodeName=="NextHopAddress")
-          {
-            e->setGateway(IPv4Address((*ifElemIt)->getNodeValue()));
-            InterfaceEntry *intf=NULL;
-            for (int i=0; i<ift->getNumInterfaces(); i++)
+            if (nodeName=="NetworkAddress")
             {
-              intf = ift->getInterface(i);
-              if (((intf->ipv4Data()->getIPAddress()).doAnd(intf->ipv4Data()->getNetmask()))==((e->getGateway()).doAnd(intf->ipv4Data()->getNetmask())))
-                  break;
-
+                e->setDestination(IPv4Address((*ifElemIt)->getNodeValue()));
+                EV << "Address = " << e->getDestination() << endl;
             }
-            if (intf)
-              e->setInterface(intf);
-            else
-              opp_error("Error.");
-            e->setMetric(1);
-          }
-          if (nodeName=="ExitInterface")
-          {
-            InterfaceEntry *ie=ift->getInterfaceByName((*ifElemIt)->getNodeValue());
-            if (!ie)
+
+            if (nodeName=="NetworkMask")
+            {
+                e->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
+                EV << "NetworkMask = " << e->getNetmask() << endl;
+            }
+
+            if (nodeName=="NextHopAddress")
+            {
+                e->setGateway(IPv4Address((*ifElemIt)->getNodeValue()));
+                InterfaceEntry *intf=NULL;
+                for (int i=0; i<ift->getNumInterfaces(); i++)
+                {
+                    intf = ift->getInterface(i);
+                    if (((intf->ipv4Data()->getIPAddress()).doAnd(intf->ipv4Data()->getNetmask()))==((e->getGateway()).doAnd(intf->ipv4Data()->getNetmask())))
+                        break;
+                }
+
+                if (intf)
+                    e->setInterface(intf);
+                else
+                    opp_error("Error.");
+
+                e->setMetric(1);
+            }
+
+            if (nodeName=="ExitInterface")
+            {
+                InterfaceEntry *ie=ift->getInterfaceByName((*ifElemIt)->getNodeValue());
+                if (!ie)
                 opp_error("Interface does not exists");
 
-            e->setInterface(ie);
-            e->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);
-            e->setMetric(0);
-          }
-          if (nodeName=="StaticRouteMetric")
-          {
-            e->setMetric(atoi((*ifElemIt)->getNodeValue()));
-          }
-        }
-        rt->addRoute(e);
-    }
+                e->setInterface(ie);
+                e->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);
+                e->setMetric(0);
+            }
 
-  }
+            if (nodeName=="StaticRouteMetric")
+            {
+                e->setMetric(atoi((*ifElemIt)->getNodeValue()));
+            }
+        }
+
+        rt->addRoute(e);
+
+        route = xmlParser::GetStaticRoute(route, NULL);
+    }
 }
 
+void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway){
+
+   if (gateway == NULL)
+      return;
+
+   // get default-router address string (without prefix)
+   IPv4Address nextHop;
+   nextHop = IPv4Address(gateway->getNodeValue());
+
+   // browse routing table to find the best route to default-router
+   const IPv4Route *route = rt->findBestMatchingRoute(nextHop);
+   if (route == NULL){
+      return;
+   }
+
+   IPv4Route *defaultRoute = new IPv4Route();
+   defaultRoute->setDestination(IPv4Address::UNSPECIFIED_ADDRESS);
+   defaultRoute->setNetmask(IPv4Address::UNSPECIFIED_ADDRESS);
+   defaultRoute->setGateway(nextHop);
+   defaultRoute->setInterface(route->getInterface());
+   defaultRoute->setMetric(1);
+
+   rt->addRoute(defaultRoute);
+}
 
 //
 //

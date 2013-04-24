@@ -35,6 +35,7 @@ class xmlParser {
    public:
       static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, const char *configFile);
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);
+      static cXMLElement * GetStaticRoute(cXMLElement *route, cXMLElement *device);
       static cXMLElement * GetStaticRoute6(cXMLElement *route, cXMLElement *device);
       static cXMLElement * GetOspfProcess6(cXMLElement *process, cXMLElement *device);
       static cXMLElement * GetIPv6Address(cXMLElement *addr, cXMLElement *iface);

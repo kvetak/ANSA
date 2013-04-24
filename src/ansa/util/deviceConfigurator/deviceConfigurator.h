@@ -74,18 +74,33 @@ class DeviceConfigurator : public cSimpleModule {
       const char *configFile;
       cXMLElement *device;
 
+   protected:
+      IInterfaceTable *ift;
+      RoutingTable6 *rt6;
+      IRoutingTable *rt;
+      PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
+      virtual int numInitStages() const {return 4;}
+      virtual void initialize(int stage);
+      virtual void handleMessage(cMessage *msg);
 
+      //////////////////////////
+      /// IPv4 Configuration ///
+      //////////////////////////
       void loadDefaultRouter(cXMLElement *gateway);
-      void loadInterfaceConfig(cXMLElement *iface);
-      void loadStaticRouting(cXMLElement *route);
+      void loadInterfaceConfig(cXMLElement* iface);
+      void loadStaticRouting(cXMLElement* route);
 
-      // Load IPv4 configuration
-      bool readRoutingTableFromXml (const char *filename, const char *RouterId);
-      void readInterfaceFromXml(cXMLElement* Node);
-      void readStaticRouteFromXml(cXMLElement* Node);
+      //////////////////////////
+      /// IPv6 Configuration ///
+      //////////////////////////
+      void loadDefaultRouter6(cXMLElement *gateway);
+      void loadInterfaceConfig6(cXMLElement *iface);
+      void loadStaticRouting6(cXMLElement *route);
 
-      /* ISIS related */
+      /////////////////////////
+      //    ISIS related     //
+      /////////////////////////
       void loadISISCoreDefaultConfig(ISIS *isisModule);
       void loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *entry);
       void loadISISInterfacesConfig(ISIS *isisModule);
@@ -111,31 +126,20 @@ class DeviceConfigurator : public cSimpleModule {
       int getISISL2PSNPInterval(cXMLElement *isisRouting);
       int getISISL1SPFFullInterval(cXMLElement *isisRouting);
       int getISISL2SPFFullInterval(cXMLElement *isisRouting);
-
-
-
       /* END of ISIS related */
-   protected:
 
-      IInterfaceTable *ift;
-      RoutingTable6 *rt6;
-      AnsaRoutingTable *rt;
-      PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
-
-
-      virtual int numInitStages() const {return 4;}
-      virtual void initialize(int stage);
-      virtual void handleMessage(cMessage *msg);
-
-
-      //configuration for PIM
+      ///////////////////////////
+      // configuration for PIM //
+      ///////////////////////////
       void loadPimInterfaceConfig(cXMLElement *iface);
 
    public:
       // global configuration for PIM
       void loadPimGlobalConfig(pimSM *pimSMModule);
 
-      // configuration for RIPng
+      /////////////////////////////
+      // configuration for RIPng //
+      /////////////////////////////
       /**
        * Loads configuration for RIPngModule
        * @param RIPngModule [in]
@@ -150,13 +154,15 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface);
 
+      ///////////////////////////
+      // configuration for RIP //
+      ///////////////////////////
       /**
        * Loads configuration for RIPModule
        * @param RIPModule [in]
        */
       void loadRIPConfig(RIPRouting *RIPModule);
 
-      // configuration for RIP
       /**
        * Adds networks obtained from the interface configuration to the RIPRouting table
        * @param RIPModule [in]
@@ -164,6 +170,9 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface);
 
+      /////////////////////////
+      //    ISIS related     //
+      /////////////////////////
       /*
        * Loads configuraion for IS-IS module.
        * @param isisModule [in]

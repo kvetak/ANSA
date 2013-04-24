@@ -23,6 +23,9 @@
 
 Define_Module(AnsaRoutingTable);
 
+/** Defined in RoutingTable.cc */
+std::ostream& operator<<(std::ostream& os, const IPv4Route& e);
+
 /** Printout of structure AnsaIPv4MulticastRoute (one route in table). */
 std::ostream& operator<<(std::ostream& os, const AnsaIPv4MulticastRoute& e)
 {
@@ -117,8 +120,9 @@ void AnsaRoutingTable::updateDisplayString()
         return;
 
     char buf[80];
-    sprintf(buf, "%ld routes", multicastRoutes.size());
-    getDisplayString().setTagArg("t",0,buf);
+    sprintf(buf, "%d routes\n%d multicast routes", (int)routes.size(), (int)multicastRoutes.size());
+
+    getDisplayString().setTagArg("t", 0, buf);
 }
 
 
@@ -149,6 +153,7 @@ void AnsaRoutingTable::initialize(int stage)
 
         // watch multicast table
         WATCH_VECTOR(showMRoute);
+        WATCH_PTRVECTOR(routes);
         WATCH_PTRVECTOR(multicastRoutes);
         WATCH(IPForward);
         WATCH(routerId);

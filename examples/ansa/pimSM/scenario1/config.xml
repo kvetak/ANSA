@@ -3,7 +3,7 @@
 <Devices>
 	<!-- Hosts -->
 	<!-- Source1 -->
-	<Router id="172.16.40.100">
+	<Host id="172.16.40.100">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.40.100</IPAddress>
@@ -20,9 +20,9 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 	<!-- Host1 -->
-	<Router id="172.16.30.100">
+	<Host id="172.16.30.100">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.30.100</IPAddress>
@@ -39,9 +39,9 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 	<!-- Host2 -->
-	<Router id="172.16.20.100">
+	<Host id="172.16.20.100">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.20.100</IPAddress>
@@ -58,7 +58,7 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 
 	<!-- R0 -->
 	<Router id="192.168.0.1">
