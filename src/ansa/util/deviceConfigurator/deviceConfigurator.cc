@@ -104,15 +104,6 @@ void DeviceConfigurator::initialize(int stage){
                     ev << "No IPv4 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
                 else
                     loadStaticRouting(route);
-
-                // Adding default route requires routing table lookup to pick the right output
-                // interface. This needs to be performed when all IPv4 addresses are already assigned
-                // and there are matching records in the routing table.
-                cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
-                if (gateway == NULL && strcmp(deviceType, "Host") == 0)
-                    ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-                else
-                    loadDefaultRouter(gateway);
             }
         }
 
@@ -178,6 +169,25 @@ void DeviceConfigurator::initialize(int stage){
             EV<< "Multicast routing is not enable for this device (" << deviceType << " id=" << deviceId << ")" << endl;
         }
     }
+    else if(stage == 4)
+    {
+        if (device == NULL)
+            return;
+
+        //////////////////////////
+        /// IPv4 Configuration ///
+        //////////////////////////
+        // Adding default route requires routing table lookup to pick the right output
+        // interface. This needs to be performed when all IPv4 addresses are already assigned
+        // and there are matching records in the routing table.
+        // ANSARoutingTable: dir. conn. routes are added by deviceConfigurator in stage 2
+        // "inet" RoutingTable: dir. conn. routes are added by initialite() in the RoutingTable stage 3
+        cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
+        if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+            ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        else
+            loadDefaultRouter(gateway);
+    }
 }
 
 void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
@@ -212,14 +222,10 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
          // -> we have to set the address as non-tentative
          ie->ipv6Data()->assignAddress(ipv6, false, 0, 0);
 
+         //If rt6 is ANSARoutingTable6, than overridden addStaticRoute is called and ANSAIPv6Route is added
+         //else inet IPv6Route is added
          // adding directly connected route to the routing table
-         IPv6Route *route = new IPv6Route(ipv6.getPrefix(prefixLen), prefixLen, IPv6Route::STATIC);
-         route->setInterfaceId(ie->getInterfaceId());
-         route->setNextHop(IPv6Address::UNSPECIFIED_ADDRESS);
-         route->setMetric(0);
-
          rt6->addStaticRoute(ipv6.getPrefix(prefixLen), prefixLen, ie->getInterfaceId(), IPv6Address::UNSPECIFIED_ADDRESS, 0);
-
 
          // get next IPv6 address
          addr = xmlParser::GetIPv6Address(addr, NULL);
@@ -423,9 +429,11 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
             ie->setPointToPoint(true);
 
         //register multicast groups
-        ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
         if (strcmp("Router", deviceType) == 0)
+        {//TODO: ???
+            ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
             ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
+        }
 
         ie->ipv4Data()->setMetric(1);
         ie->setMtu(1500);
@@ -443,6 +451,23 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
             if (nodeName=="MTU")
                 ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
+        }
+
+        //Add directly connected routes to the ANSA rt version only
+        //--- inet routing table adds dir. conn. routes in its own initialize method
+        AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
+        if (ANSArt != NULL)
+        {
+            ANSAIPv4Route *route = new ANSAIPv4Route();
+            route->setSource(IPv4Route::IFACENETMASK);
+            route->setDestination(ie->ipv4Data()->getIPAddress().doAnd(ie->ipv4Data()->getNetmask()));
+            route->setNetmask(ie->ipv4Data()->getNetmask());
+            route->setGateway(IPv4Address());
+            route->setMetric(ie->ipv4Data()->getMetric());
+            route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
+            route->setInterface(ie);
+
+            ANSArt->addRoute(route);
         }
 
         iface = xmlParser::GetInterface(iface, NULL);
@@ -516,27 +541,45 @@ void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
 void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway){
 
-   if (gateway == NULL)
+    if (gateway == NULL)
       return;
 
-   // get default-router address string (without prefix)
-   IPv4Address nextHop;
-   nextHop = IPv4Address(gateway->getNodeValue());
+    // get default-router address string (without prefix)
+    IPv4Address nextHop;
+    nextHop = IPv4Address(gateway->getNodeValue());
 
-   // browse routing table to find the best route to default-router
-   const IPv4Route *route = rt->findBestMatchingRoute(nextHop);
-   if (route == NULL){
+    // browse routing table to find the best route to default-router
+    const IPv4Route *route = rt->findBestMatchingRoute(nextHop);
+    if (route == NULL){
       return;
-   }
+    }
 
-   IPv4Route *defaultRoute = new IPv4Route();
-   defaultRoute->setDestination(IPv4Address::UNSPECIFIED_ADDRESS);
-   defaultRoute->setNetmask(IPv4Address::UNSPECIFIED_ADDRESS);
-   defaultRoute->setGateway(nextHop);
-   defaultRoute->setInterface(route->getInterface());
-   defaultRoute->setMetric(1);
+    AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
+    if (ANSArt != NULL)
+    {
+        ANSAIPv4Route *defaultRoute = new ANSAIPv4Route();
+        defaultRoute->setSource(IPv4Route::MANUAL);
+        defaultRoute->setDestination(IPv4Address());
+        defaultRoute->setNetmask(IPv4Address());
+        defaultRoute->setGateway(nextHop);
+        defaultRoute->setInterface(route->getInterface());
+        defaultRoute->setMetric(1);
+        defaultRoute->setAdminDist(ANSAIPv4Route::dStatic);
 
-   rt->addRoute(defaultRoute);
+        ANSArt->addRoute(defaultRoute);
+    }
+    else
+    {
+        IPv4Route *defaultRoute = new IPv4Route();
+        defaultRoute->setSource(IPv4Route::MANUAL);
+        defaultRoute->setDestination(IPv4Address());
+        defaultRoute->setNetmask(IPv4Address());
+        defaultRoute->setGateway(nextHop);
+        defaultRoute->setInterface(route->getInterface());
+        defaultRoute->setMetric(1);
+
+        rt->addRoute(defaultRoute);
+    }
 }
 
 //

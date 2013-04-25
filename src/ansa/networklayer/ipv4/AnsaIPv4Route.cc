@@ -28,7 +28,7 @@ std::string ANSAIPv4Route::info() const
     std::stringstream out;
 
     out << getRouteSrcName();
-    out << " " << getDestination() << "/" << getNetmask();
+    out << " " << getDestination() << "/" << getNetmask().getNetmaskLength();
 
     if (getGateway().isUnspecified())
     {
@@ -56,6 +56,7 @@ const char *ANSAIPv4Route::getRouteSrcName() const
     switch (getSource())
     {
         case MANUAL:
+        case IFACENETMASK:
             if (getGateway().isUnspecified())
                 return "C";
             return "S";

@@ -164,9 +164,10 @@ void AnsaRoutingTable::initialize(int stage)
         // assigns interface addresses
         configureRouterId();
 
-        // we don't use notifications during initialize(), so we do it manually.
-        // Should be in stage=3 because autoconfigurator runs in stage=2.
-        updateNetmaskRoutes();
+        // We don't want to call this method:
+        // 1. adds IPv4Route instead of ANSAIPv4Route (method is not overridden)
+        // 2. directly connected routes are added in the deviceConfigurator
+        //updateNetmaskRoutes();
 
         //printRoutingTable();
     }

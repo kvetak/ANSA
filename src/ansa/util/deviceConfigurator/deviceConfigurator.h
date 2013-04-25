@@ -80,7 +80,7 @@ class DeviceConfigurator : public cSimpleModule {
       IRoutingTable *rt;
       PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
-      virtual int numInitStages() const {return 4;}
+      virtual int numInitStages() const {return 5;}
       virtual void initialize(int stage);
       virtual void handleMessage(cMessage *msg);
 
