@@ -28,7 +28,17 @@ std::string ANSAIPv4Route::info() const
     std::stringstream out;
 
     out << getRouteSrcName();
-    out << " " << getDestination() << "/" << getNetmask().getNetmaskLength();
+    out << " ";
+    if (getDestination().isUnspecified())
+        out << "0.0.0.0";
+    else
+        out << getDestination();
+
+    out << "/";
+    if (getNetmask().isUnspecified())
+        out << "0";
+    else
+        out << getNetmask().getNetmaskLength();
 
     if (getGateway().isUnspecified())
     {
