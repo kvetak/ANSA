@@ -21,6 +21,14 @@
         
         <Routing6>
         </Routing6>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+        		<Passive-interface>eth2</Passive-interface>
+        		<Passive-interface>eth3</Passive-interface>
+        	</RIP>
+        </Routing>
     </Router>
     
     <Router id="2001:12::2">
@@ -45,6 +53,14 @@
         
         <Routing6>    
         </Routing6>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+        		<Passive-interface>eth2</Passive-interface>
+        		<Passive-interface>eth3</Passive-interface>
+        	</RIP>
+        </Routing>
     </Router>
     
     <Router id="2001:13::3">
@@ -73,6 +89,14 @@
         
         <Routing6>    
         </Routing6>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+        		<Passive-interface>eth2</Passive-interface>
+        		<Passive-interface>eth3</Passive-interface>
+        	</RIP>
+        </Routing>
     </Router>
     
     <Router id="2001:34::4">
@@ -89,6 +113,13 @@
         
         <Routing6>    
         </Routing6>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+        		<Passive-interface>eth1</Passive-interface>
+        	</RIP>
+        </Routing>
     </Router>
     
     <Host id="2001:3:3:3::10">

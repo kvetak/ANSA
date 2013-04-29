@@ -733,6 +733,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     int interfaceId;
     const char *interfaceName;
 
+    //RIP NETWORK COMMAND
     networkElement = xmlParser::getRIPNetwork(NULL, device);
     while (networkElement != NULL)
     {// process all RIP Network "command"
@@ -746,8 +747,13 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
         for (int i = 0; i < numInterfaces; ++i)
         {
             interface = ift->getInterface(i);
+            IPv4Address interfaceAddress = interface->ipv4Data()->getIPAddress();
+            if (interfaceAddress.isUnspecified())
+                continue;
+
             interfaceId = interface->getInterfaceId();
-            if (network.prefixMatches(interface->ipv4Data()->getIPAddress(), interface->ipv4Data()->getNetmask().getNetmaskLength()))
+            //isUnspecified -> network = 0.0.0.0 -> all interfaces
+            if (network.isUnspecified() || network.isNetwork(interfaceAddress))
             {// IP address of the interface match the network
                 //check if the interface is not in the rip interfaces
                 if (RIPModule->getEnabledInterfaceIndexById(interfaceId) == -1)
@@ -775,6 +781,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
         passiveInterfaceElem = xmlParser::getRIPPassiveInterface(passiveInterfaceElem, NULL);
     }
 
+    //RIP PER INTERFACE CONFIGURATION
     std::string RIPInterfaceSplitHorizon;
     std::string RIPInterfacePoisonReverse;
 
@@ -808,7 +815,8 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
 void DeviceConfigurator::loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface)
 {
     // make directly connected route
-    RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(interface->ipv4Data()->getIPAddress(), interface->ipv4Data()->getNetmask());
+    RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(interface->ipv4Data()->getIPAddress().doAnd(interface->ipv4Data()->getNetmask()),
+                                                               interface->ipv4Data()->getNetmask());
     route->setInterface(interface);
     route->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);  // means directly connected network
     route->setMetric(RIPModule->getConnNetworkMetric());

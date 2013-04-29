@@ -36,6 +36,7 @@ RoutingTableEntry::RoutingTableEntry(IPv4Address network, IPv4Address netMask) :
     setDestination(network);
     setNetmask(netMask);
 
+    setSource(IPv4Route::RIP);
     setRoutingProtocolSource(pRIP);
     setAdminDist(dRIP);
     setTimer(NULL);
@@ -52,6 +53,7 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
 
     setRoutingTable(NULL);
 
+    setSource(entry.getSource());
     setRoutingProtocolSource(entry.getRoutingProtocolSource());
     setAdminDist(entry.getAdminDist());
     setTimer(NULL);
@@ -73,12 +75,12 @@ std::string RoutingTableEntry::RIPInfo() const
     std::string expTime;
     std::stringstream out;
 
-    out << getDestination() << "/" << getNetmask();
+    out << getDestination() << "/" << getNetmask().getNetmaskLength();
     out << ", metric " << getMetric();
     if (getCopy() != NULL)
         out << ", installed";
 
-    if (getGateway() != IPv4Address::UNSPECIFIED_ADDRESS)
+    if (!getGateway().isUnspecified())
     {//Not directly connected
         RIPTimer *timer = getTimer();
         if (timer != NULL && timer->isScheduled())
@@ -103,7 +105,7 @@ std::string RoutingTableEntry::RIPInfo() const
     }
 
     out << ", " << getInterface()->getName();
-    if (getGateway() != IPv4Address::UNSPECIFIED_ADDRESS)
+    if (!getGateway().isUnspecified())
         out << "/" << getGateway();
 
     return out.str();

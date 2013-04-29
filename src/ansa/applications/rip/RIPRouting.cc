@@ -103,7 +103,10 @@ void RIPRouting::addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool create
     }
 
     routingTable.push_back(entry);
-    addRoutingTableEntryToGlobalRT(entry);
+
+    //Do not try to add directly connected routes to the "global" routing table
+    if (!entry->getGateway().isUnspecified())
+        addRoutingTableEntryToGlobalRT(entry);
 
     ++numRoutes;
 }
@@ -342,7 +345,7 @@ RIP::Interface *RIPRouting::enableRIPOnInterface(const char *interfaceName)
 
 RIP::Interface *RIPRouting::enableRIPOnInterface(int interfaceId)
 {
-    ev << "Enabling RIP on " << interfaceId << routerText << endl;
+    ev << "Enabling RIP on " << ift->getInterfaceById(interfaceId)->getName() << routerText << endl;
 
     RIP::Interface *RIPInterface = new RIP::Interface(interfaceId);
     // add interface to local RIP interface table
@@ -636,7 +639,7 @@ void RIPRouting::handleRIPMessage(RIPMessage *msg)
     EV << "RIP: Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
     int command = msg->getCommand();
     int version = msg->getVersion();
-    if (version != 1)
+    if (version != 2)
         EV << "This implementation of RIP does not support version '" << version << "' of this protocol." << endl;
 
     if (command == RIPRequest)
@@ -670,16 +673,24 @@ bool RIPRouting::checkMessageValidity(RIPMessage *response)
 
     // is from RIP port
     if (controlInfo->getSrcPort() != RIPPort)
+    {
+        EV << "RIP message: bad source port." << endl;
         return false;
+    }
 
     IPv4Address sourceAddr = controlInfo->getSrcAddr().get4();
     // source addr. is not from this device
     if (rt->isLocalAddress(sourceAddr))
+    {
+        EV << "RIP message: is local address - ignoring..." << endl;
         return false;
+    }
 
-    // hop-count is 255
-    if (controlInfo->getTtl() != 255)
+    if (controlInfo->getTtl() < 254)
+    {
+        EV << "RIP message: bad ttl." << endl;
         return false;
+    }
 
     return true;
 }
@@ -774,7 +785,7 @@ void RIPRouting::handleRequest(RIPMessage *request, int srcPort, IPv4Address &sr
     {// could be a request for all routes
         EV << "RIP message: RIP - General Request" << endl;
         RIPRTE &rte = request->getRtes(0);
-        if (rte.getIPv4Address() == IPv4Address::UNSPECIFIED_ADDRESS &&
+        if (rte.getIPv4Address().isUnspecified() &&
             rte.getNetMask() == 0 &&
             rte.getMetric() == infinityMetric &&
             rte.getRouteTag() == 0)
@@ -1084,7 +1095,7 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
                {
                    if ((*it)->getInterface()->getInterfaceId() == interfaceEntryId)
                    {
-                       if ((*it)->getGateway() == IPv4Address::UNSPECIFIED_ADDRESS)
+                       if ((*it)->getGateway().isUnspecified())
                        {// directly connected
                            (*it)->setMetric(infinityMetric);
                            (*it)->setChangeFlag();
@@ -1140,7 +1151,7 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
                {
                    if ((*it)->getInterface()->getInterfaceId() == interfaceEntryId)
                    {
-                       if ((*it)->getGateway() == IPv4Address::UNSPECIFIED_ADDRESS)
+                       if ((*it)->getGateway().isUnspecified())
                        {// "renew" directly connected
                            (*it)->setMetric(connNetworkMetric);
                            (*it)->setChangeFlag();

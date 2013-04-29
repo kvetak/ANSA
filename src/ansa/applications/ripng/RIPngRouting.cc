@@ -103,7 +103,10 @@ void RIPngRouting::addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool cr
     }
 
     routingTable.push_back(entry);
-    addRoutingTableEntryToGlobalRT(entry);
+
+    //Do not try to add directly connected routes to the "global" routing table
+    if (!entry->getNextHop().isUnspecified())
+        addRoutingTableEntryToGlobalRT(entry);
 
     ++numRoutes;
 }
@@ -755,7 +758,7 @@ void RIPngRouting::handleRequest(RIPngMessage *request, int srcPort, IPv6Address
     {// could be a request for all routes
         EV << "RIPng message: RIPng - General Request" << endl;
         RIPngRTE &rte = request->getRtes(0);
-        if (rte.getIPv6Prefix() == IPv6Address::UNSPECIFIED_ADDRESS &&
+        if (rte.getIPv6Prefix().isUnspecified() &&
             rte.getPrefixLen() == 0 &&
             rte.getMetric() == infinityMetric &&
             rte.getRouteTag() == 0)
@@ -1060,7 +1063,7 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
                {
                    if ((*it)->getInterfaceId() == interfaceEntryId)
                    {
-                       if ((*it)->getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+                       if ((*it)->getNextHop().isUnspecified())
                        {// directly connected
                            (*it)->setMetric(infinityMetric);
                            (*it)->setChangeFlag();
@@ -1116,7 +1119,7 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
                {
                    if ((*it)->getInterfaceId() == interfaceEntryId)
                    {
-                       if ((*it)->getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+                       if ((*it)->getNextHop().isUnspecified())
                        {// "renew" directly connected
                            (*it)->setMetric(connNetworkMetric);
                            (*it)->setChangeFlag();

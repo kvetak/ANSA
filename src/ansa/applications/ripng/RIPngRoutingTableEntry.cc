@@ -70,7 +70,7 @@ std::string RoutingTableEntry::RIPngInfo() const
     if (getCopy() != NULL)
         out << ", installed";
 
-    if (getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS)
+    if (!getNextHop().isUnspecified())
     {//Not directly connected
         RIPngTimer *timer = getTimer();
         if (timer != NULL && timer->isScheduled())
@@ -95,7 +95,7 @@ std::string RoutingTableEntry::RIPngInfo() const
     }
 
     out << ", " << ift->getInterfaceById(getInterfaceId())->getName();
-    if (getNextHop() != IPv6Address::UNSPECIFIED_ADDRESS)
+    if (!getNextHop().isUnspecified())
         out << "/" << getNextHop();
 
     return out.str();

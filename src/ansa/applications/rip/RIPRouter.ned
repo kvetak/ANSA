@@ -112,8 +112,8 @@ module RIPRouter
         RIP.udpOut --> udp.appIn[0];
         RIP.udpIn <-- udp.appOut[0];
 
-        udp.ipv6Out --> networkLayer.udpIn;
-        udp.ipv6In <-- networkLayer.udpOut;
+        udp.ipOut --> networkLayer.udpIn;
+        udp.ipIn <-- networkLayer.udpOut;
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
