@@ -1193,7 +1193,10 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
        {// check if RIP has that route and install it
            routingTableEntryInRIPRT = getRoutingTableEntry(route->getDestination(), route->getNetmask());
            if (routingTableEntryInRIPRT != NULL)
-               addRoutingTableEntryToGlobalRT(routingTableEntryInRIPRT);
+           {
+               if (!routingTableEntryInRIPRT->getGateway().isUnspecified())
+                   addRoutingTableEntryToGlobalRT(routingTableEntryInRIPRT);
+           }
        }
    }
 

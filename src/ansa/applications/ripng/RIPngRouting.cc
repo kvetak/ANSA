@@ -1161,7 +1161,10 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
        {// check if RIPng has that route and install it
            routingTableEntryInRIPngRT = getRoutingTableEntry(route->getDestPrefix(), route->getPrefixLength());
            if (routingTableEntryInRIPngRT != NULL)
-               addRoutingTableEntryToGlobalRT(routingTableEntryInRIPngRT);
+           {
+               if (!routingTableEntryInRIPngRT->getNextHop().isUnspecified())
+                   addRoutingTableEntryToGlobalRT(routingTableEntryInRIPngRT);
+           }
        }
    }
 

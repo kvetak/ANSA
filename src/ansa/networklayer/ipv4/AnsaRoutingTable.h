@@ -49,11 +49,17 @@ class INET_API AnsaRoutingTable : public RoutingTable {
       virtual ~AnsaRoutingTable();
 
     public:
+
+      /**
+       * reimplemented - adds ANSAIPv4Routes instead of IPv4Route
+       */
+      virtual void updateNetmaskRoutes();
+
       /**
        * Finds route to the given network.
        * @return NULL, if route does not exist
        */
-      virtual ANSAIPv4Route *findRoute(const IPv4Address& network, const IPv4Address& netmask);
+      virtual IPv4Route *findRoute(const IPv4Address& network, const IPv4Address& netmask);
 
       /**
        * Prepares routing table for adding new route.
@@ -62,7 +68,7 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        * @return true, if it is safe to add route,
        *         false otherwise
        */
-      virtual bool prepareForAddRoute(ANSAIPv4Route *route);
+      virtual bool prepareForAddRoute(IPv4Route *route);
 
       //rozsireni routing table
       virtual AnsaIPv4MulticastRoute *getRouteFor(IPv4Address group, IPv4Address source);
