@@ -989,7 +989,19 @@ void RIPngRouting::initialize(int stage)
     regularUpdateTimer = createAndStartTimer(RIPNG_GENERAL_UPDATE, regularUpdateTimeout);
     triggeredUpdateTimer = createTimer(RIPNG_TRIGGERED_UPDATE);
 
+    updateDisplayString();
+
     sendAllRoutesRequest();
+}
+
+void RIPngRouting::updateDisplayString()
+{
+    if (ev.isGUI())
+    {
+        char buf[40];
+        sprintf(buf, "%d routes", numRoutes);
+        getDisplayString().setTagArg("t", 0, buf);
+    }
 }
 
 void RIPngRouting::handleMessage(cMessage *msg)
@@ -1012,12 +1024,7 @@ void RIPngRouting::handleMessage(cMessage *msg)
         error("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
     }
 
-    if (ev.isGUI())
-    {
-        char buf[40];
-        sprintf(buf, "%d routes", numRoutes);
-        getDisplayString().setTagArg("t", 0, buf);
-    }
+    updateDisplayString();
 }
 
 void RIPngRouting::receiveChangeNotification(int category, const cObject *details)

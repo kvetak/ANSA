@@ -1021,7 +1021,19 @@ void RIPRouting::initialize(int stage)
     regularUpdateTimer = createAndStartTimer(RIP_GENERAL_UPDATE, regularUpdateTimeout);
     triggeredUpdateTimer = createTimer(RIP_TRIGGERED_UPDATE);
 
+    updateDisplayString();
+
     sendAllRoutesRequest();
+}
+
+void RIPRouting::updateDisplayString()
+{
+    if (ev.isGUI())
+    {
+        char buf[40];
+        sprintf(buf, "%d routes", numRoutes);
+        getDisplayString().setTagArg("t", 0, buf);
+    }
 }
 
 void RIPRouting::handleMessage(cMessage *msg)
@@ -1044,12 +1056,7 @@ void RIPRouting::handleMessage(cMessage *msg)
         error("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
     }
 
-    if (ev.isGUI())
-    {
-        char buf[40];
-        sprintf(buf, "%d routes", numRoutes);
-        getDisplayString().setTagArg("t", 0, buf);
-    }
+    updateDisplayString();
 }
 
 void RIPRouting::receiveChangeNotification(int category, const cObject *details)

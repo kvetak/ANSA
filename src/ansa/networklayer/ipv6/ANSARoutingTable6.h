@@ -139,7 +139,7 @@ class ANSARoutingTable6 : public RoutingTable6
      * Finds route with the given prefix and prefix length.
      * @return NULL, if route does not exist
      */
-    virtual ANSAIPv6Route *findRoute(const IPv6Address& prefix, int prefixLength);
+    virtual IPv6Route *findRoute(const IPv6Address& prefix, int prefixLength);
 
     /**
      * Prepares routing table for adding new route.
@@ -148,7 +148,7 @@ class ANSARoutingTable6 : public RoutingTable6
      * @return true, if it is safe to add route,
      *         false otherwise
      */
-    virtual bool prepareForAddRoute(ANSAIPv6Route *route);
+    virtual bool prepareForAddRoute(IPv6Route *route);
 
     virtual void addOrUpdateOnLinkPrefix(const IPv6Address& destPrefix, int prefixLength,
                                  int interfaceId, simtime_t expiryTime);
@@ -177,7 +177,7 @@ class ANSARoutingTable6 : public RoutingTable6
     /**
      * Must be reimplemented because of cache handling.
      */
-    virtual void removeRoute(ANSAIPv6Route *route);
+    virtual void removeRoute(IPv6Route *route);
 
     /**
      * To be called from route objects whenever a field changes. Used for
