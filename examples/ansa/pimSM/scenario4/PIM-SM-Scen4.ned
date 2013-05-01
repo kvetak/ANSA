@@ -22,6 +22,7 @@ package inet.examples.ansa.pimSM.scenario4;
 
 import inet.ansa.networklayer.pim.PIMRouter;
 import inet.ansa.nodes.inet.AnsaHost;
+import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.nodes.ethernet.Eth100M;
 import inet.world.scenario.ScenarioManager;
 
@@ -56,31 +57,31 @@ network pimSMScenario4
         }
         R4: PIMRouter {
             parameters:
-                @display("p=383,109");
+                @display("p=363,120");
             gates:
                 ethg[3];
         }
-        Source1: AnsaHost {
+        Source2: ANSAStandardHost {
             parameters:
-                @display("p=527,197");
+                @display("i=device/server;p=230,36");
             gates:
                 ethg[1];
         }
-        Source2: AnsaHost {
+        Source1: ANSAStandardHost {
             parameters:
-                @display("p=155,27");
+                @display("i=device/server;p=489,56");
             gates:
                 ethg[1];
         }
-        Host1: AnsaHost {
+        Host1: ANSAStandardHost {
             parameters:
                 @display("p=394,420");
             gates:
                 ethg[1];
         }
-        Host2: AnsaHost {
+        Host2: ANSAStandardHost {
             parameters:
-                @display("p=70,143");
+                @display("p=70,85");
             gates:
                 ethg[1];
         }

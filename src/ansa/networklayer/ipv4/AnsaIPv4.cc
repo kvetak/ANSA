@@ -140,6 +140,8 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
                 fromIE->ipv4Data()->removeMulticastListener(datagram->getDestAddress());
             else
                 fromIE->ipv4Data()->addMulticastListener(datagram->getDestAddress());
+
+            delete datagram;
             return;
         }
 

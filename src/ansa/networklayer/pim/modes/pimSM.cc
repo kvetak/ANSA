@@ -521,20 +521,20 @@ void pimSM::processJoinTimer(PIMjt *timer)
     if (timer->getJoinType() == SG)
     {
         route = rt->getRouteFor(timer->getGroup(), timer->getJoinPruneAddr());
-        if (route)
+        if (route && !route->isOilistNull())
             sendPIMJoinPrune(timer->getGroup(),timer->getJoinPruneAddr(),timer->getUpstreamNbr(),JoinMsg,SG);
     }
     else if (timer->getJoinType() == G)
     {
         route = rt->getRouteFor(timer->getGroup(), IPv4Address::UNSPECIFIED_ADDRESS);
-        if (route)
+        if (route && !route->isOilistNull())
             sendPIMJoinPrune(timer->getGroup(),timer->getJoinPruneAddr(),timer->getUpstreamNbr(),JoinMsg,G);
     }
     else
         throw cRuntimeError("pimSM::processJoinTimer - Bad Join type!");
 
     // restart JT timer
-    if (route)
+    if (route && !route->isOilistNull())
     {
         if (route->getJt())
         {
@@ -1609,7 +1609,7 @@ void pimSM::newMulticastReciever(addRemoveAddr *members)
             newRouteG->setInInt(newInIntG, newInIntG->getInterfaceId(), neighborToRP->getAddr());
 
             // create and set (*,G) ET timer
-            PIMet* timerEt = createExpiryTimer(outInt->getInterfaceId(),HOLDTIME,multGroup,IPv4Address::UNSPECIFIED_ADDRESS, G);
+            PIMet* timerEt = createExpiryTimer(outInt->getInterfaceId(),HOLDTIME_HOST,multGroup,IPv4Address::UNSPECIFIED_ADDRESS, G);
             PIMet* timerEtNI = createExpiryTimer(NO_INT_TIMER,HOLDTIME,multGroup,IPv4Address::UNSPECIFIED_ADDRESS, G);
             PIMjt* timerJt = createJoinTimer(multGroup, this->getRPAddress(), neighborToRP->getAddr(),G);
             newRouteG->setJt(timerJt);
