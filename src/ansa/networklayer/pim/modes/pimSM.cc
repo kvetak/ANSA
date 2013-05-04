@@ -234,10 +234,12 @@ PIMppt* pimSM::createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IP
  * DATA ON RPF INTERFACE
  *
  * The method process notification about data which appears on RPF interface. It means that source
- * is still active. The resault is resetting of Keep Alive Timer.
+ * is still active. The result is resetting of Keep Alive Timer. Also if first data packet arrive to
+ * last hop router in RPT, switchover to SPT has to be considered.
  *
  * @param newRoute Pointer to new entry in the multicast routing table.
  * @see PIMkat()
+ * @see getSPTthreshold()
  */
 void pimSM::dataOnRpf(AnsaIPv4MulticastRoute *route)
 {
@@ -256,6 +258,16 @@ void pimSM::dataOnRpf(AnsaIPv4MulticastRoute *route)
             if (!route->isFlagSet(AnsaIPv4MulticastRoute::T))
                 route->addFlag(AnsaIPv4MulticastRoute::T);
         }
+    }
+
+    //TODO SPT threshold at last hop router
+    if (route->isFlagSet(AnsaIPv4MulticastRoute::C))
+    {
+        if (this->getSPTthreshold() != "infinity")
+            EV << "pimSM::dataOnRpf - Last hop router should to send Join(S,G)" << endl;
+        else
+            EV << "pimSM::dataOnRpf - SPT threshold set to infinity" << endl;
+
     }
 }
 
@@ -1126,6 +1138,7 @@ void pimSM::processRegisterPacket(PIMRegister *pkt)
         if (!(newRoute = rt->getRouteFor(multGroup,multOrigin)))
         {
             InterfaceEntry *newInIntG = rt->getInterfaceForDestAddr(multOrigin);
+            std::cout << multOrigin << endl;
             PimNeighbor *pimIntfToDR = pimNbt->getNeighborByIntID(newInIntG->getInterfaceId());
             newRoute = routePointer;
             newRoute->setInInt(newInIntG, newInIntG->getInterfaceId(), pimIntfToDR->getAddr());

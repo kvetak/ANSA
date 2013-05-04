@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
-// @file finalTest.ned
-// @date 21.10.2011
+// @file PIM-SM-Scen2.ned
+// @date 18.2.2013
 // @author: Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
 // @brief Topology with PIM network
 
@@ -31,31 +31,31 @@ network pimSMScenario2
     @display("bgb=623,419");
 
     submodules:
-        R0: PIMRouter {
+        DR_R1: PIMRouter {
             parameters:
                 @display("p=86,336");
             gates:
                 ethg[3];
         }
-        R1: PIMRouter {
+        DR_R2: PIMRouter {
             parameters:
                 @display("p=86,218");
             gates:
                 ethg[4];
         }
-        R2_RP: PIMRouter {
+        RP: PIMRouter {
             parameters:
                 @display("p=410,218");
             gates:
                 ethg[3];
         }
-        R3: PIMRouter {
+        DR_S2: PIMRouter {
             parameters:
                 @display("p=246,113");
             gates:
                 ethg[3];
         }
-        R4: PIMRouter {
+        DR_S1: PIMRouter {
             parameters:
                 @display("p=399,25");
             gates:
@@ -67,27 +67,28 @@ network pimSMScenario2
             gates:
                 ethg[1];
         }
-        Host1: ANSAStandardHost {
+        Receiver1: ANSAStandardHost {
             parameters:
                 @display("p=410,336");
             gates:
                 ethg[1];
         }
-        Host2: ANSAStandardHost {
+        Receiver2: ANSAStandardHost {
             parameters:
                 @display("p=86,59");
             gates:
                 ethg[1];
         }
 
+
     connections allowunconnected:
-        R1.ethg[2] <--> Eth100M <--> R2_RP.ethg[1];
-        R1.ethg[1] <--> Eth100M <--> R3.ethg[1];
-        R2_RP.ethg[0] <--> Eth100M <--> R3.ethg[2];
-        R3.ethg[0] <--> Eth100M <--> R4.ethg[1];
-        R4.ethg[0] <--> Eth100M <--> Source1.ethg[0];
-        R0.ethg[1] <--> Eth100M <--> R1.ethg[0];
-        Host1.ethg[0] <--> Eth100M <--> R0.ethg[0];
-        Host2.ethg[0] <--> Eth100M <--> R1.ethg[3];
+        DR_R2.ethg[2] <--> Eth100M <--> RP.ethg[1];
+        DR_R2.ethg[1] <--> Eth100M <--> DR_S2.ethg[1];
+        RP.ethg[0] <--> Eth100M <--> DR_S2.ethg[2];
+        DR_S2.ethg[0] <--> Eth100M <--> DR_S1.ethg[1];
+        DR_S1.ethg[0] <--> Eth100M <--> Source1.ethg[0];
+        DR_R1.ethg[1] <--> Eth100M <--> DR_R2.ethg[0];
+        Receiver1.ethg[0] <--> Eth100M <--> DR_R1.ethg[0];
+        Receiver2.ethg[0] <--> Eth100M <--> DR_R2.ethg[3];
 
 }
