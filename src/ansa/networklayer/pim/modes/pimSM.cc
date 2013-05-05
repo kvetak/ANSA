@@ -1138,7 +1138,6 @@ void pimSM::processRegisterPacket(PIMRegister *pkt)
         if (!(newRoute = rt->getRouteFor(multGroup,multOrigin)))
         {
             InterfaceEntry *newInIntG = rt->getInterfaceForDestAddr(multOrigin);
-            std::cout << multOrigin << endl;
             PimNeighbor *pimIntfToDR = pimNbt->getNeighborByIntID(newInIntG->getInterfaceId());
             newRoute = routePointer;
             newRoute->setInInt(newInIntG, newInIntG->getInterfaceId(), pimIntfToDR->getAddr());
