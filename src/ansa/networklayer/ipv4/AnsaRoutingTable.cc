@@ -94,6 +94,8 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
         {
             if (routeInTable->getMetric() > route->getMetric())
                 removeRoute(routeInTable);
+            else
+                return false;
         }
         else
         {

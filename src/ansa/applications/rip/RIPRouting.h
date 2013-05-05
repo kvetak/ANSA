@@ -368,4 +368,4 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     virtual void updateDisplayString();
 };
 
-#endif /* RIPNGROUTING_H_ */
+#endif /* RIPROUTING_H_ */

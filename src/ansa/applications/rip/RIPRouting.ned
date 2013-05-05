@@ -41,7 +41,7 @@ simple RIPRouting
         int timeToLive = default(255);                     // if not -1 set Hop Limit field of sent packets to this value
                 
         string configFile;                                 // file name of the XML file which contains configuration for RIPng process
-        string deviceId;                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPngRouting)
+        string deviceId;                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPRouting)
         string deviceType;
         
         @display("i=block/network2");  

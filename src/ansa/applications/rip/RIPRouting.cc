@@ -28,6 +28,8 @@
 
 Define_Module(RIPRouting);
 
+//TODO: set context pointer to the timer messages - like RIPng
+
 std::ostream& operator<<(std::ostream& os, const RIP::RoutingTableEntry& e)
 {
     os << e.RIPInfo();
@@ -722,7 +724,8 @@ void RIPRouting::processRTEs(RIPMessage *response, int sourceIntId, IPv4Address 
 
 void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr)
 {
-    checkAndLogRTE(rte, sourceAddr);
+    if (!checkAndLogRTE(rte, sourceAddr))
+        return;
 
     IPv4Address &network = rte.getIPv4Address();
     IPv4Address netmask = IPv4Address::makeNetmask(rte.getNetMask());

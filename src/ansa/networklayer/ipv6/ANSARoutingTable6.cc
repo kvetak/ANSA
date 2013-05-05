@@ -41,7 +41,12 @@ std::string ANSAIPv6Route::info() const
     std::stringstream out;
 
     out << getRouteSrcName();
-    out << " " << getDestPrefix() << "/" << getPrefixLength();
+    out << " ";
+    if (getDestPrefix().isUnspecified())
+        out << "::";
+    else
+        out << getDestPrefix();
+    out << "/" << getPrefixLength();
     out << " [" << getAdminDist() << "/" << getMetric() << "]";
     out << " via ";
     if (getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
@@ -172,6 +177,8 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
         {
             if (routeInTable->getMetric() > route->getMetric())
                 removeRoute(routeInTable);
+            else
+                return false;
         }
         else
         {

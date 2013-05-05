@@ -152,7 +152,7 @@ class DeviceConfigurator : public cSimpleModule {
        * @param interface [in] interface, from which should be added prefixes
        * @see InterfaceTable
        */
-      void loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface);
+      void loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *process, cXMLElement *interface);
 
       ///////////////////////////
       // configuration for RIP //

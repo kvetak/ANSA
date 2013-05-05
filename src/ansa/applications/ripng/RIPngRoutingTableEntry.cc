@@ -34,7 +34,7 @@ RoutingTableEntry::RoutingTableEntry(IPv6Address destPrefix, int length) :
     _routeTag(0)
 {
     setRoutingProtocolSource(pRIP);
-    setAdminDist(dRIP);
+    setProcess(NULL);
     setTimer(NULL);
     setGCTimer(NULL);
     setCopy(NULL);
@@ -44,6 +44,7 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
     ANSAIPv6Route(entry.getDestPrefix(), entry.getPrefixLength(), IPv6Route::ROUTING_PROT),
     _changeFlag(false)
 {
+    setProcess(entry.getProcess());
     setRoutingProtocolSource(entry.getRoutingProtocolSource());
     setAdminDist(entry.getAdminDist());
     setTimer(NULL);
@@ -65,7 +66,11 @@ std::string RoutingTableEntry::RIPngInfo() const
     std::string expTime;
     std::stringstream out;
 
-    out << getDestPrefix() << "/" << getPrefixLength();
+    if (getDestPrefix().isUnspecified())
+        out << "::";
+    else
+        out << getDestPrefix();
+    out << "/" << getPrefixLength();
     out << ", metric " << getMetric();
     if (getCopy() != NULL)
         out << ", installed";
