@@ -344,7 +344,7 @@ bool AnsaRoutingTable::deleteMulticastRoute(const AnsaIPv4MulticastRoute *entry)
             delete entry->getPpt();
         }
         // delete timers from outgoing interfaces
-        InterfaceVector outInt = entry->getOutInt();
+        AnsaIPv4MulticastRoute::InterfaceVector outInt = entry->getOutInt();
         for (unsigned int j = 0;j < outInt.size(); j++)
         {
             if (outInt[j].pruneTimer != NULL)
@@ -448,33 +448,33 @@ void AnsaRoutingTable::generateShowIPMroute()
         if (ipr->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)
             if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
         os << "flags: ";
-        std::vector<flag> flags = ipr->getFlags();
+        std::vector<AnsaIPv4MulticastRoute::flag> flags = ipr->getFlags();
         for (unsigned int j = 0; j < flags.size(); j++)
         {
             switch(flags[j])
             {
-                case D:
+                case AnsaIPv4MulticastRoute::D:
                     os << "D";
                     break;
-                case S:
+                case AnsaIPv4MulticastRoute::S:
                     os << "S";
                     break;
-                case C:
+                case AnsaIPv4MulticastRoute::C:
                     os << "C";
                     break;
-                case P:
+                case AnsaIPv4MulticastRoute::P:
                     os << "P";
                     break;
-                case A:
+                case AnsaIPv4MulticastRoute::A:
                     os << "A";
                     break;
-                case F:
+                case AnsaIPv4MulticastRoute::F:
                     os << "F";
                     break;
-                case T:
+                case AnsaIPv4MulticastRoute::T:
                     os << "T";
                     break;
-                case NO_FLAG:
+                case AnsaIPv4MulticastRoute::NO_FLAG:
                     break;
             }
         }
@@ -487,17 +487,18 @@ void AnsaRoutingTable::generateShowIPMroute()
         else os << "RPF neighbor " << ipr->getInIntNextHop() << endl;
         os << "Outgoing interface list:" << endl;
 
-        InterfaceVector all = ipr->getOutInt();
+        AnsaIPv4MulticastRoute::InterfaceVector all = ipr->getOutInt();
         if (all.size() == 0)
             os << "Null" << endl;
         else
             for (unsigned int k = 0; k < all.size(); k++)
             {
-                if ((all[k].mode == Sparsemode && all[k].shRegTun == true) || all[k].mode == Densemode)
+                if ((all[k].mode == AnsaIPv4MulticastRoute::Sparsemode && all[k].shRegTun == true)
+                        || all[k].mode ==AnsaIPv4MulticastRoute:: Densemode)
                 {
                     os << all[k].intPtr->getName() << ", ";
-                    if (all[k].forwarding == Forward) os << "Forward/"; else os << "Pruned/";
-                    if (all[k].mode == Densemode) os << "Dense"; else os << "Sparse";
+                    if (all[k].forwarding == AnsaIPv4MulticastRoute::Forward) os << "Forward/"; else os << "Pruned/";
+                    if (all[k].mode == AnsaIPv4MulticastRoute::Densemode) os << "Dense"; else os << "Sparse";
                     os << endl;
                 }
                 else

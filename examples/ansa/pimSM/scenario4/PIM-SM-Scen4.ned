@@ -22,6 +22,7 @@ package inet.examples.ansa.pimSM.scenario4;
 
 import inet.ansa.networklayer.pim.PIMRouter;
 import inet.ansa.nodes.inet.AnsaHost;
+import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.nodes.ethernet.Eth100M;
 import inet.world.scenario.ScenarioManager;
 
@@ -30,70 +31,70 @@ network pimSMScenario4
     @display("bgb=567,467");
 
     submodules:
-        R0: PIMRouter {
+        DR_R1: PIMRouter {
             parameters:
                 @display("p=70,420");
             gates:
                 ethg[3];
         }
-        R1: PIMRouter {
+        DR_R2: PIMRouter {
             parameters:
                 @display("p=70,302");
             gates:
                 ethg[4];
         }
-        R2_RP: PIMRouter {
+        RP: PIMRouter {
             parameters:
                 @display("p=394,302");
             gates:
                 ethg[3];
         }
-        R3: PIMRouter {
+        DR_S2: PIMRouter {
             parameters:
                 @display("p=230,197");
             gates:
                 ethg[4];
         }
-        R4: PIMRouter {
+        DR_S1: PIMRouter {
             parameters:
-                @display("p=383,109");
+                @display("p=420,143");
             gates:
                 ethg[3];
         }
-        Source1: AnsaHost {
+        Source2: ANSAStandardHost {
             parameters:
-                @display("p=527,197");
+                @display("i=device/server;p=230,36");
             gates:
                 ethg[1];
         }
-        Source2: AnsaHost {
+        Source1: ANSAStandardHost {
             parameters:
-                @display("p=155,27");
+                @display("i=device/server;p=536,29");
             gates:
                 ethg[1];
         }
-        Host1: AnsaHost {
+        Receiver1: ANSAStandardHost {
             parameters:
                 @display("p=394,420");
             gates:
                 ethg[1];
         }
-        Host2: AnsaHost {
+        Receiver2: ANSAStandardHost {
             parameters:
-                @display("p=70,143");
+                @display("p=70,85");
             gates:
                 ethg[1];
         }
 
     connections allowunconnected:
-        R1.ethg[2] <--> Eth100M <--> R2_RP.ethg[1];
-        R1.ethg[1] <--> Eth100M <--> R3.ethg[1];
-        R2_RP.ethg[0] <--> Eth100M <--> R3.ethg[2];
-        R3.ethg[0] <--> Eth100M <--> R4.ethg[1];
-        R4.ethg[0] <--> Eth100M <--> Source1.ethg[0];
-        R0.ethg[1] <--> Eth100M <--> R1.ethg[0];
-        Host1.ethg[0] <--> Eth100M <--> R0.ethg[0];
-        Host2.ethg[0] <--> Eth100M <--> R1.ethg[3];
-        R3.ethg[3] <--> Eth100M <--> Source2.ethg[0];
+        DR_R2.ethg[2] <--> Eth100M <--> RP.ethg[1];
+        DR_R2.ethg[1] <--> Eth100M <--> DR_S2.ethg[1];
+        RP.ethg[0] <--> Eth100M <--> DR_S2.ethg[2];
+        DR_S2.ethg[0] <--> Eth100M <--> DR_S1.ethg[1];
+        DR_S1.ethg[0] <--> Eth100M <--> Source1.ethg[0];
+        DR_R1.ethg[1] <--> Eth100M <--> DR_R2.ethg[0];
+        Receiver1.ethg[0] <--> Eth100M <--> DR_R1.ethg[0];
+        Receiver2.ethg[0] <--> Eth100M <--> DR_R2.ethg[3];
+        DR_S2.ethg[3] <--> Eth100M <--> Source2.ethg[0];
 
 }

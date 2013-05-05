@@ -980,6 +980,7 @@ void DeviceConfigurator::loadPimGlobalConfig(pimSM *pimSMModule)
         if (SPTthreshold != NULL)
         {
             std::string SPTthresholdString = SPTthreshold->getNodeValue();
+            pimSMModule->setSPTthreshold(SPTthresholdString);
             EV << "SPTthreshold in config found: " << SPTthresholdString.c_str() << endl;
         }
     }
@@ -993,7 +994,7 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get PIM node
         cXMLElement* pimNode = iface->getElementByPath("Pim");
         if (pimNode == NULL)
-          continue;
+          break;                //FIXME it is break ok?
 
         // create new PIM interface
         PimInterface newentry;

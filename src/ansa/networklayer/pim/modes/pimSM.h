@@ -44,6 +44,7 @@
 #define JT 60.0                         /**< Join Timer */
 #define REGISTER_PROBE_TIME 5.0         /**< Register Probe Time */
 #define HOLDTIME 210.0                  /**< Holdtime for Expiry Timer */
+#define HOLDTIME_HOST 180.0             /**< Holdtime for interface ET connected to host */
 #define PPT 3.0                         /**< value for Prune-Pending Timer*/
 #define ALL_PIM_ROUTERS "224.0.0.13"    /**< Multicast address for PIM routers */
 #define MAX_TTL 255                     /**< Maximum TTL */

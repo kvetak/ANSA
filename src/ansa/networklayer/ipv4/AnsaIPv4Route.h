@@ -99,92 +99,80 @@ class ANSAIPv4Route : public IPv4Route
 /**
  * ANSAIPv4 multicast route in IRoutingTable.
  */
-
-/**
- * Route flags. Added to each route.
- */
-enum flag
-{
-    NO_FLAG,
-    D,              /**< Dense */
-    S,              /**< Sparse */
-    C,              /**< Connected */
-    P,              /**< Pruned */
-    A,              /**< Source is directly connected */
-    F,              /**< Register flag*/
-    T               /**< SPT bit*/
-};
-
-/**
- * States of each outgoing interface. E.g.: Forward/Dense.
- */
-enum intState
-{
-    Densemode = 1,
-    Sparsemode = 2,
-    Forward,
-    Pruned
-};
-
-/**
- * Assert States of each outgoing interface.
- */
-enum AssertState
-{
-    NoInfo = 0,
-    Winner = 1,
-    Loser = 2
-};
-
-/**
- * Register machine States.
- */
-enum RegisterState
-{
-  NoInfoRS = 0,
-  Join = 1,
-  Prune = 2,
-  JoinPending = 3
-};
-
-/**
- * @brief Structure of incoming interface.
- * @details E.g.: GigabitEthernet1/4, RPF nbr 10.10.51.145
- */
-struct inInterface
-{
-    InterfaceEntry          *intPtr;            /**< Pointer to interface */
-    int                     intId;              /**< Interface ID */
-    IPv4Address               nextHop;            /**< RF neighbor */
-};
-
-/**
- * @brief Structure of outgoing interface.
- * @details E.g.: Ethernet0, Forward/Sparse, 5:29:15/0:02:57
- */
-struct outInterface
-{
-    InterfaceEntry          *intPtr;            /**< Pointer to interface */
-    int                     intId;              /**< Interface ID */
-    intState                forwarding;         /**< Forward or Pruned */
-    intState                mode;               /**< Dense, Sparse, ... */
-    PIMpt                   *pruneTimer;        /**< Pointer to PIM Prune Timer*/
-    PIMet                   *expiryTimer;       /**< Pointer to PIM Expiry Timer*/
-    AssertState             assert;             /**< Assert state. */
-    RegisterState           regState;           /**< Register state. */
-    bool                    shRegTun;           /**< Show interface which is also register tunnel interface*/
-};
-
-/**
- * Vector of outgoing interfaces.
- */
-typedef std::vector<outInterface> InterfaceVector;
-
-
-
-
 class INET_API AnsaIPv4MulticastRoute : public IPv4MulticastRoute
 {
+    public:
+        /** Route flags. Added to each route. */
+        enum flag
+        {
+            NO_FLAG,
+            D,              /**< Dense */
+            S,              /**< Sparse */
+            C,              /**< Connected */
+            P,              /**< Pruned */
+            A,              /**< Source is directly connected */
+            F,              /**< Register flag*/
+            T               /**< SPT bit*/
+        };
+
+        /** States of each outgoing interface. E.g.: Forward/Dense. */
+        enum intState
+        {
+            Densemode = 1,
+            Sparsemode = 2,
+            Forward,
+            Pruned
+        };
+
+        /** Assert States of each outgoing interface. */
+        enum AssertState
+        {
+            NoInfo = 0,
+            Winner = 1,
+            Loser = 2
+        };
+
+        /**  Register machine States. */
+        enum RegisterState
+        {
+          NoInfoRS = 0,
+          Join = 1,
+          Prune = 2,
+          JoinPending = 3
+        };
+
+        /**
+         * @brief Structure of incoming interface.
+         * @details E.g.: GigabitEthernet1/4, RPF nbr 10.10.51.145
+         */
+        struct inInterface
+        {
+            InterfaceEntry          *intPtr;            /**< Pointer to interface */
+            int                     intId;              /**< Interface ID */
+            IPv4Address               nextHop;            /**< RF neighbor */
+        };
+
+        /**
+         * @brief Structure of outgoing interface.
+         * @details E.g.: Ethernet0, Forward/Sparse, 5:29:15/0:02:57
+         */
+        struct outInterface
+        {
+            InterfaceEntry          *intPtr;            /**< Pointer to interface */
+            int                     intId;              /**< Interface ID */
+            intState                forwarding;         /**< Forward or Pruned */
+            intState                mode;               /**< Dense, Sparse, ... */
+            PIMpt                   *pruneTimer;        /**< Pointer to PIM Prune Timer*/
+            PIMet                   *expiryTimer;       /**< Pointer to PIM Expiry Timer*/
+            AssertState             assert;             /**< Assert state. */
+            RegisterState           regState;           /**< Register state. */
+            bool                    shRegTun;           /**< Show interface which is also register tunnel interface*/
+        };
+
+        /** Vector of outgoing interfaces. */
+        typedef std::vector<outInterface> InterfaceVector;
+
+
     private:
         IPv4Address                 RP;                     /**< Randevous point */
         std::vector<flag>           flags;                  /**< Route flags */
