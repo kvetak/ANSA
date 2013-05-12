@@ -110,6 +110,7 @@ class RIPngProcess
      * Used by RIPng interfaces only!
      */
     void setDefaultInformation(bool d) { if (d) ++numOfDefaultInformationInterfaces; else --numOfDefaultInformationInterfaces; }
+
     bool sendingDefaultInformation() { return (numOfDefaultInformationInterfaces > 0) ? true : false; }
 
     void enableSplitHorizon()  { splitHorizon = true; }

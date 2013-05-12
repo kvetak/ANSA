@@ -58,6 +58,8 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
 
 RoutingTableEntry::~RoutingTableEntry()
 {
+    if (_copy != NULL)
+        _copy->setCopy(NULL);
 }
 
 std::string RoutingTableEntry::RIPngInfo() const

@@ -51,6 +51,7 @@ RIPngProcess::RIPngProcess(const char *name, RIPngRouting *RIPngModule) :
     setConnNetworkMetric(RIPngModule->getConnNetworkMetric());
     setInfiniteMetric(RIPngModule->getInfinityMetric());
 
+    hostName = RIPngModule->getHostName();
     routeTimeout = RIPngModule->getRouteTimeout();
     routeGarbageCollectionTimeout = RIPngModule->getRouteGarbageCollectionTimeout();
     regularUpdateTimeout = RIPngModule->getRegularUpdateTimeout();
@@ -549,17 +550,33 @@ void RIPngProcess::setInterfaceDefaultInformation(RIPng::Interface *RIPngInterfa
 void RIPngProcess::setInterfaceSplitHorizon(RIPng::Interface *RIPngInterface, bool status)
 {
     if (status)
+    {
+        ev << "   Enabling";
         RIPngInterface->enableSplitHorizon();
+    }
     else
+    {
+        ev << "   Disabling";
         RIPngInterface->disableSplitHorizon();
+    }
+
+    ev << " split horizon (interface id: " << RIPngInterface->getId() << ")." << routerText << endl;
 }
 
 void RIPngProcess::setInterfacePoisonReverse(RIPng::Interface *RIPngInterface, bool status)
 {
     if (status)
+    {
+        ev << "   Enabling";
         RIPngInterface->enablePoisonReverse();
+    }
     else
+    {
+        ev << "   Disabling";
         RIPngInterface->disablePoisonReverse();
+    }
+
+    ev << " poison reverse (interface id: " << RIPngInterface->getId() << ")." << routerText << endl;
 }
 
 void RIPngProcess::addRoutingTableEntryToGlobalRT(RIPng::RoutingTableEntry* entry)

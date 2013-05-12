@@ -71,6 +71,8 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
     Sockets sockets;
 
   public:
+    std::string getHostName() { return hostName; }
+
     unsigned int getDistance() { return distance; }
     int getConnNetworkMetric() { return connNetworkMetric; }
     int getInfinityMetric() { return infinityMetric; }

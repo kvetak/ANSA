@@ -145,6 +145,15 @@ class ANSARoutingTable6 : public RoutingTable6
      * Prepares routing table for adding new route.
      * e.g. removes route with the same prefix, prefix length and lower administrative distance
      * and purge destination cache
+     *
+     * Method uses removeRouteSilent() for removing routes - NF_IPv6_ROUTE_DELETED notification cannot be fired,
+     * because other routing protocol listening to this notification could add his route (route is already deleted
+     * so this route would be added without any problem with administrative distance), than this method
+     * return true and the protocol calling this method adds his route also.
+     *
+     * One could create another notification, like NF_IPv6_ROUTE_DELETED_INTERNAL, in the future.
+     * Adding a route would not be allowed on receipt this notification.
+     *
      * @return true, if it is safe to add route,
      *         false otherwise
      */
@@ -178,6 +187,12 @@ class ANSARoutingTable6 : public RoutingTable6
      * Must be reimplemented because of cache handling.
      */
     virtual void removeRoute(IPv6Route *route);
+
+    /**
+     * Same as removeRoute, except route deleted notification is not fired.
+     * @see prapareForAddRoute
+     */
+    virtual void removeRouteSilent(IPv6Route *route);
 
     /**
      * To be called from route objects whenever a field changes. Used for

@@ -5,10 +5,7 @@
                 <IPAddress>12.12.12.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:12::1/64</IPv6Address>
-                <RIPng name="RIPng1">
-                	<MetricOffset>1</MetricOffset>
-                	<SplitHorizon>disable</SplitHorizon>
-                </RIPng>
+                <RIPng name="RIPng1"/>
             </Interface>
             <Interface name="eth2">
                 <IPAddress>1.1.1.1</IPAddress>
@@ -35,16 +32,7 @@
         </Interfaces>
         
         <Routing6>
-        	<RIPng name="RIPng1">
-        		<Port>521</Port>
-        		<Address>FF02::9</Address>
-        		<Distance>100</Distance>
-        		<Timers>
-        			<Update>5</Update>
-        			<Route>100</Route>
-        			<Garbage>150</Garbage>
-        		</Timers>
-        	</RIPng>
+        	<RIPng name="RIPng1"/>
         </Routing6>
     </Router>
     
@@ -81,8 +69,7 @@
         </Interfaces>
         
         <Routing6>
-        	<RIPng name="RIPng1">
-        	</RIPng>
+        	<RIPng name="RIPng1"/>
         </Routing6>
     </Router>
     
@@ -92,12 +79,7 @@
                 <IPAddress>13.13.13.3</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:13::3/64</IPv6Address>
-                <RIPng name="RIPng1">
-                    <DefaultInformation>
-                		<Metric>1</Metric>
-                		<DefaultOnly>true</DefaultOnly>
-                	</DefaultInformation>
-               	</RIPng>
+                <RIPng name="RIPng1"/>
             </Interface>
             <Interface name="eth2">
                 <IPAddress>5.5.5.5</IPAddress>
@@ -119,29 +101,17 @@
                 <IPAddress>23.23.23.2</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:23::3/64</IPv6Address>
-                 <RIPng name="RIPng1">
-                    <DefaultInformation>
-                		<Metric>1</Metric>
-                		<DefaultOnly>true</DefaultOnly>
-                	</DefaultInformation>
-               	</RIPng>
+                <RIPng name="RIPng1"/>
             </Interface>
             <Interface name="eth4">
                 <IPAddress>34.34.34.3</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:34::3/64</IPv6Address>
-                <RIPng name="RIPng1">
-                    <DefaultInformation>
-                		<Metric>1</Metric>
-                		<DefaultOnly>true</DefaultOnly>
-                	</DefaultInformation>
-               	</RIPng>
             </Interface>
         </Interfaces>
         
         <Routing6>
-        	<RIPng name="RIPng1">
-        	</RIPng>
+        	<RIPng name="RIPng1"/>
         </Routing6>
     </Router>
     
@@ -151,7 +121,6 @@
                 <IPAddress>34.34.34.4</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:34::4/64</IPv6Address>
-                <RIPng name="RIPng1"/>
             </Interface>
             <Interface name="eth1">
                 <IPAddress>7.7.7.7</IPAddress>
@@ -164,8 +133,7 @@
         </Interfaces>
         
         <Routing6>
-        	<RIPng name="RIPng1">
-        	</RIPng>
+        	<RIPng name="RIPng1"/>
         </Routing6>
     </Router>
     

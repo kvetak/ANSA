@@ -24,58 +24,57 @@ import inet.world.scenario.ScenarioManager;
 
 network RIPngTestNetwork
 {
-    @display("bgb=376,240");
+    @display("bgb=416,274,grey,black");
     types:
     submodules:
         router1: RIPngRouter {
             parameters:
-                @display("p=122,78");
+                @display("p=121,78");
             gates:
                 ethg[4];
 
         }
         router2: RIPngRouter {
             parameters:
-                @display("p=220,78");
+                @display("p=257,78");
             gates:
                 ethg[4];
         }
         router3: RIPngRouter {
             parameters:
-                @display("p=173,152");
+                @display("p=187,162");
             gates:
                 ethg[5];
         }
         router4: RIPngRouter {
             parameters:
-                @display("p=98,199");
+                @display("p=112,199");
             gates:
                 ethg[2];
         }
         LAN2: ANSAStandardHost6 {
-            @display("p=53,118;i=cloud_s");
+            @display("p=51,125;i=cloud_s");
         }
         LAN4: ANSAStandardHost6 {
-            @display("p=304,118;i=cloud_s");
+            @display("p=332,118;i=cloud_s");
         }
         LAN3: ANSAStandardHost6 {
-            @display("p=304,37;i=cloud_s");
+            @display("p=332,37;i=cloud_s");
         }
         LAN1: ANSAStandardHost6 {
-            @display("p=53,37;i=cloud_s");
+            @display("p=51,37;i=cloud_s");
         }
         LAN5: ANSAStandardHost6 {
-            @display("p=173,208;i=cloud_s");
+            @display("p=187,221;i=cloud_s");
         }
         LAN6: ANSAStandardHost6 {
-            @display("p=251,208;i=cloud_s");
+            @display("p=265,221;i=cloud_s");
         }
         LAN7: ANSAStandardHost6 {
-            @display("p=31,208;i=cloud_s");
+            @display("p=51,221;i=cloud_s");
         }
         scenarioManager: ScenarioManager {
-            @display("p=327,208");
-            script = xmldoc("scenario.xml");
+            @display("p=364,239");
         }
     connections:
         router1.ethg[0] <--> Eth100M <--> router2.ethg[0];

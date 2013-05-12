@@ -24,7 +24,43 @@ ANSAUDP::~ANSAUDP()
 {
 }
 
-UDP::SockDesc *ANSAUDP::findSocketByLocalAddress(const IPvXAddress& localAddr, ushort localPort)
+void ANSAUDP::bind(int sockId, int gateIndex, const IPvXAddress& localAddr, int localPort)
+{
+    if (sockId == -1)
+        error("sockId in BIND message not filled in");
+
+    if (localPort<-1 || localPort>65535) // -1: ephemeral port
+        error("bind: invalid local port number %d", localPort);
+
+    // do not allow two apps to bind to the same address/port combination
+    SockDesc *existing = ANSAfindSocketByLocalAddress(localAddr, localPort);
+    if (existing != NULL)
+        error("bind: local address/port %s:%u already taken", localAddr.str().c_str(), localPort);
+
+    SocketsByIdMap::iterator it = socketsByIdMap.find(sockId);
+    if (it != socketsByIdMap.end())
+    {
+        SockDesc *sd = it->second;
+        if (sd->isBound)
+            error("bind: socket is already bound (sockId=%d)", sockId);
+
+        sd->isBound = true;
+        sd->localAddr = localAddr;
+        if (localPort != -1 && sd->localPort != localPort)
+        {
+            socketsByPortMap[sd->localPort].remove(sd);
+            sd->localPort = localPort;
+            socketsByPortMap[sd->localPort].push_back(sd);
+        }
+    }
+    else
+    {
+        SockDesc *sd = createSocket(sockId, gateIndex, localAddr, localPort);
+        sd->isBound = true;
+    }
+}
+
+UDP::SockDesc *ANSAUDP::ANSAfindSocketByLocalAddress(const IPvXAddress& localAddr, ushort localPort)
 {
     SocketsByPortMap::iterator it = socketsByPortMap.find(localPort);
     if (it == socketsByPortMap.end())

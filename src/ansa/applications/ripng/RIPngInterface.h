@@ -123,7 +123,7 @@ struct Socket
 struct GlobalSocket
 {
     UDPSocket socket;                          ///< Socket for "send" messages with global unicast address as a source
-    std::vector<RIPngProcess *> processes;     ///< RIPng processes using that socket (port)
+    std::vector<RIPngProcess *> processes;     ///< RIPng processes using that socket
 
     int removeProcess(RIPngProcess *process)
     {

@@ -171,12 +171,12 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
 
         if (oldAdminDist > newAdminDist)
         {
-            removeRoute(routeInTable);
+            removeRouteSilent(routeInTable);
         }
         else if(oldAdminDist == newAdminDist)
         {
             if (routeInTable->getMetric() > route->getMetric())
-                removeRoute(routeInTable);
+                removeRouteSilent(routeInTable);
             else
                 return false;
         }
@@ -185,8 +185,6 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
             return false;
         }
     }
-
-    return true;
 
     /*XXX: this deletes some cache entries we want to keep, but the node MUST update
      the Destination Cache in such a way that all entries will use the latest
@@ -317,6 +315,7 @@ void ANSARoutingTable6::addRoutingProtocolRoute(ANSAIPv6Route *route)
 
 void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
 {
+    //TODO: invalidate cache
     route->setRoutingTable(this);
     routeList.push_back(route);
 
@@ -335,6 +334,24 @@ void ANSARoutingTable6::removeRoute(IPv6Route *route)
     ASSERT(it!=routeList.end());
 
     nb->fireChangeNotification(NF_IPv6_ROUTE_DELETED, route); // rather: going to be deleted
+
+    routeList.erase(it);
+
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that all entries using the next-hop from
+     the deleted route perform next-hop determination again rather than continue
+     sending traffic using that deleted route next-hop.*/
+    purgeDestCache();
+
+    delete route;
+
+    updateDisplayString();
+}
+
+void ANSARoutingTable6::removeRouteSilent(IPv6Route *route)
+{
+    RouteList::iterator it = std::find(routeList.begin(), routeList.end(), route);
+    ASSERT(it!=routeList.end());
 
     routeList.erase(it);
 

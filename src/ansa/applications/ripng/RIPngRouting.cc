@@ -39,7 +39,10 @@ std::ostream& operator<<(std::ostream& os, RIPngProcess& p)
     os << "; poison reverse is ";
         if (p.isPoisonReverse()) os << "on"; else os << "off";
     os << endl;
-    os << "   Default routes are ;" << endl;
+    os << "   Default routes are ";
+    if (!p.sendingDefaultInformation())
+        os << "not ";
+    os << "generated" << endl;
     os << "   Periodic updates " << p.getRegularUpdates() << ", trigger updates " << p.getTriggerUpdates() << endl;
     os << " Interfaces:" << endl;
     os << "   ";
@@ -265,9 +268,9 @@ void RIPngRouting::moveProcessToSocket(RIPngProcess *process, int oldPort, int p
             int numOldSocketProcesses = oldSocket->processes.size();
             if (numOldSocketProcesses <= 1)
             {//If this was last process which has been using that socket for receiving messages
-                oldSocket->socket.leaveMulticastGroup(multicastAddress);
+                //Leaving multicast groups is not necessary, since it has no effect when
+                //closing socket (multicast addresses cannot be removed from the interfaces).
                 oldSocket->socket.close();
-
                 globalSockets.erase(it);
                 delete oldSocket;
             }
@@ -292,6 +295,7 @@ void RIPngRouting::moveProcessToSocket(RIPngProcess *process, int oldPort, int p
     else
     {
         it->second->processes.push_back(process);
+        it->second->socket.joinMulticastGroup(multicastAddress, -1);
     }
 
     unsigned long numInterfaces = process->getEnabledInterfacesCount();
@@ -332,13 +336,24 @@ void RIPngRouting::forwardRIPngMessage(RIPngMessage *msg)
     UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
     int sourceInterfaceId = controlInfo->getInterfaceId();
     int destPort = controlInfo->getDestPort();
+    const IPv6Address &destAddr = controlInfo->getDestAddr().get6();
 
     Sockets::iterator it = sockets.find(SocketsKey(sourceInterfaceId, destPort));
     if (it != sockets.end())
-    {//Forward the message to the RIPng process
-        RIPngProcess *process = it->second->RIPngInterfaces[0]->getProcess();
-        if (process)
-            process->handleRIPngMessage(msg);
+    {//Forward the message to the RIPng process running on the given port
+        std::vector<RIPng::Interface *> ifaces = it->second->RIPngInterfaces;
+        int numInterfaces = ifaces.size();
+        for (int i = 0; i < numInterfaces; ++i)
+        {
+            RIPngProcess *process = ifaces[i]->getProcess();
+            // If destAddr is unicast forward to the first process on the interface
+            // else forward to the process with the given multicast-address
+            if (process && (destAddr.isUnicast() || process->getRIPngAddress() == destAddr))
+            {
+                process->handleRIPngMessage(msg);
+                break;
+            }
+        }
     }
 
     delete msg;
