@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Routers>
 <!-- Host1 -->
-	<Router id="Host1">
+	<Host id="Host1">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.30.100</IPAddress>
@@ -18,9 +18,9 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 	<!-- Host2 -->
-	<Router id="Host2">
+	<Host id="Host2">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.30.101</IPAddress>
@@ -37,7 +37,7 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 	<RBridge id="rB1">
   		<Routing>
   			<ISIS>

@@ -15,6 +15,7 @@
 
 package inet.ansa.nodes.inet;
 
+import inet.ansa.util.IPGen.AnsaIPTrafGen;
 import inet.nodes.inet.StandardHost;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 
@@ -36,4 +37,13 @@ module ANSAStandardHost extends StandardHost
             configFile = configFile;
             @display("p=61,54");
         }
+
+        ipTrafGen: AnsaIPTrafGen {
+            parameters:
+                @display("p=580,287;i=block/circle");
+        }
+
+    connections allowunconnected:
+        ipTrafGen.ipOut --> networkLayer.rsvpIn;
+        ipTrafGen.ipIn <-- networkLayer.rsvpOut;
 }

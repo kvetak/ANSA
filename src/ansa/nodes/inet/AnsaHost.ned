@@ -51,7 +51,7 @@ module AnsaHost
         string deviceId = default("");
         string configFile = default("");
         xml routingTable = default(xml("<routingTable/>"));  // Routing table is filled by deviceConfigurator
-        bool IPForward = default(true);
+        bool IPForward = default(false);
 
 		int numUdpApps = default(0);
         bool legacyForwardIPv4 = default(false);

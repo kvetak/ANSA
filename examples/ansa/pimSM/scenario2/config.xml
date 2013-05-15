@@ -3,7 +3,7 @@
 <Devices>
 	<!-- Hosts -->
 	<!-- Source1 -->
-	<Router id="172.16.40.100">
+	<Host id="172.16.40.100">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.40.100</IPAddress>
@@ -20,9 +20,9 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 	<!-- Host1 -->
-	<Router id="172.16.30.100">
+	<Host id="172.16.30.100">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.30.100</IPAddress>
@@ -39,9 +39,9 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 	<!-- Host2 -->
-	<Router id="172.16.20.100">
+	<Host id="172.16.20.100">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>172.16.20.100</IPAddress>
@@ -58,15 +58,15 @@
 				</Route>
 			</Static>	
 		</Routing>
-	</Router>
+	</Host>
 
-	<!-- R0 -->
+	<!-- R0 = DR_R1 -->
 	<Router id="192.168.0.1">
 		<Routing>
 			<Multicast enable="1">
 				<Pim>
 					<RPAddress>
-						<IPAddress>192.168.23.1</IPAddress>
+						<IPAddress>10.2.2.2</IPAddress>
 					</RPAddress>
 					<SPTthreshold>infinity</SPTthreshold>
 				</Pim>
@@ -78,12 +78,32 @@
 					<NextHopAddress>192.168.1.2</NextHopAddress>
 				</Route>
 				<Route>
+					<NetworkAddress>192.168.13.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
+				<Route>
 					<NetworkAddress>192.168.23.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
 					<NextHopAddress>192.168.1.2</NextHopAddress>
 				</Route>
 				<Route>
+					<NetworkAddress>192.168.34.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
+				<Route>
 					<NetworkAddress>172.16.40.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>172.16.20.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>10.2.2.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
 					<NextHopAddress>192.168.1.2</NextHopAddress>
 				</Route>
@@ -108,13 +128,13 @@
 	</Router>
 
 	<!-- Routers -->
-	<!-- R1 -->
+	<!-- R1 = DR_R2 -->
 	<Router id="192.168.11.1">
 		<Routing>
 			<Multicast enable="1">
 				<Pim>
 					<RPAddress>
-						<IPAddress>192.168.23.1</IPAddress>
+						<IPAddress>10.2.2.2</IPAddress>
 					</RPAddress>
 					<SPTthreshold>infinity</SPTthreshold>
 				</Pim>
@@ -132,6 +152,16 @@
 				</Route>
 				<Route>
 					<NetworkAddress>192.168.23.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.34.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>10.2.2.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
 					<NextHopAddress>192.168.12.2</NextHopAddress>
 				</Route>
@@ -169,18 +199,28 @@
     	</Interfaces>
 	</Router>
 	
-	<!-- R2 -->
+	<!-- R2 = RP-->
 	<Router id="192.168.12.2">
 		<Routing>
 			<Multicast enable="1">
 				<Pim>
 					<RPAddress>
-						<IPAddress>192.168.23.1</IPAddress>
+						<IPAddress>10.2.2.2</IPAddress>
 					</RPAddress>
 					<SPTthreshold>infinity</SPTthreshold>
 				</Pim>
 			</Multicast>	
 			<Static>
+				<Route>
+					<NetworkAddress>172.16.20.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>172.16.30.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.12.1</NextHopAddress>
+				</Route>
 				<Route>
 					<NetworkAddress>172.16.40.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
@@ -192,9 +232,9 @@
 					<NextHopAddress>192.168.23.2</NextHopAddress>
 				</Route>
 				<Route>
-					<NetworkAddress>172.16.30.0</NetworkAddress>
+					<NetworkAddress>192.168.13.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
-					<NextHopAddress>192.168.13.1</NextHopAddress>
+					<NextHopAddress>192.168.12.1</NextHopAddress>
 				</Route>
 				<Route>
 					<NetworkAddress>192.168.1.0</NetworkAddress>
@@ -218,21 +258,30 @@
 					<Mode>sparse-mode</Mode>
 			 	</Pim>
       		</Interface>
+      		<Interface name="lo0">
+        		<IPAddress>10.2.2.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+      		</Interface>
     	</Interfaces>
 	</Router>
 	
-	<!-- R3 -->
+	<!-- R3 = DR_S2 -->
 	<Router id="192.168.13.3">
 		<Routing>
 			<Multicast enable="1">
 				<Pim>
 					<RPAddress>
-						<IPAddress>192.168.23.1</IPAddress>
+						<IPAddress>10.2.2.2</IPAddress>
 					</RPAddress>
 					<SPTthreshold>infinity</SPTthreshold>
 				</Pim>
 			</Multicast>	
 			<Static>
+				<Route>
+					<NetworkAddress>172.16.20.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.1</NextHopAddress>
+				</Route>
 				<Route>
 					<NetworkAddress>172.16.30.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
@@ -249,7 +298,17 @@
 					<NextHopAddress>192.168.23.1</NextHopAddress>
 				</Route>
 				<Route>
+					<NetworkAddress>192.168.13.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.13.1</NextHopAddress>
+				</Route>
+				<Route>
 					<NetworkAddress>192.168.12.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.23.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>10.2.2.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
 					<NextHopAddress>192.168.23.1</NextHopAddress>
 				</Route>
@@ -279,20 +338,40 @@
       		</Interface>
     	</Interfaces>
 	</Router>
-	<!-- R4 -->
+	<!-- R4 = DR_S1 -->
 	<Router id="192.168.14.4">
 		<Routing>
 			<Multicast enable="1">
 				<Pim>
 					<RPAddress>
-						<IPAddress>192.168.23.1</IPAddress>
+						<IPAddress>10.2.2.2</IPAddress>
 					</RPAddress>
 					<SPTthreshold>infinity</SPTthreshold>
 				</Pim>
 			</Multicast>	
 			<Static>
 				<Route>
+					<NetworkAddress>172.16.20.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>172.16.30.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>10.2.2.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+				<Route>
 					<NetworkAddress>192.168.23.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.34.1</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.13.0</NetworkAddress>
 					<NetworkMask>255.255.255.0</NetworkMask>
 					<NextHopAddress>192.168.34.1</NextHopAddress>
 				</Route>

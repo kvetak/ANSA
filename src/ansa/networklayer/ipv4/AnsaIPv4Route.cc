@@ -28,7 +28,17 @@ std::string ANSAIPv4Route::info() const
     std::stringstream out;
 
     out << getRouteSrcName();
-    out << " " << getDestination() << "/" << getNetmask();
+    out << " ";
+    if (getDestination().isUnspecified())
+        out << "0.0.0.0";
+    else
+        out << getDestination();
+
+    out << "/";
+    if (getNetmask().isUnspecified())
+        out << "0";
+    else
+        out << getNetmask().getNetmaskLength();
 
     if (getGateway().isUnspecified())
     {
@@ -56,6 +66,7 @@ const char *ANSAIPv4Route::getRouteSrcName() const
     switch (getSource())
     {
         case MANUAL:
+        case IFACENETMASK:
             if (getGateway().isUnspecified())
                 return "C";
             return "S";
@@ -172,7 +183,7 @@ void AnsaIPv4MulticastRoute::setRegStatus(int intId, RegisterState regState)
     }
 }
 
-RegisterState AnsaIPv4MulticastRoute::getRegStatus(int intId)
+AnsaIPv4MulticastRoute::RegisterState AnsaIPv4MulticastRoute::getRegStatus(int intId)
 {
     unsigned int i;
     for (i = 0; i < outInt.size(); i++)

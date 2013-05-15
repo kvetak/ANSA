@@ -100,11 +100,37 @@ cXMLElement * xmlParser::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
 cXMLElement * xmlParser::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
-   // initial call of the method - find <Routing6> -> <Static>
+   // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
    if (device != NULL){
 
       cXMLElement *routing = device->getFirstChildWithTag("Routing6");
+      if (routing == NULL)
+         return NULL;
+
+      cXMLElement *staticRouting = routing->getFirstChildWithTag("Static");
+      if (staticRouting == NULL)
+         return NULL;
+
+      route = staticRouting->getFirstChildWithTag("Route");
+
+   // repeated call - get another "Route" sibling node
+   }else if (route != NULL){
+      route = route->getNextSiblingWithTag("Route");
+   }else{
+      route = NULL;
+   }
+
+   return route;
+}
+
+cXMLElement * xmlParser::GetStaticRoute(cXMLElement *route, cXMLElement *device){
+
+   // initial call of the method - find <Routing6> -> <Static>
+   // and then get first "Route" child node
+   if (device != NULL){
+
+      cXMLElement *routing = device->getFirstChildWithTag("Routing");
       if (routing == NULL)
          return NULL;
 
@@ -226,7 +252,7 @@ cXMLElement * xmlParser::GetIsisRouting(cXMLElement * device)
     return isis;
 }
 
-const char *xmlParser::getNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue)
+const char *xmlParser::GetNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue)
 {
     ASSERT(node != NULL);
 
@@ -246,24 +272,80 @@ const char *xmlParser::getNodeParamConfig(cXMLElement *node, const char *paramNa
 //- configuration for RIPng
 //
 //
-const char *xmlParser::getInterfaceRIPngStatus(cXMLElement *iface)
+cXMLElement *xmlParser::GetInterfaceRIPngProcess(cXMLElement *ripng, cXMLElement *iface)
 {
-    return getNodeParamConfig(iface, "RIPngInterfaceStatus", "disable");
+    // initial call of the method - get first "RIPng" child node
+    if (iface != NULL)
+    {
+        ripng = iface->getFirstChildWithTag("RIPng");
+    // repeated call - get another "RIPng" sibling node
+    }
+    else if (ripng != NULL)
+    {
+        ripng = ripng->getNextSiblingWithTag("RIPng");
+    }
+    else
+    {
+        ripng = NULL;
+    }
+
+    return ripng;
 }
 
-const char *xmlParser::getRIPngInterfacePassiveStatus(cXMLElement *iface)
+const char *xmlParser::GetInterfaceRIPngPassiveStatus(cXMLElement *ripng)
 {
-    return getNodeParamConfig(iface, "RIPngPassiveInterface", "disable");
+    return GetNodeParamConfig(ripng, "PassiveInterface", "disable");
 }
 
-const char *xmlParser::getRIPngInterfaceSplitHorizon(cXMLElement *iface)
+const char *xmlParser::GetInterfaceRIPngSplitHorizon(cXMLElement *ripng)
 {
-    return getNodeParamConfig(iface, "RIPngSplitHorizon", "enable");
+    return GetNodeParamConfig(ripng, "SplitHorizon", "enable");
 }
 
-const char *xmlParser::getRIPngInterfacePoisonReverse(cXMLElement *iface)
+const char *xmlParser::GetInterfaceRIPngPoisonReverse(cXMLElement *ripng)
 {
-    return getNodeParamConfig(iface, "RIPngPoisonReverse", "disable");
+    return GetNodeParamConfig(ripng, "PoisonReverse", "disable");
+}
+
+cXMLElement *xmlParser::GetInterfaceRIPngDefaultInformation(cXMLElement *ripng)
+{
+    return ripng->getFirstChildWithTag("DefaultInformation");
+}
+
+const char  *xmlParser::GetInterfaceRIPngMetricOffset(cXMLElement *ripng)
+{
+    return GetNodeParamConfig(ripng, "MetricOffset", "0");
+}
+
+cXMLElement *xmlParser::GetRIPngProcess(cXMLElement *process, cXMLElement *device)
+{
+    // initial call of the method - find <Routing6> -> <RIPng>
+    // and then get first "RIPng" child node
+    if (device != NULL)
+    {
+        cXMLElement *routing = device->getFirstChildWithTag("Routing6");
+        if (routing == NULL)
+            return NULL;
+
+        process = routing->getFirstChildWithTag("RIPng");
+
+    // repeated call - get another "RIPng" sibling node
+    }
+    else if (process != NULL)
+    {
+        process = process->getNextSiblingWithTag("RIPng");
+    }
+    else
+    {
+        process = NULL;
+    }
+
+    return process;
+}
+
+cXMLElement *xmlParser::GetRIPngProcessTimers(cXMLElement *process)
+{
+    return process->getFirstChildWithTag("Timers");
 }
 
 //
@@ -272,7 +354,7 @@ const char *xmlParser::getRIPngInterfacePoisonReverse(cXMLElement *iface)
 //
 //
 
-cXMLElement *xmlParser::getRIPNetwork(cXMLElement *network, cXMLElement *device)
+cXMLElement *xmlParser::GetRIPNetwork(cXMLElement *network, cXMLElement *device)
 {
     // initial call of the method - find <Routing> -> <RIP>
     // and then get first "Network" child node
@@ -298,7 +380,7 @@ cXMLElement *xmlParser::getRIPNetwork(cXMLElement *network, cXMLElement *device)
     return network;
 }
 
-cXMLElement *xmlParser::getRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device)
+cXMLElement *xmlParser::GetRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device)
 {
     // initial call of the method - find <Routing> -> <RIP>
     // and then get first "Passive-interface" child node
@@ -324,14 +406,14 @@ cXMLElement *xmlParser::getRIPPassiveInterface(cXMLElement *passiveInterface, cX
     return passiveInterface;
 }
 
-const char *xmlParser::getRIPInterfaceSplitHorizon(cXMLElement *iface)
+const char *xmlParser::GetRIPInterfaceSplitHorizon(cXMLElement *iface)
 {
-    return getNodeParamConfig(iface, "RIPSplitHorizon", "enable");
+    return GetNodeParamConfig(iface, "RIPSplitHorizon", "enable");
 }
 
-const char *xmlParser::getRIPInterfacePoisonReverse(cXMLElement *iface)
+const char *xmlParser::GetRIPInterfacePoisonReverse(cXMLElement *iface)
 {
-    return getNodeParamConfig(iface, "RIPPoisonReverse", "disable");
+    return GetNodeParamConfig(iface, "RIPPoisonReverse", "disable");
 }
 
 bool xmlParser::isMulticastEnabled(cXMLElement *device)

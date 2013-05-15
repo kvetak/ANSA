@@ -20,13 +20,22 @@
 */
 
 #include "RIPngInterface.h"
+#include "RIPngProcess.h"
 
 namespace RIPng
 {
 
-Interface::Interface(int intId) :
-    id(intId)
+Interface::Interface(int intId, RIPngProcess *process) :
+    id(intId),
+    pProcess(process),
+    pOutputSocket(NULL)
 {
+    bDefaultInformation = false;
+    bDefaultRouteOnly = false;
+    bDefaultRouteMetric = 1;
+
+    iMetricOffset = 1;
+
     disablePassive();
     enableSplitHorizon();
     disablePoisonReverse();
@@ -34,6 +43,30 @@ Interface::Interface(int intId) :
 
 Interface::~Interface()
 {
+}
+
+
+void Interface::setDefaultInformationOriginate()
+{
+    bDefaultInformation = true;
+    bDefaultRouteOnly = false;
+    bDefaultRouteMetric = 1;
+    pProcess->setDefaultInformation(true);
+}
+
+void Interface::setDefaultInformationOnly()
+{
+    bDefaultInformation = true;
+    bDefaultRouteOnly = true;
+    bDefaultRouteMetric = 1;
+    pProcess->setDefaultInformation(true);
+}
+
+void Interface::noDefaultInforamtion()
+{
+    bDefaultInformation = false;
+    bDefaultRouteOnly = false;
+    pProcess->setDefaultInformation(false);
 }
 
 } /* namespace RIPng */

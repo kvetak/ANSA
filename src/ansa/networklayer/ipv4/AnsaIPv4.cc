@@ -140,6 +140,8 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
                 fromIE->ipv4Data()->removeMulticastListener(datagram->getDestAddress());
             else
                 fromIE->ipv4Data()->addMulticastListener(datagram->getDestAddress());
+
+            delete datagram;
             return;
         }
 
@@ -301,6 +303,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     EV << "AnsaIPv4::routeMulticastPacket - Multicast routing." << endl;
 
     //PIM mode specific behavior
+    //FIXME better is outgoing interface
     PIMmode intfMode = pimIft->getInterfaceByIntID(fromIE->getInterfaceId())->getMode();
 
     // multicast group is not in multicast routing table and has to be added
@@ -343,13 +346,13 @@ void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram
     nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF, route);
 
     // data won't be sent because there is no outgoing interface and/or route is pruned
-    InterfaceVector outInt = route->getOutInt();
-    if (outInt.size() == 0 || route->isFlagSet(P))
+    AnsaIPv4MulticastRoute::InterfaceVector outInt = route->getOutInt();
+    if (outInt.size() == 0 || route->isFlagSet(AnsaIPv4MulticastRoute::P))
     {
         EV << "Route does not have any outgoing interface or it is pruned." << endl;
         if(ctrl != NULL)
         {
-            if (!route->isFlagSet(A))
+            if (!route->isFlagSet(AnsaIPv4MulticastRoute::A))
                 nb->fireChangeNotification(NF_IPv4_DATA_ON_PRUNED_INT, ctrl);
         }
         delete datagram;
@@ -360,7 +363,7 @@ void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram
     for (unsigned int i=0; i<outInt.size(); i++)
     {
         // do not send to pruned interface
-        if (outInt[i].forwarding == Pruned)
+        if (outInt[i].forwarding == AnsaIPv4MulticastRoute::Pruned)
             continue;
 
         InterfaceEntry *destIE = outInt[i].intPtr;
@@ -396,12 +399,12 @@ void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute
         nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, route);
     }
 
-    InterfaceVector outInt = routePtr->getOutInt();
+    AnsaIPv4MulticastRoute::InterfaceVector outInt = routePtr->getOutInt();
     // send packet to all outgoing interfaces of route (oilist)
     for (unsigned int i=0; i<outInt.size(); i++)
     {
         // do not send to pruned interface
-        if (outInt[i].forwarding == Pruned)
+        if (outInt[i].forwarding == AnsaIPv4MulticastRoute::Pruned)
             continue;
         // RPF check before datagram sending
         if (outInt[i].intId == rpfInt->getInterfaceId())
@@ -415,7 +418,9 @@ void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute
         fragmentAndSend(datagramCopy, destIE, destAddr);
     }
 
-    if (route && route->isFlagSet(F) && route->isFlagSet(P) && (route->getRegStatus(intToRP->getInterfaceId()) == Join))
+    if (route && route->isFlagSet(AnsaIPv4MulticastRoute::F)
+            && route->isFlagSet(AnsaIPv4MulticastRoute::P)
+            && (route->getRegStatus(intToRP->getInterfaceId()) == AnsaIPv4MulticastRoute::Join))
         nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
 }
 

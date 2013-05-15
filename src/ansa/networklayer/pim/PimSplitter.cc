@@ -478,7 +478,7 @@ void PimSplitter::newMulticast(IPv4Address destAddr, IPv4Address srcAddr)
             const IPv4Route *routeToSrc = rt->findBestMatchingRoute(srcAddr);
             if (routeToSrc->getSource() == IPv4Route::IFACENETMASK)
             {
-                newRoute->addFlag(A);
+                newRoute->addFlag(AnsaIPv4MulticastRoute::A);
                 rpf = srcAddr;
             }
             // Not directly connected, next hop address is saved in routing table
@@ -488,10 +488,7 @@ void PimSplitter::newMulticast(IPv4Address destAddr, IPv4Address srcAddr)
             newRoute->setInInt(inInt, inInt->getInterfaceId(), rpf);
 		}
 		if (pimInt->getMode() == Sparse)
-		{
 		    newRoute->setInInt(inInt, inInt->getInterfaceId(), IPv4Address("0.0.0.0"));
-		}
-
 
 		// notification for PIM module about new multicast route
 		if (pimInt->getMode() == Dense)

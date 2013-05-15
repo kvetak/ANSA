@@ -26,6 +26,8 @@
 
 #include "RIPngTimer_m.h"
 
+class RIPngProcess;
+
 namespace RIPng
 {
 
@@ -42,6 +44,7 @@ class RoutingTableEntry : public ANSAIPv6Route
   protected:
     RIPngTimer *_timeout;          ///< Pointer for the Route timeout timer
     RIPngTimer *_GCTimeout;        ///< Pointer for the Route Garbage-Collection Timer
+    RIPngProcess *_process;        ///< pointer to the RIPng process to which interface belongs
     bool _changeFlag;              ///< The Route Changed Flag
     unsigned short int _routeTag;  ///< The Route routeTag
     RoutingTableEntry *_copy;      ///< If this RTE is stored in the "RIPng routing table", this is reference to the RTE in the "global routing table" and vice versa
@@ -67,6 +70,9 @@ class RoutingTableEntry : public ANSAIPv6Route
     void setGCTimer(RIPngTimer *t) { _GCTimeout = t; }
     void setRouteTag(unsigned short int tag) { _routeTag = tag;}
     void setCopy(RoutingTableEntry *copy) { _copy = copy; }
+
+    void setProcess(RIPngProcess *p) { _process = p; }
+    RIPngProcess *getProcess() { return _process; }
 };
 
 } /* namespace RIPng */

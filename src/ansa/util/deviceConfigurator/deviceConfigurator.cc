@@ -59,114 +59,138 @@ void DeviceConfigurator::initialize(int stage){
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /* doesn't need to be performed anywhere else,
+        /*
+         * doesn't need to be performed anywhere else,
          * if it's NULL then behaviour depends on device type
          */
         device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-
-    }
-
-
-
-   // interfaces and routing table are not ready before stage 2
-    if (stage == 2){
-
-        // get table of interfaces of this device
-        ift = InterfaceTableAccess().get();
-        if (ift == NULL){
-           throw cRuntimeError("InterfaceTable not found");
-        }
-        // get routing table of this device
-        rt = AnsaRoutingTableAccess().getIfExists();
-        if (rt != NULL){
-           //throw cRuntimeError("AnsaRoutingTable not found");
-
-            for (int i=0; i<ift->getNumInterfaces(); ++i)
-                rt->configureInterfaceForIPv4(ift->getInterface(i));
-
-            const char *routerIdStr = par("deviceId").stringValue();
-            this->readRoutingTableFromXml(configFile, routerIdStr);
-        }
-
-      // get routing table of this device
-      rt6 = RoutingTable6Access().getIfExists();
-      if (rt6 != NULL){
-          //throw cRuntimeError("RoutingTable6 not found");
-
-          // RFC 4861 specifies that sending RAs should be disabled by default
-          for (int i = 0; i < ift->getNumInterfaces(); i++){
-             ift->getInterface(i)->ipv6Data()->setAdvSendAdvertisements(false);
-          }
-
-          device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-          if (device == NULL){
-             ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-             return;
-          }
-
-          // configure interfaces - addressing
-          cXMLElement *iface = xmlParser::GetInterface(NULL, device);
-          if (iface == NULL){
-             ev << "No interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-          }else{
-             loadInterfaceConfig(iface);
-          }
-
-
-          // configure static routing
-          cXMLElement *route = xmlParser::GetStaticRoute6(NULL, device);
-          if (route == NULL && strcmp(deviceType, "Router") == 0){
-             ev << "No static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-          }else{
-             loadStaticRouting(route);
-          }
-
-          // Adding default route requires routing table lookup to pick the right output
-          // interface. This needs to be performed when all IPv6 addresses are already assigned
-          // and there are matching records in the routing table.
-          cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
-          if (gateway == NULL && strcmp(deviceType, "Host") == 0){
-             ev << "No default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-          }else{
-             loadDefaultRouter(gateway);
-          }
-      }
-   }
-   else if(stage == 3)
-     {
-         device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-         if (device == NULL){
+        if (device == NULL)
+        {
             ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             return;
-         }
+        }
+    }
+    else if (stage == 2)
+    {// interfaces and routing table are not ready before stage 2
+        // get table of interfaces of this device
+        ift = InterfaceTableAccess().get();
+        if (ift == NULL)
+            throw cRuntimeError("InterfaceTable not found");
 
-         if (xmlParser::isMulticastEnabled(device))
-         {
-             // get PIM interface table of this device
-             pimIft = PimInterfaceTableAccess().get();
-             if (pimIft == NULL){
-                 throw cRuntimeError("PimInterfaces not found");
-             }
+        //////////////////////////
+        /// IPv4 Configuration ///
+        //////////////////////////
+        // get routing table of this device
+        rt = RoutingTableAccess().getIfExists();
+        if (rt != NULL)
+        {
+            for (int i=0; i<ift->getNumInterfaces(); ++i)
+            {
+                //ift->getInterface(i)->setMulticast(true);
+                rt->configureInterfaceForIPv4(ift->getInterface(i));
+            }
 
-             // is multicast routing enabled on the device?
-             if (!xmlParser::isMulticastEnabled(device))
-             {
-                 EV<< "Multicast routing is not enable for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-             }
-             else
-             {
-                 // fill pim interfaces table from config file
-                 cXMLElement *iface = xmlParser::GetInterface(NULL, device);
-                 if (iface != NULL)
-                     loadPimInterfaceConfig(iface);
-                 else
-                     EV<< "No PIM interface is configured for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-             }
-         }
-     }
+            if (device != NULL)
+            {
+                cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+                if (iface == NULL)
+                    ev << "No IPv4 interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+                else
+                    loadInterfaceConfig(iface);
+
+                // configure static routing
+                cXMLElement *route = xmlParser::GetStaticRoute(NULL, device);
+                if (route == NULL && strcmp(deviceType, "Router") == 0)
+                    ev << "No IPv4 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+                else
+                    loadStaticRouting(route);
+            }
+        }
+
+        //////////////////////////
+        /// IPv6 Configuration ///
+        //////////////////////////
+        // get routing table of this device
+        rt6 = RoutingTable6Access().getIfExists();
+        if (rt6 != NULL)
+        {
+            // RFC 4861 specifies that sending RAs should be disabled by default
+            for (int i = 0; i < ift->getNumInterfaces(); i++)
+                ift->getInterface(i)->ipv6Data()->setAdvSendAdvertisements(false);
+
+            if (device == NULL)
+                return;
+
+            // configure interfaces - addressing
+            cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+            if (iface == NULL)
+                ev << "No IPv6 interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            else
+                loadInterfaceConfig6(iface);
+
+            // configure static routing
+            cXMLElement *route = xmlParser::GetStaticRoute6(NULL, device);
+            if (route == NULL && strcmp(deviceType, "Router") == 0)
+                ev << "No IPv6 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            else
+                loadStaticRouting6(route);
+
+            // Adding default route requires routing table lookup to pick the right output
+            // interface. This needs to be performed when all IPv6 addresses are already assigned
+            // and there are matching records in the routing table.
+            cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter6");
+            if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+                ev << "No IPv6 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            else
+                loadDefaultRouter6(gateway);
+        }
+    }
+    else if(stage == 3)
+    {
+        if (device == NULL)
+            return;
+
+        if (xmlParser::isMulticastEnabled(device))
+        {
+            // get PIM interface table of this device
+            pimIft = PimInterfaceTableAccess().get();
+            if (pimIft == NULL)
+                throw cRuntimeError("PimInterfaces not found");
+
+            // fill pim interfaces table from config file
+            cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+            if (iface != NULL)
+                loadPimInterfaceConfig(iface);
+            else
+                EV<< "No PIM interface is configured for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        }
+        else
+        {
+            EV<< "Multicast routing is not enable for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        }
+    }
+    else if(stage == 4)
+    {
+        if (device == NULL)
+            return;
+
+        //////////////////////////
+        /// IPv4 Configuration ///
+        //////////////////////////
+        // Adding default route requires routing table lookup to pick the right output
+        // interface. This needs to be performed when all IPv4 addresses are already assigned
+        // and there are matching records in the routing table.
+        // ANSARoutingTable: dir. conn. routes are added by deviceConfigurator in stage 2
+        // "inet" RoutingTable: dir. conn. routes are added by initialite() in the RoutingTable stage 3
+        cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
+        if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+            ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        else
+            loadDefaultRouter(gateway);
+    }
 }
 
-void DeviceConfigurator::loadInterfaceConfig(cXMLElement *iface){
+void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
    while (iface != NULL){
@@ -198,14 +222,10 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement *iface){
          // -> we have to set the address as non-tentative
          ie->ipv6Data()->assignAddress(ipv6, false, 0, 0);
 
+         //If rt6 is ANSARoutingTable6, than overridden addStaticRoute is called and ANSAIPv6Route is added
+         //else inet IPv6Route is added
          // adding directly connected route to the routing table
-         IPv6Route *route = new IPv6Route(ipv6.getPrefix(prefixLen), prefixLen, IPv6Route::STATIC);
-         route->setInterfaceId(ie->getInterfaceId());
-         route->setNextHop(IPv6Address::UNSPECIFIED_ADDRESS);
-         route->setMetric(0);
-
          rt6->addStaticRoute(ipv6.getPrefix(prefixLen), prefixLen, ie->getInterfaceId(), IPv6Address::UNSPECIFIED_ADDRESS, 0);
-
 
          // get next IPv6 address
          addr = xmlParser::GetIPv6Address(addr, NULL);
@@ -300,7 +320,7 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement *iface){
 }
 
 
-void DeviceConfigurator::loadStaticRouting(cXMLElement *route){
+void DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
    while (route != NULL){
@@ -365,7 +385,7 @@ void DeviceConfigurator::loadStaticRouting(cXMLElement *route){
 }
 
 
-void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway){
+void DeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
       return;
@@ -390,164 +410,204 @@ void DeviceConfigurator::handleMessage(cMessage *msg){
    delete msg;
 }
 
-bool DeviceConfigurator::readRoutingTableFromXml(const char *filename, const char *RouterId)
+void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
-    cXMLElement* routerConfig = ev.getXMLDocument(filename);
-    if (routerConfig == NULL) {
-        return false;
-    }
+    AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
-    // load information on this router
-    std::string routerXPath("Router[@id='");
-    routerXPath += RouterId;
-    routerXPath += "']";
-
-    cXMLElement* routerNode = routerConfig->getElementByPath(routerXPath.c_str());
-    if (routerNode == NULL)
-        opp_error("No configuration for Router ID: %s", RouterId);
-
-    cXMLElement* IntNode = routerNode->getFirstChildWithTag("Interfaces");
-    if (IntNode)
-        readInterfaceFromXml(IntNode);
-
-    cXMLElement* routingNode = routerNode->getFirstChildWithTag("Routing");
-    if (routingNode){
-       cXMLElement* staticNode = routingNode->getFirstChildWithTag("Static");
-       if (staticNode)
-          readStaticRouteFromXml(staticNode);
-    }
-    return true;
-}
-
-void DeviceConfigurator::readInterfaceFromXml(cXMLElement* Node)
-{
-    InterfaceEntry* ie;
-
-    cXMLElementList intConfig = Node->getChildren();
-    for (cXMLElementList::iterator intConfigIt = intConfig.begin(); intConfigIt != intConfig.end(); intConfigIt++)
+    while (iface != NULL)
     {
-      std::string nodeName = (*intConfigIt)->getTagName();
-      if (nodeName == "Interface" && (*intConfigIt)->getAttribute("name"))
-      {
-        std::string intName=(*intConfigIt)->getAttribute("name");
-        std::string typeName=intName.substr(0,3);
+        // get interface name and find matching interface in interface table
+        const char *ifaceName = iface->getAttribute("name");
+        InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
+        if (ie == NULL)
+           throw cRuntimeError("No interface called %s on this device", ifaceName);
 
-        ie=ift->getInterfaceByName(intName.c_str());
-
-        if (!ie)
-          opp_error("Error in routing file: interface name `%s' not registered by any L2 module", intName.c_str());
+        std::string ifaceType = std::string(ifaceName).substr(0,3);
 
         //implicitne nastavenia
-        if (typeName=="eth")
-              ie->setBroadcast(true);
-        if (typeName=="ppp")
-              ie->setPointToPoint(true);
+        if (ifaceType=="eth")
+            ie->setBroadcast(true);
+        if (ifaceType=="ppp")
+            ie->setPointToPoint(true);
 
         //register multicast groups
-        ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
-        ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
+        if (strcmp("Router", deviceType) == 0)
+        {//TODO: ???
+            ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
+            ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
+        }
 
         ie->ipv4Data()->setMetric(1);
         ie->setMtu(1500);
 
-        cXMLElementList ifDetails = (*intConfigIt)->getChildren();
+        cXMLElementList ifDetails = iface->getChildren();
         for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
         {
-          std::string nodeName = (*ifElemIt)->getTagName();
+            std::string nodeName = (*ifElemIt)->getTagName();
 
-          if (nodeName=="IPAddress")
-          {
-            ie->ipv4Data()->setIPAddress(IPv4Address((*ifElemIt)->getNodeValue()));
-          }
+            if (nodeName=="IPAddress")
+                ie->ipv4Data()->setIPAddress(IPv4Address((*ifElemIt)->getNodeValue()));
 
-          if (nodeName=="Mask")
-          {
-            ie->ipv4Data()->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
-          }
+            if (nodeName=="Mask")
+                ie->ipv4Data()->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
 
-          if (nodeName=="MTU")
-          {
-            ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
-          }
-
+            if (nodeName=="MTU")
+                ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
         }
 
-      }
+        //Add directly connected routes to the ANSA rt version only
+        //--- inet routing table adds dir. conn. routes in its own initialize method
+        if (ANSArt != NULL)
+        {
+            ANSAIPv4Route *route = new ANSAIPv4Route();
+            route->setSource(IPv4Route::IFACENETMASK);
+            route->setDestination(ie->ipv4Data()->getIPAddress().doAnd(ie->ipv4Data()->getNetmask()));
+            route->setNetmask(ie->ipv4Data()->getNetmask());
+            route->setGateway(IPv4Address());
+            route->setMetric(ie->ipv4Data()->getMetric());
+            route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
+            route->setInterface(ie);
+
+            ANSArt->addRoute(route);
+        }
+
+        iface = xmlParser::GetInterface(iface, NULL);
     }
 }
 
-void DeviceConfigurator::readStaticRouteFromXml(cXMLElement* Node)
+void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
-  cXMLElementList intConfig = Node->getChildren();
-  for (cXMLElementList::iterator intConfigIt = intConfig.begin(); intConfigIt != intConfig.end(); intConfigIt++)
-  {
-    std::string nodeName = (*intConfigIt)->getTagName();
-    if (nodeName == "Route")
+    AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
+
+    while (route != NULL)
     {
-        IPv4Route *e = new IPv4Route();
-        cXMLElementList ifDetails = (*intConfigIt)->getChildren();
-        for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
+        ANSAIPv4Route *ANSAStaticRoute = new ANSAIPv4Route();
+
+        cXMLElementList ifDetails = route->getChildren();
+        for (cXMLElementList::iterator routeElemIt = ifDetails.begin(); routeElemIt != ifDetails.end(); routeElemIt++)
         {
-          std::string nodeName = (*ifElemIt)->getTagName();
+            std::string nodeName = (*routeElemIt)->getTagName();
 
-          if (nodeName=="NetworkAddress")
-          {
-            e->setDestination(IPv4Address((*ifElemIt)->getNodeValue()));
-            EV << "Address = " << e->getDestination() << endl;
-          }
-
-          if (nodeName=="NetworkMask")
-          {
-            e->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
-            EV << "NetworkMask = " << e->getNetmask() << endl;
-          }
-
-          if (nodeName=="NextHopAddress")
-          {
-            e->setGateway(IPv4Address((*ifElemIt)->getNodeValue()));
-            InterfaceEntry *intf=NULL;
-            for (int i=0; i<ift->getNumInterfaces(); i++)
+            if (nodeName=="NetworkAddress")
             {
-              intf = ift->getInterface(i);
-              if (((intf->ipv4Data()->getIPAddress()).doAnd(intf->ipv4Data()->getNetmask()))==((e->getGateway()).doAnd(intf->ipv4Data()->getNetmask())))
-                  break;
-
+                ANSAStaticRoute->setDestination(IPv4Address((*routeElemIt)->getNodeValue()));
             }
-            if (intf)
-              e->setInterface(intf);
-            else
-              opp_error("Error.");
-            e->setMetric(1);
-          }
-          if (nodeName=="ExitInterface")
-          {
-            InterfaceEntry *ie=ift->getInterfaceByName((*ifElemIt)->getNodeValue());
-            if (!ie)
-                opp_error("Interface does not exists");
+            else if (nodeName=="NetworkMask")
+            {
+                ANSAStaticRoute->setNetmask(IPv4Address((*routeElemIt)->getNodeValue()));
+            }
+            else if (nodeName=="NextHopAddress")
+            {
+                ANSAStaticRoute->setGateway(IPv4Address((*routeElemIt)->getNodeValue()));
+                InterfaceEntry *intf=NULL;
+                for (int i=0; i<ift->getNumInterfaces(); i++)
+                {
+                    intf = ift->getInterface(i);
+                    if ( ((intf->ipv4Data()->getIPAddress()).doAnd(intf->ipv4Data()->getNetmask())) ==
+                         ((ANSAStaticRoute->getGateway()).doAnd(intf->ipv4Data()->getNetmask())) )
+                        break;
+                }
 
-            e->setInterface(ie);
-            e->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);
-            e->setMetric(0);
-          }
-          if (nodeName=="StaticRouteMetric")
-          {
-            e->setMetric(atoi((*ifElemIt)->getNodeValue()));
-          }
+                if (intf)
+                    ANSAStaticRoute->setInterface(intf);
+                else
+                    throw cRuntimeError("No exit interface found for the static route %s next hop.", (*routeElemIt)->getNodeValue());
+
+                ANSAStaticRoute->setMetric(1);
+            }
+            else if (nodeName=="ExitInterface")
+            {
+                InterfaceEntry *ie=ift->getInterfaceByName((*routeElemIt)->getNodeValue());
+                if (!ie)
+                    throw cRuntimeError("Interface %s does not exists.", (*routeElemIt)->getNodeValue());
+
+                ANSAStaticRoute->setInterface(ie);
+                ANSAStaticRoute->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);
+                ANSAStaticRoute->setMetric(0);
+            }
+            else if (nodeName=="StaticRouteMetric")
+            {
+                ANSAStaticRoute->setMetric(atoi((*routeElemIt)->getNodeValue()));
+            }
         }
-        rt->addRoute(e);
-    }
 
-  }
+        ANSAStaticRoute->setSource(IPv4Route::MANUAL);
+        ANSAStaticRoute->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
+
+        //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add IPv4Route
+        if (ANSArt != NULL)
+        {
+            rt->addRoute(ANSAStaticRoute);
+        }
+        else
+        {
+            IPv4Route *staticRoute = new IPv4Route();
+            staticRoute->setSource(ANSAStaticRoute->getSource());
+            staticRoute->setDestination(ANSAStaticRoute->getDestination());
+            staticRoute->setNetmask(ANSAStaticRoute->getNetmask());
+            staticRoute->setGateway(ANSAStaticRoute->getGateway());
+            staticRoute->setInterface(ANSAStaticRoute->getInterface());
+            staticRoute->setMetric(ANSAStaticRoute->getMetric());
+
+            rt->addRoute(staticRoute);
+            delete ANSAStaticRoute;
+        }
+
+        route = xmlParser::GetStaticRoute(route, NULL);
+    }
 }
 
+void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
+{
+    if (gateway == NULL)
+      return;
+
+    // get default-router address string (without prefix)
+    IPv4Address nextHop;
+    nextHop = IPv4Address(gateway->getNodeValue());
+
+    // browse routing table to find the best route to default-router
+    const IPv4Route *route = rt->findBestMatchingRoute(nextHop);
+    if (route == NULL)
+      return;
+ 
+    AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
+
+    //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add IPv4Route
+    if (ANSArt != NULL)
+    {
+        ANSAIPv4Route *defaultRoute = new ANSAIPv4Route();
+        defaultRoute->setSource(IPv4Route::MANUAL);
+        defaultRoute->setDestination(IPv4Address());
+        defaultRoute->setNetmask(IPv4Address());
+        defaultRoute->setGateway(nextHop);
+        defaultRoute->setInterface(route->getInterface());
+        defaultRoute->setMetric(0);
+        defaultRoute->setAdminDist(ANSAIPv4Route::dStatic);
+
+        rt->addRoute(defaultRoute);
+    }
+    else
+    {
+        IPv4Route *defaultRoute = new IPv4Route();
+        defaultRoute->setSource(IPv4Route::MANUAL);
+        defaultRoute->setDestination(IPv4Address());
+        defaultRoute->setNetmask(IPv4Address());
+        defaultRoute->setGateway(nextHop);
+        defaultRoute->setInterface(route->getInterface());
+        defaultRoute->setMetric(0);
+
+        rt->addRoute(defaultRoute);
+    }
+}
 
 //
 //
 //- configuration for RIPng
 //
 //
-void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule){
-
+void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule)
+{
     ASSERT(RIPngModule != NULL);
 
     // get access to device node from XML
@@ -556,56 +616,178 @@ void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule){
     const char *configFile = par("configFile");
     cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
 
-    if (device == NULL){
-        ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+    if (device == NULL)
+    {
+        ev << "No RIPng configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
              return;
-     }
+    }
 
-    // interfaces config
-    cXMLElement *interface;
-    RIPng::Interface *ripngInterface;
-    std::string RIPngInterfaceStatus;
-    std::string RIPngInterfacePassiveStatus;
-    std::string RIPngInterfaceSplitHorizon;
-    std::string RIPngInterfacePoisonReverse;
+    ev << "Configuring RIPng on this device (" << deviceType << " id=" << deviceId << ")" << endl;
 
-      //get first router's interface
-      interface = xmlParser::GetInterface(NULL, device);
-      while (interface != NULL)
-      {// process all interfaces in config file
-          const char *interfaceName = interface->getAttribute("name");
-          RIPngInterfaceStatus = xmlParser::getInterfaceRIPngStatus(interface);
-          if (RIPngInterfaceStatus == "enable")
+    const char *RIPngProcessName;
+    const char *RIPngParamString;
+    RIPngProcess *RIPngProcess;
+    cXMLElement *RIPngProcessTimersElement;
+
+      cXMLElement *RIPngProcessElement = xmlParser::GetRIPngProcess(NULL, device);
+      if (RIPngProcessElement == NULL)
+          ev << "   No RIPng configuration found." << endl;
+
+      while(RIPngProcessElement != NULL)
+      {
+          RIPngProcessName = RIPngProcessElement->getAttribute("name");
+          if (RIPngProcessName == NULL)
           {
-              ripngInterface = RIPngModule->enableRIPngOnInterface(interfaceName);
-              // add prefixes from int to the RIPng routing table
-              loadPrefixesFromInterfaceToRIPngRT(RIPngModule, interface);
+              ev << "   RIPng process name not found." << endl;
+          }
+          else
+          {
+              RIPngProcess = RIPngModule->addProcess(RIPngProcessName);
 
-              RIPngInterfacePassiveStatus = xmlParser::getRIPngInterfacePassiveStatus(interface);
-              if (RIPngInterfacePassiveStatus == "enable")
-              {// set the interface as passive (interface is "active" by default)
-                  RIPngModule->setInterfacePassiveStatus(ripngInterface, true);
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Port", "");
+              if (strcmp(RIPngParamString, "") != 0)
+              {// set port and address
+                  int port;
+                  if (xmlParser::Str2Int(&port, RIPngParamString))
+                  {
+                      RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Address", "");
+                      if (strcmp(RIPngParamString, "") != 0)
+                      {
+                          IPv6Address RIPngAddress = IPv6Address(RIPngParamString);
+                          RIPngModule->setPortAndAddress(RIPngProcess, port, RIPngAddress);
+                      }
+                  }
               }
 
-              RIPngInterfaceSplitHorizon = xmlParser::getRIPngInterfaceSplitHorizon(interface);
-              if (RIPngInterfaceSplitHorizon == "disable")
-              {// disable Split Horizon on the interface (Split Horizon is enabled by default)
-                  RIPngModule->setInterfaceSplitHorizon(ripngInterface, false);
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Distance", "");
+              if (strcmp(RIPngParamString, "") != 0)
+              {// set distance (AD)
+                  int distance;
+                  if (xmlParser::Str2Int(&distance, RIPngParamString))
+                  {
+                      RIPngModule->setDistance(RIPngProcess, distance);
+                  }
               }
 
-              RIPngInterfacePoisonReverse = xmlParser::getRIPngInterfacePoisonReverse(interface);
-              if (RIPngInterfacePoisonReverse == "enable")
-              {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
-                  RIPngModule->setInterfacePoisonReverse(ripngInterface, true);
+              RIPngProcessTimersElement = xmlParser::GetRIPngProcessTimers(RIPngProcessElement);
+              if (RIPngProcessTimersElement != NULL)
+              {// set timers
+                  int update, route, garbage;
+                  RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessTimersElement, "Update", "-1");
+                  if (!xmlParser::Str2Int(&update, RIPngParamString))
+                      update = -1;
+                  RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessTimersElement, "Route", "-1");
+                  if (!xmlParser::Str2Int(&route, RIPngParamString))
+                      route = -1;
+                  RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessTimersElement, "Garbage", "-1");
+                  if (!xmlParser::Str2Int(&garbage, RIPngParamString))
+                      garbage = -1;
+
+                  RIPngModule->setTimers(RIPngProcess, update, route, garbage);
+              }
+
+              //Must be set before any INTERFACE PoisonReverse command
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "PoisonReverse", "");
+              if (strcmp(RIPngParamString, "enable") == 0)
+              {// enable Poison Reverse (Poison Reverse is disabled by default)
+                  RIPngModule->setPoisonReverse(RIPngProcess, true);
+              }
+
+              //Must be set before any INTERFACE SplitHorizon command
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "SplitHorizon", "");
+              if (strcmp(RIPngParamString, "disable") == 0)
+              {// // disable Split Horizon (Split Horizon is enabled by default)
+                  RIPngModule->setSplitHorizon(RIPngProcess, false);
               }
           }
 
+          RIPngProcessElement = xmlParser::GetRIPngProcess(RIPngProcessElement, NULL);
+      }
+
+    // interfaces config
+    cXMLElement *interfaceElement;
+    cXMLElement *interfaceRIPngProcessElement;
+    cXMLElement *interfaceRIPngDefaultInfElement;
+    const char *interfaceRIPngProcessName;
+    const char *interfaceRIPngParamString;
+    RIPng::Interface *ripngInterface;
+
+      //get first router's interface
+      interfaceElement = xmlParser::GetInterface(NULL, device);
+      while (interfaceElement != NULL)
+      {// process all interfaces in config file
+          const char *interfaceName = interfaceElement->getAttribute("name");
+          interfaceRIPngProcessElement = xmlParser::GetInterfaceRIPngProcess(NULL, interfaceElement);
+          while (interfaceRIPngProcessElement != NULL)
+          {
+              interfaceRIPngProcessName = interfaceRIPngProcessElement->getAttribute("name");
+
+              if (interfaceRIPngProcessName != NULL && strcmp(interfaceRIPngProcessName, "") != 0)
+              {
+                  ripngInterface = RIPngModule->enableRIPngOnInterface(interfaceRIPngProcessName, interfaceName);
+                  if (ripngInterface == NULL)
+                  {
+                      ev << "   Interface with name " << interfaceName << " not found." << endl;
+                      continue;
+                  }
+
+                  RIPngProcess = ripngInterface->getProcess();
+
+                  // add prefixes from int to the RIPng routing table
+                  loadPrefixesFromInterfaceToRIPngRT(RIPngProcess, interfaceElement);
+
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngPassiveStatus(interfaceRIPngProcessElement);
+                  if (strcmp(interfaceRIPngParamString, "enable") == 0)
+                  {// set the interface as passive (interface is "active" by default)
+                      RIPngProcess->setInterfacePassiveStatus(ripngInterface, true);
+                  }
+
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngSplitHorizon(interfaceRIPngProcessElement);
+                  if (strcmp(interfaceRIPngParamString, "disable") == 0)
+                  {// disable Split Horizon on the interface (Split Horizon is enabled by default)
+                      RIPngProcess->setInterfaceSplitHorizon(ripngInterface, false);
+                  }
+
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngPoisonReverse(interfaceRIPngProcessElement);
+                  if (strcmp(interfaceRIPngParamString, "enable") == 0)
+                  {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
+                      RIPngProcess->setInterfacePoisonReverse(ripngInterface, true);
+                  }
+
+                  int metricOffset;
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngMetricOffset(interfaceRIPngProcessElement);
+                  if (xmlParser::Str2Int(&metricOffset, interfaceRIPngParamString) && metricOffset != 0)
+                  {// metric-offset
+                      RIPngProcess->setInterfaceMetricOffset(ripngInterface, metricOffset);
+                  }
+
+                  interfaceRIPngDefaultInfElement = xmlParser::GetInterfaceRIPngDefaultInformation(interfaceRIPngProcessElement);
+                  if (interfaceRIPngDefaultInfElement != NULL)
+                  {// default-information
+                      bool defRouteOnly = false;
+                      interfaceRIPngParamString = xmlParser::GetNodeParamConfig(interfaceRIPngDefaultInfElement, "DefaultOnly", "false");
+                      xmlParser::Str2Bool(&defRouteOnly, interfaceRIPngParamString);
+
+                      int metric = 0;
+                      interfaceRIPngParamString = xmlParser::GetNodeParamConfig(interfaceRIPngDefaultInfElement, "Metric", "0");
+                      xmlParser::Str2Int(&metric, interfaceRIPngParamString);
+
+                      RIPngProcess->setInterfaceDefaultInformation(ripngInterface, true, defRouteOnly, metric);
+                  }
+
+              }
+
+              // process next RIPng on the interface
+              interfaceRIPngProcessElement = xmlParser::GetInterfaceRIPngProcess(interfaceRIPngProcessElement, NULL);
+
+          }
+
           // process next interface
-          interface = xmlParser::GetInterface(interface, NULL);
+          interfaceElement = xmlParser::GetInterface(interfaceElement, NULL);
       }
 }
 
-void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface)
+void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *process, cXMLElement *interface)
 {
     const char *interfaceName = interface->getAttribute("name");
     InterfaceEntry *interfaceEntry = ift->getInterfaceByName(interfaceName);
@@ -634,10 +816,11 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngM
             {
                 // make directly connected route
                 route = new RIPng::RoutingTableEntry(ipv6address.getPrefix(prefixLen), prefixLen);
+                route->setProcess(process);
                 route->setInterfaceId(interfaceId);
                 route->setNextHop(IPv6Address::UNSPECIFIED_ADDRESS);  // means directly connected network
-                route->setMetric(RIPngModule->getConnNetworkMetric());
-                RIPngModule->addRoutingTableEntry(route, false);
+                route->setMetric(process->getConnNetworkMetric());
+                process->addRoutingTableEntry(route, false);
 
                 // directly connected routes do not need a RIPng route timer
             }
@@ -673,7 +856,8 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     int interfaceId;
     const char *interfaceName;
 
-    networkElement = xmlParser::getRIPNetwork(NULL, device);
+    //RIP NETWORK COMMAND
+    networkElement = xmlParser::GetRIPNetwork(NULL, device);
     while (networkElement != NULL)
     {// process all RIP Network "command"
 
@@ -686,8 +870,13 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
         for (int i = 0; i < numInterfaces; ++i)
         {
             interface = ift->getInterface(i);
+            IPv4Address interfaceAddress = interface->ipv4Data()->getIPAddress();
+            if (interfaceAddress.isUnspecified())
+                continue;
+
             interfaceId = interface->getInterfaceId();
-            if (network.prefixMatches(interface->ipv4Data()->getIPAddress(), interface->ipv4Data()->getNetmask().getNetmaskLength()))
+            //isUnspecified -> network = 0.0.0.0 -> all interfaces
+            if (network.isUnspecified() || network.isNetwork(interfaceAddress))
             {// IP address of the interface match the network
                 //check if the interface is not in the rip interfaces
                 if (RIPModule->getEnabledInterfaceIndexById(interfaceId) == -1)
@@ -700,21 +889,22 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
         }
 
         //next Network element
-        networkElement = xmlParser::getRIPNetwork(networkElement, NULL);
+        networkElement = xmlParser::GetRIPNetwork(networkElement, NULL);
     }
 
     //PASSIVE-INTERFACE
     cXMLElement *passiveInterfaceElem;
-    passiveInterfaceElem = xmlParser::getRIPPassiveInterface(NULL, device);
+    passiveInterfaceElem = xmlParser::GetRIPPassiveInterface(NULL, device);
     while(passiveInterfaceElem != NULL)
     {
         RIPInterface = RIPModule->getEnabledInterfaceByName(passiveInterfaceElem->getNodeValue());
         RIPModule->setInterfacePassiveStatus(RIPInterface, true);
 
         // next passive-interface command
-        passiveInterfaceElem = xmlParser::getRIPPassiveInterface(passiveInterfaceElem, NULL);
+        passiveInterfaceElem = xmlParser::GetRIPPassiveInterface(passiveInterfaceElem, NULL);
     }
 
+    //RIP PER INTERFACE CONFIGURATION
     std::string RIPInterfaceSplitHorizon;
     std::string RIPInterfacePoisonReverse;
 
@@ -723,7 +913,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     while (interfaceElem != NULL)
     {
         interfaceName = interfaceElem->getAttribute("name");
-        RIPInterfaceSplitHorizon = xmlParser::getRIPInterfaceSplitHorizon(interfaceElem);
+        RIPInterfaceSplitHorizon = xmlParser::GetRIPInterfaceSplitHorizon(interfaceElem);
         RIPInterface = RIPModule->getEnabledInterfaceByName(interfaceName);
 
         if (RIPInterface != NULL)
@@ -733,7 +923,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
                 RIPModule->setInterfaceSplitHorizon(RIPInterface, false);
             }
 
-            RIPInterfacePoisonReverse = xmlParser::getRIPInterfacePoisonReverse(interfaceElem);
+            RIPInterfacePoisonReverse = xmlParser::GetRIPInterfacePoisonReverse(interfaceElem);
             if (RIPInterfacePoisonReverse == "enable")
             {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
                 RIPModule->setInterfacePoisonReverse(RIPInterface, true);
@@ -748,7 +938,8 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
 void DeviceConfigurator::loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface)
 {
     // make directly connected route
-    RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(interface->ipv4Data()->getIPAddress(), interface->ipv4Data()->getNetmask());
+    RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(interface->ipv4Data()->getIPAddress().doAnd(interface->ipv4Data()->getNetmask()),
+                                                               interface->ipv4Data()->getNetmask());
     route->setInterface(interface);
     route->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);  // means directly connected network
     route->setMetric(RIPModule->getConnNetworkMetric());
@@ -789,6 +980,7 @@ void DeviceConfigurator::loadPimGlobalConfig(pimSM *pimSMModule)
         if (SPTthreshold != NULL)
         {
             std::string SPTthresholdString = SPTthreshold->getNodeValue();
+            pimSMModule->setSPTthreshold(SPTthresholdString);
             EV << "SPTthreshold in config found: " << SPTthresholdString.c_str() << endl;
         }
     }
@@ -802,7 +994,7 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get PIM node
         cXMLElement* pimNode = iface->getElementByPath("Pim");
         if (pimNode == NULL)
-          continue;
+          break;                //FIXME it is break ok?
 
         // create new PIM interface
         PimInterface newentry;
