@@ -1,18 +1,27 @@
+// Copyright (C) 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
+/**
+ * @file CLNSTable.cc
+ * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 3.2.2013
+ * @brief
+ * @detail
+ * @todo TODO A2 Add hopCount for TRILL.
+ */
 #include "CLNSTable.h"
 
 
@@ -78,7 +87,7 @@ std::string CLNSRoute::info() const{
 //    out << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) this->destPrefix[6];
 
     out << "/" << getLength() << " --> ";
-    out << std::dec << " metric: " << (uint32_t) metric << " " << (unsigned int) metric << " via: ";
+    out << std::dec << " metric: " << (unsigned int) metric << " via: ";
 //    std::cout << " metric: " << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) metric << " " << (unsigned int) metric << " via: ";
 
     for (ISISNeighbours_t::iterator nIt = neig.begin(); nIt != neig.end(); ++nIt)
