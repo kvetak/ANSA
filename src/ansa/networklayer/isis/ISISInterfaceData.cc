@@ -29,7 +29,7 @@ ISISInterfaceData::ISISInterfaceData()
 {
     // TODO Auto-generated constructor stub
 
-
+    this->helloValid = false;
 }
 
 void ISISInterfaceData::init(void){
