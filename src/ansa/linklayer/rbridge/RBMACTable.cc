@@ -542,6 +542,7 @@ void RBMACTable::initialize() {
 
 
     WATCH_MAP(this->table);
+    WATCH_MAP(this->eSTable);
     WATCH(this->addressTableSize);
     WATCH(this->agingTime);
     WATCH_RW(uAgingTime);
