@@ -261,7 +261,9 @@ std::vector<unsigned int> RBVLANTable::getVLANList() {
 void RBVLANTable::extendTable(int VLAN) {
 
     EV <<"KECYYYYYY !!!!!!!!!!!!!!!!!!" << "\n";
-    while (vidTable.size() < (unsigned int) VLAN+2) { // +1 is for index compensation
+    //TODO A1 check or change the VLAN + 1 expression below (was VLAN + 2)
+    //even +1 should be eliminated, because it produce wrong output in simulation (zero-th VLAN is extra)
+    while (vidTable.size() < (unsigned int) VLAN+1) { // +1 is for index compensation
         vidTable.push_back(emptyVID);
 
     }
