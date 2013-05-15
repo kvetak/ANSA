@@ -2159,30 +2159,34 @@ void ISIS::schedule(ISISTimer *timer, double timee)
 
     switch (timer->getTimerKind())
         {
-        case (ISIS_START_TIMER):
+        case (ISIS_START_TIMER): {
             this->scheduleAt(0, timer);
             break;
-        case (TRILL_HELLO_TIMER):
+        }
+        case (TRILL_HELLO_TIMER): {
 
-        case (HELLO_TIMER):
+        }
+
+        case (HELLO_TIMER): {
             timeAt = this->getHelloInterval(timer->getInterfaceIndex(), timer->getIsType());
             randomTime = uniform(0, 0.25 * timeAt);
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             EV<< "ISIS::schedule: timeAt: " << timeAt << " randomTime: " << randomTime << endl;
             break;
-
-            case (NEIGHBOUR_DEAD_TIMER):
+        }
+        case (NEIGHBOUR_DEAD_TIMER): {
             if (timee < 0)
             {
-                EV << "ISIS: Warning: You forgot provide additional time to schedule for NEIGHBOUR_DEAD_TIMER" << endl;
+                EV<< "ISIS: Warning: You forgot provide additional time to schedule for NEIGHBOUR_DEAD_TIMER" << endl;
                 timee = 0;
             }
             timeAt = timee;
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
-
-            case (PERIODIC_SEND_TIMER):
+        }
+        case (PERIODIC_SEND_TIMER): {
             if (timer->getIsType() == L1_TYPE)
             {
                 timeAt = this->L1LspSendInterval;
@@ -2193,20 +2197,24 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             }
             else
             {
-                EV << "ISIS: Warning: Unsupported IS-Type in schedule for PERIODIC_SEND_TIMER" << endl;
+                EV<< "ISIS: Warning: Unsupported IS-Type in schedule for PERIODIC_SEND_TIMER" << endl;
             }
 
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
-
-            case (LSP_REFRESH_TIMER):
+        }
+        case (LSP_REFRESH_TIMER):
+        {
             timeAt = this->lspRefreshInterval;
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
-
-            case (LSP_DEAD_TIMER):
+        }
+        case (LSP_DEAD_TIMER):
+        {
             if (timee < 0)
             {
                 EV << "ISIS: Warning: You forgot provide additional time to schedule for LSP_DEAD_TIMER" << endl;
@@ -2216,13 +2224,15 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             //randomTime = uniform(0, 0.25 * timeAt);
             this->scheduleAt(simTime() + timeAt, timer);
             break;
-
-            case (LSP_DELETE_TIMER):
+        }
+        case (LSP_DELETE_TIMER):
+        {
             timeAt = this->lspMaxLifetime * 2;
             this->scheduleAt(simTime() + timeAt, timer);
             break;
-
-            case (CSNP_TIMER):
+        }
+        case (CSNP_TIMER):
+        {
             if (timer->getIsType() == L1_TYPE)
             {
                 timeAt = this->ISISIft.at(timer->getInterfaceIndex()).L1CsnpInterval;
@@ -2237,10 +2247,12 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             }
 
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
-
-            case (PSNP_TIMER):
+        }
+        case (PSNP_TIMER):
+        {
             if (timer->getIsType() == L1_TYPE)
             {
                 timeAt = this->ISISIft.at(timer->getInterfaceIndex()).L1PsnpInterval;
@@ -2255,24 +2267,30 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             }
 
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
-
-            case (L1_CSNP):
+        }
+        case (L1_CSNP):
+        {
             timeAt = this->ISISIft.at(timer->getInterfaceIndex()).L1CsnpInterval;
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
 
             break;
-
-            case (L1_PSNP):
+        }
+        case (L1_PSNP):
+        {
             timeAt = this->ISISIft.at(timer->getInterfaceIndex()).L1PsnpInterval;
             randomTime = uniform(0, 0.25 * timeAt);
+            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
 
             break;
-
-            case (GENERATE_LSP_TIMER):
+        }
+        case (GENERATE_LSP_TIMER):
+        {
             if (timer->getIsType() == L1_TYPE)
             {
                 if ((simTime().dbl() + this->L1LspGenInterval) * 1000 < this->L1LspInitWait)
@@ -2300,11 +2318,13 @@ void ISIS::schedule(ISISTimer *timer, double timee)
                 EV << "ISIS: ERROR: Unsupported IS-Type in PERIODIC_SEND_TIMER timer" << endl;
             }
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
 
             break;
-
-            case (SPF_FULL_TIMER):
+        }
+        case (SPF_FULL_TIMER):
+        {
             if (timer->getIsType() == L1_TYPE)
             {
                 timeAt = this->L1SPFFullInterval;
@@ -2318,13 +2338,14 @@ void ISIS::schedule(ISISTimer *timer, double timee)
                 EV << "ISIS: Error Unsupported IS-Type in SPF_FULL timer" << endl;
             }
             randomTime = uniform(0, 0.25 * timeAt);
+//            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
-
-            default:
-            EV << "ISIS: ERROR: Unsupported timer type in schedule" << endl;
-            break;
         }
+        default:
+        EV << "ISIS: ERROR: Unsupported timer type in schedule" << endl;
+        break;
+    }
 
     }
 
@@ -3164,7 +3185,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
             {
                 if (tmpTLV->length == 1)
                 {
-                    if (tmpAdj->state) //UP
+                    if (tmpAdj->state == ISIS_ADJ_REPORT) //UP
                     {
                         if (tmpTLV->value[0] == PTP_UP)
                         {
@@ -9936,6 +9957,9 @@ void ISIS::extractAreas(ISISPaths_t* paths, ISISPaths_t* areas, short circuitTyp
     {
         //for each record in best paths extract connected Areas
         lspRec = this->getLSPFromDbByID((*pathIt)->to, circuitType);
+        if(lspRec == NULL){
+            continue;
+        }
         lsp = lspRec->LSP;
         for (int offset = 0; (tmpTLV = this->getTLVByType(lsp, AREA_ADDRESS, offset)) != NULL; offset++)
         {
