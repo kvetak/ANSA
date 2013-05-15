@@ -636,7 +636,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
     frameDesc.portList.push_back(egressPort);
     ISISadj *adj = this->isis->getAdjBySystemID(nextHopSysId, L1_TYPE, egressPort.port);
     if(egressPort.port < 0 || adj == NULL){
-        EV <<"dispatchTRILLDataUnicastRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
+        EV <<"Error: dispatchTRILLDataUnicastRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
         return false;
     }
 
@@ -1318,8 +1318,15 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
                 break;
 
             case RBMACTable::EST_RBRIDGE:
+                /*
+                 * This should never happen. When the frame innerFrame is unicast and this is the
+                 * destination RBridge, then it should be localy delivered.
+                 * This situation could mean that the end-station has relocated and therefore,
+                 * it's record should be deleted and when running ESADI, immediately initiate sending updating LSP.
+                 */
                 EV<< "TRILL: ERROR: ProcessTRILLDataUnicast" <<endl;
-                //TODO A!
+                //TODO A! change to dispatchNativeMulti (should be send on all links where this RBridge is App Fwd)
+
                 dispatchNativeRemote(innerFrameDesc);
                 return true;
                 break;
