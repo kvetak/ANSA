@@ -1,0 +1,24 @@
+<Devices>	
+	<Router id="router">
+		<Routing6>
+		</Routing6>
+		<Interfaces>
+			<Interface name="eth0">
+        		<IPAddress>192.168.100.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<IPv6Address>2001:5:5:5::5/64</IPv6Address>	
+			</Interface>
+    	</Interfaces>
+	</Router>
+	<Host id="host">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:3:3:3::10/64</IPAddress6>
+                <MCastGroups6>
+                	<MCastGroup>ff02::1:5</MCastGroup>
+				</MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:5:5:5::5</DefaultRouter6>
+	</Host>
+</Devices>

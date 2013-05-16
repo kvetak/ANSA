@@ -99,6 +99,7 @@ void RoutingTable6::initialize(int stage)
         WATCH_PTRVECTOR(routeList);
         WATCH_MAP(destCache); // FIXME commented out for now
         isrouter = par("isRouter");
+        multicastForward = par("forwardMulticast");
         WATCH(isrouter);
 
 #ifdef WITH_xMIPv6
@@ -847,4 +848,3 @@ bool RoutingTable6::isOnLinkAddress(const IPv6Address& address)
     return false;
 }
 #endif /* WITH_xMIPv6 */
-

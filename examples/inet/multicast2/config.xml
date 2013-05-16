@@ -1,0 +1,17 @@
+<config>
+
+  <interface hosts="host1" towards="router1" address="172.0.0.1" netmask="255.255.255.0" mtu="1500"/>
+
+  <interface hosts="router1" towards="host1" address="172.0.0.11" netmask="255.255.255.0" mtu="1500"/>
+ 
+  <multicast-group hosts="host1" towards="router1" address="225.0.0.1"/>
+  <multicast-group hosts="host1" address="225.0.1.1"/>
+
+  <route hosts="host1" destination="*" netmask="/0" gateway="router1" metric="0"/>
+  
+  <route hosts="router1" destination="host1" netmask="/32" metric="0" interface="ppp0"/>
+  
+  <multicast-route hosts="router1" groups="225.0.0.1" children=">host1"/>
+  <multicast-route hosts="router1" groups="225.0.1.1" children=">host1"/>
+
+</config>

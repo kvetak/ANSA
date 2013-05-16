@@ -469,4 +469,100 @@ void IPv6InterfaceData::updateHomeNetworkInfo(const IPv6Address& hoa, const IPv6
     if ( addr == IPv6Address::UNSPECIFIED_ADDRESS )
         this->assignAddress(hoa, false, 0, 0, true);
 }
+
+void IPv6InterfaceData::removeMulticastListener(const IPv6Address &multicastAddress)
+{
+    IPv6AddressVector &multicastGroups = getRouterData()->reportedMulticastGroups;
+
+    int n = multicastGroups.size();
+    int i;
+    for (i = 0; i < n; i++)
+        if (multicastGroups[i] == multicastAddress)
+            break;
+    if (i != n)
+    {
+        multicastGroups.erase(multicastGroups.begin() + i);
+        changed1();
+    }
+}
+
+void IPv6InterfaceData::addMulticastListener(const IPv6Address &multicastAddress)
+{
+    if(!multicastAddress.isMulticast())
+        throw cRuntimeError("IPv6InterfaceData::addMulticastListener(): multicast address expected, received %s.", multicastAddress.str().c_str());
+
+    if (!hasMulticastListener(multicastAddress))
+    {
+        getRouterData()->reportedMulticastGroups.push_back(multicastAddress);
+        changed1();
+    }
+}
+
+bool IPv6InterfaceData::hasMulticastListener(const IPv6Address &multicastAddress) const
+{
+    const IPv6AddressVector &multicastGroups = getRouterData()->reportedMulticastGroups;
+    return find(multicastGroups.begin(),  multicastGroups.end(), multicastAddress) != multicastGroups.end();
+}
+
+bool IPv6InterfaceData::isMemberOfMulticastGroup(const IPv6Address &multicastAddress) const
+{
+    const IPv6AddressVector &multicastGroups = getJoinedMulticastGroups();
+    return find(multicastGroups.begin(), multicastGroups.end(), multicastAddress) != multicastGroups.end();
+}
+
+void IPv6InterfaceData::joinMulticastGroup(const IPv6Address& multicastAddress)
+{
+    if(!multicastAddress.isMulticast())
+        throw cRuntimeError("IPv6InterfaceData::joinMulticastGroup(): multicast address expected, received %s.", multicastAddress.str().c_str());
+
+    IPv6AddressVector &multicastGroups = getHostData()->joinedMulticastGroups;
+    std::vector<int> &refCounts = getHostData()->refCounts;
+    for (int i = 0; i < (int)multicastGroups.size(); ++i)
+    {
+        if (multicastGroups[i] == multicastAddress)
+        {
+            refCounts[i]++;
+            return;
+        }
+    }
+
+    multicastGroups.push_back(multicastAddress);
+    refCounts.push_back(1);
+
+    changed1();
+
+    if(!nb)
+        nb = NotificationBoardAccess().get();
+    IPv6MulticastGroupInfo info(ownerp, multicastAddress);
+    nb->fireChangeNotification(NF_IPv6_MCAST_JOIN, &info);
+}
+
+void IPv6InterfaceData::leaveMulticastGroup(const IPv6Address& multicastAddress)
+{
+    if(!multicastAddress.isMulticast())
+        throw cRuntimeError("IPv6InterfaceData::leaveMulticastGroup(): multicast address expected, received %s.", multicastAddress.str().c_str());
+
+    IPv6AddressVector &multicastGroups = getHostData()->joinedMulticastGroups;
+    std::vector<int> &refCounts = getHostData()->refCounts;
+    for (int i = 0; i < (int)multicastGroups.size(); ++i)
+    {
+        if (multicastGroups[i] == multicastAddress)
+        {
+            if (--refCounts[i] == 0)
+            {
+                multicastGroups.erase(multicastGroups.begin()+i);
+                refCounts.erase(refCounts.begin()+i);
+
+                changed1();
+
+                if (!nb)
+                    nb = NotificationBoardAccess().get();
+                IPv6MulticastGroupInfo info(ownerp, multicastAddress);
+                nb->fireChangeNotification(NF_IPv6_MCAST_LEAVE, &info);
+            }
+        }
+    }
+}
+
+
 #endif /* WITH_xMIPv6 */

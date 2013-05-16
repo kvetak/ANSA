@@ -82,6 +82,8 @@ class INET_API AnsaRoutingTable : public RoutingTable {
       virtual void addMulticastRoute(const AnsaIPv4MulticastRoute *entry);
       virtual bool deleteMulticastRoute(const AnsaIPv4MulticastRoute *entry);
 
+      virtual bool isMulticastForwardingEnabled() { return multicastForward; }
+
 };
 
 #endif /* ANSAROUTINGTABLE_H_ */

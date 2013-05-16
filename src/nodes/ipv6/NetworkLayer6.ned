@@ -26,6 +26,8 @@ import inet.networklayer.icmpv6.ICMPv6;
 import inet.networklayer.IxMIPv6Support;
 import inet.networklayer.IIPv6Tunneling;
 import inet.base.IHook;
+import inet.networklayer.ipv6.IMLD;
+import inet.networklayer.ipv6.MLD;
 
 
 //
@@ -38,6 +40,7 @@ module NetworkLayer6
 {
     parameters:
         bool xMIPv6Support = default(false);
+        string mldType = default("MLD");
         @display("i=block/fork");
     gates:
         input ifIn[] @labels(IPv6Datagram);
@@ -54,14 +57,17 @@ module NetworkLayer6
         output ospfOut @labels(IPv6ControlInfo/up);
         input pingIn[];
         output pingOut[];
+        input mldIn;
+        output mldOut;
+
     submodules:
         ipv6: IPv6 {
             parameters:
-                protocolMapping = "6:0,17:1,46:2,89:3,132:4"; // TODO register 132 as sctp in ipv6 code
+                protocolMapping = "6:0,17:1,46:2,89:3,132:4,58:5"; // TODO register 132 as sctp in ipv6 code
                 @display("p=84,129");
             gates:
-                transportIn[5];
-                transportOut[5];
+                transportIn[6];
+                transportOut[6];
                 queueIn[sizeof(ifIn)];
                 queueOut[sizeof(ifIn)];
         }
@@ -85,6 +91,11 @@ module NetworkLayer6
             parameters:
                 @display("p=44,79");
         }
+        mld: <mldType> like IMLD {
+            parameters:
+                @display("p=133,48");
+        }
+
     connections allowunconnected:  // FIXME remove 'nocheck'!
         // IPv6 to transport Layer
         ipv6.transportOut[0] --> { @display("m=n"); } --> tcpOut;
@@ -101,6 +112,12 @@ module NetworkLayer6
 
         ipv6.transportOut[4] --> { @display("m=n"); } --> sctpOut;
         ipv6.transportIn[4] <-- { @display("m=n"); } <-- sctpIn;
+
+        ipv6.transportIn[5] <-- mld.ipOut;
+        ipv6.transportOut[5] --> mld.ipIn;
+
+        mld.routerOut --> mldOut;
+        mld.routerIn <-- mldIn;
 
         // IPv6 to IPv6 Tunneling
         iptunneling.upperLayerIn <-- ipv6.upperTunnelingOut;

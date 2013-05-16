@@ -31,5 +31,6 @@ simple ANSARoutingTable6
     parameters:
         xml routingTable = default(xml("<routingTable/>"));
         bool isRouter;
+        bool forwardMulticast = default(false);
         @display("i=block/table");
 }

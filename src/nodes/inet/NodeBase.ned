@@ -49,6 +49,7 @@ module NodeBase
         string routingFile = default("");
         bool IPForward = default(true);
         bool forwardMulticast = default(false);
+        int IGMPVersion = default(2);
     gates:
         input radioIn[numRadios] @directIn;
         inout pppg[] @labels(PPPFrame-conn);

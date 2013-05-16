@@ -1,0 +1,38 @@
+<Devices>	
+	<Router id="router">
+		<Routing>
+			<Multicast enable="1"></Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>192.168.100.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.100.2</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+			<Interface name="eth0">
+        		<IPAddress>192.168.100.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>dense-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+	<Host id="host">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.100.10</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <MCastGroups>
+					<McastGroup>225.0.0.1</McastGroup>
+					<McastGroup>225.34.5.7</McastGroup>
+					<McastGroup>225.123.44.5</McastGroup>
+					<MCastGroup>225.0.5.5</MCastGroup>
+				</MCastGroups>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.100.1</DefaultRouter>
+	</Host>
+</Devices>

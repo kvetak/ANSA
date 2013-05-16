@@ -180,6 +180,13 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
 
+      ////////////////////////
+      //    IGMP Related    //
+      ////////////////////////
+
+      void addIPv4MulticastGroups(cXMLElement *iface);
+      void addIPv6MulticastGroups(cXMLElement *iface);
+
 };
 
 #endif
