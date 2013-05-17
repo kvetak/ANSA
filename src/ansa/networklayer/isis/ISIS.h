@@ -131,6 +131,9 @@ private:
     int L2SPFFullInterval;
     unsigned long helloCounter; /*!< my hax hello counter to sync DIS/non-DIS hellos. This variable is deprecated, but is kept for sentimental reasons. */
 
+    ISISTimer *genL1LspTimer;
+    ISISTimer *genL2LspTimer;
+
     /* TRILL related */
     std::map<int, ISISPaths_t *> distribTrees;
 
