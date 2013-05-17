@@ -34,92 +34,88 @@ import ned.DatarateChannel;
 
 network adjPTP
 {
-    @display("bgb=701,389");
+    @display("bgb=509,278");
     types:
-        channel ethernetline extends DatarateChannel
-        {
-            delay = 0.1us;
-        }
     submodules:
 
-        router1: AnsaISISRouter {
-            parameters:
-                @display("p=57,191");
-                
-            gates:
-                ethg[1];
-        }
-        router2: AnsaISISRouter {
-            parameters:
-                @display("p=269,293");
-            gates:
-                ethg[3];
-        }
-        router3: AnsaISISRouter {
-            parameters:
-                @display("p=44,347");
-            gates:
-                ethg[1];
-        }
-        etherSwitch1: EtherSwitch {
-            parameters:
-                @display("p=148,284");
-            gates:
-                ethg[3];
-        }
-        router4: AnsaISISRouter {
-            parameters:
-                @display("p=409,293");
-            gates:
-                ethg[3];
-        }
-        router5: AnsaISISRouter {
-            parameters:
-                @display("p=338,214");
-            gates:
-                ethg[3];
-        }
+        //        router1: AnsaISISRouter {
+        //            parameters:
+        //                @display("p=57,191");
+        //                
+        //            gates:
+        //                ethg[1];
+        //        }
+        //        router2: AnsaISISRouter {
+        //            parameters:
+        //                @display("p=269,293");
+        //            gates:
+        //                ethg[3];
+        //        }
+        //        router3: AnsaISISRouter {
+        //            parameters:
+        //                @display("p=44,347");
+        //            gates:
+        //                ethg[1];
+        //        }
+        //        etherSwitch1: EtherSwitch {
+        //            parameters:
+        //                @display("p=148,284");
+        //            gates:
+        //                ethg[3];
+        //        }
+        //        router4: AnsaISISRouter {
+        //            parameters:
+        //                @display("p=409,293");
+        //            gates:
+        //                ethg[3];
+        //        }
+        //        router5: AnsaISISRouter {
+        //            parameters:
+        //                @display("p=338,214");
+        //            gates:
+        //                ethg[3];
+        //        }
         router6: AnsaISISRouter {
             parameters:
-                @display("p=530,293");
+                @display("p=150,166");
             gates:
-                ethg[2];
+                ethg[1];
         }
         router7: AnsaISISRouter {
             parameters:
-                @display("p=657,293");
+                @display("p=410,166");
             gates:
                 ethg[1];
         }
-        etherSwitch2: EtherSwitch {
-            parameters:
-                @display("p=338,110");
-            gates:
-                ethg[3];
-        }
-        router8: AnsaISISRouter {
-            parameters:
-                @display("p=268,29");
-            gates:
-                ethg[1];
-        }
-        router9: AnsaISISRouter {
-            parameters:
-                @display("p=401,27");
-            gates:
-                ethg[1];
-        }
+    //        etherSwitch2: EtherSwitch {
+    //            parameters:
+    //                @display("p=338,110");
+    //            gates:
+    //                ethg[3];
+    //        }
+    //        router8: AnsaISISRouter {
+    //            parameters:
+    //                @display("p=268,29");
+    //            gates:
+    //                ethg[1];
+    //        }
+    //        router9: AnsaISISRouter {
+    //            parameters:
+    //                @display("p=401,27");
+    //            gates:
+    //                ethg[1];
+    //        }
     connections allowunconnected:
-        router1.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[0];
-        router2.ethg[1] <--> Eth100M <--> etherSwitch1.ethg[2];
-        router3.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[1];
-        router2.ethg[2] <--> Eth100M <--> router4.ethg[0];
-        router2.ethg[0] <--> Eth100M <--> router5.ethg[1];
-        router5.ethg[0] <--> Eth100M <--> router4.ethg[1];
-        router8.ethg[0] <--> Eth100M <--> etherSwitch2.ethg[0];
-        router9.ethg[0] <--> Eth100M <--> etherSwitch2.ethg[1];
-        router5.ethg[2] <--> Eth100M <--> etherSwitch2.ethg[2];
-        router6.ethg[0] <--> Eth100M <--> router4.ethg[2];
-        router6.ethg[1] <--> Eth100M <--> router7.ethg[0];
+        //        router1.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[0];
+        //        router2.ethg[1] <--> Eth100M <--> etherSwitch1.ethg[2];
+        //        router3.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[1];
+        //        router2.ethg[2] <--> Eth100M <--> router4.ethg[0];
+        //        router2.ethg[0] <--> Eth100M <--> router5.ethg[1];
+        //        router5.ethg[0] <--> Eth100M <--> router4.ethg[1];
+        //        router8.ethg[0] <--> Eth100M <--> etherSwitch2.ethg[0];
+        //        router9.ethg[0] <--> Eth100M <--> etherSwitch2.ethg[1];
+        //        router5.ethg[2] <--> Eth100M <--> etherSwitch2.ethg[2];
+        //        router6.ethg[0] <--> Eth100M <--> router4.ethg[2];
+        router6.ethg[0] <--> Eth100M <--> router7.ethg[0];
 
 }
