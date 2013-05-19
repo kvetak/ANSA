@@ -133,6 +133,8 @@ private:
 
     ISISTimer *genL1LspTimer;
     ISISTimer *genL2LspTimer;
+    ISISTimer *spfL1Timer;
+    ISISTimer *spfL2Timer;
 
     /* TRILL related */
     std::map<int, ISISPaths_t *> distribTrees;
