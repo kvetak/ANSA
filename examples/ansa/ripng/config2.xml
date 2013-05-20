@@ -1,0 +1,67 @@
+<Devices>    
+    <Router id="2001:13::3">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>13.13.13.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:13::3/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>5.5.5.5</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:5:5:5::5/64</IPv6Address>
+                <RIPng name="RIPng1">
+                	<PassiveInterface>enable</PassiveInterface>
+                </RIPng>
+            </Interface>
+            <Interface name="eth3">
+                <IPAddress>6.6.6.6</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:6:6:6::6/64</IPv6Address>
+                <RIPng name="RIPng1">
+                	<PassiveInterface>enable</PassiveInterface>
+                </RIPng>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>23.23.23.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:23::3/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+            <Interface name="eth4">
+                <IPAddress>34.34.34.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:34::3/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+        </Interfaces>
+        
+        <Routing6>
+        	<RIPng name="RIPng1"/>
+        </Routing6>
+    </Router>
+    
+    <Router id="2001:34::4">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>34.34.34.4</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:34::4/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>7.7.7.7</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:7:7:7::7/64</IPv6Address>
+                <RIPng name="RIPng1">
+                	<PassiveInterface>enable</PassiveInterface>
+                </RIPng>
+            </Interface>
+        </Interfaces>
+        
+        <Routing6>
+        	<RIPng name="RIPng1"/>
+        </Routing6>
+    </Router>
+</Devices>
