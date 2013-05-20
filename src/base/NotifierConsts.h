@@ -111,6 +111,10 @@ enum
     NF_CLNS_ROUTE_DELETED,
     NF_CLNS_ROUTE_CHANGED,
 
+    NF_ISIS_ADJ_CHANGED,
+
+
+
     // - layer 4 (transport)
     //...
 

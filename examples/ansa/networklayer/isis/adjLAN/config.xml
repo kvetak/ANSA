@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<Routers>
+	<Router id="192.168.1.1">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.1.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>broadcast</ISIS-Network>
+      		</Interface>
+      		
+    	</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.0100.0000.0001.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.25.2">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.25.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L2</ISIS-Circuit-Type>
+     		</Interface>
+     		<Interface name="eth1">
+        		<IPAddress>192.168.1.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>broadcast</ISIS-Network>
+        		<ISIS-Circuit-Type>L1</ISIS-Circuit-Type>
+     		</Interface>
+     		<Interface name="eth2">
+        		<IPAddress>192.168.24.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L2</ISIS-Circuit-Type>
+     		</Interface>
+    	</Interfaces>
+		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1-2</IS-Type>
+  				<NET>49.0001.0100.0000.0002.00</NET>
+  			</ISIS>
+  		</Routing>
+
+
+	</Router>
+	
+	<Router id="192.168.1.3">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.1.3</IPAddress>
+        		<ISIS-Network>broadcast</ISIS-Network>
+        		<Mask>255.255.255.0</Mask>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.0100.0000.0003.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.24.4">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.24.4</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L2</ISIS-Circuit-Type>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.45.4</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L2</ISIS-Circuit-Type>
+      		</Interface>
+      		<Interface name="eth2">
+        		<IPAddress>192.168.46.4</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L1</ISIS-Circuit-Type>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1-2</IS-Type>
+  				<NET>49.0002.0100.0000.0004.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>	
+	
+	<Router id="192.168.45.5">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.45.5</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L2</ISIS-Circuit-Type>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.25.5</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L2</ISIS-Circuit-Type>
+      		</Interface>
+      		<Interface name="eth2">
+        		<IPAddress>192.168.3.5</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Network>broadcast</ISIS-Network>
+        		<ISIS-Circuit-Type>L1</ISIS-Circuit-Type>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1-2</IS-Type>
+  				<NET>49.0003.0100.0000.0005.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>		
+	
+	<Router id="192.168.46.6">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.46.6</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.67.6</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0002.0100.0000.0006.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.67.7">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.67.7</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0002.0100.0000.0007.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.3.8">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.3.8</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>broadcast</ISIS-Network>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0003.0100.0000.0008.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>	
+	
+	<Router id="192.168.3.9">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.3.9</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>80</ISIS-Priority>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0003.0100.0000.0009.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+		
+</Routers>

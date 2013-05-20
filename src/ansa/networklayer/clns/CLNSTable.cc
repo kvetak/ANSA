@@ -80,7 +80,7 @@ std::string CLNSRoute::info() const{
 
     for (unsigned int i = 0; i < 7; i++)
     {
-        out << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) this->destPrefix[i];
+        out << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) this->destPrefix[i];
         if (i % 2 == 1)
             out << ".";
     }

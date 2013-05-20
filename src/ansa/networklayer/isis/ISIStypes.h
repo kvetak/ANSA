@@ -37,13 +37,13 @@
 #define ISIS_LSP_INTERVAL 33 /*!< Minimum delay in ms between sending two successive LSPs. */
 #define ISIS_LSP_REFRESH_INTERVAL 150 /*!< Interval in seconds at which LSPs are refreshed (1 to 65535). This value SHOULD be less than ISIS_LSP_MAX_LIFETIME*/
 #define ISIS_LSP_MAX_LIFETIME 200 /*!< Interval in seconds during which is specified LSP valid. This value SHOULD be more than ISIS_LSP_REFRESH_INTERVAL */
-#define ISIS_LSP_GEN_INTERVAL 1 //TODO A! change back to 5 /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
-#define ISIS_LSP_INIT_WAIT 3 //TODO A! change back to 50 /*!< Initial wait interval in ms before generating first LSP.*/
-#define ISIS_CSNP_INTERVAL 3 //TODO A! change back to 10 /*!< Interval in seconds between generating CSNP message.*/
-#define ISIS_PSNP_INTERVAL 2 /*!< Interval in seconds between generating PSNP message.*/
-#define ISIS_LSP_MAX_SIZE 1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
+#define ISIS_LSP_GEN_INTERVAL 5 //TODO A! change back to 5 /*!< Interval in seconds at which LSPs (with SRMflag set) are transmitted.*/
+#define ISIS_LSP_INIT_WAIT 50 //TODO A! change back to 50 /*!< Initial wait interval in ms before generating first LSP.*/
+#define ISIS_CSNP_INTERVAL 10 //TODO A! change back to 10 /*!< Interval in seconds between generating CSNP message.*/
+#define ISIS_PSNP_INTERVAL 5 /*!< Interval in seconds between generating PSNP message.*/
+#define ISIS_LSP_MAX_SIZE  21 //1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
 #define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
-#define ISIS_SPF_FULL_INTERVAL 29 //TODO A! change back to 50
+#define ISIS_SPF_FULL_INTERVAL 50 //TODO A! change back to 50
 #define ISIS_TRILL_MAX_HELLO_SIZE 1470
 //class InterfaceEntr;
 //class MACAddress;
@@ -190,27 +190,11 @@ struct LSPRecord
             }
         }*/
 
-        ~LSPRecord(){
 
-/*            for (unsigned int i = 0; i < this->LSP->getTLVArraySize(); i++)
-            {
-                if(this->LSP->getTLV(i).value != NULL){
-                    delete this->LSP->getTLV(i).value;
-                }
-            }*/
-            this->LSP->setTLVArraySize(0);
-            if(this->LSP != NULL){
-                delete this->LSP;
-            }
-//            if(this->deadTimer != NULL){
-//                drop(this->deadTimer);
-//                delete this->deadTimer;
-//            }
-            this->SRMflags.clear();
-            this->SSNflags.clear();
-        }
+
 
         //bool operator for sorting
+
          bool operator<(const LSPRecord& lspRec2) const {
 
              for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
@@ -226,8 +210,49 @@ struct LSPRecord
              return false;
          }
 
+         ~LSPRecord(){
+
+  /*            for (unsigned int i = 0; i < this->LSP->getTLVArraySize(); i++)
+              {
+                  if(this->LSP->getTLV(i).value != NULL){
+                      delete this->LSP->getTLV(i).value;
+                  }
+              }*/
+              this->LSP->setTLVArraySize(0);
+              if(this->LSP != NULL){
+                  delete this->LSP;
+              }
+  //            if(this->deadTimer != NULL){
+  //                drop(this->deadTimer);
+  //                delete this->deadTimer;
+  //            }
+              this->SRMflags.clear();
+              this->SSNflags.clear();
+          }
+
 };
 typedef std::vector<LSPRecord *> LSPRecQ_t;
+
+
+struct cmpLSPRecord{
+        bool operator()(const LSPRecord *lspRec1, const LSPRecord *lspRec2){
+                    for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+                    {
+                        if (lspRec1->LSP->getLspID(i) < lspRec2->LSP->getLspID(i))
+                        {
+                            return true; //first is smaller, so return true
+                        }
+                        else if (lspRec1->LSP->getLspID(i) > lspRec2->LSP->getLspID(i))
+                        {
+                            return false; //first is bigger, so return false
+                        }
+                        //if it's equal then continue to next one
+                    }
+
+                    //if they're equal, return false
+                    return false;
+                }
+};
 
 struct FlagRecord
 {
