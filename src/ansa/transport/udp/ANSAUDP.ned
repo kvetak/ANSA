@@ -16,6 +16,11 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+// @file ANSAUDP.ned
+// @date 21.5.2013
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief @see ANSAUDP.h
+
 
 package inet.ansa.transport.udp;
 

@@ -12,6 +12,13 @@
 // License along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSARoutingTable6.cc
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended RoutingTable6
+ * @details Adds administrative distance, fixes routing table cache, IPv4-like routes updates
+ */
 
 #include <algorithm>
 

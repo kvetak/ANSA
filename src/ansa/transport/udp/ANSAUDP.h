@@ -12,6 +12,15 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSAUDP.h
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended UDP
+ * @details Bind method in this class allows bind only to the specified port and than bind to
+ *          that port again but with the specified address
+ */
+
 #ifndef __INET_ANSA_ANSAUDP_H
 #define __INET_ANSA_ANSAUDP_H
 

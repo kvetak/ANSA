@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
-* @file RIPngInterface.cc
-* @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-* @brief
-* @detail
+* @file RIPRoutingTableEntry.h
+* @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+* @brief RIP RTE
+* @detail Represents RIP Routing Table Entry
 */
 
 #ifndef RIPROUTINGTABLEENTRY_H_

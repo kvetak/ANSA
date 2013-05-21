@@ -12,6 +12,14 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSARoutingTable6.h
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended RoutingTable6
+ * @details Adds administrative distance, fixes routing table cache, IPv4-like routes updates
+ */
+
 #ifndef __INET_ANSA_ANSAROUTINGTABLE6_H
 #define __INET_ANSA_ANSAROUTINGTABLE6_H
 

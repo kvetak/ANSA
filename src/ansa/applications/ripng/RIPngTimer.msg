@@ -14,9 +14,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 // @file RIPngTimer.msg
-// @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-// @brief
-// @detail
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief RIPng timer
+// @detail RIPng timer
 
 cplusplus {{
 #include "IPv6Address.h"

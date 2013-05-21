@@ -13,6 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+// @file RIPTestNetwork.ned
+// @date 21.5.2013
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+
 package inet.examples.ansa.rip;
 
 import inet.nodes.ethernet.Eth100M;

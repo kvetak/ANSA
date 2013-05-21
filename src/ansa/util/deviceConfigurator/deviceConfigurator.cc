@@ -32,8 +32,8 @@
 //
 
 /**
- * @file TRILL.cc
- * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @file deviceConfigurator.cc
+ * @author Marek Cerny, Jiri Trhlik (mailto:jiritm@gmail.com), Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 2011
  * @brief
  * @detail
