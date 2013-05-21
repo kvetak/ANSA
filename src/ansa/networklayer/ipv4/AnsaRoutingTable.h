@@ -70,6 +70,11 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        */
       virtual bool prepareForAddRoute(IPv4Route *route);
 
+      /**
+       * @see removeRouteSilent and prepareForAddRoute in @class ANSARoutingTable6
+       */
+      bool deleteRouteSilent(IPv4Route *entry);
+
       //rozsireni routing table
       virtual AnsaIPv4MulticastRoute *getRouteFor(IPv4Address group, IPv4Address source);
       virtual std::vector<AnsaIPv4MulticastRoute*> getRouteFor(IPv4Address group);

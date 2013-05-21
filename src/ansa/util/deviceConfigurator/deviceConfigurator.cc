@@ -812,7 +812,7 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *proces
                throw cRuntimeError("Unable to set IPv6 network address %s for RIPng route", sIpv6address.c_str());
             }
 
-            if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast())
+            if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast() && !ipv6address.isUnspecified())
             {
                 // make directly connected route
                 route = new RIPng::RoutingTableEntry(ipv6address.getPrefix(prefixLen), prefixLen);

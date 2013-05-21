@@ -167,9 +167,9 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
         ANSAIPv6Route *ANSARoute = dynamic_cast<ANSAIPv6Route *>(route);
         ANSAIPv6Route *ANSARouteInTable = dynamic_cast<ANSAIPv6Route *>(routeInTable);
 
-        //Assume that inet routes have AD -1
-        int newAdminDist = -1;
-        int oldAdminDist = -1;
+        //Assume that inet routes have AD 255
+        int newAdminDist = ANSAIPv6Route::dUnknown;
+        int oldAdminDist = ANSAIPv6Route::dUnknown;
 
         if (ANSARoute)
             newAdminDist = ANSARoute->getAdminDist();
@@ -322,7 +322,10 @@ void ANSARoutingTable6::addRoutingProtocolRoute(ANSAIPv6Route *route)
 
 void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
 {
-    //TODO: invalidate cache
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that the latest route information are used.*/
+    purgeDestCache();
+
     route->setRoutingTable(this);
     routeList.push_back(route);
 

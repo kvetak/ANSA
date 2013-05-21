@@ -75,8 +75,11 @@ class ANSAIPv4Route : public IPv4Route
             dUnknown = 255
         };
 
+        //Some codes are defined in @class IPv4Route!!
+        enum {F_ADMINDIST = 10, F_ROUTINGPROTSOURCE = 11}; // field codes for changed()
+
     protected:
-        RouteAdminDist _adminDist;
+        unsigned int _adminDist;
         /** Should be set if route source is a "routing protocol" **/
         RoutingProtocolSource _routingProtocolSource;
 
@@ -86,13 +89,12 @@ class ANSAIPv4Route : public IPv4Route
         virtual std::string info() const;
         virtual std::string detailedInfo() const;
 
-        void setAdminDist(RouteAdminDist adminDist)  {_adminDist = adminDist; }
-        void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) { _routingProtocolSource = routingProtocolSource; }
-
         virtual const char *getRouteSrcName() const;
-        RouteAdminDist getAdminDist() const  { return _adminDist; }
+        unsigned int getAdminDist() const  { return _adminDist; }
         RoutingProtocolSource getRoutingProtocolSource() const { return _routingProtocolSource; }
 
+        void setAdminDist(unsigned int adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changed(F_ADMINDIST);} }
+        void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) { if (routingProtocolSource != _routingProtocolSource) { _routingProtocolSource = routingProtocolSource; changed(F_ROUTINGPROTSOURCE);} }
 };
 
 

@@ -56,6 +56,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
 
     unsigned int         connNetworkMetric;
     unsigned int         infinityMetric;
+    unsigned int         distance;
     simtime_t   routeTimeout;
     simtime_t   routeGarbageCollectionTimeout;
     simtime_t   regularUpdateTimeout;

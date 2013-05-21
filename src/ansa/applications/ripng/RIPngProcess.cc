@@ -1271,11 +1271,14 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
        RIPng::RoutingTableEntry *RIPngRoute = dynamic_cast<RIPng::RoutingTableEntry *>(route);
 
        if (RIPngRoute != NULL)
-       {// notification about RIPng route
-           routingTableEntryInRIPngRT = RIPngRoute->getCopy();
-           ASSERT(routingTableEntryInRIPngRT != NULL);
+       {
+           if (RIPngRoute->getProcess() == this)
+           {// notification about RIPng route of this process
+               routingTableEntryInRIPngRT = RIPngRoute->getCopy();
+               ASSERT(routingTableEntryInRIPngRT != NULL);
 
-           routingTableEntryInRIPngRT->setCopy(NULL);
+               routingTableEntryInRIPngRT->setCopy(NULL);
+           }
        }
        else
        {// check if RIPng has that route and install it
@@ -1288,5 +1291,45 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
        }
    }
 
-   //observing route_changed is not necessarily, each protocol has its own metric
+   if (category == NF_IPv6_ROUTE_CHANGED)
+   {
+       IPv6Route *changedRoute = check_and_cast<IPv6Route *>(details);
+       ANSAIPv6Route *changedRouteANSA = dynamic_cast<ANSAIPv6Route *>(changedRoute);
+       RIPng::RoutingTableEntry *changedRouteRIPng = dynamic_cast<RIPng::RoutingTableEntry *>(changedRoute);
+
+       if (changedRouteRIPng != NULL)
+       {
+           if (changedRouteRIPng->getProcess() == this)
+           {// ignore notifications for routes of this process
+               return;
+           }
+       }
+
+       unsigned int adminDist;
+       if (changedRouteANSA != NULL)
+           adminDist = changedRouteANSA->getAdminDist();
+       else
+           adminDist = ANSAIPv6Route::dUnknown;
+
+       if (adminDist >= distance)
+       {
+           RIPng::RoutingTableEntry *routingTableEntryInRIPngRT = getRoutingTableEntry(changedRoute->getDestPrefix(), changedRoute->getPrefixLength());
+           if (routingTableEntryInRIPngRT != NULL)
+           {// check if RIPng has that route
+               if (!routingTableEntryInRIPngRT->getNextHop().isUnspecified())
+               {
+                   if (adminDist > distance || (adminDist == distance && changedRoute->getMetric() > routingTableEntryInRIPngRT->getMetric()))
+                   {
+                       RIPng::RoutingTableEntry *newRIPngRoute = new RIPng::RoutingTableEntry(*routingTableEntryInRIPngRT);
+                       newRIPngRoute->setRoutingTable(rt);
+                       routingTableEntryInRIPngRT->setCopy(newRIPngRoute);
+
+                       //we cannot call rt->removeRoute()!
+                       delete changedRoute;
+                       changedRoute = newRIPngRoute;
+                   }
+               }
+           }
+       }
+   }
 }

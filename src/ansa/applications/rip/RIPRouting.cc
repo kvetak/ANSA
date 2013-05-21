@@ -401,7 +401,7 @@ void RIPRouting::removeRoutingTableEntryFromGlobalRT(RIP::RoutingTableEntry* ent
 {
     if (entry->getCopy() != NULL)
     // corresponding route from "global routing table" to the entry from "RIP routing table"
-        rt->removeRoute(entry->getCopy());
+        rt->deleteRoute(entry->getCopy());
 }
 
 //
@@ -1003,6 +1003,7 @@ void RIPRouting::initialize(int stage)
     routeTimeout = par("routeTimeout").doubleValue();
     routeGarbageCollectionTimeout = par("routeGarbageCollectionTimeout").doubleValue();
     regularUpdateTimeout = par("regularUpdateInterval").doubleValue();
+    distance = par("adminDist").longValue();
 
     // get deviceId
     deviceId = par("deviceId");
@@ -1210,5 +1211,42 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
        }
    }
 
-   //observing route_changed is not necessarily, each protocol has its own metric
+   if (category == NF_IPv4_ROUTE_CHANGED)
+   {
+       IPv4Route *changedRoute = check_and_cast<IPv4Route *>(details);
+       ANSAIPv4Route *changedRouteANSA = dynamic_cast<ANSAIPv4Route *>(changedRoute);
+       RIP::RoutingTableEntry *changedRouteRIPng = dynamic_cast<RIP::RoutingTableEntry *>(changedRoute);
+
+       if (changedRouteRIPng != NULL)
+       {// ignore notifications for RIPng routes
+           return;
+       }
+
+       unsigned int adminDist;
+       if (changedRouteANSA != NULL)
+           adminDist = changedRouteANSA->getAdminDist();
+       else
+           adminDist = ANSAIPv4Route::dUnknown;
+
+       if (adminDist >= distance)
+       {
+           RIP::RoutingTableEntry *routingTableEntryInRIPRT = getRoutingTableEntry(changedRoute->getDestination(), changedRoute->getNetmask());
+           if (routingTableEntryInRIPRT != NULL)
+           {// check if RIP has that route
+               if (!routingTableEntryInRIPRT->getGateway().isUnspecified())
+               {
+                   if (adminDist > distance || (adminDist == distance && changedRoute->getMetric() > routingTableEntryInRIPRT->getMetric()))
+                   {
+                       RIP::RoutingTableEntry *newRIPRoute = new RIP::RoutingTableEntry(*routingTableEntryInRIPRT);
+                       newRIPRoute->setRoutingTable(changedRoute->getRoutingTable());
+                       routingTableEntryInRIPRT->setCopy(newRIPRoute);
+
+                       //we cannot call rt->deleteRoute()!
+                       delete changedRoute;
+                       changedRoute = newRIPRoute;
+                   }
+               }
+           }
+       }
+   }
 }
