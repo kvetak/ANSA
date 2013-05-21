@@ -55,8 +55,8 @@ class RIPngProcess
 
     /**
      * To disable the RIPng process, this method must be called
-     * before deleting process. Stopped process must be deleted,
-     * you can't call start again.
+     * before deleting process. Stopped process MUST be deleted
+     * - you can't call start() again.
      */
     virtual void stop();
 
@@ -148,6 +148,7 @@ class RIPngProcess
     RIPng::RoutingTableEntry*       getRoutingTableEntry(const IPv6Address &prefix, int prefixLength);
     void                            addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool createTimers = true);
     void                            removeRoutingTableEntry(IPv6Address &prefix, int prefixLength);
+    void                            removeRoutingTableEntry(RIPng::RoutingTableEntry *entry);
     void                            removeRoutingTableEntry(RoutingTableIt it);
 
     /**

@@ -41,6 +41,4 @@ enum RIPTimerType
 packet RIPTimer 
 {
     char timerKind enum(RIPTimerType) = RIP_GENERAL_UPDATE;
-    IPv4Address IPv4Address;                                //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char netmask;                                           //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }

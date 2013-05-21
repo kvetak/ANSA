@@ -67,6 +67,13 @@ RIPRouting::~RIPRouting()
     }
     sockets.clear();
     enabledInterfaces.clear();
+
+    unsigned long downIntCount = downInterfaces.size();
+    for (unsigned long i = 0; i < downIntCount; ++i)
+    {
+        delete downInterfaces[i];
+    }
+    downInterfaces.clear();
 }
 
 //
@@ -93,14 +100,10 @@ void RIPRouting::addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool create
 {
     if (createTimers == true)
     {
-        RIPTimer *timer = createAndStartTimer(RIP_ROUTE_TIMEOUT, routeTimeout);
-        timer->setIPv4Address(entry->getDestination());
-        timer->setNetmask(entry->getNetmask().getNetmaskLength());
+        RIPTimer *timer = createAndStartTimer(RIP_ROUTE_TIMEOUT, entry, routeTimeout);
         entry->setTimer(timer);
 
-        RIPTimer *GCTimer = createTimer(RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT);
-        GCTimer->setIPv4Address(entry->getDestination());
-        GCTimer->setNetmask(entry->getNetmask().getNetmaskLength());
+        RIPTimer *GCTimer = createTimer(RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT, entry);
         entry->setGCTimer(GCTimer);
     }
 
@@ -112,11 +115,24 @@ void RIPRouting::addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool create
 
     ++numRoutes;
 }
+
 void RIPRouting::removeRoutingTableEntry(IPv4Address &network, int netmask)
 {
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
     {
         if ((*it)->getDestination()==network && (*it)->getNetmask().getNetmaskLength()==netmask)
+        {
+            removeRoutingTableEntry(it);
+            break;
+        }
+    }
+}
+
+void RIPRouting::removeRoutingTableEntry(RIP::RoutingTableEntry *entry)
+{
+    for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
+    {
+        if ((*it) == entry)
         {
             removeRoutingTableEntry(it);
             break;
@@ -265,22 +281,24 @@ int RIPRouting::getEnabledInterfaceIndexById(int id)
     return i == size ? -1 : i;
 }
 
+int RIPRouting::getDownInterfaceIndexById(int id)
+{
+    int i = 0, size = downInterfaces.size();
+    while (i < size && downInterfaces[i]->getId() != id) i++;
+    return i == size ? -1 : i;
+}
+
 void RIPRouting::addEnabledInterface(RIP::Interface *interface)
 {
     enabledInterfaces.push_back(interface);
     sockets.push_back(createAndSetSocketForInt(interface));
 }
 
-void RIPRouting::removeEnabledInterface(unsigned long i)
+RIP::Interface *RIPRouting::removeEnabledInterface(unsigned long i)
 {
-    delete enabledInterfaces[i];
+    RIP::Interface *interface = enabledInterfaces[i];
     enabledInterfaces.erase(enabledInterfaces.begin() + i);
-    sockets[i]->close();
-    delete sockets[i];
-    sockets.erase(sockets.begin() + i);
-
-    //if (i == 0)
-        //sockets[0]->joinMulticastGroup(RIPAddress, -1);
+    return interface;
 }
 
 void RIPRouting::removeAllEnabledInterfaces()
@@ -343,6 +361,17 @@ RIP::Interface *RIPRouting::enableRIPOnInterface(const char *interfaceName)
     int interfaceId = interface->getInterfaceId();
 
     return enableRIPOnInterface(interfaceId);
+}
+
+RIP::Interface *RIPRouting::disableRIPOnInterface(unsigned long RIPInterfaceIndex)
+{
+    ASSERT(RIPInterfaceIndex < getEnabledInterfacesCount());
+
+    sockets[RIPInterfaceIndex]->close();
+    delete sockets[RIPInterfaceIndex];
+    sockets.erase(sockets.begin() + RIPInterfaceIndex);
+
+    return removeEnabledInterface(RIPInterfaceIndex);
 }
 
 RIP::Interface *RIPRouting::enableRIPOnInterface(int interfaceId)
@@ -490,6 +519,7 @@ void RIPRouting::sendDelayedTriggeredUpdateMessage()
 
 RIPMessage *RIPRouting::makeUpdateMessageForInterface(RIP::Interface *interface, bool changed)
 {
+    //FIXME: maximum datagram size is limited by the network's MTU?
     int size;
     std::vector<RIPRTE> rtes;
 
@@ -530,6 +560,7 @@ void RIPRouting::sendAllRoutesRequest()
     RIP::Interface *interface;
 
     RIPRTE rte = RIPRTE();
+    rte.setAFI(0);
     rte.setIPv4Address(IPv4Address()); // IPv4 Address 0.0.0.0
     rte.setMetric(16);
     rte.setNetMask(0);
@@ -614,6 +645,8 @@ RIPRTE RIPRouting::makeRTEFromRoutingTableEntry(RIP::RoutingTableEntry *routingT
     rte.setIPv4Address(routingTableEntry->getDestination());
     rte.setMetric(routingTableEntry->getMetric());
     rte.setRouteTag(routingTableEntry->getRouteTag());
+    rte.setNextHop(IPv4Address::UNSPECIFIED_ADDRESS);
+    rte.setAFI(2);
 
     return rte;
 }
@@ -729,13 +762,34 @@ void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAdd
 
     IPv4Address &network = rte.getIPv4Address();
     IPv4Address netmask = IPv4Address::makeNetmask(rte.getNetMask());
+    IPv4Address &gateway = rte.getNextHop();
+    if (gateway.isUnspecified())
+    {
+        gateway = sourceAddr;
+    }
+    else
+    {
+        bool nextHopOK = false;
+        for (int i=0; i<ift->getNumInterfaces(); i++)
+        {
+            IPv4InterfaceData *intData = ift->getInterface(i)->ipv4Data();
+            if (intData->getIPAddress().prefixMatches(gateway, intData->getNetmask().getNetmaskLength()))
+            {
+                nextHopOK = true;
+                break;
+            }
+        }
+
+        if (!nextHopOK)
+            gateway = sourceAddr;
+    }
 
     // Check if a route with the prefix exists
     RIP::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(network, netmask);
 
     if (routingTableEntry != NULL)
     {// Update Routing Table Entry
-        updateRoutingTableEntry(routingTableEntry, rte, sourceIntId, sourceAddr);
+        updateRoutingTableEntry(routingTableEntry, rte, sourceIntId, gateway);
     }
     else
     {// Create and add new Routing Table Entry
@@ -746,7 +800,7 @@ void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAdd
         {
             RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(network, netmask);
             route->setInterface(ift->getInterfaceById(sourceIntId));
-            route->setGateway(sourceAddr);
+            route->setGateway(gateway);
             route->setMetric(metric);
             route->setChangeFlag();
 
@@ -762,9 +816,17 @@ bool RIPRouting::checkAndLogRTE(RIPRTE &rte, IPv4Address &sourceAddr)
     // netmask is valid (0-32)
     // metric is valid (0-16)
     if ( rte.getNetMask() > 32 ||
-         rte.getMetric() > 16)
+         rte.getMetric() > 16 ||
+         rte.getIPv4Address().isMulticast() ||
+         rte.getIPv4Address().getAddressCategory() != IPv4Address::GLOBAL)
     {
         EV << "Bad RTE from: " << sourceAddr << endl;
+        return false;
+    }
+
+    if ( rte.getAFI() != 2)
+    {
+        EV << "Bad RTE from: " << sourceAddr << "(Unsupported Address Family Identifier)" << endl;
         return false;
     }
 
@@ -788,10 +850,8 @@ void RIPRouting::handleRequest(RIPMessage *request, int srcPort, IPv4Address &sr
     {// could be a request for all routes
         EV << "RIP message: RIP - General Request" << endl;
         RIPRTE &rte = request->getRtes(0);
-        if (rte.getIPv4Address().isUnspecified() &&
-            rte.getNetMask() == 0 &&
-            rte.getMetric() == infinityMetric &&
-            rte.getRouteTag() == 0)
+        if (rte.getAFI() == 0 &&
+            rte.getMetric() == infinityMetric)
         {
             getRTEs(responseRtes, RIPInt, false);
         }
@@ -839,17 +899,18 @@ void RIPRouting::handleRequest(RIPMessage *request, int srcPort, IPv4Address &sr
 //-- TIMEOUTS
 //
 //
-RIPTimer *RIPRouting::createTimer(int timerKind)
+RIPTimer *RIPRouting::createTimer(int timerKind, void *context)
 {
     RIPTimer *timer = new RIPTimer();
     timer->setTimerKind(timerKind);
+    timer->setContextPointer(context);
 
     return timer;
 }
 
-RIPTimer *RIPRouting::createAndStartTimer(int timerKind, simtime_t timerLen)
+RIPTimer *RIPRouting::createAndStartTimer(int timerKind, void *context, simtime_t timerLen)
 {
-    RIPTimer *timer = createTimer(timerKind);
+    RIPTimer *timer = createTimer(timerKind, context);
 
     scheduleAt(simTime() + timerLen, timer);
 
@@ -924,10 +985,7 @@ void RIPRouting::handleTriggeredUpdateTimer()
 
 void RIPRouting::startRouteDeletionProcess(RIPTimer *timer)
 {
-    IPv4Address &network = timer->getIPv4Address();
-    IPv4Address netmask = IPv4Address::makeNetmask(timer->getNetmask());
-    RIP::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(network, netmask);
-
+    RIP::RoutingTableEntry *routingTableEntry = reinterpret_cast<RIP::RoutingTableEntry *>(timer->getContextPointer());
     startRouteDeletionProcess(routingTableEntry);
 }
 
@@ -952,10 +1010,8 @@ void RIPRouting::startRouteDeletionProcess(RIP::RoutingTableEntry *routingTableE
 
 void RIPRouting::deleteRoute(RIPTimer *timer)
 {
-    IPv4Address &network = timer->getIPv4Address();
-    int netmask = timer->getNetmask();
-
-    removeRoutingTableEntry(network, netmask);
+    RIP::RoutingTableEntry *entry = reinterpret_cast<RIP::RoutingTableEntry *>(timer->getContextPointer());
+    removeRoutingTableEntry(entry);
 }
 
 //
@@ -1022,8 +1078,8 @@ void RIPRouting::initialize(int stage)
     globalSocket.joinMulticastGroup(RIPAddress, -1);
 
     // start REGULAR UPDATE TIMER
-    regularUpdateTimer = createAndStartTimer(RIP_GENERAL_UPDATE, regularUpdateTimeout);
-    triggeredUpdateTimer = createTimer(RIP_TRIGGERED_UPDATE);
+    regularUpdateTimer = createAndStartTimer(RIP_GENERAL_UPDATE, this, regularUpdateTimeout);
+    triggeredUpdateTimer = createTimer(RIP_TRIGGERED_UPDATE, this);
 
     updateDisplayString();
 
@@ -1091,7 +1147,7 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
                if (RIPInterface->getId() == interfaceEntryId)
                {
                    alreadyDisabled = false;
-                   removeEnabledInterface(i);
+                   downInterfaces.push_back(disableRIPOnInterface(i));
                    break;
                }
            }
@@ -1152,7 +1208,17 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
            if (!alreadyEnabled)
            {
                // add interface to RIP interfaces
-               enableRIPOnInterface(interfaceEntry->getName());
+               int downRIPInterfaceIndex = getDownInterfaceIndexById(interfaceEntryId);
+               if (downRIPInterfaceIndex != -1)
+               {
+                   RIP::Interface *downRIPInterface = downInterfaces[downRIPInterfaceIndex];
+                   addEnabledInterface(downRIPInterface);
+                   downInterfaces.erase(downInterfaces.begin() + downRIPInterfaceIndex);
+               }
+               else
+               {
+                   enableRIPOnInterface(interfaceEntry->getName());
+               }
 
                bBlockTriggeredUpdateMessage = true;
 

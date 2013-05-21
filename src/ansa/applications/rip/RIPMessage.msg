@@ -43,7 +43,7 @@ class RIPRTE
     uint16_t	routeTag = 0;  //2 bytes
     IPv4Address IPv4Address;   //4 bytes
     uint32_t    netMask;       //4 bytes
-    uint32_t    nextHop;       //4 bytes
+    IPv4Address nextHop;       //4 bytes
     uint32_t    metric;        //4 byte
 }
 

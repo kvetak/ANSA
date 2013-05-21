@@ -41,6 +41,4 @@ enum RIPngTimerType
 packet RIPngTimer 
 {
     char timerKind enum(RIPngTimerType) = RIPNG_GENERAL_UPDATE;
-    IPv6Address IPv6Prefix;                                //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char prefixLen;                                        //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }
