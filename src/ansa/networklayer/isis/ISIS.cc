@@ -32,8 +32,7 @@
 #include "deviceConfigurator.h"
 #include "TRILLInterfaceData.h"
 
-Define_Module(ISIS)
-;
+Define_Module(ISIS);
 
 ISIS::ISIS()
 {
@@ -230,6 +229,11 @@ ISIS::~ISIS()
 
 }
 
+/**
+ * Handles notifications received through notification board.
+ * @param is fired notification
+ * @param detail is user defined pointer
+ */
 void ISIS::receiveChangeNotification(int category, const cObject *details)
 {
     // TODO B1:
@@ -268,15 +272,15 @@ void ISIS::receiveChangeNotification(int category, const cObject *details)
     }
 }
 
-    /**
-     * Initialization function called at the start of simulation. This method provides initial
-     * parsing of XML config file and configuration of whole module including network interfaces.
-     * NED address is validated and after it's loaded. Initial timers for hello and LSP packets
-     * are also set.
-     * @see insertIft(InterfaceEntry *entry, cXMLElement *intElement)
-     * @see parseNetAddr()
-     * @param stage defines stage(step) of global initialization
-     */
+/**
+ * Initialization function called at the start of simulation. This method provides initial
+ * parsing of XML config file and configuration of whole module including network interfaces.
+ * NED address is validated and after it's loaded. Initial timers for hello and LSP packets
+ * are also set.
+ * @see insertIft(InterfaceEntry *entry, cXMLElement *intElement)
+ * @see parseNetAddr()
+ * @param stage defines stage(step) of global initialization
+ */
 
 void ISIS::initialize(int stage)
 {
@@ -1541,12 +1545,12 @@ void ISIS::sendHelloMsg(ISISTimer* timer)
 
 }
 
-        /*
-         * Send hello message on specified broadcast interface.
-         * Packets contain IS_NEIGHBOURS_HELLO and AREA_ADDRESS TLVs.
-         * @param k is interface index (index to ISISIft)
-         * @param circuitType is circuit type of specified interface.
-         */
+/*
+ * Send hello message on specified broadcast interface.
+ * Packets contain IS_NEIGHBOURS_HELLO and AREA_ADDRESS TLVs.
+ * @param k is interface index (index to ISISIft)
+ * @param circuitType is circuit type of specified interface.
+ */
 void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 {
 
@@ -1838,9 +1842,14 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 
 }
 
-/***********************************************************/
+/******************/
 /*   TRILL Hellos */
-
+/******************/
+/**
+ * Generates TRILL hellos and places them in TRILLInterfaceData
+ * @param interfaceId is interface id in interfacetable
+ * @param circuitType is circuit type of interface with @param interfaceId
+ */
 void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
 {
 
@@ -2411,14 +2420,14 @@ void ISIS::schedule(ISISTimer *timer, double timee)
         break;
     }
 
-    }
+}
 
-            /**
-             * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
-             * Method is used in initialization.
-             * @see initialize(int stage)
-             * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
-             */
+                /**
+                 * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
+                 * Method is used in initialization.
+                 * @see initialize(int stage)
+                 * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
+                 */
 bool ISIS::parseNetAddr()
 {
     std::string net = netAddr;
@@ -4341,7 +4350,10 @@ void ISIS::removeDeadNeighbour(ISISTimer *msg)
     }
 
 }
-
+/**
+ * Performs DIS election
+ * @param msg is received LAN Hello PDU
+ */
 void ISIS::electDIS(ISISLANHelloPacket *msg)
 {
 
@@ -7637,7 +7649,12 @@ std::vector<FlagRecord*>* ISIS::getSSNQ(bool network, int interfaceIndex, short 
     }
     return NULL;
 }
-
+/**
+ * Replaces existing lsp in LSP record
+ * @param lsp is received LSP
+ * @param is local lsp Record
+ * @param circuitType is circuit type
+ */
 void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitType)
 {
 
@@ -7732,6 +7749,11 @@ void ISIS::addFlags(LSPRecord *lspRec, short circuitType)
     //this->setSRMflags(lspRec, circuitType);
 }
 
+/**
+ * Installs @param lsp in local database.
+ * @param lsp is received LSP
+ * @param circuitType is circuit type
+ */
 LSPRecord * ISIS::installLSP(ISISLSPPacket *lsp, short circuitType)
 {
 
@@ -8336,7 +8358,7 @@ ISISadj* ISIS::getAdjByGateIndex(int gateIndex, short circuitType, int offset)
 }
 
 /**
- *
+ * Returns interface fo provided gate index.
  * @param gateIndex index to global interface table
  */
 
@@ -8485,7 +8507,11 @@ double ISIS::getHelloInterval(int interfaceIndex, short circuitType)
     return 0.0;
 
 }
-
+/**
+ * Return true if this system is DIS for interface specified by @param interfaceIndex for specified level.
+ * @param entry Pointer to interface record in interfaceTable
+ * @param intElement XML element of current interface in XML config file
+ */
 bool ISIS::amIDIS(int interfaceIndex, short circuitType)
 {
 
@@ -9444,7 +9470,10 @@ bool ISIS::isAdjUp(ISISMessage *msg, short circuitType)
     return false;
 }
 
-
+/**
+ * Computes distribution tree for each system in LSP DB.
+ * @param circuitType is circuit type
+ */
 void ISIS::spfDistribTrees(short int circuitType){
 
 //    std::map<int, ISISPaths_t *> distribTrees;
@@ -9797,7 +9826,12 @@ std::vector<unsigned char *> *ISIS::getSystemIDsFromTreeOnlySource(int nickname,
 
 }
 
-
+/**
+ * Returns system-ids of all neighbours for in distribution tree for specified nickname
+ * @param nickname specify tree
+ * @param system-id to look for in distribution tree
+ * @return vector of system-ids
+ */
 std::vector<unsigned char *> *ISIS::getSystemIDsFromTree(int nickname, const unsigned char *systemId){
 
     std::vector<unsigned char *> *systemIDs = new std::vector<unsigned char *>;
@@ -9844,7 +9878,10 @@ std::vector<unsigned char *> *ISIS::getSystemIDsFromTree(int nickname, const uns
 
 }
 
-
+/**
+ * Returns all system-id from LSP database
+ * @param circuitType is circuit type.
+ */
 std::map<std::string, int> ISIS::getAllSystemIdsFromLspDb(short circuitType){
     LSPRecQ_t * lspDb = this->getLSPDb(circuitType);
     std::map<std::string, int> systemIdMap;
@@ -9860,7 +9897,7 @@ std::map<std::string, int> ISIS::getAllSystemIdsFromLspDb(short circuitType){
 }
 
 /*
- * Performs full run of SPF algorithm.
+ * Performs full run of SPF algorithm. For L2 ISIS also computes distribution trees.
  * @param timer is initiating timer.
  */
 void ISIS::fullSPF(ISISTimer *timer)
@@ -10127,7 +10164,12 @@ void ISIS::fullSPF(ISISTimer *timer)
 
     this->schedule(timer);
 }
-
+/**
+ * Extracts areas from LSP DB for every path in @param paths
+ * @param paths is set of paths to be searched
+ * @param areas output variable to store extracted paths
+ * @param circuitType is either L1 or L2
+ */
 void ISIS::extractAreas(ISISPaths_t* paths, ISISPaths_t* areas, short circuitType)
 {
 
@@ -10194,7 +10236,9 @@ void ISIS::extractAreas(ISISPaths_t* paths, ISISPaths_t* areas, short circuitTyp
     }
 
 }
-
+/**
+ * Sets attached system to closest system that advertise att flag
+ */
 void ISIS::setClosestAtt(void)
 {
 
@@ -10512,6 +10556,8 @@ void ISIS::getBestMetric(ISISPaths_t *paths)
 
 /*
  * This methods extract ISO information from LSP database.
+ * @param initial is set of unidirectional connections
+ * @return false if extractict fails
  */
 bool ISIS::extractISO(ISISCons_t *initial, short circuitType)
 {
