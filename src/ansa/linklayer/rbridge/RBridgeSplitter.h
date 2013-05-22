@@ -19,8 +19,8 @@
  * @file RBridgeSplitter.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 10.2.2013
- * @brief
- * @detail
+ * @brief Handles de/encapsulation for IS-IS module and splits traffic between IS-IS and TRILL modules.
+ * @detail Handles de/encapsulation for IS-IS module and splits traffic between IS-IS and TRILL modules.
  * @todo Z9
  */
 

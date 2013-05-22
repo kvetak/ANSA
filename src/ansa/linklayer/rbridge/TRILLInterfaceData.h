@@ -18,8 +18,8 @@
  * @file TRILLInterfaceData.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 24.3.2013
- * @brief
- * @detail
+ * @brief Represents TRILL related data on interface.
+ * @detail Represents TRILL related data on interface.
  * @todo Z9
  */
 

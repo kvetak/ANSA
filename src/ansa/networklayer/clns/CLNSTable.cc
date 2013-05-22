@@ -18,8 +18,8 @@
  * @file CLNSTable.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 3.2.2013
- * @brief
- * @detail
+ * @brief Holds CLNS routes.
+ * @detail Holds CLNS routes.
  * @todo TODO A2 Add hopCount for TRILL.
  */
 #include "CLNSTable.h"

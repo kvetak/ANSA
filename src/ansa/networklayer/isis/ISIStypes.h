@@ -1,6 +1,4 @@
-// Author: Matej Hrncirik
-// FIT VUT 2012
-//
+// Copyright (C) 2012 - 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -15,6 +13,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
+
+/**
+ * @file ISIStypes.h
+ * @author Matej Hrncirik, Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 7.3.2012
+ * @brief Contains various types used in IS-IS module.
+ * @detail Contains various types used in IS-IS module. Namely structure fo adjacency, LSP record and path with metric to its neighbors.
+ * @todo
+ */
 
 #ifndef ISISTYPES_H_
 #define ISISTYPES_H_

@@ -18,8 +18,8 @@
  * @file TRILLFrame.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 16.3.2012
- * @brief
- * @detail
+ * @brief Header file for class representing TRILL header.
+ * @detail Header file for class representing TRILL header.
  * @todo Z9
  */
 #ifndef TRILLFRAME_H_

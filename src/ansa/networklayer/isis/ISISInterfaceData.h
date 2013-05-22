@@ -18,8 +18,8 @@
  * @file ISISInterfaceData.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 1.4.2013
- * @brief
- * @detail
+ * @brief Stores IS-IS interface related data.
+ * @detail Stores IS-IS interface related data.
  * @todo Z9
  */
 

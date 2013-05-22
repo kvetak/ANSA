@@ -18,9 +18,9 @@
  * @file CLNSTable.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 3.2.2013
- * @brief
- * @detail
- * @todo TODO
+ * @brief Header file for CLNS Table and CLNS Route
+ * @detail Header file for CLNS Table and CLNS Route
+ * @todo
  */
 
 #ifndef CLNSTABLE_H_
@@ -34,7 +34,7 @@
 #include "NotificationBoard.h"
 #include <vector>
 #include "InterfaceTableAccess.h"
-#include "ISIStypes.h" //TODO delete -> this imply reverted dependency
+#include "ISIStypes.h" //TODO A2 delete -> this imply reverted dependency
 
 class IInterfaceTable;
 class InterfaceEntry;

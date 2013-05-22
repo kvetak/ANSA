@@ -18,8 +18,8 @@
  * @file RBMACTable.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 19.3.2013
- * @brief
- * @detail
+ * @brief Represents forwarding table. Based on Zdenek Kraus's MACTable.
+ * @detail Represents forwarding table. Based on Zdenek Kraus's MACTable.
  * @todo Z9
  */
 

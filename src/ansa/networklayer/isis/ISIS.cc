@@ -18,10 +18,9 @@
  * @file ISIS.cc
  * @author Matej Hrncirik, Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 7.3.2012
- * @brief
- * @detail
+ * @brief Base class for the IS-IS module.
+ * @detail Base class for the IS-IS module.
  * @todo TODO B3 Multicast MAC adresses 01:80:c2:00:00:14 and :15 works so replace the ff:ff:...
- *       TODO B1 Move everything
  *       TODO A1 SEVERE call trillDIS() -> such method would appoint forwarder and handle other TRILL-DIS related duties
  *       TODO B3 Add SimTime isisStarted; and compute initial wait period (for LSP generating and SPF calculation} from such variable
  */
@@ -2832,6 +2831,7 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
              * Handle TRILL Hello messages.
              * I necessary creates new adjacency.
              * Handles only L1.
+             * @param inMsg is incoming TRILL Hello message
              */
 void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
 {

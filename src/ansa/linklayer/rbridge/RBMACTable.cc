@@ -18,14 +18,13 @@
  * @file RBMACTable.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 19.3.2013
- * @brief
- * @detail
- * @todo Z9
+ * @brief Represents forwarding table. Based on Zdenek Kraus's MACTable.
+ * @detail Represents forwarding table. Based on Zdenek Kraus's MACTable.
+
  */
 
 #include "RBMACTable.h"
 
-//#include "macTable.h"
 
 Define_Module(RBMACTable);
 

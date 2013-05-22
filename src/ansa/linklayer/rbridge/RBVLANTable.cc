@@ -18,8 +18,8 @@
  * @file RBVLANTable.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 20.3.2013
- * @brief
- * @detail
+ * @brief Represents VLAN Table. Based on Zdenek Krau's vlanTable
+ * @detail Represents VLAN Table. Based on Zdenek Krau's vlanTable
  * @todo It would be desirable to change __port (gateIndex) to interfaceId
  */
 
