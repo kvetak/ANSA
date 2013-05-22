@@ -41,7 +41,7 @@
 #define ISIS_LSP_INIT_WAIT 50 //TODO A! change back to 50 /*!< Initial wait interval in ms before generating first LSP.*/
 #define ISIS_CSNP_INTERVAL 10 //TODO A! change back to 10 /*!< Interval in seconds between generating CSNP message.*/
 #define ISIS_PSNP_INTERVAL 5 /*!< Interval in seconds between generating PSNP message.*/
-#define ISIS_LSP_MAX_SIZE  21 //1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
+#define ISIS_LSP_MAX_SIZE  1492 /*!< Maximum size of LSP in Bytes.*/ //TODO change to something smaller so we can test it
 #define ISIS_LSP_SEND_INTERVAL 5 /*!< Interval in seconds between periodic scanning LSP Database and checking SRM and SSN flags.*/
 #define ISIS_SPF_FULL_INTERVAL 50 //TODO A! change back to 50
 #define ISIS_TRILL_MAX_HELLO_SIZE 1470
