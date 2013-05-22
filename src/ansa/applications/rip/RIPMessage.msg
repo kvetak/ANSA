@@ -14,9 +14,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 // @file RIPMessage.msg
-// @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-// @brief
-// @detail
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief RIP message
+// @detail RIP protocol message (same format as is defined in RFC 2453)
 
 
 cplusplus {{
@@ -43,7 +43,7 @@ class RIPRTE
     uint16_t	routeTag = 0;  //2 bytes
     IPv4Address IPv4Address;   //4 bytes
     uint32_t    netMask;       //4 bytes
-    uint32_t    nextHop;       //4 bytes
+    IPv4Address nextHop;       //4 bytes
     uint32_t    metric;        //4 byte
 }
 

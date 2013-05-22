@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
-* @file RIPngInterface.cc
-* @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-* @brief
-* @detail
+* @file RIPngProcess.cc
+* @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+* @brief RIPng process
+* @detail RIPng process (Cisco-like), implements RIPng protocol
 */
 
 #include "RIPngProcess.h"
@@ -110,6 +110,13 @@ void RIPngProcess::start()
 
 void RIPngProcess::stop()
 {
+    RIPng::RoutingTableEntry *routingTableEntry;
+    for (RoutingTableIt it = routingTable.begin(); it != routingTable.end(); it++)
+    {
+        routingTableEntry = (*it);
+        removeRoutingTableEntryFromGlobalRT(routingTableEntry);
+    }
+
     unsigned long intCount = getEnabledInterfacesCount();
     for (unsigned long i = 0; i < intCount; ++i)
     {
@@ -252,13 +259,9 @@ void RIPngProcess::addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool cr
     if (createTimers == true)
     {
         RIPngTimer *timer = RIPng->createAndStartTimer(RIPNG_ROUTE_TIMEOUT, entry, routeTimeout);
-        timer->setIPv6Prefix(entry->getDestPrefix());
-        timer->setPrefixLen(entry->getPrefixLength());
         entry->setTimer(timer);
 
         RIPngTimer *GCTimer = RIPng->createTimer(RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT, entry);
-        GCTimer->setIPv6Prefix(entry->getDestPrefix());
-        GCTimer->setPrefixLen(entry->getPrefixLength());
         entry->setGCTimer(GCTimer);
     }
 
@@ -275,6 +278,18 @@ void RIPngProcess::removeRoutingTableEntry(IPv6Address &prefix, int prefixLength
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
     {
         if ((*it)->getDestPrefix()==prefix && (*it)->getPrefixLength()==prefixLength)
+        {
+            removeRoutingTableEntry(it);
+            break;
+        }
+    }
+}
+
+void RIPngProcess::removeRoutingTableEntry(RIPng::RoutingTableEntry *entry)
+{
+    for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
+    {
+        if ((*it) == entry)
         {
             removeRoutingTableEntry(it);
             break;
@@ -690,6 +705,8 @@ void RIPngProcess::sendDelayedTriggeredUpdateMessage()
 
 RIPngMessage *RIPngProcess::makeUpdateMessageForInterface(RIPng::Interface *interface, bool changed)
 {
+    //FIXME: maximum datagram size is limited by the network's MTU see RFC2080 section 2.1 ->
+    //ift->getInterfaceById(interface->getId())->getMTU()
     int size;
     std::vector<RIPngRTE> rtes;
 
@@ -924,6 +941,11 @@ void RIPngProcess::processRTEs(RIPngMessage *response, int srcRIPngIntInd, IPv6A
 
 void RIPngProcess::processRTE(RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &sourceAddr)
 {
+    if (rte.getMetric() == 0xFF)
+    {//TODO: next hop unsupported
+        EV << "RIPng - Ignoring Next Hop RTE from: " << sourceAddr << endl;
+    }
+
     if (!checkAndLogRTE(rte, sourceAddr))
         return;
 
@@ -1084,6 +1106,8 @@ void RIPngProcess::handleTimer(RIPngTimer *msg)
 
 void RIPngProcess::handleRegularUpdateTimer()
 {
+    //For RIPngTest2
+    //if (hostName == "router4" && simTime() > 20) return;
      // send regular update message
     sendRegularUpdateMessage();
     // plan next regular update
@@ -1098,10 +1122,7 @@ void RIPngProcess::handleTriggeredUpdateTimer()
 
 void RIPngProcess::startRouteDeletionProcess(RIPngTimer *timer)
 {
-    IPv6Address &prefix = timer->getIPv6Prefix();
-    int prefixLen = timer->getPrefixLen();
-    RIPng::RoutingTableEntry *routingTableEntry = getRoutingTableEntry(prefix, prefixLen);
-
+    RIPng::RoutingTableEntry *routingTableEntry = reinterpret_cast<RIPng::RoutingTableEntry *>(timer->getContextPointer());
     startRouteDeletionProcess(routingTableEntry);
 }
 
@@ -1126,10 +1147,8 @@ void RIPngProcess::startRouteDeletionProcess(RIPng::RoutingTableEntry *routingTa
 
 void RIPngProcess::deleteRoute(RIPngTimer *timer)
 {
-    IPv6Address &prefix = timer->getIPv6Prefix();
-    int prefixLen = timer->getPrefixLen();
-
-    removeRoutingTableEntry(prefix, prefixLen);
+    RIPng::RoutingTableEntry *rte = reinterpret_cast<RIPng::RoutingTableEntry *>(timer->getContextPointer());
+    removeRoutingTableEntry(rte);
 }
 
 //
@@ -1271,11 +1290,14 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
        RIPng::RoutingTableEntry *RIPngRoute = dynamic_cast<RIPng::RoutingTableEntry *>(route);
 
        if (RIPngRoute != NULL)
-       {// notification about RIPng route
-           routingTableEntryInRIPngRT = RIPngRoute->getCopy();
-           ASSERT(routingTableEntryInRIPngRT != NULL);
+       {
+           if (RIPngRoute->getProcess() == this)
+           {// notification about RIPng route of this process
+               routingTableEntryInRIPngRT = RIPngRoute->getCopy();
+               ASSERT(routingTableEntryInRIPngRT != NULL);
 
-           routingTableEntryInRIPngRT->setCopy(NULL);
+               routingTableEntryInRIPngRT->setCopy(NULL);
+           }
        }
        else
        {// check if RIPng has that route and install it
@@ -1288,5 +1310,45 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
        }
    }
 
-   //observing route_changed is not necessarily, each protocol has its own metric
+   if (category == NF_IPv6_ROUTE_CHANGED)
+   {
+       IPv6Route *changedRoute = check_and_cast<IPv6Route *>(details);
+       ANSAIPv6Route *changedRouteANSA = dynamic_cast<ANSAIPv6Route *>(changedRoute);
+       RIPng::RoutingTableEntry *changedRouteRIPng = dynamic_cast<RIPng::RoutingTableEntry *>(changedRoute);
+
+       if (changedRouteRIPng != NULL)
+       {
+           if (changedRouteRIPng->getProcess() == this)
+           {// ignore notifications for routes of this process
+               return;
+           }
+       }
+
+       unsigned int adminDist;
+       if (changedRouteANSA != NULL)
+           adminDist = changedRouteANSA->getAdminDist();
+       else
+           adminDist = ANSAIPv6Route::dUnknown;
+
+       if (adminDist >= distance)
+       {
+           RIPng::RoutingTableEntry *routingTableEntryInRIPngRT = getRoutingTableEntry(changedRoute->getDestPrefix(), changedRoute->getPrefixLength());
+           if (routingTableEntryInRIPngRT != NULL)
+           {// check if RIPng has that route
+               if (!routingTableEntryInRIPngRT->getNextHop().isUnspecified())
+               {
+                   if (adminDist > distance || (adminDist == distance && changedRoute->getMetric() > routingTableEntryInRIPngRT->getMetric()))
+                   {
+                       RIPng::RoutingTableEntry *newRIPngRoute = new RIPng::RoutingTableEntry(*routingTableEntryInRIPngRT);
+                       newRIPngRoute->setRoutingTable(rt);
+                       routingTableEntryInRIPngRT->setCopy(newRIPngRoute);
+
+                       //we cannot call rt->removeRoute()!
+                       delete changedRoute;
+                       changedRoute = newRIPngRoute;
+                   }
+               }
+           }
+       }
+   }
 }

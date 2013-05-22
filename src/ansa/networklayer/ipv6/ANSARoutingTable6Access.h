@@ -15,6 +15,13 @@
 //
 //
 
+/**
+ * @file ANSARoutingTableAccess6.h
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief File contains implementation of access class.
+ */
+
 #ifndef __INET_ANSA_ROUTING_TABLE6_ACCESS_H
 #define __INET_ANSA_ROUTING_TABLE6_ACCESS_H
 

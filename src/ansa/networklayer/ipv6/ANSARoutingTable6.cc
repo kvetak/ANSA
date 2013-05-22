@@ -12,6 +12,13 @@
 // License along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSARoutingTable6.cc
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended RoutingTable6
+ * @details Adds administrative distance, fixes routing table cache, IPv4-like routes updates
+ */
 
 #include <algorithm>
 
@@ -160,9 +167,9 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
         ANSAIPv6Route *ANSARoute = dynamic_cast<ANSAIPv6Route *>(route);
         ANSAIPv6Route *ANSARouteInTable = dynamic_cast<ANSAIPv6Route *>(routeInTable);
 
-        //Assume that inet routes have AD -1
-        int newAdminDist = -1;
-        int oldAdminDist = -1;
+        //Assume that inet routes have AD 255
+        int newAdminDist = ANSAIPv6Route::dUnknown;
+        int oldAdminDist = ANSAIPv6Route::dUnknown;
 
         if (ANSARoute)
             newAdminDist = ANSARoute->getAdminDist();
@@ -315,7 +322,10 @@ void ANSARoutingTable6::addRoutingProtocolRoute(ANSAIPv6Route *route)
 
 void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
 {
-    //TODO: invalidate cache
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that the latest route information are used.*/
+    purgeDestCache();
+
     route->setRoutingTable(this);
     routeList.push_back(route);
 

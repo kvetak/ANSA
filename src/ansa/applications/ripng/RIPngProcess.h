@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
-* @file RIPngInterface.cc
-* @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-* @brief
-* @detail
+* @file RIPngProcess.h
+* @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+* @brief RIPng process
+* @detail RIPng process (Cisco-like), implements RIPng protocol
 */
 
 #ifndef RIPNGPROCESS_H_
@@ -55,8 +55,8 @@ class RIPngProcess
 
     /**
      * To disable the RIPng process, this method must be called
-     * before deleting process. Stopped process must be deleted,
-     * you can't call start again.
+     * before deleting process. Stopped process MUST be deleted
+     * - you can't call start() again.
      */
     virtual void stop();
 
@@ -148,6 +148,7 @@ class RIPngProcess
     RIPng::RoutingTableEntry*       getRoutingTableEntry(const IPv6Address &prefix, int prefixLength);
     void                            addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool createTimers = true);
     void                            removeRoutingTableEntry(IPv6Address &prefix, int prefixLength);
+    void                            removeRoutingTableEntry(RIPng::RoutingTableEntry *entry);
     void                            removeRoutingTableEntry(RoutingTableIt it);
 
     /**

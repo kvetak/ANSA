@@ -32,8 +32,8 @@
 //
 
 /**
- * @file TRILL.cc
- * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @file deviceConfigurator.cc
+ * @author Marek Cerny, Jiri Trhlik (mailto:jiritm@gmail.com), Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 2011
  * @brief
  * @detail
@@ -812,7 +812,7 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *proces
                throw cRuntimeError("Unable to set IPv6 network address %s for RIPng route", sIpv6address.c_str());
             }
 
-            if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast())
+            if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast() && !ipv6address.isUnspecified())
             {
                 // make directly connected route
                 route = new RIPng::RoutingTableEntry(ipv6address.getPrefix(prefixLen), prefixLen);

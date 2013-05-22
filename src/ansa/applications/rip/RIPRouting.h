@@ -14,9 +14,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
 * @file RIPRouting.h
-* @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-* @brief
-* @detail
+* @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+* @brief RIP
+* @detail Implements RIP protocol.
 */
 
 #ifndef RIPROUTING_H_
@@ -56,6 +56,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
 
     unsigned int         connNetworkMetric;
     unsigned int         infinityMetric;
+    unsigned int         distance;
     simtime_t   routeTimeout;
     simtime_t   routeGarbageCollectionTimeout;
     simtime_t   regularUpdateTimeout;
@@ -75,6 +76,8 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     AnsaRoutingTable*                               rt;                 ///< Provides access to the IPv4 routing table.
     NotificationBoard*                              nb;                 ///< Provides access to the notification board
     std::vector<RIP::Interface*>                    enabledInterfaces;  ///< Interfaces which has allowed RIP
+    std::vector<RIP::Interface*>                    downInterfaces;     ///< Interfaces which has allowed RIP and are down - for keeping configuration
+
     std::vector<UDPSocket*>                         sockets;            ///< UDP Socket for every RIP interface
     UDPSocket                                       globalSocket;       ///< Socket for "send" messages with global unicast address as a source
 
@@ -96,6 +99,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     RIP::RoutingTableEntry*         getRoutingTableEntry(const IPv4Address &network, const IPv4Address &netmask);
     void                            addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool createTimers = true);
     void                            removeRoutingTableEntry(IPv4Address &network, int netmask);
+    void                            removeRoutingTableEntry(RIP::RoutingTableEntry *entry);
     void                            removeRoutingTableEntry(RoutingTableIt it);
 
     /**
@@ -103,7 +107,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      * @param routingTableEntry [in] pointer to the routing table entry (in the RIP routingTable) to update
      * @param rte [in] rte from the update message
      * @param sourceIntId [in] interface where was (the update message with) the rte received
-     * @param sourceAddr [in] source of the received rte
+     * @param sourceAddr [in] source (nexthop) of the received rte
      */
     void                            updateRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry, RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr);
     void                            removeAllRoutingTableEntries();
@@ -114,8 +118,11 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     const RIP::Interface*  getEnabledInterface(unsigned long i) const  { return enabledInterfaces[i]; }
     RIP::Interface*        getEnabledInterfaceByName(const char *interfaceName);
     int                    getEnabledInterfaceIndexById(int id);
+    int                    getDownInterfaceIndexById(int id);
+
+  private:
     void                   addEnabledInterface(RIP::Interface *interface);
-    void                   removeEnabledInterface(unsigned long i);
+    RIP::Interface        *removeEnabledInterface(unsigned long i);
     void                   removeAllEnabledInterfaces();
 
   public:
@@ -143,6 +150,14 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      * @return created interface
      */
     RIP::Interface *enableRIPOnInterface(const char *interfaceName);
+
+    /**
+     * Disables RIP on the interface (removes it from the "RIP interface table")
+     * Method does not deletes the RIP interface object, only returns pointer to it!
+     * @param RIPInterfaceIndex [in] index of the RIP interface in the "RIP interface table"
+     */
+    RIP::Interface *disableRIPOnInterface(unsigned long RIPInterfaceIndex);
+
     RIP::Interface *enableRIPOnInterface(int interfaceId);
     void setInterfacePassiveStatus(RIP::Interface *RIPInterface, bool status);
     void setInterfaceSplitHorizon(RIP::Interface *RIPInterface, bool status);
@@ -294,17 +309,19 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     /**
      * Creates new timer
      * @param timerKind [in] type of the timer @see RIPTimer
+     * @param context [in] context pointer @see cMessage
      * @return Created RIPTimer timer
      */
-    RIPTimer *createTimer(int timerKind);
+    RIPTimer *createTimer(int timerKind, void *context);
 
     /**
      * Creates and starts new timer
      * @param timerKind [in] type of the timer @see RIPTimer
+     * @param context [in] context pointer @see cMessage
      * @param timerLen [in] timer duration
      * @return Created RIPTimer timer
      */
-    RIPTimer *createAndStartTimer(int timerKind, simtime_t timerLen);
+    RIPTimer *createAndStartTimer(int timerKind, void *context, simtime_t timerLen);
 
     /**
      * Starts or resets timer

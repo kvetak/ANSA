@@ -78,7 +78,7 @@
                 <Mask>255.255.255.0</Mask>
             </Interface>
             <Interface name="eth1">
-                <IPAddress>23.23.23.2</IPAddress>
+                <IPAddress>23.23.23.3</IPAddress>
                 <Mask>255.255.255.0</Mask>
             </Interface>
             <Interface name="eth4">
@@ -159,6 +159,6 @@
                 <Mask>255.255.255.0</Mask>
 			</Interface>
 		</Interfaces>
-		<DefaultRouter>7.7.7.10</DefaultRouter>
+		<DefaultRouter>7.7.7.7</DefaultRouter>
 	</Host>
 </Devices>

@@ -13,6 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+// @file ANSAStandardHost6.ned
+// @date 21.5.2013
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @details Extended StandardHost6 with the ANSA device configurator.
+
 package inet.ansa.nodes.ipv6;
 
 import inet.nodes.ipv6.StandardHost6;

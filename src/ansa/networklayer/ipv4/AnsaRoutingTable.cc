@@ -77,9 +77,9 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
         ANSAIPv4Route *ANSARoute = dynamic_cast<ANSAIPv4Route *>(route);
         ANSAIPv4Route *ANSARouteInTable = dynamic_cast<ANSAIPv4Route *>(routeInTable);
 
-        //Assume that inet routes have AD -1
-        int newAdminDist = -1;
-        int oldAdminDist = -1;
+        //Assume that inet routes have AD 255
+        int newAdminDist = ANSAIPv4Route::dUnknown;
+        int oldAdminDist = ANSAIPv4Route::dUnknown;
 
         if (ANSARoute)
             newAdminDist = ANSARoute->getAdminDist();
@@ -88,12 +88,12 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
 
         if (oldAdminDist > newAdminDist)
         {
-            removeRoute(routeInTable);
+            deleteRouteSilent(routeInTable);
         }
         else if(oldAdminDist == newAdminDist)
         {
             if (routeInTable->getMetric() > route->getMetric())
-                removeRoute(routeInTable);
+                deleteRouteSilent(routeInTable);
             else
                 return false;
         }
@@ -104,6 +104,22 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
     }
 
     return true;
+}
+
+bool AnsaRoutingTable::deleteRouteSilent(IPv4Route *entry)
+{
+    Enter_Method("deleteRouteSilent(...)");
+
+    entry = internalRemoveRoute(entry);
+
+    if (entry != NULL)
+    {
+        invalidateCache();
+        updateDisplayString();
+        ASSERT(entry->getRoutingTable() == this); // still filled in, for the listeners' benefit
+        delete entry;
+    }
+    return entry != NULL;
 }
 
 void AnsaRoutingTable::updateNetmaskRoutes()
