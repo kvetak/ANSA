@@ -63,6 +63,11 @@ class xmlParser {
       static cXMLElement *GetRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device);
       static const char  *GetRIPInterfaceSplitHorizon(cXMLElement *iface);
       static const char  *GetRIPInterfacePoisonReverse(cXMLElement *iface);
+
+      // configuration for VRRP
+      static cXMLElement *GetVRRPGroup(cXMLElement *group, cXMLElement *iface);
+      static cXMLElement *GetVRRPGroup(cXMLElement *device, const char* name, const char* groupId);
+      static bool HasVRPPGroup(cXMLElement* group, int *groupId);
 };
 
 #endif /* XMLPARSER_H_ */

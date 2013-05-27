@@ -25,6 +25,8 @@
 #include <omnetpp.h>
 #include "AnsaIPv4.h"
 
+#include "AnsaIPv4RoutingDecision_m.h"
+
 Define_Module(AnsaIPv4);
 
 
@@ -42,7 +44,7 @@ void AnsaIPv4::initialize(int stage)
     ift = InterfaceTableAccess().get();
     rt = AnsaRoutingTableAccess().get();
     nb = NotificationBoardAccess().get();
-    pimIft = PimInterfaceTableAccess().get();               // For recognizing PIM mode
+    pimIft = PimInterfaceTableAccess().getIfExists();               // For recognizing PIM mode
 
     queueOutGate = gate("queueOut");
 
@@ -182,7 +184,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         {
             // broadcast datagram on the target subnet if we are a router
             if (broadcastIE && fromIE != broadcastIE && rt->isIPForwardingEnabled())
-                fragmentAndSend(datagram->dup(), broadcastIE, IPv4Address::ALLONES_ADDRESS);
+                IPv4::fragmentAndSend(datagram->dup(), broadcastIE, IPv4Address::ALLONES_ADDRESS);
 
             EV << "Broadcast received\n";
             reassembleAndDeliver(datagram);
@@ -260,7 +262,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     {
         IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
         datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
-        fragmentAndSend(datagramCopy, destIE, destAddr);
+        IPv4::fragmentAndSend(datagramCopy, destIE, destAddr);
 
         delete datagram;
         return;
@@ -372,7 +374,7 @@ void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram
         // set datagram source address if not yet set
         if (datagramCopy->getSrcAddress().isUnspecified())
             datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
-        fragmentAndSend(datagramCopy, destIE, destAddr);    // send
+        IPv4::fragmentAndSend(datagramCopy, destIE, destAddr);    // send
     }
 }
 
@@ -415,7 +417,7 @@ void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute
         // set datagram source address if not yet set
         if (datagramCopy->getSrcAddress().isUnspecified())
             datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
-        fragmentAndSend(datagramCopy, destIE, destAddr);
+        IPv4::fragmentAndSend(datagramCopy, destIE, destAddr);
     }
 
     if (route && route->isFlagSet(AnsaIPv4MulticastRoute::F)
@@ -536,12 +538,20 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
     // extract requested interface and next hop
     InterfaceEntry *destIE = NULL;
     IPv4Address nextHopAddress = IPv4Address::UNSPECIFIED_ADDRESS;
+    int vforwarder = -1;
     bool multicastLoop = true;
+
     if (controlInfo!=NULL)
     {
         destIE = ift->getInterfaceById(controlInfo->getInterfaceId());
         nextHopAddress = controlInfo->getNextHopAddr();
         multicastLoop = controlInfo->getMulticastLoop();
+
+        if (destIE && dynamic_cast<AnsaInterfaceEntry *>(destIE))
+        {
+            AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(destIE);
+            vforwarder = ieVF->getVirtualForwarderId(controlInfo->getMacSrc());
+        }
     }
 
     delete controlInfo;
@@ -560,13 +570,13 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
         {
             InterfaceEntry *loopbackIF = ift->getFirstLoopbackInterface();
             if (loopbackIF)
-                fragmentAndSend(datagram->dup(), loopbackIF, destAddr);
+                fragmentAndSend(datagram->dup(), loopbackIF, destAddr, vforwarder);
         }
 
         if (destIE)
         {
             numMulticast++;
-            fragmentAndSend(datagram, destIE, destAddr);
+            fragmentAndSend(datagram, destIE, destAddr, vforwarder);
         }
         else
         {
@@ -590,7 +600,7 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
 
             destIE = ift->getFirstLoopbackInterface();
             ASSERT(destIE);
-            fragmentAndSend(datagram, destIE, destAddr);
+            fragmentAndSend(datagram, destIE, destAddr, vforwarder);
         }
         else if (destAddr.isLimitedBroadcastAddress() || rt->isLocalBroadcastAddress(destAddr))
             routeLocalBroadcastPacket(datagram, destIE);
@@ -654,9 +664,15 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
     }
     else // fragment and send
     {
+        int vforwarder = -1;
+        if (dynamic_cast<AnsaInterfaceEntry *>(destIE))
+        {
+            vforwarder = dynamic_cast<AnsaInterfaceEntry *>(destIE)->getVirtualForwarderId(datagram->getSrcAddress());
+        }
+
         EV << "output interface is " << destIE->getName() << ", next-hop address: " << nextHopAddr << "\n";
         numForwarded++;
-        fragmentAndSend(datagram, destIE, nextHopAddr);
+        fragmentAndSend(datagram, destIE, nextHopAddr, vforwarder);
     }
 }
 
@@ -745,4 +761,105 @@ InterfaceEntry *AnsaIPv4::determineOutgoingInterfaceForMulticastDatagram(IPv4Dat
             EV << "multicast packet routed via the first multicast interface " << ie->getName() << "\n";
     }
     return ie;
+}
+
+void AnsaIPv4::sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarderId)
+{
+    if (vforwarderId == -1)
+    {
+        IPv4::sendDatagramToOutput(datagram,ie, nextHopAddr);
+        return;
+    }
+
+    AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ie);
+    delete datagram->removeControlInfo();
+    AnsaIPv4RoutingDecision *routingDecision = new AnsaIPv4RoutingDecision();
+    routingDecision->setInterfaceId(ieVF->getInterfaceId());
+    routingDecision->setNextHopAddr(nextHopAddr);
+    routingDecision->setVforwarderId(vforwarderId);
+    datagram->setControlInfo(routingDecision);
+    send(datagram, queueOutGate);
+}
+
+void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarder)
+{
+    // fill in source address
+    if (datagram->getSrcAddress().isUnspecified())
+        datagram->setSrcAddress(ie->ipv4Data()->getIPAddress());
+
+    // hop counter decrement; but not if it will be locally delivered
+    if (!ie->isLoopback())
+        datagram->setTimeToLive(datagram->getTimeToLive()-1);
+
+    // hop counter check
+    if (datagram->getTimeToLive() < 0)
+    {
+        // drop datagram, destruction responsibility in ICMP
+        EV << "datagram TTL reached zero, sending ICMP_TIME_EXCEEDED\n";
+        icmpAccess.get()->sendErrorMessage(datagram, ICMP_TIME_EXCEEDED, 0);
+        numDropped++;
+        return;
+    }
+
+    int mtu = ie->getMTU();
+
+    // check if datagram does not require fragmentation
+    if (datagram->getByteLength() <= mtu)
+    {
+        sendDatagramToOutput(datagram, ie, nextHopAddr, vforwarder);
+        return;
+    }
+
+    // if "don't fragment" bit is set, throw datagram away and send ICMP error message
+    if (datagram->getDontFragment())
+    {
+        EV << "datagram larger than MTU and don't fragment bit set, sending ICMP_DESTINATION_UNREACHABLE\n";
+        icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE,
+                                                     ICMP_FRAGMENTATION_ERROR_CODE);
+        numDropped++;
+        return;
+    }
+
+    // optimization: do not fragment and reassemble on the loopback interface
+    if (ie->isLoopback())
+    {
+        sendDatagramToOutput(datagram, ie, nextHopAddr, vforwarder);
+        return;
+    }
+
+    // FIXME some IP options should not be copied into each fragment, check their COPY bit
+    int headerLength = datagram->getHeaderLength();
+    int payloadLength = datagram->getByteLength() - headerLength;
+    int fragmentLength = ((mtu - headerLength) / 8) * 8; // payload only (without header)
+    int offsetBase = datagram->getFragmentOffset();
+
+    int noOfFragments = (payloadLength + fragmentLength - 1)/ fragmentLength;
+    EV << "Breaking datagram into " << noOfFragments << " fragments\n";
+
+    // create and send fragments
+    std::string fragMsgName = datagram->getName();
+    fragMsgName += "-frag";
+
+    for (int offset=0; offset < payloadLength; offset+=fragmentLength)
+    {
+        bool lastFragment = (offset+fragmentLength >= payloadLength);
+        // length equal to fragmentLength, except for last fragment;
+        int thisFragmentLength = lastFragment ? payloadLength - offset : fragmentLength;
+
+        // FIXME is it ok that full encapsulated packet travels in every datagram fragment?
+        // should better travel in the last fragment only. Cf. with reassembly code!
+        IPv4Datagram *fragment = (IPv4Datagram *) datagram->dup();
+        fragment->setName(fragMsgName.c_str());
+
+        // "more fragments" bit is unchanged in the last fragment, otherwise true
+        if (!lastFragment)
+            fragment->setMoreFragments(true);
+
+        fragment->setByteLength(headerLength + thisFragmentLength);
+        fragment->setFragmentOffset(offsetBase + offset);
+
+        sendDatagramToOutput(fragment, ie, nextHopAddr, vforwarder);
+    }
+
+    delete datagram;
 }

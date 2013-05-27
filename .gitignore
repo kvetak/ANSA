@@ -1,3 +1,6 @@
+/.settings/org.eclipse.cdt.codan.core.prefs
+/.settings/org.eclipse.cdt.core.prefs
+/.settings/org.eclipse.cdt.ui.prefs
 # ignore generated files
 *_m.h
 *_m.cc

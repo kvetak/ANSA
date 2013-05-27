@@ -1,0 +1,42 @@
+<Devices>
+	<Router id="192.168.1.1">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>Working group</Description>
+                	</Group>
+                </VRRP>
+            </Interface>                                    
+        </Interfaces>     
+    </Router> 
+    
+	<Router id="192.168.1.2">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.1.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>Working group</Description>
+                	</Group>
+                </VRRP>                
+            </Interface>                                     
+        </Interfaces>       
+    </Router>
+    
+	<Host id="192.168.1.10">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.10</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.1.254</DefaultRouter>
+	</Host>   
+	     
+</Devices>

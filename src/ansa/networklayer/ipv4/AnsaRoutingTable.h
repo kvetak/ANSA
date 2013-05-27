@@ -87,6 +87,8 @@ class INET_API AnsaRoutingTable : public RoutingTable {
       virtual void addMulticastRoute(const AnsaIPv4MulticastRoute *entry);
       virtual bool deleteMulticastRoute(const AnsaIPv4MulticastRoute *entry);
 
+      virtual bool isLocalAddress(const IPv4Address& dest) const;
+      virtual InterfaceEntry *getInterfaceByAddress(const IPv4Address& addr) const;
 };
 
 #endif /* ANSAROUTINGTABLE_H_ */

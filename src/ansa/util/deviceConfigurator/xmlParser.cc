@@ -455,4 +455,49 @@ cXMLElement * xmlParser::GetPimGlobal(cXMLElement * device)
     return  pimGlobal;
 }
 
+cXMLElement * xmlParser::GetVRRPGroup(cXMLElement *group, cXMLElement *iface) {
 
+   // initial call of the method - find <Interfaces> and get first "Interface" node
+   if (iface != NULL){
+
+      cXMLElement *groups = iface->getFirstChildWithTag("VRRP");
+      if (groups == NULL)
+         return NULL;
+
+      group = groups->getFirstChildWithTag("Group");
+
+   // repeated call - get another "Interface" sibling node
+   }else if (group != NULL){
+       group = group->getNextSiblingWithTag("Group");
+   }else{
+       group = NULL;
+   }
+
+   return group;
+}
+
+cXMLElement * xmlParser::GetVRRPGroup(cXMLElement *device, const char* name, const char* groupId)
+{
+    string path = "./Interfaces/Interface[\@name='" ;
+    path += name;
+    path += "']/VRRP/Group[\@id='";
+    path += groupId;
+    path += "']";
+
+    return device->getElementByPath(path.c_str());
+}
+
+bool xmlParser::HasVRPPGroup(cXMLElement* group, int *groupId)
+{
+    cXMLElement *address = group->getFirstChildWithTag("IPAddress");
+    if (address == NULL)
+        return false;
+
+    if (!xmlParser::Str2Int(groupId, group->getAttribute("id")))
+        return false;
+
+    if ((* groupId) < 0 || (* groupId) > 255)
+        return false;
+
+    return true;
+}
