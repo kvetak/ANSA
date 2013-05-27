@@ -42,7 +42,8 @@ void RBridgeSplitter::initialize(int stage){
     }
 }
 
-void RBridgeSplitter::handleMessage(cMessage *msg){
+void RBridgeSplitter::handleMessage(cMessage *msg)
+{
 
     cGate* gate = msg->getArrivalGate();
     std::string gateName = gate->getBaseName();
@@ -70,13 +71,16 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
             frame->setVlan(vlanId);
             frame->setEtherType(ETHERTYPE_L2_ISIS);
             frame->encapsulate((ISISMessage *) msg);
-            if(frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES) {
+            if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
+            {
                 frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
             }
             frame->setControlInfo(ctrl->dup());
 
             this->send(frame, "lowerLayerOut", gateIndex);
 
+            delete ctrl;
+//            delete msg;
 
         }
         else
@@ -99,56 +103,69 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
 //            frame->setVlan(vlanId);
             frame->setEtherType(ETHERTYPE_L2_ISIS);
             frame->encapsulate((ISISMessage *) msg);
-            if(frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES) {
+            if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
+            {
                 frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
             }
             frame->setControlInfo(ctrl->dup());
 
             // send packet to out interface
             this->send(frame, "lowerLayerOut", gateIndex);
-
+            delete ctrl;
 
         }
 
-    // packet coming from in interfaces
-    }else if(gateName == "upperLayerIn" || gateName == "trillIn"){
+        // packet coming from in interfaces
+    }
+    else if (gateName == "upperLayerIn" || gateName == "trillIn")
+    {
         this->send(msg, "lowerLayerOut", gateIndex);
     }
     else
     {
-        if(dynamic_cast<AnsaEtherFrame *>(msg)){
+        if (dynamic_cast<AnsaEtherFrame *>(msg))
+        {
 //            EthernetIIFrame * frame = (EthernetIIFrame *) msg;
-            AnsaEtherFrame * frame = (AnsaEtherFrame *)msg;
+            AnsaEtherFrame * frame = (AnsaEtherFrame *) msg;
             //if src unicast
-              //trillModule->learn(msg);
+            //trillModule->learn(msg);
 
             //check integrity, ...
 
             //if ethertype == L2_ISIS AND Outer.MacDA == ALL-IS-IS-RBridges
-            if(frame->getEtherType() == ETHERTYPE_L2_ISIS){
-                if(trillModule->isAllowedByGate(frame->getVlan(), frame->getArrivalGate()->getIndex())){
-                                trillModule->learn(frame);
-                                Ieee802Ctrl *ctrl = (Ieee802Ctrl *) frame->getControlInfo();
-                                if(ctrl == NULL){
-                                    ctrl= new Ieee802Ctrl();
-                                    ctrl->setSrc(frame->getSrc());
-                                    ctrl->setDest(frame->getDest());
-                                    ctrl->setEtherType(frame->getEtherType());
+            if (frame->getEtherType() == ETHERTYPE_L2_ISIS)
+            {
+                if (trillModule->isAllowedByGate(frame->getVlan(), frame->getArrivalGate()->getIndex()))
+                {
+                    trillModule->learn(frame);
+                    Ieee802Ctrl *ctrl = (Ieee802Ctrl *) frame->getControlInfo();
+                    if (ctrl == NULL)
+                    {
+                        ctrl = new Ieee802Ctrl();
+                        ctrl->setSrc(frame->getSrc());
+                        ctrl->setDest(frame->getDest());
+                        ctrl->setEtherType(frame->getEtherType());
 
-                                }
-                                cPacket *packet = frame->decapsulate()->dup();
-                                packet->setControlInfo(ctrl->dup());
-                                this->send(packet, "isisOut", gateIndex);
-                                delete msg;
-                }else{
-                    EV <<" Warning L2_ISIS frame with not-allowed vlan tag" << endl;
+                    }
+                    cPacket *packet = frame->decapsulate();
+                    packet->setControlInfo(ctrl->dup());
+                    this->send(packet, "isisOut", gateIndex);
+
+                    delete ctrl;
+                    delete msg;
+
+                }
+                else
+                {
+                    EV<<" Warning L2_ISIS frame with not-allowed vlan tag" << endl;
 
                 }
 
                 return;
             }
             //
-            else{
+            else
+            {
                 this->send(msg,"trillOut", gateIndex);
             }
 
@@ -185,18 +202,7 @@ void RBridgeSplitter::handleMessage(cMessage *msg){
         {
             EV << "Warning: received unsupported frame type" << endl;
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
+
 }
 

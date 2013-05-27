@@ -215,6 +215,7 @@ private:
     std::map<std::string, int> getAllSystemIdsFromLspDb(short circuitType);
 
     /* SPF */
+    void runSPF(short circuitType, ISISTimer *timer = NULL);
     void fullSPF(ISISTimer *timer);
     bool extractISO(ISISCons_t *initial, short  circuitType); /*!< Extracts ISO informations from lspDb needed to perform SPF calculation. > */
     ISISPath *getPath(ISISPaths_t *paths, unsigned char *id);

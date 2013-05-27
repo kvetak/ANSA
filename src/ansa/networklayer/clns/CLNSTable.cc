@@ -228,12 +228,13 @@ void CLNSTable::addRecord(CLNSRoute *route)
         //comparison is based on matching destPrefix and length
         if ((*(*it)) == (*route))
         {
-            if ((*it)->getMetric() > route->getMetric())
-            {
+//            if ((*it)->getMetric() > route->getMetric())
+//            {
+            /* above "if" is commented because we shoudn't compare metric, just replace the records */
                 this->routeVector.erase(it);
                 this->routeVector.push_back(route);
 
-            }
+//            }
             return;
         }
     }

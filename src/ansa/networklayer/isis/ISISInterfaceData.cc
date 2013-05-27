@@ -55,7 +55,11 @@ void ISISInterfaceData::setHello(ISISMessage *hello)
 }
 
 void ISISInterfaceData::clearHello(void){
-    this->hellos.clear();
+    for(std::vector<ISISMessage *>::iterator it = this->hellos.begin(); it != this->hellos.end();){
+        delete (*it);
+        it = this->hellos.erase(it);
+    }
+//    this->hellos.clear();
 }
 
 void ISISInterfaceData::addHello(ISISMessage *hello){

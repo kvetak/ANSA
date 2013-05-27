@@ -155,7 +155,7 @@ void TRILL::handleMessage(cMessage *msg) {
                     delete msg;
                     return;
                 }
-
+                delete frameDesc.payload;
 
             }
 
@@ -556,6 +556,9 @@ bool TRILL::dispatchNativeRemote(tFrameDescriptor &frameDesc){
     RBVLANTable::tVIDPort egressPort;
     unsigned char *nextHopSysId;
     nextHopSysId = this->clnsTable->getNextHopSystemIDBySystemID(tmpSysId);
+    if (nextHopSysId == NULL){
+        return false;
+    }
     egressPort.port = clnsTable->getGateIndexBySystemID(tmpSysId);
     frameDesc.portList.push_back(egressPort);
     ISISadj *adj = this->isis->getAdjBySystemID(nextHopSysId, L1_TYPE, egressPort.port);
@@ -706,7 +709,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
     }
 
 
-    delete trillFrame;
+//    delete trillFrame;
     delete untaggedFrame;
     delete taggedFrame;
     return true;
@@ -1284,9 +1287,10 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
 
     this->ingress(innerFrameDesc, innerFrame, frameDesc.rPort);
     this->learnTRILLData(innerFrameDesc, trillFrame->getIngressRBNickname());
+    bool result;
     if(trillFrame->getEgressRBNickname() == this->isis->getNickname()){
         //destination RBridge
-        AnsaEtherFrame *innerFrame = static_cast<AnsaEtherFrame *>((frameDesc.payload->dup())->decapsulate());
+//        AnsaEtherFrame *innerFrame = static_cast<AnsaEtherFrame *>((frameDesc.payload->dup())->decapsulate());
         if(innerFrame->getDest().isMulticast()){
             //discard
             return false;
@@ -1323,7 +1327,10 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
                     vid_port.port = innerFrameDesc.record.portList.at(0);
                     innerFrameDesc.portList.push_back(vid_port);
 
-                    return dispatchNativeLocalPort(innerFrameDesc);
+                    result = dispatchNativeLocalPort(innerFrameDesc);
+                    delete innerFrame;
+                    delete innerFrameDesc.payload;
+                    return result;
                     //                return true;
 
                 break;
@@ -1338,8 +1345,10 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
                 EV<< "TRILL: ERROR: ProcessTRILLDataUnicast" <<endl;
                 //TODO A! change to dispatchNativeMulti (should be send on all links where this RBridge is App Fwd)
 
-                dispatchNativeRemote(innerFrameDesc);
-                return true;
+                result = dispatchNativeRemote(innerFrameDesc);
+                delete innerFrame;
+                delete innerFrameDesc.payload;
+                return result;
                 break;
 
             case RBMACTable::EST_EMPTY:
@@ -1354,11 +1363,19 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
                 innerFrameDesc.portList = this->vlanTable->getPorts(innerFrameDesc.VID);//set it to
                 //minimize output ports
                 this->egressNativeLocal(innerFrameDesc);
-                dispatchNativeLocalPort(innerFrameDesc);
+                result = dispatchNativeLocalPort(innerFrameDesc);
+                delete innerFrame;
+                delete innerFrameDesc.payload;
+                return result;
+
 
             break;
                 default:
                 EV << "TRILL: ERROR: ProcessNative unrecognized type" <<endl;
+                delete innerFrame;
+                delete innerFrameDesc.payload;
+
+                return false;
             }
 
         }
@@ -1367,7 +1384,11 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
             //transit RBridge
             trillFrame->decHopCount();
             //egressTRILLDataUnicastRemote
-            return this->dispatchTRILLDataUnicastRemote(frameDesc);
+            result = this->dispatchTRILLDataUnicastRemote(frameDesc);
+            delete innerFrame;
+            delete innerFrameDesc.payload;
+
+                            return result;
         }
 
 
@@ -1421,6 +1442,8 @@ bool TRILL::processTRILLDataMultiDest(tFrameDescriptor &frameDesc){
 
     if(innerFrameDesc.VID == 0x0 || innerFrameDesc.VID == 0xFFF){
         //discard
+        delete innerFrame;
+        delete innerFrameDesc.payload;
         return false;
     }
 
@@ -1446,6 +1469,7 @@ bool TRILL::processTRILLDataMultiDest(tFrameDescriptor &frameDesc){
     this->dispatchNativeLocalPort(innerFrameDesc);
     //delete copy of innerFrame
     delete innerFrame; //the original innerFrame is still in frameDesc.payload (TRILL encapsulated)
+    delete innerFrameDesc.payload;
 
 
     //hop count decreased

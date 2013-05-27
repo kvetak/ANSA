@@ -18,7 +18,7 @@ package inet.examples.ansa.rBridge.multidest3;
 import inet.ansa.RBridge;
 import inet.ansa.nodes.inet.AnsaHost;
 import inet.nodes.ethernet.Eth100M;
-
+import inet.world.scenario.ScenarioManager;
 
 //
 // TODO Auto-generated network
@@ -66,6 +66,9 @@ network MultiDest3
             @display("p=39,47");
             gates:
                 ethg[1];
+        }
+        scenarioManager: ScenarioManager {
+            @display("p=34,302");
         }
     connections:
         rBridge1.ethg[0] <--> Eth100M <--> rBridge2.ethg[0];

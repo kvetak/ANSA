@@ -236,12 +236,12 @@ ISIS::~ISIS()
 void ISIS::receiveChangeNotification(int category, const cObject *details)
 {
     // TODO B1:
-    return;
+//    return;
     // ignore notifications during initialization
     if (simulation.getContextType() == CTX_INITIALIZE){
         return;
     }
-
+    Enter_Method_Silent();
     if(category == NF_ISIS_ADJ_CHANGED){
         /*TODO B3 Make new timer Type and schedule it when you receive ADJ_CHANGED for short period of time (TBD)
          * and increment some internal counter. When the counter hit certain threshold, stop pushing the timer and wait for
@@ -259,12 +259,15 @@ void ISIS::receiveChangeNotification(int category, const cObject *details)
 
         if(timer->getIsType() == L1_TYPE){
             cancelEvent(this->spfL1Timer);
-            scheduleAt(simTime() + 4, this->spfL1Timer);
+            scheduleAt(simTime(), this->spfL1Timer);
         }else{
             cancelEvent(this->spfL2Timer);
-            scheduleAt(simTime() + 4, this->spfL2Timer);
+            scheduleAt(simTime(), this->spfL2Timer);
 
         }
+
+
+
 
 
 
@@ -1857,7 +1860,7 @@ void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
     ISISInterfaceData *d = ie->isisData();
     ISISinterface *iface = this->getIfaceByGateIndex(ie->getNetworkLayerGateIndex());
 
-    if (d->isHelloValid() && false)
+    if (d->isHelloValid())
     { //TODO A1 remove true
         //nothing has changed since last Hello generating
         return;
@@ -2261,19 +2264,19 @@ void ISIS::schedule(ISISTimer *timer, double timee)
         case (PERIODIC_SEND_TIMER): {
             if (timer->getIsType() == L1_TYPE)
             {
-                timeAt = this->L1LspSendInterval;
+                timeAt = (double)this->L1LspSendInterval;
             }
             else if (timer->getIsType() == L2_TYPE)
             {
-                timeAt = this->L2LspSendInterval;
+                timeAt = (double)this->L2LspSendInterval;
             }
             else
             {
                 EV<< "ISIS: Warning: Unsupported IS-Type in schedule for PERIODIC_SEND_TIMER" << endl;
             }
 
-            randomTime = uniform(0, 0.25 * timeAt);
-//            randomTime = 0;
+//            randomTime = uniform(0, 0.25 * timeAt);
+            randomTime = 0;
             this->scheduleAt(simTime() + timeAt - randomTime, timer);
             break;
         }
@@ -2295,6 +2298,10 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             timeAt = timee;
             //randomTime = uniform(0, 0.25 * timeAt);
             this->scheduleAt(simTime() + timeAt, timer);
+
+            /*dirty hack */
+            this->runSPF(0, timer);
+
             break;
         }
         case (LSP_DELETE_TIMER):
@@ -2827,12 +2834,12 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
 
     }
 }
-            /**
-             * Handle TRILL Hello messages.
-             * I necessary creates new adjacency.
-             * Handles only L1.
-             * @param inMsg is incoming TRILL Hello message
-             */
+/**
+ * Handle TRILL Hello messages.
+ * I necessary creates new adjacency.
+ * Handles only L1.
+ * @param inMsg is incoming TRILL Hello message
+*/
 void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
 {
 
@@ -3008,6 +3015,13 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
                     if (changed != tmpAdj->state)
                     {
                         //TODO generate event adjacencyStateChanged
+                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        int gateIndex = msg->getArrivalGate()->getIndex();
+                //        int gateIndex = timer->getInterfaceIndex();
+                        InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
+                        ISISInterfaceData *isisData = entry->isisData();
+                        isisData->setHelloValid(false);
+
                     }
 
                 }
@@ -3078,6 +3092,13 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
         //insert neighbour into adjL1Table
         adjL1Table.push_back(neighbour);
         std::sort(this->adjL1Table.begin(), this->adjL1Table.end());
+
+//        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+        int gateIndex = msg->getArrivalGate()->getIndex();
+//        int gateIndex = timer->getInterfaceIndex();
+        InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
+        ISISInterfaceData *isisData = entry->isisData();
+        isisData->setHelloValid(false);
 
     }
 
@@ -7725,6 +7746,8 @@ void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitTyp
     lspRecord->simLifetime = simTime().dbl() + lspRecord->LSP->getRemLifeTime();
 
     this->schedule(lspRecord->deadTimer, lsp->getRemLifeTime());
+    //TODO B1 use fireNotification
+        this->runSPF(circuitType);
 
 }
 
@@ -7816,6 +7839,9 @@ LSPRecord * ISIS::installLSP(ISISLSPPacket *lsp, short circuitType)
     lspDb->push_back(tmpLSPRecord);
 
     return lspDb->back();
+
+    //TODO B1 use fireNotification
+    this->runSPF(circuitType);
 }
 
 /*
@@ -9895,6 +9921,25 @@ std::map<std::string, int> ISIS::getAllSystemIdsFromLspDb(short circuitType){
 
     return systemIdMap;
 }
+
+
+void ISIS::runSPF(short circuitType, ISISTimer *timer){
+
+    if(timer != NULL){
+        circuitType = timer->getIsType();
+    }
+
+    if(circuitType == L1_TYPE){
+        timer = this->spfL1Timer;
+    }else if(circuitType == L2_TYPE){
+        timer = this->spfL2Timer;
+    }
+
+    cancelEvent(timer);
+    fullSPF(timer);
+//    this->schedule(timer);
+}
+
 
 /*
  * Performs full run of SPF algorithm. For L2 ISIS also computes distribution trees.
