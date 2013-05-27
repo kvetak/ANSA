@@ -43,6 +43,7 @@
 #include "ARPPacket_m.h"
 #include "IPv4.h"
 #include "PimSplitter.h"
+#include "AnsaInterfaceEntry.h"
 #include "AnsaRoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "PIMPacket_m.h"
@@ -79,7 +80,9 @@ class INET_API AnsaIPv4 : public IPv4
         virtual void reassembleAndDeliver(IPv4Datagram *datagram);
         virtual InterfaceEntry *determineOutgoingInterfaceForMulticastDatagram(IPv4Datagram *datagram, InterfaceEntry *multicastIFOption);
 
-
+        virtual void fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarder);
+        virtual void sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarderId);
+        int getVirtualForwarderId(InterfaceEntry *ie, MACAddress addr);
     public:
         AnsaIPv4() {}
 

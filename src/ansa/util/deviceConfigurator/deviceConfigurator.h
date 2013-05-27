@@ -57,6 +57,8 @@
 #include "RIPngRouting.h"
 #include "RIPRouting.h"
 #include "pimSM.h"
+#include "VRRPv2.h"
+#include "VRRPv2VirtualRouter.h"
 
 /* TRILL */
 #include "TRILLAccess.h"
@@ -179,6 +181,16 @@ class DeviceConfigurator : public cSimpleModule {
        * @param isisMode [in] L2_ISIS_MODE or L3_ISIS_MODE
        */
       void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
+
+      //////////////////////////////
+      // Configuration for VRRPv2 //
+      //////////////////////////////
+      /**
+       * Loads configuration for VRRPv2
+       * @param VRRPModule [in]
+       */
+      void loadVRRPv2Config(VRRPv2* VRRPModule);
+      void loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule);
 
 };
 

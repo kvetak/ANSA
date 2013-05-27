@@ -23,6 +23,7 @@
 
 #include "AnsaRoutingTable.h"
 #include "IPv4InterfaceData.h"
+#include "AnsaInterfaceEntry.h"
 
 Define_Module(AnsaRoutingTable);
 
@@ -552,3 +553,52 @@ std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRoutesForSource(IPv4Ad
     }
     return routes;
 }
+
+bool AnsaRoutingTable::isLocalAddress(const IPv4Address& dest) const
+{
+    Enter_Method("isLocalAddress A (%u.%u.%u.%u)", dest.getDByte(0), dest.getDByte(1), dest.getDByte(2), dest.getDByte(3)); // note: str().c_str() too slow here
+
+    if (localAddresses.empty())
+    {
+        // collect interface addresses if not yet done
+        for (int i=0; i<ift->getNumInterfaces(); i++)
+        {
+            IPv4Address interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
+            localAddresses.insert(interfaceAddr);
+        }
+    }
+
+    for (int i=0; i<ift->getNumInterfaces(); i++)
+    {
+        AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterface(i));
+        if (ieVF && ieVF->hasIPAddress(dest))
+            return true;
+    }
+
+    AddressSet::iterator it = localAddresses.find(dest);
+    return it!=localAddresses.end();
+}
+
+InterfaceEntry *AnsaRoutingTable::getInterfaceByAddress(const IPv4Address& addr) const
+{
+    Enter_Method("getInterfaceByAddress(%u.%u.%u.%u)", addr.getDByte(0), addr.getDByte(1), addr.getDByte(2), addr.getDByte(3)); // note: str().c_str() too slow here
+
+    if (addr.isUnspecified())
+        return NULL;
+    for (int i=0; i<ift->getNumInterfaces(); ++i)
+    {
+        InterfaceEntry* ie = ift->getInterface(i);
+        if (ie->ipv4Data()->getIPAddress()==addr)
+            return ie;
+
+        if (!ie->isLoopback() && dynamic_cast<AnsaInterfaceEntry *>(ie))
+        {
+            AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ie);
+            if (ieVF->hasIPAddress(addr))
+                return ie;
+
+        }
+    }
+    return NULL;
+}
+

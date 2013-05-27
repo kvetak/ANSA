@@ -1957,3 +1957,128 @@ int DeviceConfigurator::getISISL2SPFFullInterval(cXMLElement *isisRouting){
 }
 
 /* End of IS-IS related methods */
+
+//
+//- configuration for VRRPv2
+//
+void DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
+
+    ASSERT(VRRPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    cXMLElement *interface;
+    //get first router's interface
+    interface = xmlParser::GetInterface(NULL, device);
+
+    while (interface != NULL)
+    {
+        int interfaceId = ift->getInterfaceByName(interface->getAttribute("name"))->getInterfaceId();
+
+        cXMLElement *group;
+        group = xmlParser::GetVRRPGroup(NULL, interface);
+        while (group != NULL)
+        {
+            int groupId = -1;
+            if (xmlParser::HasVRPPGroup(group, &groupId))
+                VRRPModule->addVirtualRouter(interfaceId, groupId);
+
+            group = xmlParser::GetVRRPGroup(group, NULL);
+        }
+        interface = xmlParser::GetInterface(interface, NULL);
+    }
+}
+
+void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule) {
+    ASSERT(VRRPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       EV << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    std::ostringstream groupId;
+    groupId <<  VRRPModule->getVrid();
+
+    cXMLElement *group;
+    group = xmlParser::GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.str().c_str());
+    if (group == NULL) {
+        EV << "No configuration found for group " << groupId << endl;
+        return;
+    }
+
+    cXMLElementList ifDetails = group->getChildren();
+    for (cXMLElementList::iterator routeElemIt = ifDetails.begin(); routeElemIt != ifDetails.end(); routeElemIt++)
+    {
+        std::string nodeName = (*routeElemIt)->getTagName();
+
+        if (nodeName == "IPAddress")
+        {
+            VRRPModule->setIPPrimary((*routeElemIt)->getNodeValue());
+            VRRPModule->addIPSecondary((*routeElemIt)->getNodeValue());
+        }
+        else if (nodeName == "IPSecondary")
+        {
+            VRRPModule->addIPSecondary((*routeElemIt)->getNodeValue());
+        }
+        else if (nodeName == "Description")
+        {
+            VRRPModule->setDescription((*routeElemIt)->getNodeValue());
+        }
+        else if (nodeName == "Priority")
+        {
+            int value = 0;
+            if (!xmlParser::Str2Int(&value, (*routeElemIt)->getNodeValue()))
+                throw cRuntimeError("Invalid Priority value on interface %s", VRRPModule->getInterface()->getName());
+
+            VRRPModule->setPriority(value);
+        }
+        else if (nodeName == "Preempt")
+        {
+            bool value = false;
+            if (!xmlParser::Str2Bool(&value, (*routeElemIt)->getNodeValue())){
+               throw cRuntimeError("Invalid Preempt value on interface %s", VRRPModule->getInterface()->getName());
+            }
+            VRRPModule->setPreemtion(value);
+
+            if ((*routeElemIt)->hasAttributes()) {
+                int value = 0;
+                if (!xmlParser::Str2Int(&value, (*routeElemIt)->getAttribute("delay")))
+                    throw cRuntimeError("Unable to parse valid Preemtion delay %s on interface %s", value, VRRPModule->getInterface()->getName());
+
+                VRRPModule->setPreemtionDelay(value);
+            }
+        }
+        else if (nodeName == "TimerAdvertise")
+        {
+            int value = 0;
+            if (!xmlParser::Str2Int(&value, (*routeElemIt)->getNodeValue()))
+                throw cRuntimeError("Unable to parse valid TimerAdvertise %s on interface %s", value, VRRPModule->getInterface()->getFullName());
+
+            VRRPModule->setAdvertisement(value);
+        }
+        else if (nodeName == "TimerLearn")
+        {
+            bool value = false;
+            if (!xmlParser::Str2Bool(&value, (*routeElemIt)->getNodeValue())){
+               throw cRuntimeError("Invalid TimerLearn value on interface %s", VRRPModule->getInterface()->getName());
+            }
+            VRRPModule->setLearn(value);
+        }
+    }
+}
