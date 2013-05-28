@@ -989,7 +989,8 @@ void ISIS::initTRILLHello()
         timerMsg->setIsType(iface->circuitType);
         timerMsg->setInterfaceIndex(k);
         timerMsg->setGateIndex(iface->gateIndex);
-        this->schedule(timerMsg);
+        scheduleAt(simTime(), timerMsg);
+//        this->schedule(timerMsg);
 
     }
 }
@@ -1059,11 +1060,13 @@ void ISIS::initPeriodicSend()
         timerMsg = new ISISTimer("Periodic send");
         timerMsg->setTimerKind(PERIODIC_SEND_TIMER);
         timerMsg->setIsType(L1_TYPE);
+        this->periodicL1Timer = timerMsg;
         this->schedule(timerMsg);
 
         timerMsg = new ISISTimer("Periodic send");
         timerMsg->setTimerKind(PERIODIC_SEND_TIMER);
         timerMsg->setIsType(L2_TYPE);
+        this->periodicL2Timer = timerMsg;
         this->schedule(timerMsg);
     }
     else
@@ -1071,6 +1074,11 @@ void ISIS::initPeriodicSend()
         timerMsg = new ISISTimer("Periodic send");
         timerMsg->setTimerKind(PERIODIC_SEND_TIMER);
         timerMsg->setIsType(this->isType);
+        if(this->isType == L1_TYPE){
+            this->periodicL1Timer = timerMsg;
+        }else {
+            this->periodicL2Timer = timerMsg;
+        }
         this->schedule(timerMsg);
     }
 }
@@ -2262,6 +2270,7 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             break;
         }
         case (PERIODIC_SEND_TIMER): {
+            cancelEvent(timer);
             if (timer->getIsType() == L1_TYPE)
             {
                 timeAt = (double)this->L1LspSendInterval;
@@ -5046,6 +5055,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
         delete lsp;
         return;
     }
+//    this->schedulePeriodicSend(circuitType);
 
     lspID = this->getLspID(lsp);
 
@@ -5118,6 +5128,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
         {
             /* 7.3.15.1 e) 1) i. */
             this->installLSP(lsp, circuitType);
+            this->schedulePeriodicSend(circuitType);
             delete lspID;
             return;
 
@@ -5128,6 +5139,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
             {
                 /* 7.3.15.1 e) 1) i. */
                 this->replaceLSP(lsp, lspRec, circuitType);
+                this->schedulePeriodicSend(circuitType);
                 delete lspID;
                 return;
 
@@ -5199,7 +5211,7 @@ void ISIS::sendCsnp(ISISTimer *timer)
 {
     //TODO don't know how to handle csnp over PtP yet (there is no periodic sending, but initial csnp is sent)
     /* Maybe send CSNP during some initial interval (or number of times, or just once) and then just don't re-schedule timer for this interface */
-    if (!this->ISISIft.at(timer->getInterfaceIndex()).network || !this->amIDIS(timer->getInterfaceIndex(), timer->getIsType()))
+    if (this->ISISIft.at(timer->getInterfaceIndex()).network && (false && !this->ISISIft.at(timer->getInterfaceIndex()).network || !this->amIDIS(timer->getInterfaceIndex(), timer->getIsType())))
     {
         this->schedule(timer);
         return;
@@ -6361,6 +6373,18 @@ void ISIS::removeDeadLSP(ISISTimer *timer)
             break;
         }
     }
+}
+
+void ISIS::schedulePeriodicSend(short circuitType){
+    ISISTimer *timer;
+    if(circuitType == L1_TYPE){
+        timer = this->periodicL1Timer;
+    }else{
+        timer = this->periodicL2Timer;
+    }
+
+    cancelEvent(timer);
+    scheduleAt(simTime() + 0.33, timer);
 }
 
 /*

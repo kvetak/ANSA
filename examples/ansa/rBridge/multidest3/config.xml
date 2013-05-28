@@ -39,14 +39,6 @@
 		</Routing>
 	</Host>
 	<RBridge id="rB1">
-			<Interfaces>
-      		<Interface name="eth0">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth1">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		</Interfaces>
   		<Routing>
   			<ISIS>
   				<NET>00.0000.0100.0000.0001.00</NET>
@@ -54,17 +46,6 @@
   		</Routing>
 	</RBridge>
 	<RBridge id="rB2">
-	<Interfaces>
-		<Interface name="eth0">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth1">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth2">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		</Interfaces>
   		<Routing>
   			<ISIS>
   				<NET>00.0000.0100.0000.0002.00</NET>
@@ -72,14 +53,6 @@
   		</Routing>
 	</RBridge>
 	<RBridge id="rB3">
-	<Interfaces>
-		<Interface name="eth0">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth1">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		     		</Interfaces>
   		<Routing>
   			<ISIS>
   				<NET>00.0000.0100.0000.0003.00</NET>
@@ -87,17 +60,6 @@
   		</Routing>
 	</RBridge>
 	<RBridge id="rB4">
-	<Interfaces>
-		<Interface name="eth0">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth1">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth2">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		</Interfaces>
   		<Routing>
   			<ISIS>
   				<NET>00.0000.0100.0000.0004.00</NET>
@@ -105,32 +67,13 @@
   		</Routing>
 	</RBridge>
 	<RBridge id="rB5">
-	<Interfaces>
-		<Interface name="eth0">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth1">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		
-     		</Interfaces>
   		<Routing>
-  		
   			<ISIS>
   				<NET>00.0000.0100.0000.0005.00</NET>
   			</ISIS>
   		</Routing>
 	</RBridge>
 	<RBridge id="rB6">
-	<Interfaces>
-		<Interface name="eth0">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		<Interface name="eth1">
-        		<ISIS-Network>point-to-point</ISIS-Network>
-     		</Interface>
-     		
-     		</Interfaces>
   		<Routing>
   			<ISIS>
   				<NET>00.0000.0100.0000.0006.00</NET>

@@ -135,6 +135,8 @@ private:
     ISISTimer *genL2LspTimer; /*!< Reference to timer that initiate LSP generation for L2*/
     ISISTimer *spfL1Timer; /*!< Reference to timer that initiate full spf for L1 */
     ISISTimer *spfL2Timer; /*!< Reference to timer that initiate full spf for L2*/
+    ISISTimer *periodicL1Timer;
+    ISISTimer *periodicL2Timer;
 
     /* TRILL related */
     std::map<int, ISISPaths_t *> distribTrees;
@@ -203,6 +205,7 @@ private:
     void refreshLSP(short  circuitType);
     std::vector<LSPRecord*> *getLSPDb(short  circuitType);
     void periodicSend(ISISTimer *timer, short  circuitType); /*!< Sends LSPs on interfaces with SRMflag every ISIS_LSP_GEN_INTERVAL.*/
+    void schedulePeriodicSend(short circuitType);
     void sendCsnp(ISISTimer *timer);
     void sendPsnp(ISISTimer *timer);
     unsigned char *getLSPID();
