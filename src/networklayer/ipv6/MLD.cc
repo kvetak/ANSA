@@ -1,11 +1,9 @@
+// Copyright (C) 2012 - 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
 //
-// Copyright (C) 2011 CoCo Communications
-// Copyright (C) 2012 Opensim Ltd
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +11,16 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with this program; if not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see http://www.gnu.org/licenses/.
 //
+
+/**
+ * @file MLD.cc
+ * @author Adam Malik(mailto:towdie13@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 9.5.2013
+ * @brief
+ * @detail
+ */
 
 #include "MLD.h"
 #include "RoutingTable6Access.h"
@@ -26,112 +32,6 @@
 #include <algorithm>
 
 Define_Module(MLD);
-
-// RFC 2236, Section 6: Host State Diagram
-//                           ________________
-//                          |                |
-//                          |                |
-//                          |                |
-//                          |                |
-//                --------->|   Non-Member   |<---------
-//               |          |                |          |
-//               |          |                |          |
-//               |          |                |          |
-//               |          |________________|          |
-//               |                   |                  |
-//               | leave group       | join group       | leave group
-//               | (stop timer,      |(send report,     | (send leave
-//               |  send leave if    | set flag,        |  if flag set)
-//               |  flag set)        | start timer)     |
-//       ________|________           |          ________|________
-//      |                 |<---------          |                 |
-//      |                 |                    |                 |
-//      |                 |<-------------------|                 |
-//      |                 |   query received   |                 |
-//      | Delaying Member |    (start timer)   |   Idle Member   |
-// ---->|                 |------------------->|                 |
-//|     |                 |   report received  |                 |
-//|     |                 |    (stop timer,    |                 |
-//|     |                 |     clear flag)    |                 |
-//|     |_________________|------------------->|_________________|
-//| query received    |        timer expired
-//| (reset timer if   |        (send report,
-//|  Max Resp Time    |         set flag)
-//|  < current timer) |
-// -------------------
-//
-// RFC 2236, Section 7: Router State Diagram
-//                                     --------------------------------
-//                             _______|________  gen. query timer      |
-// ---------                  |                |        expired        |
-//| Initial |---------------->|                | (send general query,  |
-// ---------  (send gen. q.,  |                |  set gen. q. timer)   |
-//       set initial gen. q.  |                |<----------------------
-//             timer)         |    Querier     |
-//                            |                |
-//                       -----|                |<---
-//                      |     |                |    |
-//                      |     |________________|    |
-//query received from a |                           | other querier
-//router with a lower   |                           | present timer
-//IP address            |                           | expired
-//(set other querier    |      ________________     | (send general
-// present timer)       |     |                |    |  query,set gen.
-//                      |     |                |    |  q. timer)
-//                      |     |                |    |
-//                       ---->|      Non       |----
-//                            |    Querier     |
-//                            |                |
-//                            |                |
-//                       ---->|                |----
-//                      |     |________________|    |
-//                      | query received from a     |
-//                      | router with a lower IP    |
-//                      | address                   |
-//                      | (set other querier        |
-//                      |  present timer)           |
-//                       ---------------------------
-//
-//                              ________________
-// ----------------------------|                |<-----------------------
-//|                            |                |timer expired           |
-//|               timer expired|                |(notify routing -,      |
-//|          (notify routing -)|   No Members   |clear rxmt tmr)         |
-//|                    ------->|    Present     |<-------                |
-//|                   |        |                |       |                |
-//|v1 report rec'd    |        |                |       |  ------------  |
-//|(notify routing +, |        |________________|       | | rexmt timer| |
-//| start timer,      |                    |            | |  expired   | |
-//| start v1 host     |  v2 report received|            | | (send g-s  | |
-//|  timer)           |  (notify routing +,|            | |  query,    | |
-//|                   |        start timer)|            | |  st rxmt   | |
-//|         __________|______              |       _____|_|______  tmr)| |
-//|        |                 |<------------       |              |     | |
-//|        |                 |                    |              |<----- |
-//|        |                 | v2 report received |              |       |
-//|        |                 | (start timer)      |              |       |
-//|        | Members Present |<-------------------|    Checking  |       |
-//|  ----->|                 | leave received     |   Membership |       |
-//| |      |                 | (start timer*,     |              |       |
-//| |      |                 |  start rexmt timer,|              |       |
-//| |      |                 |  send g-s query)   |              |       |
-//| |  --->|                 |------------------->|              |       |
-//| | |    |_________________|                    |______________|       |
-//| | |v2 report rec'd |  |                          |                   |
-//| | |(start timer)   |  |v1 report rec'd           |v1 report rec'd    |
-//| |  ----------------   |(start timer,             |(start timer,      |
-//| |v1 host              | start v1 host timer)     | start v1 host     |
-//| |tmr    ______________V__                        | timer)            |
-//| |exp'd |                 |<----------------------                    |
-//|  ------|                 |                                           |
-//|        |    Version 1    |timer expired                              |
-//|        | Members Present |(notify routing -)                         |
-// ------->|                 |-------------------------------------------
-//         |                 |<--------------------
-// ------->|_________________| v1 report rec'd     |
-//| v2 report rec'd |   |   (start timer,          |
-//| (start timer)   |   |    start v1 host timer)  |
-// -----------------     --------------------------
 
 MLD::HostGroupData::HostGroupData(MLD *owner, const IPv6Address &group)
     : owner(owner), groupAddr(group)
@@ -177,11 +77,6 @@ MLD::RouterGroupData::~RouterGroupData()
         delete (MLDRouterTimerContext*)rexmtTimer->getContextPointer();
         owner->cancelAndDelete(rexmtTimer);
     }
-//    if (v1HostTimer)
-//    {
-//        delete (IGMPRouterTimerContext*)v1HostTimer->getContextPointer();
-//        owner->cancelAndDelete(v1HostTimer);
-//    }
 }
 
 MLD::HostInterfaceData::HostInterfaceData(MLD *owner)
@@ -329,7 +224,7 @@ void MLD::deleteRouterGroupData(InterfaceEntry *ie, const IPv6Address &group)
 
 void MLD::initialize(int stage)
 {
-    if (stage == 1)
+    if (stage == 6)
     {
         ift = InterfaceTableAccess().get();
         rt = RoutingTable6Access().get();
@@ -340,7 +235,6 @@ void MLD::initialize(int stage)
         nb->subscribe(this, NF_IPv6_MCAST_LEAVE);
 
         enabled = par("enabled");
-        externalRouter = gate("routerIn")->isPathOK() && gate("routerOut")->isPathOK();
         robustness = par("robustnessVariable");
         queryInterval = par("queryInterval");
         queryResponseInterval = par("queryResponseInterval");
@@ -351,7 +245,6 @@ void MLD::initialize(int stage)
         lastMemberQueryInterval = par("lastMemberQueryInterval");
         lastMemberQueryCount = par("lastMemberQueryCount");
         unsolicitedReportInterval = par("unsolicitedReportInterval");
-        //version1RouterPresentInterval = par("version1RouterPresentInterval");
 
         numGroups = 0;
         numHostGroups = 0;
@@ -383,7 +276,7 @@ void MLD::initialize(int stage)
         WATCH(numLeavesSent);
         WATCH(numLeavesRecv);
     }
-    else if (stage == 5)
+    else if (stage == 8)
     {
         for (int i = 0; i < (int)ift->getNumInterfaces(); ++i)
         {
@@ -439,7 +332,7 @@ void MLD::receiveChangeNotification(int category, const cPolymorphic *details)
 
 void MLD::configureInterface(InterfaceEntry *ie)
 {
-    if (enabled && rt->isMulticastForwardingEnabled() /*&& !externalRouter*/)
+    if (enabled && rt->isMulticastForwardingEnabled())
     {
         // start querier on this interface
         cMessage *timer = new cMessage("MLD query timer", MLD_QUERY_TIMER);
@@ -498,7 +391,7 @@ void MLD::multicastGroupJoined(InterfaceEntry *ie, const IPv6Address& groupAddr)
     ASSERT(ie && ie->isMulticast());
     ASSERT(groupAddr.isMulticast());
 
-    if (enabled && !groupAddr.isLinkLocal())    //todo zistiti co tu ma byt to linklocalmulticast
+    if (enabled && !groupAddr.isLinkLocal())
     {
         HostGroupData *groupData = createHostGroupData(ie, groupAddr);
         numGroups++;
@@ -516,7 +409,7 @@ void MLD::multicastGroupLeft(InterfaceEntry *ie, const IPv6Address& groupAddr)
     ASSERT(ie && ie->isMulticast());
     ASSERT(groupAddr.isMulticast());
 
-    if (enabled && !groupAddr.isLinkLocal())        //todo zase link localmulticast
+    if (enabled && !groupAddr.isLinkLocal())
     {
         HostGroupData *groupData = getHostGroupData(ie, groupAddr);
         if (groupData)
@@ -556,7 +449,7 @@ void MLD::startHostTimer(InterfaceEntry *ie, HostGroupData* group, double maxRes
 
 void MLD::sendQuery(InterfaceEntry *ie, const IPv6Address& groupAddr, double maxRespTime)
 {
-    ASSERT(groupAddr.isUnspecified() || groupAddr.isMulticast() /*&& !groupAddr.isLinkLocal())*/); //todo linklocalmulticast
+    ASSERT(groupAddr.isUnspecified() || (groupAddr.isMulticast() && !groupAddr.isLinkLocal()));
     RouterInterfaceData *interfaceData = getRouterInterfaceData(ie);
 
     if (interfaceData->mldRouterState == MLD_RS_QUERIER)
@@ -567,9 +460,9 @@ void MLD::sendQuery(InterfaceEntry *ie, const IPv6Address& groupAddr, double max
             EV << "MLD: sending Membership Query for group=" << groupAddr << " on iface=" << ie->getName() << "\n";
 
         MLDMessage *msg = new MLDMessage("MLD query");
-        msg->setType(MLD_MEMBERSHIP_QUERY);
+        msg->setType(MLD_MULTICAST_LISTENER_QUERY);
         msg->setGroupAddress(groupAddr);
-        msg->setMaxRespTime((int)(maxRespTime * 10.0));
+        msg->setMaxRespDelay((int)(maxRespTime * 10.0));
         msg->setByteLength(24);
         sendToIP(msg, ie, groupAddr.isUnspecified() ? IPv6Address::ALL_NODES_2 : groupAddr);
 
@@ -583,11 +476,11 @@ void MLD::sendQuery(InterfaceEntry *ie, const IPv6Address& groupAddr, double max
 
 void MLD::sendReport(InterfaceEntry *ie, HostGroupData* group)
 {
-    ASSERT(group->groupAddr.isMulticast() /*&& !group->groupAddr.isLinkLocal()*/);  //todo prekontrolovat preco to bolo v ipv4 a skusit hodit do ipv6 ak to bude nutne
+    ASSERT(group->groupAddr.isMulticast() && !group->groupAddr.isLinkLocal());
 
     EV << "MLD: sending Membership Report for group=" << group->groupAddr << " on iface=" << ie->getName() << "\n";
     MLDMessage *msg = new MLDMessage("MLD report");
-    msg->setType(MLD_MEMBERSHIP_REPORT);
+    msg->setType(MLD_MULTICAST_LISTENER_REPORT);
     msg->setGroupAddress(group->groupAddr);
     msg->setByteLength(8);
     sendToIP(msg, ie, group->groupAddr);
@@ -596,11 +489,11 @@ void MLD::sendReport(InterfaceEntry *ie, HostGroupData* group)
 
 void MLD::sendLeave(InterfaceEntry *ie, HostGroupData* group)
 {
-    ASSERT(group->groupAddr.isMulticast() /*&& !group->groupAddr.isLinkLocal()*/);  // todo linklocalmulticast
+    ASSERT(group->groupAddr.isMulticast() && !group->groupAddr.isLinkLocal());
 
     EV << "MLD: sending Leave Group for group=" << group->groupAddr << " on iface=" << ie->getName() << "\n";
     MLDMessage *msg = new MLDMessage("MLD leave");
-    msg->setType(MLD_LEAVE_GROUP);
+    msg->setType(MLD_MULTICAST_LISTENER_DONE);
     msg->setGroupAddress(group->groupAddr);
     msg->setByteLength(8);
     sendToIP(msg, ie, IPv6Address::ALL_ROUTERS_2);
@@ -612,7 +505,7 @@ void MLD::sendToIP(MLDMessage *msg, InterfaceEntry *ie, const IPv6Address& dest)
     ASSERT(ie->isMulticast());
 
     IPv6ControlInfo *controlInfo = new IPv6ControlInfo();
-    controlInfo->setProtocol(IP_PROT_IPv6_ICMP);     //todo mozem pouzit 58 aj ked nebude MLD v ICMPv6???
+    controlInfo->setProtocol(IP_PROT_IPv6_ICMP);
     controlInfo->setInterfaceId(ie->getInterfaceId());
     controlInfo->setHopLimit(1);
     controlInfo->setDestAddr(dest);
@@ -627,27 +520,18 @@ void MLD::processMldMessage(MLDMessage *msg)
     InterfaceEntry *ie = ift->getInterfaceById(controlInfo->getInterfaceId());
     switch (msg->getType())
     {
-        case MLD_MEMBERSHIP_QUERY:
+        case MLD_MULTICAST_LISTENER_QUERY:
             processQuery(ie, controlInfo->getSrcAddr(), msg);
             break;
-        //case IGMPV1_MEMBERSHIP_REPORT:
-        //    processV1Report(ie, msg);
-        //    delete msg;
-        //    break;
-        case MLD_MEMBERSHIP_REPORT:
+        case MLD_MULTICAST_LISTENER_REPORT:
             processV2Report(ie, msg);
             break;
-        case MLD_LEAVE_GROUP:
+        case MLD_MULTICAST_LISTENER_DONE:
             processLeave(ie, msg);
             break;
         default:
-            if (externalRouter)
-                send(msg, "routerOut");
-            else
-            {
-                delete msg;
-                throw cRuntimeError("MLD: Unhandled message type (%dq)", msg->getType());
-            }
+            delete msg;
+            throw cRuntimeError("MLD: Unhandled message type (%dq)", msg->getType());
             break;
     }
 }
@@ -720,7 +604,7 @@ void MLD::processQuery(InterfaceEntry *ie, const IPv6Address& sender, MLDMessage
         EV << "MLD: received General Membership Query on iface=" << ie->getName() << "\n";
         numGeneralQueriesRecv++;
         for (GroupToHostDataMap::iterator it = interfaceData->groups.begin(); it != interfaceData->groups.end(); ++it)
-            processGroupQuery(ie, it->second, msg->getMaxRespTime());
+            processGroupQuery(ie, it->second, msg->getMaxRespDelay());
     }
     else
     {
@@ -729,19 +613,13 @@ void MLD::processQuery(InterfaceEntry *ie, const IPv6Address& sender, MLDMessage
         numGroupSpecificQueriesRecv++;
         GroupToHostDataMap::iterator it = interfaceData->groups.find(groupAddr);
         if (it != interfaceData->groups.end())
-            processGroupQuery(ie, it->second, msg->getMaxRespTime());
+            processGroupQuery(ie, it->second, msg->getMaxRespDelay());
     }
 
-    if (rt->isMulticastForwardingEnabled()) //todo opravit
+    if (rt->isMulticastForwardingEnabled())
     {
-        //if (externalRouter)
-        //{
-        //    send(msg, "routerOut");
-        //    return;
-        //}
-
         RouterInterfaceData *routerInterfaceData = getRouterInterfaceData(ie);
-        if (sender < ie->ipv6Data()->getPreferredAddress()) //todo ->getIPAddress()) nahradene
+        if (sender < ie->ipv6Data()->getPreferredAddress())
         {
             startTimer(routerInterfaceData->mldQueryTimer, otherQuerierPresentInterval);
             routerInterfaceData->mldRouterState = MLD_RS_NON_QUERIER;
@@ -752,7 +630,7 @@ void MLD::processQuery(InterfaceEntry *ie, const IPv6Address& sender, MLDMessage
             RouterGroupData *groupData = getRouterGroupData(ie, groupAddr);
             if (groupData->state == MLD_RGS_MEMBERS_PRESENT)
             {
-                double maxResponseTime = (double)msg->getMaxRespTime() / 10.0;
+                double maxResponseTime = (double)msg->getMaxRespDelay() / 10.0;
                 startTimer(groupData->timer, maxResponseTime * lastMemberQueryCount);
                 groupData->state = MLD_RGS_CHECKING_MEMBERSHIP;
             }
@@ -805,14 +683,8 @@ void MLD::processV2Report(InterfaceEntry *ie, MLDMessage *msg)
         }
     }
 
-    if (rt->isMulticastForwardingEnabled()) //todo opravit
+    if (rt->isMulticastForwardingEnabled())
     {
-        //if (externalRouter)
-        //{
-        //    send(msg, "routerOut");
-        //    return;
-        //}
-
         RouterGroupData* routerGroupData = getRouterGroupData(ie, groupAddr);
         if (!routerGroupData)
         {
@@ -836,8 +708,8 @@ void MLD::processV2Report(InterfaceEntry *ie, MLDMessage *msg)
             // notify IPv4InterfaceData to update its listener list
             ie->ipv6Data()->addMulticastListener(groupAddr);
             // notify routing
-            IPv6MulticastGroupInfo info(ie, routerGroupData->groupAddr);    //todo uz to mam vyssie
-            nb->fireChangeNotification(NF_IPv6_MCAST_REGISTERED, &info);    //todo pre ipv6
+            IPv6MulticastGroupInfo info(ie, routerGroupData->groupAddr);
+            nb->fireChangeNotification(NF_IPv6_MCAST_REGISTERED, &info);
             numRouterGroups++;
         }
         else if (routerGroupData->state == MLD_RGS_CHECKING_MEMBERSHIP)
@@ -858,14 +730,8 @@ void MLD::processLeave(InterfaceEntry *ie, MLDMessage *msg)
 
     numLeavesRecv++;
 
-    if (rt->isMulticastForwardingEnabled()) //todo opravit
+    if (rt->isMulticastForwardingEnabled())
     {
-        //if (externalRouter)
-        //{
-        //    send(msg, "routerOut");
-        //    return;
-        //}
-
         IPv6Address &groupAddr = msg->getGroupAddress();
         RouterInterfaceData *interfaceData = getRouterInterfaceData(ie);
         RouterGroupData *groupData = getRouterGroupData(ie, groupAddr);

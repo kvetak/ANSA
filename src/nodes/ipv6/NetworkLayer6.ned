@@ -41,7 +41,7 @@ module NetworkLayer6
     parameters:
         bool xMIPv6Support = default(false);
         string mldType = default("MLD");
-        @display("i=block/fork");
+        @display("i=block/fork;bgb=399,281");
     gates:
         input ifIn[] @labels(IPv6Datagram);
         output ifOut[] @labels(IPv6Datagram);
@@ -73,27 +73,27 @@ module NetworkLayer6
         }
         icmpv6: ICMPv6 {
             parameters:
-                @display("p=189,79");
+                @display("p=257,129");
         }
         ipv6ErrorHandling: IPv6ErrorHandling {
             parameters:
-                @display("p=280,79");
+                @display("p=350,129");
         }
         neighbourDiscovery: IPv6NeighbourDiscovery {
             parameters:
-                @display("p=257,149");
+                @display("p=296,234");
         }
         iptunneling: <default(firstAvailable("IPv6Tunneling","IPv6Tunneling_None"))> like IIPv6Tunneling {
             parameters:
-                @display("p=44,168");
+                @display("p=32,222");
         }
         mipv6support: <default(xMIPv6Support?"xMIPv6Support":"xMIPv6Support_None")> like IxMIPv6Support {
             parameters:
-                @display("p=44,79");
+                @display("p=32,48");
         }
         mld: <mldType> like IMLD {
             parameters:
-                @display("p=133,48");
+                @display("p=191,56");
         }
 
     connections allowunconnected:  // FIXME remove 'nocheck'!

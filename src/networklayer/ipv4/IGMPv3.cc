@@ -1,17 +1,26 @@
+// Copyright (C) 2012 - 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
+
+/**
+ * @file IGMPv3.cc
+ * @author Adam Malik(mailto:towdie13@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 12.5.2013
+ * @brief
+ * @detail
+ */
 
 #include "IGMPv3.h"
 #include "RoutingTableAccess.h"
@@ -34,7 +43,6 @@ IGMPv3::HostGroupData::HostGroupData(IGMPv3 *owner, const IPv4Address &group)
     ASSERT(groupAddr.isMulticast());
 
     state = IGMPV3_HGS_NON_MEMBER;
-    flag = false;
     filter = IGMPV3_FM_INITIAL;
     sourceAddressList.clear();
     timer = NULL;           //timer for group query
@@ -390,8 +398,8 @@ void IGMPv3::configureInterface(InterfaceEntry *ie)
         RouterInterfaceData *routerData = getRouterInterfaceData(ie);
         routerData->generalQueryTimer = timer;
         routerData->state = IGMPV3_RS_QUERIER;
-        sendQuery(ie, IPv4Address(), sources, queryResponseInterval); // general query       //todo pozriet a skontrolovat po dokonceni funkcii sendquery
-        startTimer(timer, startupQueryInterval);                                    //todo pozriet a skontrolovat po dokonceni funkcii starttimer
+        sendQuery(ie, IPv4Address(), sources, queryResponseInterval); // general query
+        startTimer(timer, startupQueryInterval);
     }
 }
 
@@ -411,14 +419,14 @@ void IGMPv3::handleMessage(cMessage *msg)
     {
         switch (msg->getKind())
         {
-            case IGMPV3_R_GENERAL_QUERY_TIMER:          //received schedulled message for General Query Retransmission
+            case IGMPV3_R_GENERAL_QUERY_TIMER:
                 processRouterGeneralQueryTimer(msg);
                 break;
-            case IGMPV3_R_GROUP_TIMER:                  //router group timer expired
+            case IGMPV3_R_GROUP_TIMER:
                 processRouterGroupTimer(msg);
                 break;
             case IGMPV3_R_SOURCE_TIMER:
-                processRouterSourceTimer(msg);          //router source timer expired
+                processRouterSourceTimer(msg);
                 break;
             case IGMPV3_H_GENERAL_QUERY_TIMER:
                 processHostGeneralQueryTimer(msg);
@@ -426,9 +434,6 @@ void IGMPv3::handleMessage(cMessage *msg)
             case IGMPV3_H_GROUP_TIMER:
                 processHostGroupQueryTimer(msg);
                 break;
-            //case IGMPV3_H_SOURCE_TIMER:
-            //    processHostSourceQueryTimer(msg);
-            //    break;
             default:
                 ASSERT(false);
                 break;
@@ -454,9 +459,8 @@ void IGMPv3::multicastGroupJoined(InterfaceEntry *ie, const IPv4Address& groupAd
         HostGroupData *groupData = createHostGroupData(ie, groupAddr);
         numGroups++;
         numHostGroups++;
-        IGMPv3::IpVector sources;
-        sources.clear();
-        sendGroupReport(ie, groupData->groupAddr, IGMPV3_RT_IS_EX, sources);
+        std::vector<IPv4Address> sources = std::vector<IPv4Address>();
+        sendGroupReport(ie, groupData->groupAddr, IGMPV3_RT_IS_EX, sources);    //sending Join Report message
         groupData->state = IGMPV3_HGS_DELAYING_MEMBER;
     }
 }
@@ -473,9 +477,7 @@ void IGMPv3::multicastGroupLeft(InterfaceEntry *ie, const IPv4Address& groupAddr
         {
             if (groupData->timer->isScheduled())
                 cancelEvent(groupData->timer);
-
         }
-
         deleteHostGroupData(ie, groupAddr);
         numHostGroups--;
         numGroups--;
@@ -494,7 +496,6 @@ void IGMPv3::startHostGeneralTimer(InterfaceEntry *ie, HostInterfaceData* ifc, d
     if (!ifc->generalQueryTimer)
     {
         ifc->generalQueryTimer = new cMessage("IGMPv3 Host General timer", IGMPV3_H_GENERAL_QUERY_TIMER);
-        //ifc->generalQueryTimer->setContextPointer(new IGMPHostTimerContext(ie, group)); //todo zatial ho sem nedam, kedze tento bude pre kazdy ie len jeden
     }
 
     double delay = uniform(0.0, maxRespTime);
@@ -517,7 +518,7 @@ void IGMPv3::startHostGroupTimer(InterfaceEntry *ie, HostGroupData* group, doubl
 
 void IGMPv3::startHostSourceTimer(InterfaceEntry *ie, HostGroupData* group, double maxRespTime, std::vector<IPv4Address> sourceList)
 {
-    if (!group->timer)  //todo dorobit kontexty timerom..
+    if (!group->timer)
     {
         group->timer = new cMessage("IGMPv3 Host Group and Source timer", IGMPV3_H_SOURCE_TIMER);
         group->timer->setContextPointer(new IGMPV3HostTimerSourceContext(ie, group, sourceList));
@@ -574,7 +575,7 @@ void IGMPv3::processRouterGeneralQueryTimer(cMessage *msg)
     if (state == IGMPV3_RS_QUERIER || state == IGMPV3_RS_NON_QUERIER)
     {
         interfaceData->state = IGMPV3_RS_QUERIER;
-        sendQuery(ie, IPv4Address(), sources, queryResponseInterval); // general query
+        sendQuery(ie, IPv4Address(), sources, queryResponseInterval);
         startTimer(msg, queryInterval);
     }
 }
@@ -609,16 +610,25 @@ void IGMPv3::sendQueryToIP(IGMPv3Query *msg, InterfaceEntry *ie, const IPv4Addre
 
 void IGMPv3::processHostGeneralQueryTimer(cMessage *msg)
 {
-    //IGMPHostTimerContext *ctx = (IGMPHostTimerContext*)msg->getContextPointer();
-    InterfaceEntry *ie = (InterfaceEntry*)msg->getContextPointer();
+    IGMPV3HostGeneralTimerContext *ctx = (IGMPV3HostGeneralTimerContext*)msg->getContextPointer();
+    InterfaceEntry *ie = ctx->ie;
+    HostInterfaceData *interfaceData = ctx->interfaceData;
     ASSERT(ie);
-    HostInterfaceData *interfaceData = getHostInterfaceData(ie);
+    //HostInterfaceData *interfaceData = getHostInterfaceData(ie);
     IGMPv3Report *report = new IGMPv3Report("IGMPv3 report");
     report->setType(IGMPV3_MEMBERSHIP_REPORT);
     int counter = 0;
+    report->setGroupRecordArraySize(interfaceData->groups.size());
+    /*
+     * creating GroupRecord for each group on interface
+     */
     for(GroupToHostDataMap::iterator it = interfaceData->groups.begin(); it != interfaceData->groups.end(); ++it)
     {
         GroupRecord gr;
+        if(it->second->filter == IGMPV3_FM_INITIAL)
+        {
+            gr.recordType = IGMPV3_RT_IS_EX;
+        }
         if(it->second->filter == IGMPV3_FM_INCLUDE)
         {
             gr.recordType = IGMPV3_RT_IS_IN;
@@ -629,20 +639,24 @@ void IGMPv3::processHostGeneralQueryTimer(cMessage *msg)
         }
         gr.groupAddress = it->second->groupAddr;
         gr.numOfSources = it->second->sourceAddressList.size();
+        gr.SourceList = IGMPv3::IpVector();
         gr.SourceList = it->second->sourceAddressList;
         report->setGroupRecord(counter++,gr);
     }
-    report->setNumGroupRecords(counter);
-    EV << "IGMPv3: Host General Query Timer expired on iface=" << ie->getName() << "\n";
-    sendReportToIP(report, ie, IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
-    numReportsSent++;
+    if(counter != 0)    //if no record created, dont need to send report
+    {
+        report->setNumGroupRecords(counter);
+        EV << "IGMPv3: Host General Query Timer expired on iface=" << ie->getName() << "\n";
+        sendReportToIP(report, ie, IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
+        numReportsSent++;
+    }
 }
 
 void IGMPv3::processHostGroupQueryTimer(cMessage *msg)
 {
     IGMPV3HostTimerSourceContext *ctx = (IGMPV3HostTimerSourceContext*)msg->getContextPointer();
     EV << "IGMPv3: Host Group Timer expired for group=" << ctx->hostGroup->groupAddr << " on iface=" << ctx->ie->getName() << "\n";
-
+    //checking if query is group or group-and-source specific
     if(ctx->sourceList.empty())
     {
         if(ctx->hostGroup->filter == IGMPV3_FM_EXCLUDE)
@@ -666,31 +680,18 @@ void IGMPv3::processHostGroupQueryTimer(cMessage *msg)
         }
     }
 
-    ctx->sourceList.clear();    //nieje z toho RFC uplne jasne ci ten k timeru alebo ten k skupine, ale pride mi blbost mazat ten k skupine.. :)
-
-    //sendGroupReport(ctx->ie, ctx->hostGroup->groupAddr, sources);
-    ctx->hostGroup->flag = true;
-    //ctx->hostGroup->state = IGMPV3_HGS_IDLE_MEMBER;   //asi nepotrebujem nejak sa to nespomina v RFC
+    ctx->sourceList.clear();
 }
-
-/* Zatial nebude pouzita a asi vobec nakoniec nebude pouzita.. :-)
-void IGMPv3::processHostSourceQueryTimer(cMessage *msg)
-{
-    IGMPV3HostTimerSourceContext *ctx = (IGMPV3HostTimerSourceContext*)msg->getContextPointer();
-    EV << "IGMPv3: Host Group and Source Timer expired for group=" << ctx->hostGroup->groupAddr << " on iface=" << ctx->ie->getName() << "\n";
-    sendReport(ctx->ie, ctx->hostGroup->groupAddr, ctx->hostGroup->sourceAddressList);
-    ctx->hostGroup->flag = true;
-    ctx->hostGroup->state = IGMPV3_HGS_IDLE_MEMBER;
-}
-*/
-
+/**
+ * Function for processing data from future Multicast application
+ * This function is sending report message if interface state was changed.
+ */
 void IGMPv3::processSocketChange(SocketMessage *msg)
 {
     InterfaceEntry *ie = (InterfaceEntry*)msg->getContextPointer();
     ASSERT(ie);
     EV << "IGMPv3: Host received socket change on iface=" << ie->getName() << "\n";
     HostInterfaceData *interfaceData = getHostInterfaceData(ie);
-    //bool hasIfaceChanged = false; //todo asi delete..
     GroupToHostDataMap::iterator it = interfaceData->groups.find(msg->getGroupAddr());
     HostGroupData *groupData = it->second;
     FilterMode filter;
@@ -699,19 +700,19 @@ void IGMPv3::processSocketChange(SocketMessage *msg)
     else
         filter = IGMPV3_FM_EXCLUDE;
 
-    //ceoknutie ci nieje stav interface rovnaky, vtedy by netrebalo nic
+    //Chec if IF state is different
     if(!(groupData->filter == filter) || !(groupData->sourceAddressList == msg->getSourceAddressList()))
     {
         //OldState: INCLUDE(A) NewState: INCLUDE(B) StateChangeRecordSent: ALLOW(B-A) BLOCK(A-B)
         if(groupData->filter == IGMPV3_FM_INCLUDE && filter == IGMPV3_FM_INCLUDE && groupData->sourceAddressList != msg->getSourceAddressList())
         {
-            sendGroupReport(ie, msg->getGroupAddr(), IGMPV3_RT_ALLOW, IpComplement(msg->getSourceAddressList(), groupData->sourceAddressList)); //todo osetrit prazdny list of sources
+            sendGroupReport(ie, msg->getGroupAddr(), IGMPV3_RT_ALLOW, IpComplement(msg->getSourceAddressList(), groupData->sourceAddressList));
             sendGroupReport(ie, msg->getGroupAddr(), IGMPV3_RT_BLOCK, IpComplement(groupData->sourceAddressList, msg->getSourceAddressList()));
             groupData->sourceAddressList = msg->getSourceAddressList();
         }
         else if(groupData->filter == IGMPV3_FM_EXCLUDE && filter == IGMPV3_FM_EXCLUDE && groupData->sourceAddressList != msg->getSourceAddressList())
         {
-            sendGroupReport(ie, msg->getGroupAddr(), IGMPV3_RT_ALLOW, IpComplement(groupData->sourceAddressList, msg->getSourceAddressList())); //todo osetrit prazdny list of sources
+            sendGroupReport(ie, msg->getGroupAddr(), IGMPV3_RT_ALLOW, IpComplement(groupData->sourceAddressList, msg->getSourceAddressList()));
             sendGroupReport(ie, msg->getGroupAddr(), IGMPV3_RT_BLOCK, IpComplement(msg->getSourceAddressList(), groupData->sourceAddressList));
             groupData->sourceAddressList = msg->getSourceAddressList();
         }
@@ -740,82 +741,89 @@ void IGMPv3::processQuery(IGMPv3Query *msg)
     ASSERT(ie->isMulticast());
 
     HostInterfaceData *interfaceData = getHostInterfaceData(ie);
-
+    if(!interfaceData->generalQueryTimer)
+    {
+        interfaceData->generalQueryTimer = new cMessage("IGMPv3 Host General Timer", IGMPV3_H_GENERAL_QUERY_TIMER);
+        interfaceData->generalQueryTimer->setContextPointer(new IGMPV3HostGeneralTimerContext(ie, interfaceData));
+    }
 
     numQueriesRecv++;
 
     IPv4Address &groupAddr = msg->getGroupAddress();
     IpVector sources = msg->getSourceList();
-    HostGroupData *groupData = getHostGroupData(ie, groupAddr);
-
 
     double maxRespTime = countMaxResponseTime((double)msg->getMaxRespCode()) /10.0;
     double delay = uniform(0.0, maxRespTime);
 
 
-    /////tu idem podla pravidiel na str 22
+
+    // Rules from RFC page 22
     if(interfaceData->generalQueryTimer->isScheduled() && interfaceData->generalQueryTimer->getArrivalTime() < simTime() + delay)
     {
-        //pravidlo 1.   //todo zbavit sa tohto prazdneho dako..
+        //rule 1.
     }
     else if(groupAddr.isUnspecified() && msg->getSourceList().empty())
     {
-        //pravidlo 2.
+        //rule 2.
         if(interfaceData->generalQueryTimer->isScheduled())
         {
             cancelEvent(interfaceData->generalQueryTimer);
         }
         scheduleAt(simTime() + delay, interfaceData->generalQueryTimer);
     }
-    else if(!groupAddr.isUnspecified() && !groupData->timer->isScheduled())
+    if(!groupAddr.isUnspecified())
     {
-            //pravidlo 3.
+        HostGroupData *groupData = getHostGroupData(ie, groupAddr);
+        if(!groupData->timer)
+        {
+            groupData->timer = new cMessage("IGMPv3 Host Group Timer", IGMPV3_H_GROUP_TIMER);
+        }
+        else if(!groupAddr.isUnspecified() && !groupData->timer->isScheduled())
+        {
+            //rule 3.
             groupData->timer->setContextPointer(new IGMPV3HostTimerSourceContext(ie, groupData, msg->getSourceList()));
             scheduleAt(simTime() + delay, groupData->timer);
-    }
-    else if(!groupAddr.isUnspecified() && groupData->timer->isScheduled())
-    {
-        IGMPV3HostTimerSourceContext *ctx = (IGMPV3HostTimerSourceContext*)groupData->timer->getContextPointer();
-        //pravidlo 4.
-        if(msg->getSourceList().empty())
+        }
+        else if(!groupAddr.isUnspecified() && groupData->timer->isScheduled())
         {
-            groupData->timer->setContextPointer(new IGMPV3HostTimerSourceContext(ie, groupData, msg->getSourceList()));
-            if(groupData->timer->getArrivalTime() > simTime() + delay)
+            IGMPV3HostTimerSourceContext *ctx = (IGMPV3HostTimerSourceContext*)groupData->timer->getContextPointer();
+            //rule 4.
+            if(msg->getSourceList().empty())
             {
-                cancelEvent(groupData->timer);
-                scheduleAt(simTime() + delay, groupData->timer);
+                groupData->timer->setContextPointer(new IGMPV3HostTimerSourceContext(ie, groupData, msg->getSourceList()));
+                if(groupData->timer->getArrivalTime() > simTime() + delay)
+                {
+                    cancelEvent(groupData->timer);
+                    scheduleAt(simTime() + delay, groupData->timer);
+                }
+            }
+            else
+            {
+                //rule 5.
+                if(groupData->timer->getArrivalTime() > simTime() + delay)
+                {
+                    IGMPv3::IpVector combinedSources;
+                    combinedSources.reserve(msg->getSourceList().size() + ctx->sourceList.size());
+                    combinedSources.insert(combinedSources.end(), msg->getSourceList().begin(), msg->getSourceList().end());
+                    combinedSources.insert(combinedSources.end(),ctx->sourceList.begin(),ctx->sourceList.end());
+                    cancelEvent(groupData->timer);
+                    scheduleAt(simTime() + delay, groupData->timer);
+                }
             }
         }
-        else
-        {
-            //pravidlo 5.
-            if(groupData->timer->getArrivalTime() > simTime() + delay)
-            {
-                IGMPv3::IpVector combinedSources;
-                combinedSources.reserve(msg->getSourceList().size() + ctx->sourceList.size());
-                combinedSources.insert(combinedSources.end(), msg->getSourceList().begin(), msg->getSourceList().end());
-                combinedSources.insert(combinedSources.end(),ctx->sourceList.begin(),ctx->sourceList.end());
-                cancelEvent(groupData->timer);
-                scheduleAt(simTime() + delay, groupData->timer);
-            }
-        }
     }
 
-
-
-//////Dalsia cast pre router s querier election a tak
+// Router part | Querier Election
     if (rt->isMulticastForwardingEnabled())
     {
 
-        //Volba Queriera
+        //Querier Election
         RouterInterfaceData *routerInterfaceData = getRouterInterfaceData(ie);
         if (controlInfo->getSrcAddr() < ie->ipv4Data()->getIPAddress())
         {
             startTimer(routerInterfaceData->generalQueryTimer, otherQuerierPresentInterval);
             routerInterfaceData->state = IGMPV3_RS_NON_QUERIER;
         }
-
-        //todo toto upravit tak aby to sedelo na V3: asi hotovo, kedze to rbi len pri grop aleb group a surce specific query
 
         if (!groupAddr.isUnspecified() && routerInterfaceData->state == IGMPV3_RS_NON_QUERIER) // group specific query
         {
@@ -828,7 +836,6 @@ void IGMPv3::processQuery(IGMPv3Query *msg)
             }
         }
     }
-
     delete msg;
 }
 
@@ -903,10 +910,12 @@ void IGMPv3::sendGroupReport(InterfaceEntry *ie, IPv4Address group, ReportType t
     IGMPv3Report *msg = new IGMPv3Report("IGMPv3 report");
     msg->setType(IGMPV3_MEMBERSHIP_REPORT);
     GroupRecord gr;
+    gr.SourceList = IGMPv3::IpVector();
     gr.SourceList = sources;
     gr.groupAddress = group;
     gr.numOfSources = sources.size();
     gr.recordType = type;
+    msg->setGroupRecordArraySize(1);
     msg->setGroupRecord(0,gr);
     msg->setNumGroupRecords(1);
     sendReportToIP(msg, ie, group);
@@ -915,26 +924,14 @@ void IGMPv3::sendGroupReport(InterfaceEntry *ie, IPv4Address group, ReportType t
 
 void IGMPv3::processReport(IGMPv3Report *msg)
 {
-    InterfaceEntry *ie = (InterfaceEntry*)msg->getContextPointer();
+    IPv4ControlInfo *controlInfo = (IPv4ControlInfo *)msg->getControlInfo();
+    InterfaceEntry *ie = ift->getInterfaceById(controlInfo->getInterfaceId());
     ASSERT(ie->isMulticast());
 
-
-    //EV << "IGMPv2: received V2 Membership Report for group=" << groupAddr << " iface=" << ie->getName() << "\n";
+    EV << "IGMPv3: received Membership Report on iface=" << ie->getName() << "\n";
 
     numReportsRecv++;
-    //todo tu co sa bude diat ak host dostane report, btw toto tam nebolo popisane.. :D cize asi sa nedeje nic.. :D
-    /*
-    HostGroupData *hostGroupData = getHostGroupData(ie, groupAddr);
-    if (hostGroupData)
-    {
-        if (hostGroupData && hostGroupData->state == IGMP_HGS_DELAYING_MEMBER)
-        {
-            cancelEvent(hostGroupData->timer);
-            hostGroupData->flag = false;
-            hostGroupData->state = IGMP_HGS_IDLE_MEMBER;
-        }
-    }
-    */
+
     if (rt->isMulticastForwardingEnabled())
     {
         for(int i = 0; i < msg->getNumGroupRecords(); i++)
@@ -944,6 +941,7 @@ void IGMPv3::processReport(IGMPv3Report *msg)
             if(!groupData)
             {
                 groupData = createRouterGroupData(ie, gr.groupAddress);
+                groupData->filter = IGMPV3_FM_EXCLUDE;
                 // notify IPv4InterfaceData to update its listener list
                 ie->ipv4Data()->addMulticastListener(groupData->groupAddr);
                 // notify routing
@@ -953,10 +951,10 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                 numGroups++;
             }
 
-            //Cast pre Current State Recordy
+
+            //Current State Record part
             if(gr.recordType == IGMPV3_RT_IS_IN)
             {
-
                 if(groupData->filter == IGMPV3_FM_INCLUDE)
                 {
                     for(IGMPv3::IpVector::iterator it = gr.SourceList.begin(); it != gr.SourceList.end(); ++it)
@@ -964,7 +962,7 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                         SourceRecord *record = getSourceRecord(ie, groupData->groupAddr, *it);
                         if(!record)
                         {
-                            record = createSourceRecord(ie, groupData->groupAddr, *it);     //todo neviem ci to takto moze byt
+                            record = createSourceRecord(ie, groupData->groupAddr, *it);
                             cMessage *timer = new cMessage("IGMPv3 router source timer", IGMPV3_R_SOURCE_TIMER);
                             timer->setContextPointer(new IGMPV3RouterSourceTimerContext(ie, groupData, *it));
                             record->sourceTimer = timer;
@@ -974,16 +972,6 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                 }
                 else if(groupData->filter == IGMPV3_FM_EXCLUDE)
                 {
-                    /* asi zbytocne
-                    for(SourceToGroupDataMap::iterator it = groupData->sources.begin(); it != groupData->sources.end(); ++it)
-                    {
-                        if(std::find(gr.SourceList.begin(), gr.SourceList.end(), it->first)!= gr.SourceList.end())
-                        {
-                            SourceRecord *record = it->second;
-                            startTimer(record->sourceTimer, groupMembershipInterval);
-                        }
-                    }
-                    */
                     for(IGMPv3::IpVector::iterator it = gr.SourceList.begin(); it != gr.SourceList.end(); ++it)
                     {
                         SourceRecord *record = getSourceRecord(ie, groupData->groupAddr, *it);
@@ -996,31 +984,6 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                         }
                         startTimer(record->sourceTimer, groupMembershipInterval);
                     }
-
-                    /* old verzia asi blbo
-                    for(IGMPv3::IpVector::iterator it = gr.SourceList.begin(); it != gr.SourceList.end(); ++it)
-                    {
-                        SourceRecord *record = getSourceRecord(ie, groupData->groupAddr, (IPv4Address)it);
-                        if(!record)
-                        {
-                            record = createSourceRecord(ie, groupData->groupAddr, (IPv4Address)it);
-                            cMessage *timer = new cMessage("IGMPv3 router sourcetimer", IGMPV3_R_SOURCE_TIMER);
-                            timer->setContextPointer(ie);
-                            record->sourceTimer = timer;
-                            startTimer(record->sourceTimer, groupMembershipInterval);
-                        }
-                        else
-                        {
-                            if(record->sourceTimer->isScheduled())
-                            {
-                                startTimer(record->sourceTimer, groupMembershipInterval);
-                            }
-                            else
-                            {
-                                deleteSourceRecord(ie, groupData->groupAddr, (IPv4Address)it);
-                            }
-                        }
-                    } */
                 }
             }
             else if(gr.recordType == IGMPV3_RT_IS_EX)
@@ -1043,7 +1006,7 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                         SourceRecord *record = getSourceRecord(ie, groupData->groupAddr, *it);
                         if(!record)
                         {
-                            record = createSourceRecord(ie, groupData->groupAddr, *it);     //todo neviem ci to takto moze byt
+                            record = createSourceRecord(ie, groupData->groupAddr, *it);
                             cMessage *timer = new cMessage("IGMPv3 router source timer", IGMPV3_R_SOURCE_TIMER);
                             timer->setContextPointer(new IGMPV3RouterSourceTimerContext(ie, groupData, *it));
                             record->sourceTimer = timer;
@@ -1107,7 +1070,7 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                     }
                 }
             }
-            ///// Cast pre Filter Mode Change a Source List Change
+            //Filter Mode change and Source List change part
             else if(gr.recordType == IGMPV3_RT_ALLOW)
             {
                 if(groupData->filter == IGMPV3_FM_INCLUDE)
@@ -1158,8 +1121,6 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                 }
                 else if(groupData->filter == IGMPV3_FM_EXCLUDE)
                 {
-
-
                     //Exclude x+(a-y), y to je pokial to necham tak jak to je a vytvorim ten jeden dole
                     //A-X-Y=GroupTimer
                     for(SourceToGroupDataMap::iterator it = groupData->sources.begin(); it != groupData->sources.end(); ++it)
@@ -1315,7 +1276,6 @@ void IGMPv3::processReport(IGMPv3Report *msg)
                                 deleteSourceRecord(ie, groupData->groupAddr, it->first);
                             }
                         }
-
                     }
                     //A-X-Y = GMI
                     for(IGMPv3::IpVector::iterator it = gr.SourceList.begin(); it != gr.SourceList.end(); ++it)
@@ -1346,63 +1306,14 @@ void IGMPv3::processReport(IGMPv3Report *msg)
         }
 
     }
-
-
-        /*
-        //pozrie ci router group data existuju a ak nie vytvori.. asi ok
-        RouterGroupData* routerGroupData = getRouterGroupData(ie, groupAddr);
-        if (!routerGroupData)
-        {
-            routerGroupData = createRouterGroupData(ie, groupAddr);
-            numGroups++;
-        }
-
-
-
-
-
-        if (!routerGroupData->timer)
-        {
-            routerGroupData->timer = new cMessage("IGMPv2 leave timer", IGMP_LEAVE_TIMER);
-            routerGroupData->timer->setContextPointer(new IGMPRouterTimerContext(ie, routerGroupData));
-        }
-        if (!routerGroupData->rexmtTimer)
-        {
-            routerGroupData->rexmtTimer = new cMessage("IGMPv2 rexmt timer", IGMP_REXMT_TIMER);
-            routerGroupData->rexmtTimer->setContextPointer(new IGMPRouterTimerContext(ie, routerGroupData));
-        }
-
-        if (routerGroupData->state == IGMP_RGS_NO_MEMBERS_PRESENT)
-        {
-            // notify IPv4InterfaceData to update its listener list
-            ie->ipv4Data()->addMulticastListener(groupAddr);
-            // notify routing
-            IPv4MulticastGroupInfo info(ie, routerGroupData->groupAddr);
-            nb->fireChangeNotification(NF_IPv4_MCAST_REGISTERED, &info);
-            numRouterGroups++;
-        }
-        else if (routerGroupData->state == IGMP_RGS_CHECKING_MEMBERSHIP)
-            cancelEvent(routerGroupData->rexmtTimer);
-
-        startTimer(routerGroupData->timer, groupMembershipInterval);
-        routerGroupData->state = IGMP_RGS_MEMBERS_PRESENT;
-    }
-*/
     delete msg;
 }
-/* propose to delete kedze som to spravil hnusne v kode.. :)
-void IGMPv3::setSourceTimers(std::vector<IGMPv3::SourceRecord> sources, double timerValue)
-{
-    for(std::vector<IGMPv3::SourceRecord>::iterator it = sources.begin(); it != sources.end(); ++it)
-    {
-        cancelEvent(it->sourceTimer);
-        scheduleAt(simTime() + timerValue, it->sourceTimer);
-    }
 
-
-}
-*/
-
+/**
+ * Function for switching EXCLUDE filter mode back to INCLUDE
+ * If at least one source timer is still runing, it will switch to Include mode.
+ * Else if no source timer is running, group record is deleted.
+ */
 void IGMPv3::processRouterGroupTimer(cMessage *msg)
 {
     IGMPV3RouterTimerContext *ctx = (IGMPV3RouterTimerContext*)msg->getContextPointer();
@@ -1433,7 +1344,9 @@ void IGMPv3::processRouterGroupTimer(cMessage *msg)
         }
     }
 }
-
+/**
+ * Function for checking expired source timers if group is in INCLUDE filter mode.
+ */
 void IGMPv3::processRouterSourceTimer(cMessage *msg)
 {
     IGMPV3RouterSourceTimerContext *ctx = (IGMPV3RouterSourceTimerContext*)msg->getContextPointer();
@@ -1460,18 +1373,3 @@ void IGMPv3::processRouterSourceTimer(cMessage *msg)
         numGroups--;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -127,15 +127,12 @@ public:
             std::string detailedInfo();
         };
 
-    HostMulticastData *hostData;
+    HostMulticastData *hostMData;
     RouterMulticastData *routerData;
 
-    NotificationBoard *nb;
+    NotificationBoard *nbo;
 
-    HostMulticastData *getHostData() { if (!hostData) hostData = new HostMulticastData(); return hostData; }
-    const HostMulticastData *getHostData() const { return const_cast<IPv6InterfaceData*>(this)->getHostData(); }
-    RouterMulticastData *getRouterData() { if (!routerData) routerData = new RouterMulticastData(); return routerData; }
-    const RouterMulticastData *getRouterData() const { return const_cast<IPv6InterfaceData*>(this)->getRouterData(); }
+
 
   public:
 
@@ -455,7 +452,7 @@ public:
 
   public:
     IPv6InterfaceData();
-    virtual ~IPv6InterfaceData() {}
+    virtual ~IPv6InterfaceData();
     std::string info() const;
     std::string detailedInfo() const;
 
@@ -785,6 +782,10 @@ public:
     virtual void removeMulticastListener(const IPv6Address &multicastAddress);
     virtual void addMulticastListener(const IPv6Address &multicastAddress);
     bool hasMulticastListener(const IPv6Address &multicastAddress) const;
+    HostMulticastData *getHostData() { if (!hostMData) hostMData = new HostMulticastData(); return hostMData; }
+    const HostMulticastData *getHostData() const { return const_cast<IPv6InterfaceData*>(this)->getHostData(); }
+    RouterMulticastData *getRouterData() { if (!routerData) routerData = new RouterMulticastData(); return routerData; }
+    const RouterMulticastData *getRouterData() const { return const_cast<IPv6InterfaceData*>(this)->getRouterData(); }
 
   protected:
     RoutingTable6* rt6; // A pointer variable, specifically used to access the type of node (MN, HA, Router, CN). Used in info(). (Zarrar Yousaf 20.07.07)

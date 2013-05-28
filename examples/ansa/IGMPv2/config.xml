@@ -1,5 +1,5 @@
 <Devices>	
-	<Router id="router">
+	<Router id="FITgate1">
 		<Routing>
 			<Multicast enable="1"></Multicast>	
 			<Static>
@@ -20,19 +20,69 @@
       		</Interface>
     	</Interfaces>
 	</Router>
-	<Host id="host">
+	<Router id="FITgate2">
+		<Routing>
+			<Multicast enable="1"></Multicast>	
+			<Static>
+				<Route>
+					<NetworkAddress>192.168.100.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>192.168.100.1</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>
+		<Interfaces>
+			<Interface name="eth0">
+        		<IPAddress>192.168.100.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>dense-mode</Mode>
+			 	</Pim>
+      		</Interface>
+      		<Interface name="eth1">
+        		<IPAddress>192.168.200.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+				<Pim>
+					<Mode>dense-mode</Mode>
+			 	</Pim>
+      		</Interface>
+    	</Interfaces>
+	</Router>
+	<Host id="Alice">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>192.168.100.10</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <MCastGroups>
-					<McastGroup>225.0.0.1</McastGroup>
-					<McastGroup>225.34.5.7</McastGroup>
-					<McastGroup>225.123.44.5</McastGroup>
-					<MCastGroup>225.0.5.5</MCastGroup>
+					<MCastGroup>227.0.13.37</MCastGroup>
+					<MCastGroup>229.1.2.3</MCastGroup>
 				</MCastGroups>
 			</Interface>
 		</Interfaces>
 		<DefaultRouter>192.168.100.1</DefaultRouter>
+	</Host>
+	<Host id="Bob">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.100.20</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <MCastGroups>
+					<MCastGroup>229.1.2.3</MCastGroup>
+				</MCastGroups>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.100.1</DefaultRouter>
+	</Host>
+	<Host id="Carlos">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.200.10</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <MCastGroups>
+					<MCastGroup>228.0.10.1</MCastGroup>
+				</MCastGroups>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.200.1</DefaultRouter>
 	</Host>
 </Devices>

@@ -341,8 +341,11 @@ void RoutingTable::configureInterfaceForIPv4(InterfaceEntry *ie)
     {
         d->joinMulticastGroup(IPv4Address::ALL_HOSTS_MCAST);
         if (IPForward)
+        {
             d->joinMulticastGroup(IPv4Address::ALL_ROUTERS_MCAST);
-        //if (IPForward && IGMPVersion == 3)
+            d->joinMulticastGroup(IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
+        }
+            //if (IPForward && IGMPVersion == 3)
         //    d->joinMulticastGroup(IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
     }
 }

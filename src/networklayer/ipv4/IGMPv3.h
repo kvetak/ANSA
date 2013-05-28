@@ -1,17 +1,26 @@
+// Copyright (C) 2012 - 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
+
+/**
+ * @file IGMPv3.h
+ * @author Adam Malik(mailto:towdie13@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 12.5.2013
+ * @brief
+ * @detail
+ */
 
 #ifndef INET_IGMPV3_H
 #define INET_IGMPV3_H
@@ -76,17 +85,13 @@ class INET_API IGMPv3 : public cSimpleModule, protected INotifiable
 
         enum ReportType
         {
-            IGMPV3_RT_ALLOW,
-            IGMPV3_RT_BLOCK,
-            IGMPV3_RT_IS_IN,
-            IGMPV3_RT_IS_EX,
-            IGMPV3_RT_TO_IN,
-            IGMPV3_RT_TO_EX,
+            IGMPV3_RT_ALLOW = 1,
+            IGMPV3_RT_BLOCK = 2,
+            IGMPV3_RT_IS_IN = 3,
+            IGMPV3_RT_IS_EX = 4,
+            IGMPV3_RT_TO_IN = 5,
+            IGMPV3_RT_TO_EX = 6,
         };
-
-
-
-
 
         struct HostGroupData
         {
@@ -95,7 +100,6 @@ class INET_API IGMPv3 : public cSimpleModule, protected INotifiable
             FilterMode filter;
             IpVector sourceAddressList;
             HostGroupState state;
-            bool flag;               //neviem ci budem potrebovat
             cMessage *timer;
             cMessage *sourceTimer;
 
@@ -165,6 +169,13 @@ class INET_API IGMPv3 : public cSimpleModule, protected INotifiable
             HostGroupData *hostGroup;
             std::vector<IPv4Address> sourceList;
             IGMPV3HostTimerSourceContext(InterfaceEntry *ie, HostGroupData *hostGroup, std::vector<IPv4Address> sourceList) : ie(ie), hostGroup(hostGroup), sourceList(sourceList) {}
+        };
+
+        struct IGMPV3HostGeneralTimerContext
+        {
+            InterfaceEntry *ie;
+            HostInterfaceData *interfaceData;
+            IGMPV3HostGeneralTimerContext(InterfaceEntry *ie, HostInterfaceData *interfaceData) : ie(ie), interfaceData(interfaceData) {}
         };
 
         struct IGMPV3RouterTimerContext
@@ -252,32 +263,31 @@ class INET_API IGMPv3 : public cSimpleModule, protected INotifiable
         virtual void startHostSourceTimer(InterfaceEntry *ie, HostGroupData* group, double maxRespTime, std::vector<IPv4Address> sourceList);
 
         virtual void sendQuery(InterfaceEntry *ie, const IPv4Address& groupAddr,std::vector<IPv4Address> sources, double maxRespTime);
-        virtual void sendGroupReport(InterfaceEntry *ie, IPv4Address group, ReportType type, IpVector sources);     //todo upravene len na adresu, tak uvidime ci to takto pojde.. :)
-        //virtual void sendGeneralReport(InterfaceEntry*ie);
+        virtual void sendGroupReport(InterfaceEntry *ie, IPv4Address group, ReportType type, IpVector sources);
         virtual void sendQueryToIP(IGMPv3Query *msg, InterfaceEntry *ie, const IPv4Address& dest);
         virtual void sendReportToIP(IGMPv3Report *msg, InterfaceEntry *ie, const IPv4Address& dest);
 
         virtual void processHostGeneralQueryTimer(cMessage *msg);
         virtual void processHostGroupQueryTimer(cMessage *msg);
-        //virtual void processHostSourceQueryTimer(cMessage *msg);
         virtual void processRouterGeneralQueryTimer(cMessage *msg);
         virtual void processRouterGroupTimer(cMessage *msg);
         virtual void processRouterSourceTimer(cMessage *msg);
 
-        virtual void processQuery(/*InterfaceEntry *ie, const IPv4Address& sender, */IGMPv3Query *msg);     //todo upravene, kedze nepouzivam processigmp message ako splitter na spravy
-        virtual void processReport(/*InterfaceEntry *ie, */IGMPv3Report *msg);
-        virtual void processSocketChange(/*InterfaceEntry *ie, */SocketMessage *msg);
+        virtual void processQuery(IGMPv3Query *msg);
+        virtual void processReport(IGMPv3Report *msg);
+        virtual void processSocketChange(SocketMessage *msg);
 
         virtual void multicastGroupJoined(InterfaceEntry *ie, const IPv4Address& groupAddr);
         virtual void multicastGroupLeft(InterfaceEntry *ie, const IPv4Address& groupAddr);
 
+        /* Vector functions */
         virtual IpVector IpComplement(IpVector first, IpVector second);
         virtual IpVector IpIntersection(IpVector first, IpVector second);
         virtual IpVector IpUnion(IpVector first, IpVector second);
+        /**
+         * Function for counting max response time from max response code
+         */
         virtual double countMaxResponseTime(double maxRespCode);
-        //virtual void setSourceTimers(std::vector<SourceRecord> sources, double timerValue);
-        //todo SetRouterTimers
-        //todo CheckDiffOnIF
 };
 
 

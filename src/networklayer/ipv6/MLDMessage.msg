@@ -18,18 +18,47 @@ class noncobject IPv6Address;
 cplusplus {{
 #include "INETDefs.h"
 #include "IPv6Address.h"
+#include <vector>
+typedef std::vector<IPv6Address> IPVector6;
 }}
+
+class noncobject IPVector6;
 
 enum MLDType
 {
-    MLD_MEMBERSHIP_QUERY = 0x11;
-    MLD_MEMBERSHIP_REPORT = 0x16;
-    MLD_LEAVE_GROUP = 0x17;
+    MLD_MULTICAST_LISTENER_QUERY = 130;
+    MLD_MULTICAST_LISTENER_REPORT = 131;
+    MLD_MULTICAST_LISTENER_DONE = 132;
+    MLD_MULTICAST_LISTENER_V2REPORT = 140;
 }
+
+struct GroupRecordMLD
+{
+    int recordType;
+    int numOfSources;
+    IPv6Address groupAddress;
+    IPVector6 SourceList;
+};
 
 packet MLDMessage
 {
     int type enum(MLDType);
-    int maxRespTime;
+    int maxRespDelay;
     IPv6Address groupAddress;
+}
+
+packet MLDv2Query
+{
+    int type enum(MLDType) = MLD_MULTICAST_LISTENER_QUERY;
+    int maxRespCode;
+    IPv6Address groupAddress;
+    int numOfSources;
+    IPVector6 sourceList;
+}
+
+packet MLDv2Report
+{
+    int type enum(MLDType) = MLD_MULTICAST_LISTENER_V2REPORT;
+    int numGroupRecords;
+    GroupRecordMLD groupRecord[];
 }

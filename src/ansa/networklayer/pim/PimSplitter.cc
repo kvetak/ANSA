@@ -364,6 +364,8 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 	PimInterface * pimInt = pimIft->getInterfaceByIntID(intId);
 
 	// save old and new set of multicast IP address assigned to interface
+	if(pimInt)
+	{
 	vector<IPv4Address> multicastAddrsOld = pimInt->getIntMulticastAddresses();
 	vector<IPv4Address> multicastAddrsNew = pimInt->deleteLocalIPs(interface->ipv4Data()->getReportedMulticastGroups());
 
@@ -434,6 +436,7 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 		    nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED, addr);
 		if (pimInt->getMode() == Sparse)
 		    nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED_PISM, addr);
+	}
 	}
 }
 

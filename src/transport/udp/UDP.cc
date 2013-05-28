@@ -197,14 +197,14 @@ void UDP::processCommandFromApp(cMessage *msg)
                 setMulticastLoop(sd, ((UDPSetMulticastLoopCommand*)ctrl)->getLoop());
             else if (dynamic_cast<UDPJoinMulticastGroupsCommand*>(ctrl))
             {
-                UDPJoinMulticastGroupsCommand *cmd = (UDPJoinMulticastGroupsCommand*)ctrl;
-                std::vector<IPvXAddress> addresses;
-                std::vector<int> interfaceIds;
-                for (int i = 0; i < (int)cmd->getMulticastAddrArraySize(); i++)
-                    addresses.push_back(cmd->getMulticastAddr(i));
-                for (int i = 0; i < (int)cmd->getInterfaceIdArraySize(); i++)
-                    interfaceIds.push_back(cmd->getInterfaceId(i));
-                joinMulticastGroups(sd, addresses, interfaceIds);
+            //    UDPJoinMulticastGroupsCommand *cmd = (UDPJoinMulticastGroupsCommand*)ctrl;
+            //    std::vector<IPvXAddress> addresses;
+            //    std::vector<int> interfaceIds;
+            //    for (int i = 0; i < (int)cmd->getMulticastAddrArraySize(); i++)
+            //        addresses.push_back(cmd->getMulticastAddr(i));
+            //    for (int i = 0; i < (int)cmd->getInterfaceIdArraySize(); i++)
+            //        interfaceIds.push_back(cmd->getInterfaceId(i));
+                //joinMulticastGroups(sd, addresses, interfaceIds);
             }
             else if (dynamic_cast<UDPLeaveMulticastGroupsCommand*>(ctrl))
             {
@@ -780,47 +780,47 @@ void UDP::setMulticastLoop(SockDesc *sd, bool loop)
     sd->multicastLoop = loop;
 }
 
-void UDP::joinMulticastGroups(SockDesc *sd, const std::vector<IPvXAddress>& multicastAddresses, const std::vector<int> interfaceIds)
-{
-    int multicastAddressesLen = multicastAddresses.size();
-    int interfaceIdsLen = interfaceIds.size();
-    for (int k = 0; k < multicastAddressesLen; k++)
-    {
-        const IPvXAddress &multicastAddr = multicastAddresses[k];
-        int interfaceId = k < interfaceIdsLen ? interfaceIds[k] : -1;
-        ASSERT(multicastAddr.isMulticast());
-        sd->multicastAddrs[multicastAddr] = interfaceId;
-
-        // add the multicast address to the selected interface or all interfaces
-        IInterfaceTable *ift = InterfaceTableAccess().get(this);
-        if (interfaceId != -1)
-        {
-            InterfaceEntry *ie = ift->getInterfaceById(interfaceId);
-            if (!ie)
-                error("Interface id=%d does not exist", interfaceId);
-            addMulticastAddressToInterface(ie, multicastAddr);
-        }
-        else
-        {
-            int n = ift->getNumInterfaces();
-            for (int i = 0; i < n; i++)
-                addMulticastAddressToInterface(ift->getInterface(i), multicastAddr);
-        }
-    }
-}
+//void UDP::joinMulticastGroups(SockDesc *sd, const std::vector<IPvXAddress>& multicastAddresses, const std::vector<int> interfaceIds)
+//{
+//    int multicastAddressesLen = multicastAddresses.size();
+//    int interfaceIdsLen = interfaceIds.size();
+//    for (int k = 0; k < multicastAddressesLen; k++)
+//    {
+//        const IPvXAddress &multicastAddr = multicastAddresses[k];
+//        int interfaceId = k < interfaceIdsLen ? interfaceIds[k] : -1;
+//        ASSERT(multicastAddr.isMulticast());
+//        sd->multicastAddrs[multicastAddr] = interfaceId;
+//
+//        // add the multicast address to the selected interface or all interfaces
+//        IInterfaceTable *ift = InterfaceTableAccess().get(this);
+//        if (interfaceId != -1)
+//        {
+//            InterfaceEntry *ie = ift->getInterfaceById(interfaceId);
+//            if (!ie)
+//                error("Interface id=%d does not exist", interfaceId);
+//            addMulticastAddressToInterface(ie, multicastAddr);
+//        }
+//        else
+//        {
+//            int n = ift->getNumInterfaces();
+//            for (int i = 0; i < n; i++)
+//                addMulticastAddressToInterface(ift->getInterface(i), multicastAddr);
+//        }
+//    }
+//}
 
 void UDP::addMulticastAddressToInterface(InterfaceEntry *ie, const IPvXAddress& multicastAddr)
 {
     if (!multicastAddr.isIPv6())
     {
 #ifdef WITH_IPv4
-        ie->ipv4Data()->joinMulticastGroup(multicastAddr.get4());
+        //ie->ipv4Data()->joinMulticastGroup(multicastAddr.get4());
 #endif
     }
     else
     {
 #ifdef WITH_IPv6
-        ie->ipv6Data()->assignAddress(multicastAddr.get6(), false, SimTime::getMaxTime(), SimTime::getMaxTime());
+        //ie->ipv6Data()->assignAddress(multicastAddr.get6(), false, SimTime::getMaxTime(), SimTime::getMaxTime());
 #endif
     }
 }

@@ -1,24 +1,66 @@
-<Devices>	
-	<Router id="router">
+<Devices>
+	<Router id="Router1">
 		<Routing6>
 		</Routing6>
 		<Interfaces>
 			<Interface name="eth0">
-        		<IPAddress>192.168.100.1</IPAddress>
-        		<Mask>255.255.255.0</Mask>
-        		<IPv6Address>2001:5:5:5::5/64</IPv6Address>	
+        		<IPv6Address>2001:1:1:1::1/64</IPv6Address>	
+			</Interface>
+			<Interface name="eth1">
+        		<IPv6Address>2001:2:2:2::2/64</IPv6Address>	
 			</Interface>
     	</Interfaces>
 	</Router>
-	<Host id="host">
+	<Router id="Router2">
+		<Routing6>
+		</Routing6>
 		<Interfaces>
 			<Interface name="eth0">
-				<IPAddress6>2001:3:3:3::10/64</IPAddress6>
+        		<IPv6Address>2001:1:1:1::2/64</IPv6Address>	
+			</Interface>
+			<Interface name="eth1">
+        		<IPv6Address>2001:2:2:2::1/64</IPv6Address>	
+			</Interface>
+    	</Interfaces>
+	</Router>
+	<Host id="Bratislava1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:1:1:1::10/64</IPAddress6>
                 <MCastGroups6>
-                	<MCastGroup>ff02::1:5</MCastGroup>
-				</MCastGroups6>
+               	</MCastGroups6>
 			</Interface>
 		</Interfaces>
-		<DefaultRouter6>2001:5:5:5::5</DefaultRouter6>
+		<DefaultRouter6>2001:1:1:1::1</DefaultRouter6>
+	</Host>
+	<Host id="Bratislava2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:1:1:1::20/64</IPAddress6>
+                <MCastGroups6>
+               	</MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:1:1:1::1</DefaultRouter6>
+	</Host>
+	<Host id="Brno1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:2:2:2::10/64</IPAddress6>
+                <MCastGroups6>
+               	</MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:2:2:2::2</DefaultRouter6>
+	</Host>
+	<Host id="Brno2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:2:2:2::20/64</IPAddress6>
+                <MCastGroups6>
+                </MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:2:2:2::2</DefaultRouter6>
 	</Host>
 </Devices>

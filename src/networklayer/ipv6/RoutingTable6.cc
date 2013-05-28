@@ -254,6 +254,18 @@ void RoutingTable6::configureInterfaceForIPv6(InterfaceEntry *ie)
     // add link-local prefix to each interface according to RFC 4861 5.1
     if (!ie->isLoopback())
         addStaticRoute(IPv6Address::LINKLOCAL_PREFIX, 10, ie->getInterfaceId(), IPv6Address::UNSPECIFIED_ADDRESS);
+
+    if (ie->isMulticast())
+        {
+            ipv6IfData->joinMulticastGroup(IPv6Address::ALL_NODES_2);
+            if (isrouter)
+            {
+                ipv6IfData->joinMulticastGroup(IPv6Address::ALL_ROUTERS_2);
+                ipv6IfData->joinMulticastGroup(IPv6Address("ff02::16"));
+            }
+                //if (IPForward && IGMPVersion == 3)
+            //    d->joinMulticastGroup(IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
+        }
 }
 
 void RoutingTable6::assignRequiredNodeAddresses(InterfaceEntry *ie)

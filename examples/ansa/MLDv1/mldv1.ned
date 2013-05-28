@@ -16,6 +16,7 @@
 package inet.examples.ansa.MLDv1;
 import inet.ansa.applications.ripng.RIPngRouter;
 import inet.ansa.nodes.ipv6.ANSAStandardHost6;
+import inet.nodes.ethernet.EtherSwitch;
 import ned.DatarateChannel;
 import inet.nodes.ethernet.Eth100M;
 
@@ -32,13 +33,55 @@ network MLD
         }
 
     submodules:
-        ansaStandardHost6: ANSAStandardHost6 {
-            @display("p=123,118");
+        Bratislava1: ANSAStandardHost6 {
+            @display("p=145,77");
+            gates:
+                ethg[1];
         }
-        riPngRouter: RIPngRouter {
-            @display("p=628,118");
+        Router1: RIPngRouter {
+            @display("p=423,50");
+            gates:
+                ethg[2];
+        }
+        Router2: RIPngRouter {
+            @display("p=423,214");
+            gates:
+                ethg[2];
+        }
+        etherSwitch: EtherSwitch {
+            @display("p=277,124");
+            gates:
+                ethg[4];
+        }
+        Bratislava2: ANSAStandardHost6 {
+            @display("p=145,182");
+            gates:
+                ethg[1];
+        }
+        etherSwitch1: EtherSwitch {
+            @display("p=563,133");
+            gates:
+                ethg[4];
+        }
+        Brno1: ANSAStandardHost6 {
+            @display("p=765,62");
+            gates:
+                ethg[1];
+        }
+        Brno2: ANSAStandardHost6 {
+            parameters:
+            @display("p=765,232");
+            gates:
+                ethg[1];
         }
     connections allowunconnected:
-        ansaStandardHost6.ethg++ <--> Eth100M <--> riPngRouter.ethg++;
+        Bratislava1.ethg[0] <--> Eth100M <--> etherSwitch.ethg[0];
+        Bratislava2.ethg[0] <--> Eth100M <--> etherSwitch.ethg[1];
+        Router1.ethg[0] <--> Eth100M <--> etherSwitch.ethg[2];
+        Router2.ethg[0] <--> Eth100M <--> etherSwitch.ethg[3];
+        Brno1.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[0];
+        Brno2.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[1];
+        Router1.ethg[1] <--> Eth100M <--> etherSwitch1.ethg[2];
+        Router2.ethg[1] <--> Eth100M <--> etherSwitch1.ethg[3];
 }
 

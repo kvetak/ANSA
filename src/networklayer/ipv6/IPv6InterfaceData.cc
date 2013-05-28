@@ -32,6 +32,9 @@ IPv6InterfaceData::IPv6InterfaceData()
 {
 #ifdef WITH_xMIPv6
     rt6 = RoutingTable6Access().get();
+    hostMData = NULL;
+    routerData = NULL;
+    nbo = NULL;
 #endif /* WITH_xMIPv6 */
     /*******************Setting host/node/router Protocol Constants************/
     routerConstants.maxInitialRtrAdvertInterval = IPv6_MAX_INITIAL_RTR_ADVERT_INTERVAL;
@@ -93,6 +96,12 @@ IPv6InterfaceData::IPv6InterfaceData()
     if (rtrVars.advDefaultLifetime<1)
         rtrVars.advDefaultLifetime = 1;
 #endif
+}
+
+IPv6InterfaceData::~IPv6InterfaceData()
+{
+    delete hostMData;
+    delete routerData;
 }
 
 std::string IPv6InterfaceData::info() const
@@ -516,6 +525,7 @@ void IPv6InterfaceData::joinMulticastGroup(const IPv6Address& multicastAddress)
         throw cRuntimeError("IPv6InterfaceData::joinMulticastGroup(): multicast address expected, received %s.", multicastAddress.str().c_str());
 
     IPv6AddressVector &multicastGroups = getHostData()->joinedMulticastGroups;
+
     std::vector<int> &refCounts = getHostData()->refCounts;
     for (int i = 0; i < (int)multicastGroups.size(); ++i)
     {
@@ -529,12 +539,13 @@ void IPv6InterfaceData::joinMulticastGroup(const IPv6Address& multicastAddress)
     multicastGroups.push_back(multicastAddress);
     refCounts.push_back(1);
 
+
     changed1();
 
-    if(!nb)
-        nb = NotificationBoardAccess().get();
+    if(!nbo)
+        nbo = NotificationBoardAccess().get();
     IPv6MulticastGroupInfo info(ownerp, multicastAddress);
-    nb->fireChangeNotification(NF_IPv6_MCAST_JOIN, &info);
+    nbo->fireChangeNotification(NF_IPv6_MCAST_JOIN, &info);
 }
 
 void IPv6InterfaceData::leaveMulticastGroup(const IPv6Address& multicastAddress)
@@ -555,10 +566,10 @@ void IPv6InterfaceData::leaveMulticastGroup(const IPv6Address& multicastAddress)
 
                 changed1();
 
-                if (!nb)
-                    nb = NotificationBoardAccess().get();
+                if (!nbo)
+                    nbo = NotificationBoardAccess().get();
                 IPv6MulticastGroupInfo info(ownerp, multicastAddress);
-                nb->fireChangeNotification(NF_IPv6_MCAST_LEAVE, &info);
+                nbo->fireChangeNotification(NF_IPv6_MCAST_LEAVE, &info);
             }
         }
     }

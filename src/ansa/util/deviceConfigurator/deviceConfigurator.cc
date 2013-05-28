@@ -162,8 +162,7 @@ void DeviceConfigurator::initialize(int stage){
             if (iface != NULL)
             {
                 loadPimInterfaceConfig(iface);
-                //addIPv4MulticastGroups(iface);
-                //addIPv6MulticastGroups(iface);
+
             }
             else
                 EV<< "No PIM interface is configured for this device (" << deviceType << " id=" << deviceId << ")" << endl;
@@ -193,6 +192,13 @@ void DeviceConfigurator::initialize(int stage){
             ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
         else
             loadDefaultRouter(gateway);
+
+
+    }
+    else if(stage == 10)
+    {
+        if(device == NULL)
+            return;
 
         cXMLElement *iface = xmlParser::GetInterface(NULL, device);
         addIPv4MulticastGroups(iface);

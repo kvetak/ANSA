@@ -78,7 +78,7 @@ void IPv6::updateDisplayString()
     if (numMulticast>0) sprintf(buf+strlen(buf), "mcast:%d ", numMulticast);
     if (numDropped>0) sprintf(buf+strlen(buf), "DROP:%d ", numDropped);
     if (numUnroutable>0) sprintf(buf+strlen(buf), "UNROUTABLE:%d ", numUnroutable);
-    getDisplayString().setTagArg("t", 0, buf);
+    //getDisplayString().setTagArg("t", 0, buf);
 }
 
 void IPv6::endService(cPacket *msg)

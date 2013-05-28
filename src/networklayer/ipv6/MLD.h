@@ -1,3 +1,26 @@
+// Copyright (C) 2012 - 2013 Brno University of Technology (http://nes.fit.vutbr.cz/ansa)
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+//
+
+/**
+ * @file MLD.h
+ * @author Adam Malik(mailto:towdie13@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @date 9.5.2013
+ * @brief
+ * @detail
+ */
 
 #ifndef __INET_IGMP_H
 #define __INET_IGMP_H
@@ -17,21 +40,27 @@ class NotificationBoard;
 class INET_API MLD : public cSimpleModule, protected INotifiable
 {
   protected:
+    /**
+     * Querier router state
+     */
     enum RouterState
     {
         MLD_RS_INITIAL,
         MLD_RS_QUERIER,
         MLD_RS_NON_QUERIER,
     };
-
+    /**
+     * Router member state for groups
+     */
     enum RouterGroupState
     {
         MLD_RGS_NO_MEMBERS_PRESENT,
         MLD_RGS_MEMBERS_PRESENT,
-        MLD_RGS_V1_MEMBERS_PRESENT,
         MLD_RGS_CHECKING_MEMBERSHIP,
     };
-
+    /**
+     * Host member state for groups
+     */
     enum HostGroupState
     {
         MLD_HGS_NON_MEMBER,
@@ -39,6 +68,9 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
         MLD_HGS_IDLE_MEMBER,
     };
 
+    /**
+     * Struct for storing group data on hosts interface
+     */
     struct HostGroupData
     {
         MLD *owner;
@@ -52,6 +84,9 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     };
     typedef std::map<IPv6Address, HostGroupData*> GroupToHostDataMap;
 
+    /**
+     * Struct for storing gtoup data on router interface
+     */
     struct RouterGroupData
     {
         MLD *owner;
@@ -66,6 +101,9 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     };
     typedef std::map<IPv6Address, RouterGroupData*> GroupToRouterDataMap;
 
+    /**
+     * Data about all interfaces on hosts
+     */
     struct HostInterfaceData
     {
         MLD *owner;
@@ -76,6 +114,9 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     };
     typedef std::map<int, HostInterfaceData*> InterfaceToHostDataMap;
 
+    /**
+     * Data about all interfaces on router
+     */
     struct RouterInterfaceData
     {
         MLD *owner;
@@ -88,7 +129,9 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     };
     typedef std::map<int, RouterInterfaceData*> InterfaceToRouterDataMap;
 
-    // Timers
+    /**
+     * Timers
+     */
     enum MLDTimerKind
     {
         MLD_QUERY_TIMER,
@@ -117,18 +160,16 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     NotificationBoard *nb; // cached pointer
 
     bool enabled;
-    bool externalRouter;
-    int robustness;                          // RFC 2236: Section 8.1
-    double queryInterval;                    // RFC 2236: Section 8.2
-    double queryResponseInterval;            // RFC 2236: Section 8.3
-    double groupMembershipInterval;          // RFC 2236: Section 8.4
-    double otherQuerierPresentInterval;      // RFC 2236: Section 8.5
-    double startupQueryInterval;             // RFC 2236: Section 8.6
-    double startupQueryCount;                // RFC 2236: Section 8.7
-    double lastMemberQueryInterval;          // RFC 2236: Section 8.8
-    double lastMemberQueryCount;             // RFC 2236: Section 8.9
-    double unsolicitedReportInterval;        // RFC 2236: Section 8.10
-    //double version1RouterPresentInterval;  // RFC 2236: Section 8.11
+    int robustness;
+    double queryInterval;
+    double queryResponseInterval;
+    double groupMembershipInterval;
+    double otherQuerierPresentInterval;
+    double startupQueryInterval;
+    double startupQueryCount;
+    double lastMemberQueryInterval;
+    double lastMemberQueryCount;
+    double unsolicitedReportInterval;
 
     // state variables per interface
     InterfaceToHostDataMap hostData;
@@ -152,7 +193,7 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     int numLeavesRecv;
 
   protected:
-    virtual int numInitStages() const  {return 6;}
+    virtual int numInitStages() const  {return 9;}
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
     virtual void receiveChangeNotification(int category, const cPolymorphic *details);
@@ -173,28 +214,27 @@ class INET_API MLD : public cSimpleModule, protected INotifiable
     virtual void deleteRouterGroupData(InterfaceEntry *ie, const IPv6Address &group);
 
     virtual void configureInterface(InterfaceEntry *ie);
-    virtual void multicastGroupJoined(InterfaceEntry *ie, const IPv6Address& groupAddr);
-    virtual void multicastGroupLeft(InterfaceEntry *ie, const IPv6Address& groupAddr);
+    virtual void multicastGroupJoined(InterfaceEntry *ie, const IPv6Address& groupAddr); /** @brief Function aclled from NB. Sending Join Message */
+    virtual void multicastGroupLeft(InterfaceEntry *ie, const IPv6Address& groupAddr);   /** @brief Function called after removing group with leave timer */
 
     virtual void startTimer(cMessage *timer, double interval);
     virtual void startHostTimer(InterfaceEntry *ie, HostGroupData* group, double maxRespTime);
 
-    virtual void sendQuery(InterfaceEntry *ie, const IPv6Address& groupAddr, double maxRespTime);
-    virtual void sendReport(InterfaceEntry *ie, HostGroupData* group);
-    virtual void sendLeave(InterfaceEntry *ie, HostGroupData* group);
-    virtual void sendToIP(MLDMessage *msg, InterfaceEntry *ie, const IPv6Address& dest);
+    virtual void sendQuery(InterfaceEntry *ie, const IPv6Address& groupAddr, double maxRespTime);   /** @brief Function for sending Query Messages */
+    virtual void sendReport(InterfaceEntry *ie, HostGroupData* group);                              /** @brief Function for sending Report Messages */
+    virtual void sendLeave(InterfaceEntry *ie, HostGroupData* group);                               /** @brief Function for sending Leave Group Message */
+    virtual void sendToIP(MLDMessage *msg, InterfaceEntry *ie, const IPv6Address& dest);            /** @brief Function for preparing and sending message to IP module */
 
-    virtual void processQueryTimer(cMessage *msg);
-    virtual void processHostGroupTimer(cMessage *msg);
-    virtual void processLeaveTimer(cMessage *msg);
-    virtual void processRexmtTimer(cMessage *msg);
+    virtual void processQueryTimer(cMessage *msg);          /** @brief Function for processing expired query timer */
+    virtual void processHostGroupTimer(cMessage *msg);      /** @brief Function for processing expired Group timer on Hosts */
+    virtual void processLeaveTimer(cMessage *msg);          /** @brief Function for processing expired Leave timer */
+    virtual void processRexmtTimer(cMessage *msg);          /** @brief Function for processing expired Rexmt timer */
 
-    virtual void processMldMessage(MLDMessage *msg);
-    virtual void processQuery(InterfaceEntry *ie, const IPv6Address& sender, MLDMessage *msg);
-    virtual void processGroupQuery(InterfaceEntry *ie, HostGroupData* group, int maxRespTime);
-    //virtual void processV1Report(InterfaceEntry *ie, IGMPMessage *msg);
-    virtual void processV2Report(InterfaceEntry *ie, MLDMessage *msg);
-    virtual void processLeave(InterfaceEntry *ie, MLDMessage *msg);
+    virtual void processMldMessage(MLDMessage *msg);        /** Function for processing received MLD message(Splitter for another functions) */
+    virtual void processQuery(InterfaceEntry *ie, const IPv6Address& sender, MLDMessage *msg);  /** Function for processing received Query Message */
+    virtual void processGroupQuery(InterfaceEntry *ie, HostGroupData* group, int maxRespTime);  /** Function for prcessing Group Queries for each group */
+    virtual void processV2Report(InterfaceEntry *ie, MLDMessage *msg);                          /** Function for processing Report messages */
+    virtual void processLeave(InterfaceEntry *ie, MLDMessage *msg);                             /** Function for processing leave group messages */
 };
 
 #endif

@@ -17,6 +17,7 @@ package inet.examples.ansa.IGMPv2;
 import inet.ansa.networklayer.pim.PIMRouter;
 import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.examples.bgpv4.BGPUpdate.BGPRouter;
+import inet.nodes.ethernet.EtherSwitch;
 import inet.nodes.inet.Router;
 import inet.nodes.inet.StandardHost;
 import ned.DatarateChannel;
@@ -35,15 +36,41 @@ network IGMP
         }
 
     submodules:
-        ansaStandardHost: ANSAStandardHost {
-            @display("p=68,101");
+        Alice: ANSAStandardHost {
+            @display("p=76,62");
+            gates:
+                ethg[1];
         }
-        pimRouter: PIMRouter {
-            @display("p=440,101;is=l");
-            //forwardMulticast = true;
-            multicastForward = true;
+        FITgate1: PIMRouter {
+            @display("p=314,58");
+            gates:
+                ethg[1];
+        }
+        FITgate2: PIMRouter {
+            @display("p=314,168");
+            gates:
+                ethg[2];
+        }
+        Bob: ANSAStandardHost {
+            @display("p=76,172");
+            gates:
+                ethg[1];
+        }
+        Carlos: ANSAStandardHost {
+            @display("p=314,257");
+            gates:
+                ethg[1];
+        }
+        etherSwitch: EtherSwitch {
+            @display("p=203,124");
+            gates:
+                ethg[4];
         }
     connections allowunconnected:
-        pimRouter.ethg++ <--> Eth100M <--> ansaStandardHost.ethg++;
+        Alice.ethg[0] <--> Eth100M <--> etherSwitch.ethg[0];
+        Bob.ethg[0] <--> Eth100M <--> etherSwitch.ethg[1];
+        FITgate1.ethg[0] <--> Eth100M <--> etherSwitch.ethg[2];
+        FITgate2.ethg[0] <--> Eth100M <--> etherSwitch.ethg[3];
+        Carlos.ethg[0] <--> Eth100M <--> FITgate2.ethg[1];
 }
 
