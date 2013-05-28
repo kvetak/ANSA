@@ -226,6 +226,7 @@ void AnsaRoutingTable::initialize(int stage)
         nb = NotificationBoardAccess().get();
 
         IPForward = par("IPForward").boolValue();
+        multicastForward = par("forwardMulticast").boolValue();
 
         nb->subscribe(this, NF_INTERFACE_CREATED);
         nb->subscribe(this, NF_INTERFACE_DELETED);

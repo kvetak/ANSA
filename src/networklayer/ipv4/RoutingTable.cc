@@ -72,6 +72,7 @@ void RoutingTable::initialize(int stage)
 
         IPForward = par("IPForward").boolValue();
         multicastForward = par("forwardMulticast");
+        //IGMPVersion = par("IGMPVersion");
 
         nb->subscribe(this, NF_INTERFACE_CREATED);
         nb->subscribe(this, NF_INTERFACE_DELETED);
@@ -83,6 +84,7 @@ void RoutingTable::initialize(int stage)
         WATCH_PTRVECTOR(multicastRoutes);
         WATCH(IPForward);
         WATCH(routerId);
+        //WATCH(IGMPVersion);
     }
     else if (stage==1)
     {
@@ -339,7 +341,12 @@ void RoutingTable::configureInterfaceForIPv4(InterfaceEntry *ie)
     {
         d->joinMulticastGroup(IPv4Address::ALL_HOSTS_MCAST);
         if (IPForward)
+        {
             d->joinMulticastGroup(IPv4Address::ALL_ROUTERS_MCAST);
+            d->joinMulticastGroup(IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
+        }
+            //if (IPForward && IGMPVersion == 3)
+        //    d->joinMulticastGroup(IPv4Address::ALL_IGMPV3_ROUTERS_MCAST);
     }
 }
 

@@ -63,7 +63,7 @@ class INET_API IGMPv2 : public cSimpleModule, protected INotifiable
         HostGroupState state;
         bool flag;                // true when we were the last host to send a report for this group
         cMessage *timer;
-
+        IPv4Address querierAddress;
         HostGroupData(IGMPv2 *owner, const IPv4Address &group);
         virtual ~HostGroupData();
     };
@@ -76,7 +76,6 @@ class INET_API IGMPv2 : public cSimpleModule, protected INotifiable
         RouterGroupState state;
         cMessage *timer;
         cMessage *rexmtTimer;
-        //cMessage *v1HostTimer;
 
         RouterGroupData(IGMPv2 *owner, const IPv4Address &group);
         virtual ~RouterGroupData();
@@ -209,9 +208,9 @@ class INET_API IGMPv2 : public cSimpleModule, protected INotifiable
     virtual void processIgmpMessage(IGMPMessage *msg);
     virtual void processQuery(InterfaceEntry *ie, const IPv4Address& sender, IGMPMessage *msg);
     virtual void processGroupQuery(InterfaceEntry *ie, HostGroupData* group, int maxRespTime);
-    //virtual void processV1Report(InterfaceEntry *ie, IGMPMessage *msg);
     virtual void processV2Report(InterfaceEntry *ie, IGMPMessage *msg);
     virtual void processLeave(InterfaceEntry *ie, IGMPMessage *msg);
+    virtual void plotGraph();
 };
 
 #endif

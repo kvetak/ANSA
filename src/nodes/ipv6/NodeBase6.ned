@@ -45,6 +45,7 @@ module NodeBase6
         string mobilityType = default("StationaryMobility");
         xml routingTable = default(xml("<routingTable/>"));
         bool IPForward = default(true);
+        bool forwardMulticast = default(false);
     gates:
         input radioIn[numRadios] @directIn;
         inout pppg[] @labels(PPPFrame-conn);

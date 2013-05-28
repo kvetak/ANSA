@@ -32,8 +32,6 @@ import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.base.NotificationBoard;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
-import inet.linklayer.IWiredNic;
-
 module PIMRouter
 {
     parameters:
@@ -43,6 +41,7 @@ module PIMRouter
         xml routingTable = default(xml("<routingTable/>"));  // Routing table is filled by deviceConfigurator
         bool IPForward = default(true);
         bool multicastForward = default(true);
+        bool forwardMulticast = default(true);				 // Temporary value(will be replaced bymulticastForward)
         string configFile = default("config.xml");           // file name of the XML file which contains configuration for router
         string deviceId;                                     // needed for proper load of device XML configuration
         string hostname = default("Router");
@@ -108,10 +107,6 @@ module PIMRouter
         }
 
     connections allowunconnected:
-        PIM.networkLayerOut --> networkLayer.pimIn;
-        PIM.networkLayerIn <-- networkLayer.pimOut;
-
-
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
             eth[i].upperLayerOut --> networkLayer.ifIn++;
@@ -123,4 +118,10 @@ module PIMRouter
             ppp[i].upperLayerOut --> networkLayer.ifIn++;
             ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
+        PIM.networkLayerOut --> networkLayer.pimIn;
+        PIM.networkLayerIn <-- networkLayer.pimOut;
+
+
 }
+import inet.linklayer.IWiredNic;
+

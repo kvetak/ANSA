@@ -26,6 +26,8 @@ import inet.networklayer.icmpv6.ICMPv6;
 import inet.networklayer.IxMIPv6Support;
 import inet.networklayer.IIPv6Tunneling;
 import inet.base.IHook;
+import inet.networklayer.ipv6.IMLD;
+import inet.networklayer.ipv6.MLD;
 
 
 //
@@ -38,7 +40,8 @@ module NetworkLayer6
 {
     parameters:
         bool xMIPv6Support = default(false);
-        @display("i=block/fork");
+        string mldType = default("MLD");
+        @display("i=block/fork;bgb=399,281");
     gates:
         input ifIn[] @labels(IPv6Datagram);
         output ifOut[] @labels(IPv6Datagram);
@@ -54,37 +57,45 @@ module NetworkLayer6
         output ospfOut @labels(IPv6ControlInfo/up);
         input pingIn[];
         output pingOut[];
+        input mldIn;
+        output mldOut;
+
     submodules:
         ipv6: IPv6 {
             parameters:
-                protocolMapping = "6:0,17:1,46:2,89:3,132:4"; // TODO register 132 as sctp in ipv6 code
+                protocolMapping = "6:0,17:1,46:2,89:3,132:4,58:5"; // TODO register 132 as sctp in ipv6 code
                 @display("p=84,129");
             gates:
-                transportIn[5];
-                transportOut[5];
+                transportIn[6];
+                transportOut[6];
                 queueIn[sizeof(ifIn)];
                 queueOut[sizeof(ifIn)];
         }
         icmpv6: ICMPv6 {
             parameters:
-                @display("p=189,79");
+                @display("p=257,129");
         }
         ipv6ErrorHandling: IPv6ErrorHandling {
             parameters:
-                @display("p=280,79");
+                @display("p=350,129");
         }
         neighbourDiscovery: IPv6NeighbourDiscovery {
             parameters:
-                @display("p=257,149");
+                @display("p=296,234");
         }
         iptunneling: <default(firstAvailable("IPv6Tunneling","IPv6Tunneling_None"))> like IIPv6Tunneling {
             parameters:
-                @display("p=44,168");
+                @display("p=32,222");
         }
         mipv6support: <default(xMIPv6Support?"xMIPv6Support":"xMIPv6Support_None")> like IxMIPv6Support {
             parameters:
-                @display("p=44,79");
+                @display("p=32,48");
         }
+        mld: <mldType> like IMLD {
+            parameters:
+                @display("p=191,56");
+        }
+
     connections allowunconnected:  // FIXME remove 'nocheck'!
         // IPv6 to transport Layer
         ipv6.transportOut[0] --> { @display("m=n"); } --> tcpOut;
@@ -101,6 +112,12 @@ module NetworkLayer6
 
         ipv6.transportOut[4] --> { @display("m=n"); } --> sctpOut;
         ipv6.transportIn[4] <-- { @display("m=n"); } <-- sctpIn;
+
+        ipv6.transportIn[5] <-- mld.ipOut;
+        ipv6.transportOut[5] --> mld.ipIn;
+
+        mld.routerOut --> mldOut;
+        mld.routerIn <-- mldIn;
 
         // IPv6 to IPv6 Tunneling
         iptunneling.upperLayerIn <-- ipv6.upperTunnelingOut;

@@ -160,14 +160,19 @@ void DeviceConfigurator::initialize(int stage){
             // fill pim interfaces table from config file
             cXMLElement *iface = xmlParser::GetInterface(NULL, device);
             if (iface != NULL)
+            {
                 loadPimInterfaceConfig(iface);
+
+            }
             else
                 EV<< "No PIM interface is configured for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+
         }
         else
         {
             EV<< "Multicast routing is not enable for this device (" << deviceType << " id=" << deviceId << ")" << endl;
         }
+
     }
     else if(stage == 4)
     {
@@ -187,6 +192,17 @@ void DeviceConfigurator::initialize(int stage){
             ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
         else
             loadDefaultRouter(gateway);
+
+
+    }
+    else if(stage == 10)
+    {
+        if(device == NULL)
+            return;
+
+        cXMLElement *iface = xmlParser::GetInterface(NULL, device);
+        addIPv4MulticastGroups(iface);
+        addIPv6MulticastGroups(iface);
     }
 }
 
@@ -433,8 +449,8 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
         //register multicast groups
         if (strcmp("Router", deviceType) == 0)
         {//TODO: ???
-            ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
-            ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
+            //ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
+            //ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
         }
 
         ie->ipv4Data()->setMetric(1);
@@ -1952,6 +1968,66 @@ int DeviceConfigurator::getISISL2SPFFullInterval(cXMLElement *isisRouting){
     else
     {
         return atoi(cxL2SPFFullInt->getNodeValue());
+    }
+
+}
+
+void DeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
+{
+    while (iface != NULL)
+    {
+        // get MCastGroups Node
+        cXMLElement* MCastGroupsNode = iface->getElementByPath("MCastGroups");
+        if (MCastGroupsNode == NULL)
+        {
+            break;
+        }
+
+
+
+        //std::vector<IPv4Address> mcastGroupsList;
+        InterfaceEntry *ie = ift->getInterfaceByName(iface->getAttribute("name"));
+        bool empty = true;
+        for (cXMLElement *mcastNode=MCastGroupsNode->getFirstChild(); mcastNode; mcastNode = mcastNode->getNextSibling())
+        {
+            const char *mcastAddress = mcastNode->getNodeValue();
+            //mcastGroupsList.push_back((IPv4Address)mcastAddress);
+            ie->ipv4Data()->joinMulticastGroup((IPv4Address)mcastAddress);
+            empty = false;
+        }
+        if(empty)
+            EV << "No Multicast Groups found for this interface " << iface->getAttribute("name") << " on this device: " <<  deviceType << " id=" << deviceId << endl;
+        iface = xmlParser::GetInterface(iface, NULL);
+    }
+
+}
+
+void DeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
+{
+    while (iface != NULL)
+    {
+        // get MCastGroups Node
+        cXMLElement* MCastGroupsNode6 = iface->getElementByPath("MCastGroups6");
+        if (MCastGroupsNode6 == NULL)
+        {
+            break;
+        }
+
+
+
+        //std::vector<IPv4Address> mcastGroupsList;
+        InterfaceEntry *ie = ift->getInterfaceByName(iface->getAttribute("name"));
+        bool empty = true;
+        for (cXMLElement *mcastNode6=MCastGroupsNode6->getFirstChild(); mcastNode6; mcastNode6 = mcastNode6->getNextSibling())
+        {
+            const char *mcastAddress6 = mcastNode6->getNodeValue();
+            //mcastGroupsList.push_back((IPv4Address)mcastAddress);
+            ie->ipv6Data()->joinMulticastGroup(IPv6Address(mcastAddress6));      //todo
+            empty = false;
+        }
+        if(empty)
+            EV << "No Multicast6 Groups found for this interface " << iface->getAttribute("name") << " on this device: " <<  deviceType << " id=" << deviceId << endl;
+        iface = xmlParser::GetInterface(iface, NULL);
     }
 
 }

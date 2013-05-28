@@ -82,7 +82,7 @@ class DeviceConfigurator : public cSimpleModule {
       IRoutingTable *rt;
       PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
-      virtual int numInitStages() const {return 5;}
+      virtual int numInitStages() const {return 11;}
       virtual void initialize(int stage);
       virtual void handleMessage(cMessage *msg);
 
@@ -182,6 +182,14 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
 
+
+      ////////////////////////
+      //    IGMP Related    //
+      ////////////////////////
+
+      void addIPv4MulticastGroups(cXMLElement *iface);
+      void addIPv6MulticastGroups(cXMLElement *iface);
+
       //////////////////////////////
       // Configuration for VRRPv2 //
       //////////////////////////////
@@ -191,6 +199,7 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadVRRPv2Config(VRRPv2* VRRPModule);
       void loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule);
+
 
 };
 

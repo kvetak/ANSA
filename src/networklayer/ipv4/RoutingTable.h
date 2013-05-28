@@ -80,6 +80,7 @@ class INET_API RoutingTable: public cSimpleModule, public IRoutingTable, protect
     IPv4Address routerId;
     bool IPForward;
     bool multicastForward;
+    int IGMPVersion;
 
     //
     // Routes:
