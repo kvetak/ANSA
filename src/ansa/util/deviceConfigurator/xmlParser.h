@@ -46,19 +46,28 @@ class xmlParser {
       static bool Str2Int(int *retValue, const char *str);
       static bool Str2Bool(bool *ret, const char *str);
 
-      static const char *getNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue);
+      static const char *GetNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue);
 
       // configuration for RIPng
-      static const char *getInterfaceRIPngStatus(cXMLElement *iface);
-      static const char *getRIPngInterfacePassiveStatus(cXMLElement *iface);
-      static const char *getRIPngInterfaceSplitHorizon(cXMLElement *iface);
-      static const char *getRIPngInterfacePoisonReverse(cXMLElement *iface);
+      static cXMLElement *GetRIPngProcess(cXMLElement *process, cXMLElement *device);
+      static cXMLElement *GetRIPngProcessTimers(cXMLElement *process);
+      static cXMLElement *GetInterfaceRIPngProcess(cXMLElement *ripng, cXMLElement *iface);
+      static const char  *GetInterfaceRIPngPassiveStatus(cXMLElement *ripng);
+      static const char  *GetInterfaceRIPngSplitHorizon(cXMLElement *ripng);
+      static const char  *GetInterfaceRIPngPoisonReverse(cXMLElement *ripng);
+      static cXMLElement *GetInterfaceRIPngDefaultInformation(cXMLElement *ripng);
+      static const char  *GetInterfaceRIPngMetricOffset(cXMLElement *ripng);
 
       // configuration for RIP
-      static cXMLElement *getRIPNetwork(cXMLElement *network, cXMLElement *device);
-      static cXMLElement *getRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device);
-      static const char *getRIPInterfaceSplitHorizon(cXMLElement *iface);
-      static const char *getRIPInterfacePoisonReverse(cXMLElement *iface);
+      static cXMLElement *GetRIPNetwork(cXMLElement *network, cXMLElement *device);
+      static cXMLElement *GetRIPPassiveInterface(cXMLElement *passiveInterface, cXMLElement *device);
+      static const char  *GetRIPInterfaceSplitHorizon(cXMLElement *iface);
+      static const char  *GetRIPInterfacePoisonReverse(cXMLElement *iface);
+
+      // configuration for VRRP
+      static cXMLElement *GetVRRPGroup(cXMLElement *group, cXMLElement *iface);
+      static cXMLElement *GetVRRPGroup(cXMLElement *device, const char* name, const char* groupId);
+      static bool HasVRPPGroup(cXMLElement* group, int *groupId);
 };
 
 #endif /* XMLPARSER_H_ */

@@ -18,8 +18,8 @@
  * @file TRILLFrame.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 16.3.2012
- * @brief
- * @detail
+ * @brief Derived class to allow re-implement data fields handling.
+ * @detail Derived class to allow re-implement data fields handling.
  * @todo Z9
  */
 #include "TRILLFrame.h"

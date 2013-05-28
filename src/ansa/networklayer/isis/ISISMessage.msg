@@ -53,10 +53,12 @@ enum PDU_Type
 	PTP_HELLO = 17;
 	L1_LSP = 18;
 	L2_LSP = 20;
+	MTU_PROBE_PDU = 23;
 	L1_CSNP = 24;
 	L2_CSNP = 25;
 	L1_PSNP = 26;
 	L2_PSNP = 27;
+    MTU_ACK_PDU = 28;
 };
 
 
@@ -134,6 +136,24 @@ packet ISISMessage extends cPacket
     TLV_t TLV[];
 };
 
+packet ISISMTUPDU extends ISISMessage
+{
+    uint16_t pduLength; //gives length of whole message (including size of ISISMessage a.k.a common header)
+    unsigned char probeID[6]; //arbitary value set by IS issuing the MTU-probe
+    unsigned char probeSourceID[6]; //set by issuing IS and copied by the responding IS
+    unsigned char ackSourceID[6]; //issuing IS set this to zero. IS issuing response sets this to itself System ID
+}
+
+packet ISISMTUProbe extends ISISMTUPDU
+{
+    type = MTU_PROBE_PDU;
+}
+
+packet ISISMTUAck extends ISISMTUPDU
+{
+    type = MTU_ACK_PDU;
+    
+}
 
 packet ISISLANHelloPacket extends ISISMessage
 {

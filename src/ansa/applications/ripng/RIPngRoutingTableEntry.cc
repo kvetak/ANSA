@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
-* @file RIPngInterface.cc
-* @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-* @brief
-* @detail
+* @file RIPngRoutingTableEntry.cc
+* @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+* @brief RIPng RTE
+* @detail Represents RIPng Routing Table Entry
 */
 
 #include "RIPngRoutingTableEntry.h"
@@ -34,7 +34,7 @@ RoutingTableEntry::RoutingTableEntry(IPv6Address destPrefix, int length) :
     _routeTag(0)
 {
     setRoutingProtocolSource(pRIP);
-    setAdminDist(dRIP);
+    setProcess(NULL);
     setTimer(NULL);
     setGCTimer(NULL);
     setCopy(NULL);
@@ -44,6 +44,7 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
     ANSAIPv6Route(entry.getDestPrefix(), entry.getPrefixLength(), IPv6Route::ROUTING_PROT),
     _changeFlag(false)
 {
+    setProcess(entry.getProcess());
     setRoutingProtocolSource(entry.getRoutingProtocolSource());
     setAdminDist(entry.getAdminDist());
     setTimer(NULL);
@@ -57,6 +58,8 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
 
 RoutingTableEntry::~RoutingTableEntry()
 {
+    if (_copy != NULL)
+        _copy->setCopy(NULL);
 }
 
 std::string RoutingTableEntry::RIPngInfo() const
@@ -65,7 +68,11 @@ std::string RoutingTableEntry::RIPngInfo() const
     std::string expTime;
     std::stringstream out;
 
-    out << getDestPrefix() << "/" << getPrefixLength();
+    if (getDestPrefix().isUnspecified())
+        out << "::";
+    else
+        out << getDestPrefix();
+    out << "/" << getPrefixLength();
     out << ", metric " << getMetric();
     if (getCopy() != NULL)
         out << ", installed";

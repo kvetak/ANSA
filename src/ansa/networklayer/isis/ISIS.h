@@ -18,8 +18,8 @@
  * @file ISIS.h
  * @author Matej Hrncirik, Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 7.3.2012
- * @brief
- * @detail
+ * @brief Header file for IS-IS module.
+ * @detail Header file for IS-IS module.
  * @todo TODO Incrementing sequence number should be done by using modulo and overflow should be properly handled
  *       FIXED BUG-ID: 1; A known bug emerged with new version of INET. If gateIndex doesn't corresponds to interface's index in interface table, things go terribly wrong.
  */
@@ -127,23 +127,28 @@ private:
     int L2CSNPInterval; /*!< Interval in seconds between generating CSNP message.*/
     int L1PSNPInterval; /*!< Interval in seconds between generating PSNP message.*/
     int L2PSNPInterval; /*!< Interval in seconds between generating PSNP message.*/
-    int L1SPFFullInterval;
-    int L2SPFFullInterval;
+    int L1SPFFullInterval; /*!< Interval in seconds between Full SPF generation of L1 CLNS routes */
+    int L2SPFFullInterval; /*!< Interval in seconds between Full SPF generation of L2 CLNS routes */
     unsigned long helloCounter; /*!< my hax hello counter to sync DIS/non-DIS hellos. This variable is deprecated, but is kept for sentimental reasons. */
+
+    ISISTimer *genL1LspTimer; /*!< Reference to timer that initiate LSP generation for L1*/
+    ISISTimer *genL2LspTimer; /*!< Reference to timer that initiate LSP generation for L2*/
+    ISISTimer *spfL1Timer; /*!< Reference to timer that initiate full spf for L1 */
+    ISISTimer *spfL2Timer; /*!< Reference to timer that initiate full spf for L2*/
 
     /* TRILL related */
     std::map<int, ISISPaths_t *> distribTrees;
 
     /* Init */
     void initISIS(); // main init
-    void initHello();
-    void initTRILLHello();
-    void initGenerate();
-    void initRefresh();
-    void initPeriodicSend();
-    void initCsnp();
-    void initPsnp();
-    void initSPF();
+    void initHello(); /*!< Initiate Hello timers*/
+    void initTRILLHello(); /*!< Initiate Trill Hello timers*/
+    void initGenerate(); /*!< Initiate LSP generating timers*/
+    void initRefresh(); /*!< Initiate LSP refresh timers*/
+    void initPeriodicSend(); /*!< Initiate Periodic Sending of LSP timers*/
+    void initCsnp(); /*!< Initiate CSNP timers*/
+    void initPsnp(); /*!< Initiate PSNP timers*/
+    void initSPF(); /*!< Initiate Full SPF timers*/
 
     /* Hello */
     void handlePTPHelloMsg(ISISMessage *inMsg); //

@@ -19,8 +19,8 @@
  * @file ISISAccess.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date Mar 9, 2013
- * @brief 
- * @detail
+ * @brief Provides access to IS-IS module.
+ * @detail Provides access to IS-IS module.
  * @todo Z9
  */
 
@@ -38,7 +38,5 @@ class ISISAccess : public ModuleAccess<ISIS>
         {
         }
 };
-
-
 
 #endif /* ISISACCESS_H_ */

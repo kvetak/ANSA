@@ -14,9 +14,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 // @file RIPRouting.ned
-// @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-// @brief
-// @detail
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief RIP
+// @detail Implements RIP protocol.
 
 package inet.ansa.applications.rip;
 
@@ -41,7 +41,7 @@ simple RIPRouting
         int timeToLive = default(255);                     // if not -1 set Hop Limit field of sent packets to this value
                 
         string configFile;                                 // file name of the XML file which contains configuration for RIPng process
-        string deviceId;                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPngRouting)
+        string deviceId;                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPRouting)
         string deviceType;
         
         @display("i=block/network2");  

@@ -12,6 +12,14 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSARoutingTable6.h
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended RoutingTable6
+ * @details Adds administrative distance, fixes routing table cache, IPv4-like routes updates
+ */
+
 #ifndef __INET_ANSA_ANSAROUTINGTABLE6_H
 #define __INET_ANSA_ANSAROUTINGTABLE6_H
 
@@ -82,7 +90,7 @@ class ANSAIPv6Route : public IPv6Route
   protected:
     IInterfaceTable *ift;     ///< cached pointer
     ANSARoutingTable6 *rt;    ///< the routing table in which this route is inserted, or NULL
-    RouteAdminDist _adminDist;
+    unsigned int  _adminDist;
     /** Should be set if route source is a "routing protocol" **/
     RoutingProtocolSource _routingProtocolSource;
 
@@ -100,11 +108,11 @@ class ANSAIPv6Route : public IPv6Route
     virtual std::string detailedInfo() const;
     virtual const char *getRouteSrcName() const;
 
-    RouteAdminDist getAdminDist() const  { return _adminDist; }
+    unsigned int getAdminDist() const  { return _adminDist; }
     RoutingProtocolSource getRoutingProtocolSource() const { return _routingProtocolSource; }
     const char *getInterfaceName() const;
 
-    virtual void setAdminDist(RouteAdminDist adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changed(F_ADMINDIST);} }
+    virtual void setAdminDist(unsigned int adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changed(F_ADMINDIST);} }
     virtual void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) {  if (routingProtocolSource != _routingProtocolSource) { _routingProtocolSource = routingProtocolSource; changed(F_ROUTINGPROTSOURCE);} }
     virtual void setInterfaceId(int interfaceId)  { if (interfaceId != _interfaceID) { _interfaceID = interfaceId; changed(F_IFACE);} }
     virtual void setNextHop(const IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changed(F_NEXTHOP);} }
@@ -145,6 +153,15 @@ class ANSARoutingTable6 : public RoutingTable6
      * Prepares routing table for adding new route.
      * e.g. removes route with the same prefix, prefix length and lower administrative distance
      * and purge destination cache
+     *
+     * Method uses removeRouteSilent() for removing routes - NF_IPv6_ROUTE_DELETED notification cannot be fired,
+     * because other routing protocol listening to this notification could add his route (route is already deleted
+     * so this route would be added without any problem with administrative distance), than this method
+     * return true and the protocol calling this method adds his route also.
+     *
+     * One could create another notification, like NF_IPv6_ROUTE_DELETED_INTERNAL, in the future.
+     * Adding a route would not be allowed on receipt this notification.
+     *
      * @return true, if it is safe to add route,
      *         false otherwise
      */
@@ -178,6 +195,12 @@ class ANSARoutingTable6 : public RoutingTable6
      * Must be reimplemented because of cache handling.
      */
     virtual void removeRoute(IPv6Route *route);
+
+    /**
+     * Same as removeRoute, except route deleted notification is not fired.
+     * @see prapareForAddRoute
+     */
+    virtual void removeRouteSilent(IPv6Route *route);
 
     /**
      * To be called from route objects whenever a field changes. Used for

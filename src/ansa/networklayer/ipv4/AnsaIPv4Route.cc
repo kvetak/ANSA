@@ -183,7 +183,7 @@ void AnsaIPv4MulticastRoute::setRegStatus(int intId, RegisterState regState)
     }
 }
 
-RegisterState AnsaIPv4MulticastRoute::getRegStatus(int intId)
+AnsaIPv4MulticastRoute::RegisterState AnsaIPv4MulticastRoute::getRegStatus(int intId)
 {
     unsigned int i;
     for (i = 0; i < outInt.size(); i++)

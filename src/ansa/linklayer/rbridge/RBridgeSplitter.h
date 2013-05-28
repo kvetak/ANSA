@@ -19,8 +19,8 @@
  * @file RBridgeSplitter.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 10.2.2013
- * @brief
- * @detail
+ * @brief Handles de/encapsulation for IS-IS module and splits traffic between IS-IS and TRILL modules.
+ * @detail Handles de/encapsulation for IS-IS module and splits traffic between IS-IS and TRILL modules.
  * @todo Z9
  */
 
@@ -31,7 +31,7 @@
 #include "ISISAccess.h"
 #include "TRILLAccess.h"
 #include "RBVLANTable.h"
-#include "RBPortTable.h"
+//#include "RBPortTable.h"
 #include "AnsaEtherFrame_m.h"
 #include "IInterfaceTable.h"
 #include "InterfaceTableAccess.h"
@@ -46,7 +46,7 @@ class RBridgeSplitter : public cSimpleModule
         ISIS *isisModule;
         TRILL *trillModule;
         RBVLANTable *vlanTableModule;
-        RBPortTable *portTableModule;
+//        RBPortTable *portTableModule;
         IInterfaceTable *ift;
     protected:
       virtual void initialize(int stage);

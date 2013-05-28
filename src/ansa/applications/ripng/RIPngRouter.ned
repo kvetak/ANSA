@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-// @file RIPngRouter.msg
-// @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-// @brief
-// @detail
+// @file RIPngRouter.ned
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief Simple RIPng router
+// @detail RIPng router module for testing purposes 
 
 package inet.ansa.applications.ripng;
 
@@ -48,24 +48,24 @@ module RIPngRouter
     submodules:
 
         deviceConfigurator: DeviceConfigurator {
-            @display("p=53,113");
+            @display("p=184,32");
             deviceId = deviceId;
             deviceType = "Router";
             configFile = configFile;
         }
-        
+
         interfaceStateManager: InterfaceStateManager {
-            @display("p=53,188");
+            @display("p=64,32");
         }
 
         notificationBoard: NotificationBoard {
             parameters:
-                @display("p=53,38");
+                @display("p=301,32");
         }
 
         // applications layer
         RIPng: RIPngRouting {
-            @display("p=204,113");
+            @display("p=184,100");
             configFile = configFile;
             deviceId = deviceId;
             deviceType = "Router";
@@ -74,7 +74,7 @@ module RIPngRouter
         // transort layer
         udp: ANSAUDP {
             parameters:
-                @display("p=290,172;i=block/transport");
+                @display("p=301,147;i=block/transport");
             gates:
                 appIn[1];
                 appOut[1];
@@ -83,12 +83,12 @@ module RIPngRouter
         // network layer
         networkLayer: NetworkLayer6 {
             parameters:
-                @display("p=204,240;q=queue");
+                @display("p=184,193;q=queue");
         }
 
         routingTable6: ANSARoutingTable6 {
             parameters:
-                @display("p=290,38");
+                @display("p=64,193");
                 isRouter = IPForward;
                 routingTable = routingTable;
         }
@@ -96,17 +96,17 @@ module RIPngRouter
         // linklayer
         interfaceTable: InterfaceTable {
             parameters:
-                @display("p=204,38");
+                @display("p=64,262");
         }
 
 
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
-                @display("p=127,317,row,90;q=txQueue");
+                @display("p=184,262,row,90;q=txQueue");
         }
         ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
             parameters:
-                @display("p=290,317,row,90;q=txQueue");
+                @display("p=301,262,row,90;q=txQueue");
         }
 
     connections allowunconnected:

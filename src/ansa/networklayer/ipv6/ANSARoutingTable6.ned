@@ -15,6 +15,12 @@
 // License along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+// @file ANSARoutingTable6.ned
+// @date 21.5.2013
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief Inherited module for RoutingTable6
+// @details Simple module for IPv6 ANSARouting table
+
 
 package inet.ansa.networklayer.ipv6;
 

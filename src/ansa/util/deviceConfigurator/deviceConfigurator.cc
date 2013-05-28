@@ -32,8 +32,8 @@
 //
 
 /**
- * @file TRILL.cc
- * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @file deviceConfigurator.cc
+ * @author Marek Cerny, Jiri Trhlik (mailto:jiritm@gmail.com), Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz), .. DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 2011
  * @brief
  * @detail
@@ -622,8 +622,8 @@ void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 //- configuration for RIPng
 //
 //
-void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule){
-
+void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule)
+{
     ASSERT(RIPngModule != NULL);
 
     // get access to device node from XML
@@ -632,56 +632,178 @@ void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule){
     const char *configFile = par("configFile");
     cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
 
-    if (device == NULL){
-        ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+    if (device == NULL)
+    {
+        ev << "No RIPng configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
              return;
-     }
+    }
 
-    // interfaces config
-    cXMLElement *interface;
-    RIPng::Interface *ripngInterface;
-    std::string RIPngInterfaceStatus;
-    std::string RIPngInterfacePassiveStatus;
-    std::string RIPngInterfaceSplitHorizon;
-    std::string RIPngInterfacePoisonReverse;
+    ev << "Configuring RIPng on this device (" << deviceType << " id=" << deviceId << ")" << endl;
 
-      //get first router's interface
-      interface = xmlParser::GetInterface(NULL, device);
-      while (interface != NULL)
-      {// process all interfaces in config file
-          const char *interfaceName = interface->getAttribute("name");
-          RIPngInterfaceStatus = xmlParser::getInterfaceRIPngStatus(interface);
-          if (RIPngInterfaceStatus == "enable")
+    const char *RIPngProcessName;
+    const char *RIPngParamString;
+    RIPngProcess *RIPngProcess;
+    cXMLElement *RIPngProcessTimersElement;
+
+      cXMLElement *RIPngProcessElement = xmlParser::GetRIPngProcess(NULL, device);
+      if (RIPngProcessElement == NULL)
+          ev << "   No RIPng configuration found." << endl;
+
+      while(RIPngProcessElement != NULL)
+      {
+          RIPngProcessName = RIPngProcessElement->getAttribute("name");
+          if (RIPngProcessName == NULL)
           {
-              ripngInterface = RIPngModule->enableRIPngOnInterface(interfaceName);
-              // add prefixes from int to the RIPng routing table
-              loadPrefixesFromInterfaceToRIPngRT(RIPngModule, interface);
+              ev << "   RIPng process name not found." << endl;
+          }
+          else
+          {
+              RIPngProcess = RIPngModule->addProcess(RIPngProcessName);
 
-              RIPngInterfacePassiveStatus = xmlParser::getRIPngInterfacePassiveStatus(interface);
-              if (RIPngInterfacePassiveStatus == "enable")
-              {// set the interface as passive (interface is "active" by default)
-                  RIPngModule->setInterfacePassiveStatus(ripngInterface, true);
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Port", "");
+              if (strcmp(RIPngParamString, "") != 0)
+              {// set port and address
+                  int port;
+                  if (xmlParser::Str2Int(&port, RIPngParamString))
+                  {
+                      RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Address", "");
+                      if (strcmp(RIPngParamString, "") != 0)
+                      {
+                          IPv6Address RIPngAddress = IPv6Address(RIPngParamString);
+                          RIPngModule->setPortAndAddress(RIPngProcess, port, RIPngAddress);
+                      }
+                  }
               }
 
-              RIPngInterfaceSplitHorizon = xmlParser::getRIPngInterfaceSplitHorizon(interface);
-              if (RIPngInterfaceSplitHorizon == "disable")
-              {// disable Split Horizon on the interface (Split Horizon is enabled by default)
-                  RIPngModule->setInterfaceSplitHorizon(ripngInterface, false);
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Distance", "");
+              if (strcmp(RIPngParamString, "") != 0)
+              {// set distance (AD)
+                  int distance;
+                  if (xmlParser::Str2Int(&distance, RIPngParamString))
+                  {
+                      RIPngModule->setDistance(RIPngProcess, distance);
+                  }
               }
 
-              RIPngInterfacePoisonReverse = xmlParser::getRIPngInterfacePoisonReverse(interface);
-              if (RIPngInterfacePoisonReverse == "enable")
-              {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
-                  RIPngModule->setInterfacePoisonReverse(ripngInterface, true);
+              RIPngProcessTimersElement = xmlParser::GetRIPngProcessTimers(RIPngProcessElement);
+              if (RIPngProcessTimersElement != NULL)
+              {// set timers
+                  int update, route, garbage;
+                  RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessTimersElement, "Update", "-1");
+                  if (!xmlParser::Str2Int(&update, RIPngParamString))
+                      update = -1;
+                  RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessTimersElement, "Route", "-1");
+                  if (!xmlParser::Str2Int(&route, RIPngParamString))
+                      route = -1;
+                  RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessTimersElement, "Garbage", "-1");
+                  if (!xmlParser::Str2Int(&garbage, RIPngParamString))
+                      garbage = -1;
+
+                  RIPngModule->setTimers(RIPngProcess, update, route, garbage);
+              }
+
+              //Must be set before any INTERFACE PoisonReverse command
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "PoisonReverse", "");
+              if (strcmp(RIPngParamString, "enable") == 0)
+              {// enable Poison Reverse (Poison Reverse is disabled by default)
+                  RIPngModule->setPoisonReverse(RIPngProcess, true);
+              }
+
+              //Must be set before any INTERFACE SplitHorizon command
+              RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "SplitHorizon", "");
+              if (strcmp(RIPngParamString, "disable") == 0)
+              {// // disable Split Horizon (Split Horizon is enabled by default)
+                  RIPngModule->setSplitHorizon(RIPngProcess, false);
               }
           }
 
+          RIPngProcessElement = xmlParser::GetRIPngProcess(RIPngProcessElement, NULL);
+      }
+
+    // interfaces config
+    cXMLElement *interfaceElement;
+    cXMLElement *interfaceRIPngProcessElement;
+    cXMLElement *interfaceRIPngDefaultInfElement;
+    const char *interfaceRIPngProcessName;
+    const char *interfaceRIPngParamString;
+    RIPng::Interface *ripngInterface;
+
+      //get first router's interface
+      interfaceElement = xmlParser::GetInterface(NULL, device);
+      while (interfaceElement != NULL)
+      {// process all interfaces in config file
+          const char *interfaceName = interfaceElement->getAttribute("name");
+          interfaceRIPngProcessElement = xmlParser::GetInterfaceRIPngProcess(NULL, interfaceElement);
+          while (interfaceRIPngProcessElement != NULL)
+          {
+              interfaceRIPngProcessName = interfaceRIPngProcessElement->getAttribute("name");
+
+              if (interfaceRIPngProcessName != NULL && strcmp(interfaceRIPngProcessName, "") != 0)
+              {
+                  ripngInterface = RIPngModule->enableRIPngOnInterface(interfaceRIPngProcessName, interfaceName);
+                  if (ripngInterface == NULL)
+                  {
+                      ev << "   Interface with name " << interfaceName << " not found." << endl;
+                      continue;
+                  }
+
+                  RIPngProcess = ripngInterface->getProcess();
+
+                  // add prefixes from int to the RIPng routing table
+                  loadPrefixesFromInterfaceToRIPngRT(RIPngProcess, interfaceElement);
+
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngPassiveStatus(interfaceRIPngProcessElement);
+                  if (strcmp(interfaceRIPngParamString, "enable") == 0)
+                  {// set the interface as passive (interface is "active" by default)
+                      RIPngProcess->setInterfacePassiveStatus(ripngInterface, true);
+                  }
+
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngSplitHorizon(interfaceRIPngProcessElement);
+                  if (strcmp(interfaceRIPngParamString, "disable") == 0)
+                  {// disable Split Horizon on the interface (Split Horizon is enabled by default)
+                      RIPngProcess->setInterfaceSplitHorizon(ripngInterface, false);
+                  }
+
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngPoisonReverse(interfaceRIPngProcessElement);
+                  if (strcmp(interfaceRIPngParamString, "enable") == 0)
+                  {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
+                      RIPngProcess->setInterfacePoisonReverse(ripngInterface, true);
+                  }
+
+                  int metricOffset;
+                  interfaceRIPngParamString = xmlParser::GetInterfaceRIPngMetricOffset(interfaceRIPngProcessElement);
+                  if (xmlParser::Str2Int(&metricOffset, interfaceRIPngParamString) && metricOffset != 0)
+                  {// metric-offset
+                      RIPngProcess->setInterfaceMetricOffset(ripngInterface, metricOffset);
+                  }
+
+                  interfaceRIPngDefaultInfElement = xmlParser::GetInterfaceRIPngDefaultInformation(interfaceRIPngProcessElement);
+                  if (interfaceRIPngDefaultInfElement != NULL)
+                  {// default-information
+                      bool defRouteOnly = false;
+                      interfaceRIPngParamString = xmlParser::GetNodeParamConfig(interfaceRIPngDefaultInfElement, "DefaultOnly", "false");
+                      xmlParser::Str2Bool(&defRouteOnly, interfaceRIPngParamString);
+
+                      int metric = 0;
+                      interfaceRIPngParamString = xmlParser::GetNodeParamConfig(interfaceRIPngDefaultInfElement, "Metric", "0");
+                      xmlParser::Str2Int(&metric, interfaceRIPngParamString);
+
+                      RIPngProcess->setInterfaceDefaultInformation(ripngInterface, true, defRouteOnly, metric);
+                  }
+
+              }
+
+              // process next RIPng on the interface
+              interfaceRIPngProcessElement = xmlParser::GetInterfaceRIPngProcess(interfaceRIPngProcessElement, NULL);
+
+          }
+
           // process next interface
-          interface = xmlParser::GetInterface(interface, NULL);
+          interfaceElement = xmlParser::GetInterface(interfaceElement, NULL);
       }
 }
 
-void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface)
+void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *process, cXMLElement *interface)
 {
     const char *interfaceName = interface->getAttribute("name");
     InterfaceEntry *interfaceEntry = ift->getInterfaceByName(interfaceName);
@@ -706,14 +828,15 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngM
                throw cRuntimeError("Unable to set IPv6 network address %s for RIPng route", sIpv6address.c_str());
             }
 
-            if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast())
+            if (!ipv6address.isLinkLocal() && !ipv6address.isMulticast() && !ipv6address.isUnspecified())
             {
                 // make directly connected route
                 route = new RIPng::RoutingTableEntry(ipv6address.getPrefix(prefixLen), prefixLen);
+                route->setProcess(process);
                 route->setInterfaceId(interfaceId);
                 route->setNextHop(IPv6Address::UNSPECIFIED_ADDRESS);  // means directly connected network
-                route->setMetric(RIPngModule->getConnNetworkMetric());
-                RIPngModule->addRoutingTableEntry(route, false);
+                route->setMetric(process->getConnNetworkMetric());
+                process->addRoutingTableEntry(route, false);
 
                 // directly connected routes do not need a RIPng route timer
             }
@@ -750,7 +873,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     const char *interfaceName;
 
     //RIP NETWORK COMMAND
-    networkElement = xmlParser::getRIPNetwork(NULL, device);
+    networkElement = xmlParser::GetRIPNetwork(NULL, device);
     while (networkElement != NULL)
     {// process all RIP Network "command"
 
@@ -782,19 +905,19 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
         }
 
         //next Network element
-        networkElement = xmlParser::getRIPNetwork(networkElement, NULL);
+        networkElement = xmlParser::GetRIPNetwork(networkElement, NULL);
     }
 
     //PASSIVE-INTERFACE
     cXMLElement *passiveInterfaceElem;
-    passiveInterfaceElem = xmlParser::getRIPPassiveInterface(NULL, device);
+    passiveInterfaceElem = xmlParser::GetRIPPassiveInterface(NULL, device);
     while(passiveInterfaceElem != NULL)
     {
         RIPInterface = RIPModule->getEnabledInterfaceByName(passiveInterfaceElem->getNodeValue());
         RIPModule->setInterfacePassiveStatus(RIPInterface, true);
 
         // next passive-interface command
-        passiveInterfaceElem = xmlParser::getRIPPassiveInterface(passiveInterfaceElem, NULL);
+        passiveInterfaceElem = xmlParser::GetRIPPassiveInterface(passiveInterfaceElem, NULL);
     }
 
     //RIP PER INTERFACE CONFIGURATION
@@ -806,7 +929,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     while (interfaceElem != NULL)
     {
         interfaceName = interfaceElem->getAttribute("name");
-        RIPInterfaceSplitHorizon = xmlParser::getRIPInterfaceSplitHorizon(interfaceElem);
+        RIPInterfaceSplitHorizon = xmlParser::GetRIPInterfaceSplitHorizon(interfaceElem);
         RIPInterface = RIPModule->getEnabledInterfaceByName(interfaceName);
 
         if (RIPInterface != NULL)
@@ -816,7 +939,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
                 RIPModule->setInterfaceSplitHorizon(RIPInterface, false);
             }
 
-            RIPInterfacePoisonReverse = xmlParser::getRIPInterfacePoisonReverse(interfaceElem);
+            RIPInterfacePoisonReverse = xmlParser::GetRIPInterfacePoisonReverse(interfaceElem);
             if (RIPInterfacePoisonReverse == "enable")
             {// enable Poison Reverse on the interface (Poison Reverse is disabled by default)
                 RIPModule->setInterfacePoisonReverse(RIPInterface, true);
@@ -873,6 +996,7 @@ void DeviceConfigurator::loadPimGlobalConfig(pimSM *pimSMModule)
         if (SPTthreshold != NULL)
         {
             std::string SPTthresholdString = SPTthreshold->getNodeValue();
+            pimSMModule->setSPTthreshold(SPTthresholdString);
             EV << "SPTthreshold in config found: " << SPTthresholdString.c_str() << endl;
         }
     }
@@ -886,7 +1010,7 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get PIM node
         cXMLElement* pimNode = iface->getElementByPath("Pim");
         if (pimNode == NULL)
-          continue;
+          break;                //FIXME it is break ok?
 
         // create new PIM interface
         PimInterface newentry;
@@ -1314,8 +1438,9 @@ void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, Interf
         /* By this time the trillData should be initialized.
          * So set the intial appointedForwaders to itself for configured VLAN(s).
          * TODO B5 add RFC reference and do some magic with vlanId, desiredVlanId, enabledVlans, ... */
-        ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
-
+        if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
+            ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
+        }
         newIftEntry.passive = false;
         d->setPassive(false);
         newIftEntry.entry = ie;
@@ -1908,3 +2033,128 @@ void DeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 }
 
 /* End of IS-IS related methods */
+
+//
+//- configuration for VRRPv2
+//
+void DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
+
+    ASSERT(VRRPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    cXMLElement *interface;
+    //get first router's interface
+    interface = xmlParser::GetInterface(NULL, device);
+
+    while (interface != NULL)
+    {
+        int interfaceId = ift->getInterfaceByName(interface->getAttribute("name"))->getInterfaceId();
+
+        cXMLElement *group;
+        group = xmlParser::GetVRRPGroup(NULL, interface);
+        while (group != NULL)
+        {
+            int groupId = -1;
+            if (xmlParser::HasVRPPGroup(group, &groupId))
+                VRRPModule->addVirtualRouter(interfaceId, groupId);
+
+            group = xmlParser::GetVRRPGroup(group, NULL);
+        }
+        interface = xmlParser::GetInterface(interface, NULL);
+    }
+}
+
+void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule) {
+    ASSERT(VRRPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       EV << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    std::ostringstream groupId;
+    groupId <<  VRRPModule->getVrid();
+
+    cXMLElement *group;
+    group = xmlParser::GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.str().c_str());
+    if (group == NULL) {
+        EV << "No configuration found for group " << groupId << endl;
+        return;
+    }
+
+    cXMLElementList ifDetails = group->getChildren();
+    for (cXMLElementList::iterator routeElemIt = ifDetails.begin(); routeElemIt != ifDetails.end(); routeElemIt++)
+    {
+        std::string nodeName = (*routeElemIt)->getTagName();
+
+        if (nodeName == "IPAddress")
+        {
+            VRRPModule->setIPPrimary((*routeElemIt)->getNodeValue());
+            VRRPModule->addIPSecondary((*routeElemIt)->getNodeValue());
+        }
+        else if (nodeName == "IPSecondary")
+        {
+            VRRPModule->addIPSecondary((*routeElemIt)->getNodeValue());
+        }
+        else if (nodeName == "Description")
+        {
+            VRRPModule->setDescription((*routeElemIt)->getNodeValue());
+        }
+        else if (nodeName == "Priority")
+        {
+            int value = 0;
+            if (!xmlParser::Str2Int(&value, (*routeElemIt)->getNodeValue()))
+                throw cRuntimeError("Invalid Priority value on interface %s", VRRPModule->getInterface()->getName());
+
+            VRRPModule->setPriority(value);
+        }
+        else if (nodeName == "Preempt")
+        {
+            bool value = false;
+            if (!xmlParser::Str2Bool(&value, (*routeElemIt)->getNodeValue())){
+               throw cRuntimeError("Invalid Preempt value on interface %s", VRRPModule->getInterface()->getName());
+            }
+            VRRPModule->setPreemtion(value);
+
+            if ((*routeElemIt)->hasAttributes()) {
+                int value = 0;
+                if (!xmlParser::Str2Int(&value, (*routeElemIt)->getAttribute("delay")))
+                    throw cRuntimeError("Unable to parse valid Preemtion delay %s on interface %s", value, VRRPModule->getInterface()->getName());
+
+                VRRPModule->setPreemtionDelay(value);
+            }
+        }
+        else if (nodeName == "TimerAdvertise")
+        {
+            int value = 0;
+            if (!xmlParser::Str2Int(&value, (*routeElemIt)->getNodeValue()))
+                throw cRuntimeError("Unable to parse valid TimerAdvertise %s on interface %s", value, VRRPModule->getInterface()->getFullName());
+
+            VRRPModule->setAdvertisement(value);
+        }
+        else if (nodeName == "TimerLearn")
+        {
+            bool value = false;
+            if (!xmlParser::Str2Bool(&value, (*routeElemIt)->getNodeValue())){
+               throw cRuntimeError("Invalid TimerLearn value on interface %s", VRRPModule->getInterface()->getName());
+            }
+            VRRPModule->setLearn(value);
+        }
+    }
+}

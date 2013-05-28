@@ -25,45 +25,45 @@ import inet.nodes.ethernet.Eth100M;
 //
 network MultiDest3
 {
-    @display("bgb=509,354");
+    @display("bgb=509,333");
     submodules:
         rBridge1: RBridge {
-            @display("p=113,90");
+            @display("p=113,47");
             gates:
                 ethg[3];
         }
         rBridge2: RBridge {
-            @display("p=269,90");
+            @display("p=269,47");
             gates:
                 ethg[3];
         }
         rBridge3: RBridge {
-            @display("p=428,90");
+            @display("p=428,47");
             gates:
                 ethg[2];
         }
         rBridge4: RBridge {
-            @display("p=269,223");
+            @display("p=269,180");
             gates:
                 ethg[3];
         }
         rBridge5: RBridge {
-            @display("p=428,223");
+            @display("p=428,180");
             gates:
                 ethg[3];
         }
         rBridge6: RBridge {
-            @display("p=113,223");
+            @display("p=113,180");
             gates:
                 ethg[2];
         }
         ansaHost2: AnsaHost {
-            @display("p=428,315");
+            @display("p=428,272");
             gates:
                 ethg[1];
         }
         ansaHost1: AnsaHost {
-            @display("p=39,90");
+            @display("p=39,47");
             gates:
                 ethg[1];
         }

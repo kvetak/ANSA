@@ -33,8 +33,8 @@
 //
 
 /**
- * @file TRILL.cc
- * @author Marek Cerny, Jiri Trhlik, Tomas Prochazka, etc ... DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @file deviceConfigurator.h
+ * @author Marek Cerny, Jiri Trhlik (mailto:jiritm@gmail.com), Tomas Prochazka, etc ... DOPLNTE Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 2011
  * @brief
  * @detail
@@ -57,6 +57,8 @@
 #include "RIPngRouting.h"
 #include "RIPRouting.h"
 #include "pimSM.h"
+#include "VRRPv2.h"
+#include "VRRPv2VirtualRouter.h"
 
 /* TRILL */
 #include "TRILLAccess.h"
@@ -152,7 +154,7 @@ class DeviceConfigurator : public cSimpleModule {
        * @param interface [in] interface, from which should be added prefixes
        * @see InterfaceTable
        */
-      void loadPrefixesFromInterfaceToRIPngRT(RIPngRouting *RIPngModule, cXMLElement *interface);
+      void loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *process, cXMLElement *interface);
 
       ///////////////////////////
       // configuration for RIP //
@@ -180,12 +182,24 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
 
+
       ////////////////////////
       //    IGMP Related    //
       ////////////////////////
 
       void addIPv4MulticastGroups(cXMLElement *iface);
       void addIPv6MulticastGroups(cXMLElement *iface);
+
+      //////////////////////////////
+      // Configuration for VRRPv2 //
+      //////////////////////////////
+      /**
+       * Loads configuration for VRRPv2
+       * @param VRRPModule [in]
+       */
+      void loadVRRPv2Config(VRRPv2* VRRPModule);
+      void loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule);
+
 
 };
 

@@ -18,8 +18,8 @@
  * @file TRILL.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 7.3.2013
- * @brief
- * @detail
+ * @brief Base class for TRILL module.
+ * @detail Base class for TRILL module. Performs TRILL de/encapsulation.
  * @todo Z9
  */
 
@@ -41,7 +41,10 @@ MACAddress TRILL::getBridgeAddress() {
     return bridgeAddress;
 }
 
-
+/**
+ *  Initialize TRILL module. Sets pointers to MAC and VLAN Table as well as IS-IS module
+ * @param stage is configuration stage
+ */
 void TRILL::initialize(int stage) {
 
     if (stage == 0) {
@@ -88,6 +91,10 @@ void TRILL::initialize(int stage) {
     }
 }
 
+/**
+ * Handles incoming messages.
+ * @param msg is incoming message
+ */
 void TRILL::handleMessage(cMessage *msg) {
 
     if (!msg->isSelfMessage()) {
@@ -165,7 +172,11 @@ void TRILL::handleMessage(cMessage *msg) {
     }
     delete msg;
 }
-
+/**
+ * Fills frame's descriptor with information in @param msg
+ * @param frame is frame's descriptor structure
+ * @param msg incomming message to be parsed
+ */
 bool TRILL::reception(TRILL::tFrameDescriptor& frame, cMessage *msg) {
     /* ACTIVE TOPOLOGY ENFORCEMENT AFTER CLASSIFICATION AND INGRESS
      * because of learning state operation, MAC record can be learned
@@ -194,57 +205,57 @@ bool TRILL::reception(TRILL::tFrameDescriptor& frame, cMessage *msg) {
 
     return true;
 }
-
-void TRILL::relay(TRILL::tFrameDescriptor& frame) {
-
-    // BPDU Handling
-    if (frame.dest == bridgeGroupAddress) {
-        deliverBPDU(frame);
-        return;
-    }
-
-     /* Dropping forbidden PortVID */
-    if (frame.VID == 0) {
-        return;
-    }
-
-    // BROADCAST ??
-    if (frame.dest.isBroadcast()) {
-        frame.portList = vlanTable->getPorts(frame.VID);
-        if (frame.portList.size() == 0) {
-            return;
-        }
-
-    } else {
-        RBVLANTable::tVIDPort tmpPort;
-        tmpPort.action = RBVLANTable::REMOVE;
-
-        RBMACTable::tPortList tmpPortList = rbMACTable->getPorts(frame.dest);
-
-        if (tmpPortList.size() == 0) { // not known -> bcast
-            frame.portList = vlanTable->getPorts(frame.VID);
-        } else {
-            for (unsigned int i = 0; i < tmpPortList.size(); i++) {
-                tmpPort.port = tmpPortList.at(i);
-                frame.portList.push_back(tmpPort);
-            }
-        }
-    }
-
-    //EV << frame;
-    //error("BLE BLE");
-
-
-    // LEARNING (explained in reception())
-    learn(frame);
-    // ACTIVE TOPOLOGY ENFORCEMENT (explained in reception())
-//    if (spanningTree->forwarding(frame.rPort, frame.VID) == true) {
-        // EGRESS
-        egress(frame);
-        // SEND
-        dispatch(frame);
+//
+//void TRILL::relay(TRILL::tFrameDescriptor& frame) {
+//
+//    // BPDU Handling
+//    if (frame.dest == bridgeGroupAddress) {
+//        deliverBPDU(frame);
+//        return;
 //    }
-}
+//
+//     /* Dropping forbidden PortVID */
+//    if (frame.VID == 0) {
+//        return;
+//    }
+//
+//    // BROADCAST ??
+//    if (frame.dest.isBroadcast()) {
+//        frame.portList = vlanTable->getPorts(frame.VID);
+//        if (frame.portList.size() == 0) {
+//            return;
+//        }
+//
+//    } else {
+//        RBVLANTable::tVIDPort tmpPort;
+//        tmpPort.action = RBVLANTable::REMOVE;
+//
+//        RBMACTable::tPortList tmpPortList = rbMACTable->getPorts(frame.dest);
+//
+//        if (tmpPortList.size() == 0) { // not known -> bcast
+//            frame.portList = vlanTable->getPorts(frame.VID);
+//        } else {
+//            for (unsigned int i = 0; i < tmpPortList.size(); i++) {
+//                tmpPort.port = tmpPortList.at(i);
+//                frame.portList.push_back(tmpPort);
+//            }
+//        }
+//    }
+//
+//    //EV << frame;
+//    //error("BLE BLE");
+//
+//
+//    // LEARNING (explained in reception())
+//    learn(frame);
+//    // ACTIVE TOPOLOGY ENFORCEMENT (explained in reception())
+////    if (spanningTree->forwarding(frame.rPort, frame.VID) == true) {
+//        // EGRESS
+//        egress(frame);
+//        // SEND
+//        dispatch(frame);
+////    }
+//}
 
 bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, EthernetIIFrame *frame, int rPort) {
     // Info from recepted frame
@@ -636,7 +647,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
     frameDesc.portList.push_back(egressPort);
     ISISadj *adj = this->isis->getAdjBySystemID(nextHopSysId, L1_TYPE, egressPort.port);
     if(egressPort.port < 0 || adj == NULL){
-        EV <<"dispatchTRILLDataUnicastRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
+        EV <<"Error: dispatchTRILLDataUnicastRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
         return false;
     }
 
@@ -1318,8 +1329,15 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
                 break;
 
             case RBMACTable::EST_RBRIDGE:
+                /*
+                 * This should never happen. When the frame innerFrame is unicast and this is the
+                 * destination RBridge, then it should be localy delivered.
+                 * This situation could mean that the end-station has relocated and therefore,
+                 * it's record should be deleted and when running ESADI, immediately initiate sending updating LSP.
+                 */
                 EV<< "TRILL: ERROR: ProcessTRILLDataUnicast" <<endl;
-                //TODO A!
+                //TODO A! change to dispatchNativeMulti (should be send on all links where this RBridge is App Fwd)
+
                 dispatchNativeRemote(innerFrameDesc);
                 return true;
                 break;

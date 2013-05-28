@@ -18,8 +18,8 @@
  * @file RBMACTable.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 19.3.2013
- * @brief
- * @detail
+ * @brief Represents forwarding table. Based on Zdenek Kraus's MACTable.
+ * @detail Represents forwarding table. Based on Zdenek Kraus's MACTable.
  * @todo Z9
  */
 
@@ -73,6 +73,7 @@ public:
           std::vector<int> portList; //vector is inteded for group addresses (multicast)
           unsigned char systemID[6]; //Use ingressNickname instead  ... //Egress RBridge System ID
           int ingressNickname; //ingressNickname
+          unsigned int confidence; //TODO A1 (might be useful RFC 6325 section 4.8.1 at the very end)
           ESTRecordType type; //how to handle record type
           ESTInputType inputType; //specify inserting method
           SimTime insertTime;
@@ -204,6 +205,46 @@ inline std::ostream& operator<<(std::ostream& os, const RBMACTable::ESTKey key){
     os <<"MAC address: " << key.first << " and VLAN: " << key.second;
     return os;
 }
+
+inline std::ostream& operator<<(std::ostream& os, const RBMACTable::ESTRecordType t) {
+    switch (t) {
+        case RBMACTable::EST_EMPTY:
+            os << "Empty";
+            break;
+        case RBMACTable::EST_LOCAL_PROCESS:
+            os << "Local processing";
+                        break;
+        case RBMACTable::EST_LOCAL_PORT: // for unicast destination (unicast source during learning)
+            os << "Local port";
+            break;
+        case RBMACTable::EST_RBRIDGE: // send to RBRidge
+            os << "Remote RBridge";
+            break;
+        case RBMACTable::EST_MULTICAST: //this option will be specified later
+            os << "Multi-destination";
+            break;
+    }
+
+    return os;
+}
+
+
+inline std::ostream& operator<<(std::ostream& os, const RBMACTable::ESTRecord record){
+//    os <<"MAC address: " << key.first << " and VLAN: " << key.second;
+
+
+//    os << addr.type;
+//    if (addr.spec != RBMACTable::NONE) {
+//        os << "(" << addr.spec << ")";
+//    }
+//    os << " " << addr.portList << " @" << addr.insert_time;
+//    return os;
+
+    os << record.type;
+    os << " " << record.portList << " @" << record.insertTime;
+    return os;
+}
+
 
 
 inline std::ostream& operator<<(std::ostream& os, const RBMACTable::tType t) {

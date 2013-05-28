@@ -14,9 +14,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 // @file RIPTimer.msg
-// @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-// @brief
-// @detail
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief RIP timer
+// @detail RIP timer
 
 cplusplus {{
 #include "IPv4Address.h"
@@ -41,6 +41,4 @@ enum RIPTimerType
 packet RIPTimer 
 {
     char timerKind enum(RIPTimerType) = RIP_GENERAL_UPDATE;
-    IPv4Address IPv4Address;                                //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char netmask;                                           //meaning in the case of RIP_ROUTE_TIMEOUT and RIP_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }

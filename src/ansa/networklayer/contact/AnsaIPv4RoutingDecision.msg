@@ -13,14 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.ansa.linklayer.rbridge;
+class noncobject IPv4Address;
+class noncobject MACAddress;
+class noncobject IPv4RoutingDecision;
 
+cplusplus {{
+#include "IPv4Address.h"
+#include "IPProtocolId_m.h"
+#include "MACAddress.h"
+#include "IPv4ControlInfo_m.h"
+}}
 //
-// TODO auto-generated type
+// TODO generated message class
 //
-simple RBPortTable
+class AnsaIPv4RoutingDecision extends IPv4RoutingDecision 
 {
-//       parameters:
-//        int portCount;
-    @display("i=block/table,yellow");
+	int vforwarderId = -1;
 }

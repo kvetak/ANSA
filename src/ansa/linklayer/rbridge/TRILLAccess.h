@@ -18,8 +18,8 @@
  * @file TRILLAccess.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date Mar 9, 2013
- * @brief 
- * @detail
+ * @brief Provides access to TRILL module.
+ * @detail Provides access to TRILL module.
  * @todo Z9
  */
 

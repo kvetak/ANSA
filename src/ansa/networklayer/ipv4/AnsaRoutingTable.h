@@ -70,6 +70,11 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        */
       virtual bool prepareForAddRoute(IPv4Route *route);
 
+      /**
+       * @see removeRouteSilent and prepareForAddRoute in @class ANSARoutingTable6
+       */
+      bool deleteRouteSilent(IPv4Route *entry);
+
       //rozsireni routing table
       virtual AnsaIPv4MulticastRoute *getRouteFor(IPv4Address group, IPv4Address source);
       virtual std::vector<AnsaIPv4MulticastRoute*> getRouteFor(IPv4Address group);
@@ -84,6 +89,8 @@ class INET_API AnsaRoutingTable : public RoutingTable {
 
       virtual bool isMulticastForwardingEnabled() { return multicastForward; }
 
+      virtual bool isLocalAddress(const IPv4Address& dest) const;
+      virtual InterfaceEntry *getInterfaceByAddress(const IPv4Address& addr) const;
 };
 
 #endif /* ANSAROUTINGTABLE_H_ */

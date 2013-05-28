@@ -12,6 +12,13 @@
 // License along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSARoutingTable6.cc
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended RoutingTable6
+ * @details Adds administrative distance, fixes routing table cache, IPv4-like routes updates
+ */
 
 #include <algorithm>
 
@@ -41,7 +48,12 @@ std::string ANSAIPv6Route::info() const
     std::stringstream out;
 
     out << getRouteSrcName();
-    out << " " << getDestPrefix() << "/" << getPrefixLength();
+    out << " ";
+    if (getDestPrefix().isUnspecified())
+        out << "::";
+    else
+        out << getDestPrefix();
+    out << "/" << getPrefixLength();
     out << " [" << getAdminDist() << "/" << getMetric() << "]";
     out << " via ";
     if (getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
@@ -155,9 +167,9 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
         ANSAIPv6Route *ANSARoute = dynamic_cast<ANSAIPv6Route *>(route);
         ANSAIPv6Route *ANSARouteInTable = dynamic_cast<ANSAIPv6Route *>(routeInTable);
 
-        //Assume that inet routes have AD -1
-        int newAdminDist = -1;
-        int oldAdminDist = -1;
+        //Assume that inet routes have AD 255
+        int newAdminDist = ANSAIPv6Route::dUnknown;
+        int oldAdminDist = ANSAIPv6Route::dUnknown;
 
         if (ANSARoute)
             newAdminDist = ANSARoute->getAdminDist();
@@ -166,20 +178,20 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
 
         if (oldAdminDist > newAdminDist)
         {
-            removeRoute(routeInTable);
+            removeRouteSilent(routeInTable);
         }
         else if(oldAdminDist == newAdminDist)
         {
             if (routeInTable->getMetric() > route->getMetric())
-                removeRoute(routeInTable);
+                removeRouteSilent(routeInTable);
+            else
+                return false;
         }
         else
         {
             return false;
         }
     }
-
-    return true;
 
     /*XXX: this deletes some cache entries we want to keep, but the node MUST update
      the Destination Cache in such a way that all entries will use the latest
@@ -310,6 +322,10 @@ void ANSARoutingTable6::addRoutingProtocolRoute(ANSAIPv6Route *route)
 
 void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
 {
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that the latest route information are used.*/
+    purgeDestCache();
+
     route->setRoutingTable(this);
     routeList.push_back(route);
 
@@ -328,6 +344,24 @@ void ANSARoutingTable6::removeRoute(IPv6Route *route)
     ASSERT(it!=routeList.end());
 
     nb->fireChangeNotification(NF_IPv6_ROUTE_DELETED, route); // rather: going to be deleted
+
+    routeList.erase(it);
+
+    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+     the Destination Cache in such a way that all entries using the next-hop from
+     the deleted route perform next-hop determination again rather than continue
+     sending traffic using that deleted route next-hop.*/
+    purgeDestCache();
+
+    delete route;
+
+    updateDisplayString();
+}
+
+void ANSARoutingTable6::removeRouteSilent(IPv6Route *route)
+{
+    RouteList::iterator it = std::find(routeList.begin(), routeList.end(), route);
+    ASSERT(it!=routeList.end());
 
     routeList.erase(it);
 

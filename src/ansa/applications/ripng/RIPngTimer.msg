@@ -14,9 +14,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 // @file RIPngTimer.msg
-// @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-// @brief
-// @detail
+// @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+// @brief RIPng timer
+// @detail RIPng timer
 
 cplusplus {{
 #include "IPv6Address.h"
@@ -41,6 +41,4 @@ enum RIPngTimerType
 packet RIPngTimer 
 {
     char timerKind enum(RIPngTimerType) = RIPNG_GENERAL_UPDATE;
-    IPv6Address IPv6Prefix;                                //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
-    char prefixLen;                                        //meaning in the case of RIPNG_ROUTE_TIMEOUT and RIPNG_ROUTE_GARBAGE_COLECTION_TIMEOUT
 }

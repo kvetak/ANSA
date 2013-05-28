@@ -37,7 +37,7 @@ import inet.ansa.linklayer.rbridge.RBridgeSplitter;
 
 import inet.ansa.linklayer.switch.sink;
 import inet.ansa.linklayer.rbridge.RBVLANTable;
-import inet.ansa.linklayer.rbridge.RBPortTable;
+//import inet.ansa.linklayer.rbridge.RBPortTable;
 
 import inet.ansa.linklayer.rbridge.RBridgeSplitter;
 import inet.ansa.linklayer.rbridge.RBEthernetInterface;
@@ -114,10 +114,10 @@ module RBridge
                 portCount = sizeof(ethg);
                 @display("p=165,44;is=l");
         }
-        rBPortTable: RBPortTable {
-            parameters:
-                @display("p=527,118");
-        }
+//        rBPortTable: RBPortTable {
+//            parameters:
+//                @display("p=527,118");
+//        }
         sink: sink {
             @display("p=314,295");
         }

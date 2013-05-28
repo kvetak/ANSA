@@ -12,13 +12,23 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+/**
+ * @file ANSAUDP.h
+ * @date 21.5.2013
+ * @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @brief Extended UDP
+ * @details Bind method in this class allows bind only to the specified port and than bind to
+ *          that port again but with the specified address
+ */
+
 #ifndef __INET_ANSA_ANSAUDP_H
 #define __INET_ANSA_ANSAUDP_H
 
 #include "UDP.h"
 
 /**
- * Created for the RIPng class - the findSocketByLocalAddress() method had to be reimplemented
+ * Created for the RIPng class - the bind() method had to be reimplemented using method
+ * ANSAfindSocketByLocalAddress() instead of findSocketByLocalAddress()
  * TODO: watch this class and changes in INET! - especially UDP class
  * @see UDP
  */
@@ -29,7 +39,8 @@ class ANSAUDP : public UDP
         virtual ~ANSAUDP();
 
     protected:
-        virtual SockDesc *findSocketByLocalAddress(const IPvXAddress& localAddr, ushort localPort);
+        virtual void bind(int sockId, int gateIndex, const IPvXAddress& localAddr, int localPort);
+        virtual SockDesc *ANSAfindSocketByLocalAddress(const IPvXAddress& localAddr, ushort localPort);
 };
 
 #endif /* __INET_ANSA_ANSAUDP_H */

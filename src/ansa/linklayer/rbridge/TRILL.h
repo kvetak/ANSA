@@ -18,8 +18,8 @@
  * @file TRILL.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 7.3.2013
- * @brief Based on Zdenek Kraus's AnsaSwitchCore
- * @detail
+ * @brief Header file for TRILL module.
+ * @detail Header file for TRILL module. Based on Zdenek Kraus's AnsaSwitchCore
  * @todo Z9
  */
 

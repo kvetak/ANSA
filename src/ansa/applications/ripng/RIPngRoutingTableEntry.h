@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 /**
-* @file RIPngInterface.cc
-* @author Jiri Trhlik (mailto:), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
-* @brief
-* @detail
+* @file RIPngRoutingTableEntry.h
+* @author Jiri Trhlik (mailto:jiritm@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+* @brief RIPng RTE
+* @detail Represents RIPng Routing Table Entry
 */
 
 #ifndef RIPNGROUTINGTABLEENTRY_H_
@@ -25,6 +25,8 @@
 #include "ANSARoutingTable6.h"
 
 #include "RIPngTimer_m.h"
+
+class RIPngProcess;
 
 namespace RIPng
 {
@@ -42,6 +44,7 @@ class RoutingTableEntry : public ANSAIPv6Route
   protected:
     RIPngTimer *_timeout;          ///< Pointer for the Route timeout timer
     RIPngTimer *_GCTimeout;        ///< Pointer for the Route Garbage-Collection Timer
+    RIPngProcess *_process;        ///< pointer to the RIPng process to which interface belongs
     bool _changeFlag;              ///< The Route Changed Flag
     unsigned short int _routeTag;  ///< The Route routeTag
     RoutingTableEntry *_copy;      ///< If this RTE is stored in the "RIPng routing table", this is reference to the RTE in the "global routing table" and vice versa
@@ -67,6 +70,9 @@ class RoutingTableEntry : public ANSAIPv6Route
     void setGCTimer(RIPngTimer *t) { _GCTimeout = t; }
     void setRouteTag(unsigned short int tag) { _routeTag = tag;}
     void setCopy(RoutingTableEntry *copy) { _copy = copy; }
+
+    void setProcess(RIPngProcess *p) { _process = p; }
+    RIPngProcess *getProcess() { return _process; }
 };
 
 } /* namespace RIPng */

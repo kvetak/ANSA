@@ -23,6 +23,7 @@
 
 #include "AnsaRoutingTable.h"
 #include "IPv4InterfaceData.h"
+#include "AnsaInterfaceEntry.h"
 
 Define_Module(AnsaRoutingTable);
 
@@ -77,9 +78,9 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
         ANSAIPv4Route *ANSARoute = dynamic_cast<ANSAIPv4Route *>(route);
         ANSAIPv4Route *ANSARouteInTable = dynamic_cast<ANSAIPv4Route *>(routeInTable);
 
-        //Assume that inet routes have AD -1
-        int newAdminDist = -1;
-        int oldAdminDist = -1;
+        //Assume that inet routes have AD 255
+        int newAdminDist = ANSAIPv4Route::dUnknown;
+        int oldAdminDist = ANSAIPv4Route::dUnknown;
 
         if (ANSARoute)
             newAdminDist = ANSARoute->getAdminDist();
@@ -88,12 +89,14 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
 
         if (oldAdminDist > newAdminDist)
         {
-            removeRoute(routeInTable);
+            deleteRouteSilent(routeInTable);
         }
         else if(oldAdminDist == newAdminDist)
         {
             if (routeInTable->getMetric() > route->getMetric())
-                removeRoute(routeInTable);
+                deleteRouteSilent(routeInTable);
+            else
+                return false;
         }
         else
         {
@@ -102,6 +105,22 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
     }
 
     return true;
+}
+
+bool AnsaRoutingTable::deleteRouteSilent(IPv4Route *entry)
+{
+    Enter_Method("deleteRouteSilent(...)");
+
+    entry = internalRemoveRoute(entry);
+
+    if (entry != NULL)
+    {
+        invalidateCache();
+        updateDisplayString();
+        ASSERT(entry->getRoutingTable() == this); // still filled in, for the listeners' benefit
+        delete entry;
+    }
+    return entry != NULL;
 }
 
 void AnsaRoutingTable::updateNetmaskRoutes()
@@ -343,7 +362,7 @@ bool AnsaRoutingTable::deleteMulticastRoute(const AnsaIPv4MulticastRoute *entry)
             delete entry->getPpt();
         }
         // delete timers from outgoing interfaces
-        InterfaceVector outInt = entry->getOutInt();
+        AnsaIPv4MulticastRoute::InterfaceVector outInt = entry->getOutInt();
         for (unsigned int j = 0;j < outInt.size(); j++)
         {
             if (outInt[j].pruneTimer != NULL)
@@ -447,33 +466,33 @@ void AnsaRoutingTable::generateShowIPMroute()
         if (ipr->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)
             if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
         os << "flags: ";
-        std::vector<flag> flags = ipr->getFlags();
+        std::vector<AnsaIPv4MulticastRoute::flag> flags = ipr->getFlags();
         for (unsigned int j = 0; j < flags.size(); j++)
         {
             switch(flags[j])
             {
-                case D:
+                case AnsaIPv4MulticastRoute::D:
                     os << "D";
                     break;
-                case S:
+                case AnsaIPv4MulticastRoute::S:
                     os << "S";
                     break;
-                case C:
+                case AnsaIPv4MulticastRoute::C:
                     os << "C";
                     break;
-                case P:
+                case AnsaIPv4MulticastRoute::P:
                     os << "P";
                     break;
-                case A:
+                case AnsaIPv4MulticastRoute::A:
                     os << "A";
                     break;
-                case F:
+                case AnsaIPv4MulticastRoute::F:
                     os << "F";
                     break;
-                case T:
+                case AnsaIPv4MulticastRoute::T:
                     os << "T";
                     break;
-                case NO_FLAG:
+                case AnsaIPv4MulticastRoute::NO_FLAG:
                     break;
             }
         }
@@ -486,17 +505,18 @@ void AnsaRoutingTable::generateShowIPMroute()
         else os << "RPF neighbor " << ipr->getInIntNextHop() << endl;
         os << "Outgoing interface list:" << endl;
 
-        InterfaceVector all = ipr->getOutInt();
+        AnsaIPv4MulticastRoute::InterfaceVector all = ipr->getOutInt();
         if (all.size() == 0)
             os << "Null" << endl;
         else
             for (unsigned int k = 0; k < all.size(); k++)
             {
-                if ((all[k].mode == Sparsemode && all[k].shRegTun == true) || all[k].mode == Densemode)
+                if ((all[k].mode == AnsaIPv4MulticastRoute::Sparsemode && all[k].shRegTun == true)
+                        || all[k].mode ==AnsaIPv4MulticastRoute:: Densemode)
                 {
                     os << all[k].intPtr->getName() << ", ";
-                    if (all[k].forwarding == Forward) os << "Forward/"; else os << "Pruned/";
-                    if (all[k].mode == Densemode) os << "Dense"; else os << "Sparse";
+                    if (all[k].forwarding == AnsaIPv4MulticastRoute::Forward) os << "Forward/"; else os << "Pruned/";
+                    if (all[k].mode == AnsaIPv4MulticastRoute::Densemode) os << "Dense"; else os << "Sparse";
                     os << endl;
                 }
                 else
@@ -534,3 +554,52 @@ std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRoutesForSource(IPv4Ad
     }
     return routes;
 }
+
+bool AnsaRoutingTable::isLocalAddress(const IPv4Address& dest) const
+{
+    Enter_Method("isLocalAddress A (%u.%u.%u.%u)", dest.getDByte(0), dest.getDByte(1), dest.getDByte(2), dest.getDByte(3)); // note: str().c_str() too slow here
+
+    if (localAddresses.empty())
+    {
+        // collect interface addresses if not yet done
+        for (int i=0; i<ift->getNumInterfaces(); i++)
+        {
+            IPv4Address interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
+            localAddresses.insert(interfaceAddr);
+        }
+    }
+
+    for (int i=0; i<ift->getNumInterfaces(); i++)
+    {
+        AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterface(i));
+        if (ieVF && ieVF->hasIPAddress(dest))
+            return true;
+    }
+
+    AddressSet::iterator it = localAddresses.find(dest);
+    return it!=localAddresses.end();
+}
+
+InterfaceEntry *AnsaRoutingTable::getInterfaceByAddress(const IPv4Address& addr) const
+{
+    Enter_Method("getInterfaceByAddress(%u.%u.%u.%u)", addr.getDByte(0), addr.getDByte(1), addr.getDByte(2), addr.getDByte(3)); // note: str().c_str() too slow here
+
+    if (addr.isUnspecified())
+        return NULL;
+    for (int i=0; i<ift->getNumInterfaces(); ++i)
+    {
+        InterfaceEntry* ie = ift->getInterface(i);
+        if (ie->ipv4Data()->getIPAddress()==addr)
+            return ie;
+
+        if (!ie->isLoopback() && dynamic_cast<AnsaInterfaceEntry *>(ie))
+        {
+            AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ie);
+            if (ieVF->hasIPAddress(addr))
+                return ie;
+
+        }
+    }
+    return NULL;
+}
+
