@@ -1301,19 +1301,19 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
      */
     ISISLANHelloPacket *hello = new ISISLANHelloPacket("Hello");
     //set appropriate destination MAC addresses
-    MACAddress ma;
+//    MACAddress ma;
 
     if (circuitType == L1_TYPE)
     {
         hello->setType(LAN_L1_HELLO);
         disID = iface->L1DIS;
-        ma.setAddress(ISIS_ALL_L1_IS);
+//        ma.setAddress(ISIS_ALL_L1_IS);
     }
     else if (circuitType == L2_TYPE)
     {
         hello->setType(LAN_L2_HELLO);
         disID = iface->L2DIS;
-        ma.setAddress(ISIS_ALL_L2_IS);
+//        ma.setAddress(ISIS_ALL_L2_IS);
     }
     else
     {
@@ -1321,7 +1321,7 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
         return;
     }
 
-    hello->setCircuitType(circuitType);
+//    hello->setCircuitType(circuitType);
 
     //set source id
     for (unsigned int i = 0; i < 6; i++)
@@ -1329,24 +1329,18 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
         hello->setSourceID(i, sysId[i]);
     }
 
-    /* TODO B1
-     * They should have separate Ethernet control info but OMNeT++ simulation
-     doesn't recognize 01:80:c2:00:00:14 and 01:80:c2:00:00:15 as multicast OSI
-     MAC addresses. Therefore destination MAC address is always set to broadcast
-     ff:ff:ff:ff:ff:ff
-     */
 
-    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 
     // set DSAP & NSAP fields
-    ctrl->setDsap(SAP_CLNS);
-    ctrl->setSsap(SAP_CLNS);
-
-    ctrl->setDest(ma);
+//    ctrl->setDsap(SAP_CLNS);
+//    ctrl->setSsap(SAP_CLNS);
+//
+//    ctrl->setDest(ma);
 
 
     //assign Ethernet control info
-    hello->setControlInfo(ctrl);
+//    hello->setControlInfo(ctrl);
 
     //set TLVs
     TLV_t myTLV;
@@ -1415,32 +1409,32 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 
 
     //TODO change to appropriate layer-2 protocol
-    Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
+//    Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
 
     // set DSAP & NSAP fields
-    ctrlPtp->setDsap(SAP_CLNS);
-    ctrlPtp->setSsap(SAP_CLNS);
+//    ctrlPtp->setDsap(SAP_CLNS);
+//    ctrlPtp->setSsap(SAP_CLNS);
 
     //set appropriate destination MAC addresses
-    MACAddress ma;
-
-    if (iface->circuitType == L1_TYPE)
-    {
-        ma.setAddress(ISIS_ALL_L1_IS);
-    }
-    else
-    {
-        ma.setAddress(ISIS_ALL_L2_IS);
-    }
-
-
-    ctrlPtp->setDest(ma);
+//    MACAddress ma;
+//
+//    if (iface->circuitType == L1_TYPE)
+//    {
+//        ma.setAddress(ISIS_ALL_L1_IS);
+//    }
+//    else
+//    {
+//        ma.setAddress(ISIS_ALL_L2_IS);
+//    }
+//
+//
+//    ctrlPtp->setDest(ma);
 
     //type
     ISISPTPHelloPacket *ptpHello = new ISISPTPHelloPacket("PTP Hello");
 
     //assign Ethernet control info
-    ptpHello->setControlInfo(ctrlPtp);
+//    ptpHello->setControlInfo(ctrlPtp);
     //circuitType
     ptpHello->setCircuitType(iface->circuitType);
 
@@ -4261,19 +4255,19 @@ void ISIS::sendCsnp(ISISTimer *timer)
         }
         packet->setLength(0); //TODO set to length of header
 
-        //add Ethernet control info
-        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-
-        // set DSAP & NSAP fields
-        ctrl->setDsap(SAP_CLNS);
-        ctrl->setSsap(SAP_CLNS);
-
-        //set destination broadcast address
-        //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-        MACAddress ma;
-        ma.setAddress("ff:ff:ff:ff:ff:ff");
-        ctrl->setDest(ma);
-        packet->setControlInfo(ctrl);
+//        //add Ethernet control info
+//        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//
+//        // set DSAP & NSAP fields
+//        ctrl->setDsap(SAP_CLNS);
+//        ctrl->setSsap(SAP_CLNS);
+//
+//        //set destination broadcast address
+//        //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
+//        MACAddress ma;
+//        ma.setAddress("ff:ff:ff:ff:ff:ff");
+//        ctrl->setDest(ma);
+//        packet->setControlInfo(ctrl);
 
         //set system ID field which consists of my system id + zero circuit id inc this case
         for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
@@ -4463,20 +4457,20 @@ void ISIS::sendPsnp(ISISTimer *timer)
     }
     packet->setLength(0); //TODO set to length of header
 
-    //add Ethernet control info
-    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-
-    // set DSAP & NSAP fields
-    ctrl->setDsap(SAP_CLNS);
-    ctrl->setSsap(SAP_CLNS);
-
-    //set destination broadcast address
-    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-    ctrl->setDest(ma);
-
-    packet->setControlInfo(ctrl);
+//    //add Ethernet control info
+//    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//
+//    // set DSAP & NSAP fields
+//    ctrl->setDsap(SAP_CLNS);
+//    ctrl->setSsap(SAP_CLNS);
+//
+//    //set destination broadcast address
+//    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
+//    MACAddress ma;
+//    ma.setAddress("ff:ff:ff:ff:ff:ff");
+//    ctrl->setDest(ma);
+//
+//    packet->setControlInfo(ctrl);
 
     //set system ID field which consists of my system id + zero circuit id in this case
     for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
@@ -5156,20 +5150,20 @@ void ISIS::sendLSP(LSPRecord *lspRec, int gateIndex)
     }
 
     ISISLSPPacket *tmpLSP = lspRec->LSP->dup();
-    //TODO add proper control Info for point-to-point
-    Ieee802Ctrl *tmpCtrl = new Ieee802Ctrl();
-
-    // set DSAP & NSAP fields
-    tmpCtrl->setDsap(SAP_CLNS);
-    tmpCtrl->setSsap(SAP_CLNS);
-
-    //set destination broadcast address
-    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-    tmpCtrl->setDest(ma);
-
-    tmpLSP->setControlInfo(tmpCtrl);
+//    //TODO add proper control Info for point-to-point
+//    Ieee802Ctrl *tmpCtrl = new Ieee802Ctrl();
+//
+//    // set DSAP & NSAP fields
+//    tmpCtrl->setDsap(SAP_CLNS);
+//    tmpCtrl->setSsap(SAP_CLNS);
+//
+//    //set destination broadcast address
+//    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
+//    MACAddress ma;
+//    ma.setAddress("ff:ff:ff:ff:ff:ff");
+//    tmpCtrl->setDest(ma);
+//
+//    tmpLSP->setControlInfo(tmpCtrl);
 
     send(tmpLSP, "lowerLayerOut", gateIndex);
     EV<< "ISIS::sendLSP: Source-ID: ";
