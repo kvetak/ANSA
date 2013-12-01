@@ -1300,16 +1300,20 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
      ISISL2HelloPacket *helloL2 = new ISISL2HelloPacket("L2 Hello");
      */
     ISISLANHelloPacket *hello = new ISISLANHelloPacket("Hello");
+    //set appropriate destination MAC addresses
+    MACAddress ma;
 
     if (circuitType == L1_TYPE)
     {
         hello->setType(LAN_L1_HELLO);
         disID = iface->L1DIS;
+        ma.setAddress(ISIS_ALL_L1_IS);
     }
     else if (circuitType == L2_TYPE)
     {
         hello->setType(LAN_L2_HELLO);
         disID = iface->L2DIS;
+        ma.setAddress(ISIS_ALL_L2_IS);
     }
     else
     {
@@ -1317,18 +1321,11 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
         return;
     }
 
-        //set circuit type field
-        /*helloL1->setCircuitType(L1_TYPE);
-         helloL2->setCircuitType(L2_TYPE);
-         */
     hello->setCircuitType(circuitType);
 
     //set source id
     for (unsigned int i = 0; i < 6; i++)
     {
-        /*helloL1->setSourceID(i, sysId[i]);
-         helloL2->setSourceID(i, sysId[i]);
-         */
         hello->setSourceID(i, sysId[i]);
     }
 
@@ -1340,24 +1337,15 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
      */
 
     Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-//    Ieee802Ctrl *ctrl2;
 
     // set DSAP & NSAP fields
     ctrl->setDsap(SAP_CLNS);
     ctrl->setSsap(SAP_CLNS);
 
-    //set appropriate destination MAC addresses
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-
     ctrl->setDest(ma);
 
-//    ctrl2 = ctrl->dup();
 
-    /*//assign Ethernet control info
-     helloL1->setControlInfo(ctrl);
-     helloL2->setControlInfo(ctrl2);
-     */
+    //assign Ethernet control info
     hello->setControlInfo(ctrl);
 
     //set TLVs
@@ -1365,59 +1353,11 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
     //helloL1->setTLVArraySize(0);
 
     //set area address
-    /*
-     this->addTLV(helloL1, AREA_ADDRESS, L1_TYPE); //last parameter is not needed
-     this->addTLV(helloL2, AREA_ADDRESS, L2_TYPE);
-     */
-
     this->addTLV(hello, AREA_ADDRESS, circuitType);
-    //set area address
-    /*    myTLV.type = AREA_ADDRESS;
-     myTLV.length = 3;
-     myTLV.value = new unsigned char[3];
-     this->copyArrayContent((unsigned char *) areaId, myTLV.value, 3, 0, 0);
-     unsigned int tlvSize = helloL1->getTLVArraySize();
-     helloL1->setTLVArraySize(tlvSize + 1); //resize array
-     helloL1->setTLV(tlvSize, myTLV);
-
-     tlvSize = helloL2->getTLVArraySize();
-     helloL2->setTLVArraySize(tlvSize + 1); //resize array
-     helloL2->setTLV(tlvSize, myTLV);*/
 
     //set NEIGHBOURS
-    /*this->addTLV(helloL1, IS_NEIGHBOURS_HELLO, L1_TYPE); //last parameter is not needed
-     this->addTLV(helloL2, IS_NEIGHBOURS_HELLO, L2_TYPE);*/
-
     this->addTLV(hello, IS_NEIGHBOURS_HELLO, circuitType, gateIndex);
 
-    //set NEIGHBOURS L1 TLV
-    /*myTLV.type = IS_NEIGHBOURS_HELLO;
-     myTLV.length = adjL1Table.size() * 6; //number of records * 6 (6 is size of system ID/MAC address)
-     myTLV.value = new unsigned char[adjL1Table.size() * 6];
-
-     for (unsigned int h = 0; h < adjL1Table.size(); h++)
-     {
-     this->copyArrayContent(adjL1Table.at(h).mac.getAddressBytes(), myTLV.value, 6, 0, h * 6);
-     }
-
-     tlvSize = helloL1->getTLVArraySize();
-     helloL1->setTLVArraySize(tlvSize + 1);
-     helloL1->setTLV(tlvSize, myTLV);
-
-     //L2 neighbours
-     myTLV.type = IS_NEIGHBOURS_HELLO;
-     myTLV.length = adjL2Table.size() * 6; //number of records * 6 (6 is size of system ID/MAC address)
-     myTLV.value = new unsigned char[adjL2Table.size() * 6];
-     //L2 neighbours
-     for (unsigned int h = 0; h < adjL2Table.size(); h++)
-     {
-     this->copyArrayContent(adjL2Table.at(h).mac.getAddressBytes(), myTLV.value, 6, 0, h * 6);
-     }
-
-     tlvSize = helloL2->getTLVArraySize();
-     helloL2->setTLVArraySize(tlvSize + 1);
-     helloL2->setTLV(tlvSize, myTLV);
-     */
 
     //TODO PADDING TLV is omitted
     //TODO Authentication TLV
@@ -1473,12 +1413,6 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
         return;
     }
 
-    /* TODO B1
-     * They should have separate Ethernet control info but OMNeT++ simulation
-     doesn't recognize 01:80:c2:00:00:14 and 01:80:c2:00:00:15 as multicast OSI
-     MAC addresses. Therefore destination MAC address is always set to broadcast
-     ff:ff:ff:ff:ff:ff
-     */
 
     //TODO change to appropriate layer-2 protocol
     Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
@@ -1489,7 +1423,16 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 
     //set appropriate destination MAC addresses
     MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
+
+    if (iface->circuitType == L1_TYPE)
+    {
+        ma.setAddress(ISIS_ALL_L1_IS);
+    }
+    else
+    {
+        ma.setAddress(ISIS_ALL_L2_IS);
+    }
+
 
     ctrlPtp->setDest(ma);
 
@@ -1521,51 +1464,13 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
     //set TLVs
     TLV_t myTLV;
 
-    this->addTLV(ptpHello, AREA_ADDRESS, circuitType);
     //set area address
-    /*    myTLV.type = AREA_ADDRESS;
-     myTLV.length = 3;
-     myTLV.value = new unsigned char[3];
-     this->copyArrayContent((unsigned char *) areaId, myTLV.value, 3, 0, 0);
+    this->addTLV(ptpHello, AREA_ADDRESS, circuitType);
 
-     unsigned int tlvSize = ptpHello->getTLVArraySize();
-     ptpHello->setTLVArraySize(tlvSize + 1);
-     ptpHello->setTLV(tlvSize, myTLV);*/
-
+    //ptp adjacency state TLV #240
     this->addTLV(ptpHello, PTP_HELLO_STATE, circuitType, gateIndex);
-    /* //ptp adjacency state TLV #240
 
-     myTLV.type = PTP_HELLO_STATE;
-     myTLV.length = 1;
-     myTLV.value = new unsigned char[myTLV.length];
-     ISISadj* tempAdj;
-     //if adjacency for this interface exists, then its state is either UP or INIT
-     //we also assumes that on point-to-point link only one adjacency can exist
-     //TODO we check appropriate level adjacency table, but what to do for L1L2? In such case there's should be adjacency in both tables so we check just L1
-     if ((tempAdj = this->getAdjByGateIndex(ISISIft.at(gateIndex).gateIndex, circuitType) ) != NULL)
-     {
-     if (!tempAdj->state)
-     {
-     myTLV.value[0] = PTP_INIT;
-     EV << "ISIS::sendPTPHello: sending state PTP_INIT "<< endl;
-     }
-     else
-     {
-     myTLV.value[0] = PTP_UP;
-     EV << "ISIS::sendPTPHello: sending state PTP_UP "<< endl;
-     }
-
-     }
-     else
-     {
-     //if adjacency doesn't exist yet, then it's for sure down
-     myTLV.value[0] = PTP_DOWN;
-     EV << "ISIS::sendPTPHello: sending state PTP_DOWN "<< endl;
-     }
-     tlvSize = ptpHello->getTLVArraySize();
-     ptpHello->setTLVArraySize(tlvSize + 1);
-     ptpHello->setTLV(tlvSize, myTLV);
-     //TODO TLV #129 Protocols supported*/
+     //TODO TLV #129 Protocols supported
 
     this->send(ptpHello, "lowerLayerOut", iface->gateIndex);
 
@@ -1765,71 +1670,7 @@ void ISIS::sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex, short c
         this->send(trillHello, "lowerLayerOut", gateIndex);
 
     }
-//
-//    unsigned int tlvSize;
-//    unsigned char * disID;
-////    ISISinterface *iface = &(this->ISISIft.at(interfaceIndex));
-//
-//    TRILLHelloPacket *hello = new TRILLHelloPacket("TRILL Hello");
-//
-//    //TRILL hello currently supports only L1
-//    disID = iface->L1DIS;
-//
-//    //set source id
-//    for (unsigned int i = 0; i < 6; i++)
-//    {
-//        hello->setSourceID(i, sysId[i]);
-//    }
-//
-//    hello->setMaxAreas(1);
-//
-//    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-//
-//    // set DSAP & NSAP fields
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
-//
-//    //set appropriate destination MAC addresses
-//    MACAddress ma;
-//    ma.setAddress("01:80:c2:00:00:14");
-//    ctrl->setDest(ma);
-//
-//    //assign Ethernet control info
-//    hello->setControlInfo(ctrl);
-//
-//    //set TLVs
-//    TLV_t myTLV;
-//    //helloL1->setTLVArraySize(0);
-//
-//
-//    this->addTLV(hello, AREA_ADDRESS, circuitType);
-//    this->addTLV(hello, TLV_TRILL_NEIGHBOR, circuitType, gateIndex);
-//
-//
-//
-//
-//   //TODO protocols supported NLPID code 0xC0
-//
-//    //TODO PADDING TLV is omitted
-//    //TODO Authentication TLV
-//    //TODO add eventually another TLVs (eg. from RFC 1195)
-//    //don't send hello packets from passive interfaces
-//    if (!iface->passive && iface->ISISenabled)
-//    {
-//        // if this interface is DIS for LAN, hellos are sent 3-times faster (3.33sec instead of 10.0)
-//        // decision is made according to global hello counter (dirty hax - don't blame me pls, but i don't have time to code it nice way :)
-//
-//        //set LAN ID field (DIS-ID)
-//        for (unsigned int j = 0; j < 7; j++)
-//        {
-//            hello->setLanID(j, disID[j]);
-//        }
-//
-//        hello->setPriority(iface->priority);
-//        send(hello, "lowerLayerOut", iface->gateIndex);
-//        EV << "'devideId :" << deviceId << " ISIS: L1 Hello packet was sent from " << iface->entry->getName() << "\n";
-//
-//    }
+
 
 }
 
@@ -1850,13 +1691,6 @@ void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuit
         return;
     }
 
-    /* TODO B1
-     * They should have separate Ethernet control info but OMNeT++ simulation
-     doesn't recognize 01:80:c2:00:00:14 and 01:80:c2:00:00:15 as multicast OSI
-     MAC addresses. Therefore destination MAC address is always set to broadcast
-     ff:ff:ff:ff:ff:ff
-     */
-
     //TODO change to appropriate layer-2 protocol
     Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
 
@@ -1866,7 +1700,10 @@ void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuit
 
     //set appropriate destination MAC addresses
     MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
+    /*
+     * I assume that since there is only one level, destination is All ISIS Systems.
+     */
+    ma.setAddress(ALL_IS_IS_RBRIDGES);
 
     ctrlPtp->setDest(ma);
 
@@ -1926,7 +1763,7 @@ void ISIS::schedule(ISISTimer *timer, double timee)
             break;
         }
         case (TRILL_HELLO_TIMER): {
-
+            //no brak here is on purpose
         }
 
         case (HELLO_TIMER): {

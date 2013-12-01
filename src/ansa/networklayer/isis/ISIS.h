@@ -61,6 +61,10 @@
 //#include "TRILL.h"
 class TRILL;
 
+//Multicast MAC adresses 01:80:c2:00:00:14 and :15 works so replace the ff:ff:...
+#define ISIS_ALL_L1_IS "01:80:c2:00:00:14"
+#define ISIS_ALL_L2_IS "01:80:c2:00:00:15"
+
 //class ISISLSPPacket;
 /**
  * Single class providing all functionality of whole module.
