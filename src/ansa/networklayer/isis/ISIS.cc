@@ -266,11 +266,6 @@ void ISIS::receiveChangeNotification(int category, const cObject *details)
 
         }
 
-
-
-
-
-
     }
 }
 
@@ -318,283 +313,7 @@ void ISIS::initialize(int stage)
         DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
         devConf->loadISISConfig(this, this->mode);
 
-        /*
-         //        ift = AnsaInterfaceTableAccess().get();
-         ift = InterfaceTableAccess().get();
-         if (ift == NULL) {
-         throw cRuntimeError("AnsaInterfaceTable not found");
-         }
 
-         clnsTable = CLNSTableAccess().get();
-
-
-         nb = NotificationBoardAccess().get();
-         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-         nb->subscribe(this, NF_CLNS_ROUTE_DELETED);
-
-         //TODO
-         this->mode = L2_ISIS_MODE;
-
-
-         cXMLElement *device = xmlParser::GetDevice(deviceType.c_str(), deviceId.c_str(),
-         configFile.c_str());
-         if (device == NULL) {
-         EV << "deviceId " << deviceId
-         << ": Can't find device in config file\n";
-         return;
-         }
-
-         //load IS-IS routing info from config file
-         cXMLElement *isisRouting = xmlParser::GetIsisRouting(device);
-         if (isisRouting == NULL) {
-         EV << "deviceId " << deviceId
-         << ": ISIS is not enabled on this device\n";
-         return;
-         }
-         //TODO: multiple NETs for migrating purposes (merging, splitting areas)
-         cXMLElement *net = isisRouting->getFirstChildWithTag("NET");
-         if (net == NULL) {
-         EV << "deviceId " << deviceId
-         << ": Net address wasn't specified in IS-IS routing\n";
-         return;
-         }
-
-         netAddr =  net->getNodeValue();
-         if (netAddr == "") {
-         EV << "deviceId " << deviceId
-         << ": Net address wasn't specified in IS-IS routing\n";
-         return;
-         } else {
-         if (!parseNetAddr()) {
-         EV << "deviceId " << deviceId
-         << ": Invalid net address format\n";
-         return;
-         } else {
-         EV << "deviceId " << deviceId << ": Net address set to: "
-         << netAddr << "\n";
-         }
-         }
-
-         //set router IS type {L1 | L2 | L1L2 (default)}
-         cXMLElement *routertype = isisRouting->getFirstChildWithTag("IS-Type");
-         if (routertype == NULL) {
-         this->isType = L1L2_TYPE;
-         } else {
-         const char* routerTypeValue = routertype->getNodeValue();
-         if (routerTypeValue == NULL) {
-         this->isType = L1L2_TYPE;
-         } else {
-         if (strcmp(routerTypeValue, "level-1") == 0) {
-         this->isType = L1_TYPE;
-         } else {
-         if (strcmp(routerTypeValue, "level-2") == 0) {
-         this->isType = L2_TYPE;
-         } else {
-         this->isType = L1L2_TYPE;
-         }
-         }
-         }
-         }
-
-         //set L1 hello interval in seconds
-         cXMLElement *L1HelloInt = isisRouting->getFirstChildWithTag(
-         "L1-Hello-Interval");
-         if (L1HelloInt == NULL || L1HelloInt->getNodeValue() == NULL) {
-         this->L1HelloInterval = ISIS_HELLO_INTERVAL;
-         } else {
-         this->L1HelloInterval = atoi(L1HelloInt->getNodeValue());
-         }
-
-         //set L1 hello multiplier
-         cXMLElement *L1HelloMult = isisRouting->getFirstChildWithTag(
-         "L1-Hello-Multiplier");
-         if (L1HelloMult == NULL || L1HelloMult->getNodeValue() == NULL) {
-         this->L1HelloMultiplier = ISIS_HELLO_MULTIPLIER;
-         } else {
-         this->L1HelloMultiplier = atoi(L1HelloMult->getNodeValue());
-         }
-
-         //set L2 hello interval in seconds
-         cXMLElement *L2HelloInt = isisRouting->getFirstChildWithTag(
-         "L2-Hello-Interval");
-         if (L2HelloInt == NULL || L2HelloInt->getNodeValue() == NULL) {
-         this->L2HelloInterval = ISIS_HELLO_INTERVAL;
-         } else {
-         this->L2HelloInterval = atoi(L2HelloInt->getNodeValue());
-         }
-
-         //set L2 hello multiplier
-         cXMLElement *L2HelloMult = isisRouting->getFirstChildWithTag(
-         "L2-Hello-Multiplier");
-         if (L2HelloMult == NULL || L2HelloMult->getNodeValue() == NULL) {
-         this->L2HelloMultiplier = ISIS_HELLO_MULTIPLIER;
-         } else {
-         this->L2HelloMultiplier = atoi(L2HelloMult->getNodeValue());
-         }
-
-         //set lspInterval
-         cXMLElement *cxlspInt = isisRouting->getFirstChildWithTag("LSP-Interval");
-         if (cxlspInt == NULL || cxlspInt->getNodeValue() == NULL)
-         {
-         this->lspInterval = ISIS_LSP_INTERVAL;
-         }
-         else
-         {
-         this->lspInterval = atoi(cxlspInt->getNodeValue());
-         }
-
-         //set lspRefreshInterval
-         cXMLElement *cxlspRefInt = isisRouting->getFirstChildWithTag("LSP-Refresh-Interval");
-         if (cxlspRefInt == NULL || cxlspRefInt->getNodeValue() == NULL)
-         {
-         this->lspRefreshInterval = ISIS_LSP_REFRESH_INTERVAL;
-         }
-         else
-         {
-         this->lspRefreshInterval = atoi(cxlspRefInt->getNodeValue());
-         }
-
-         //set lspMaxLifetime
-         cXMLElement *cxlspMaxLife = isisRouting->getFirstChildWithTag("LSP-Max-Lifetime");
-         if (cxlspMaxLife == NULL || cxlspMaxLife->getNodeValue() == NULL)
-         {
-         this->lspMaxLifetime = ISIS_LSP_MAX_LIFETIME;
-         }
-         else
-         {
-         this->lspMaxLifetime = atoi(cxlspMaxLife->getNodeValue());
-         }
-
-         //set L1LspGenInterval (CISCO's
-         cXMLElement *cxL1lspGenInt = isisRouting->getFirstChildWithTag("L1-LSP-Gen-Interval");
-         if (cxL1lspGenInt == NULL || cxL1lspGenInt->getNodeValue() == NULL)
-         {
-         this->L1LspGenInterval = ISIS_LSP_GEN_INTERVAL;
-         }
-         else
-         {
-         this->L1LspGenInterval = atoi(cxL1lspGenInt->getNodeValue());
-         }
-
-         //set L2LspGenInterval
-         cXMLElement *cxL2lspGenInt = isisRouting->getFirstChildWithTag("L2-LSP-Gen-Interval");
-         if (cxL2lspGenInt == NULL || cxL2lspGenInt->getNodeValue() == NULL)
-         {
-         this->L2LspGenInterval = ISIS_LSP_GEN_INTERVAL;
-         }
-         else
-         {
-         this->L2LspGenInterval = atoi(cxL2lspGenInt->getNodeValue());
-         }
-
-         //set L1LspSendInterval
-         cXMLElement *cxL1lspSendInt = isisRouting->getFirstChildWithTag("L1-LSP-Send-Interval");
-         if (cxL1lspSendInt == NULL || cxL1lspSendInt->getNodeValue() == NULL)
-         {
-         this->L1LspSendInterval = ISIS_LSP_SEND_INTERVAL;
-         }
-         else
-         {
-         this->L1LspSendInterval = atoi(cxL1lspSendInt->getNodeValue());
-         }
-
-         //set L2LspSendInterval
-         cXMLElement *cxL2lspSendInt = isisRouting->getFirstChildWithTag("L2-LSP-Send-Interval");
-         if (cxL2lspSendInt == NULL || cxL2lspSendInt->getNodeValue() == NULL)
-         {
-         this->L2LspSendInterval = ISIS_LSP_SEND_INTERVAL;
-         }
-         else
-         {
-         this->L2LspSendInterval = atoi(cxL2lspSendInt->getNodeValue());
-         }
-
-         //set L1LspInitWait
-         cXMLElement *cxL1lspInitWait = isisRouting->getFirstChildWithTag("L1-LSP-Init-Wait");
-         if (cxL1lspInitWait == NULL || cxL1lspInitWait->getNodeValue() == NULL)
-         {
-         this->L1LspInitWait = ISIS_LSP_INIT_WAIT;
-         }
-         else
-         {
-         this->L1LspInitWait = atoi(cxL1lspInitWait->getNodeValue());
-         }
-         //set L2LspInitWait
-         cXMLElement *cxL2lspInitWait = isisRouting->getFirstChildWithTag("L2-LSP-Init-Wait");
-         if (cxL2lspInitWait == NULL || cxL2lspInitWait->getNodeValue() == NULL)
-         {
-         this->L2LspInitWait = ISIS_LSP_INIT_WAIT;
-         }
-         else
-         {
-         this->L2LspInitWait = atoi(cxL2lspInitWait->getNodeValue());
-         }
-
-         //set L1CsnpInterval
-         cXMLElement *cxL1CsnpInt = isisRouting->getFirstChildWithTag("L1-CSNP-Interval");
-         if (cxL1CsnpInt == NULL || cxL1CsnpInt->getNodeValue() == NULL)
-         {
-         this->L1CSNPInterval = ISIS_CSNP_INTERVAL;
-         }
-         else
-         {
-         this->L1CSNPInterval = atoi(cxL1CsnpInt->getNodeValue());
-         }
-
-         //set L2CsnpInterval
-         cXMLElement *cxL2CsnpInt = isisRouting->getFirstChildWithTag("L2-CSNP-Interval");
-         if (cxL2CsnpInt == NULL || cxL2CsnpInt->getNodeValue() == NULL)
-         {
-         this->L2CSNPInterval = ISIS_CSNP_INTERVAL;
-         }
-         else
-         {
-         this->L2CSNPInterval = atoi(cxL2CsnpInt->getNodeValue());
-         }
-
-         //set L1PsnpInterval
-         cXMLElement *cxL1PsnpInt = isisRouting->getFirstChildWithTag("L1-PSNP-Interval");
-         if (cxL1PsnpInt == NULL || cxL1PsnpInt->getNodeValue() == NULL)
-         {
-         this->L1PSNPInterval = ISIS_CSNP_INTERVAL;
-         }
-         else
-         {
-         this->L1PSNPInterval = atoi(cxL1PsnpInt->getNodeValue());
-         }
-
-         //set L2PsnpInterval
-         cXMLElement *cxL2PsnpInt = isisRouting->getFirstChildWithTag("L2-PSNP-Interval");
-         if (cxL2PsnpInt == NULL || cxL2PsnpInt->getNodeValue() == NULL)
-         {
-         this->L2PSNPInterval = ISIS_CSNP_INTERVAL;
-         }
-         else
-         {
-         this->L2PSNPInterval = atoi(cxL2PsnpInt->getNodeValue());
-         }
-
-
-         cXMLElement *interfaces = device->getFirstChildWithTag("Interfaces");
-         if (interfaces == NULL) {
-         EV
-         << "deviceId "
-         << deviceId
-         << ": <Interfaces></Interfaces> tag is missing in configuration file: \""
-         << configFile << "\"\n";
-         return;
-         }
-
-         // add all interfaces to ISISIft vector containing additional information
-         InterfaceEntry *entryIFT = new InterfaceEntry(this); //TODO added "this" -> experimental
-         for (int i = 0; i < ift->getNumInterfaces(); i++) {
-         entryIFT = ift->getInterface(i);
-         //EV << entryIFT->getNetworkLayerGateIndex() << " " << entryIFT->getName() << " " << entryIFT->getFullName() << "\n";
-         this->insertIft(
-         entryIFT,
-         interfaces->getFirstChildWithAttribute("Interface", "name",
-         entryIFT->getName()));
-         }*/
 
         //TODO passive-interface
         //create SRMQueue for each interface (even though it would be used only for broadcast interfaces)
@@ -1342,11 +1061,11 @@ void ISIS::handleMessage(cMessage* msg)
             //get circuit type for arrival interface
             short circuitType = tmpIntf->circuitType;
 
-            /* Usually we shouldn't need to check matching circuit type with arrived message,
+            /* Usually we shouldn't need to check matching circuit type with arrived message
              * and these messages should be filtered based on destination MAC address.
              * Since we use broadcast MAC address, IS(router) cannot determine if it's
-             * for ALL L1 or ALL L2 systems. Therefore wee need to check manually.
-             * If appropriate Level isn't enabled on interface, then the message is dicarded.
+             * for ALL L1 or ALL L2 systems. Therefore we need to check manually.
+             * If appropriate Level isn't enabled on interface, then the message is discarded.
              */
 
             switch (inMsg->getType())
@@ -1532,11 +1251,11 @@ void ISIS::handleMessage(cMessage* msg)
         }
     }
 
-                    /**
-                     * Create hello packet and send it out to specified interface. This method handle
-                     * LAN hello and PTP hello packets. Destination MAC address is broadcast (ff:ff:ff:ff:ff:ff).
-                     * @param timer is timer that triggered this action
-                     */
+/**
+ * Create hello packet and send it out to specified interface. This method handle
+ * LAN hello and PTP hello packets. Destination MAC address is broadcast (ff:ff:ff:ff:ff:ff).
+ * @param timer is timer that triggered this action
+ */
 void ISIS::sendHelloMsg(ISISTimer* timer)
 {
     if (this->ISISIft.at(timer->getInterfaceIndex()).network)
@@ -1737,12 +1456,12 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
     }
 }
 
-        /*
-         * Sends hello message to specified PtP interface.
-         * Packets contain IS_NEIGHBOURS_HELLO and AREA_ADDRESS TLVs.
-         * @param gateIndex is interface index (index to ISISIft)
-         * @param circuitType is circuit type of specified interface.
-         */
+/*
+ * Sends hello message to specified PtP interface.
+ * Packets contain IS_NEIGHBOURS_HELLO and AREA_ADDRESS TLVs.
+ * @param gateIndex is interface index (index to ISISIft)
+ * @param circuitType is circuit type of specified interface.
+ */
 void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 {
 
@@ -2003,12 +1722,12 @@ void ISIS::sendTRILLHelloMsg(ISISTimer* timer)
 
 }
 
-        /*
-         * Send hello message on specified broadcast interface.
-         * Packets contain IS_NEIGHBOURS_HELLO and AREA_ADDRESS TLVs.
-         * @param k is interface index (index to ISISIft)
-         * @param circuitType is circuit type of specified interface.
-         */
+/*
+ * Send hello message on specified broadcast interface.
+ * Packets contain IS_NEIGHBOURS_HELLO and AREA_ADDRESS TLVs.
+ * @param k is interface index (index to ISISIft)
+ * @param circuitType is circuit type of specified interface.
+ */
 //TODO the last parameter is not necessary
 void ISIS::sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 {
@@ -2180,50 +1899,10 @@ void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuit
     TLV_t myTLV;
 
     this->addTLV(ptpHello, AREA_ADDRESS, circuitType);
-    //set area address
-    /*    myTLV.type = AREA_ADDRESS;
-     myTLV.length = 3;
-     myTLV.value = new unsigned char[3];
-     this->copyArrayContent((unsigned char *) areaId, myTLV.value, 3, 0, 0);
-
-     unsigned int tlvSize = ptpHello->getTLVArraySize();
-     ptpHello->setTLVArraySize(tlvSize + 1);
-     ptpHello->setTLV(tlvSize, myTLV);*/
 
     this->addTLV(ptpHello, PTP_HELLO_STATE, circuitType, gateIndex);
-    /* //ptp adjacency state TLV #240
 
-     myTLV.type = PTP_HELLO_STATE;
-     myTLV.length = 1;
-     myTLV.value = new unsigned char[myTLV.length];
-     ISISadj* tempAdj;
-     //if adjacency for this interface exists, then its state is either UP or INIT
-     //we also assumes that on point-to-point link only one adjacency can exist
-     //TODO we check appropriate level adjacency table, but what to do for L1L2? In such case there's should be adjacency in both tables so we check just L1
-     if ((tempAdj = this->getAdjByGateIndex(ISISIft.at(gateIndex).gateIndex, circuitType) ) != NULL)
-     {
-     if (!tempAdj->state)
-     {
-     myTLV.value[0] = PTP_INIT;
-     EV << "ISIS::sendPTPHello: sending state PTP_INIT "<< endl;
-     }
-     else
-     {
-     myTLV.value[0] = PTP_UP;
-     EV << "ISIS::sendPTPHello: sending state PTP_UP "<< endl;
-     }
-
-     }
-     else
-     {
-     //if adjacency doesn't exist yet, then it's for sure down
-     myTLV.value[0] = PTP_DOWN;
-     EV << "ISIS::sendPTPHello: sending state PTP_DOWN "<< endl;
-     }
-     tlvSize = ptpHello->getTLVArraySize();
-     ptpHello->setTLVArraySize(tlvSize + 1);
-     ptpHello->setTLV(tlvSize, myTLV);
-     //TODO TLV #129 Protocols supported*/
+     //TODO TLV #129 Protocols supported
 
     this->send(ptpHello, "lowerLayerOut", iface->gateIndex);
 
@@ -2437,12 +2116,12 @@ void ISIS::schedule(ISISTimer *timer, double timee)
 
 }
 
-                /**
-                 * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
-                 * Method is used in initialization.
-                 * @see initialize(int stage)
-                 * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
-                 */
+/**
+ * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
+ * Method is used in initialization.
+ * @see initialize(int stage)
+ * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
+ */
 bool ISIS::parseNetAddr()
 {
     std::string net = netAddr;
@@ -3761,41 +3440,7 @@ unsigned char* ISIS::getLspID(ISISTimer *timer)
     return lspID;
 }
 
-/*
 
- unsigned char * ISIS::getSysID(ISISL1HelloPacket *msg){
- unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
-
- for (int i = 0; i < ISIS_SYSTEM_ID; i++)
- {
- systemID[i] = msg->getSourceID(i);
- }
-
- return systemID;
- }
-
- unsigned char * ISIS::getSysID(ISISL2HelloPacket *msg){
- unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
-
- for (int i = 0; i < ISIS_SYSTEM_ID; i++)
- {
- systemID[i] = msg->getSourceID(i);
- }
-
- return systemID;
- }
-
- unsigned char * ISIS::getSysID(ISISPTPHelloPacket *msg){
- unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
-
- for (int i = 0; i < ISIS_SYSTEM_ID; i++)
- {
- systemID[i] = msg->getSourceID(i);
- }
-
- return systemID;
- }
- */
 /*
  * Extract LSP-ID from message.
  * @param msg incomming msg
@@ -4172,11 +3817,11 @@ void ISIS::printLSPDB()
 
     //TODO print L2 LSP DB
 }
-        /*
-         * Print contents of LSP to std::cout
-         * @param lsp is LSP packet
-         * @param from is description where from this print has been called.
-         */
+/*
+ * Print contents of LSP to std::cout
+ * @param lsp is LSP packet
+ * @param from is description where from this print has been called.
+ */
 void ISIS::printLSP(ISISLSPPacket *lsp, char *from)
 {
     std::cout << "PrintLSP called from: " << from << endl;
@@ -4494,160 +4139,9 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
     delete lastDIS;
 }
 
-/**
- * Election of L1 Designated IS. Priorities are compared when received new
- * hello packet. Higher priority wins.
- * DEPRECATED!
- * @see handleL1HelloMsg(ISISMessage *inMsg)
- * @param msg Received hello packet containing neighbours priority.
- */
-void ISIS::electL1DesignatedIS(ISISL1HelloPacket *msg)
-{
-    /* TODO Please rewrite this mess. */
 
-//    Ieee802Ctrl *ctrl = check_and_cast <Ieee802Ctrl *> (msg->getControlInfo());
-    short circuitType = L1_TYPE;
-    unsigned int i;
-    for (i = 0; i < ISISIft.size(); i++)
-    {
-        if (ISISIft.at(i).gateIndex == msg->getArrivalGate()->getIndex())
-        {
-            if (ISISIft.at(i).gateIndex != i)
-            {
-                EV<< "ISIS: Warning: Houston, we got a problem! A BIG ONE!" << endl;
-            }
-            //break the cycle, we have the right position stored at "i"
-            break;
-        }
-    }
 
-                //compare LAN-ID from message aka LAN DIS with supposed DIS
-    bool equal = true;
-    unsigned char * msgLanID = new unsigned char[7];
-    for (unsigned int k = 0; k < msg->getLanIDArraySize(); k++)
-    {
-        msgLanID[k] = msg->getLanID(k);
-        if (msg->getLanID(k) != ISISIft.at(i).L1DIS[k])
-        {
-            equal = false;
-            //break;
-        }
-    }
-    if (equal)
-    {
-        //DIS-ID from IIH and local DIS in interface->L1DIS is same so we don't need to elect anybody
-        return;
 
-    }
-
-//    bool last = this->amIL1DIS(i);
-    unsigned char* lastDIS = new unsigned char[ISIS_SYSTEM_ID + 1];
-    for (unsigned int k = 0; k < msg->getLanIDArraySize(); k++)
-    {
-        lastDIS[k] = ISISIft.at(i).L1DIS[k];
-    }
-
-    MACAddress localDIS, receivedDIS;
-    ISISadj *tmpAdj;
-
-//    MACAddress tmpMAC = ISISIft.at(i).entry->getMacAddress();
-
-    //first old/local DIS
-    //if DIS == me then use my MAC for specified interface
-    if (this->amIL1DIS(i))
-    {
-        localDIS = ISISIft.at(i).entry->getMacAddress();
-    }
-    //else find adjacency and from that use MAC
-    else
-    {
-        if ((tmpAdj = this->getAdjBySystemID(lastDIS, L1_TYPE, ISISIft.at(i).gateIndex)) != NULL)
-        {
-            localDIS = tmpAdj->mac;
-        }
-        else
-        {
-            EV<< "deviceId: " << deviceId
-            << " ISIS: Warning: Didn't find adjacency for local MAC comparison in electL1DesignatedIS "
-            << endl;
-            localDIS = MACAddress("000000000000");
-        }
-    }
-
-            //find out MAC address for IS with LAN-ID from received message
-    if ((tmpAdj = this->getAdjBySystemID(msgLanID, L1_TYPE, ISISIft.at(i).gateIndex)) != NULL)
-    {
-        receivedDIS = tmpAdj->mac;
-    }
-    else
-    {
-        EV<< "deviceId: " << deviceId
-        << " ISIS: Warning: Didn't find adjacency for received MAC comparison in electL1DesignatedIS "
-        << endl;
-        receivedDIS = MACAddress("000000000000");
-    }
-
-        //if announced DIS priority is higher then actual one or if they are equal and src MAC is higher than mine, then it's time to update DIS
-    if ((!equal)
-            && ((msg->getPriority() > ISISIft.at(i).L1DISpriority)
-                    || (msg->getPriority() == ISISIft.at(i).L1DISpriority && (receivedDIS.compareTo(localDIS) > 0))))
-    {
-        unsigned char * disLspID = new unsigned char[ISIS_SYSTEM_ID + 2];
-        this->copyArrayContent(lastDIS, disLspID, ISIS_SYSTEM_ID + 1, 0, 0);
-        disLspID[ISIS_SYSTEM_ID + 1] = 0; //set fragment-ID
-        //purge lastDIS's LSPs
-        this->purgeRemainLSP(disLspID, circuitType);
-
-        for (unsigned int j = 0; j < msg->getLanIDArraySize(); j++)
-        {
-            //set new DIS
-            ISISIft.at(i).L1DIS[j] = msg->getLanID(j);
-        }
-        //and set his priority
-        ISISIft.at(i).L1DISpriority = msg->getPriority();
-
-        //purge DIS LSP
-        //clear LSP containing dead neighbour
-
-        /*        for (unsigned int it = 0; it < L1LSP.size();)
-         {
-         bool found = false;
-         if (this->compareArrays(this->L1LSP.at(it).LSPid, lastDIS, ISIS_SYSTEM_ID + 1))
-         {
-         found = true;
-
-         }
-
-         if (found)
-         {
-         //mark with sequence number 0
-         L1LSP.at(it).seq = 0;
-         L1LSP.at(it).neighbours.clear();
-         //send empty LSP informing about expiration
-         this->sendSpecificL1LSP(L1LSP.at(it).LSPid);
-         //now completely delete
-         L1LSP.erase(L1LSP.begin() + it);
-
-         }
-         else
-         {
-         it++;
-
-         }
-         }*/
-
-    }
-}
-
-/**
- * Not implemented yet and DEPRECATED
- * @see electL1DesignatedIS(ISISL1HelloPacket *msg)
- */
-void ISIS::electL2DesignatedIS(ISISL2HelloPacket *msg)
-{
-
-    //TODO implement
-}
 
 /**
  * Reset DIS on all interfaces. New election occurs after reset.
@@ -4687,297 +4181,9 @@ void ISIS::resetDIS(unsigned char* systemID, int interfaceIndex, short circuitTy
     }
 }
 
-/**
- * Flood L1 LSP packets containing whole link-state database to neighbours.
- * Set new timer (900s) after sending.
- * DEPRECATED.
- * @see updateMyLSP()
- */
-void ISIS::sendMyL1LSPs()
-{
-    EV<< "ISIS: Warning: Running deprecated method" << endl;
-    //update my own LSPs
-    this->updateMyLSP();
 
-    ISISLSPL1Packet *LSP = new ISISLSPL1Packet("L1 LSP");
 
-    //add Ethernet controll info
-    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 
-    // set DSAP & NSAP fields
-    ctrl->setDsap(SAP_CLNS);
-    ctrl->setSsap(SAP_CLNS);
-
-    //set destination broadcast address
-    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-    ctrl->setDest(ma);
-
-    //set area address TLV
-    TLV_t myTLV;
-    myTLV.type = AREA_ADDRESS;
-    myTLV.length = ISIS_AREA_ID;
-    myTLV.value = new unsigned char[ISIS_AREA_ID];
-    this->copyArrayContent((unsigned char*) this->areaId, myTLV.value, 3, 0, 0);
-
-    LSP->setTLVArraySize(1);
-    LSP->setTLV(0, myTLV);
-
-    /* - TODO Auth TLV
-     - eventually implement ES neighbours TLV, but I don't think it's necessary
-     - next TLVs from RFC 1195 if IP should be supported
-     */
-
-    for (unsigned int a = 0; a < ISISIft.size(); a++)
-    {
-        if (!ISISIft.at(a).passive && ISISIft.at(a).ISISenabled
-                && (ISISIft.at(a).circuitType == L1_TYPE || ISISIft.at(a).circuitType == L1L2_TYPE))
-        {
-            //flood my LSP on links
-            for (unsigned int i = 0; i < L1LSP.size(); i++)
-            {
-                //if I find LSP of my own, send it out
-                if (this->compareArrays(L1LSP.at(i).LSPid, (unsigned char*) this->sysId, ISIS_SYSTEM_ID))
-                {
-                    ISISLSPL1Packet *LSPcopy = LSP->dup();
-                    Ieee802Ctrl *ctrlCopy = ctrl->dup();
-                    LSPcopy->setControlInfo(ctrlCopy);
-
-                    //set LSP ID field
-                    for (unsigned int j = 0; j < LSPcopy->getLspIDArraySize(); j++)
-                    {
-                        LSPcopy->setLspID(j, L1LSP.at(i).LSPid[j]);
-                    }
-
-                    //set sequence number
-                    LSPcopy->setSeqNumber(L1LSP.at(i).seq);
-
-                    myTLV.type = IS_NEIGHBOURS_LSP;
-                    myTLV.length = 1 + L1LSP.at(i).neighbours.size() * 11;
-                    myTLV.value = new unsigned char[myTLV.length];
-                    myTLV.value[0] = 0;//reserved byte
-
-                    //set neighbours
-                    for (unsigned int k = 0; k < L1LSP.at(i).neighbours.size(); k++)
-                    {
-                        myTLV.value[(k * 11) + 1] = L1LSP.at(i).neighbours.at(k).metrics.defaultMetric;
-                        myTLV.value[(k * 11) + 2] = L1LSP.at(i).neighbours.at(k).metrics.delayMetric;
-                        myTLV.value[(k * 11) + 3] = L1LSP.at(i).neighbours.at(k).metrics.expenseMetric;
-                        myTLV.value[(k * 11) + 4] = L1LSP.at(i).neighbours.at(k).metrics.errortMetric;
-                        this->copyArrayContent(L1LSP.at(i).neighbours.at(k).LANid, myTLV.value, 7, 0, (k * 11) + 5); //set system ID
-                    }
-
-                    //assign TLV
-                    LSPcopy->setTLVArraySize(2);
-                    LSPcopy->setTLV(1, myTLV);
-
-                    send(LSPcopy, "lowerLayerOut", ISISIft.at(a).gateIndex);
-                }
-            }
-        }
-    }
-
-    //schedule refresh timer (after 900s)
-    ISISTimer *timer = new ISISTimer("LSP_Refresh");
-    timer->setTimerKind(LSP_REFRESH_TIMER);
-    scheduleAt(simTime() + 18.0, timer);//TODO Z1
-
-    delete LSP;
-}
-
-    /**
-     * Not implemented yet
-     * @see sendMyL1LSPs()
-     */
-void ISIS::sendMyL2LSPs()
-{
-    EV<< "ISIS: Warning: Running deprecated method" << endl;
-    //TODO Z1
-}
-
-    /**
-     * Handle received L1 LSP packet.
-     * Create new LSP records in L1 link-state database (this->L1LSP) for each
-     * additional LSP contained in TLV of LSP packet. Update existing LSP records
-     * (update sequence number and content). Flood packet further to all other
-     * neighbours if seq number of LSP > mine LSP seq number in link-state db.
-     * If packet LSP seq num < mine LSP seq number, flood mine version of LSP
-     * to all neighbours. If packet LSP seq num == 0, reflood packet further
-     * and delete dead LSP.
-     * ****************
-     * ** DEPRECATED **
-     * ****************
-     * @param inMsg received L1 LSP packet
-     */
-void ISIS::handleL1LSP(ISISMessage * inMsg)
-{
-    EV<< "ISIS: Warning: Running deprecated method" << endl;
-    ISISLSPL1Packet *msg = check_and_cast<ISISLSPL1Packet *>(inMsg);
-
-    //TODO if the Remaining Life Time is 0 a.k.a purge LSP then no TLV is present and this check should be omitted
-    //check if area IDs match
-    for (unsigned int i = 0; i < msg->getTLVArraySize(); i++)
-    {
-        if (msg->getTLV(i).type == AREA_ADDRESS
-                && this->compareArrays((unsigned char *) this->areaId, msg->getTLV(i).value, msg->getTLV(i).length))
-        {
-
-            //area address is OK
-            //try to find LSDP ID in L1 LSP DB
-            bool match = false;
-            unsigned int j;
-            for (j = 0; j < L1LSP.size(); j++)
-            {
-                bool found = true;
-                //compare LSP IDs
-                for (unsigned int k = 0; k < msg->getLspIDArraySize(); k++)
-                {
-                    if (msg->getLspID(k) != L1LSP.at(j).LSPid[k])
-                    found = false;
-                }
-
-                if (found)
-                {
-                    match = true;
-                    break;
-
-                }
-            }
-
-            //update record
-            if (match)
-            {
-
-                //update record only if we receiver LSP with higher sequence number
-                if (msg->getSeqNumber() > L1LSP.at(j).seq)
-                {
-
-                    //update timer
-                    cancelEvent(L1LSP.at(j).deadTimer);
-                    scheduleAt(simTime() + msg->getRemLifeTime(), L1LSP.at(j).deadTimer);//should be 1200 secs.
-
-                    //update sequence number
-                    L1LSP.at(j).seq = msg->getSeqNumber();
-
-                    //update neighbour records
-                    std::vector<LSPneighbour> neighbours;
-
-                    //find IS_NEIGHBOURS_LSP  TLV
-                    for (unsigned int a = 0; a < msg->getTLVArraySize(); a++)
-                    {
-                        if (msg->getTLV(a).type == IS_NEIGHBOURS_LSP)
-                        {
-
-                            unsigned int size = (msg->getTLV(a).length - 1) / 11;
-                            for (unsigned int b = 0; b < size; b++)
-                            {
-                                //neighbour record
-                                LSPneighbour neighbour;
-
-                                //set metrics
-                                neighbour.metrics.defaultMetric = msg->getTLV(a).value[(b * 11) + 1];
-                                neighbour.metrics.delayMetric = msg->getTLV(a).value[(b * 11) + 2];
-                                neighbour.metrics.expenseMetric = msg->getTLV(a).value[(b * 11) + 3];
-                                neighbour.metrics.errortMetric = msg->getTLV(a).value[(b * 11) + 4];
-
-                                //copy LAN id
-                                this->copyArrayContent(msg->getTLV(a).value, neighbour.LANid, 7, (b * 11) + 5, 0);
-
-                                //store to neighbours vector
-                                neighbours.push_back(neighbour);
-                            }
-
-                            L1LSP.at(j).neighbours = neighbours;
-
-                            break;
-                        }
-                    }
-
-                    //flood msg further to other neighbours
-                    this->floodFurtherL1LSP(msg);
-                }
-                else
-                {
-                    //if seqNumber is zero, purge that LSP and flood empty LSP ID with seqNumber 0 to other neighbour, so they can purge it too
-                    if (msg->getSeqNumber() == 0)
-                    {
-                        //delete LSP
-                        L1LSP.erase(L1LSP.begin() + j);
-                        //send further message informing about LSP death
-                        this->floodFurtherL1LSP(msg);
-                    }
-                    else
-                    {
-                        //we have received older version of LSP than we have in L1LSP DB
-                        //our task is to transmit our newer version of LSP to all neighbours
-                        if (msg->getSeqNumber() < L1LSP.at(j).seq)
-                        {
-                            this->sendSpecificL1LSP(L1LSP.at(j).LSPid);
-                        }
-                    }
-                }
-            }
-            else //create new LSP record
-            {
-
-                //don't create already dead LSP
-                if (msg->getSeqNumber() > 0)
-                {
-
-                    //set timer
-                    LSPrecord record;
-                    record.deadTimer = new ISISTimer("L1 LSP dead");
-                    record.deadTimer->setTimerKind(LSP_DEAD_TIMER);
-
-                    //set timer LSP ID and record LSP ID
-                    for (unsigned int a = 0; a < msg->getLspIDArraySize(); a++)
-                    {
-                        record.LSPid[a] = msg->getLspID(a);
-                        record.deadTimer->setLSPid(a, msg->getLspID(a));
-                    }
-                    scheduleAt(simTime() + msg->getRemLifeTime(), record.deadTimer);
-
-                    //set sequence number
-                    record.seq = msg->getSeqNumber();
-
-                    //find IS_NEIGHBOURS_LSP  TLV
-                    for (unsigned int a = 0; a < msg->getTLVArraySize(); a++)
-                    {
-                        if (msg->getTLV(a).type == IS_NEIGHBOURS_LSP)
-                        {
-
-                            unsigned int size = (msg->getTLV(a).length - 1) / 11;
-                            for (unsigned int b = 0; b < size; b++)
-                            {
-                                //neighbour record
-                                LSPneighbour neighbour;
-
-                                //set metrics
-                                neighbour.metrics.defaultMetric = msg->getTLV(a).value[(b * 11) + 1];
-                                neighbour.metrics.delayMetric = msg->getTLV(a).value[(b * 11) + 2];
-                                neighbour.metrics.expenseMetric = msg->getTLV(a).value[(b * 11) + 3];
-                                neighbour.metrics.errortMetric = msg->getTLV(a).value[(b * 11) + 4];
-
-                                //copy LAN id
-                                this->copyArrayContent(msg->getTLV(a).value, neighbour.LANid, 7, (b * 11) + 5, 0);
-
-                                //store to neighbours vector
-                                record.neighbours.push_back(neighbour);
-                            }
-
-                            L1LSP.push_back(record);
-
-                            break;
-                        }
-                    }
-
-                    this->floodFurtherL1LSP(msg);
-                }
-            }
-        }
-    }
-}
 
 short ISIS::getLevel(ISISMessage *msg)
 {
@@ -5006,10 +4212,10 @@ short ISIS::getLevel(ISISMessage *msg)
         return L1_TYPE;
     }
 
-            /*
-             * Handles L1 LSP according to ISO 10589 7.3.15.1
-             * @param lsp is received LSP
-             */
+/*
+ * Handles L1 LSP according to ISO 10589 7.3.15.1
+ * @param lsp is received LSP
+ */
 void ISIS::handleLsp(ISISLSPPacket *lsp)
 {
 
@@ -5174,34 +4380,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
     delete lspID;
 }
 
-/*
- * This method is not used and will be deleted.
- */
-void ISIS::updateLSP(ISISLSPPacket *lsp, short circuitType)
-{
 
-    unsigned char *lspId;
-    LSPRecord * tmpLSPRecord;
-    lspId = this->getLspID(lsp);
-    if ((tmpLSPRecord = this->getLSPFromDbByID(lspId, circuitType)) == NULL)
-    {
-        //installLSP
-    }
-    else
-    {
-        //we have that LSP
-    }
-}
-
-/**
- * Not implemented yet AND
- *  DEPRECATED
- * @see handleL1LSP(ISISMessage * inMsg)
- */
-void ISIS::handleL2LSP(ISISMessage * msg)
-{
-    //TODO Z1
-}
 
 /*
  * Create and send CSNP message to DIS interface.
@@ -5681,7 +4860,7 @@ void ISIS::handlePsnp(ISISPSNPPacket *psnp)
 }
 
 /*
- * Handle incomming csnp message according to ISO 10589 7.3.15.2
+ * Handles incomming CSNP message according to ISO 10589 7.3.15.2
  * @param csnp is incomming CSNP message
  */
 void ISIS::handleCsnp(ISISCSNPPacket *csnp)
@@ -5906,372 +5085,7 @@ unsigned char * ISIS::getEndLspID(ISISCSNPPacket *csnp)
     return lspId;
 }
 
-/**
- * Send CSNP packet to each LAN, where this router represents DIS.
- * Repeat every 10 seconds.
- * *************************************************************************
- * *                  This method is deprecated.                           *
- * *************************************************************************
- */
-void ISIS::sendL1CSNP()
-{
-    EV<< "ISIS: Warning: Running deprecated method" << endl;
-    //update my own LSPs
 
-    ISISCSNPL1Packet *packet = new ISISCSNPL1Packet("L1 CSNP");
-
-    //add Ethernet controll info
-    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-
-    // set DSAP & NSAP fields
-    ctrl->setDsap(SAP_CLNS);
-    ctrl->setSsap(SAP_CLNS);
-
-    //set destination broadcast address
-    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-    ctrl->setDest(ma);
-
-    //set system ID field which consists of my system id + zero circuit id inc this case
-    for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
-    {
-        packet->setSourceID(i, this->sysId[i]);
-    }
-    packet->setSourceID(6, 0);
-
-    //set start LSP ID to zeros and end LSP ID to max value
-    for (unsigned int i = 0; i < packet->getStartLspIDArraySize(); i++)
-    {
-        packet->setStartLspID(i, 0);
-        packet->setEndLspID(i, 255);
-    }
-
-    //set area address TLV
-    TLV_t myTLV;
-    myTLV.type = LSP_ENTRIES;
-    myTLV.length = this->L1LSP.size() * 14;
-    myTLV.value = new unsigned char[myTLV.length];
-    /*
-     * Value Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
-     * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
-     * 2 bytes smaller.
-     */
-    for (unsigned int i = 0; i < L1LSP.size(); i++)
-    {
-        //get remaining lifetime //TODO change value to constant or something
-        unsigned short remTime = 50
-        - ((unsigned short) (simTime().dbl())
-                - (unsigned short) (L1LSP.at(i).deadTimer->getCreationTime().dbl()));
-
-        //convert unsigned short to unsigned char array and insert to TLV
-        myTLV.value[(i * 14)] = ((remTime >> 8) & 0xFF);
-        myTLV.value[(i * 14) + 1] = (remTime & 0xFF);
-
-        //copy LSP ID to TLV
-        this->copyArrayContent(L1LSP.at(i).LSPid, myTLV.value, 8, 0, (i * 14) + 2);
-
-        //convert unsigned long seq number to unsigned char array[4] and insert into TLV
-        for (unsigned int j = 0; j < 4; j++)
-        {
-            myTLV.value[(i * 14) + 10 + j] = (L1LSP.at(i).seq >> (24 - (8 * j))) & 0xFF;
-        }
-    }
-
-    packet->setTLVArraySize(1);
-    packet->setTLV(0, myTLV);
-
-    /* - TODO Auth TLV
-     - eventually implement ES neighbours TLV, but I don't think it's necessary
-     - next TLVs from RFC 1195 if IP should be supported in future
-     */
-
-    //walk through all itnerfaces
-    for (unsigned int a = 0; a < ISISIft.size(); a++)
-    {
-        //if interface status meets condition
-        if (!ISISIft.at(a).passive && ISISIft.at(a).ISISenabled
-                && (ISISIft.at(a).circuitType == L1_TYPE || ISISIft.at(a).circuitType == L1L2_TYPE))
-        {
-            //check if this Ift represents DIS on associated LAN
-            unsigned char myLANid[7];
-            this->copyArrayContent((unsigned char *) this->sysId, myLANid, 7, 0, 0);
-            myLANid[6] = ISISIft.at(a).gateIndex + 1;
-
-            //if they match, send CSNP packet to that LAN
-            if (this->compareArrays(myLANid, ISISIft.at(a).L1DIS, 7))
-            {
-                ISISCSNPL1Packet *packetCopy = packet->dup();
-                Ieee802Ctrl *ctrlCopy = ctrl->dup();
-                packetCopy->setControlInfo(ctrlCopy);
-                send(packetCopy, "lowerLayerOut", ISISIft.at(a).gateIndex);
-            }
-        }
-    }
-
-    //set new CNSP timer (10s)
-    ISISTimer *CSNPtimer = new ISISTimer("Send CSNP packets");
-    CSNPtimer->setTimerKind(CSNP_TIMER);
-    scheduleAt(simTime() + 10.0, CSNPtimer);
-
-    delete packet;
-}
-
-    /**
-     * Not implemented yet
-     */
-void ISIS::sendL2CSNP()
-{
-    //TODO Z1
-}
-
-/**
- * Handle received L1 CSNP packet. Check for existing LSPs in LSP table.
- * Those with lower sequence number number or missing are asked for using
- * PSNP packets.
- * *************************************************************************
- * *                  This method is deprecated.                           *
- * *************************************************************************
- * @param inMsg recived L1 CSNP packet
- */
-void ISIS::handleL1CSNP(ISISMessage * inMsg)
-{
-    ISISCSNPL1Packet *msg = check_and_cast<ISISCSNPL1Packet *>(inMsg);
-
-    for (unsigned int i = 0; i < msg->getTLVArraySize(); i++)
-    {
-        //find LSP_ENTRIES TLV
-        if (msg->getTLV(i).type == LSP_ENTRIES)
-        {
-
-            /*
-             * TLV Value Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
-             * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
-             * 2 bytes smaller, which give us 14 bytes of data per LSP entry.
-             */
-
-            //list of LSP to be asked for using PSNP packets
-            std::vector<unsigned char *> LSPlist;
-
-            //parse each LSP entry separatly
-            for (unsigned int j = 0; j < msg->getTLV(i).length / 14; j++)
-            {
-                unsigned char *lspEntry = new unsigned char[14];
-                this->copyArrayContent(msg->getTLV(i).value, lspEntry, 14, j * 14, 0);
-
-                //ignore time remaining for now
-                //copy and compare for existing LSP id in L1LSP
-                unsigned char lspid[8];
-                this->copyArrayContent(lspEntry, lspid, 8, 2, 0);
-
-                bool found = false;
-                unsigned int k;
-                for (k = 0; k < L1LSP.size(); k++)
-                {
-                    if (this->compareArrays(lspid, L1LSP.at(k).LSPid, 8))
-                    {
-                        found = true;
-                        break;
-
-                    }
-                }
-
-                //LSP ID exists
-                if (found)
-                {
-                    //compare sequence numbers
-                    //we must built sequence number from received unsigned char array using bitshifting
-                    unsigned long seqNum = ((lspEntry[10] << 24) + (lspEntry[11] << 16) + (lspEntry[12] << 8)
-                            + (lspEntry[13]));
-
-                    //request update if DIS is holding newer version of LSP
-                    if (seqNum > L1LSP.at(k).seq)
-                    {
-                        LSPlist.push_back(lspEntry);
-                    }
-                    else
-                    {
-                        //In case I received LSP with older seq number than I have stored in my db,
-                        //flood my newer version
-                        if (seqNum < L1LSP.at(k).seq)
-                            this->sendSpecificL1LSP(lspid);
-                    }
-                }
-
-                //LSP entry not found
-                else
-                {
-                    LSPlist.push_back(lspEntry);
-                }
-            }
-
-            //send PSNP packets if I have missing/outdated LSP entry/entries
-            if (LSPlist.size() > 0)
-            {
-                this->sendL1PSNP(&LSPlist, msg->getArrivalGate()->getIndex());
-            }
-
-            break;
-        }
-    }
-}
-
-/**
- * Not implemented yet
- */
-void ISIS::handleL2CSNP(ISISMessage * msg)
-{
-    //TODO Z1
-}
-
-/**
- * Send PSNP packet after being found, that some LSP entry/entries are outdated or
- * missing. Packet consists of LSP list to be asked for.
- * *************************************************************************
- * *                  This method is deprecated.                           *
- * *************************************************************************
- * @see handleL1CSNP(ISISMessage * inMsg)
- * @param gateIndex index of gate which is received CSNP packet came from (we will send PSNP packet out from this ift)
- * @param LSPlist list of LSP entries to be asked for
- */
-void ISIS::sendL1PSNP(std::vector<unsigned char *> * LSPlist, int gateIndex)
-{
-    ISISPSNPL1Packet *packet = new ISISPSNPL1Packet("L1 PSNP");
-
-    //add Ethernet controll info
-    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-
-    // set DSAP & NSAP fields
-    ctrl->setDsap(SAP_CLNS);
-    ctrl->setSsap(SAP_CLNS);
-
-    //set destination broadcast address
-    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-    ctrl->setDest(ma);
-
-    packet->setControlInfo(ctrl);
-
-    //set system ID field which consists of my system id + zero circuit id in this case
-    for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
-    {
-        packet->setSourceID(i, this->sysId[i]);
-    }
-    packet->setSourceID(6, 0);
-
-    //set area address TLV
-    TLV_t myTLV;
-    myTLV.type = LSP_ENTRIES;
-    myTLV.length = LSPlist->size() * 14;
-    myTLV.value = new unsigned char[myTLV.length];
-    /*
-     * Value� Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
-     * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
-     * 2 bytes smaller.
-     */
-    for (unsigned int i = 0; i < LSPlist->size(); i++)
-    {
-        this->copyArrayContent(LSPlist->at(i), myTLV.value, 14, 0, i * 14);
-    }
-
-    packet->setTLVArraySize(1);
-    packet->setTLV(0, myTLV);
-
-    /* - TODO Auth TLV
-     - eventually implement ES neighbours TLV, but I don't think it's necessary
-     - next TLVs from RFC 1195 if IP should be supported in future
-     */
-
-    //send packet to same interface as CSNP packet came in
-    //DIS should receive this packet and handle it
-    send(packet, "lowerLayerOut", gateIndex);
-}
-
-/**
- * Not implemented yet
- */
-void ISIS::sendL2PSNP()
-{
-    //TODO Z1
-}
-
-/**
- * Handle PSNP received from another IS. Content of packet informs about LSPs which have to be sent.
- * *************************************************************************
- * *                  This method is deprecated.                           *
- * *************************************************************************
- * @param inMsg received PSNP packet
- * @see sendL1PSNP(std::vector<unsigned char *> * LSPlist, int gateIndex)
- * @see handleL1CSNP(ISISMessage * inMsg)
- */
-void ISIS::handleL1PSNP(ISISMessage * inMsg)
-{
-    ISISPSNPL1Packet *msg = check_and_cast<ISISPSNPL1Packet *>(inMsg);
-
-    //PSNP packets should process only DIS, therefore we need to check this
-
-    //find interface which packet came from
-    for (unsigned int i = 0; i < ISISIft.size(); i++)
-    {
-        //we found dat interface
-        if (ISISIft.at(i).gateIndex == msg->getArrivalGate()->getIndex())
-        {
-            unsigned char LanID[7];
-
-            //set LAN ID which consists of system ID + pseudonode ID
-            this->copyArrayContent((unsigned char *) this->sysId, LanID, 6, 0, 0); //set system ID
-            LanID[6] = ISISIft.at(i).gateIndex + 1; //set pseudonode ID
-
-            //compare Ift's DIS with LAN ID
-            //if they don't match, I'm not DIS on dat LAN and no processing of PSNP packet is necessary
-            if (!(this->compareArrays(LanID, ISISIft.at(i).L1DIS, 7)))
-                return;
-        }
-    }
-
-    for (unsigned int i = 0; i < msg->getTLVArraySize(); i++)
-    {
-        //find LSP_ENTRIES TLV
-        if (msg->getTLV(i).type == LSP_ENTRIES)
-        {
-
-            /*
-             * TLV Value Multiples of LSP summaries, each consisting of the remaining lifetime (2 bytes), LSP ID (ID length + 2 bytes),
-             * LSP sequence number(4 bytes), and LSP checksum (2 bytes). But we ignore LSP checksum so length of each LSP record in CSNP is
-             * 2 bytes smaller, which give us 14 bytes of data per LSP entry.
-             */
-
-            //parse each LSP entry separately
-            for (unsigned int j = 0; j < msg->getTLV(i).length / 14; j++)
-            {
-                unsigned char lspEntry[14];
-                this->copyArrayContent(msg->getTLV(i).value, lspEntry, 14, j * 14, 0);
-
-                //ignore time remaining for now
-                //copy and compare for existing LSP id in L1LSP
-                unsigned char lspid[8];
-                this->copyArrayContent(lspEntry, lspid, 8, 2, 0);
-
-                //send LSP packet containing relevant data
-                this->sendSpecificL1LSP(lspid);
-            }
-        }
-
-        break;
-    }
-}
-
-/**
- * Not implemented yet
- * *************************************************************************
- * *                  This method is deprecated.                           *
- * *************************************************************************
- */
-void ISIS::handleL2PSNP(ISISMessage * msg)
-{
-    //TODO Z1
-}
 
 /**
  * Check sysId from received hello packet for duplicity.
@@ -6339,41 +5153,6 @@ bool ISIS::checkDuplicateSysID(ISISMessage * msg)
     return test;
 }
 
-/**
- * Remove LSP which wasn't refreshed for 900 sec. Flood LSP packet with
- * sequence ID = 0 indicating dead LSP.
- * *************************************************************************
- * *                  This method is deprecated.                           *
- * *************************************************************************
- * @param timer Timer associated with dead LSP
- */
-void ISIS::removeDeadLSP(ISISTimer *timer)
-{
-    for (unsigned int i = 0; i < L1LSP.size(); i++)
-    {
-        //find dead LSP ID
-        bool found = true;
-        for (unsigned int j = 0; j < timer->getLSPidArraySize(); j++)
-        {
-            if (timer->getLSPid(j) != L1LSP.at(i).LSPid[j])
-                found = false;
-        }
-
-        //we found it!
-        if (found)
-        {
-
-            //mark with sequence number 0
-            L1LSP.at(i).seq = 0;
-            L1LSP.at(i).neighbours.clear();
-            //send empty LSP informing about expiration
-            this->sendSpecificL1LSP(L1LSP.at(i).LSPid);
-            //now completely delete
-            L1LSP.erase(L1LSP.begin() + i);
-            break;
-        }
-    }
-}
 
 void ISIS::schedulePeriodicSend(short circuitType){
     ISISTimer *timer;
@@ -6568,11 +5347,11 @@ void ISIS::sendLSP(LSPRecord *lspRec, int gateIndex)
 
 }
 
-            /**
-             * Create or update my own LSP.
-             * @param circuiType specify level e.g. L1 or L2
-             * @return vector of generated LSPs
-             */
+/**
+ * Create or update my own LSP.
+ * @param circuiType specify level e.g. L1 or L2
+ * @return vector of generated LSPs
+ */
 std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
 {
     unsigned char *myLSPID = this->getLSPID();
@@ -7959,406 +6738,6 @@ unsigned char* ISIS::getLSPID()
     return myLSPID;
 }
 
-/**
- * Create or update my own LSP.
- * @see ISIS::sendMyL1LSPs()
- * DEPRECATED
- */
-void ISIS::updateMyLSP()
-{
-    unsigned char myLSPid[8];
-
-    //at first, we generate (or update existing) non-psudonode LSP with pesudonode ID (myLSPid[6]) equal to 0 according to ISO10859
-    //myLSPid[7] is always 0 because omnet doesn't support packet fragmentation (or I don't want to solve that :D)
-    this->copyArrayContent((unsigned char*) this->sysId, myLSPid, 6, 0, 0);
-    myLSPid[6] = 0;
-    myLSPid[7] = 0;
-
-    bool found = false;
-
-    //we try to find existing LSP with this ID
-    for (unsigned int j = 0; j < L1LSP.size(); j++)
-    {
-        //if we have found matching LSP ID
-        if (this->compareArrays(myLSPid, L1LSP.at(j).LSPid, 8))
-        {
-            //update it
-
-            //increment sequence number
-            L1LSP.at(j).seq++;
-
-            //reset dead timer
-            cancelEvent(L1LSP.at(j).deadTimer);
-            scheduleAt(simTime() + 50, L1LSP.at(j).deadTimer); //should be 1200 secs.
-
-            //set neighbours (pseudonode neighbours)
-            std::vector<LSPneighbour> neighbours;
-
-            //as we are using ethernet, which is multiaccess medium, we have to add pseudonodes as IS neighbours
-            //at this point, network should be converged and assigned appropriate designated IS for each LAN
-
-            for (unsigned int i = 0; i < ISISIft.size(); i++)
-            {
-                if (ISISIft.at(i).ISISenabled
-                        && (ISISIft.at(i).circuitType == L1_TYPE || ISISIft.at(i).circuitType == L1L2_TYPE))
-                {
-                    LSPneighbour neighbour;
-                    ISISadj *tmpAdj = this->getAdjByGateIndex(ISISIft.at(i).gateIndex, L1_TYPE);
-                    //if there's not adjacency in state "UP" for specified interface, then skip this interface
-                    if (tmpAdj == NULL || tmpAdj->state < ISIS_ADJ_2WAY) //A1 either < or <=
-                    {
-                        continue;
-                    }
-                    //for broadcast network use DIS's System-ID
-                    if (ISISIft.at(i).network)
-                    {
-                        this->copyArrayContent(ISISIft.at(i).L1DIS, neighbour.LANid, 7, 0, 0);
-                    }
-                    else
-                    //for point-to-point links use actual System-ID padded with 0 byte
-                    {
-                        this->copyArrayContent(tmpAdj->sysID, neighbour.LANid, ISIS_SYSTEM_ID, 0, 0);
-                        neighbour.LANid[ISIS_SYSTEM_ID] = 0;
-                    }
-
-                    //find interface which is DIS connected to and set metrics
-                    neighbour.metrics.defaultMetric = ISISIft.at(i).metric; //default = 10
-                    neighbour.metrics.delayMetric = 128; //disabled;
-                    neighbour.metrics.expenseMetric = 128; //disabled
-                    neighbour.metrics.errortMetric = 128; //disabled
-
-                    neighbours.push_back(neighbour);
-                }
-            }
-
-            //replace old neighbours
-            L1LSP.at(j).neighbours = neighbours;
-
-            found = true;
-            break;
-        }
-    }
-
-    //if LSP record doesn't exist, create it
-    if (!found)
-    {
-        LSPrecord record;
-
-        //set LSP ID
-        this->copyArrayContent(myLSPid, record.LSPid, 8, 0, 0);
-
-        //set dead timer
-        record.deadTimer = new ISISTimer("L1 LSP dead");
-        record.deadTimer->setTimerKind(LSP_DEAD_TIMER);
-        for (unsigned int x = 0; x < record.deadTimer->getLSPidArraySize(); x++)
-        {
-            record.deadTimer->setLSPid(x, myLSPid[x]);
-        }
-        scheduleAt(simTime() + 50.0, record.deadTimer); //TODO Z1
-
-        //initial sequence number = 1
-        record.seq = 1;
-
-        //set pseudonode neighbours
-        std::vector<LSPneighbour> neighbours;
-
-        for (unsigned int i = 0; i < ISISIft.size(); i++)
-        {
-            if (ISISIft.at(i).ISISenabled
-                    && (ISISIft.at(i).circuitType == L1_TYPE || ISISIft.at(i).circuitType == L1L2_TYPE))
-            {
-                for (unsigned int f = 0; f < this->adjL1Table.size(); f++)
-                {
-                    if (ISISIft.at(i).gateIndex == adjL1Table.at(f).gateIndex && adjL1Table.at(f).state)
-                    {
-                        LSPneighbour neighbour;
-                        if (ISISIft.at(i).network)
-                        {
-                            this->copyArrayContent(ISISIft.at(i).L1DIS, neighbour.LANid, 7, 0, 0);
-                        }
-                        else
-                        {
-                            this->copyArrayContent(this->adjL1Table.at(f).sysID, neighbour.LANid, ISIS_SYSTEM_ID, 0, 0);
-                            neighbour.LANid[6] = 0;
-
-                        }
-
-                        //find interface which is DIS connected to and set metrics
-                        neighbour.metrics.defaultMetric = ISISIft.at(i).metric; //default = 10
-                        neighbour.metrics.delayMetric = 128; //disabled;
-                        neighbour.metrics.expenseMetric = 128; //disabled
-                        neighbour.metrics.errortMetric = 128; //disabled
-
-                        neighbours.push_back(neighbour);
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (neighbours.size() > 0)
-        {
-            record.neighbours = neighbours;
-            L1LSP.push_back(record);
-        }
-    }
-
-    //end of non-pseudonode LSP
-    //####################################################################################################
-    //start of pseudonode LSP
-
-    for (unsigned int i = 0; i < ISISIft.size(); i++)
-    {
-        //check if this interface is DIS for LAN AND if it is broadcast interface
-        if (this->compareArrays((unsigned char*) this->sysId, ISISIft.at(i).L1DIS, 6) && ISISIft.at(i).network)
-        {
-            //check if LSP ID exists; update neighbours if record exists; create new record otherwise
-            //I have already my system id contained in myLSPid; we have to set only pseudonode ID byte
-
-            found = false;
-            myLSPid[6] = ISISIft.at(i).L1DIS[6];
-            for (unsigned int j = 0; j < L1LSP.size(); j++)
-            {
-                //we found the match
-                if (this->compareArrays(myLSPid, L1LSP.at(j).LSPid, 8))
-                {
-
-                    //update sequence number
-                    L1LSP.at(j).seq++;
-
-                    //reset dead timer
-                    cancelEvent(L1LSP.at(j).deadTimer);
-                    scheduleAt(simTime() + 50, L1LSP.at(j).deadTimer); //should be 1200 secs.
-
-                    //set neighbours (NON-pseudonode neighbours)
-                    std::vector<LSPneighbour> neighbours;
-
-                    //set every adjacent IS as neighbour
-                    for (unsigned int k = 0; k < adjL1Table.size(); k++)
-                    {
-                        //consider only directly connected neighbours in "UP" state
-                        if (adjL1Table.at(k).state && adjL1Table.at(k).gateIndex == ISISIft.at(i).gateIndex)
-                        {
-                            LSPneighbour neighbour;
-                            this->copyArrayContent(adjL1Table.at(k).sysID, neighbour.LANid, 6, 0, 0);
-                            neighbour.LANid[6] = 0;
-                            neighbour.metrics.defaultMetric = 0; //metric to every neighbour in pseudonode LSP is always zero!!!
-                            neighbour.metrics.delayMetric = 128; //disabled;
-                            neighbour.metrics.expenseMetric = 128; //disabled
-                            neighbour.metrics.errortMetric = 128; //disabled
-
-                            neighbours.push_back(neighbour);
-                        }
-                    }
-
-                    //add also mine non-pseudonode interface as neighbour
-                    LSPneighbour neighbour;
-                    this->copyArrayContent((unsigned char*) this->sysId, neighbour.LANid, 6, 0, 0);
-                    neighbour.LANid[6] = 0;
-                    neighbour.metrics.defaultMetric = 0; //metric to every neighbour in pseudonode LSP is always zero!!!
-                    neighbour.metrics.delayMetric = 128; //disabled;
-                    neighbour.metrics.expenseMetric = 128; //disabled
-                    neighbour.metrics.errortMetric = 128; //disabled
-
-                    neighbours.push_back(neighbour);
-
-                    //replace old neighbours
-                    L1LSP.at(j).neighbours = neighbours;
-
-                    found = true;
-                    break;
-                }
-            }
-
-            //create new pseudonode LSP record
-            if (!found)
-            {
-                LSPrecord record;
-
-                //set LSP ID
-                this->copyArrayContent(myLSPid, record.LSPid, 8, 0, 0);
-
-                //set dead timer
-                record.deadTimer = new ISISTimer("L1 LSP dead");
-                record.deadTimer->setTimerKind(LSP_DEAD_TIMER);
-                for (unsigned int x = 0; x < record.deadTimer->getLSPidArraySize(); x++)
-                {
-                    record.deadTimer->setLSPid(x, myLSPid[x]);
-                }
-                scheduleAt(simTime() + 50.0, record.deadTimer);
-
-                //initial sequence number = 1
-                record.seq = 1;
-
-                //set neighbours (NON-pseudonode neighbours)
-                std::vector<LSPneighbour> neighbours;
-
-                //set every adjacent IS as neighbour
-                for (unsigned int k = 0; k < adjL1Table.size(); k++)
-                {
-                    //consider only directly connected neighbours in "UP" state
-                    if (adjL1Table.at(k).state && adjL1Table.at(k).gateIndex == ISISIft.at(i).gateIndex)
-                    {
-                        LSPneighbour neighbour;
-                        this->copyArrayContent(adjL1Table.at(k).sysID, neighbour.LANid, 6, 0, 0);
-                        neighbour.LANid[6] = 0;
-                        neighbour.metrics.defaultMetric = 0; //metric to every neighbour in pseudonode LSP is always zero!!!
-                        neighbour.metrics.delayMetric = 128; //disabled;
-                        neighbour.metrics.expenseMetric = 128; //disabled
-                        neighbour.metrics.errortMetric = 128; //disabled
-
-                        neighbours.push_back(neighbour);
-                    }
-                }
-
-                if (neighbours.size() > 0)
-                {
-                    //add also mine non-pseudonode interface as neighbour
-                    LSPneighbour neighbour;
-                    this->copyArrayContent((unsigned char*) this->sysId, neighbour.LANid, 6, 0, 0);
-                    neighbour.LANid[6] = 0;
-                    neighbour.metrics.defaultMetric = 0; //metric to every neighbour in pseudonode LSP is always zero!!!
-                    neighbour.metrics.delayMetric = 128; //disabled;
-                    neighbour.metrics.expenseMetric = 128; //disabled
-                    neighbour.metrics.errortMetric = 128; //disabled
-
-                    neighbours.push_back(neighbour);
-
-                    record.neighbours = neighbours;
-
-                    //replace old neighbours
-                    L1LSP.push_back(record);
-                }
-            }
-        }
-    }
-}
-
-/**
- * Send received LSP packet to all other neighbours (flooding).
- * DEPRECATED
- * @param msg received packet that has to be resent
- */
-void ISIS::floodFurtherL1LSP(ISISLSPL1Packet *msg)
-{
-    //duplicate packet
-
-    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
-
-    //resend unchanged message to all L1 IS-IS enabled interfaces except of that, which message came from
-    for (unsigned int i = 0; i < ISISIft.size(); i++)
-    {
-        if (!ISISIft.at(i).passive && ISISIft.at(i).ISISenabled
-                && (ISISIft.at(i).circuitType == L1_TYPE || ISISIft.at(i).circuitType == L1L2_TYPE)
-                && ISISIft.at(i).gateIndex != msg->getArrivalGate()->getIndex())
-        {
-            //send it
-            ISISLSPL1Packet *myMsg = msg->dup();
-            Ieee802Ctrl *ctrlCopy = ctrl->dup();
-            myMsg->setControlInfo(ctrlCopy);
-
-            send(myMsg, "lowerLayerOut", ISISIft.at(i).gateIndex);
-        }
-    }
-
-}
-
-/**
- * Send only specific LSP to all attached neighbours.
- * DEPRECATED
- * @param LSPid ID of LSP which should be flooded using LSP packets
- */
-void ISIS::sendSpecificL1LSP(unsigned char *LSPid)
-{
-    ISISLSPL1Packet *LSP = new ISISLSPL1Packet("L1 LSP");
-    //add Ethernet controll info
-    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-
-    // set DSAP & NSAP fields
-    ctrl->setDsap(SAP_CLNS);
-    ctrl->setSsap(SAP_CLNS);
-
-    //set destination broadcast address
-    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-    MACAddress ma;
-    ma.setAddress("ff:ff:ff:ff:ff:ff");
-    ctrl->setDest(ma);
-
-    //set LSP ID packet field
-    for (unsigned int j = 0; j < LSP->getLspIDArraySize(); j++)
-    {
-        LSP->setLspID(j, LSPid[j]);
-    }
-
-    //set area address TLV
-    TLV_t myTLV;
-    myTLV.type = AREA_ADDRESS;
-    myTLV.length = 3;
-    myTLV.value = new unsigned char[3];
-    this->copyArrayContent((unsigned char*) this->areaId, myTLV.value, 3, 0, 0);
-
-    LSP->setTLVArraySize(1);
-    LSP->setTLV(0, myTLV);
-
-    //find LSP
-    bool found = false;
-    unsigned int j;
-    for (j = 0; j < L1LSP.size(); j++)
-    {
-        if (this->compareArrays(LSPid, L1LSP.at(j).LSPid, 8))
-        {
-            found = true;
-            break;
-        }
-    }
-
-    if (found)
-    {
-
-        //set sequence number
-        LSP->setSeqNumber(L1LSP.at(j).seq);
-
-        //cout << "seq: " << LSP->getSeqNumber() << endl;
-
-        //set neighbours TLV
-        myTLV.type = IS_NEIGHBOURS_LSP;
-        myTLV.length = 1 + L1LSP.at(j).neighbours.size() * 11;
-        myTLV.value = new unsigned char[myTLV.length];
-        myTLV.value[0] = 0; //reserved byte
-
-        //set neighbours
-        for (unsigned int k = 0; k < L1LSP.at(j).neighbours.size(); k++)
-        {
-            myTLV.value[(k * 11) + 1] = L1LSP.at(j).neighbours.at(k).metrics.defaultMetric;
-            myTLV.value[(k * 11) + 2] = L1LSP.at(j).neighbours.at(k).metrics.delayMetric;
-            myTLV.value[(k * 11) + 3] = L1LSP.at(j).neighbours.at(k).metrics.expenseMetric;
-            myTLV.value[(k * 11) + 4] = L1LSP.at(j).neighbours.at(k).metrics.errortMetric;
-            this->copyArrayContent(L1LSP.at(j).neighbours.at(k).LANid, myTLV.value, 7, 0, (k * 11) + 5); //set LAN ID
-        }
-
-        LSP->setTLVArraySize(2);
-        LSP->setTLV(1, myTLV);
-
-        /* - TODO Auth TLV
-         - eventually implement ES neighbours TLV, but I don't think it's necessary
-         - next TLVs from RFC 1195 if IP should be supported
-         */
-
-        for (unsigned int a = 0; a < ISISIft.size(); a++)
-        {
-            if (!ISISIft.at(a).passive && ISISIft.at(a).ISISenabled
-                    && (ISISIft.at(a).circuitType == L1_TYPE || ISISIft.at(a).circuitType == L1L2_TYPE))
-            {
-                ISISLSPL1Packet *LSPcopy = LSP->dup();
-                Ieee802Ctrl *ctrlCopy = ctrl->dup();
-                LSPcopy->setControlInfo(ctrlCopy);
-                send(LSPcopy, "lowerLayerOut", ISISIft.at(a).gateIndex);
-            }
-        }
-    }
-    //cleanup
-    delete LSP;
-}
 
 /**
  * Since this method is used for point-to-point links only one adjacency is expected
@@ -8408,7 +6787,7 @@ ISISadj* ISIS::getAdjByGateIndex(int gateIndex, short circuitType, int offset)
 }
 
 /**
- * Returns interface fo provided gate index.
+ * Returns interface for provided gate index.
  * @param gateIndex index to global interface table
  */
 
