@@ -49,7 +49,7 @@ void TRILLInterfaceData::setDefaults(void){
 
     this->p2p = false;
 
-    this->announcingSet.push_back(1); //FIX change to some configurable default VLAN
+    this->announcingSet.push_back(1); //TODO A2 FIX change to some configurable default VLAN
 
     this->enabledgSet.push_back(1);
 

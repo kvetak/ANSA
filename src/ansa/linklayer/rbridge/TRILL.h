@@ -30,6 +30,8 @@
 #define ALL_IS_IS_RBRIDGES "01-80-C2-00-00-41"
 #define ALL_ESADI_RBRIGES "01-80-C2-00-00-42"
 
+#define TRILL_DEFAULT_VLAN 1
+
 
 #include <omnetpp.h>
 #include <csimplemodule.h>
@@ -86,6 +88,7 @@ class TRILL : public cSimpleModule
           TRILL::FrameCategory category;
 //          std::vector<unsigned char *> systemIDs; //for forwarding TRILL MultiDest (maybe even TRILL unicast)
 //          InterfaceEntry *ie
+          Ieee802Ctrl *ctrl;
         } tFrameDescriptor;
 
 
@@ -135,6 +138,7 @@ class TRILL : public cSimpleModule
       virtual void finish();
 
       bool reception(tFrameDescriptor& frame, cMessage *msg);
+      bool reception(tFrameDescriptor& frame, ISISMessage *isisMsg);
       void relay(tFrameDescriptor& frame);
       void dispatch(tFrameDescriptor& frame);
 
@@ -179,6 +183,7 @@ class TRILL : public cSimpleModule
       bool dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc);
       bool dispatchTRILLDataMultiDestRemote(tFrameDescriptor &frameDesc);
       bool dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc);
+      bool dispatchTRILLControl(ISISMessage* isisMsg);
 
       bool egressNativeLocal(tFrameDescriptor &frameDesc);//returns false when after removing redundant ports etc there is none to send it onto.
       bool egressNativeMulticastRemote(tFrameDescriptor &frameDesc);

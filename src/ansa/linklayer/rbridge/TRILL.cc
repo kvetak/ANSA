@@ -99,10 +99,16 @@ void TRILL::handleMessage(cMessage *msg) {
 
     if (!msg->isSelfMessage()) {
         tFrameDescriptor frameDesc;
+        const char * inGate = msg->getArrivalGate()->getName();
 
         if (strcmp(msg->getArrivalGate()->getName(), "stpIn") == 0) {
             /* Messages from STP process */
             dispatchBPDU(msg, msg->getArrivalGate()->getIndex());
+            return;
+        }else if (strcmp(msg->getArrivalGate()->getName(), "isisIn") == 0){
+            /* Messages from ISIS module */
+//            reception(frameDesc, (ISISMessage*) msg);//TODO C1 handle returned value
+            dispatchTRILLControl((ISISMessage*) msg);
             return;
 
         } else if (strcmp(msg->getArrivalGate()->getName(), "lowerLayerIn") == 0) {
@@ -114,6 +120,7 @@ void TRILL::handleMessage(cMessage *msg) {
                 //frame received on port's allowed VLAN and successfully parsed
                 //now determine the proper type
                 //getTRILL_Type
+                Ieee802Ctrl *ctrl;
                 TRILL::FrameCategory cat;
                 switch(cat = classify(frameDesc)){
                     case TRILL::TRILL_L2_CONTROL:
@@ -137,11 +144,16 @@ void TRILL::handleMessage(cMessage *msg) {
 
                     case TRILL::TRILL_CONTROL:
                         //TODO B1
-                        EV <<"Error: L2_ISIS frame shoudn't get send to TRILL (for NOW)" <<endl;
-                        //send("toISIS", gateIndex);
+//                        EV <<"Error: L2_ISIS frame shoudn't get send to TRILL (for NOW)" <<endl;
+//                        send(msg->)
+//                        ctrl = (Ieee802Ctrl*)msg->getControlInfo();
+//                        ctrl->dup();
+                        frameDesc.payload->setControlInfo(frameDesc.ctrl->dup());
+//                        framed
+                        send(frameDesc.payload, "isisOut", frameDesc.rPort);
                         break;
                     case TRILL::TRILL_OTHER:
-                        EV <<"Warning: TRILL: Received TRILL::OTHER frame so dicarding" <<endl;
+                        EV <<"Warning: TRILL: Received TRILL::OTHER frame so discarding" <<endl;
                         break;
                     case TRILL::TRILL_NONE:
                         EV <<"ERROR: TRILL: Misclassified frame" <<endl;
@@ -172,6 +184,12 @@ void TRILL::handleMessage(cMessage *msg) {
     }
     delete msg;
 }
+
+//bool TRILL::reception(TRILL::tFrameDescriptor& frame, ISISMessage *isisMsg){
+//    int rPort = isisMsg->getArrivalGate()->getIndex();
+//
+//    return true;
+//}
 /**
  * Fills frame's descriptor with information in @param msg
  * @param frame is frame's descriptor structure
@@ -259,6 +277,14 @@ bool TRILL::reception(TRILL::tFrameDescriptor& frame, cMessage *msg) {
 
 bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, EthernetIIFrame *frame, int rPort) {
     // Info from recepted frame
+    tmp.ctrl = (Ieee802Ctrl *) frame->getControlInfo();
+    if (tmp.ctrl == NULL)
+    {
+        tmp.ctrl = new Ieee802Ctrl();
+        tmp.ctrl->setSrc(frame->getSrc());
+        tmp.ctrl->setDest(frame->getDest());
+        tmp.ctrl->setEtherType(frame->getEtherType());
+    }
     tmp.payload = frame->decapsulate();
     tmp.name.insert(0, frame->getName());
     tmp.rPort = rPort;
@@ -280,6 +306,14 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, EthernetIIFrame *frame, int rP
 
 bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPort) {
     // Info from recepted frame
+    tmp.ctrl = (Ieee802Ctrl *)frame->getControlInfo();
+    if (tmp.ctrl == NULL)
+    {
+        tmp.ctrl = new Ieee802Ctrl();
+        tmp.ctrl->setSrc(frame->getSrc());
+        tmp.ctrl->setDest(frame->getDest());
+        tmp.ctrl->setEtherType(frame->getEtherType());
+    }
     tmp.payload = frame->decapsulate();
     tmp.name.insert(0, frame->getName());
     tmp.rPort = rPort;
@@ -463,6 +497,104 @@ void TRILL::dispatch(TRILL::tFrameDescriptor& frame) {
     delete taggedFrame;
     delete untaggedFrame;
     return;
+}
+//bool TRILL::dispatchTRILLHello(TRILLHelloPacket* trillHello){
+//
+//
+//
+//    return true;
+//}
+/*
+ * This method is for passing messages from IS-IS module to lowerLayer module
+ * with encapsulating it in Ethernet frame.
+ * @param isisMsg is received message from ISIS module. It may be Hello, LSP, CSNP, ..
+ */
+bool TRILL::dispatchTRILLControl(ISISMessage* isisMsg){
+    EthernetIIFrame* untaggedFrame = new EthernetIIFrame(isisMsg->getName());
+    AnsaEtherFrame * taggedFrame = new AnsaEtherFrame(isisMsg->getName());
+
+    taggedFrame->setKind(isisMsg->getKind());
+//     taggedFrame->setSrc(frame.src); will be set by underlying module
+//     taggedFrame->setDest(frame.dest);
+    taggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
+    taggedFrame->setVlan(TRILL_DEFAULT_VLAN); //TODO A! VLAN_ID should get dynamically. Also more than one Hello could be send on interface.
+    taggedFrame->setEtherType(ETHERTYPE_L2_ISIS);
+
+    taggedFrame->encapsulate(isisMsg->dup());
+    if (taggedFrame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
+    {
+        taggedFrame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
+    }
+
+    untaggedFrame->setKind(isisMsg->getKind());
+//     untaggedFrame->setSrc(frame.src);
+//     untaggedFrame->setDest(frame.dest);
+    untaggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
+    untaggedFrame->setEtherType(ETHERTYPE_L2_ISIS);
+
+    untaggedFrame->encapsulate(isisMsg->dup());
+    if (untaggedFrame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
+    {
+        untaggedFrame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
+    }
+
+    MACAddress ma;
+    switch (isisMsg->getType())
+        {
+
+        case TRILL_HELLO:
+        case L1_LSP:
+        case L1_CSNP:
+        case L1_PSNP:
+        case MTU_PROBE_PDU:
+        case MTU_ACK_PDU:
+            ma.setAddress(ALL_IS_IS_RBRIDGES);
+
+        }
+    taggedFrame->setDest(ma);
+    untaggedFrame->setDest(ma);
+
+    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+    ctrl->setEtherType(ETHERTYPE_L2_ISIS);
+    ctrl->setDsap(SAP_CLNS);
+    ctrl->setSsap(SAP_CLNS);
+    ctrl->setDest(MACAddress(ALL_IS_IS_RBRIDGES)); //ALL-IS-IS-RBridges
+//
+
+    taggedFrame->setControlInfo(ctrl->dup());
+    untaggedFrame->setControlInfo(ctrl->dup());
+
+    RBVLANTable::tVIDPortList::iterator it;
+//         for (it = frame.portList.begin(); it != frame.portList.end(); it++) {
+//             if (it->port >= portCount) {//TODO A! this needs to go to egress// do not send on received port
+//                 continue;
+//             }
+    //        if (spanningTree->forwarding(it->port, frame.VID) == false) {
+    //            continue;
+    //        }
+
+    //TODO A1 This below is a mess. Get VLAN ID and port/gate index properly.
+
+    int port = isisMsg->getArrivalGate()->getIndex();
+
+    RBVLANTable::tTagAction action = this->vlanTable->getTag(TRILL_DEFAULT_VLAN, port);
+
+    if (action == RBVLANTable::INCLUDE)
+    {
+        send(taggedFrame, "lowerLayerOut", port);
+    }
+    else
+    {
+        send(untaggedFrame->dup(), "lowerLayerOut", port);
+    }
+//         }
+
+//    delete taggedFrame;
+    delete untaggedFrame;
+    delete ctrl;
+    return true;
+
+
 }
 
 /* NEW */

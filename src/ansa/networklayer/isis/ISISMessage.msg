@@ -187,6 +187,7 @@ packet TRILLHelloPacket extends ISISLANHelloPacket
 {
     type = TRILL_HELLO;
     circuitType = L1_TYPE;
+//    unsigned int vlan = 0; 										//This is not part of the standard. It's for internal usage.
     
 }
 

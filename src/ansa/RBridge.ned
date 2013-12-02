@@ -172,14 +172,15 @@ module RBridge
             //            mac[i].upperLayerIn <-- rbridgeSplitter.lowerLayerOut[i];
             eth[i].upperLayerOut --> rbridgeSplitter.lowerLayerIn[i];
             eth[i].upperLayerIn <-- rbridgeSplitter.lowerLayerOut[i];
-            rbridgeSplitter.isisOut[i] --> isis.lowerLayerIn[i];
-            rbridgeSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
+//            rbridgeSplitter.isisOut[i] --> isis.lowerLayerIn[i];
+//            rbridgeSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
 
+			
             rbridgeSplitter.trillOut[i] --> trill.lowerLayerIn[i];
             rbridgeSplitter.trillIn[i] <-- trill.lowerLayerOut[i];
 
-            isis.trillOut[i] --> trill.isisIn[i];
-            isis.trillIn[i] <-- trill.isisOut[i];
+            isis.lowerLayerOut[i] --> trill.isisIn[i];
+            isis.lowerLayerIn[i] <-- trill.isisOut[i];
 
 
         }

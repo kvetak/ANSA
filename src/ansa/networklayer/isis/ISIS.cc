@@ -1127,7 +1127,7 @@ void ISIS::handleMessage(cMessage* msg)
                 break;
 
                 case (TRILL_HELLO):
-                //On PTP link process all Hellos
+
                 if (circuitType != RESERVED_TYPE)
                 {
                     this->handleTRILLHelloMsg(inMsg);
@@ -1546,7 +1546,7 @@ void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
             hello->setLanID(j, disId[j]);
 
         }
-
+        //TODO A1 change to define
         hello->setMaxAreas(1);
         hello->setPriority(d->getPriority());
         hello->setHoldTime(this->getHoldTime(this->getIfaceIndex(iface), circuitType));
@@ -1649,18 +1649,18 @@ void ISIS::sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex, short c
     {
 
         TRILLHelloPacket *trillHello = ((TRILLHelloPacket *) (*it))->dup();
-        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-        // set DSAP & NSAP fields
-        ctrl->setDsap(SAP_CLNS);
-        ctrl->setSsap(SAP_CLNS);
+//        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//        // set DSAP & NSAP fields
+//        ctrl->setDsap(SAP_CLNS);
+//        ctrl->setSsap(SAP_CLNS);
 
         //set appropriate destination MAC addresses
-        MACAddress ma;
-        ma.setAddress(ALL_IS_IS_RBRIDGES);
-        ctrl->setDest(ma);
+//        MACAddress ma;
+//        ma.setAddress(ALL_IS_IS_RBRIDGES);
+//        ctrl->setDest(ma);
 
         //assign Ethernet control info
-        trillHello->setControlInfo(ctrl);
+//        trillHello->setControlInfo(ctrl);
         this->send(trillHello, "lowerLayerOut", gateIndex);
 
     }

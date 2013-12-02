@@ -131,43 +131,43 @@ void RBridgeSplitter::handleMessage(cMessage *msg)
             //trillModule->learn(msg);
 
             //check integrity, ...
-
+            this->send(msg,"trillOut", gateIndex);
             //if ethertype == L2_ISIS AND Outer.MacDA == ALL-IS-IS-RBridges
-            if (frame->getEtherType() == ETHERTYPE_L2_ISIS)
-            {
-                if (trillModule->isAllowedByGate(frame->getVlan(), frame->getArrivalGate()->getIndex()))
-                {
-                    trillModule->learn(frame);
-                    Ieee802Ctrl *ctrl = (Ieee802Ctrl *) frame->getControlInfo();
-                    if (ctrl == NULL)
-                    {
-                        ctrl = new Ieee802Ctrl();
-                        ctrl->setSrc(frame->getSrc());
-                        ctrl->setDest(frame->getDest());
-                        ctrl->setEtherType(frame->getEtherType());
-
-                    }
-                    cPacket *packet = frame->decapsulate();
-                    packet->setControlInfo(ctrl->dup());
-                    this->send(packet, "isisOut", gateIndex);
-
-                    delete ctrl;
-                    delete msg;
-
-                }
-                else
-                {
-                    EV<<" Warning L2_ISIS frame with not-allowed vlan tag" << endl;
-
-                }
-
-                return;
-            }
-            //
-            else
-            {
-                this->send(msg,"trillOut", gateIndex);
-            }
+//            if (frame->getEtherType() == ETHERTYPE_L2_ISIS)
+//            {
+//                if (trillModule->isAllowedByGate(frame->getVlan(), frame->getArrivalGate()->getIndex()))
+//                {
+//                    trillModule->learn(frame);
+//                    Ieee802Ctrl *ctrl = (Ieee802Ctrl *) frame->getControlInfo();
+//                    if (ctrl == NULL)
+//                    {
+//                        ctrl = new Ieee802Ctrl();
+//                        ctrl->setSrc(frame->getSrc());
+//                        ctrl->setDest(frame->getDest());
+//                        ctrl->setEtherType(frame->getEtherType());
+//
+//                    }
+//                    cPacket *packet = frame->decapsulate();
+//                    packet->setControlInfo(ctrl->dup());
+//                    this->send(packet, "isisOut", gateIndex);
+//
+//                    delete ctrl;
+//                    delete msg;
+//
+//                }
+//                else
+//                {
+//                    EV<<" Warning L2_ISIS frame with not-allowed vlan tag" << endl;
+//
+//                }
+//
+//                return;
+//            }
+//            //
+//            else
+//            {
+//                this->send(msg,"trillOut", gateIndex);
+//            }
 
         }
         //
