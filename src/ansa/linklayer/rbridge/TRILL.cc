@@ -109,7 +109,8 @@ void TRILL::handleMessage(cMessage *msg) {
             /* Messages from ISIS module */
 //            reception(frameDesc, (ISISMessage*) msg);//TODO C1 handle returned value
             dispatchTRILLControl((ISISMessage*) msg);
-            return;
+//            delete msg;
+//            return;
 
         } else if (strcmp(msg->getArrivalGate()->getName(), "lowerLayerIn") == 0) {
             /* Messages from network */
@@ -121,6 +122,7 @@ void TRILL::handleMessage(cMessage *msg) {
                 //now determine the proper type
                 //getTRILL_Type
                 Ieee802Ctrl *ctrl;
+                cPacket *tmpPacket;
                 TRILL::FrameCategory cat;
                 switch(cat = classify(frameDesc)){
                     case TRILL::TRILL_L2_CONTROL:
@@ -148,9 +150,12 @@ void TRILL::handleMessage(cMessage *msg) {
 //                        send(msg->)
 //                        ctrl = (Ieee802Ctrl*)msg->getControlInfo();
 //                        ctrl->dup();
-                        frameDesc.payload->setControlInfo(frameDesc.ctrl->dup());
-//                        framed
-                        send(frameDesc.payload, "isisOut", frameDesc.rPort);
+//                        frameDesc.payload->setControlInfo(frameDesc.ctrl->dup());
+                        tmpPacket = frameDesc.payload->dup();
+                        tmpPacket->setControlInfo(frameDesc.ctrl->dup());
+                        send(tmpPacket, "isisOut", frameDesc.rPort);
+
+//                        processResult = true;
                         break;
                     case TRILL::TRILL_OTHER:
                         EV <<"Warning: TRILL: Received TRILL::OTHER frame so discarding" <<endl;
@@ -160,13 +165,14 @@ void TRILL::handleMessage(cMessage *msg) {
                         break;
                 }
 
-                if(processResult){
+//                if(processResult){
+//
+//
+//                }else{
+//                    delete msg;
+//                    return;
+//                }
 
-
-                }else{
-                    delete msg;
-                    return;
-                }
                 delete frameDesc.payload;
 
             }
@@ -322,10 +328,6 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPo
     tmp.dest = frame->getDest();
     tmp.etherType = frame->getEtherType();
     tmp.d = this->ift->getInterfaceByNetworkLayerGateIndex(rPort)->trillData();
-
-
-
-
 
     // VLAN Allowed
     if (vlanTable->isAllowed(frame->getVlan(), rPort) == false) {
@@ -498,12 +500,7 @@ void TRILL::dispatch(TRILL::tFrameDescriptor& frame) {
     delete untaggedFrame;
     return;
 }
-//bool TRILL::dispatchTRILLHello(TRILLHelloPacket* trillHello){
-//
-//
-//
-//    return true;
-//}
+
 /*
  * This method is for passing messages from IS-IS module to lowerLayer module
  * with encapsulating it in Ethernet frame.
@@ -559,19 +556,10 @@ bool TRILL::dispatchTRILLControl(ISISMessage* isisMsg){
     ctrl->setDsap(SAP_CLNS);
     ctrl->setSsap(SAP_CLNS);
     ctrl->setDest(MACAddress(ALL_IS_IS_RBRIDGES)); //ALL-IS-IS-RBridges
-//
+
 
     taggedFrame->setControlInfo(ctrl->dup());
     untaggedFrame->setControlInfo(ctrl->dup());
-
-    RBVLANTable::tVIDPortList::iterator it;
-//         for (it = frame.portList.begin(); it != frame.portList.end(); it++) {
-//             if (it->port >= portCount) {//TODO A! this needs to go to egress// do not send on received port
-//                 continue;
-//             }
-    //        if (spanningTree->forwarding(it->port, frame.VID) == false) {
-    //            continue;
-    //        }
 
     //TODO A1 This below is a mess. Get VLAN ID and port/gate index properly.
 
@@ -581,15 +569,15 @@ bool TRILL::dispatchTRILLControl(ISISMessage* isisMsg){
 
     if (action == RBVLANTable::INCLUDE)
     {
-        send(taggedFrame, "lowerLayerOut", port);
+        send(taggedFrame->dup(), "lowerLayerOut", port);
     }
     else
     {
         send(untaggedFrame->dup(), "lowerLayerOut", port);
     }
-//         }
 
-//    delete taggedFrame;
+
+    delete taggedFrame;
     delete untaggedFrame;
     delete ctrl;
     return true;
@@ -1415,7 +1403,10 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
     //check egress Nickname. if it is unknown or reserved -> discard
     tFrameDescriptor innerFrameDesc;
     TRILLFrame *trillFrame = static_cast<TRILLFrame *>(frameDesc.payload);
-    AnsaEtherFrame *innerFrame = static_cast<AnsaEtherFrame *>((frameDesc.payload->dup())->decapsulate());
+    cPacket *tmpPacket = frameDesc.payload->dup();
+
+    AnsaEtherFrame *innerFrame = static_cast<AnsaEtherFrame *>(tmpPacket->decapsulate());
+    delete tmpPacket;
 
     this->ingress(innerFrameDesc, innerFrame, frameDesc.rPort);
     this->learnTRILLData(innerFrameDesc, trillFrame->getIngressRBNickname());
@@ -1567,8 +1558,10 @@ bool TRILL::processTRILLDataMultiDest(tFrameDescriptor &frameDesc){
 
     //skipping additional check more info in RFC 6325 section 4.5.2.
     tFrameDescriptor innerFrameDesc;
+    cPacket *tmpPacket = frameDesc.payload->dup();
 
-    AnsaEtherFrame *innerFrame = static_cast<AnsaEtherFrame *>((frameDesc.payload->dup())->decapsulate());
+    AnsaEtherFrame *innerFrame = static_cast<AnsaEtherFrame *>(tmpPacket->decapsulate());
+    delete tmpPacket;
 
     this->ingress(innerFrameDesc, innerFrame, frameDesc.rPort);
 
