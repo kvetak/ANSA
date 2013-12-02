@@ -116,6 +116,7 @@ void IPv4::endService(cPacket *msg)
         handlePacketFromNetwork(dgram, fromIE);
     }else{
         //FIXME delete msg; ?
+        delete msg;
 
     }
 
