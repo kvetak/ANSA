@@ -44,10 +44,10 @@ std::ostream& operator<<(std::ostream& os, const AnsaIPv4MulticastRoute& e)
  */
 AnsaRoutingTable::~AnsaRoutingTable()
 {
-    for (unsigned int i=0; i<routes.size(); i++)
-        delete routes[i];
-    for (unsigned int i=0; i<multicastRoutes.size(); i++)
-        delete multicastRoutes[i];
+//    for (unsigned int i=0; i<routes.size(); i++)
+//        delete routes[i];
+//    for (unsigned int i=0; i<multicastRoutes.size(); i++)
+//        delete multicastRoutes[i];
 }
 
 IPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Address& netmask)
