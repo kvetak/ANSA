@@ -1,0 +1,26 @@
+<Devices>
+	<Switch id="Switch1">
+		<STP>
+			<Instance id="1">
+				<BridgePriority>16000</BridgePriority>
+				<ForwardDelay>5</ForwardDelay>
+				<MaxAge>6</MaxAge>
+				<HelloTimer>1</HelloTimer>
+			</Instance>
+		</STP>
+	</Switch>
+	<Switch id="Switch2">
+		<STP>
+			<Instance id="1">
+				<BridgePriority>32000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+	<Switch id="Switch3">
+		<STP>
+			<Instance id="1">
+				<BridgePriority>64000</BridgePriority>
+			</Instance>
+		</STP>
+	</Switch>
+</Devices>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<scenario>
+  <at t="110">
+    <disconnect src-module="rBridge2" src-gate="ethg[2]"/>
+  </at>
+  <at t="140">
+    <connect src-module="rBridge2" src-gate="ethg[2]" 
+             dest-module="rBridge3" dest-gate="ethg[0]"
+             channel-type="inet.nodes.ethernet.Eth100M"/>
+  </at>
+</scenario>

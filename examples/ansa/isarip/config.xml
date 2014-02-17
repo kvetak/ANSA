@@ -1,0 +1,98 @@
+<Devices>
+	<!--				 ROUTER R1 					-->
+	<Router id="R1">
+	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.13.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>10.0.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>            
+        </Interfaces>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+				<Passive-interface>eth1</Passive-interface>        		
+        	</RIP>
+        </Routing>
+        
+    </Router>
+    
+    <!--				 ROUTER R2 					-->
+    <Router id="R2">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.23.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>10.0.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+            </Interface>            
+        </Interfaces>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+        		<Passive-interface>eth1</Passive-interface>    			       	
+        	</RIP>
+        </Routing>
+        
+    </Router>
+    
+    <!--				 ROUTER R3 					-->
+    <Router id="R3">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.13.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>192.168.23.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>            
+        </Interfaces>
+        
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>	       					        	
+        	</RIP>
+        </Routing>
+        
+    </Router>        
+    
+    <!--				 HOST PC1 					-->
+    <Host id="PC1">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.1.99</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>10.0.1.1</DefaultRouter>
+		
+	</Host>	
+	
+    <!--				 HOST PC2 					-->
+    <Host id="PC2">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.2.99</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>10.0.2.1</DefaultRouter>
+		
+	</Host>
+			
+</Devices>

@@ -1,0 +1,11 @@
+<Devices>
+	<Switch id="Switch1">
+		<Hostname>Foo</Hostname>
+		<Interfaces>
+			<Interface id="0">
+				<Name>SW2</Name>
+				<VLAN>0</VLAN>
+			</Interface>
+		</Interfaces>
+	</Switch>
+</Devices>

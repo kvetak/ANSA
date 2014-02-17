@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+
+<Routers>
+<!-- Host1 -->
+	<Host id="Host1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>172.16.30.100</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>172.16.30.1</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Host>
+	<!-- Host2 -->
+	<Host id="Host2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>172.16.30.101</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>172.16.30.1</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Host>
+	  <Switch id="switch1">
+  		<VLANs>
+					
+		</VLANs>		
+	</Switch>
+	<Switch id="switch2">
+	</Switch>
+	<Switch id="switch3">		
+	</Switch>
+	<Switch id="switch4">		
+	</Switch>
+	<Switch id="switch5">		
+	</Switch>
+	<Switch id="switch6">		
+	</Switch>
+</Routers>

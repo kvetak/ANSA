@@ -1,0 +1,66 @@
+<Devices>
+	<Router id="Router1">
+		<Routing6>
+		</Routing6>
+		<Interfaces>
+			<Interface name="eth0">
+        		<IPv6Address>2001:1:1:1::1/64</IPv6Address>	
+			</Interface>
+			<Interface name="eth1">
+        		<IPv6Address>2001:2:2:2::2/64</IPv6Address>	
+			</Interface>
+    	</Interfaces>
+	</Router>
+	<Router id="Router2">
+		<Routing6>
+		</Routing6>
+		<Interfaces>
+			<Interface name="eth0">
+        		<IPv6Address>2001:1:1:1::2/64</IPv6Address>	
+			</Interface>
+			<Interface name="eth1">
+        		<IPv6Address>2001:2:2:2::1/64</IPv6Address>	
+			</Interface>
+    	</Interfaces>
+	</Router>
+	<Host id="Bratislava1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:1:1:1::10/64</IPAddress6>
+                <MCastGroups6>
+               	</MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:1:1:1::1</DefaultRouter6>
+	</Host>
+	<Host id="Bratislava2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:1:1:1::20/64</IPAddress6>
+                <MCastGroups6>
+               	</MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:1:1:1::1</DefaultRouter6>
+	</Host>
+	<Host id="Brno1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:2:2:2::10/64</IPAddress6>
+                <MCastGroups6>
+               	</MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:2:2:2::2</DefaultRouter6>
+	</Host>
+	<Host id="Brno2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress6>2001:2:2:2::20/64</IPAddress6>
+                <MCastGroups6>
+                </MCastGroups6>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter6>2001:2:2:2::2</DefaultRouter6>
+	</Host>
+</Devices>
