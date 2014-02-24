@@ -501,20 +501,3 @@ bool xmlParser::HasVRPPGroup(cXMLElement* group, int *groupId)
 
     return true;
 }
-
-cXMLElement* xmlParser::GetLISPMapServers(cXMLElement *ms, cXMLElement *device)
-{
-    if (device != NULL){
-       cXMLElement* mss = device->getFirstChildWithTag("MapServer");
-       if (mss == NULL)
-          return NULL;
-       ms = mss->getFirstChildWithTag("MapServer");
-    }
-    else if (ms != NULL){
-       ms = ms->getNextSiblingWithTag("MapServer");
-    }
-    else{
-       ms = NULL;
-    }
-    return ms;
-}

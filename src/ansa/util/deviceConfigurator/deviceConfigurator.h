@@ -60,8 +60,6 @@
 #include "VRRPv2.h"
 #include "VRRPv2VirtualRouter.h"
 
-#include "LISPCore.h"
-
 /* TRILL */
 #include "TRILLAccess.h"
 /* IS-IS */
@@ -202,10 +200,6 @@ class DeviceConfigurator : public cSimpleModule {
       void loadVRRPv2Config(VRRPv2* VRRPModule);
       void loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule);
 
-      //////////////////////////////
-      // Configuration for LISP   //
-      //////////////////////////////
-      void loadLISPConfig(LISPCore* LISPModule);
 
 };
 

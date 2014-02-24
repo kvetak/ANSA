@@ -39,13 +39,10 @@ Define_Module(AnsaIPv4);
  */
 void AnsaIPv4::initialize(int stage)
 {
-    if (stage < 1)
-        return;
-
     QueueBase::initialize();
 
     ift = InterfaceTableAccess().get();
-    rt = ModuleAccess<AnsaRoutingTable>("routingTable").get();
+    rt = AnsaRoutingTableAccess().get();
     nb = NotificationBoardAccess().get();
     pimIft = PimInterfaceTableAccess().getIfExists();               // For recognizing PIM mode
 

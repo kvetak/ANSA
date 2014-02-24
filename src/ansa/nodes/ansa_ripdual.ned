@@ -33,8 +33,7 @@ import inet.linklayer.IWirelessNic;
 import inet.linklayer.IWiredNic;
 import inet.linklayer.IExternalNic;
 import inet.base.NotificationBoard;
-//import inet.nodes.inet.NetworkLayer;
-import inet.ansa.nodes.inet.ansaNetworkLayer;
+import inet.nodes.inet.NetworkLayer;
 import inet.nodes.ipv6.NetworkLayer6;
 
 
@@ -95,7 +94,7 @@ module ANSA_RouterRIPDual
         }
 
         // network layers        
-        networkLayer: ansaNetworkLayer {
+        networkLayer: NetworkLayer {
             parameters:
                 @display("p=242,311;q=queue");
             gates:

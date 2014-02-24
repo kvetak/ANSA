@@ -68,9 +68,6 @@ class xmlParser {
       static cXMLElement *GetVRRPGroup(cXMLElement *group, cXMLElement *iface);
       static cXMLElement *GetVRRPGroup(cXMLElement *device, const char* name, const char* groupId);
       static bool HasVRPPGroup(cXMLElement* group, int *groupId);
-
-      // configuration for LISP
-      static cXMLElement* GetLISPMapServers(cXMLElement *ms, cXMLElement *device);
 };
 
 #endif /* XMLPARSER_H_ */
