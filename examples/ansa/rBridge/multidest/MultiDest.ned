@@ -3,22 +3,22 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 package inet.examples.ansa.rBridge.multidest;
 
 import inet.ansa.RBridge;
 import inet.ansa.nodes.inet.AnsaHost;
 import inet.nodes.ethernet.Eth100M;
-
+import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
 //
 // TODO Auto-generated network
@@ -27,6 +27,17 @@ network MultiDest
 {
     @display("bgb=509,354");
     submodules:
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+                config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;
+                @display("p=42,305");
+        }
         rBridge1: RBridge {
             @display("p=113,90");
             gates:

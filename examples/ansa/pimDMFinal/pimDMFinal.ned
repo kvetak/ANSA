@@ -24,12 +24,24 @@ import inet.ansa.networklayer.pim.PIMRouter;
 import inet.ansa.nodes.inet.AnsaHost;
 import inet.nodes.ethernet.Eth100M;
 import inet.world.scenario.ScenarioManager;
+import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
 network pimDMFinal
 {
     @display("bgb=448,352,white");
 
     submodules:
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+                config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;
+                @display("p=54,40");
+        }
         R1: PIMRouter {
             @display("p=208,102");
         }

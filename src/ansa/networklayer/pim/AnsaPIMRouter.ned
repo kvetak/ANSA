@@ -26,6 +26,7 @@ import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.networklayer.pim.pim;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.ansa.nodes.inet.ansaNetworkLayer;
+import inet.linklayer.loopback.LoopbackInterface;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 //import inet.networklayer.ipv6.RoutingTable6;
@@ -106,6 +107,9 @@ module PIMRouter
             @display("p=80,210");
         }
 
+        lo0: LoopbackInterface {
+            @display("p=317,191");
+        }
     connections allowunconnected:
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
@@ -118,6 +122,10 @@ module PIMRouter
             ppp[i].upperLayerOut --> networkLayer.ifIn++;
             ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
+
+        lo0.upperLayerOut --> networkLayer.ifIn++;
+        lo0.upperLayerIn <-- networkLayer.ifOut++;
+
         PIM.networkLayerOut --> networkLayer.pimIn;
         PIM.networkLayerIn <-- networkLayer.pimOut;
 
