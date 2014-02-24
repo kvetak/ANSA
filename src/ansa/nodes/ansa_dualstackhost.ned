@@ -28,7 +28,7 @@ import inet.transport.ITCP;
 import inet.transport.IUDP;
 import inet.networklayer.ipv4.RoutingTable;
 import inet.networklayer.ipv6.RoutingTable6;
-import inet.nodes.inet.NetworkLayer;
+import inet.ansa.nodes.inet.ansaNetworkLayer;
 import inet.nodes.ipv6.NetworkLayer6;
 import inet.networklayer.common.InterfaceTable;
 import inet.mobility.IMobility;
@@ -136,7 +136,7 @@ module ANSA_DualStackHost
         }
 
         // network layer
-        networkLayer: NetworkLayer {
+        networkLayer: ansaNetworkLayer {
             parameters:
                 @display("p=290,348;q=queue");
             gates:

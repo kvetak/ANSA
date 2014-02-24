@@ -46,6 +46,7 @@
 #include "IPv6InterfaceData.h"
 #include "IPv4Address.h"
 #include "xmlParser.h"
+#include "LISPCore.h"
 
 Define_Module(DeviceConfigurator);
 
@@ -2135,7 +2136,7 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
             if ((*routeElemIt)->hasAttributes()) {
                 int value = 0;
                 if (!xmlParser::Str2Int(&value, (*routeElemIt)->getAttribute("delay")))
-                    throw cRuntimeError("Unable to parse valid Preemtion delay %s on interface %s", value, VRRPModule->getInterface()->getName());
+                    throw cRuntimeError("Unable to parse valid Preemption delay %s on interface %s", value, VRRPModule->getInterface()->getName());
 
                 VRRPModule->setPreemtionDelay(value);
             }
@@ -2156,5 +2157,31 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
             }
             VRRPModule->setLearn(value);
         }
+    }
+}
+
+void DeviceConfigurator::loadLISPConfig(LISPCore* LISPModule)
+{
+    ASSERT(LISPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    cXMLElement *mss = xmlParser::GetLISPMapServers(NULL, device);
+    while (mss != NULL) {
+        if (mss->hasAttributes()) {
+            std::string mssv4 = mss->getAttribute("ipv4");
+            std::string mssv6 = mss->getAttribute("ipv6");
+            EV << "MapServer" << mssv4 << "   " << mssv6 << endl;
+        }
+        mss = xmlParser::GetLISPMapServers(mss, device);
     }
 }

@@ -17,11 +17,25 @@
 //@author Vladimir Vesely (<a href="mailto:ivesely@fit.vutbr.cz">ivesely@fit.vutbr.cz</a>)
 
 #include "LISPCore.h"
+#include "deviceConfigurator.h"
 
 Define_Module(LISPCore);
 
-void LISPCore::initialize()
+LISPCore::LISPCore()
 {
+
+}
+LISPCore::~LISPCore()
+{
+    mss->clear();
+    mrs->clear();
+}
+
+
+void LISPCore::initialize(int stage)
+{
+    if (stage < 3)
+        return;
     // access to the routing and interface table
     rt = AnsaRoutingTableAccess().get();
     ift = InterfaceTableAccess().get();
@@ -29,9 +43,13 @@ void LISPCore::initialize()
     nb = NotificationBoardAccess().get();
     // get deviceId
     deviceId = par("deviceId");
-    // read the RIP process configuration
-    devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    //devConf->loadLISPConfig(this);
+    // local MapCache
+    lmc =  ModuleAccess<LISPMapCache>("mapCache").get();
+
+    deviceId = par("deviceId");
+    DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    devConf->loadLISPConfig(this);
+
     //socket.setOutputGate(gate("udpOut"));
     //socket.bind(4341);
     //setSocketOptions();
@@ -39,6 +57,8 @@ void LISPCore::initialize()
 
 void LISPCore::handleMessage(cMessage *msg)
 {
+
+
 
 }
 

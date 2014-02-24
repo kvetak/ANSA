@@ -20,7 +20,7 @@ package inet.ansa.nodes.lisp;
 //
 // TODO auto-generated type
 //
-module ANSA_MRMS
+module ANSA_MRMS extends ANSA_xTR
 {
     @display("i=abstract/table");
 }
