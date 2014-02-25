@@ -21,8 +21,8 @@ simple RBridgeSplitter
         @display("i=block/routing");
 
     gates:
-        input lowerLayerIn[];
-        output lowerLayerOut[];
+        input ifIn[];
+        output ifOut[];
         input isisIn[];
         output isisOut[];
         input trillIn[];

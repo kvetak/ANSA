@@ -155,8 +155,8 @@ module RBridge
             parameters:
                 @display("p=154,295;is=l");
             gates:
-                lowerLayerIn[sizeof(ethg)];
-                lowerLayerOut[sizeof(ethg)];
+                ifIn[sizeof(ethg)];
+                ifOut[sizeof(ethg)];
                 isisIn[sizeof(ethg)];
                 isisOut[sizeof(ethg)];
                 trillIn[sizeof(ethg)];
@@ -170,8 +170,15 @@ module RBridge
             ethg[i] <--> eth[i].phys;
             //            mac[i].upperLayerOut --> rbridgeSplitter.lowerLayerIn[i];
             //            mac[i].upperLayerIn <-- rbridgeSplitter.lowerLayerOut[i];
-            eth[i].upperLayerOut --> rbridgeSplitter.lowerLayerIn[i];
-            eth[i].upperLayerIn <-- rbridgeSplitter.lowerLayerOut[i];
+            
+            
+//            eth[i].upperLayerOut --> rbridgeSplitter.lowerLayerIn[i];
+//            eth[i].upperLayerIn <-- rbridgeSplitter.lowerLayerOut[i];
+            
+            eth[i].upperLayerOut --> rbridgeSplitter.ifIn[i];
+            eth[i].upperLayerIn <-- rbridgeSplitter.ifOut[i];
+            
+            
 //            rbridgeSplitter.isisOut[i] --> isis.lowerLayerIn[i];
 //            rbridgeSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
 

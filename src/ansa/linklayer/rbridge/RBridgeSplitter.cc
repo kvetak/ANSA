@@ -52,7 +52,7 @@ void RBridgeSplitter::handleMessage(cMessage *msg)
     // packet coming from network layer modules within the router
  if (gateName == "upperLayerIn" || gateName == "trillIn")
     {
-        this->send(msg, "lowerLayerOut", gateIndex);
+        this->send(msg, "ifOut", gateIndex);
     }
     else
     {
