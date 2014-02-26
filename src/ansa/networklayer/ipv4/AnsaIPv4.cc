@@ -39,36 +39,66 @@ Define_Module(AnsaIPv4);
  */
 void AnsaIPv4::initialize(int stage)
 {
-    QueueBase::initialize();
+    if (stage == 0)
+    {
+        QueueBase::initialize();
 
-    ift = InterfaceTableAccess().get();
-    rt = AnsaRoutingTableAccess().get();
-    nb = NotificationBoardAccess().get();
-    pimIft = PimInterfaceTableAccess().getIfExists();               // For recognizing PIM mode
+        ift = InterfaceTableAccess().get();
+        rt = AnsaRoutingTableAccess().get();
+        nb = NotificationBoardAccess().get();
 
-    queueOutGate = gate("queueOut");
+        pimIft = PimInterfaceTableAccess().getIfExists();               // For recognizing PIM mode
 
-    defaultTimeToLive = par("timeToLive");
-    defaultMCTimeToLive = par("multicastTimeToLive");
-    fragmentTimeoutTime = par("fragmentTimeout");
-    forceBroadcast = par("forceBroadcast");
-    mapping.parseProtocolMapping(par("protocolMapping"));
+        queueOutGate = gate("queueOut");
 
-    curFragmentId = 0;
-    lastCheckTime = 0;
-    fragbuf.init(icmpAccess.get());
+        defaultTimeToLive = par("timeToLive");
+        defaultMCTimeToLive = par("multicastTimeToLive");
+        fragmentTimeoutTime = par("fragmentTimeout");
+        forceBroadcast = par("forceBroadcast");
+        mapping.parseProtocolMapping(par("protocolMapping"));
 
-    numMulticast = numLocalDeliver = numDropped = numUnroutable = numForwarded = 0;
+        curFragmentId = 0;
+        lastCheckTime = 0;
+        fragbuf.init(icmpAccess.get());
 
-    WATCH(numMulticast);
-    WATCH(numLocalDeliver);
-    WATCH(numDropped);
-    WATCH(numUnroutable);
-    WATCH(numForwarded);
+        numMulticast = numLocalDeliver = numDropped = numUnroutable = numForwarded = 0;
 
-    // by default no MANET routing
-    manetRouting = false;
+        WATCH(numMulticast);
+        WATCH(numLocalDeliver);
+        WATCH(numDropped);
+        WATCH(numUnroutable);
+        WATCH(numForwarded);
 
+        // by default no MANET routing
+        manetRouting = false;
+
+#ifdef WITH_MANET
+        // test for the presence of MANET routing
+        // check if there is a protocol -> gate mapping
+        int gateindex = mapping.getOutputGateForProtocol(IP_PROT_MANET);
+        if (gateSize("transportOut")-1<gateindex)
+            return;
+
+        // check if that gate is connected at all
+        cGate *manetgate = gate("transportOut", gateindex)->getPathEndGate();
+        if (manetgate==NULL)
+            return;
+
+        cModule *destmod = manetgate->getOwnerModule();
+        if (destmod==NULL)
+            return;
+
+        // manet routing will be turned on ONLY for routing protocols which has the @reactive property set
+        // this prevents performance loss with other protocols that use pro active routing and do not need
+        // assistance from the IPv4 component
+        cProperties *props = destmod->getProperties();
+        manetRouting = props && props->getAsBool("reactive");
+#endif
+    }
+    else if (stage == 1)
+    {
+        isUp = isNodeUp();
+    }
 }
 
 
@@ -95,7 +125,6 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         }
     }
 
-
     // remove control info, but keep the one on the last fragment of DSR and MANET datagrams
     if (datagram->getTransportProtocol()!=IP_PROT_DSR && datagram->getTransportProtocol()!=IP_PROT_MANET
             && !datagram->getDestAddress().isMulticast() && datagram->getTransportProtocol()!=IP_PROT_PIM)
@@ -104,7 +133,6 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
     }
     else if (datagram->getMoreFragments())
         delete datagram->removeControlInfo(); // delete all control message except the last
-
 
     //MYWORK Add all neccessery info to the IP Control Info for future use.
     if (datagram->getDestAddress().isMulticast() || datagram->getTransportProtocol() == IP_PROT_PIM)
@@ -115,6 +143,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         ctrl->setInterfaceId(getSourceInterfaceFrom(datagram)->getInterfaceId());
         datagram->setControlInfo(ctrl);
     }
+
 
     // route packet
     IPv4Address &destAddr = datagram->getDestAddress();
@@ -220,10 +249,18 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
  */
 void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, InterfaceEntry *fromIE)
 {
+    ASSERT(fromIE);
     IPv4Address destAddr = datagram->getDestAddress();
     IPv4Address srcAddr = datagram->getSrcAddress();
     IPv4ControlInfo *ctrl = (IPv4ControlInfo *) datagram->getControlInfo();
+    ASSERT(destAddr.isMulticast());
+    ASSERT(!destAddr.isLinkLocalMulticast());
+
+    if (!nb)
+        throw cRuntimeError("If multicast forwarding is enabled, then the node must contain a NotificationBoard.");
+
     EV << "Routing multicast datagram `" << datagram->getName() << "' with dest=" << destAddr << "\n";
+
     AnsaIPv4MulticastRoute *route = rt->getRouteFor(destAddr, srcAddr);
     AnsaIPv4MulticastRoute *routeG = rt->getRouteFor(destAddr, IPv4Address::UNSPECIFIED_ADDRESS);
 
@@ -338,7 +375,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     // refresh output in MRT
     rt->generateShowIPMroute();
     // only copies sent, delete original datagram
-    delete datagram;
+    //delete datagram;
 }
 
 void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
@@ -425,85 +462,6 @@ void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute
             && (route->getRegStatus(intToRP->getInterfaceId()) == AnsaIPv4MulticastRoute::Join))
         nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
 }
-
-void AnsaIPv4::reassembleAndDeliver(IPv4Datagram *datagram)
-{
-    EV << "Local delivery\n";
-
-    if (datagram->getSrcAddress().isUnspecified())
-        EV << "Received datagram '%s' without source address filled in" << datagram->getName() << "\n";
-
-    // reassemble the packet (if fragmented)
-    if (datagram->getFragmentOffset()!=0 || datagram->getMoreFragments())
-    {
-        EV << "Datagram fragment: offset=" << datagram->getFragmentOffset()
-           << ", MORE=" << (datagram->getMoreFragments() ? "true" : "false") << ".\n";
-
-        // erase timed out fragments in fragmentation buffer; check every 10 seconds max
-        if (simTime() >= lastCheckTime + 10)
-        {
-            lastCheckTime = simTime();
-            fragbuf.purgeStaleFragments(simTime()-fragmentTimeoutTime);
-        }
-
-        datagram = fragbuf.addFragment(datagram, simTime());
-        if (!datagram)
-        {
-            EV << "No complete datagram yet.\n";
-            return;
-        }
-        EV << "This fragment completes the datagram.\n";
-    }
-
-    // decapsulate and send on appropriate output gate
-    int protocol = datagram->getTransportProtocol();
-
-    if (protocol==IP_PROT_ICMP)
-    {
-        // incoming ICMP packets are handled specially
-        handleReceivedICMP(check_and_cast<ICMPMessage *>(decapsulate(datagram)));
-        numLocalDeliver++;
-    }
-    else if (protocol==IP_PROT_IP)
-    {
-        // tunnelled IP packets are handled separately
-        send(decapsulate(datagram), "preRoutingOut");  //FIXME There is no "preRoutingOut" gate in the IPv4 module.
-    }
-    else if (protocol==IP_PROT_PIM)
-    {
-        cPacket *packet = decapsulate(datagram);
-        send(packet, "transportOut", mapping.getOutputGateForProtocol(IP_PROT_PIM));
-        return;
-    }
-    else if (protocol==IP_PROT_DSR)
-    {
-#ifdef WITH_MANET
-        // If the protocol is Dsr Send directely the datagram to manet routing
-        if (manetRouting)
-            sendToManet(datagram);
-#else
-        throw cRuntimeError("DSR protocol packet received, but MANET routing support is not available.");
-#endif
-    }
-    else
-    {
-        // JcM Fix: check if the transportOut port are connected, otherwise
-        // discard the packet
-        int gateindex = mapping.getOutputGateForProtocol(protocol);
-
-        if (gate("transportOut", gateindex)->isPathOK())
-        {
-            send(decapsulate(datagram), "transportOut", gateindex);
-            numLocalDeliver++;
-        }
-        else
-        {
-            EV << "L3 Protocol not connected. discarding packet" << endl;
-            icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE, ICMP_DU_PROTOCOL_UNREACHABLE);
-        }
-    }
-}
-
 
 void AnsaIPv4::handleMessageFromHL(cPacket *msg)
 {
@@ -629,18 +587,15 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
         {
             // if the interface is broadcast we must search the next hop
             const IPv4Route *re = rt->findBestMatchingRoute(destAddr);
-            if (re && (re->getSource() != IPv4Route::MANET || re->getDestination()==destAddr) &&
-                    re->getInterface() == destIE)
+            if (re && re->getInterface() == destIE)
                 nextHopAddr = re->getGateway();
         }
     }
     else
     {
         // use IPv4 routing (lookup in routing table)
-        //    FIXME MANET routes should use 255.255.255.255 netmask,
-        //          to eliminate the equality check below.
         const IPv4Route *re = rt->findBestMatchingRoute(destAddr);
-        if (re && (re->getSource() != IPv4Route::MANET || re->getDestination() == destAddr))
+        if (re)
         {
             destIE = re->getInterface();
             nextHopAddr = re->getGateway();
@@ -674,6 +629,167 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
         numForwarded++;
         fragmentAndSend(datagram, destIE, nextHopAddr, vforwarder);
     }
+}
+
+void AnsaIPv4::reassembleAndDeliver(IPv4Datagram *datagram)
+{
+    EV << "Local delivery\n";
+
+    if (datagram->getSrcAddress().isUnspecified())
+        EV << "Received datagram '%s' without source address filled in" << datagram->getName() << "\n";
+
+    // reassemble the packet (if fragmented)
+    if (datagram->getFragmentOffset()!=0 || datagram->getMoreFragments())
+    {
+        EV << "Datagram fragment: offset=" << datagram->getFragmentOffset()
+           << ", MORE=" << (datagram->getMoreFragments() ? "true" : "false") << ".\n";
+
+        // erase timed out fragments in fragmentation buffer; check every 10 seconds max
+        if (simTime() >= lastCheckTime + 10)
+        {
+            lastCheckTime = simTime();
+            fragbuf.purgeStaleFragments(simTime()-fragmentTimeoutTime);
+        }
+
+        datagram = fragbuf.addFragment(datagram, simTime());
+        if (!datagram)
+        {
+            EV << "No complete datagram yet.\n";
+            return;
+        }
+        EV << "This fragment completes the datagram.\n";
+    }
+
+    // decapsulate and send on appropriate output gate
+    int protocol = datagram->getTransportProtocol();
+
+    if (protocol==IP_PROT_ICMP)
+    {
+        // incoming ICMP packets are handled specially
+        handleReceivedICMP(check_and_cast<ICMPMessage *>(decapsulate(datagram)));
+        numLocalDeliver++;
+    }
+    else if (protocol==IP_PROT_IP)
+    {
+        // tunnelled IP packets are handled separately
+        send(decapsulate(datagram), "preRoutingOut");  //FIXME There is no "preRoutingOut" gate in the IPv4 module.
+    }
+    else if (protocol==IP_PROT_PIM)
+    {
+        cPacket *packet = decapsulate(datagram);
+        send(packet, "transportOut", mapping.getOutputGateForProtocol(IP_PROT_PIM));
+        return;
+    }
+    else if (protocol==IP_PROT_DSR)
+    {
+#ifdef WITH_MANET
+        // If the protocol is Dsr Send directely the datagram to manet routing
+        if (manetRouting)
+            sendToManet(datagram);
+#else
+        throw cRuntimeError("DSR protocol packet received, but MANET routing support is not available.");
+#endif
+    }
+    else
+    {
+        // JcM Fix: check if the transportOut port are connected, otherwise
+        // discard the packet
+        int gateindex = mapping.getOutputGateForProtocol(protocol);
+
+        if (gate("transportOut", gateindex)->isPathOK())
+        {
+            send(decapsulate(datagram), "transportOut", gateindex);
+            numLocalDeliver++;
+        }
+        else
+        {
+            EV << "L3 Protocol not connected. discarding packet" << endl;
+            icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE, ICMP_DU_PROTOCOL_UNREACHABLE);
+        }
+    }
+}
+
+void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarder)
+{
+    // fill in source address
+    if (datagram->getSrcAddress().isUnspecified())
+        datagram->setSrcAddress(ie->ipv4Data()->getIPAddress());
+
+    // hop counter decrement; but not if it will be locally delivered
+    if (!ie->isLoopback())
+        datagram->setTimeToLive(datagram->getTimeToLive()-1);
+
+    // hop counter check
+    if (datagram->getTimeToLive() < 0)
+    {
+        // drop datagram, destruction responsibility in ICMP
+        EV << "datagram TTL reached zero, sending ICMP_TIME_EXCEEDED\n";
+        icmpAccess.get()->sendErrorMessage(datagram, ICMP_TIME_EXCEEDED, 0);
+        numDropped++;
+        return;
+    }
+
+    int mtu = ie->getMTU();
+
+    // check if datagram does not require fragmentation
+    if (datagram->getByteLength() <= mtu)
+    {
+        sendDatagramToOutput(datagram, ie, nextHopAddr, vforwarder);
+        return;
+    }
+
+    // if "don't fragment" bit is set, throw datagram away and send ICMP error message
+    if (datagram->getDontFragment())
+    {
+        EV << "datagram larger than MTU and don't fragment bit set, sending ICMP_DESTINATION_UNREACHABLE\n";
+        icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE,
+                                                     ICMP_FRAGMENTATION_ERROR_CODE);
+        numDropped++;
+        return;
+    }
+
+    // optimization: do not fragment and reassemble on the loopback interface
+    if (ie->isLoopback())
+    {
+        sendDatagramToOutput(datagram, ie, nextHopAddr, vforwarder);
+        return;
+    }
+
+    // FIXME some IP options should not be copied into each fragment, check their COPY bit
+    int headerLength = datagram->getHeaderLength();
+    int payloadLength = datagram->getByteLength() - headerLength;
+    int fragmentLength = ((mtu - headerLength) / 8) * 8; // payload only (without header)
+    int offsetBase = datagram->getFragmentOffset();
+
+    int noOfFragments = (payloadLength + fragmentLength - 1)/ fragmentLength;
+    EV << "Breaking datagram into " << noOfFragments << " fragments\n";
+
+    // create and send fragments
+    std::string fragMsgName = datagram->getName();
+    fragMsgName += "-frag";
+
+    for (int offset=0; offset < payloadLength; offset+=fragmentLength)
+    {
+        bool lastFragment = (offset+fragmentLength >= payloadLength);
+        // length equal to fragmentLength, except for last fragment;
+        int thisFragmentLength = lastFragment ? payloadLength - offset : fragmentLength;
+
+        // FIXME is it ok that full encapsulated packet travels in every datagram fragment?
+        // should better travel in the last fragment only. Cf. with reassembly code!
+        IPv4Datagram *fragment = (IPv4Datagram *) datagram->dup();
+        fragment->setName(fragMsgName.c_str());
+
+        // "more fragments" bit is unchanged in the last fragment, otherwise true
+        if (!lastFragment)
+            fragment->setMoreFragments(true);
+
+        fragment->setByteLength(headerLength + thisFragmentLength);
+        fragment->setFragmentOffset(offsetBase + offset);
+
+        sendDatagramToOutput(fragment, ie, nextHopAddr, vforwarder);
+    }
+
+    delete datagram;
 }
 
 
@@ -781,85 +897,3 @@ void AnsaIPv4::sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, 
     send(datagram, queueOutGate);
 }
 
-void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarder)
-{
-    // fill in source address
-    if (datagram->getSrcAddress().isUnspecified())
-        datagram->setSrcAddress(ie->ipv4Data()->getIPAddress());
-
-    // hop counter decrement; but not if it will be locally delivered
-    if (!ie->isLoopback())
-        datagram->setTimeToLive(datagram->getTimeToLive()-1);
-
-    // hop counter check
-    if (datagram->getTimeToLive() < 0)
-    {
-        // drop datagram, destruction responsibility in ICMP
-        EV << "datagram TTL reached zero, sending ICMP_TIME_EXCEEDED\n";
-        icmpAccess.get()->sendErrorMessage(datagram, ICMP_TIME_EXCEEDED, 0);
-        numDropped++;
-        return;
-    }
-
-    int mtu = ie->getMTU();
-
-    // check if datagram does not require fragmentation
-    if (datagram->getByteLength() <= mtu)
-    {
-        sendDatagramToOutput(datagram, ie, nextHopAddr, vforwarder);
-        return;
-    }
-
-    // if "don't fragment" bit is set, throw datagram away and send ICMP error message
-    if (datagram->getDontFragment())
-    {
-        EV << "datagram larger than MTU and don't fragment bit set, sending ICMP_DESTINATION_UNREACHABLE\n";
-        icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE,
-                                                     ICMP_FRAGMENTATION_ERROR_CODE);
-        numDropped++;
-        return;
-    }
-
-    // optimization: do not fragment and reassemble on the loopback interface
-    if (ie->isLoopback())
-    {
-        sendDatagramToOutput(datagram, ie, nextHopAddr, vforwarder);
-        return;
-    }
-
-    // FIXME some IP options should not be copied into each fragment, check their COPY bit
-    int headerLength = datagram->getHeaderLength();
-    int payloadLength = datagram->getByteLength() - headerLength;
-    int fragmentLength = ((mtu - headerLength) / 8) * 8; // payload only (without header)
-    int offsetBase = datagram->getFragmentOffset();
-
-    int noOfFragments = (payloadLength + fragmentLength - 1)/ fragmentLength;
-    EV << "Breaking datagram into " << noOfFragments << " fragments\n";
-
-    // create and send fragments
-    std::string fragMsgName = datagram->getName();
-    fragMsgName += "-frag";
-
-    for (int offset=0; offset < payloadLength; offset+=fragmentLength)
-    {
-        bool lastFragment = (offset+fragmentLength >= payloadLength);
-        // length equal to fragmentLength, except for last fragment;
-        int thisFragmentLength = lastFragment ? payloadLength - offset : fragmentLength;
-
-        // FIXME is it ok that full encapsulated packet travels in every datagram fragment?
-        // should better travel in the last fragment only. Cf. with reassembly code!
-        IPv4Datagram *fragment = (IPv4Datagram *) datagram->dup();
-        fragment->setName(fragMsgName.c_str());
-
-        // "more fragments" bit is unchanged in the last fragment, otherwise true
-        if (!lastFragment)
-            fragment->setMoreFragments(true);
-
-        fragment->setByteLength(headerLength + thisFragmentLength);
-        fragment->setFragmentOffset(offsetBase + offset);
-
-        sendDatagramToOutput(fragment, ie, nextHopAddr, vforwarder);
-    }
-
-    delete datagram;
-}
