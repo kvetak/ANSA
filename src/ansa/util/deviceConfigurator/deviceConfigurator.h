@@ -59,6 +59,7 @@
 #include "pimSM.h"
 #include "VRRPv2.h"
 #include "VRRPv2VirtualRouter.h"
+#include "IEigrpModule.h"
 
 /* TRILL */
 #include "TRILLAccess.h"
@@ -135,6 +136,22 @@ class DeviceConfigurator : public cSimpleModule {
       ///////////////////////////
       void loadPimInterfaceConfig(cXMLElement *iface);
 
+      /////////////////////////////
+      // configuration for EIGRP //
+      /////////////////////////////
+      /**< Gets interfaces that correspond to the IP address and mask */
+      std::vector<int> getInterfacesByIpv4Prefix(const IPv4Address& prefix, const IPv4Address& mask);
+      /**< Converts wildcard to netmask and check validity */
+      bool wildcardToMask(const char *wildcard, IPv4Address& result);
+      /**< Loads configuration of EIGRP process */
+      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule *eigrpModule);
+      /**< Loads configuration of interface for EIGRP */
+      void loadEigrpInterfaceConfig(cXMLElement *device, IEigrpModule *eigrpModule);
+      /**< Loads networks added to EIGRP */
+      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule);
+      /**< Loads K-value and converts it to number */
+      int loadEigrpKValue(cXMLElement *node, const char *attrName, const char *attrValue);
+
    public:
       // global configuration for PIM
       void loadPimGlobalConfig(pimSM *pimSMModule);
@@ -199,6 +216,16 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadVRRPv2Config(VRRPv2* VRRPModule);
       void loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRPModule);
+
+      /////////////////////////////
+      // configuration for EIGRP //
+      /////////////////////////////
+      /**
+       * Loads configuration for EIGRP
+       * @param eigrpModule [in]
+       */
+      void loadEigrpIPv4Config(IEigrpModule *eigrpModule);
+
 
 
 };

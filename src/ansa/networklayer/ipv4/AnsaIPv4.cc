@@ -183,6 +183,13 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
             send(packet, "transportOut", mapping.getOutputGateForProtocol(IP_PROT_PIM));
             return;
         }
+        // send EIGRP packet to EIGRP module
+        else if (datagram->getTransportProtocol() == IP_PROT_EIGRP)
+        {
+            cPacket *packet = decapsulate(datagram);
+            send(packet, "transportOut", mapping.getOutputGateForProtocol(IP_PROT_EIGRP));
+            return;
+        }
 
         // don't forward if IP forwarding is off, or if dest address is link-scope
         if (!rt->isIPForwardingEnabled() || destAddr.isLinkLocalMulticast())

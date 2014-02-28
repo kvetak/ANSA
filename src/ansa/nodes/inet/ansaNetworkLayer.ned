@@ -54,6 +54,7 @@ module ansaNetworkLayer
         input manetIn;
         input igmpIn;
         input pimIn;
+        input eigrpIn;
         output ifOut[] @labels(IPv4Datagram);
         output tcpOut @labels(TCPSegment,IPv4ControlInfo/up);
         output udpOut @labels(UDPPacket,IPv4ControlInfo/up);
@@ -64,15 +65,16 @@ module ansaNetworkLayer
         output manetOut;
         output igmpOut;
         output pimOut;
+        output eigrpOut;
 
     submodules:
         ip: AnsaIPv4 {
             parameters:
-                protocolMapping = "6:0,17:1,1:2,2:3,46:4,89:5,132:6,48:7,138:7,103:8"; // see: http://www.iana.org/assignments/protocol-numbers
+                protocolMapping = "6:0,17:1,1:2,2:3,46:4,89:5,132:6,48:7,138:7,103:8,88:9"; // see: http://www.iana.org/assignments/protocol-numbers
                 @display("p=85,95;q=queue");
             gates:
-                transportIn[9];
-                transportOut[9];
+                transportIn[10];
+                transportOut[10];
                 queueIn[sizeof(ifIn)];
         }   
         arp: ARP {
@@ -123,6 +125,9 @@ module ansaNetworkLayer
         
         ip.transportOut[8] --> pimOut;
         ip.transportIn[8] <-- pimIn;
+        
+        ip.transportOut[9] --> eigrpOut;
+        ip.transportIn[9] <-- eigrpIn;
 
         for i=0..sizeof(pingOut)-1 {
             icmp.pingOut++ --> { @display("m=n"); } --> pingOut[i];

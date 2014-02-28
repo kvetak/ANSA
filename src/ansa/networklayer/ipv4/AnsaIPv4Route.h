@@ -84,7 +84,7 @@ class ANSAIPv4Route : public IPv4Route
         RoutingProtocolSource _routingProtocolSource;
 
     public:
-        ANSAIPv4Route() : IPv4Route() {}
+        ANSAIPv4Route() : IPv4Route() { _adminDist = dUnknown; _routingProtocolSource = pUnknown; }
         virtual ~ANSAIPv4Route() {}
         virtual std::string info() const;
         virtual std::string detailedInfo() const;

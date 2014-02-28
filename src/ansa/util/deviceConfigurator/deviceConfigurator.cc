@@ -2097,7 +2097,7 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
 
     const char* aaa = VRRPModule->getInterface()->getFullName();
 
-    cXMLElement *group = xmlParser::GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.c_str());
+    cXMLElement *group = xmlParser::GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.str().c_str());
     if (group == NULL) {
         EV << "No configuration found for group " << groupId << endl;
         return;
@@ -2161,5 +2161,269 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
             }
             VRRPModule->setLearn(value);
         }
+    }
+}
+
+//
+//
+//- configuration for EIGRP
+//
+//
+bool DeviceConfigurator::wildcardToMask(const char *wildcard, IPv4Address& result)
+{
+    result.set(wildcard);
+    uint32 wcNum = result.getInt();
+
+    // convert wildcard to mask
+    wcNum = ~wcNum;
+    result.set(wcNum);
+
+    if (!result.isValidNetmask())
+        return false;
+
+    return true;
+}
+
+std::vector<int> DeviceConfigurator::getInterfacesByIpv4Prefix(
+        const IPv4Address& prefix, const IPv4Address& mask)
+{
+    int numInterfaces = ift->getNumInterfaces();
+    InterfaceEntry *interface;
+    vector<int> resultIfs;
+    int maskLength, ifMaskLength;
+
+    for (int i = 0; i < numInterfaces; ++i)
+    {
+        interface = ift->getInterface(i);
+        IPv4Address ifAddress = interface->ipv4Data()->getIPAddress();
+        IPv4Address ifmask = interface->ipv4Data()->getNetmask();
+        if (ifAddress.isUnspecified())
+            continue;
+
+        maskLength = (mask.isUnspecified()) ? prefix.getNetworkMask().getNetmaskLength() : mask.getNetmaskLength();
+        ifMaskLength = ifmask.getNetmaskLength();
+
+        // prefix isUnspecified -> network = 0.0.0.0 -> all interfaces, or
+        // mask is unspecified -> classful match or
+        // mask is specified -> classless match
+        if (prefix.isUnspecified() ||
+                (mask.isUnspecified() && prefix.isNetwork(ifAddress) && maskLength <= ifMaskLength) ||
+                (prefix.maskedAddrAreEqual(prefix, ifAddress, mask) && maskLength <= ifMaskLength))
+        {// IP address of the interface match the prefix
+            resultIfs.push_back(interface->getInterfaceId());
+        }
+    }
+
+    return resultIfs;
+}
+
+void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule)
+{
+    const char *addressStr, *wildcardStr;
+    IPv4Address address, mask;
+    std::vector<int> ifaceVec;
+
+    cXMLElement *netoworkParentElem = processElem->getFirstChildWithTag("Networks");
+    if (netoworkParentElem == NULL)
+        return;
+
+    cXMLElement *networkElem = xmlParser::GetEigrpIPv4Network(NULL, netoworkParentElem);
+
+    while (networkElem != NULL)
+    {
+        // Get IP address
+        if ((addressStr = xmlParser::GetNodeParamConfig(networkElem, "IPAddress", NULL)) == NULL)
+        {// address is mandatory
+            throw cRuntimeError("No IP address specified in the IPAddress node");
+        }
+
+        // Get wildcard
+        wildcardStr = xmlParser::GetNodeParamConfig(networkElem, "Wildcard", NULL);
+
+        // Create network address and mask
+        address.set(addressStr);
+        if (wildcardStr == NULL)
+        {// wildcard is optional
+            mask = IPv4Address::UNSPECIFIED_ADDRESS;
+            // classful network
+            address = address.getNetwork();
+        }
+        else
+        {
+            // Accepts incorrectly specified wildcard as normal mask (Cisco)
+            mask = IPv4Address(wildcardStr);
+            if (mask.isUnspecified() || !mask.isValidNetmask()) {
+                if (!wildcardToMask(wildcardStr, mask))
+                    throw cRuntimeError("Invalid wildcard in EIGRP network configuration");
+            }
+
+            address = address.doAnd(mask);
+        }
+
+        int networkId = eigrpModule->addNetwork(address, mask);
+
+        // Find and store interfaces for the network
+        ifaceVec = getInterfacesByIpv4Prefix(address, mask);
+        for(std::vector<int>::iterator it = ifaceVec.begin(); it != ifaceVec.end(); ++it) {
+            eigrpModule->addInterface(*it, networkId, true);
+        }
+
+        networkElem = xmlParser::GetEigrpIPv4Network(networkElem, NULL);
+    }
+}
+
+void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule *eigrpModule)
+{
+    ASSERT(eigrpModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL)
+    {
+       EV << "No configuration found for this device (" << deviceType <<
+               " id=" << deviceId << ")" << endl;
+       return;
+    }
+
+    loadEigrpProcessesConfig(device, eigrpModule);
+
+    loadEigrpInterfaceConfig(device, eigrpModule);
+}
+
+void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule *eigrpModule)
+{
+    // XML nodes for EIGRP
+    cXMLElement *processElem = NULL;
+    cXMLElement *tempNode = NULL;
+
+    int asNum;    // converted AS number
+    const char *asNumStr;   // string with AS number
+    bool success;
+
+    processElem = xmlParser::GetEigrpProcess(processElem, device);
+    if (processElem == NULL)
+    {
+        EV << "No EIGRP configuration found." << endl;
+        return;
+    }
+
+    while (processElem != NULL)
+    {
+        // AS number of process
+        if ((asNumStr = processElem->getAttribute("asNumber")) == NULL)
+        {// AS number is mandatory
+            throw cRuntimeError("No EIGRP autonomous system number specified");
+        }
+        success = xmlParser::Str2Int(&asNum, asNumStr);
+        if (!success || asNum < 1 || asNum > 65535)
+        { // bad value, AS number must be in <1, 65535>
+            throw cRuntimeError("Bad value for EIGRP autonomous system number");
+        }
+        eigrpModule->setASNum(asNum);
+
+        // Loads networks and enables corresponding interfaces
+        loadEigrpIPv4Networks(processElem, eigrpModule);
+
+        // K-values for metric computation
+        if ((tempNode = processElem->getFirstChildWithTag("MetricWeights")) != NULL)
+        {
+            EigrpKValues kval;
+            kval.K1 = loadEigrpKValue(tempNode, "k1", "1");
+            kval.K2 = loadEigrpKValue(tempNode, "k2", "0");
+            kval.K3 = loadEigrpKValue(tempNode, "k3", "1");
+            kval.K4 = loadEigrpKValue(tempNode, "k4", "0");
+            kval.K5 = loadEigrpKValue(tempNode, "k5", "0");
+            //kval.K6 = loadEigrpKValue(tempNode, "k6", "0");
+
+            eigrpModule->setKValues(kval);
+        }
+
+        processElem = xmlParser::GetEigrpProcess(processElem, NULL);
+    }
+}
+
+int DeviceConfigurator::loadEigrpKValue(cXMLElement *node, const char *attrName, const char *attrValue)
+{
+    int result;
+    bool success;
+    const char *kvalueStr = xmlParser::GetNodeAttrConfig(node, attrName, attrValue);
+
+    success = xmlParser::Str2Int(&result, kvalueStr);
+    if (!success || result < 0 || result > 255)
+    { // bad value, K-value must be in <0, 255>
+        throw cRuntimeError("Bad value for EIGRP metric weights");
+    }
+    return result;
+}
+
+void DeviceConfigurator::loadEigrpInterfaceConfig(cXMLElement *device, IEigrpModule *eigrpModule)
+{
+    // XML nodes for EIGRP
+    cXMLElement *eigrpIfaceElem = NULL;
+    cXMLElement *ifaceElem = NULL;
+
+    bool success;
+    int tempNumber;
+
+    if ((ifaceElem = xmlParser::GetInterface(ifaceElem, device)) == NULL)
+    {
+        return;
+    }
+
+    while (ifaceElem != NULL)
+    {
+        // Get EIGRP configuration for interface
+        eigrpIfaceElem = ifaceElem->getFirstChildWithTag("EIGRP-IPv4");
+
+        if (eigrpIfaceElem != NULL)
+        {
+            // Get interface ID
+            const char *ifaceName = ifaceElem->getAttribute("name");
+            InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+            int ifaceId = iface->getInterfaceId();
+
+            // Get EIGRP AS number
+            const char *asNumStr;
+            if ((asNumStr = eigrpIfaceElem->getAttribute("asNumber")) == NULL)
+            {// AS number is mandatory
+                throw cRuntimeError("No EIGRP autonomous system number specified in interface settings");
+            }
+            success = xmlParser::Str2Int(&tempNumber, asNumStr);
+            if (!success || tempNumber < 1 || tempNumber > 65535)
+            { // bad value, AS number must be in <1, 65535>
+                throw cRuntimeError("Bad value for EIGRP autonomous system number");
+            }
+            // TODO vybrat podle AS spravny PDM a pro ten nastavovat nasledujici
+
+            // Hello interval
+            const char *helloStr = xmlParser::GetNodeParamConfig(eigrpIfaceElem, "HelloInterval", NULL);
+            if (helloStr != NULL)
+            {
+                success = xmlParser::Str2Int(&tempNumber, helloStr);
+                if (!success || tempNumber < 1 || tempNumber > 65535)
+                { // bad value, Hello interval must be in <1, 65535>
+                    throw cRuntimeError("Bad value for EIGRP Hello interval");
+                }
+                eigrpModule->setHelloInt(tempNumber, ifaceId);
+            }
+
+            // Hold interval
+            const char *holdStr = xmlParser::GetNodeParamConfig(eigrpIfaceElem, "HoldInterval", NULL);
+            if (holdStr != NULL)
+            {
+                success = xmlParser::Str2Int(&tempNumber, holdStr);
+                if (!success || tempNumber < 1 || tempNumber > 65535)
+                { // bad value, Hold interval must be in <1, 65535>
+                    throw cRuntimeError("Bad value for EIGRP Hold interval");
+                }
+                eigrpModule->setHoldInt(tempNumber, ifaceId);
+            }
+        }
+
+        ifaceElem = xmlParser::GetInterface(ifaceElem, NULL);
     }
 }
