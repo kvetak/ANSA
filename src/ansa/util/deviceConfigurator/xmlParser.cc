@@ -267,6 +267,17 @@ const char *xmlParser::GetNodeParamConfig(cXMLElement *node, const char *paramNa
     return paramValue;
 }
 
+const char *xmlParser::GetNodeAttrConfig(cXMLElement *node, const char *attrName, const char *defaultValue)
+{
+    ASSERT(node != NULL);
+
+    const char *attrValue = node->getAttribute(attrName);
+    if (attrValue == NULL)
+        return defaultValue;
+
+    return attrValue;
+}
+
 //
 //
 //- configuration for RIPng
@@ -500,4 +511,55 @@ bool xmlParser::HasVRPPGroup(cXMLElement* group, int *groupId)
         return false;
 
     return true;
+}
+
+//
+//
+//- configuration for EIGRP
+//
+//
+cXMLElement *xmlParser::GetEigrpProcess(cXMLElement *process, cXMLElement *device)
+{
+    // initial call of the method - get first "AS" child node in "EIGRP"
+    if (device != NULL)
+    {
+        cXMLElement *routing = device->getFirstChildWithTag("Routing");
+        if (routing == NULL)
+            return NULL;
+
+        cXMLElement *eigrp = routing->getFirstChildWithTag("EIGRP");
+        if (eigrp == NULL)
+            return NULL;
+
+        process = eigrp->getFirstChildWithTag("ProcessIPv4");
+
+    // repeated call - get another "AS" sibling node
+    }
+    else if (process != NULL)
+    {
+        process = process->getNextSiblingWithTag("ProcessIPv4");
+    }
+    else
+    {
+        process = NULL;
+    }
+
+    return process;
+}
+
+cXMLElement *xmlParser::GetEigrpIPv4Network(cXMLElement *network, cXMLElement *process)
+{
+    // initial call of the method - find first "Network" node in process
+    if (process != NULL){
+
+       network = process->getFirstChildWithTag("Network");
+
+    // repeated call - get another "Network" sibling node
+    }else if (network != NULL){
+        network = network->getNextSiblingWithTag("Network");
+    }else{
+        network = NULL;
+    }
+
+    return network;
 }
