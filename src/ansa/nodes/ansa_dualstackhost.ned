@@ -45,6 +45,8 @@ module ANSA_DualStackHost
 {
     parameters:
         @display("i=device/pc;bgb=701,607");
+        @node;
+        @labels(node);
 
         int numTcpApps = default(0);  // no of TCP apps. Specify the app types in INI file with tcpApp[0..1].typename="TCPEchoApp" syntax
         int numUdpApps = default(0);  // no of UDP apps. Specify the app types in INI file with udpApp[0..1].typename="UDPVideoStreamCli" syntax
