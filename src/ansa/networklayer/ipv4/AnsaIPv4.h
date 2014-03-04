@@ -25,33 +25,19 @@
 
 #include "INETDefs.h"
 
-#include "QueueBase.h"
-#include "InterfaceTableAccess.h"
-#include "AnsaRoutingTable.h"
-#include "ICMPAccess.h"
-#include "IPv4ControlInfo.h"
-#include "IPv4Datagram.h"
-#include "IPv4FragBuf.h"
-#include "ProtocolMap.h"
-
 #ifdef WITH_MANET
 #include "ControlManetRouting_m.h"
 #endif
 
-#include "ICMPMessage_m.h"
-#include "IPv4InterfaceData.h"
 #include "ARPPacket_m.h"
 #include "IPv4.h"
 #include "PimSplitter.h"
 #include "AnsaInterfaceEntry.h"
+#include "AnsaRoutingTable.h"
 #include "AnsaRoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "PIMPacket_m.h"
 #include "pimSM.h"
-
-
-class ARPPacket;
-class ICMPMessage;
 
 /*
  * Migration towards ANSAINET2.2
@@ -68,7 +54,6 @@ class INET_API AnsaIPv4 : public IPv4
 {
     private:
         AnsaRoutingTable            *rt;
-        NotificationBoard           *nb;
         PimInterfaceTable           *pimIft;        /**< Pointer to table of PIM interfaces. */
 
     protected:

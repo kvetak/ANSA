@@ -25,12 +25,24 @@ import inet.ansa.nodes.inet.AnsaHost;
 import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.nodes.ethernet.Eth100M;
 import inet.world.scenario.ScenarioManager;
+import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
 network pimSMScenario2
 {
     @display("bgb=623,419");
 
     submodules:
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+                config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;
+                @display("p=39,29");
+        }
         DR_R1: PIMRouter {
             parameters:
                 @display("p=86,336");

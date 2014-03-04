@@ -47,6 +47,7 @@ class xmlParser {
       static bool Str2Bool(bool *ret, const char *str);
 
       static const char *GetNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue);
+      static const char *GetNodeAttrConfig(cXMLElement *node, const char *attrName, const char *defaultValue);
 
       // configuration for RIPng
       static cXMLElement *GetRIPngProcess(cXMLElement *process, cXMLElement *device);
@@ -68,6 +69,10 @@ class xmlParser {
       static cXMLElement *GetVRRPGroup(cXMLElement *group, cXMLElement *iface);
       static cXMLElement *GetVRRPGroup(cXMLElement *device, const char* name, const char* groupId);
       static bool HasVRPPGroup(cXMLElement* group, int *groupId);
+
+      // configuration for EIGRP
+      static cXMLElement *GetEigrpProcess(cXMLElement *process, cXMLElement *device);
+      static cXMLElement *GetEigrpIPv4Network(cXMLElement *network, cXMLElement *process);
 };
 
 #endif /* XMLPARSER_H_ */
