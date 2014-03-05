@@ -59,6 +59,10 @@ void InterfaceStateManager::processCommand(const cXMLElement& node)
       }
       changeInterfaceState(targetInt, false);
     }
+    else if(!strcmp(node.getTagName(), "interfaceconfig"))
+    {
+        processInterfaceConfigCommand(node);
+    }
     else
         ASSERT(false);
 
@@ -80,11 +84,43 @@ void InterfaceStateManager::changeInterfaceState(InterfaceEntry *targetInt, bool
       targetInt->setDown();
     /*
      * Migration towards ANSAINET2.2
+     */
      else
       if(isDown && !toDown)
-        targetInt->setDown(false);*/
+        targetInt->setState(InterfaceEntry::UP);
   }
   else
     EV << "Interface NOT found\n";
 }
 
+/**
+ *  Change of interface bandwidth (in kbps)
+ *      <interfaceconfig bandwidth="1544" module="R1.interfaceStateManager" int="eth0"/>
+ *  Change of interface delay (in tens of microseconds)
+ *      <interfaceconfig delay="2000" module="R1.interfaceStateManager" int="eth0"/>
+ */
+void InterfaceStateManager::processInterfaceConfigCommand(const cXMLElement& node)
+{
+    InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
+    EV << "interface " << node.getAttribute("int") << " change bandwidth" << endl;
+    if (targetInt == NULL)
+        throw cRuntimeError("Interface %s not found", node.getAttribute("int"));
+
+    std::stringstream os;
+    int ifParam;
+
+    if (node.getAttribute("bandwidth") != NULL)
+    {
+        os << node.getAttribute("bandwidth");
+        if (!(os >> ifParam))
+            throw cRuntimeError("Bad value for bandwidth on interface %s", node.getAttribute("int"));
+        targetInt->setBandwidth(ifParam);
+    }
+    else if (node.getAttribute("delay") != NULL)
+    {
+        os << node.getAttribute("delay");
+        if (!(os >> ifParam))
+            throw cRuntimeError("Bad value for delay on interface %s", node.getAttribute("int"));
+        targetInt->setDelay(ifParam * 10);
+    }
+}

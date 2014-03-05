@@ -455,6 +455,9 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
         ie->ipv4Data()->setMetric(1);
         ie->setMtu(1500);
+        setInterfaceParamters(ie);
+
+        int tempNumber;
 
         cXMLElementList ifDetails = iface->getChildren();
         for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
@@ -469,6 +472,20 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
             if (nodeName=="MTU")
                 ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
+
+            if (nodeName=="Bandwidth")
+            { // Bandwidth in kbps
+                if (!xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue()))
+                    throw cRuntimeError("Bad value for bandwidth on interface %s", ifaceName);
+                ie->setBandwidth(tempNumber);
+            }
+
+            if (nodeName=="Delay")
+            { // Delay in tens of microseconds
+                if (!xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue()))
+                    throw cRuntimeError("Bad value for delay on interface %s", ifaceName);
+                ie->setDelay(tempNumber * 10);
+            }
         }
 
         //Add directly connected routes to the ANSA rt version only
@@ -489,6 +506,46 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
         iface = xmlParser::GetInterface(iface, NULL);
     }
+}
+
+void DeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
+{
+    int gateId = interface->getNodeOutputGateId();
+    cModule *host = findContainingNode(interface->getInterfaceModule());
+    cGate *outGw;
+    cChannel *link;
+
+    if (host != NULL && gateId != -1)
+    { // Get link type
+        outGw = host->gate(gateId);
+        if ((link = outGw->getChannel()) == NULL)
+            return;
+
+        const char *linkType = link->getChannelType()->getName();
+        cPar bwPar = link->par("datarate");
+
+        // Bandwidth in kbps
+        interface->setBandwidth(bwPar.doubleValue() / 1000);
+        interface->setDelay(getDefaultDelay(linkType));
+    }
+}
+
+double DeviceConfigurator::getDefaultDelay(const char *linkType)
+{
+    if (!strcmp(linkType, "Eth10M"))
+        return 1000;
+    if (!strcmp(linkType, "Eth100M"))
+        return 100;
+    if (!strcmp(linkType, "Eth1G"))
+        return 10;
+    if (!strcmp(linkType, "Eth10G"))
+        return 10;
+    if (!strcmp(linkType, "Eth40G"))
+        return 10;
+    if (!strcmp(linkType, "Eth100G"))
+        return 10;
+
+    return 1000;    // ethernet 10M
 }
 
 void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
@@ -2184,21 +2241,22 @@ bool DeviceConfigurator::wildcardToMask(const char *wildcard, IPv4Address& resul
     return true;
 }
 
-std::vector<int> DeviceConfigurator::getInterfacesByIpv4Prefix(
-        const IPv4Address& prefix, const IPv4Address& mask)
+EigrpNetwork *DeviceConfigurator::isEigrpInterface(std::vector<EigrpNetwork *>& networks, InterfaceEntry *interface)
 {
-    int numInterfaces = ift->getNumInterfaces();
-    InterfaceEntry *interface;
+    IPv4Address prefix, mask;
+    IPv4Address ifAddress = interface->ipv4Data()->getIPAddress();
+    IPv4Address ifmask = interface->ipv4Data()->getNetmask();
     vector<int> resultIfs;
     int maskLength, ifMaskLength;
+    std::vector<EigrpNetwork *>::iterator it;
 
-    for (int i = 0; i < numInterfaces; ++i)
+    if (ifAddress.isUnspecified())
+                return false;
+
+    for (it = networks.begin(); it != networks.end(); it++)
     {
-        interface = ift->getInterface(i);
-        IPv4Address ifAddress = interface->ipv4Data()->getIPAddress();
-        IPv4Address ifmask = interface->ipv4Data()->getNetmask();
-        if (ifAddress.isUnspecified())
-            continue;
+        prefix = (*it)->getAddress();
+        mask = (*it)->getMask();
 
         maskLength = (mask.isUnspecified()) ? prefix.getNetworkMask().getNetmaskLength() : mask.getNetmaskLength();
         ifMaskLength = ifmask.getNetmaskLength();
@@ -2209,24 +2267,25 @@ std::vector<int> DeviceConfigurator::getInterfacesByIpv4Prefix(
         if (prefix.isUnspecified() ||
                 (mask.isUnspecified() && prefix.isNetwork(ifAddress) && maskLength <= ifMaskLength) ||
                 (prefix.maskedAddrAreEqual(prefix, ifAddress, mask) && maskLength <= ifMaskLength))
-        {// IP address of the interface match the prefix
-            resultIfs.push_back(interface->getInterfaceId());
+        {
+            return *it;
         }
     }
 
-    return resultIfs;
+    return NULL;
 }
 
 void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule)
 {
     const char *addressStr, *wildcardStr;
     IPv4Address address, mask;
-    std::vector<int> ifaceVec;
+    std::vector<EigrpNetwork *> networks;
+    EigrpNetwork *net;
+    InterfaceEntry *iface;
 
     cXMLElement *netoworkParentElem = processElem->getFirstChildWithTag("Networks");
     if (netoworkParentElem == NULL)
         return;
-
     cXMLElement *networkElem = xmlParser::GetEigrpIPv4Network(NULL, netoworkParentElem);
 
     while (networkElem != NULL)
@@ -2256,19 +2315,21 @@ void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpM
                 if (!wildcardToMask(wildcardStr, mask))
                     throw cRuntimeError("Invalid wildcard in EIGRP network configuration");
             }
-
             address = address.doAnd(mask);
         }
 
-        int networkId = eigrpModule->addNetwork(address, mask);
-
-        // Find and store interfaces for the network
-        ifaceVec = getInterfacesByIpv4Prefix(address, mask);
-        for(std::vector<int>::iterator it = ifaceVec.begin(); it != ifaceVec.end(); ++it) {
-            eigrpModule->addInterface(*it, networkId, true);
-        }
+        net = eigrpModule->addNetwork(address, mask);
+        networks.push_back(net);
 
         networkElem = xmlParser::GetEigrpIPv4Network(networkElem, NULL);
+    }
+
+    // Find and store interfaces for networks
+    for(int i = 0; i < ift->getNumInterfaces(); i++)
+    {
+        iface = ift->getInterface(i);
+        if ((net = isEigrpInterface(networks, iface)) != NULL)
+            eigrpModule->addInterface(iface->getInterfaceId(), net->getNetworkId(), true);
     }
 }
 

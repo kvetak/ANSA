@@ -60,6 +60,7 @@
 #include "VRRPv2.h"
 #include "VRRPv2VirtualRouter.h"
 #include "IEigrpModule.h"
+#include "EigrpNetworkTable.h"
 
 /* TRILL */
 #include "TRILLAccess.h"
@@ -93,6 +94,11 @@ class DeviceConfigurator : public cSimpleModule {
       void loadDefaultRouter(cXMLElement *gateway);
       void loadInterfaceConfig(cXMLElement* iface);
       void loadStaticRouting(cXMLElement* route);
+
+      /**< Sets default bandwidth and delay */
+      void setInterfaceParamters(InterfaceEntry *interface);
+      /**< Returns default delay of interface by link type */
+      double getDefaultDelay(const char *linkType);
 
       //////////////////////////
       /// IPv6 Configuration ///
@@ -140,7 +146,7 @@ class DeviceConfigurator : public cSimpleModule {
       // configuration for EIGRP //
       /////////////////////////////
       /**< Gets interfaces that correspond to the IP address and mask */
-      std::vector<int> getInterfacesByIpv4Prefix(const IPv4Address& prefix, const IPv4Address& mask);
+      EigrpNetwork *isEigrpInterface(std::vector<EigrpNetwork *>& networks, InterfaceEntry *interface);
       /**< Converts wildcard to netmask and check validity */
       bool wildcardToMask(const char *wildcard, IPv4Address& result);
       /**< Loads configuration of EIGRP process */

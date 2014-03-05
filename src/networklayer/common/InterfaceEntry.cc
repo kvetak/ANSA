@@ -68,6 +68,12 @@ InterfaceEntry::InterfaceEntry(cModule* ifmod)
     isisdata = NULL;
     trilldata = NULL;
     estimateCostProcessArray.clear();
+
+    bandwidth = 0;
+    delay = 0;
+    reliability = 255;
+    recvLoad = 1;
+    transLoad = 1;
 }
 
 InterfaceEntry::~InterfaceEntry()
@@ -107,6 +113,12 @@ std::string InterfaceEntry::info() const
         out << " " << ((InterfaceProtocolData *)isisdata)->info(); // Khmm...
     if (trilldata)
         out << " " << ((InterfaceProtocolData *)trilldata)->info(); // Khmm...
+
+    out << " BW:" << bandwidth;
+    out << " DLY:" << delay;
+    out << " REL:" << reliability << "/255";
+    out << " RLOAD:" << recvLoad << "/255";
+    out << " TLOAD:" << transLoad << "/255";
     return out.str();
 }
 

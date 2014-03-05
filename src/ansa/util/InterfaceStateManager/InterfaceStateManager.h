@@ -49,10 +49,11 @@ class INET_API InterfaceStateManager : public cSimpleModule, public IScriptable
     // IScriptable implementation
     virtual void processCommand(const cXMLElement& node);
     
+    void processInterfaceConfigCommand(const cXMLElement& node);
+
   public:
   
     void changeInterfaceState(InterfaceEntry *targetInt, bool toDown);
-
 };
 
 #endif
