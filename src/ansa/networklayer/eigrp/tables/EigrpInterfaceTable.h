@@ -18,8 +18,8 @@
 
 #include <omnetpp.h>
 
-#include "IPv4Address.h"
 #include "EigrpTimer_m.h"
+#include "InterfaceEntry.h"
 
 /**
  * TODO nastavovat BW, DLY dle typu linky, Reliability pocitat
@@ -35,13 +35,13 @@ class EigrpInterface: public cObject
     EigrpTimer *hellot;     /**< pointer to hello timer */
     bool enabled;           /**< true, if EIGRP is enabled on interface */
 
-    unsigned int bandwidth; /**< Bandwidth in Kbps (<1-10 000 000>) */
-    unsigned int delay;     /**< Delay in ms (<1-16 777 215>) */
-    unsigned int reliability; /**< Reliability in percent (<1-255>) */
-    unsigned int load;      /**< Load in percent (<1-255>) */
+    double bandwidth; /**< Bandwidth in Kbps (<1-10 000 000>) */
+    double delay;     /**< Delay in us (<1-16 777 215>) */
+    int reliability; /**< Reliability in percent (<1-255>) */
+    int load;      /**< Load in percent (<1-255>) */
 
   public:
-    EigrpInterface(int interfaceId, int networkId, bool enabled);
+    EigrpInterface(InterfaceEntry *iface, int networkId, bool enabled);
     ~EigrpInterface();
 
     bool operator==(const EigrpInterface& iface) const

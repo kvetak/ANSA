@@ -16,6 +16,7 @@ class IEigrpPdm
 {
   public:
     static const int UNSPEC_RECEIVER = 0;  /**< Unspecified address of receiver - all neighbors */
+    static const bool RT_UNREACHABLE = true;
 
     virtual void addRouteToRT(EigrpRouteSource<IPv4Address> *successor) = 0;
     virtual void removeRouteFromRT(EigrpRouteSource<IPv4Address> *successor) = 0;
@@ -23,7 +24,7 @@ class IEigrpPdm
     virtual void updateRouteInRT(EigrpRouteSource<IPv4Address> *source) = 0;
     virtual void sendUpdate(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *successor = NULL) = 0;
     virtual void sendQuery(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source = NULL) = 0;
-    virtual void sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source = NULL) = 0;
+    virtual void sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source, bool isUnreachable = false) = 0;
     virtual void removeSourceFromTT(EigrpRouteSource<IPv4Address> *source) = 0;
     virtual void addSourceToTT(EigrpRouteSource<IPv4Address> *source) = 0;
     virtual int getNumPeers() = 0;

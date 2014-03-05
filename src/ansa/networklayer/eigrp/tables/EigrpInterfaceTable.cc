@@ -17,21 +17,20 @@
 
 #include <algorithm>
 
-#include "InterfaceTable.h"
-#include "InterfaceEntry.h"
-#include "IPv4Address.h"
-#include "InterfaceTableAccess.h"
-#include "IPv4InterfaceData.h"
-
 Define_Module(EigrpInterfaceTable);
 
 
-std::ostream& operator<<(std::ostream& os, const EigrpInterface& iface)
+std::ostream& operator<<(std::ostream& out, const EigrpInterface& iface)
 {
 
-    os << "ID = " << iface.getInterfaceId() << ", Hello = " << iface.getHelloInt()
-                << ", Hold = " << iface.getHoldInt();
-    return os;
+    out << "ID:" << iface.getInterfaceId();
+    out << " HELLO:" << iface.getHelloInt();
+    out << " HOLD:" << iface.getHoldInt();
+    out << " BW:" << iface.getBandwidth();
+    out << " DLY:" << iface.getDelay();
+    out << " REL:" << iface.getReliability() << "/255";
+    out << " RLOAD:" << iface.getLoad() << "/255";
+    return out;
 }
 
 EigrpInterface::~EigrpInterface()
@@ -39,17 +38,26 @@ EigrpInterface::~EigrpInterface()
     delete hellot;
 }
 
-EigrpInterface::EigrpInterface(int interfaceId, int networkId, bool enabled) :
-       interfaceId(interfaceId), networkId(networkId), enabled(enabled)
+EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enabled) :
+       interfaceId(iface->getInterfaceId()), networkId(networkId), enabled(enabled)
 {
     hellot = NULL;
-    helloInt = 5;
-    holdInt = 15;
 
-    bandwidth = 1544;
-    delay = 20000;
-    reliability = 255;
-    load = 1;
+    bandwidth = iface->getBandwidth();
+    delay = iface->getDelay();
+    reliability = iface->getReliability();
+    load = iface->getTransLoad();
+
+    if (!iface->isMulticast() && bandwidth <= 1544)
+    { // Non-broadcast Multi Access interface (no multicast) with bandwidth equal or lower than T1 link
+        helloInt = 60;
+        holdInt = 180;
+    }
+    else
+    {
+        helloInt = 5;
+        holdInt = 15;
+    }
 }
 
 EigrpInterfaceTable::~EigrpInterfaceTable()
@@ -130,28 +138,3 @@ EigrpInterface *EigrpInterfaceTable::findInterfaceById(int ifaceId)
 
     return NULL;
 }
-
-/*EigrpInterface *EigrpInterfaceTable::findInterfaceByName(const char *ifaceName)
-{
-    EigrpInterface *eigrpIface;
-    InterfaceEntry *iface;
-    int ifaceId;
-
-    if ((iface = ifTable->getInterfaceByName(ifaceName)) != NULL)
-    {
-        ifaceId = iface->getInterfaceId();
-
-        TODO toto je na hovno, mělo by to být ve zvláštní metodě
-        if ((eigrpIface = findInterfaceById(ifaceId)) == NULL)
-        { // create new EIGRP interface
-            eigrpIface = new EigrpInterface(ifaceId);
-            addInterface(eigrpIface);
-        }
-    }
-    else
-    {
-        throw cRuntimeError("Interface %s not found", ifaceName);
-    }
-
-    return NULL;
-}*/

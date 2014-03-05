@@ -40,9 +40,6 @@ struct EigrpMetricPar
     uint8_t internalTag;    // Tag for filtering
 
     EigrpMetricPar() : delay(0), bandwidth(0), reliability(0), load(0), mtu(0), hopCount(0), internalTag(0) {}
-
-    unsigned int getMin(unsigned int p1, unsigned int p2) { return (p1 < p2) ? p1 : p2; }
-    unsigned int getMax(unsigned int p1, unsigned int p2) { return (p1 < p2) ? p2 : p1; }
 };
 
 template<typename IPAddress>
@@ -129,6 +126,7 @@ class EigrpRouteSource : public cObject
     uint32_t rd;                    /**< Reported distance from neighbor (RDkj) */
     uint32_t metric;                /**< Actual metric value via that next Hop (not Dij - shortest distance) */
     EigrpMetricPar metricParams;    /**< Parameters for metric computation */
+    EigrpMetricPar rdParams;        /**< Parameters from neighbor */
     bool successor;                 /**< If next hop is successor */
     // TODO oznaceni sumarizovane cesty
 
@@ -158,7 +156,10 @@ class EigrpRouteSource : public cObject
     void setNextHop(IPAddress& nextHop) { this->nextHop = nextHop; }
 
     EigrpMetricPar getMetricParams() const { return metricParams; }
-    void setMetricParams(EigrpMetricPar &par) { metricParams = par; }
+    void setMetricParams(EigrpMetricPar& par) { this->metricParams = par; }
+
+    EigrpMetricPar getRdParams() const { return rdParams; }
+    void setRdParams(EigrpMetricPar& rdParams) { this->rdParams = rdParams; }
 
     bool isSuccessor() const { return successor; }
     void setSuccessor(bool successor) { this->successor = successor; }

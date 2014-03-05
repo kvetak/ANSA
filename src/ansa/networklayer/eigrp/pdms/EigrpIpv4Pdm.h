@@ -35,37 +35,8 @@
 #include "EigrpDisabledInterfaces.h"
 #include "IEigrpPdm.h"
 #include "EigrpDual.h"
-
-
-class EigrpNetworkTable : cObject
-{
-  public:
-    struct EigrpNetwork
-    {
-        int networkId;
-        IPv4Address address;
-        IPv4Address mask;
-
-        EigrpNetwork(IPv4Address &address, IPv4Address &mask, int id)
-                : networkId(id), address(address), mask(mask) {}
-    };
-
-  protected:
-    std::vector<EigrpNetwork *> networkVec;
-    int networkCnt;
-
-  public:
-    static const int UNSPEC_NETID = 0;
-
-    EigrpNetworkTable() : networkCnt(1) { }
-    virtual ~EigrpNetworkTable();
-
-    int addNetwork(IPv4Address &address, IPv4Address &mask);
-    EigrpNetwork *findNetworkById(int netId);
-    std::vector<EigrpNetwork *> *getAllNetworks() { return &networkVec; }
-    bool isAddressIncluded(IPv4Address& address, IPv4Address& mask);
-    bool isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId);
-};
+#include "EigrpNetworkTable.h"
+#include "EigrpMetricHelper.h"
 
 /**
  * TODO - Generated class
@@ -88,6 +59,7 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
     NotificationBoard *nb;      /**< */
 
     EigrpDual *eigrpDual;
+    EigrpMetricHelper *eigrpMetric;
     EigrpInterfaceTable *eigrpIft;                   /**< Table with enabled EIGRP interfaces */
     EigrpDisabledInterfaces *eigrpIftDisabled;       /**< Disabled EIGRP interfaces */
     EigrpIpv4NeighborTable *eigrpNt;                /**< Table with EIGRP neighbors */
@@ -122,24 +94,21 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
     void removeNeighbor(EigrpNeighbor<IPv4Address> *neigh, IPv4Address& neighMask);
 
     void disableInterface(EigrpInterface *iface, IPv4Address& ifMask);
-    void enableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask);
+    void enableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask, int networkId);
     EigrpInterface *getInterfaceById(int ifaceId);
     EigrpInterface *addInterfaceToEigrp(int ifaceId, int networkId, bool enabled);
+    void processIfaceStateChange(InterfaceEntry *iface);
+    void processIfaceConfigChange(InterfaceEntry *iface, EigrpInterface *eigrpIface);
 
     /**< Sends EIGRP message to RTP module */
     //void sendEigrpMsg(EigrpMessage *msg, int userMsgIndex);
     void sendHelloMsg(int destIfaceId, int holdInt, EigrpKValues kValues);
     void sendGoodbyeMsg(int destIfaceId, int holdInt);
-    void sendMsgToAllNeighbors(EigrpMessage *msg);
     void sendAllEigrpPaths(int destIface, IPv4Address& destAddress);
+    void sendMsgToAllNeighbors(EigrpMessage *msg);
+    void sendQueryToAllNeighbors(EigrpIpv4Query *msg, int nextHopId);
 
     void resetTimer(EigrpTimer *timer, int interval);
-
-    uint32_t computeClassicMetric(EigrpMetricPar& par);
-    EigrpMetricPar adjustMetricPar(EigrpMetricPar& metricPar, EigrpInterface *eigrpIface, InterfaceEntry *iface);
-    EigrpMetricPar getMetricPar(EigrpInterface *eigrpIface, InterfaceEntry *iface);
-    bool compareParamters(EigrpMetricPar& par1, EigrpMetricPar& par2);
-
 
     void setSource(EigrpRouteSource<IPv4Address> *src, bool isConnected, EigrpMetricPar& newMetricPar, EigrpMetricPar& neighMetricPar);
     /**< Returns next hop address. If next hop in message is 0.0.0.0, then next hop must be replaced by source IP of sender */
@@ -159,7 +128,7 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
     // Interface IEigrpModule
     void addInterface(int ifaceId, int networkId, bool enabled)
     { addInterfaceToEigrp(ifaceId, networkId, enabled); }
-    int addNetwork(IPv4Address address, IPv4Address mask);
+    EigrpNetwork *addNetwork(IPv4Address address, IPv4Address mask);
     void setASNum(int asNum) { this->asNum = asNum; }
     void setKValues(const EigrpKValues& kValues) { this->kValues = kValues; }
     void setHelloInt(int interval, int ifaceId);
@@ -171,13 +140,13 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
     void updateRouteInRT(EigrpRouteSource<IPv4Address> *source);
     void sendUpdate(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source = NULL);
     void sendQuery(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source = NULL);
-    void sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source = NULL);
+    void sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source, bool isUnreachable = false);
     void removeSourceFromTT(EigrpRouteSource<IPv4Address> *source);
     void addSourceToTT(EigrpRouteSource<IPv4Address> *source);
     int getNumPeers();
     uint32_t findRouteDMin(EigrpRoute<IPv4Address> *route);
     EigrpRouteSource<IPv4Address> * findSuccessor(EigrpRoute<IPv4Address> *route, uint32_t dmin);
-    bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t &resultDmin);
+    bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t& resultDmin);
     bool checkFeasibleSuccessor(EigrpRoute<IPv4Address> *route);
     EigrpRouteSource<IPv4Address> *getFirstSuccessor(EigrpRoute<IPv4Address> *route);
 };

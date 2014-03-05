@@ -10,6 +10,9 @@
                 	<HelloInterval>5</HelloInterval>
 					<HoldInterval>15</HoldInterval>
                 </EIGRP-IPv4>
+                
+                <Bandwidth>1544</Bandwidth>
+                <Delay>2000</Delay>
             </Interface>
             <Interface name="eth1">
                 <IPAddress>172.16.1.1</IPAddress>
@@ -51,6 +54,9 @@
             <Interface name="eth0">
                 <IPAddress>172.16.3.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
+                
+                <Bandwidth>1544</Bandwidth>
+                <Delay>2000</Delay>
             </Interface>
         </Interfaces>
         

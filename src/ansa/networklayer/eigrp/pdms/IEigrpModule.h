@@ -9,13 +9,14 @@
 #define IEIGRPMODULE_H_
 
 #include "EigrpMessage_m.h"
+#include "EigrpNetworkTable.h"
 
 class IEigrpModule
 {
   public:
     virtual ~IEigrpModule() {}
     virtual void addInterface(int ifaceId, int networkId, bool enabled) = 0;
-    virtual int addNetwork(IPv4Address address, IPv4Address mask) = 0;
+    virtual EigrpNetwork *addNetwork(IPv4Address address, IPv4Address mask) = 0;
     virtual void setASNum(int asNum) = 0;
     virtual void setKValues(const EigrpKValues& kValues) = 0;
 

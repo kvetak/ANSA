@@ -193,7 +193,7 @@ bool EigrpIpv4TopologyTable::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route
 
             if ((*it)->getRd() < route->getFd())
             {
-                EV << "satisfies" << endl;
+                EV << "satisfies FC" << endl;
                 hasFs = true;
 
                 tempD = (*it)->getMetric();
@@ -201,7 +201,7 @@ bool EigrpIpv4TopologyTable::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route
                     resultDmin = tempD;
             }
             else
-                EV << "not satisfies" << endl;
+                EV << "not satisfies FC" << endl;
         }
     }
 

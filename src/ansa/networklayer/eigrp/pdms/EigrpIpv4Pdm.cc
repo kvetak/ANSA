@@ -74,9 +74,9 @@ const char *UserMsgs[] =
 /**
  * Output operator for IPv4Network class.
  */
-std::ostream& operator<<(std::ostream& os, const EigrpNetworkTable::EigrpNetwork& network)
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork& network)
 {
-    os << "Address = " << network.address << ", Mask = " << network.mask;
+    os << "Address = " << network.getAddress() << ", Mask = " << network.getMask();
     return os;
 }
 
@@ -85,72 +85,6 @@ bool operator==(const EigrpKValues& k1, const EigrpKValues& k2)
     return k1.K1 == k2.K1 && k1.K2 == k2.K2 &&
             k1.K3 == k2.K3 && k1.K4 == k2.K4 &&
             k1.K5 == k2.K5 && k1.K6 == k2.K6;
-}
-
-EigrpNetworkTable::~EigrpNetworkTable()
-{
-    int cnt = networkVec.size();
-
-    for (int i = 0; i < cnt; i++)
-    {
-        delete networkVec[i];
-    }
-    networkVec.clear();
-}
-
-int EigrpNetworkTable::addNetwork(IPv4Address &address, IPv4Address &mask)
-{
-    networkVec.push_back(new EigrpNetwork(address, mask, networkCnt)); return networkCnt++;
-}
-
-EigrpNetworkTable::EigrpNetwork *EigrpNetworkTable::findNetworkById(int netId)
-{
-    std::vector<EigrpNetwork *>::iterator it;
-
-    for (it = networkVec.begin(); it != networkVec.end(); it++)
-    {
-        if ((*it)->networkId == netId)
-        {
-            return (*it);
-        }
-    }
-
-    return NULL;
-}
-
-/**
- * @param resultNetId ID of network that belongs to the interface. If the interface does not
- * belong to any network, it has undefined value.
- */
-bool EigrpNetworkTable::isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId)
-{
-    std::vector<EigrpNetwork *>::iterator it;
-    int netMaskLen, ifMaskLen;
-
-    if (ifAddress.isUnspecified())
-        return false;
-
-    for (it = networkVec.begin(); it != networkVec.end(); it++)
-    {
-        IPv4Address netPrefix = (*it)->address;
-        IPv4Address netMask = (*it)->mask;
-
-        netMaskLen = (netMask.isUnspecified()) ? netPrefix.getNetworkMask().getNetmaskLength() : netMask.getNetmaskLength();
-        ifMaskLen = ifMask.getNetmaskLength();
-
-        // prefix isUnspecified -> network = 0.0.0.0 -> all interfaces, or
-        // mask is unspecified -> classful match or
-        // mask is specified -> classless match
-        if (netPrefix.isUnspecified() ||
-                (netMask.isUnspecified() && netPrefix.isNetwork(ifAddress) && netMaskLen <= ifMaskLen) ||
-                (netPrefix.maskedAddrAreEqual(netPrefix, ifAddress, netMask) && netMaskLen <= ifMaskLen))
-        {// IP address of the interface match the prefix
-            (*resultNetId) = (*it)->networkId;
-            return true;
-        }
-    }
-
-    return false;
 }
 
 
@@ -194,12 +128,14 @@ void EigrpIpv4Pdm::initialize(int stage)
 
         // subscribe for changes in the device
         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+        nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
         nb->subscribe(this, NF_IPv4_ROUTE_DELETED);
         // TODO in future NF_INTERFACE_STATE_CHANGED for BW and DLY change
 
         this->eigrpIftDisabled = new EigrpDisabledInterfaces();
         this->routingForNetworks = new EigrpNetworkTable();
         this->eigrpDual = new EigrpDual(this);
+        this->eigrpMetric = new EigrpMetricHelper();
 
         // load configuration
         DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
@@ -229,38 +165,30 @@ void EigrpIpv4Pdm::receiveChangeNotification(int category, const cObject *detail
     if (category == NF_INTERFACE_STATE_CHANGED)
     {
         InterfaceEntry *iface = check_and_cast<InterfaceEntry*>(details);
-        EigrpInterface *eigrpIface;
-        int ifaceId = iface->getInterfaceId();
-        // Get address and mask of interface
-        IPv4Address ifMask = iface->ipv4Data()->getNetmask();
-        IPv4Address ifAddress = iface->ipv4Data()->getIPAddress().doAnd(ifMask);
+        processIfaceStateChange(iface);
+    }
+    else if (category == NF_INTERFACE_CONFIG_CHANGED)
+    {
+        InterfaceEntry *iface = check_and_cast<InterfaceEntry*>(details);
+        EigrpInterface *eigrpIface = getInterfaceById(iface->getInterfaceId());
+        double ifParam;
 
-        // Pri odpojeni rozhrani je nejdrive vyslana udalost (fire) a pak je zmenen stav rozhrani na UP/DOWN (
-        // pri vypnuti/zapnuti rozhrani je to naopak!).
-        if (iface->isDown())
-        { // an interface go down
-            // Move interface from EIGRP interface table to vector of disabled interfaces
-            eigrpIface = this->eigrpIft->findInterfaceById(ifaceId);
+        if (eigrpIface == NULL)
+            return;
 
-            if (eigrpIface != NULL && eigrpIface->isEnabled())
-            {
-                disableInterface(eigrpIface, ifMask);
-            }
-
+        ifParam = iface->getBandwidth();
+        if (ifParam != eigrpIface->getBandwidth())
+        { // Bandwidth
+            eigrpIface->setBandwidth(ifParam);
+            if (eigrpIface->isEnabled())
+                processIfaceConfigChange(iface, eigrpIface);
         }
-        else if (!iface->isDown())
-        { // an interface go up
-            int networkId;
-
-            if (routingForNetworks->isInterfaceIncluded(ifAddress, ifMask, &networkId))
-            { // Interface is included in EIGRP
-                if ((eigrpIface = getInterfaceById(ifaceId)) == NULL)
-                { // Create EIGRP interface
-                    eigrpIface = new EigrpInterface(ifaceId, networkId, false);
-                }
-                if (!eigrpIface->isEnabled())
-                    enableInterface(iface, eigrpIface, ifAddress, ifMask);
-            }
+        ifParam = iface->getDelay();
+        if (ifParam != eigrpIface->getDelay())
+        { // Delay
+            eigrpIface->setDelay(ifParam);
+            if (eigrpIface->isEnabled())
+                processIfaceConfigChange(iface, eigrpIface);
         }
     }
 }
@@ -288,22 +216,22 @@ void EigrpIpv4Pdm::handleMessage(cMessage *msg)
 
         if (dynamic_cast<EigrpHello*>(msg))
         {
-            EV << "Received Hello message" << endl;
+            EV << "Received Hello message from " << srcAddr << endl;
             processHelloMsg(msg, srcAddr, ifaceId, neigh);
         }
         else if (dynamic_cast<EigrpUpdate*>(msg) && neigh != NULL)
         {
-            EV << "Received Update message" << endl;
+            EV << "Received Update message from " << srcAddr << endl;
             processUpdateMsg(msg, srcAddr, ifaceId, neigh);
         }
         else if (dynamic_cast<EigrpQuery*>(msg) && neigh != NULL)
         {
-            EV << "Received Query message" << endl;
+            EV << "Received Query message from " << srcAddr << endl;
             processQueryMsg(msg, srcAddr, ifaceId, neigh);
         }
         else if (dynamic_cast<EigrpReply*>(msg) && neigh != NULL)
         {
-            EV << "Received Reply message" << endl;
+            EV << "Received Reply message from " << srcAddr << endl;
             processReplyMsg(msg, srcAddr, ifaceId, neigh);
         }
         else if (neigh != NULL)
@@ -312,7 +240,7 @@ void EigrpIpv4Pdm::handleMessage(cMessage *msg)
         }
         else
         {
-            EV << "Received message from router "<< srcAddr <<" that is not neighbor" << endl;
+            EV << "Received message from "<< srcAddr <<" that is not neighbor" << endl;
         }
 
         delete msg;
@@ -359,8 +287,6 @@ void EigrpIpv4Pdm::processTimer(cMessage *msg)
         ifMask = iface->ipv4Data()->getNetmask();
         removeNeighbor(neigh, ifMask);
         neigh = NULL;
-
-        // TODO remove all paths from TT and RT
 
         // Send goodbye and restart Hello timer
         eigrpIface = eigrpIft->findInterfaceById(ifaceId);
@@ -420,7 +346,7 @@ void EigrpIpv4Pdm::processHelloMsg(cMessage *msg, IPv4Address& srcAddress, int i
 
         // Save Hold interval
         if (tlvParam.holdTimer != neigh->getHoldInt())
-        { neigh->setHoldInt(tlvParam.holdTimer); }
+            neigh->setHoldInt(tlvParam.holdTimer);
     }
 }
 
@@ -496,36 +422,37 @@ void EigrpIpv4Pdm::processReplyMsg(cMessage *msg, IPv4Address& srcAddress, int i
 EigrpRouteSource<IPv4Address> *EigrpIpv4Pdm::processInterRoute(EigrpIpv4Internal& tlv, IPv4Address& srcAddr,
         int sourceNeighId, EigrpInterface *eigrpIface, bool &sourceNewResult)
 {
-    EigrpRouteSource<IPv4Address> *src;
-    EigrpMetricPar newMetricPar, oldMetricPar;
-    IPv4Address nextHop = getNextHopAddr(tlv.nextHop, srcAddr);
     int ifaceId = eigrpIface->getInterfaceId();
+    IPv4Address nextHop = getNextHopAddr(tlv.nextHop, srcAddr);
     EigrpNeighbor<IPv4Address> *nextHopNeigh = eigrpNt->findNeighbor(nextHop);
     InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
+    EigrpRouteSource<IPv4Address> *src;
+    EigrpMetricPar newParam, oldParam;
+    EigrpMetricPar ifParam = eigrpMetric->getParam(eigrpIface, iface);
 
     // Find route or create one (route source is identified by ID of the next hop - not by ID of sender)
     src = eigrpTt->findOrCreateRoute(tlv.destAddress, tlv.destMask, ifaceId, nextHopNeigh->getNeighborId(), sourceNewResult);
 
     // Get new metric parameters
-    newMetricPar = adjustMetricPar(tlv.metric, eigrpIface, iface);
+    newParam = eigrpMetric->adjustParam(ifParam, tlv.metric);
     // Get old metric parameters for comparison
-    oldMetricPar = src->getMetricParams();
+    oldParam = src->getMetricParams();
 
     // Compute reported distance (must be there)
-    uint32_t metric = computeClassicMetric(tlv.metric);
+    uint32_t metric = eigrpMetric->computeMetric(tlv.metric, this->kValues);
+    src->setRdParams(tlv.metric);
     src->setRd(metric);
 
-    if (sourceNewResult || !compareParamters(newMetricPar, oldMetricPar))
+    if (sourceNewResult || !eigrpMetric->compareParamters(newParam, oldParam, this->kValues))
     {
         // Set source of route
         if (sourceNewResult)
-        {
             src->setNextHop(nextHop);
-            src->setSourceId(sourceNeighId);
-        }
-        src->setMetricParams(newMetricPar);
+
+        src->setSourceId(sourceNeighId);
+        src->setMetricParams(newParam);
         // Compute metric
-        metric = computeClassicMetric(newMetricPar);
+        metric = eigrpMetric->computeMetric(newParam, this->kValues);
         src->setMetric(metric);
     }
 
@@ -690,6 +617,32 @@ void EigrpIpv4Pdm::sendMsgToAllNeighbors(EigrpMessage *msg)
     delete msg;
 }
 
+void EigrpIpv4Pdm::sendQueryToAllNeighbors(EigrpIpv4Query *msg, int nextHopId)
+{
+    EigrpNeighbor<IPv4Address> *neigh;
+    EigrpIpv4Query *msgCopy;
+    int neighCount = eigrpNt->getNumNeighbors();
+
+    for (int i = 0; i < neighCount; i++)
+    {
+        neigh = eigrpNt->getNeighbor(i);
+        msgCopy = msg->dup();
+
+        if (neigh->getNeighborId() == nextHopId)
+        { // infinite metrik only to nexthop
+            EigrpIpv4Internal tlv = msgCopy->getInterRoutes(0);
+            tlv.metric.delay = UINT32_MAX;
+            msgCopy->setInterRoutes(0, tlv);
+        }
+
+        addCtrInfo(msgCopy, neigh->getIfaceId(), neigh->getIPAddress());
+        send(msgCopy, PDM_OUTPUT_GW);
+    }
+
+    // Original msg is not used, delete it
+    delete msg;
+}
+
 /**
  * Creates relationship with neighbor.
  *
@@ -786,80 +739,6 @@ int EigrpIpv4Pdm::checkNeighborshipRules(int ifaceId, int neighAsNum,
 }
 
 /**
- * Computes classic metric.
- * TODO: nahradit hodnoty konstantami, viz RFC (i pro případní rozšíření o Wild metric)
- */
-uint32_t EigrpIpv4Pdm::computeClassicMetric(EigrpMetricPar& par)
-{
-    uint32_t metric;
-    uint32_t bwScaled = 0, dlyScaled;
-
-    if (par.delay == UINT32_MAX)
-        return UINT32_MAX;  // Infinite metric
-
-    if (par.bandwidth != 0)
-        bwScaled = 10000000 / par.bandwidth * 256;
-    dlyScaled = par.delay / 10 * 256;
-
-    metric = kValues.K1*bwScaled + kValues.K2*bwScaled / (256 - par.load) + kValues.K3 * dlyScaled;
-    if (kValues.K5 != 0)
-        metric = metric * kValues.K5 / (par.reliability + kValues.K4);
-
-    return metric;
-}
-
-bool EigrpIpv4Pdm::compareParamters(EigrpMetricPar& par1, EigrpMetricPar& par2)
-{
-    if (kValues.K1 && par1.bandwidth != par2.bandwidth)
-        return false;
-    if (kValues.K2 && par1.load != par2.load)
-        return false;
-    if (kValues.K3 && par1.delay != par2.delay)
-        return false;
-    if (kValues.K5 && par1.reliability != par2.reliability)
-        return false;
-
-    return true;
-}
-
-/**
- * Sets parameters from interface for metric computation.
- */
-EigrpMetricPar EigrpIpv4Pdm::getMetricPar(EigrpInterface *eigrpIface, InterfaceEntry *iface)
-{
-    EigrpMetricPar newMetricPar;
-
-    newMetricPar.bandwidth = eigrpIface->getBandwidth();
-    newMetricPar.delay = eigrpIface->getDelay();
-    newMetricPar.load = eigrpIface->getLoad();
-    newMetricPar.reliability = eigrpIface->getReliability();
-    newMetricPar.hopCount = 0;
-    newMetricPar.mtu = iface->getMTU();
-
-    return newMetricPar;
-}
-
-/**
- * Adjust parameters of metric by interface paramters.
- */
-EigrpMetricPar EigrpIpv4Pdm::adjustMetricPar(EigrpMetricPar& metricPar, EigrpInterface *eigrpIface, InterfaceEntry *iface)
-{
-    EigrpMetricPar newMetricPar;
-
-    if (metricPar.delay == UINT32_MAX)
-        return metricPar;   // Infinite metric
-
-    newMetricPar.bandwidth = metricPar.getMin(metricPar.bandwidth, eigrpIface->getBandwidth());
-    newMetricPar.delay = metricPar.delay + eigrpIface->getDelay();
-    newMetricPar.load = metricPar.getMax(metricPar.load, eigrpIface->getLoad());
-    newMetricPar.reliability = metricPar.getMin(metricPar.reliability, eigrpIface->getReliability());
-    newMetricPar.hopCount++;
-    newMetricPar.mtu = metricPar.getMin(metricPar.mtu, iface->getMTU());
-
-    return newMetricPar;
-}
-
-/**
  * Removes neighbor from neighbor table and delete it.
  */
 void EigrpIpv4Pdm::removeNeighbor(EigrpNeighbor<IPv4Address> *neigh, IPv4Address& neighMask)
@@ -905,6 +784,74 @@ EigrpInterface *EigrpIpv4Pdm::getInterfaceById(int ifaceId)
         return eigrpIftDisabled->findInterface(ifaceId);
 }
 
+void EigrpIpv4Pdm::processIfaceStateChange(InterfaceEntry *iface)
+{
+    EigrpInterface *eigrpIface;
+    int ifaceId = iface->getInterfaceId();
+    // Get address and mask of interface
+    IPv4Address ifMask = iface->ipv4Data()->getNetmask();
+    IPv4Address ifAddress = iface->ipv4Data()->getIPAddress().doAnd(ifMask);
+    int networkId;
+
+    if (iface->isUp())
+    { // an interface go up
+        if (routingForNetworks->isInterfaceIncluded(ifAddress, ifMask, &networkId))
+        { // Interface is included in EIGRP
+            if ((eigrpIface = getInterfaceById(ifaceId)) == NULL)
+            { // Create EIGRP interface
+                eigrpIface = new EigrpInterface(iface, networkId, false);
+            }
+            if (!eigrpIface->isEnabled())
+                enableInterface(iface, eigrpIface, ifAddress, ifMask, networkId);
+        }
+    }
+    else if (!iface->isDown() || !iface->hasCarrier())
+    { // an interface go dowdn
+        eigrpIface = this->eigrpIft->findInterfaceById(ifaceId);
+
+        if (eigrpIface != NULL && eigrpIface->isEnabled())
+        {
+            disableInterface(eigrpIface, ifMask);
+        }
+    }
+}
+
+void EigrpIpv4Pdm::processIfaceConfigChange(InterfaceEntry *iface, EigrpInterface *eigrpIface)
+{
+    EigrpRouteSource<IPv4Address> *source;
+    int routeCount = eigrpTt->getNumRoutes();
+    int ifaceId = eigrpIface->getInterfaceId();
+    EigrpMetricPar ifParam = eigrpMetric->getParam(eigrpIface, iface);
+    EigrpMetricPar newParam;
+    uint32_t metric;
+
+    // Update routes through the interface
+    for (int i = 0; i < routeCount; i++)
+    {
+        source = eigrpTt->getRoute(i);
+        if (source->getIfaceId() == ifaceId)
+        {
+            // Update metric of source
+            if (source->getNexthopId() == EigrpRouteSource<IPv4Address>::CONNECTED_ID)
+            { // connected route
+                source->setMetricParams(ifParam);
+                metric = eigrpMetric->computeMetric(ifParam, this->kValues);
+                source->setMetric(metric);
+            }
+            else
+            {
+                newParam = eigrpMetric->adjustParam(ifParam, source->getRdParams());
+                source->setMetricParams(newParam);
+                metric = eigrpMetric->computeMetric(newParam, this->kValues);
+                source->setMetric(metric);
+            }
+
+            // Notify DUAL about event
+            eigrpDual->processEvent(EigrpDual::RECV_UPDATE, source, false);
+        }
+    }
+}
+
 void EigrpIpv4Pdm::disableInterface(EigrpInterface *eigrpIface, IPv4Address& ifMask)
 {
     EigrpTimer* hellot;
@@ -936,7 +883,7 @@ void EigrpIpv4Pdm::disableInterface(EigrpInterface *eigrpIface, IPv4Address& ifM
     }
 }
 
-void EigrpIpv4Pdm::enableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask)
+void EigrpIpv4Pdm::enableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask, int networkId)
 {
     EigrpTimer* hellot;
     int ifaceId = eigrpIface->getInterfaceId();
@@ -944,27 +891,31 @@ void EigrpIpv4Pdm::enableInterface(InterfaceEntry *iface, EigrpInterface *eigrpI
     EigrpMetricPar metricPar;
     bool newSourceResult;
 
+    EV << "EIGRP enabled on interface " << ifaceId << endl;
+
     // Remove interface from EIGRP interface table
     eigrpIftDisabled->removeInterface(eigrpIface);
     eigrpIft->addInterface(eigrpIface);
 
     eigrpIface->setEnabling(true);
 
-    // Start Hello timer on interface
-    hellot = eigrpIface->getHelloTimer();
-    scheduleAt(simTime() + uniform(0, 5), hellot);
+    eigrpIface->setNetworkId(networkId);
 
-#ifdef DEBUG
-    EV << "EIGRP enabled on interface " << ifaceId << endl;
-#endif
+    // Start Hello timer on interface
+    if ((hellot = eigrpIface->getHelloTimer()) == NULL)
+    {
+        hellot = createTimer(EIGRP_HELLO_TIMER, eigrpIface);
+        eigrpIface->setHelloTimerPtr(hellot);
+    }
+    scheduleAt(simTime() + uniform(0, 5), hellot);
 
     // Create route
     src = eigrpTt->findOrCreateRoute(ifAddress, ifMask, ifaceId, EigrpRouteSource<IPv4Address>::CONNECTED_ID, newSourceResult);
 
-    metricPar = getMetricPar(eigrpIface, iface);
+    metricPar = eigrpMetric->getParam(eigrpIface, iface);
     // Compute metric
     src->setMetricParams(metricPar);
-    uint32_t metric = computeClassicMetric(metricPar);
+    uint32_t metric = eigrpMetric->computeMetric(metricPar, this->kValues);
     src->setMetric(metric);
 
     // Notify DUAL about event
@@ -973,23 +924,18 @@ void EigrpIpv4Pdm::enableInterface(InterfaceEntry *iface, EigrpInterface *eigrpI
 
 EigrpInterface *EigrpIpv4Pdm::addInterfaceToEigrp(int ifaceId, int networkId, bool enabled)
 {
-    InterfaceEntry *iface;
+    InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
     IPv4Address ifAddress, ifMask;
     // create EIGRP interface and hello timer
-    EigrpInterface *eigrpIface = new EigrpInterface(ifaceId, networkId, enabled);
-    EigrpTimer* hellot = createTimer(EIGRP_HELLO_TIMER, eigrpIface);
-
-    //add interface to the interface table
-    eigrpIface->setHelloTimerPtr(hellot);
+    EigrpInterface *eigrpIface = new EigrpInterface(iface, networkId, enabled);
 
     if (enabled)
     {
         // Get address and mask of interface
-        iface = ift->getInterfaceById(ifaceId);
         ifMask = iface->ipv4Data()->getNetmask();
         ifAddress = iface->ipv4Data()->getIPAddress().doAnd(ifMask);
 
-        enableInterface(iface, eigrpIface, ifAddress, ifMask);
+        enableInterface(iface, eigrpIface, ifAddress, ifMask, networkId);
     }
     else
     {
@@ -1003,7 +949,7 @@ EigrpInterface *EigrpIpv4Pdm::addInterfaceToEigrp(int ifaceId, int networkId, bo
 // interface IEigrpModule
 //
 
-int EigrpIpv4Pdm::addNetwork(IPv4Address address, IPv4Address mask)
+EigrpNetwork *EigrpIpv4Pdm::addNetwork(IPv4Address address, IPv4Address mask)
 {
     // TODO duplicity control
     return routingForNetworks->addNetwork(address, mask);
@@ -1047,7 +993,7 @@ void EigrpIpv4Pdm::addRouteToRT(EigrpRouteSource<IPv4Address> *successor)
 
     if (successor->isInternal())
     {
-        // Set any except IFACENETMASK and MANUAL
+        // Set any source except IFACENETMASK and MANUAL
         rtEntry->setSource(IPv4Route::ZEBRA);
         // Set right protocol source
         rtEntry->setRoutingProtocolSource(ANSAIPv4Route::pEIGRP);
@@ -1107,7 +1053,7 @@ void EigrpIpv4Pdm::removeRouteFromRT(EigrpRouteSource<IPv4Address> *source)
 
 EigrpIpv4Pdm::RouteVector::iterator EigrpIpv4Pdm::findRouteInRT(EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route)
 {
-    // Pokud bych si udržoval vector<ANSAIPv4Route>, pak kdyby nekdo pomoci prepareForAddRoute smazal moji cestu, tak
+    // kdyby nekdo pomoci prepareForAddRoute smazal moji cestu, tak
     // neprijmu udalost informujici o smazani (pouziva se deleteRouteSilent). Takze bych mohl mit vector s odkazy na
     // kusy pameti, ktere mi nepatri -> problem.
 
@@ -1121,12 +1067,8 @@ EigrpIpv4Pdm::RouteVector::iterator EigrpIpv4Pdm::findRouteInRT(EigrpRouteSource
     for (it = eigrpRtRoutes.begin(); it < eigrpRtRoutes.end(); it++)
     {
         rtEntry = *it;
-
         if (rtEntry->getDestination() == routeAddr && rtEntry->getNetmask() == routeMask && rtEntry->getGateway() == nextHop)
-        {
-            //if (rtEntry->getRoutingProtocolSource() == ANSAIPv4Route::pEIGRP)
             return it;
-        }
     }
 
     return it;
@@ -1147,6 +1089,7 @@ void EigrpIpv4Pdm::sendUpdate(EigrpRoute<IPv4Address> *route, int destNeighbor, 
     routeTlv.destAddress = route->getRouteAddress();
     routeTlv.destMask = route->getRouteMask();
     routeTlv.nextHop = IPv4Address::UNSPECIFIED_ADDRESS;
+    // TODO
     if (source != NULL)
         routeTlv.metric = source->getMetricParams();
     else
@@ -1191,14 +1134,7 @@ void EigrpIpv4Pdm::sendQuery(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     routeTlv.destAddress = route->getRouteAddress();
     routeTlv.destMask = route->getRouteMask();
     routeTlv.nextHop = IPv4Address::UNSPECIFIED_ADDRESS;
-
-    if (source != NULL)
-        routeTlv.metric = source->getMetricParams();
-    else
-    { // Unreachable route
-        routeTlv.metric.delay = UINT32_MAX;
-        routeTlv.metric.mtu = ift->getInterfaceById(neigh->getIfaceId())->getMTU();
-    }
+    routeTlv.metric = route->getRdPar();
 
     queryMsg->setInterRoutesArraySize(1);
     queryMsg->setInterRoutes(0, routeTlv);
@@ -1206,7 +1142,7 @@ void EigrpIpv4Pdm::sendQuery(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     // Send message
     if (destNeighbor == IEigrpPdm::UNSPEC_RECEIVER)
     { // Send message to all neighbors
-        sendMsgToAllNeighbors(queryMsg);
+        sendQueryToAllNeighbors(queryMsg, source->getNexthopId());
         EV << "Send Query message about route " << route->getRouteAddress() << " to all neighbors" << endl;
     }
     else
@@ -1217,7 +1153,7 @@ void EigrpIpv4Pdm::sendQuery(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     }
 }
 
-void EigrpIpv4Pdm::sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source)
+void EigrpIpv4Pdm::sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source, bool isUnreachable)
 {
     EigrpNeighbor<IPv4Address> *neigh = eigrpNt->findNeighborById(destNeighbor);
     int ifaceId = neigh->getIfaceId();
@@ -1227,14 +1163,9 @@ void EigrpIpv4Pdm::sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     routeTlv.destAddress = route->getRouteAddress();
     routeTlv.destMask = route->getRouteMask();
     routeTlv.nextHop = IPv4Address::UNSPECIFIED_ADDRESS;
-
-    if (source != NULL)
-        routeTlv.metric = source->getMetricParams();
-    else
-    { // Unreachable route
+    routeTlv.metric = route->getRdPar();
+    if (isUnreachable)
         routeTlv.metric.delay = UINT32_MAX;
-        routeTlv.metric.mtu = ift->getInterfaceById(ifaceId)->getMTU();
-    }
 
     replyMsg->setInterRoutesArraySize(1);
     replyMsg->setInterRoutes(0, routeTlv);
@@ -1272,7 +1203,7 @@ EigrpRouteSource<IPv4Address> * EigrpIpv4Pdm::findSuccessor(EigrpRoute<IPv4Addre
     return eigrpTt->findSuccessor(route, dmin);
 }
 
-bool EigrpIpv4Pdm::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t &resultDmin)
+bool EigrpIpv4Pdm::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t& resultDmin)
 {
     return eigrpTt->hasFeasibleSuccessor(route, resultDmin);
 }
