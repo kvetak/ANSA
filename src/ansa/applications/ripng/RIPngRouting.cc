@@ -174,6 +174,7 @@ void RIPngRouting::moveInterfaceToSocket(RIPng::Interface *interface, int port)
     {
         UDPSocket socket;
         socket.setOutputGate(gate("udpOut"));
+        socket.setReuseAddress(true);
         //so every RIPng message sent from RIPng interface uses correct link-local source address
         socket.bind(ift->getInterfaceById(interfaceId)->ipv6Data()->getLinkLocalAddress(), port);
 
@@ -286,6 +287,7 @@ void RIPngRouting::moveProcessToSocket(RIPngProcess *process, int oldPort, int p
     {
         RIPng::GlobalSocket *globalSocket = new RIPng::GlobalSocket();
         globalSocket->socket.setOutputGate(gate("udpOut"));
+        globalSocket->socket.setReuseAddress(true);
         globalSocket->socket.bind(port);
         globalSocket->socket.joinMulticastGroup(multicastAddress, -1);
         globalSockets[port] = globalSocket;
