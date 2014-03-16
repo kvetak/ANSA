@@ -42,6 +42,8 @@ module ANSA_xTR extends ANSA_RouterRIPDual
     submodules:
         LISP: LISPRouting {
             @display("p=429,311");
+            deviceId = deviceId;
+            deviceType = "Router";           
         }
     connections:
         UDP.appOut++ --> LISP.udpIn;

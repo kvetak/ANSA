@@ -22,7 +22,8 @@ package inet.ansa.networklayer.lisp;
 simple LISPCore
 {
     parameters:
-        @display("i=block/switch");
+        @display("i=block/switch");        
+        string deviceId;                                   
     gates:
         input udpIn @labels(UDPControlInfo/up);
         output udpOut @labels(UDPControlInfo/down);

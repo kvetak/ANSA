@@ -2152,7 +2152,7 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
     //ss << VRRPModule->getVrid();
     //string groupId = ss.str();
 
-    const char* aaa = VRRPModule->getInterface()->getFullName();
+    //const char* aaa = VRRPModule->getInterface()->getFullName();
 
     cXMLElement *group = xmlParser::GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.str().c_str());
     if (group == NULL) {
@@ -2486,5 +2486,32 @@ void DeviceConfigurator::loadEigrpInterfaceConfig(cXMLElement *device, IEigrpMod
         }
 
         ifaceElem = xmlParser::GetInterface(ifaceElem, NULL);
+    }
+}
+
+
+void DeviceConfigurator::loadLISPConfig(LISPCore* LISPModule)
+{
+    ASSERT(LISPModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL){
+       ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
+    }
+
+    cXMLElement *mss = xmlParser::GetLISPMapServers(NULL, device);
+    while (mss != NULL) {
+        if (mss->hasAttributes()) {
+            std::string mssv4 = mss->getAttribute("ipv4");
+            std::string mssv6 = mss->getAttribute("ipv6");
+            EV << "==== MapServer" << mssv4 << "   " << mssv6 << endl;
+        }
+        mss = xmlParser::GetLISPMapServers(mss, device);
     }
 }

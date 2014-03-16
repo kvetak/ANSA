@@ -27,22 +27,36 @@
 #include "IInterfaceTable.h"
 #include "InterfaceTableAccess.h"
 #include "NotificationBoard.h"
-#include "deviceConfigurator.h"
+#include "LISPMapCache.h"
+#include "LISPStructures.h"
 
 class LISPCore : public cSimpleModule, protected INotifiable
 {
+  public:
+    LISPCore();
+    virtual ~LISPCore();
+
   protected:
     const char  *deviceId;   ///< Id of the device which contains this routing process.
     std::string hostName;    ///< Device name from the network topology.
 
-    IInterfaceTable     *ift;                ///< Provides access to the interface table.
-    AnsaRoutingTable    *rt;                 ///< Provides access to the IPv4 routing table.
-    NotificationBoard   *nb;                 ///< Provides access to the notification board
-    DeviceConfigurator  *devConf;
+    IInterfaceTable*    ift;                ///< Provides access to the interface table.
+    AnsaRoutingTable*   rt;                 ///< Provides access to the IPv4 routing table.
+    NotificationBoard*  nb;                 ///< Provides access to the notification board
+    LISPMapCache*       lmc;
+
+    MapServersList*     mss;
+    MapResolversList*   mrs;
+
+    bool MapResolver;
+    bool MapServer;
+    bool isMapResolver()    {return MapResolver;}
+    bool isMapServer()      {return MapServer;}
 
     UDPSocket socket;
 
-    virtual void initialize();
+    virtual int numInitStages() const { return 4; }
+    virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
     virtual void receiveChangeNotification(int category, const cObject *details);
     virtual void updateDisplayString();
