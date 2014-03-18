@@ -564,22 +564,79 @@ cXMLElement *xmlParser::GetEigrpIPv4Network(cXMLElement *network, cXMLElement *p
     return network;
 }
 
-cXMLElement* xmlParser::GetLISPMapServers(cXMLElement *ms, cXMLElement *device)
+cXMLElement* xmlParser::GetLISPRouting(cXMLElement* device)
 {
-    if (device != NULL){
-       cXMLElement *routing = device->getFirstChildWithTag("Routing");
-       if (routing == NULL)
-          return NULL;
-       cXMLElement *lisp = routing->getFirstChildWithTag("LISP");
-       if (lisp == NULL)
-          return NULL;
-       ms = device->getFirstChildWithTag("MapServerAddress");
-    }
-    else if (ms != NULL){
-       ms = ms->getNextSiblingWithTag("MapServerAddress");
-    }
-    else{
-       ms = NULL;
-    }
-    return ms;
+    ASSERT(device != NULL);
+    cXMLElement *routing = device->getFirstChildWithTag("Routing");
+    if (routing == NULL)
+       return NULL;
+    return routing->getFirstChildWithTag("LISP");
+}
+
+cXMLElement* xmlParser::GetLISPMapServerAddr(cXMLElement* ele, cXMLElement* lisp)
+{
+    return GetLISPElement(ele, "MapServerAddress", lisp);
+}
+
+cXMLElement* xmlParser::GetLISPMapResolverAddr(cXMLElement* ele, cXMLElement* lisp)
+{
+    return GetLISPElement(ele, "MapResolverAddress", lisp);
+}
+
+cXMLElement* xmlParser::GetLISPSite(cXMLElement* ele, cXMLElement* ms)
+{
+    return GetLISPElement(ele, "Site", ms);
+}
+
+cXMLElement* xmlParser::GetLISPSiteKey(cXMLElement* ele, cXMLElement* ms)
+{
+    return GetLISPElement(ele, "Key", ms);
+}
+
+cXMLElement* xmlParser::GetLISPSiteEid(cXMLElement* ele, cXMLElement* ms)
+{
+    return GetLISPElement(ele, "EID", ms);
+}
+
+
+cXMLElement* xmlParser::GetLISPMapServer(cXMLElement* ele, cXMLElement* lisp)
+{
+    return GetLISPElement(ele, "MapServer", lisp);
+}
+
+cXMLElement* xmlParser::GetLISPMapResolver(cXMLElement* ele, cXMLElement* lisp)
+{
+    return GetLISPElement(ele, "MapResolver", lisp);
+}
+
+cXMLElement* xmlParser::GetLISPMapping(cXMLElement* ele, cXMLElement* lisp)
+{
+    return GetLISPElement(ele, "Mapping", lisp);
+}
+
+cXMLElement* xmlParser::GetLISPMappingEid(cXMLElement* ele, cXMLElement* mapping)
+{
+    return GetLISPElement(ele, "EID", mapping);
+}
+cXMLElement* xmlParser::GetLISPMappingRloc(cXMLElement* ele, cXMLElement* mapping)
+{
+    return GetLISPElement(ele, "RLOC", mapping);
+}
+cXMLElement* xmlParser::GetLISPMappingPriority(cXMLElement* ele, cXMLElement* mapping)
+{
+    return GetLISPElement(ele, "Priority", mapping);
+}
+cXMLElement* xmlParser::GetLISPMappingWeight(cXMLElement* ele, cXMLElement* mapping)
+{
+    return GetLISPElement(ele, "Weight", mapping);
+}
+
+
+cXMLElement* xmlParser::GetLISPElement(cXMLElement* element, const char* tag, cXMLElement* parent)
+{
+    if (element == NULL)
+       element = parent->getFirstChildWithTag(tag);
+    else
+       element = element->getNextSiblingWithTag(tag);
+    return element;
 }

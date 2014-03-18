@@ -2489,29 +2489,140 @@ void DeviceConfigurator::loadEigrpInterfaceConfig(cXMLElement *device, IEigrpMod
     }
 }
 
+void DeviceConfigurator::loadLISPMapServerAddresses(cXMLElement* lisp)
+{
+    cXMLElement *mss = xmlParser::GetLISPMapServerAddr(NULL, lisp);
+    while (mss != NULL) {
+       if (mss->hasAttributes()) {
+           std::string mssv4 = mss->getAttribute("ipv4");
+           std::string mssv6 = mss->getAttribute("ipv6");
+           std::string msspass = mss->getAttribute("key");
+           EV << "\tMapServerAddress:\tIPv4 = " << mssv4 << "\tIPv6 = " << mssv6 << "\tPassword = " << msspass <<endl;
+       }
+       //Iterate to next MS address
+       mss = xmlParser::GetLISPMapServerAddr(mss, NULL);
+    }
+}
+
+void DeviceConfigurator::loadLISPMapResolverAddresses(cXMLElement* lisp) {
+    cXMLElement *mrs = xmlParser::GetLISPMapResolverAddr(NULL, lisp);
+    while (mrs != NULL) {
+        if (mrs->hasAttributes()) {
+            std::string mrsv4 = mrs->getAttribute("ipv4");
+            std::string mrsv6 = mrs->getAttribute("ipv6");
+            EV << "\tMapResolverAddress:\t" << mrsv4 << "\t" << mrsv6 << endl;
+        }
+        //Iterate to next MR address
+        mrs = xmlParser::GetLISPMapResolverAddr(mrs, NULL);
+    }
+}
+
+void DeviceConfigurator::loadLISPMapping(cXMLElement* lisp) {
+    cXMLElement *mapping = xmlParser::GetLISPMapping(NULL, lisp);
+    while (mapping != NULL) {
+        std::string eid  = xmlParser::GetLISPMappingEid(NULL, mapping)->getNodeValue();
+        std::string rloc = xmlParser::GetLISPMappingRloc(NULL, mapping)->getNodeValue();
+        std::string prio = xmlParser::GetLISPMappingPriority(NULL, mapping)->getNodeValue();
+        std::string wei  = xmlParser::GetLISPMappingWeight(NULL, mapping)->getNodeValue();
+        EV << "\tMapping:\tEID = " << eid << "\tRLOC = " << rloc << "\tPriority = " << prio << "\tWeight = " << wei << endl;
+        //Iterate to next mapping
+        mapping = xmlParser::GetLISPMapping(mapping, NULL);
+    }
+}
+
+void DeviceConfigurator::loadLISPSite(cXMLElement* site)
+{
+    std::string name = site->getAttribute("name");
+    std::string key = xmlParser::GetLISPSiteKey(NULL, site)->getNodeValue();
+    EV << "\tDatabase:\n\t\tSite " << name << ":\tKey = " << key << "\t";
+
+    cXMLElement *eid = xmlParser::GetLISPSiteEid(NULL, site);
+    while (eid != NULL) {
+        std::string eidval = eid->getNodeValue();
+        EV << "EID-prefix = " << eidval << "\t";
+        //Iterate to next mapping
+        eid = xmlParser::GetLISPSiteEid(eid, NULL);
+    }
+    EV << endl;
+}
+
+void DeviceConfigurator::loadLISPMapServer(cXMLElement* lisp)
+{
+    cXMLElement *ms = xmlParser::GetLISPMapServer(NULL, lisp);
+    if (ms != NULL)
+    {
+        //Get Map Server state
+        if(ms->hasChildren())
+        {
+            std::string msv4 = ms->getAttribute("ipv4");
+            std::string msv6 = ms->getAttribute("ipv6");
+            EV << "\tMS functionality:\tIPv4 = " << msv4 << "\tIPv6 = " << msv6 << endl;
+        }
+        //Get all Site configs
+        cXMLElement *site = xmlParser::GetLISPSite(NULL, ms);
+        while (site != NULL) {
+            loadLISPSite(site);
+            //Iterate to next site
+            site = xmlParser::GetLISPSite(site, NULL);
+        }
+    }
+
+}
+
+void DeviceConfigurator::loadLISPMapResolver(cXMLElement* lisp)
+{
+    cXMLElement *mr = xmlParser::GetLISPMapResolver(NULL, lisp);
+    if (mr != NULL)
+    {
+        if(mr->hasChildren())
+        {
+            std::string mrv4 = mr->getAttribute("ipv4");
+            std::string mrv6 = mr->getAttribute("ipv6");
+            EV << "\tMR functionality:\tIPv4 = " << mrv4 << "\tIPv6 = " << mrv6 << endl;
+        }
+    }
+}
 
 void DeviceConfigurator::loadLISPConfig(LISPCore* LISPModule)
 {
     ASSERT(LISPModule != NULL);
 
-    // get access to device node from XML
+    //Get access to device node from XML
     const char *deviceType = par("deviceType");
     const char *deviceId = par("deviceId");
     const char *configFile = par("configFile");
     cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
 
+    //In case of no configuration, go to end
     if (device == NULL){
        ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             return;
     }
 
-    cXMLElement *mss = xmlParser::GetLISPMapServers(NULL, device);
-    while (mss != NULL) {
-        if (mss->hasAttributes()) {
-            std::string mssv4 = mss->getAttribute("ipv4");
-            std::string mssv6 = mss->getAttribute("ipv6");
-            EV << "==== MapServer" << mssv4 << "   " << mssv6 << endl;
-        }
-        mss = xmlParser::GetLISPMapServers(mss, device);
+    //Find LISP tag in config
+    cXMLElement *lisp = xmlParser::GetLISPRouting(device);
+
+    //In case of no LISP configuration, go to end
+    if (lisp == NULL){
+       ev << "No LISP configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+            return;
     }
+
+    EV << "LISP config for " << deviceId << endl;
+
+    //Configure Map Server Address for ETR
+    loadLISPMapServerAddresses(lisp);
+
+    //Configure Map Resolver Address for ITR
+    loadLISPMapResolverAddresses(lisp);
+
+    //Configure Map Server
+    loadLISPMapServer(lisp);
+
+    //Configure Map Resolver
+    loadLISPMapResolver(lisp);
+
+    //Configure ITR Mappings
+    loadLISPMapping(lisp);
+
 }

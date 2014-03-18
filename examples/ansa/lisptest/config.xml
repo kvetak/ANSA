@@ -29,8 +29,14 @@
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
         	<LISP>
-        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapServerAddress>
+        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO"></MapServerAddress>
         		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>        	
+        		<Mapping>
+        			<EID>10.0.1.0/24</EID>
+        			<RLOC>10.0.12.1</RLOC>
+        			<Priority>1</Priority>
+        			<Weight>100</Weight>
+        		</Mapping>     	
         	</LISP>
         </Routing>
         
@@ -63,8 +69,17 @@
         		<Network>0.0.0.0</Network>
         	</RIP>
         	<LISP>
-        		<MapServer ipv4="enable" ipv6="enable"></MapServer>
-        		<MapResolver ipv4="enable" ipv6="enable"></MapResolver>
+        		<MapServer ipv4="enable" ipv6="enable">
+        			<Site name="Site A">
+        				<EID>10.0.1.0/24</EID>
+        				<Key>HESLO</Key>
+        			</Site>
+        			<Site name="Site B">
+        				<EID>10.0.3.0/24</EID>
+        				<Key>HESLO</Key>
+        			</Site>
+        		</MapServer>
+        		<MapResolver ipv4="enable" ipv6="disable" />
         	</LISP>
         </Routing>
         
@@ -100,8 +115,14 @@
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
         	<LISP>
-        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapServerAddress>
-        		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>        	
+        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
+        		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>   
+        		<Mapping>
+        			<EID>10.0.3.0/24</EID>
+        			<RLOC>10.0.23.2</RLOC>
+        			<Priority>1</Priority>
+        			<Weight>100</Weight>
+        		</Mapping>     	
         	</LISP>        	
         </Routing>
         

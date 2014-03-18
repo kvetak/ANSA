@@ -75,7 +75,20 @@ class xmlParser {
       static cXMLElement *GetEigrpIPv4Network(cXMLElement *network, cXMLElement *process);
 
       // configuration for LISP
-      static cXMLElement* GetLISPMapServers(cXMLElement *ms, cXMLElement *device);
+      static cXMLElement* GetLISPRouting(cXMLElement* device);
+      static cXMLElement* GetLISPMapServerAddr(cXMLElement* ele, cXMLElement* lisp);
+      static cXMLElement* GetLISPMapResolverAddr(cXMLElement* ele, cXMLElement* lisp);
+      static cXMLElement* GetLISPSite(cXMLElement* ele, cXMLElement* ms);
+      static cXMLElement* GetLISPSiteKey(cXMLElement* ele, cXMLElement* site);
+      static cXMLElement* GetLISPSiteEid(cXMLElement* ele, cXMLElement* site);
+      static cXMLElement* GetLISPMapServer(cXMLElement *ele, cXMLElement* lisp);
+      static cXMLElement* GetLISPMapResolver(cXMLElement* ele, cXMLElement* lisp);
+      static cXMLElement* GetLISPMapping(cXMLElement* ele, cXMLElement* lisp);
+      static cXMLElement* GetLISPMappingEid(cXMLElement* ele, cXMLElement* mapping);
+      static cXMLElement* GetLISPMappingRloc(cXMLElement* ele, cXMLElement* mapping);
+      static cXMLElement* GetLISPMappingPriority(cXMLElement* ele, cXMLElement* mapping);
+      static cXMLElement* GetLISPMappingWeight(cXMLElement* ele, cXMLElement* mapping);
+      static cXMLElement* GetLISPElement(cXMLElement* element, const char* tag, cXMLElement* parent);
 };
 
 #endif /* XMLPARSER_H_ */

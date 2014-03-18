@@ -236,6 +236,12 @@ class DeviceConfigurator : public cSimpleModule {
       //////////////////////////////
       // Configuration for LISP   //
       //////////////////////////////
+      void loadLISPMapServerAddresses(cXMLElement* lisp);
+      void loadLISPMapResolverAddresses(cXMLElement* lisp);
+      void loadLISPSite(cXMLElement* lisp);
+      void loadLISPMapServer(cXMLElement* lisp);
+      void loadLISPMapResolver(cXMLElement* lisp);
+      void loadLISPMapping(cXMLElement* lisp);
       void loadLISPConfig(LISPCore* LISPModule);
 
 };
