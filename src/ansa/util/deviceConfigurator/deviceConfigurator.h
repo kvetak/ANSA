@@ -151,8 +151,9 @@ class DeviceConfigurator : public cSimpleModule {
       bool wildcardToMask(const char *wildcard, IPv4Address& result);
       /**< Loads configuration of EIGRP process */
       void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule *eigrpModule);
-      /**< Loads configuration of interface for EIGRP */
-      void loadEigrpInterfaceConfig(cXMLElement *device, IEigrpModule *eigrpModule);
+      /**< Loads configuration of interfaces for EIGRP */
+      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule *eigrpModule);
+      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule *eigrpModule, int ifaceId, const char *ifaceName);
       /**< Loads networks added to EIGRP */
       void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule);
       /**< Loads K-value and converts it to number */
@@ -231,7 +232,6 @@ class DeviceConfigurator : public cSimpleModule {
        * @param eigrpModule [in]
        */
       void loadEigrpIPv4Config(IEigrpModule *eigrpModule);
-
 
 
 };

@@ -2352,17 +2352,18 @@ void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule *eigrpModule)
 
     loadEigrpProcessesConfig(device, eigrpModule);
 
-    loadEigrpInterfaceConfig(device, eigrpModule);
+    loadEigrpInterfacesConfig(device, eigrpModule);
 }
 
 void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *processElem = NULL;
-    cXMLElement *tempNode = NULL;
+    cXMLElementList procDetails;
 
-    int asNum;    // converted AS number
+    int asNum;              // converted AS number
     const char *asNumStr;   // string with AS number
+    int tempNumber;
     bool success;
 
     processElem = xmlParser::GetEigrpProcess(processElem, device);
@@ -2376,31 +2377,45 @@ void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpMod
     {
         // AS number of process
         if ((asNumStr = processElem->getAttribute("asNumber")) == NULL)
-        {// AS number is mandatory
             throw cRuntimeError("No EIGRP autonomous system number specified");
-        }
         success = xmlParser::Str2Int(&asNum, asNumStr);
         if (!success || asNum < 1 || asNum > 65535)
-        { // bad value, AS number must be in <1, 65535>
-            throw cRuntimeError("Bad value for EIGRP autonomous system number");
-        }
+            throw cRuntimeError("Bad value for EIGRP autonomous system number (<1, 65535>)");
         eigrpModule->setASNum(asNum);
 
-        // Loads networks and enables corresponding interfaces
+        // Load networks and enable corresponding interfaces
         loadEigrpIPv4Networks(processElem, eigrpModule);
 
-        // K-values for metric computation
-        if ((tempNode = processElem->getFirstChildWithTag("MetricWeights")) != NULL)
+        procDetails = processElem->getChildren();
+        for (cXMLElementList::iterator procElem = procDetails.begin(); procElem != procDetails.end(); procElem++)
         {
-            EigrpKValues kval;
-            kval.K1 = loadEigrpKValue(tempNode, "k1", "1");
-            kval.K2 = loadEigrpKValue(tempNode, "k2", "0");
-            kval.K3 = loadEigrpKValue(tempNode, "k3", "1");
-            kval.K4 = loadEigrpKValue(tempNode, "k4", "0");
-            kval.K5 = loadEigrpKValue(tempNode, "k5", "0");
-            //kval.K6 = loadEigrpKValue(tempNode, "k6", "0");
+            std::string nodeName = (*procElem)->getTagName();
 
-            eigrpModule->setKValues(kval);
+            if (nodeName == "MetricWeights")
+            {
+                EigrpKValues kval;
+                kval.K1 = loadEigrpKValue((*procElem), "k1", "1");
+                kval.K2 = loadEigrpKValue((*procElem), "k2", "0");
+                kval.K3 = loadEigrpKValue((*procElem), "k3", "1");
+                kval.K4 = loadEigrpKValue((*procElem), "k4", "0");
+                kval.K5 = loadEigrpKValue((*procElem), "k5", "0");
+                kval.K6 = loadEigrpKValue((*procElem), "k6", "0");
+                eigrpModule->setKValues(kval);
+            }
+            else if (nodeName == "MaximumPath")
+            {
+                success = xmlParser::Str2Int(&tempNumber, (*procElem)->getNodeValue());
+                if (!success || tempNumber < 1)
+                    throw cRuntimeError("Bad value for EIGRP maximum paths for load balancing <1, 255>");
+                eigrpModule->setMaximumPath(tempNumber);
+            }
+            else if (nodeName == "Variance")
+            {
+                success = xmlParser::Str2Int(&tempNumber, (*procElem)->getNodeValue());
+                if (!success || tempNumber < 1 || tempNumber > 128)
+                    throw cRuntimeError("Bad value for EIGRP variance (<1, 128>)");
+                eigrpModule->setVariance(tempNumber);
+            }
         }
 
         processElem = xmlParser::GetEigrpProcess(processElem, NULL);
@@ -2415,13 +2430,11 @@ int DeviceConfigurator::loadEigrpKValue(cXMLElement *node, const char *attrName,
 
     success = xmlParser::Str2Int(&result, kvalueStr);
     if (!success || result < 0 || result > 255)
-    { // bad value, K-value must be in <0, 255>
-        throw cRuntimeError("Bad value for EIGRP metric weights");
-    }
+        throw cRuntimeError("Bad value for EIGRP metric weights (<0, 255>)");
     return result;
 }
 
-void DeviceConfigurator::loadEigrpInterfaceConfig(cXMLElement *device, IEigrpModule *eigrpModule)
+void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *eigrpIfaceElem = NULL;
@@ -2431,60 +2444,64 @@ void DeviceConfigurator::loadEigrpInterfaceConfig(cXMLElement *device, IEigrpMod
     int tempNumber;
 
     if ((ifaceElem = xmlParser::GetInterface(ifaceElem, device)) == NULL)
-    {
         return;
-    }
 
     while (ifaceElem != NULL)
     {
+        // Get interface ID
+        const char *ifaceName = ifaceElem->getAttribute("name");
+        InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+        int ifaceId = iface->getInterfaceId();
         // Get EIGRP configuration for interface
         eigrpIfaceElem = ifaceElem->getFirstChildWithTag("EIGRP-IPv4");
 
+        // Load EIGRP IPv4 configuration
         if (eigrpIfaceElem != NULL)
         {
-            // Get interface ID
-            const char *ifaceName = ifaceElem->getAttribute("name");
-            InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
-            int ifaceId = iface->getInterfaceId();
-
             // Get EIGRP AS number
             const char *asNumStr;
             if ((asNumStr = eigrpIfaceElem->getAttribute("asNumber")) == NULL)
-            {// AS number is mandatory
-                throw cRuntimeError("No EIGRP autonomous system number specified in interface settings");
-            }
+                throw cRuntimeError("No EIGRP autonomous system number specified in settings of interface %s", ifaceName);
             success = xmlParser::Str2Int(&tempNumber, asNumStr);
             if (!success || tempNumber < 1 || tempNumber > 65535)
-            { // bad value, AS number must be in <1, 65535>
-                throw cRuntimeError("Bad value for EIGRP autonomous system number");
-            }
+                throw cRuntimeError("Bad value for EIGRP autonomous system number (<1, 65535>) on interface %s", ifaceName);
             // TODO vybrat podle AS spravny PDM a pro ten nastavovat nasledujici
 
-            // Hello interval
-            const char *helloStr = xmlParser::GetNodeParamConfig(eigrpIfaceElem, "HelloInterval", NULL);
-            if (helloStr != NULL)
-            {
-                success = xmlParser::Str2Int(&tempNumber, helloStr);
-                if (!success || tempNumber < 1 || tempNumber > 65535)
-                { // bad value, Hello interval must be in <1, 65535>
-                    throw cRuntimeError("Bad value for EIGRP Hello interval");
-                }
-                eigrpModule->setHelloInt(tempNumber, ifaceId);
-            }
-
-            // Hold interval
-            const char *holdStr = xmlParser::GetNodeParamConfig(eigrpIfaceElem, "HoldInterval", NULL);
-            if (holdStr != NULL)
-            {
-                success = xmlParser::Str2Int(&tempNumber, holdStr);
-                if (!success || tempNumber < 1 || tempNumber > 65535)
-                { // bad value, Hold interval must be in <1, 65535>
-                    throw cRuntimeError("Bad value for EIGRP Hold interval");
-                }
-                eigrpModule->setHoldInt(tempNumber, ifaceId);
-            }
+            loadEigrpInterface(eigrpIfaceElem, eigrpModule, ifaceId, ifaceName);
         }
-
         ifaceElem = xmlParser::GetInterface(ifaceElem, NULL);
+    }
+}
+
+void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule *eigrpModule, int ifaceId, const char *ifaceName)
+{
+    int tempNumber;
+    bool tempBool, success;
+
+    cXMLElementList ifDetails = eigrpIface->getChildren();
+    for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
+    {
+        std::string nodeName = (*ifElemIt)->getTagName();
+
+        if (nodeName == "HelloInterval")
+        {
+            success = xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 1 || tempNumber > 65535)
+                throw cRuntimeError("Bad value for EIGRP Hello interval (<1, 65535>) on interface %s", ifaceName);
+            eigrpModule->setHelloInt(tempNumber, ifaceId);
+        }
+        else if (nodeName == "HoldInterval")
+        {
+            success = xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 1 || tempNumber > 65535)
+                throw cRuntimeError("Bad value for EIGRP Hold interval (<1, 65535>) on interface %s", ifaceName);
+            eigrpModule->setHoldInt(tempNumber, ifaceId);
+        }
+        else if (nodeName == "SplitHorizon")
+        {
+            if (!xmlParser::Str2Bool(&tempBool, (*ifElemIt)->getNodeValue()))
+                throw cRuntimeError("Bad value for EIGRP Split Horizon on interface %s", ifaceName);
+            eigrpModule->setSplitHorizon(tempBool, ifaceId);
+        }
     }
 }
