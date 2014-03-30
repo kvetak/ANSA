@@ -20,10 +20,14 @@ Define_Module(EigrpIpv4NeighborTable);
 
 std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPv4Address>& neigh)
 {
-    const char *state = neigh.getState() ? "up" : "pending";
-
-    os << "If ID = " << neigh.getIfaceId() << ", IP = " << neigh.getIPAddress();
-    os << ", Hold = " << neigh.getHoldInt() << ", state is " << state;
+    const char *state = neigh.isStateUp() ? "up" : "pending";
+    os << "ID:" << neigh.getNeighborId();
+    os << "  IP = " << neigh.getIPAddress();
+    os << "  IF ID:" << neigh.getIfaceId();
+    os << "  holdInt = " << neigh.getHoldInt();
+    os << "  state is " << state;
+    os << "  lastSeqNum = " << neigh.getSeqNumber();
+    os << "  waitForAck = " << neigh.getAck();
     return os;
 }
 
@@ -36,10 +40,7 @@ EigrpIpv4NeighborTable::~EigrpIpv4NeighborTable()
     for (int i = 0; i < cnt; i++)
     {
         neigh = neighborVec[i];
-
         cancelHoldTimer(neigh);
-
-        neighborVec[i] = NULL;
         delete neigh;
     }
     neighborVec.clear();
@@ -127,3 +128,34 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::removeNeighbor(EigrpNeighbor
 
     return NULL;
 }
+
+EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::getFirstNeighborOnIf(int ifaceId)
+{
+    NeighborVector::iterator it;
+
+    for (it = neighborVec.begin(); it != neighborVec.end(); ++it)
+    {
+        if ((*it)->getIfaceId() == ifaceId)
+            return *it;
+    }
+
+    return NULL;
+}
+
+int EigrpIpv4NeighborTable::setAckOnIface(int ifaceId, uint32_t ackNum)
+{
+    NeighborVector::iterator it;
+    int neighCnt = 0;
+
+    for (it = neighborVec.begin(); it != neighborVec.end(); ++it)
+    {
+        if ((*it)->getIfaceId() == ifaceId)
+        {
+            neighCnt++;
+            (*it)->setAck(ackNum);
+        }
+    }
+
+    return neighCnt;
+}
+

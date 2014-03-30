@@ -22,7 +22,9 @@ package inet.ansa.networklayer.lisp;
 module LISPRouting
 {
     parameters:
-        @display("i=block/network2;bgb=202,179");
+        @display("i=block/network2;bgb=202,179");        
+        string deviceId;
+        string deviceType;        
     gates:
         input udpIn @labels(UDPControlInfo/up);
         output udpOut @labels(UDPControlInfo/down);
@@ -30,9 +32,11 @@ module LISPRouting
     submodules:
         lispMapCache: LISPMapCache {
             @display("p=95,35");
+            deviceId = deviceId;                       
         }
         lispCore: LISPCore {
-            @display("p=95,120");
+            @display("p=95,120");            
+            deviceId = deviceId;
         }
     connections allowunconnected:
 

@@ -21,7 +21,7 @@ cplusplus {{
     #include "INETDefs.h"
     #include "IPvXAddress.h"       
     // ---------- Locators ---------- 
-    typedef struct _locators
+    typedef struct 
     {       
         unsigned char priority;				// unicast priority
         unsigned char weight;				// unicast weight
@@ -31,30 +31,31 @@ cplusplus {{
         bool piggybackBit;					// piggyback Bit
         bool RouteRlocBit;					// route RLOC Bit
         unsigned short locAFI;				// locator AFI
-        IPvXAddress locator;     			// locator
-    } Locators;
+        IPvXAddress rloc;       			// locator
+    } Locator;
+    typedef std::vector<Locator> Locators;
     
     // ---------- Map-Request Recs ----------
-    typedef struct _requestrecs
+    typedef struct 
     {
         unsigned short eidLen;				// EID length
         unsigned short eidPrefixAFI;		// eid-prefix AFIs     
-        IPvXAddress eidPrefix; 				// eid-prefix    
+        IPvXAddress eid; 					// eid-prefix    
     } RequestRecs;
     
     // ---------- Map-Reply Recs ----------
-    typedef struct _replyrecs
+    typedef struct 
     {
         unsigned short mapVersion;			// EID length
         unsigned short eidPrefixAFI;		// eid-prefix AFIs     
-        IPvXAddress eidPrefix; 				// eid-prefix 
+        IPvXAddress eid;	 				// eid-prefix 
            
-        Locators locators[];      			//<-- see struct above    
+        Locators locators;      			//<-- see struct above    
     } ReplyRecs;
     
     
     // ---------- Map-Reply/Register Records ----------
-    typedef struct _records
+    typedef struct 
     {
         simtime_t recordTTL;				// TTL
         unsigned char locatorCount;   		// locator count

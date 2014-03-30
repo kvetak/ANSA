@@ -24,6 +24,7 @@
 #define EIGRPROUTE_H_
 
 #include <omnetpp.h>
+#include <algorithm>
 
 #include "IPv4Address.h"
 
@@ -42,6 +43,8 @@ struct EigrpMetricPar
     EigrpMetricPar() : delay(0), bandwidth(0), reliability(0), load(0), mtu(0), hopCount(0), internalTag(0) {}
 };
 
+template<typename IPAddress> class EigrpRouteSource;
+
 template<typename IPAddress>
 class EigrpRoute : public cObject
 {
@@ -51,18 +54,17 @@ class EigrpRoute : public cObject
     IPAddress routeAddress; /**< IP address of destination */
     IPAddress routeMask;    /**< Mask of destination */
 
-    bool active;            /**< Route is passive or active */
     int queryOrigin;        /**< State of DUAL */
-    int replyStatus;     // zatim jako citac, pripadne upravit pro identifikaci sousedu (zavest handle v NT a ty vkladat sem treba do vektoru)
+    std::vector<int> replyStatusTable;  /**< Reply status for each neighbor*/
     uint32_t fd;            /**< Feasible distance */
-    // Zatím jsem rd nikde nevyuzil!
     EigrpMetricPar rd;      /**< Parameters for computation of reported distance that belongs to this router */
     uint32_t Dij;           /**< Shortest distance (Dij) */
+    EigrpRouteSource<IPAddress> *successor; /**< Actual successor for route reported to neighbors of router */
 
     int referenceCounter;   /**< Counts amount of references to this object. */
 
   public:
-    EigrpRoute(IPAddress& address, IPAddress& mask, int routeId);
+    EigrpRoute(IPAddress& address, IPAddress& mask);
     virtual ~EigrpRoute();
 
     bool operator==(const EigrpRoute<IPAddress>& route) const
@@ -72,12 +74,10 @@ class EigrpRoute : public cObject
 
     int decrementRefCnt() {return --referenceCounter; }
     void incrementRefCnt() { ++referenceCounter; }
+    int getRefCnt() {return referenceCounter; }
 
     int getRouteId() const {return routeId; }
     void setRouteId(int routeId) { this->routeId = routeId; }
-
-    bool isActive() const { return active; }
-    void setActive(bool active) { this->active = active; }
 
     uint32_t getFd() const { return fd; }
     void setFd(uint32_t fd) { this->fd = fd; }
@@ -91,9 +91,10 @@ class EigrpRoute : public cObject
     int getQueryOrigin() const {return queryOrigin; }
     void setQueryOrigin(int queryOrigin) { this->queryOrigin = queryOrigin; }
 
-    int getReplyStatus() const { return replyStatus; }
-    void setReplyStatus(int replyStatus) { this->replyStatus = replyStatus; }
-    int decrementReplyStatus() { return --replyStatus; }
+    int getReplyStatusSum() const { return replyStatusTable.size(); }
+    bool getReplyStatus(int neighborId);
+    void setReplyStatus(int neighborId) { replyStatusTable.push_back(neighborId); }
+    bool unsetReplyStatus(int neighborId);
 
     IPAddress getRouteAddress() const { return routeAddress; }
     void setRouteAddress(IPAddress routeAddress) { this->routeAddress = routeAddress; }
@@ -101,13 +102,18 @@ class EigrpRoute : public cObject
     IPAddress getRouteMask() const { return routeMask; }
     void setRouteMask(IPAddress routeMask) { this->routeMask = routeMask; }
 
+    bool isActive() const { return replyStatusTable.size() > 0; }
+
+    EigrpRouteSource<IPAddress> *getSuccessor() const { return this->successor; }
+    void setSuccessor(EigrpRouteSource<IPAddress> * successor) { this->successor = successor; }
+
     //void addSource(EigrpRouteSource<IPAddress> *routeSrc) { sourceVec.push_back(routeSrc); }
     //EigrpRouteSource<IPAddress> *removeSource(EigrpRouteSource<IPAddress> * source);
     //EigrpRouteSource<IPAddress> *findSource(int sourceId);
     //int getNumSources() const { return sourceVec.size(); }
     //EigrpRouteSource<IPAddress> *getSource(int k) const { return sourceVec[k]; }
 
-    //EigrpRouteSource<IPAddress> *getFirstSuccessor();
+    //EigrpRouteSource<IPAddreint decrementReplyStatusSum() { return --replyStatus; }ss> *getFirstSuccessor();
     //bool hasFeasibleSuccessor();
     //bool satisfiesFC(EigrpRouteSource<IPAddress> *source) const { return source->getRd() < this->fd; }
 };
@@ -116,8 +122,8 @@ template<typename IPAddress>
 class EigrpRouteSource : public cObject
 {
   protected:
+    int sourceId;                   /** Unique ID of source */
     int routeId;                    /** Unique ID of route (same as in EigrpRoute) */
-    int sourceId;                   /**< Source of the route, correspond to neighbor ID (0 -> connected) */
 
     int nextHopId;                  /**< Id of next hop neighbor (usually same as sourceId, 0 -> connected) */
     IPAddress nextHop;              /**< IP address of next hop router (0.0.0.0 -> connected), only informational. It does not correspond to the sourceId (next hop may not be source of the route). */
@@ -133,9 +139,8 @@ class EigrpRouteSource : public cObject
     EigrpRoute<IPAddress> *routeInfo;          /**< Pointer to route */
 
   public:
-    static const int CONNECTED_ID = 0;  /**< Connected source */
 
-    EigrpRouteSource(int interfaceId, int sourceId, int routeId, EigrpRoute<IPAddress> *routeInfo);
+    EigrpRouteSource(int interfaceId, int nextHopId, int routeId, EigrpRoute<IPAddress> *routeInfo);
     virtual ~EigrpRouteSource();
 
     bool operator==(const EigrpRouteSource<IPAddress>& source) const
@@ -164,9 +169,6 @@ class EigrpRouteSource : public cObject
     bool isSuccessor() const { return successor; }
     void setSuccessor(bool successor) { this->successor = successor; }
 
-    int getSourceId() const { return sourceId; }
-    void setSourceId(int sourceId) { this->sourceId = sourceId; }
-
     int getNexthopId() const { return nextHopId; }
     void setNexthopId(int nextHopId) { this->nextHopId = nextHopId; }
 
@@ -181,6 +183,8 @@ class EigrpRouteSource : public cObject
     int getRouteId() const { return routeId; }
     void setRouteId(int routeId) { this->routeId = routeId; }
 
+    int getSourceId() const { return sourceId; }
+    void setSourceId(int sourceId) { this->sourceId = sourceId; }
 
     /*uint8_t getReliability() const { return reliability; }
     void setReliability(uint8_t reliability) { this->reliability = reliability; }
@@ -216,6 +220,7 @@ EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, int nextHopId, in
     rd = 0;
     internal = true;
     successor = false;
+    sourceId = 0;
 
     routeInfo->incrementRefCnt();
 }
@@ -228,15 +233,14 @@ EigrpRouteSource<IPAddress>::~EigrpRouteSource()
 }
 
 template<typename IPAddress>
-EigrpRoute<IPAddress>::EigrpRoute(IPAddress& address, IPAddress& mask, int routeId) :
-    routeId(routeId), routeAddress(address), routeMask(mask)
+EigrpRoute<IPAddress>::EigrpRoute(IPAddress& address, IPAddress& mask) :
+    routeId(0), routeAddress(address), routeMask(mask)
 {
     fd = Dij = UINT32_MAX;
     rd.delay = UINT32_MAX;
 
-    active = false;
+    successor = NULL;
     queryOrigin = 1;
-    replyStatus = 0;
 
     referenceCounter = 0;
 }
@@ -245,6 +249,34 @@ template<typename IPAddress>
 EigrpRoute<IPAddress>::~EigrpRoute()
 {
 }
+
+template<typename IPAddress>
+bool EigrpRoute<IPAddress>::getReplyStatus(int neighborId)
+{
+    std::vector<int>::iterator it;
+
+    if ((it = std::find(replyStatusTable.begin(), replyStatusTable.end(), neighborId)) != replyStatusTable.end())
+        return true;
+
+    return false;
+}
+
+/**
+ * Clear handle for specified neighbor in Reply Status table.
+ */
+template<typename IPAddress>
+bool EigrpRoute<IPAddress>::unsetReplyStatus(int neighborId)
+{
+    std::vector<int>::iterator it;
+
+    if ((it = std::find(replyStatusTable.begin(), replyStatusTable.end(), neighborId)) != replyStatusTable.end())
+    {
+        replyStatusTable.erase(it);
+        return true;
+    }
+    return false;
+}
+
 
 /*
 template<typename IPAddress>

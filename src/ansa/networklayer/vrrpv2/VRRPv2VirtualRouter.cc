@@ -64,7 +64,7 @@ void VRRPv2VirtualRouter::initialize(int stage)
 
     ift = InterfaceTableAccess().get();
     arp = AnsaArpAccess().get();
-    int ppp = (int) par("interface");
+    //int ppp = (int) par("interface");
     ie = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterfaceById((int) par("interface")));
 
     //set default configuration

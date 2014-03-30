@@ -17,10 +17,11 @@
 enum EigrpTimerType
 {
     EIGRP_HELLO_TIMER = 1;	// Hello timer
-    EIGRP_HOLD_TIMER = 2;		// Hold timer
+    EIGRP_HOLD_TIMER = 2;	// Hold timer
+    EIGRP_PACING_TIMER = 3;	// Pacing timer
 };
 
-// general timer structure
+// general timer structure 
 message EigrpTimer
 {
     char timerKind enum(EigrpTimerType);

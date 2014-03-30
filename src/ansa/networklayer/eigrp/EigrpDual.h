@@ -19,7 +19,6 @@
 #include <omnetpp.h>
 
 #include "IPv4Address.h"
-
 #include "EigrpRoute.h"
 #include "IEigrpPdm.h"
 
@@ -28,46 +27,50 @@ class EigrpDual : public cObject /* cSimpleModule */
   public:
     enum DualEvent
     {
-        RECV_UPDATE = 1,   /**< Received update message */
+        RECV_UPDATE = 0,    /**< Change of route distance in received update message or on interface */
         RECV_QUERY,         /**< Received query message */
         RECV_REPLY,         /**< Received reply message */
-        INTERFACE_UP,       /**< Interface went up */
-        //INTERFACE_DOWN,    /**< Interface went down */
         NEIGHBOR_DOWN,      /**< Neighbor went down */
-        NEW_NETWORK,        /**< New network added */
+        INTERFACE_DOWN,     /**< EIGRP disabled on interface - only for connected route */
+        INTERFACE_UP,       /**< EIGRP enabled on interface */
     };
 
   protected:
     IEigrpPdm *pdm;     /**< Protocol dependent module interface */
 
-    //virtual void initialize(int stage);
-    //virtual void handleMessage(cMessage *msg);
-    //virtual int numInitStages() const { return 4; }
+    /**< Transition to passive state - optimalization */
+    void goToPassiveFromQo3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void gotoPassiveFromQo1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
 
-    void printEvent(const char *event, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source);
+    void processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
 
-    void updateRoutingTable(EigrpRouteSource<IPv4Address> *oldSuccessor, EigrpRouteSource<IPv4Address> *successor);
-    EigrpRouteSource<IPv4Address> * updateTopologyTable(EigrpRoute<IPv4Address> *route, uint32_t dmin);
-
-    void processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *source, bool isSourceNew, EigrpRoute<IPv4Address> *route);
-    void processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address> *source, bool isSourceNew, EigrpRoute<IPv4Address> *route);
-    void processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> *source, bool isSourceNew, EigrpRoute<IPv4Address> *route);
-    void processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *source, bool isSourceNew, EigrpRoute<IPv4Address> *route);
-    void processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *source, bool isSourceNew, EigrpRoute<IPv4Address> *route);
-
-    void processTransition1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin);
-    void processTransition2(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin);
-    void processTransition3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin);
-    void processTransition4(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin);
-    void processTransition6(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route);
-    void processTransition8(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route);
-    void processTransition13(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route);
-    void processTransition15(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route);
+    void processTransition1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition2(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition4(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition5(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition6(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition7(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition8(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition9(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition10(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition11(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition12(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition13(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition14(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition15(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition16(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId);
+    void processTransition17(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void processTransition18(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
 
   public:
     EigrpDual(IEigrpPdm *pdm) { this->pdm = pdm; }
 
-    void processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *source, bool isSourceNew);
+    void processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *source, int neighborId);
 };
 
 #endif /* EIGRPDUAL_H_ */

@@ -19,29 +19,41 @@ class EigrpNeighbor : public cObject
   protected:
     int ifaceId;        /**< ID of interface that is connected to the neighbor. */
     int neighborId;     /**< ID of neighbor */
+    // TODO - tady se uloží RID směrovače (ještě ověřit na novém IOSu), které je vždy Ipv4 adresa (i při Ipv6 směrování)
     IPAddress ipAddress;/**< IP address of neighbor. */
+
     bool isUp;          /**< State of neighbor. Possible states are pending or up. */
     int holdInt;        /**< Neighbor's Hold interval used to set Hold timer */
-    EigrpTimer *holdt;  /**< pointer to Hold timer */
+    uint32_t seqNumber; /**< Sequence number received from neighbor */
+    // Docasne reseni (pro CR mod toto stacit nebude - chce to vector)
+    uint32_t waitForAck;/**< Ack number requested from neighbor */
+
+    EigrpTimer *holdt;  /**< Pointer to Hold timer */
 
   public:
+    static const int UNSPEC_ID = 0;
+
     virtual ~EigrpNeighbor() { delete holdt; holdt = NULL; }
     EigrpNeighbor(int ifaceId, IPAddress ipAddress) :
-        ifaceId(ifaceId), ipAddress(ipAddress), isUp(false), holdt(NULL) {}
+        ifaceId(ifaceId), neighborId(UNSPEC_ID), ipAddress(ipAddress), isUp(false), holdt(NULL) { seqNumber = 0; holdInt = 0; waitForAck = 0; }
 
-    void setState(bool stateUp) { this->isUp = stateUp; }
+    void setStateUp(bool stateUp) { this->isUp = stateUp; }
     /**< Sets neighbor's Hold interval value */
     void setHoldInt(int holdInt) { this->holdInt = holdInt; }
     /**< Sets timer for a neighbor */
     void setHoldTimer(EigrpTimer *holdt) { ASSERT(this->holdt == NULL); this->holdt = holdt; }
-    void setNeighborId(int id) { this->neighborId = id; }
+    void setNeighborId(int neighborId) {  this->neighborId = neighborId; }
+    void setSeqNumber(int seqNumber) { this->seqNumber = seqNumber; }
+    void setAck(uint32_t waitForAck) { this->waitForAck = waitForAck; }
 
     IPAddress getIPAddress() const { return this->ipAddress; }
     int getIfaceId() const { return this->ifaceId; }
-    bool getState() const { return this->isUp; }
+    bool isStateUp() const { return this->isUp; }
     int getHoldInt() const { return this->holdInt; }
     EigrpTimer *getHoldTimer() const { return this->holdt; }
     int getNeighborId() const { return neighborId; }
+    int getSeqNumber() const { return seqNumber; }
+    uint32_t getAck() const { return this->waitForAck; }
 };
 
 /**

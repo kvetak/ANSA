@@ -39,12 +39,18 @@ module eigrpProcess
             @display("p=207,188");
         }
         eigrpIpv4NeighborTable: EigrpIpv4NeighborTable {
-            @display("p=196,29");
+            @display("p=207,29");
         }
         eigrpIpv4TopologyTable: EigrpIpv4TopologyTable {
             @display("p=207,105");
         }
+        rtp: EigrpRtp {
+            @display("p=78,156");
+        }
     connections:
-        splitterIn --> pdmv4.rtpIn;
-        splitterOut <-- pdmv4.rtpOut;
+        splitterIn --> pdmv4.splitterIn;
+        splitterOut <-- pdmv4.splitterOut;
+        
+        pdmv4.rtpOut --> rtp.pdmIn;
+        pdmv4.rtpIn <-- rtp.pdmOut;
 }

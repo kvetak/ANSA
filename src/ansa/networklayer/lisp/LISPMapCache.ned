@@ -23,5 +23,7 @@ package inet.ansa.networklayer.lisp;
 //
 simple LISPMapCache
 {
-    @display("i=block/table2");
+    parameters:
+    	@display("i=block/table2");
+    	string deviceId;
 }

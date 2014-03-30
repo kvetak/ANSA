@@ -563,3 +563,23 @@ cXMLElement *xmlParser::GetEigrpIPv4Network(cXMLElement *network, cXMLElement *p
 
     return network;
 }
+
+cXMLElement* xmlParser::GetLISPMapServers(cXMLElement *ms, cXMLElement *device)
+{
+    if (device != NULL){
+       cXMLElement *routing = device->getFirstChildWithTag("Routing");
+       if (routing == NULL)
+          return NULL;
+       cXMLElement *lisp = routing->getFirstChildWithTag("LISP");
+       if (lisp == NULL)
+          return NULL;
+       ms = device->getFirstChildWithTag("MapServerAddress");
+    }
+    else if (ms != NULL){
+       ms = ms->getNextSiblingWithTag("MapServerAddress");
+    }
+    else{
+       ms = NULL;
+    }
+    return ms;
+}

@@ -114,11 +114,11 @@ std::string InterfaceEntry::info() const
     if (trilldata)
         out << " " << ((InterfaceProtocolData *)trilldata)->info(); // Khmm...
 
-    out << " BW:" << bandwidth;
-    out << " DLY:" << delay;
-    out << " REL:" << reliability << "/255";
-    out << " RLOAD:" << recvLoad << "/255";
-    out << " TLOAD:" << transLoad << "/255";
+    out << "  BW:" << bandwidth;
+    out << "  DLY:" << delay;
+    out << "  REL:" << reliability << "/255";
+    out << "  RLOAD:" << recvLoad << "/255";
+    out << "  TLOAD:" << transLoad << "/255";
     return out.str();
 }
 

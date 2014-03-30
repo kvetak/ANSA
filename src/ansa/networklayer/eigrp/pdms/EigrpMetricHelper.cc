@@ -28,7 +28,7 @@ EigrpMetricHelper::~EigrpMetricHelper()
 /**
  * Sets parameters from interface for metric computation.
  */
-EigrpMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface, InterfaceEntry *iface)
+EigrpMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface)
 {
     EigrpMetricPar newMetricPar;
     uint32_t bw, dly;
@@ -43,7 +43,7 @@ EigrpMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface, Interface
     newMetricPar.load = eigrpIface->getLoad();
     newMetricPar.reliability = eigrpIface->getReliability();
     newMetricPar.hopCount = 0;
-    newMetricPar.mtu = iface->getMTU();
+    newMetricPar.mtu = eigrpIface->getMtu();
 
     return newMetricPar;
 }

@@ -25,9 +25,12 @@ struct EigrpMetricPar;
 enum HeaderOpcode
 {
     EIGRP_UPDATE_MSG = 1;
+    EIGRP_REQUEST_MSG = 2;
     EIGRP_QUERY_MSG = 3;
     EIGRP_REPLY_MSG = 4;
     EIGRP_HELLO_MSG = 5;
+    EIGRP_SIAQUERY_MSG = 10;
+    EIGRP_SIAREPLY_MSG = 11;
 };
 
 // Struct for K-values
@@ -80,12 +83,11 @@ struct EigrpIpv4Internal
 };
 
 
-// General structure of EIGRP message
+// General structure of EIGRP message with header
 packet EigrpMessage 
 {
-    // header
     char version = 2;	// Version of EIGRP header
-	char opcode;		// Type of message
+	int8_t opcode;		// Type of message
 	// flags
 	bool init;			// Initialization - establishment of neighborship
 	bool cr;			// Conditionally Received
@@ -93,7 +95,7 @@ packet EigrpMessage
 	bool eot;			// End of table
 	
 	int seqNum;			// Sequence number
-	int seqAck;			// Acknowledgement number
+	int ackNum;			// Acknowledgement number
 	uint16_t vrid;		// Virtual Router ID
 	uint16_t asNum;		// Autonomous system number
 };
@@ -108,32 +110,73 @@ packet EigrpIpv4Hello extends EigrpHello
 {
 };
 
-// EIGRP Update Message
-packet EigrpUpdate extends EigrpMessage
+// Ack message - temporarily
+packet EigrpIpv4Ack extends EigrpMessage
 {
 };
 
-packet EigrpIpv4Update extends EigrpUpdate
+packet EigrpIpv4Message extends EigrpMessage
 {
     EigrpIpv4Internal interRoutes[];
+};
+
+// EIGRP Update Message
+packet EigrpIpv4Update extends EigrpIpv4Message
+{ 
 };
 
 // EIGRP Query Message
-packet EigrpQuery extends EigrpMessage
+packet EigrpIpv4Query extends EigrpIpv4Message
 {
-};
-
-packet EigrpIpv4Query extends EigrpQuery
-{
-    EigrpIpv4Internal interRoutes[];
 };
 
 // EIGRP Reply Message
-packet EigrpReply extends EigrpMessage
+packet EigrpIpv4Reply extends EigrpIpv4Message
 {
 };
 
-packet EigrpIpv4Reply extends EigrpReply
+//
+// EIGRP RTP
+//
+cplusplus 
+{{ 
+    class EigrpMessage;
+    typedef EigrpMessage *EigrpMessagePtr; 
+}} // C++ typedef
+
+class noncobject EigrpMessagePtr;
+
+struct EigrpMsgRoute
 {
-    EigrpIpv4Internal interRoutes[];
+    int sourceId;           // ID of source for route 
+    bool unreachable;       // Route with maximal metric 
+    bool invalid;
 };
+
+// Message request
+message EigrpMsgReq
+{
+    @customize(true);
+   	
+   	int8_t opcode;			// Type of message
+   	bool goodbyeMsg = false; // Message is Hello goodbye
+   	
+   	// flags
+	bool init;			// Initialization - establishment of neighborship
+	bool cr;			// Conditionally Received
+	bool rs;			// Reset
+	bool eot;			// End of table
+	
+    int destNeighbor;    	// ID of neighbor that is destination of message 
+    int destInterface;      // ID of destination interface
+
+    uint32_t seqNumber;     // Sequence number for reliable transmission
+    uint32_t ackNumber;     // Ack number for reliable transmission
+
+    int numOfAck;			// Number of acknowledges 
+    EigrpMsgRoute routes[];
+};
+
+    
+    
+    

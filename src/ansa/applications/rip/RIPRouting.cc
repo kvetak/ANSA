@@ -819,7 +819,12 @@ bool RIPRouting::checkAndLogRTE(RIPRTE &rte, IPv4Address &sourceAddr)
     if ( rte.getNetMask() > 32 ||
          rte.getMetric() > 16 ||
          rte.getIPv4Address().isMulticast() ||
-         rte.getIPv4Address().getAddressCategory() != IPv4Address::GLOBAL)
+         (  rte.getIPv4Address().getAddressCategory() == IPv4Address::BROADCAST ||
+            rte.getIPv4Address().getAddressCategory() == IPv4Address::LOOPBACK  ||
+            rte.getIPv4Address().getAddressCategory() == IPv4Address::RESERVED  ||
+            rte.getIPv4Address().getAddressCategory() == IPv4Address::UNSPECIFIED
+         )
+       )
     {
         EV << "Bad RTE from: " << sourceAddr << endl;
         return false;

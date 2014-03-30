@@ -47,9 +47,10 @@ class EigrpIpv4NeighborTable : public cSimpleModule
     EigrpNeighbor<IPv4Address> *findNeighbor(const IPv4Address& ipAddress);
     EigrpNeighbor<IPv4Address> *findNeighborById(int id);
     EigrpNeighbor<IPv4Address> * removeNeighbor(EigrpNeighbor<IPv4Address> *neighbor);
-    std::vector<EigrpNeighbor<IPv4Address> *> getAllNeighbors() { return neighborVec; }
+    EigrpNeighbor<IPv4Address> *getFirstNeighborOnIf(int ifaceId);
     int getNumNeighbors() const { return neighborVec.size(); }
     EigrpNeighbor<IPv4Address> *getNeighbor(int k) const { return neighborVec[k]; }
+    int setAckOnIface(int ifaceId, uint32_t ackNum);
 };
 
 #endif

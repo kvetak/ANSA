@@ -34,11 +34,19 @@ class EigrpInterface: public cObject
     int holdInt;            /**< Router's hold interval in seconds (<1-65535>) */
     EigrpTimer *hellot;     /**< pointer to hello timer */
     bool enabled;           /**< true, if EIGRP is enabled on interface */
+    int neighborCount;      /**< Number of neighbors on interface */
+    bool splitHorizon;      /**< Split horizon rule enabled */
+    int pacingTime;         /**< Pacing time in milliseconds */
 
-    double bandwidth; /**< Bandwidth in Kbps (<1-10 000 000>) */
-    double delay;     /**< Delay in us (<1-16 777 215>) */
-    int reliability; /**< Reliability in percent (<1-255>) */
-    int load;      /**< Load in percent (<1-255>) */
+    double bandwidth;       /**< Bandwidth in Kbps (<1-10 000 000>) */
+    double delay;           /**< Delay in us (<1-16 777 215>) */
+    int reliability;        /**< Reliability in percent (<1-255>) */
+    int load;               /**< Load in percent (<1-255>) */
+    int mtu;                /**< MTU of interface in B */
+
+    // Statistics for optimization
+    int relMsgs;            /**< Number of messages waiting for sending on the interface */
+    int pendingMsgs;        /**< Number of reliable sent messages but not acknowledged */
 
   public:
     EigrpInterface(InterfaceEntry *iface, int networkId, bool enabled);
@@ -49,33 +57,58 @@ class EigrpInterface: public cObject
         return interfaceId == iface.getInterfaceId();
     }
 
-    /**< Set identifier of interface. */
     void setInterfaceId(int id) { interfaceId = id; }
-    /**< Set pointer to hello timer. */
-    void setHelloTimerPtr(EigrpTimer *timer) { this->hellot = timer; }
-    void setHelloInt(int helloInt) { this->helloInt = helloInt; }
-    void setHoldInt(int holdInt) { this->holdInt = holdInt; }
-    void setEnabling(bool enabled) { this->enabled = enabled; }
-    void setNetworkId(int netId) { this->networkId = netId; }
-
-    void setBandwidth(int bw) { this->bandwidth = bw; }
-    void setDelay(int dly) { this->delay = dly; }
-    void setReliability(int rel) { this->reliability = rel; }
-    void setLoad(int load) { this->load = load; }
-
-    /**< Return identifier of interface. */
     int getInterfaceId() const { return interfaceId; }
-    /**< Return pointer to hello timer. */
+
+    void setHelloTimerPtr(EigrpTimer *timer) { this->hellot = timer; }
     EigrpTimer *getHelloTimer() const { return this->hellot; }
+
+    void setHelloInt(int helloInt) { this->helloInt = helloInt; }
     int getHelloInt() const { return this->helloInt; }
+
+    void setHoldInt(int holdInt) { this->holdInt = holdInt; }
     int getHoldInt() const { return this->holdInt; }
+
+    void setEnabling(bool enabled) { this->enabled = enabled; }
     bool isEnabled() const { return this->enabled; }
+
+    void setNetworkId(int netId) { this->networkId = netId; }
     int getNetworkId() const { return this->networkId; }
 
+    void decNumOfNeighbors() { this->neighborCount--; }
+    void incNumOfNeighbors() { this->neighborCount++; }
+    int getNumOfNeighbors() const { return this->neighborCount; }
+
+    void setBandwidth(int bw) { this->bandwidth = bw; }
+    // TODO vraci uint misto double! Stejne tak delay
     unsigned int getBandwidth() const { return bandwidth; }
+
+    void setDelay(int dly) { this->delay = dly; }
     unsigned int getDelay() const { return delay; }
-    unsigned int getReliability() const { return reliability; }
-    unsigned int getLoad() const { return load; }
+
+    void setReliability(int rel) { this->reliability = rel; }
+    int getReliability() const { return reliability; }
+
+    void setLoad(int load) { this->load = load; }
+    int getLoad() const { return load; }
+
+    void setMtu(int mtu) { this->mtu = mtu; }
+    int getMtu() const { return mtu; }
+
+    bool isMulticastAllowedOnIface(InterfaceEntry *iface);
+
+    void setSplitHorizon(bool shEnabled) { this->splitHorizon = shEnabled; }
+    bool isSplitHorizonEn() const { return this->splitHorizon; }
+
+    void setRelMsgs(int cnt) { this->relMsgs = cnt; }
+    int getRelMsgs() const { return relMsgs; }
+
+    void setPendingMsgs(int cnt) { this->pendingMsgs = cnt; }
+    int getPendingMsgs() const { return pendingMsgs; }
+    void incPendingMsgs() { this->pendingMsgs++; }
+    void decPendingMsgs() { this->pendingMsgs--; }
+
+    int computePacingTime() const { return 30; }
 };
 
 /**
@@ -104,8 +137,8 @@ class EigrpInterfaceTable : public cSimpleModule
 
     /**< Gets interface from table by interface ID */
     EigrpInterface *findInterfaceById(int ifaceId);
-    /**< Gets interface from table by interface name */
-    //EigrpInterface *findInterfaceByName(const char *ifaceName);
+    int getNumInterfaces() const { return eigrpInterfaces.size(); }
+    EigrpInterface *getInterface(int k) const { return eigrpInterfaces[k]; }
 };
 
 #endif

@@ -22,14 +22,17 @@ Define_Module(EigrpInterfaceTable);
 
 std::ostream& operator<<(std::ostream& out, const EigrpInterface& iface)
 {
-
     out << "ID:" << iface.getInterfaceId();
-    out << " HELLO:" << iface.getHelloInt();
-    out << " HOLD:" << iface.getHoldInt();
-    out << " BW:" << iface.getBandwidth();
-    out << " DLY:" << iface.getDelay();
-    out << " REL:" << iface.getReliability() << "/255";
-    out << " RLOAD:" << iface.getLoad() << "/255";
+    out << "  peers:" << iface.getNumOfNeighbors();
+    out << "  helloInt:" << iface.getHelloInt();
+    out << "  holdInt:" << iface.getHoldInt();
+    const char *shStr = iface.isSplitHorizonEn() ? "en" : "dis";
+    out << "  splitHorizon:" << shStr;
+    out << "  bw:" << iface.getBandwidth();
+    out << "  dly:" << iface.getDelay();
+    out << "  rel:" << iface.getReliability() << "/255";
+    out << "  rLoad:" << iface.getLoad() << "/255";
+    out << "  pendingRt:" << iface.getPendingMsgs();
     return out;
 }
 
@@ -42,11 +45,17 @@ EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enable
        interfaceId(iface->getInterfaceId()), networkId(networkId), enabled(enabled)
 {
     hellot = NULL;
+    neighborCount = 0;
+    splitHorizon = true;
 
     bandwidth = iface->getBandwidth();
     delay = iface->getDelay();
     reliability = iface->getReliability();
     load = iface->getTransLoad();
+    mtu = iface->getMTU();
+
+    relMsgs = 0;
+    pendingMsgs = 0;
 
     if (!iface->isMulticast() && bandwidth <= 1544)
     { // Non-broadcast Multi Access interface (no multicast) with bandwidth equal or lower than T1 link
@@ -59,6 +68,16 @@ EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enable
         holdInt = 15;
     }
 }
+
+bool EigrpInterface::isMulticastAllowedOnIface(InterfaceEntry *iface)
+{
+    if (iface->isMulticast())
+        if (getNumOfNeighbors() > 1)
+            return true;
+
+    return false;
+}
+
 
 EigrpInterfaceTable::~EigrpInterfaceTable()
 {

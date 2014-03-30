@@ -32,7 +32,7 @@ class EigrpMetricHelper
     EigrpMetricHelper();
     virtual ~EigrpMetricHelper();
 
-    EigrpMetricPar getParam(EigrpInterface *eigrpIface, InterfaceEntry *iface);
+    EigrpMetricPar getParam(EigrpInterface *eigrpIface);
     EigrpMetricPar adjustParam(const EigrpMetricPar& ifParam, const EigrpMetricPar& neighParam);
     uint32_t computeMetric(const EigrpMetricPar& par, const EigrpKValues& kValues);
     bool compareParamters(const EigrpMetricPar& par1, const EigrpMetricPar& par2, EigrpKValues& kValues);

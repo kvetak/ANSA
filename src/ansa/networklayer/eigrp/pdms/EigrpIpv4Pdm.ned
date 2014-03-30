@@ -23,6 +23,9 @@ simple EigrpIpv4Pdm
     parameters:
         
     gates:
+        input splitterIn;
         input rtpIn;
+        
+        output splitterOut;
         output rtpOut;
 }
