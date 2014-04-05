@@ -32,7 +32,9 @@ class EigrpIpv4TopologyTable : public cSimpleModule
     typedef typename std::vector<EigrpRoute<IPv4Address> *> RouteInfoVector;
 
     RouteVector routeVec;       /**< Table with routes. */
-    RouteInfoVector routeInfoVec;       /**< Table with info about routes. */
+    RouteInfoVector routeInfoVec;/**< Table with info about routes. */
+
+    IPv4Address routerID;       /**< Router ID of this router */
 
     int routeIdCounter;         /**< Counter for route ID */
     int sourceIdCounter;         /**< Counter for source ID */
@@ -52,18 +54,22 @@ class EigrpIpv4TopologyTable : public cSimpleModule
     EigrpRouteSource<IPv4Address> *removeRoute(EigrpRouteSource<IPv4Address> *source);
     EigrpRouteSource<IPv4Address> *findRouteById(int sourceId);
     EigrpRouteSource<IPv4Address> *findRouteByNextHop(int routeId, int nextHopId);
-    EigrpRouteSource<IPv4Address> * findOrCreateRoute(IPv4Address routeAddr, IPv4Address routeMask, int ifaceId, int nextHopId, bool *sourceNew);
+    EigrpRouteSource<IPv4Address> * findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId, int ifaceId, int nextHopId, bool *sourceNew);
     /**< Deletes unreachable routes from the topology table. */
     void purge(int routeId);
 
     uint32_t findRouteDMin(EigrpRoute<IPv4Address> *route);
     bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t &resultDmin);
     EigrpRouteSource<IPv4Address> *getFirstSuccessor(EigrpRoute<IPv4Address> *route);
+    EigrpRouteSource<IPv4Address> *getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask);
 
     int getNumRouteInfo() const { return routeInfoVec.size(); }
     EigrpRoute<IPv4Address> *getRouteInfo(int k) { return routeInfoVec[k]; }
     void addRouteInfo(EigrpRoute<IPv4Address> *route) { route->setRouteId(routeIdCounter); routeInfoVec.push_back(route); routeIdCounter++; }
     EigrpRoute<IPv4Address> *removeRouteInfo(EigrpRoute<IPv4Address> *route);
+
+    IPv4Address& getRouterId() { return routerID; }
+    void setRouterId(IPv4Address& routerID) { this->routerID = routerID; }
 };
 
 #endif

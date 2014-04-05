@@ -27,6 +27,7 @@ class EigrpMsgReq : public EigrpMsgReq_Base
         {EigrpMsgReq_Base::operator=(other); return *this;}
     virtual EigrpMsgReq *dup() const {return new EigrpMsgReq(*this);}
     bool isMsgReliable() { return getOpcode() != EIGRP_HELLO_MSG; }
+    int findMsgRoute(int routeId) const;
 };
 
 //Register_Class(EigrpMsgReq);

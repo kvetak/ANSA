@@ -60,11 +60,11 @@ std::ostream& operator<<(std::ostream& os, const EigrpRoute<IPv4Address>& route)
 
 void EigrpIpv4TopologyTable::initialize()
 {
-#ifdef EIGRP_TT_DEBUG
+    WATCH(routerID);
     WATCH_PTRVECTOR(routeVec);
-#endif
-
+#ifdef EIGRP_TT_DEBUG
     WATCH_PTRVECTOR(routeInfoVec);
+#endif
 }
 
 void EigrpIpv4TopologyTable::handleMessage(cMessage *msg)
@@ -138,6 +138,21 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(EigrpRo
         if ((*it)->getRouteId() == routeId && (*it)->isSuccessor())
         {
             return *it;
+        }
+    }
+
+    return NULL;
+}
+
+EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask)
+{
+    RouteInfoVector::iterator it;
+
+    for (it = routeInfoVec.begin(); it != routeInfoVec.end(); it++)
+    {
+        if ((*it)->getRouteAddress() == address && (*it)->getRouteMask() == mask)
+        {
+            return (*it)->getSuccessor();
         }
     }
 
@@ -266,7 +281,7 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRouteByNextHop(int ro
 /**
  * @param sourceNewResult return value.
  */
-EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Address routeAddr, IPv4Address routeMask,
+EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId,
         int ifaceId, int nextHopId, bool *sourceNew)
 {
     EigrpRoute<IPv4Address> *route = NULL;
@@ -286,7 +301,7 @@ EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Ad
             // Store route info
             if (route == NULL) route = source->getRouteInfo();
 
-            if (source->getNexthopId() == nextHopId)
+            if (source->getNexthopId() == nextHopId && routerId.equals(source->getOriginator()))
             { // Store TT entry
                 sourceFound = true;
                 break;
@@ -302,6 +317,7 @@ EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Ad
             addRouteInfo(route);
         }
         source = new EigrpRouteSource<IPv4Address>(ifaceId, nextHopId, route->getRouteId(), route);
+        source->setOriginator(routerId);
         (*sourceNew) = true;
         addRoute(source);
     }

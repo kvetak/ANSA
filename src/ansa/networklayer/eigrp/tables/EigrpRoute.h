@@ -125,6 +125,7 @@ class EigrpRouteSource : public cObject
     int sourceId;                   /** Unique ID of source */
     int routeId;                    /** Unique ID of route (same as in EigrpRoute) */
 
+    IPAddress originator;           /**< IP of originating router */
     int nextHopId;                  /**< Id of next hop neighbor (usually same as sourceId, 0 -> connected) */
     IPAddress nextHop;              /**< IP address of next hop router (0.0.0.0 -> connected), only informational. It does not correspond to the sourceId (next hop may not be source of the route). */
     int interfaceId;                /** ID of outgoing interface for next hop */
@@ -185,6 +186,9 @@ class EigrpRouteSource : public cObject
 
     int getSourceId() const { return sourceId; }
     void setSourceId(int sourceId) { this->sourceId = sourceId; }
+
+    IPAddress& getOriginator() { return originator; }
+    void setOriginator(IPAddress& originator) { this->originator = originator; }
 
     /*uint8_t getReliability() const { return reliability; }
     void setReliability(uint8_t reliability) { this->reliability = reliability; }

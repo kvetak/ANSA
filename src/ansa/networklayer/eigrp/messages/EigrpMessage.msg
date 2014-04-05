@@ -75,6 +75,7 @@ struct EigrpIpv4Internal
     // length
     uint16_t length = 28;
     // value
+    IPv4Address routerID;		// IP of originating router (also in exterior TLV)
  	IPv4Address nextHop;   
  	EigrpMetricPar metric;
  	EigrpRouteFlags flags;
@@ -148,7 +149,8 @@ class noncobject EigrpMessagePtr;
 
 struct EigrpMsgRoute
 {
-    int sourceId;           // ID of source for route 
+    int sourceId;           // ID of source for route
+    int routeId;           	// ID of route 
     bool unreachable;       // Route with maximal metric 
     bool invalid;
 };

@@ -5,16 +5,12 @@
             <Interface name="eth0">
                 <IPAddress>10.0.12.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.13.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
@@ -58,24 +54,18 @@
             <Interface name="eth0">
                 <IPAddress>10.0.12.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.23.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth2">
                 <IPAddress>10.0.24.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
@@ -99,10 +89,10 @@
 	        				<IPAddress>10.0.23.2</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network>
-						<!-- <Network> 
+						<Network> 
 	        				<IPAddress>10.0.24.2</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
-						</Network> -->
+						</Network>
 						<Network> 
 	        				<IPAddress>10.0.2.0</IPAddress>						 
 						 	<Wildcard>0.0.0.255</Wildcard>
@@ -123,16 +113,12 @@
             <Interface name="eth0">
                 <IPAddress>10.0.13.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.23.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
@@ -176,8 +162,6 @@
             <Interface name="eth0">
                 <IPAddress>10.0.24.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
-                <Bandwidth>1544</Bandwidth>
-                <Delay>2000</Delay>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
@@ -191,14 +175,14 @@
         	<EIGRP>
 	        	<ProcessIPv4 asNumber="1">
 	        		<Networks>
-	        			<!-- <Network> 
+	        			<Network> 
 	        				<IPAddress>10.0.24.0</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network> 
 						<Network> 
 	        				<IPAddress>10.0.4.0</IPAddress>						 
 						 	<Wildcard>0.0.0.255</Wildcard>
-						</Network> -->
+						</Network>
 	        		</Networks>
 	        	</ProcessIPv4>
         	</EIGRP>

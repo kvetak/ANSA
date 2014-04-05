@@ -37,6 +37,7 @@ class EigrpInterface: public cObject
     int neighborCount;      /**< Number of neighbors on interface */
     bool splitHorizon;      /**< Split horizon rule enabled */
     int pacingTime;         /**< Pacing time in milliseconds */
+    bool passive;           /**< Interface is passive */
 
     double bandwidth;       /**< Bandwidth in Kbps (<1-10 000 000>) */
     double delay;           /**< Delay in us (<1-16 777 215>) */
@@ -107,6 +108,9 @@ class EigrpInterface: public cObject
     int getPendingMsgs() const { return pendingMsgs; }
     void incPendingMsgs() { this->pendingMsgs++; }
     void decPendingMsgs() { this->pendingMsgs--; }
+
+    void setPassive(bool passive) { this->passive = passive; }
+    bool getPassive() const { return this->passive; }
 
     int computePacingTime() const { return 30; }
 };

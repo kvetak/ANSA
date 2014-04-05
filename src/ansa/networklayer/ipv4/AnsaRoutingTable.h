@@ -61,6 +61,8 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        */
       virtual IPv4Route *findRoute(const IPv4Address& network, const IPv4Address& netmask);
 
+      IPv4Route *findRoute(const IPv4Address& network, const IPv4Address& netmask, const IPv4Address& nexthop);
+
       /**
        * Prepares routing table for adding new route.
        * e.g. removes route with the same prefix, prefix length and lower administrative distance

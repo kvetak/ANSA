@@ -102,7 +102,7 @@ EigrpRequestQueue::~EigrpRequestQueue()
 
 /**
  * Get first rel/unrel message with given interface ID from request Queue.
- * @param sent search only for messages waiting for send (not actually sent)
+ * @param sent If false search only for messages waiting for send (not actually sent).
  */
 EigrpMsgReq *EigrpRequestQueue::findReqByIf(int ifaceId, bool sent)
 {
@@ -111,7 +111,23 @@ EigrpMsgReq *EigrpRequestQueue::findReqByIf(int ifaceId, bool sent)
     {
         if ((*it)->getDestInterface() == ifaceId)
         {
-            if (sent)
+            if (sent) // Get first message
+                return *it;
+            else if ((*it)->getNumOfAck() == 0)
+                return *it;
+        }
+    }
+    return NULL;
+}
+
+EigrpMsgReq *EigrpRequestQueue::findReqByNeighbor(int neighId, bool sent)
+{
+    MessageQueue::iterator it;
+    for (it = reqQueue.begin(); it != reqQueue.end(); it++)
+    {
+        if ((*it)->getDestNeighbor() == neighId)
+        {
+            if (sent) // Get first message
                 return *it;
             else if ((*it)->getNumOfAck() == 0)
                 return *it;
@@ -256,10 +272,6 @@ void EigrpRtp::handleMessage(cMessage *msg)
     }
 }
 
-// Zpravy z fronty se budou odesilat, kdyz:
-//      prijde pozadavek && fronta je prazdna, ale az po vyprseni pacing timeru
-//      prijde potvrzeni && prisla vsechna potvrzeni -> stara zprava se vyjme z fronty, nacasuje se nova
-
 void EigrpRtp::processRequest(cMessage *msg)
 {
     EigrpMsgReq *msgReq = check_and_cast<EigrpMsgReq *>(msg);
@@ -330,12 +342,32 @@ void EigrpRtp::processHeader(cMessage *msg)
         // Store last sequence number from neighbor
         neigh->setSeqNumber(seqNumNeigh);
 
-        // Create Ack message and send it
-        EigrpMsgReq *msgReq = new EigrpMsgReq("Ack");
+        acknowledgeMsg(neigh->getNeighborId(), neigh->getIfaceId(), seqNumNeigh);
+    }
+}
+
+/**
+ * Send message with specified acknowledge number to neighbor.
+ *
+ * TODO: pri odesilani (ne enqueueing, ale sending) spolehlive zpravy se podivat, jestli neni
+ * neni naplanovana po teto zprave na danem rozhrani pro daneho souseda zprava ack (jedno na kdy, ale musi to byt po teto zprave). Jesli
+ * ano, pak ack zahodit a nechat potvrzeni na spolehlive zprave.
+ */
+void EigrpRtp::acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum)
+{
+    EigrpMsgReq *msgReq = NULL;
+
+    if ((msgReq = requestQ->findReqByIf(ifaceId, false)) != NULL && msgReq->getDestNeighbor() == neighId)
+    { // Use scheduled message as acknowledge
+        msgReq->setAckNumber(ackNum);
+    }
+    else
+    { // Create Ack message and send it
+        msgReq = new EigrpMsgReq("Ack");
         msgReq->setOpcode(EIGRP_HELLO_MSG);
-        msgReq->setDestNeighbor(neigh->getNeighborId());
-        msgReq->setDestInterface(neigh->getIfaceId());
-        msgReq->setAckNumber(seqNumNeigh);
+        msgReq->setDestNeighbor(neighId);
+        msgReq->setDestInterface(ifaceId);
+        msgReq->setAckNumber(ackNum);
 
         scheduleNewMsg(msgReq);
     }
@@ -398,14 +430,12 @@ void EigrpRtp::scheduleMsg(EigrpMsgReq *msgReq)
 }
 
 /**
- * Schedule sending next unreliable message in transmission queue (actually without pacing)
+ * Schedule sending next reliable/unreliable message in transmission queue.
  */
 void EigrpRtp::scheduleNextMsg(int ifaceId)
 {
     EigrpMsgReq *msgReq = NULL;
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
-
-    // TODO: firstly check pacing timer
 
     if (eigrpIface->getPendingMsgs() == 0)
     { // Try to send first rel/unrel message
@@ -432,6 +462,16 @@ void EigrpRtp::discardMsg(EigrpMsgReq *msgReq)
     delete msgReq;
 
     scheduleNextMsg(msgReq->getDestInterface());
+}
+
+void EigrpRtp::sendUnrelMsg(EigrpMsgReq *msgReq)
+{
+    int ifaceId = msgReq->getDestInterface();
+
+    requestQ->removeReq(msgReq);
+    send(msgReq, RTP_OUTPUT_GW); /* Do not duplicate EigrpMsgReq */
+    // Schedule next waiting message
+    scheduleNextMsg(ifaceId);
 }
 
 void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
@@ -468,7 +508,7 @@ void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
         info.lastSeqNum = 0;   // Multicast message can not be an ack
     }
 
-    eigrpIface = eigrpIft->findInterfaceById(msgReq->getDestInterface());
+    eigrpIface = eigrpIft->findInterfaceById(info.neighborIfaceId);
     eigrpIface->incPendingMsgs();
 
     // Add last sequence number from neighbor
@@ -478,6 +518,13 @@ void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
     // Request and message must be duplicated (PDM deletes request and sends message)
     msgToSend = msgReq->dup();
     send(msgToSend, RTP_OUTPUT_GW);
+
+    scheduleNextMsg(info.neighborIfaceId);
+}
+
+void EigrpRtp::tryToSuppressAck()
+{
+
 }
 
 EigrpTimer *EigrpRtp::createTimer(char timerKind, void *context)

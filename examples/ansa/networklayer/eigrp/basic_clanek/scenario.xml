@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<scenario>
+  	<at t="15">
+		<interfaceconfig delay="1000" module="R3.interfaceStateManager" int="eth2" />
+  	</at>
+</scenario>

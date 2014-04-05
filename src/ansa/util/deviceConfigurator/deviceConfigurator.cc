@@ -2373,6 +2373,13 @@ void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpMod
         return;
     }
 
+    // Set Router ID (TODO takhle by se to asi získávat nemělo (prozatím))
+    const char *routerIdStr = device->getAttribute("id");
+    if (routerIdStr == NULL)
+        throw cRuntimeError("No EIGRP autonomous system number specified");
+    IPv4Address routerId = IPv4Address(routerIdStr);
+    eigrpModule->setRouterId(routerId);
+
     while (processElem != NULL)
     {
         // AS number of process
@@ -2416,6 +2423,17 @@ void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpMod
                     throw cRuntimeError("Bad value for EIGRP variance (<1, 128>)");
                 eigrpModule->setVariance(tempNumber);
             }
+            else if (nodeName == "PassiveInterface")
+            {
+                // Get interface ID
+                const char *ifaceName = (*procElem)->getNodeValue();
+                InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+                if (iface == NULL){
+                    throw cRuntimeError("No interface called %s on this device", ifaceName);
+                }
+                int ifaceId = iface->getInterfaceId();
+                eigrpModule->setPassive(true, ifaceId);
+            }
         }
 
         processElem = xmlParser::GetEigrpProcess(processElem, NULL);
@@ -2451,6 +2469,9 @@ void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpMo
         // Get interface ID
         const char *ifaceName = ifaceElem->getAttribute("name");
         InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+        if (iface == NULL){
+            throw cRuntimeError("No interface called %s on this device", ifaceName);
+        }
         int ifaceId = iface->getInterfaceId();
         // Get EIGRP configuration for interface
         eigrpIfaceElem = ifaceElem->getFirstChildWithTag("EIGRP-IPv4");

@@ -39,6 +39,7 @@ class EigrpRequestQueue: public cObject
 
     void pushReq(EigrpMsgReq *req);
     EigrpMsgReq *findReqByIf(int ifaceId, bool sent = true);
+    EigrpMsgReq *findReqByNeighbor(int neighId, bool sent = true);
     EigrpMsgReq *findUnrelReqByIf(int ifaceId);
     EigrpMsgReq *findReqBySeq(uint32_t seqNumber);
     EigrpMsgReq *removeReq(EigrpMsgReq *msgReq);
@@ -82,10 +83,13 @@ class EigrpRtp : public cSimpleModule
     void scheduleMsg(EigrpMsgReq *msgReq);
     void scheduleNewMsg(EigrpMsgReq *msgReq);
     void sendRelMsg(EigrpMsgReq *msgReq);
-    void sendUnrelMsg(EigrpMsgReq *msgReq) { requestQ->removeReq(msgReq); send(msgReq, RTP_OUTPUT_GW); /* Do not duplicate EigrpMsgReq */ }
+    void sendUnrelMsg(EigrpMsgReq *msgReq);
     void discardMsg(EigrpMsgReq *msgReq);
 
     EigrpNeighbor<IPv4Address> *getNeighborId(EigrpMessage *msg);
+
+    void acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum);
+    void tryToSuppressAck();
 
   protected:
     virtual void initialize(int stage);

@@ -30,6 +30,7 @@ class IEigrpPdm
     virtual int setReplyStatusTable(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool updateFromS = false) = 0;
     virtual bool hasNeighbor(EigrpRouteSource<IPv4Address> *source) = 0;
     virtual EigrpRouteSource<IPv4Address> *getFirstSuccessor(EigrpRoute<IPv4Address> *route) = 0;
+    virtual void purgeTT(int routeId) = 0;
 };
 
 

@@ -9,9 +9,9 @@
              channel-type="inet.nodes.ethernet.Eth100M"/>
   	</at> -->
   	
-  	<at t="15">
-		<interfaceconfig delay="20000" module="R3.interfaceStateManager" int="eth2" />
-  	</at>
+  	<!-- t="15">
+		<interfaceconfig delay="1000" module="R3.interfaceStateManager" int="eth2" />
+  	</at> -->
   
 	<!-- <at t="20">
 		<interfacedown module="R2.interfaceStateManager" int="eth0" />

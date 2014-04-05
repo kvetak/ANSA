@@ -67,6 +67,19 @@ IPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Add
     return route;
 }
 
+IPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Address& netmask, const IPv4Address& nexthop)
+{
+    IPv4Route *route = NULL;
+    for (RouteVector::const_iterator it = routes.begin(); it != routes.end(); ++it)
+    {
+        route = *it;
+        if (route->getDestination()==network && route->getNetmask()==netmask && route->getGateway() == nexthop)
+            return route;
+    }
+
+    return NULL;
+}
+
 bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
 {
     //TODO: assume only ANSAIPv4Route in the routing table?
