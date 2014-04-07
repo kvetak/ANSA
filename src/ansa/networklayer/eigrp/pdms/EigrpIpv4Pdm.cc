@@ -1352,6 +1352,10 @@ void EigrpIpv4Pdm::disableInterface(EigrpInterface *eigrpIface, IPv4Address& ifA
     eigrpIft->removeInterface(eigrpIface);
     eigrpIftDisabled->addInterface(eigrpIface);
 
+    // Unregister multicast address on interface
+    IPv4InterfaceData *ifaceIpv4 = ift->getInterfaceById(ifaceId)->ipv4Data();
+    ifaceIpv4->leaveMulticastGroup(EIGRP_IPV4_MULT);
+
     eigrpIface->setEnabling(false);
 
     // stop hello timer
@@ -1391,6 +1395,10 @@ void EigrpIpv4Pdm::enableInterface(EigrpInterface *eigrpIface, IPv4Address& ifAd
     // Move interface to EIGRP interface table
     eigrpIftDisabled->removeInterface(eigrpIface);
     eigrpIft->addInterface(eigrpIface);
+
+    // Register multicast address on interface
+    IPv4InterfaceData *ifaceIpv4 = ift->getInterfaceById(ifaceId)->ipv4Data();
+    ifaceIpv4->joinMulticastGroup(EIGRP_IPV4_MULT);
 
     eigrpIface->setEnabling(true);
     eigrpIface->setNetworkId(networkId);
