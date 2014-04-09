@@ -1094,6 +1094,7 @@ void EigrpIpv4Pdm::msgToAllIfaces(HeaderOpcode msgType, EigrpRouteSource<IPv4Add
     EigrpInterface *eigrpIface;
     int ifCount = eigrpIft->getNumInterfaces();
 
+    // TODO využít pole s ID rozhraními, kde jsou Successors - těm by se měl odeslat PR - ještě ověřit
     for (int i = 0; i < ifCount; i++)
     {
         eigrpIface = eigrpIft->getInterface(i);
@@ -1344,7 +1345,7 @@ void EigrpIpv4Pdm::disableInterface(EigrpInterface *eigrpIface, IPv4Address& ifA
     EigrpNeighbor<IPv4Address> *neigh;
     EigrpRouteSource<IPv4Address> *source;
     int neighCount;
-    int ifaceId = eigrpIface->getInterfaceId();;
+    int ifaceId = eigrpIface->getInterfaceId();
 
     EV << "EIGRP disabled on interface " << ifaceId << endl;
 
@@ -1500,7 +1501,7 @@ void EigrpIpv4Pdm::setPassive(bool passive, int ifaceId)
 void EigrpIpv4Pdm::sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source)
 {
     ev << "DUAL: send Update message about " << route->getRouteAddress() << " to all neighbors, metric changed" << endl;
-    msgToAllIfaces(EIGRP_UPDATE_MSG, source, false /* Only when sending Query message */);
+    msgToAllIfaces(EIGRP_UPDATE_MSG, source, true /* Use Poison Reverse instead of Split Horizon */);
 }
 
 /**
