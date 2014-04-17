@@ -60,6 +60,7 @@ class EigrpRoute : public cObject
     EigrpMetricPar rd;      /**< Parameters for computation of reported distance that belongs to this router */
     uint32_t Dij;           /**< Shortest distance (Dij) */
     EigrpRouteSource<IPAddress> *successor; /**< Actual successor for route reported to neighbors of router */
+    int numSuccessors;      /** Number of successors for the route */
 
     int referenceCounter;   /**< Counts amount of references to this object. */
 
@@ -107,6 +108,9 @@ class EigrpRoute : public cObject
     EigrpRouteSource<IPAddress> *getSuccessor() const { return this->successor; }
     void setSuccessor(EigrpRouteSource<IPAddress> * successor) { this->successor = successor; }
 
+    void setNumSucc(int numSuccessors) { this->numSuccessors = numSuccessors; }
+    int getNumSucc() const {return numSuccessors; }
+
     //void addSource(EigrpRouteSource<IPAddress> *routeSrc) { sourceVec.push_back(routeSrc); }
     //EigrpRouteSource<IPAddress> *removeSource(EigrpRouteSource<IPAddress> * source);
     //EigrpRouteSource<IPAddress> *findSource(int sourceId);
@@ -136,6 +140,8 @@ class EigrpRouteSource : public cObject
     EigrpMetricPar rdParams;        /**< Parameters from neighbor */
     bool successor;                 /**< If next hop is successor */
     // TODO oznaceni sumarizovane cesty
+    bool valid;                     /**< Invalid sources will be deleted */
+    bool delayedRemove;             /**< Source will be deleted after receiving Ack from neighbor */
 
     EigrpRoute<IPAddress> *routeInfo;          /**< Pointer to route */
 
@@ -187,29 +193,17 @@ class EigrpRouteSource : public cObject
     int getSourceId() const { return sourceId; }
     void setSourceId(int sourceId) { this->sourceId = sourceId; }
 
-    IPAddress& getOriginator() { return originator; }
+    IPAddress getOriginator() const { return originator; }
     void setOriginator(IPAddress& originator) { this->originator = originator; }
 
-    /*uint8_t getReliability() const { return reliability; }
-    void setReliability(uint8_t reliability) { this->reliability = reliability; }
+    bool isValid() const { return valid; }
+    void setValid(bool valid) { this->valid = valid; }
 
-    uint8_t getHopCount() const { return hopCount; }
-    void setHopCount(uint8_t hopCount) { this->hopCount = hopCount; }
+    /** Sets metric and RD to infinity */
+    void setUnreachableMetric() { metric = UINT32_MAX; metricParams.delay = UINT32_MAX; rd = UINT32_MAX; rdParams.delay = UINT32_MAX; }
 
-    uint8_t getInternalTag() const { return internalTag; }
-    void setInternalTag(uint8_t internalTag) { this->internalTag = internalTag; }
-
-    uint8_t getLoad() const { return load; }
-    void setLoad(uint8_t load) { this->load = load; }
-
-    uint32_t getMtu() const { return mtu; }
-    void setMtu(uint32_t mtu) { this->mtu = mtu; }
-
-    uint32_t getBandwidth() const { return bandwidth; }
-    void setBandwidth(uint32_t bandwidth) { this->bandwidth = bandwidth; }
-
-    uint32_t getDelay() const { return delay; }
-    void setDelay(uint32_t delay) { this->delay = delay; }*/
+    bool isSetDelayedRemove() const { return delayedRemove; }
+    void setDelayedRemove(bool delayedRemove) { this->delayedRemove = delayedRemove; }
 };
 
 
@@ -225,6 +219,8 @@ EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, int nextHopId, in
     internal = true;
     successor = false;
     sourceId = 0;
+    valid = true;
+    delayedRemove = false;
 
     routeInfo->incrementRefCnt();
 }
@@ -232,8 +228,8 @@ EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, int nextHopId, in
 template<typename IPAddress>
 EigrpRouteSource<IPAddress>::~EigrpRouteSource()
 {
-     if (getRouteInfo()->decrementRefCnt() == 0)
-         delete getRouteInfo();
+    if (getRouteInfo()->decrementRefCnt() == 0)
+        delete getRouteInfo();
 }
 
 template<typename IPAddress>
@@ -246,6 +242,7 @@ EigrpRoute<IPAddress>::EigrpRoute(IPAddress& address, IPAddress& mask) :
     successor = NULL;
     queryOrigin = 1;
 
+    numSuccessors = 0;
     referenceCounter = 0;
 }
 

@@ -43,7 +43,7 @@ std::ostream& operator<<(std::ostream& os, const EigrpRouteSource<IPv4Address>& 
     if (source.isSuccessor()) os << "  is successor";
     os << ",  IF ID:" << source.getIfaceId();
     os << "  state:" << state;
-    //os << "  source:" << source;
+    os << "  originator:" << source.getOriginator();
 
     return os;
 }
@@ -88,7 +88,7 @@ EigrpIpv4TopologyTable::~EigrpIpv4TopologyTable()
 
 /**
  */
-EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRoute(IPv4Address& routeAddr, IPv4Address& routeMask, int nextHopId)
+EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRoute(const IPv4Address& routeAddr, const IPv4Address& routeMask, const IPv4Address& nextHop)
 {
     RouteVector::iterator it;
     EigrpRoute<IPv4Address> *route;
@@ -97,7 +97,25 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRoute(IPv4Address& ro
     {
         route = (*it)->getRouteInfo();
         if (route->getRouteAddress() == routeAddr && route->getRouteMask() == routeMask &&
-                (*it)->getNexthopId() == nextHopId)
+                (*it)->getNextHop() == nextHop && (*it)->isValid())
+        {
+            return *it;
+        }
+    }
+
+    return NULL;
+}
+
+EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRoute(const IPv4Address& routeAddr, const IPv4Address& routeMask, int nextHopId)
+{
+    RouteVector::iterator it;
+    EigrpRoute<IPv4Address> *route;
+
+    for (it = routeVec.begin(); it != routeVec.end(); it++)
+    {
+        route = (*it)->getRouteInfo();
+        if (route->getRouteAddress() == routeAddr && route->getRouteMask() == routeMask &&
+                (*it)->getNexthopId() == nextHopId && (*it)->isValid())
         {
             return *it;
         }
@@ -115,7 +133,7 @@ uint32_t EigrpIpv4TopologyTable::findRouteDMin(EigrpRoute<IPv4Address> *route)
 
     for (it = routeVec.begin(); it != routeVec.end(); it++)
     {
-        if ((*it)->getRouteId() == routeId /* do not check FC here */)
+        if ((*it)->getRouteId() == routeId /* do not check FC here */  && (*it)->isValid())
         {
             tempD = (*it)->getMetric();
             if (tempD < dmin)
@@ -128,34 +146,60 @@ uint32_t EigrpIpv4TopologyTable::findRouteDMin(EigrpRoute<IPv4Address> *route)
     return dmin;
 }
 
+/**
+ * Finds successor for the route with minimal next hop IP
+ */
 EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(EigrpRoute<IPv4Address> *route)
+{
+    RouteVector::iterator it;
+    int routeId = route->getRouteId();
+    EigrpRouteSource<IPv4Address> *tempSrc = NULL;
+
+    for (it = routeVec.begin(); it != routeVec.end(); it++)
+    {
+        if ((*it)->getRouteId() == routeId && (*it)->isSuccessor() && (*it)->isValid())
+        {
+            if (tempSrc != NULL)
+            {
+                if ((*it)->getNextHop() < tempSrc->getNextHop())
+                    tempSrc = *it;
+            }
+            else
+                tempSrc = *it;
+        }
+    }
+
+    return tempSrc;
+}
+
+/*EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask)
+{
+    RouteInfoVector::iterator it;
+
+    for (it = routeInfoVec.begin(); it != routeInfoVec.end(); it++)
+    {
+        if ((*it)->getRouteAddress() == address && (*it)->getRouteMask() == mask && (*it)->isValid())
+        {
+            return (*it)->getSuccessor();
+        }
+    }
+
+    return NULL;
+}*/
+
+EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessorByIf(EigrpRoute<IPv4Address> *route, int ifaceId)
 {
     RouteVector::iterator it;
     int routeId = route->getRouteId();
 
     for (it = routeVec.begin(); it != routeVec.end(); it++)
     {
-        if ((*it)->getRouteId() == routeId && (*it)->isSuccessor())
+        if ((*it)->getRouteId() == routeId && (*it)->isSuccessor() &&
+                (*it)->getIfaceId() == ifaceId && (*it)->isValid())
         {
             return *it;
         }
     }
-
-    return NULL;
-}
-
-EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask)
-{
-    RouteInfoVector::iterator it;
-
-    for (it = routeInfoVec.begin(); it != routeInfoVec.end(); it++)
-    {
-        if ((*it)->getRouteAddress() == address && (*it)->getRouteMask() == mask)
-        {
-            return (*it)->getSuccessor();
-        }
-    }
-
     return NULL;
 }
 
@@ -172,12 +216,12 @@ bool EigrpIpv4TopologyTable::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route
     uint32_t tempD;
 
     resultDmin = UINT32_MAX;
-    ev << "Search feasible successor for route " << route->getRouteAddress();
+    ev << "EIGRP: Search feasible successor for route " << route->getRouteAddress();
     ev << ", FD is " << route->getFd() << endl;
 
     for (it = routeVec.begin(); it != routeVec.end(); it++)
     {
-        if ((*it)->getRouteId() == routeId)
+        if ((*it)->getRouteId() == routeId && (*it)->isValid())
         {
             ev << "    Next hop " << (*it)->getNextHop();
             ev << " (" << (*it)->getMetric() << "/" << (*it)->getRd() << ") ";
@@ -198,18 +242,100 @@ bool EigrpIpv4TopologyTable::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route
                 ev << "not satisfies FC" << endl;
         }
     }
-    if (hasFs) ev << "     FS found, dmin is " << resultDmin << endl;
-    else ev << "     FS not found, because dmin is " << resultDmin << endl;
+    if (hasFs) ev << "    FS found, dmin is " << resultDmin << endl;
+    else ev << "    FS not found, dmin is " << resultDmin << endl;
 
     return hasFs;
 }
 
 void EigrpIpv4TopologyTable::addRoute(EigrpRouteSource<IPv4Address> *source)
 {
+    //RouteInfoVector::reverse_iterator rit;
+    RouteVector::iterator it = routeVec.end();
+    int routeId = source->getRouteId();
+
     source->setSourceId(sourceIdCounter);
     sourceIdCounter++;
-    this->routeVec.push_back(source);
+
+    // Find last route with routeId
+    while (it != routeVec.begin())
+    {
+         --it;
+         if ((*it)->getRouteId() == routeId && (*it)->isValid())
+         {
+             break;
+         }
+    }
+
+    // Insert item after found item
+    if (it == routeVec.end())
+        routeVec.push_back(source);
+    else
+        routeVec.insert(it + 1, source);
 }
+
+/*
+void EigrpIpv4TopologyTable::moveSuccessorAhead(EigrpRouteSource<IPv4Address> *source)
+{
+    RouteVector::iterator it, backit;
+    EigrpRouteSource<IPv4Address> *tempSource = NULL;
+
+    if ((it = std::find(routeVec.begin(), routeVec.end(), source)) == routeVec.end())
+    {
+        return;
+    }
+
+    if (it == routeVec.begin())
+        return;
+
+    backit = it - 1;
+
+    // Move successor before all nonsuccessors
+    while (it != routeVec.begin())
+    {
+         if ((*it)->getRouteId() != (*backit)->getRouteId())
+             break;
+
+         if ((*backit)->isSuccessor() && (*backit)->getNextHop() <= (*it)->getNextHop())
+             break;
+
+         // Swap items
+         tempSource = *it;
+         *it = *backit;
+         *backit = tempSource;
+
+         --it;
+         --backit;
+    }
+}*/
+
+/*
+void EigrpIpv4TopologyTable::moveRouteBack(EigrpRouteSource<IPv4Address> *source)
+{
+    RouteVector::iterator it, nextit;
+    EigrpRouteSource<IPv4Address> *tempSource = NULL;
+
+    // Get iterator of source
+    if ((it = std::find(routeVec.begin(), routeVec.end(), source)) == routeVec.end())
+    {
+        return;
+    }
+
+    // Move source behind all successors
+    for (nextit = it + 1; nextit != routeVec.end(); it++, nextit ++)
+    {
+         if ((*it)->getRouteId() != (*nextit)->getRouteId())
+             break;
+
+         if (!(*nextit)->isSuccessor())
+             break;
+
+         // Swap items
+         tempSource = *it;
+         *it = *nextit;
+         *nextit = tempSource;
+    }
+}*/
 
 /**
  * Removes neighbor form the table, but the record still exists.
@@ -220,38 +346,60 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::removeRoute(EigrpRouteSou
 
     if ((it = std::find(routeVec.begin(), routeVec.end(), source)) != routeVec.end())
     {
-        routeVec.erase(it);
+        removeRoute(it);
         return source;
     }
 
     return NULL;
 }
 
-void EigrpIpv4TopologyTable::purge(int routeId)
+void EigrpIpv4TopologyTable::delayedRemove(int neighId)
 {
     RouteVector::iterator it;
-    EigrpRouteSource<IPv4Address> *source = NULL;
-    EigrpRoute<IPv4Address> *route = NULL;
 
     for (it = routeVec.begin(); it != routeVec.end(); )
     {
-        if ((*it)->getRouteId() == routeId && (*it)->isUnreachable())
-        {  // Remove unreachable source from TT
-            source = *it;
-            route = source->getRouteInfo();
+        if ((*it)->getNexthopId() == neighId && (*it)->isSetDelayedRemove())
+            it = removeRoute(it);
+        else
+            ++it;
+    }
+}
 
-            EV << "EIGRP remove route " << route->getRouteAddress();
-            EV << " via " << source->getNextHop() << " from TT" << endl;
+/**
+ * Deletes invalid sources.
+ */
+void EigrpIpv4TopologyTable::purgeTable()
+{
+    RouteVector::iterator it;
 
-            if (route->getRefCnt() == 1)
-                removeRouteInfo(route);
-
-            it = routeVec.erase(it);
-            delete source;
+    for (it = routeVec.begin(); it != routeVec.end(); )
+    {
+        if (!(*it)->isValid())
+        {  // Remove invalid source from TT
+            it = removeRoute(it);
         }
         else
             ++it;
     }
+}
+
+std::vector<EigrpRouteSource<IPv4Address> *>::iterator EigrpIpv4TopologyTable::removeRoute(RouteVector::iterator routeIt)
+{
+    EigrpRoute<IPv4Address> *route = NULL;
+    EigrpRouteSource<IPv4Address> *source = NULL;
+
+    source = *routeIt;
+    route = source->getRouteInfo();
+
+    EV << "EIGRP: remove route " << route->getRouteAddress();
+    EV << " via " << source->getNextHop() << " from TT" << endl;
+
+    if (route->getRefCnt() == 1 && !route->isActive())
+        removeRouteInfo(route);
+
+    delete source;
+    return routeVec.erase(routeIt);
 }
 
 EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRouteById(int sourceId)
@@ -259,7 +407,7 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRouteById(int sourceI
     RouteVector::iterator it;
     for (it = routeVec.begin(); it != routeVec.end(); it++)
     {
-        if ((*it)->getSourceId() == sourceId)
+        if ((*it)->getSourceId() == sourceId && (*it)->isValid())
         return *it;
     }
     return NULL;
@@ -270,7 +418,7 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRouteByNextHop(int ro
     RouteVector::iterator it;
     for (it = routeVec.begin(); it != routeVec.end(); it++)
     {
-        if ((*it)->getRouteId() == routeId && (*it)->getNexthopId() == nextHopId)
+        if ((*it)->getRouteId() == routeId && (*it)->getNexthopId() == nextHopId && (*it)->isValid())
         return *it;
     }
     return NULL;
@@ -285,37 +433,19 @@ EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Ad
         int ifaceId, int nextHopId, bool *sourceNew)
 {
     EigrpRoute<IPv4Address> *route = NULL;
-    bool sourceFound = false;
     EigrpRouteSource<IPv4Address> *source = NULL;
     (*sourceNew) = false;
 
-    RouteVector::iterator it;
-
-    // Find route
-    for (it = routeVec.begin(); it != routeVec.end(); it++)
+    // Find source of route with given next hop ID
+    source = findRoute(routeAddr, routeMask, nextHopId);
+    if (source == NULL)
     {
-        source = *it;
-        if (source->getRouteInfo()->getRouteAddress() == routeAddr &&
-                source->getRouteInfo()->getRouteMask() == routeMask)
-        {
-            // Store route info
-            if (route == NULL) route = source->getRouteInfo();
-
-            if (source->getNexthopId() == nextHopId && routerId.equals(source->getOriginator()))
-            { // Store TT entry
-                sourceFound = true;
-                break;
-            }
-        }
-    }
-
-    if (!sourceFound)
-    { // Create route
-        if (route == NULL)
-        {
+        if ((route = findRouteInfo(routeAddr, routeMask)) == NULL)
+        { // Create route
             route = new EigrpRoute<IPv4Address>(routeAddr, routeMask);
             addRouteInfo(route);
         }
+        // Create source of route
         source = new EigrpRouteSource<IPv4Address>(ifaceId, nextHopId, route->getRouteId(), route);
         source->setOriginator(routerId);
         (*sourceNew) = true;
@@ -336,4 +466,18 @@ EigrpRoute<IPv4Address> *EigrpIpv4TopologyTable::removeRouteInfo(EigrpRoute<IPv4
     }
 
     return NULL;
+}
+
+EigrpRoute<IPv4Address> *EigrpIpv4TopologyTable::findRouteInfo(const IPv4Address& routeAddr, const IPv4Address& routeMask)
+{
+    RouteInfoVector::iterator it;
+
+    for (it = routeInfoVec.begin(); it != routeInfoVec.end(); it++)
+    {
+        if ((*it)->getRouteAddress() == routeAddr && (*it)->getRouteMask() == routeMask)
+            return *it;
+    }
+
+    return NULL;
+
 }

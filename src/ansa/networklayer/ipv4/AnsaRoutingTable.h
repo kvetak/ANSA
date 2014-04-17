@@ -43,6 +43,7 @@ class INET_API AnsaRoutingTable : public RoutingTable {
         // displays summary above the icon
         virtual void updateDisplayString();
         virtual void initialize(int stage);
+        virtual void receiveChangeNotification(int category, const cObject *details);
 
     public:
       AnsaRoutingTable(){};
@@ -93,6 +94,7 @@ class INET_API AnsaRoutingTable : public RoutingTable {
 
       virtual bool isLocalAddress(const IPv4Address& dest) const;
       virtual InterfaceEntry *getInterfaceByAddress(const IPv4Address& addr) const;
+
 };
 
 #endif /* ANSAROUTINGTABLE_H_ */

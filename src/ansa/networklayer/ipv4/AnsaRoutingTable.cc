@@ -269,6 +269,52 @@ void AnsaRoutingTable::initialize(int stage)
     }
 }
 
+void AnsaRoutingTable::receiveChangeNotification(int category, const cObject *details)
+{
+    InterfaceEntry *entry = NULL;
+
+    if (simulation.getContextType()==CTX_INITIALIZE)
+        return;  // ignore notifications during initialize
+
+    Enter_Method_Silent();
+    printNotificationBanner(category, details);
+
+    if (category==NF_INTERFACE_CREATED)
+    {
+        // add netmask route for the new interface
+        updateNetmaskRoutes();
+    }
+    else if (category==NF_INTERFACE_DELETED)
+    {
+        // remove all routes that point to that interface
+        entry = const_cast<InterfaceEntry*>(check_and_cast<const InterfaceEntry*>(details));
+        deleteInterfaceRoutes(entry);
+    }
+    else if (category==NF_INTERFACE_STATE_CHANGED)
+    {
+        entry = const_cast<InterfaceEntry*>(check_and_cast<const InterfaceEntry*>(details));
+
+        if (entry->isUp())
+        { // an interface goes up
+
+        }
+        else if (entry->isDown() || !entry->hasCarrier())
+        { // an interface goes down
+            deleteInterfaceRoutes(entry);
+        }
+    }
+    else if (category==NF_INTERFACE_CONFIG_CHANGED)
+    {
+        invalidateCache();
+    }
+    else if (category==NF_INTERFACE_IPv4CONFIG_CHANGED)
+    {
+        // if anything IPv4-related changes in the interfaces, interface netmask
+        // based routes have to be re-built.
+        updateNetmaskRoutes();
+    }
+}
+
 
 /**
  * ADD ROUTE

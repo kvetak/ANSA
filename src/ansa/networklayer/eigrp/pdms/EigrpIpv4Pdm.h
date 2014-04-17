@@ -91,6 +91,7 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
     virtual void handleMessage(cMessage *msg);
     /**< Multi-stage initialization. */
     virtual int numInitStages() const { return 4; }
+    virtual void receiveChangeNotification(int category, const cObject *details);
 
     void printSentMsg(int routeCnt, IPv4Address& destAddress, EigrpMsgReq *msgReq);
     void printRecvMsg(EigrpMessage *msg, IPv4Address& addr, int ifaceId);
@@ -113,20 +114,20 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
     void processTimer(cMessage *msg);
     void processMsgFromNetwork(cMessage *msg);
     void processMsgFromRtp(cMessage *msg);
+    void processAckMsg(cMessage *msg, IPv4Address& srcAddress, int ifaceId, EigrpNeighbor<IPv4Address> *neigh);
     void processHelloMsg(cMessage *msg, IPv4Address& srcAddress, int ifaceId, EigrpNeighbor<IPv4Address> *neigh);
     void processUpdateMsg(cMessage *msg, IPv4Address& srcAddress, int ifaceId, EigrpNeighbor<IPv4Address> *neigh);
     void processQueryMsg(cMessage *msg, IPv4Address& srcAddress, int ifaceId, EigrpNeighbor<IPv4Address> *neigh);
     void processReplyMsg(cMessage *msg, IPv4Address& srcAddress, int ifaceId, EigrpNeighbor<IPv4Address> *neigh);
-    EigrpRouteSource<IPv4Address> *processInterRoute(EigrpIpv4Internal& tlv, IPv4Address& srcAddr, int sourceNeighId, EigrpInterface *eigrpIface);
-    bool isRouteRelevant(EigrpIpv4Internal& tlv) { return tlv.routerID != eigrpTt->getRouterId(); }
+    EigrpRouteSource<IPv4Address> *processInterRoute(EigrpIpv4Internal& tlv, IPv4Address& nextHop, int sourceNeighId, EigrpInterface *eigrpIface, bool *notifyDual);
 
     void processNewNeighbor(int ifaceId, IPv4Address &srcAddress, EigrpHello *helloMessage);
     int checkNeighborshipRules(int ifaceId, int neighAsNum, IPv4Address &neighAddr,
             const EigrpKValues &neighKValues);
     EigrpNeighbor<IPv4Address> *createNeighbor(EigrpInterface *eigrpIface, IPv4Address& address, uint16_t holdInt);
-    void removeNeighbor(EigrpNeighbor<IPv4Address> *neigh, IPv4Address& neighMask);
+    void removeNeighbor(EigrpNeighbor<IPv4Address> *neigh);
 
-    void disableInterface(EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask);
+    void disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask);
     void enableInterface(EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask, int networkId);
     EigrpInterface *getInterfaceById(int ifaceId);
     EigrpInterface *addInterfaceToEigrp(int ifaceId, int networkId, bool enabled);
@@ -140,25 +141,21 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
 
     ANSAIPv4Route *createRTRoute(EigrpRouteSource<IPv4Address> *successor);
     bool createOrUpdateRouteInRT(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool *checkRTSafe, bool *isRTSafe);
-    bool installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, uint32_t dmin);
+    bool installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, uint32_t dmin, IPv4Route *rtEntry);
     bool isRTSafeForAdd(EigrpRoute<IPv4Address> *route, unsigned int eigrpAd);
 
     void msgToAllIfaces(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, bool updateFromS);
-    void msgToAllIfaces(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, std::vector<int> succIfaces);
-    void msgToIface(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, bool updateFromS, EigrpInterface *eigrpIface,  bool forcePoisonRev = false);
+    void msgToIface(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, EigrpInterface *eigrpIface,  bool forcePoisonRev = false);
     /** Sends all messages in transimt queue */
     void flushMsgRequests();
     EigrpMsgReq *pushMsgRouteToQueue(HeaderOpcode msgType, int ifaceId, int neighId, const EigrpMsgRoute& msgRt);
     //bool getRoutesFromRequests(RequestVector *msgReqs);
 
-    bool applySplitHorizon(EigrpInterface *destInterface, EigrpRouteSource<IPv4Address> *source)
-        { return destInterface->isSplitHorizonEn() && destInterface->getInterfaceId() == source->getIfaceId(); }
+    bool applySplitHorizon(EigrpInterface *destInterface, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route);
 
   public:
     EigrpIpv4Pdm();
     ~EigrpIpv4Pdm();
-
-    virtual void receiveChangeNotification(int category, const cObject *details);
 
     // Interface IEigrpModule
     void addInterface(int ifaceId, int networkId, bool enabled) { addInterfaceToEigrp(ifaceId, networkId, enabled); }
@@ -175,19 +172,19 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule, public IEigrpPdm
      void setRouterId(IPv4Address& rid) { eigrpTt->setRouterId(rid); }
 
     // Interface IEigrpPdm;
-    void sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source);
+    void sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, const char *reason);
     void sendQuery(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool updateFromS = false);
     void sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source, bool isUnreachable = false);
-    void removeRouteFromRT(EigrpRouteSource<IPv4Address> *successor);
-    EigrpRouteSource<IPv4Address> *updateRoute(EigrpRoute<IPv4Address> *route, uint32_t dmin);
-    void removeSourceFromTT(EigrpRouteSource<IPv4Address> *source);
+    bool removeRouteFromRT(EigrpRouteSource<IPv4Address> *successor);
+    EigrpRouteSource<IPv4Address> *updateRoute(EigrpRoute<IPv4Address> *route, uint32_t dmin, bool *rtableChanged, bool removeUnreach = false);
+    //void removeSourceFromTT(EigrpRouteSource<IPv4Address> *source);
     void addSourceToTT(EigrpRouteSource<IPv4Address> *source) { eigrpTt->addRoute(source); }
     uint32_t findRouteDMin(EigrpRoute<IPv4Address> *route) { return eigrpTt->findRouteDMin(route); }
     bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t& resultDmin) { return eigrpTt->hasFeasibleSuccessor(route, resultDmin); }
     EigrpRouteSource<IPv4Address> *getFirstSuccessor(EigrpRoute<IPv4Address> *route) { return eigrpTt->getFirstSuccessor(route); }
     int setReplyStatusTable(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool updateFromS = false);
-    bool hasNeighbor(EigrpRouteSource<IPv4Address> *source);
-    void purgeTT(int routeId)  { eigrpTt->purge(routeId); }
+    bool hasNeighborForUpdate(EigrpRouteSource<IPv4Address> *source);
+    void setDelayedRemove(int neighId, EigrpRouteSource<IPv4Address> *src);
 };
 
 /**

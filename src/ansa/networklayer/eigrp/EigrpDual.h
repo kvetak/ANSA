@@ -38,9 +38,7 @@ class EigrpDual : public cObject /* cSimpleModule */
   protected:
     IEigrpPdm *pdm;     /**< Protocol dependent module interface */
 
-    /**< Transition to passive state - optimalization */
-    void goToPassiveFromQo3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
-    void gotoPassiveFromQo1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
+    void invalidateRoute(EigrpRouteSource<IPv4Address> *routeSrc);
 
     void processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);
     void processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId);

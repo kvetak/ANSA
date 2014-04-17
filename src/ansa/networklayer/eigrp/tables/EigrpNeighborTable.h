@@ -25,9 +25,8 @@ class EigrpNeighbor : public cObject
     bool isUp;          /**< State of neighbor. Possible states are pending or up. */
     int holdInt;        /**< Neighbor's Hold interval used to set Hold timer */
     uint32_t seqNumber; /**< Sequence number received from neighbor */
-    // Docasne reseni (pro CR mod toto stacit nebude - chce to vector)
-    uint32_t waitForAck;/**< Ack number requested from neighbor */
-
+    bool routesForDeletion; /**< After receiving Ack from the neighbor will be removed unreachable routes from TT */
+    uint32_t waitForAck;        /**< Waiting for ack number from neighbor (for reliable transport) */
     EigrpTimer *holdt;  /**< Pointer to Hold timer */
 
   public:
@@ -35,7 +34,8 @@ class EigrpNeighbor : public cObject
 
     virtual ~EigrpNeighbor() { delete holdt; holdt = NULL; }
     EigrpNeighbor(int ifaceId, IPAddress ipAddress) :
-        ifaceId(ifaceId), neighborId(UNSPEC_ID), ipAddress(ipAddress), isUp(false), holdt(NULL) { seqNumber = 0; holdInt = 0; waitForAck = 0; }
+        ifaceId(ifaceId), neighborId(UNSPEC_ID), ipAddress(ipAddress), isUp(false), holdt(NULL)
+    { seqNumber = 0; holdInt = 0; routesForDeletion = false; waitForAck = 0; }
 
     void setStateUp(bool stateUp) { this->isUp = stateUp; }
     /**< Sets neighbor's Hold interval value */
@@ -45,6 +45,7 @@ class EigrpNeighbor : public cObject
     void setNeighborId(int neighborId) {  this->neighborId = neighborId; }
     void setSeqNumber(int seqNumber) { this->seqNumber = seqNumber; }
     void setAck(uint32_t waitForAck) { this->waitForAck = waitForAck; }
+    void setRoutesForDeletion(bool routesForDeletion) { this->routesForDeletion = routesForDeletion; }
 
     IPAddress getIPAddress() const { return this->ipAddress; }
     int getIfaceId() const { return this->ifaceId; }
@@ -53,7 +54,8 @@ class EigrpNeighbor : public cObject
     EigrpTimer *getHoldTimer() const { return this->holdt; }
     int getNeighborId() const { return neighborId; }
     int getSeqNumber() const { return seqNumber; }
-    uint32_t getAck() const { return this->waitForAck; }
+    uint32_t getAck() const { return waitForAck; }
+    bool getRoutesForDeletion() const { return this->routesForDeletion; }
 };
 
 /**
