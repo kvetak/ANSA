@@ -24,7 +24,6 @@ import inet.ansa.applications.ripng.RIPngRouting;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.isis.ISIS;
-import inet.ansa.networklayer.lisp.LISPRouting;
 import inet.ansa.networklayer.pim.pim;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
@@ -193,9 +192,6 @@ module ANSARouter
                 lowerLayerIn[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
                 lowerLayerOut[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
         }
-        lisp: LISPRouting {
-            @display("p=274,393");
-        }
         pim: pim {
             @display("p=37,302");
         }
@@ -249,10 +245,6 @@ module ANSARouter
 
         udp.appOut++ --> ripng.udpIn;
         ripng.udpOut --> udp.appIn++;
-
-        udp.appOut++ --> lisp.udpIn;
-        udp.appIn++ <-- lisp.udpOut;
-        ipSplitter.lispIn <-- lisp.ipsplitOut;
 
         networkLayer.ospfOut --> ospf.ipIn;
         ospf.ipOut --> networkLayer.ospfIn;
