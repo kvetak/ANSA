@@ -433,6 +433,7 @@ void EigrpDual::processTransition2(int event, EigrpRouteSource<IPv4Address> *sou
 
     if (event == RECV_QUERY)
     {
+
         ASSERT(successor != NULL);
         if (neighborId == successor->getNexthopId()) // Poison Reverse
             pdm->sendReply(route, neighborId, successor, true);

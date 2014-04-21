@@ -1581,6 +1581,7 @@ void EigrpIpv4Pdm::sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     if (neigh == NULL)
         return;
 
+
     msgRt.invalid = false;
     msgRt.sourceId = source->getSourceId();
     msgRt.routeId = source->getRouteId();
