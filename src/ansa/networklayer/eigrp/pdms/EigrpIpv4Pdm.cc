@@ -1020,6 +1020,7 @@ void EigrpIpv4Pdm::removeNeighbor(EigrpNeighbor<IPv4Address> *neigh)
 
     int nextHopId = neigh->getNeighborId();
     int ifaceId = neigh->getIfaceId();
+    const char *ifaceName = neigh->getIfaceName();
     int routeId;
 
     // Remove neighbor from NT
@@ -1046,7 +1047,7 @@ void EigrpIpv4Pdm::removeNeighbor(EigrpNeighbor<IPv4Address> *neigh)
 #ifdef EIGRP_DEBUG
                 ev << "     Create dummy route " << route->getRouteAddress() << " via <unspecified> for deletion of reply status handle" << endl;
 #endif
-                source = new EigrpRouteSource<IPv4Address>(ifaceId, neigh->getIfaceName(), nextHopId, routeId, route);
+                source = new EigrpRouteSource<IPv4Address>(ifaceId, ifaceName, nextHopId, routeId, route);
                 eigrpTt->addRoute(source);
                 eigrpDual->processEvent(EigrpDual::NEIGHBOR_DOWN, source, nextHopId, true);
             }
