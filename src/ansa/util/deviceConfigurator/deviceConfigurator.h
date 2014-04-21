@@ -61,7 +61,7 @@
 #include "VRRPv2VirtualRouter.h"
 #include "IEigrpModule.h"
 #include "EigrpNetworkTable.h"
-#include "LISPCore.h"
+
 /* TRILL */
 #include "TRILLAccess.h"
 /* IS-IS */
@@ -233,11 +233,6 @@ class DeviceConfigurator : public cSimpleModule {
        * @param eigrpModule [in]
        */
       void loadEigrpIPv4Config(IEigrpModule *eigrpModule);
-
-      //////////////////////////////
-      // Configuration for LISP   //
-      //////////////////////////////
-      void loadLISPConfig(LISPCore* LISPModule);
 
 };
 
