@@ -19,7 +19,7 @@
 #include <omnetpp.h>
 
 #include "EigrpRoute.h"
-
+#include "EigrpInterfaceTable.h"
 
 /**
  * V tabulce muze byt vice zaznamu do stejneho cile pres ruzne next hopy. Vyhledavat se musi podle
@@ -57,15 +57,15 @@ class EigrpIpv4TopologyTable : public cSimpleModule
     EigrpRouteSource<IPv4Address> *removeRoute(EigrpRouteSource<IPv4Address> *source);
     EigrpRouteSource<IPv4Address> *findRouteById(int sourceId);
     EigrpRouteSource<IPv4Address> *findRouteByNextHop(int routeId, int nextHopId);
-    EigrpRouteSource<IPv4Address> * findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId, int ifaceId, int nextHopId, bool *sourceNew);
+    EigrpRouteSource<IPv4Address> * findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId, EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew);
     /**< Deletes unreachable routes from the topology table. */
     void purgeTable();
     void delayedRemove(int neighId);
     //void moveSuccessorAhead(EigrpRouteSource<IPv4Address> *source);
     //void moveRouteBack(EigrpRouteSource<IPv4Address> *source);
 
-    uint32_t findRouteDMin(EigrpRoute<IPv4Address> *route);
-    bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t &resultDmin);
+    uint64_t findRouteDMin(EigrpRoute<IPv4Address> *route);
+    bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint64_t &resultDmin);
     EigrpRouteSource<IPv4Address> *getFirstSuccessor(EigrpRoute<IPv4Address> *route);
     //EigrpRouteSource<IPv4Address> *getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask);
     EigrpRouteSource<IPv4Address> *getFirstSuccessorByIf(EigrpRoute<IPv4Address> *route, int ifaceId);

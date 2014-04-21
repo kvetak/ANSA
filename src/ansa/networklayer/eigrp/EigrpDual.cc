@@ -14,6 +14,7 @@
 // 
 
 #include "EigrpDual.h"
+#include "EigrpMetricHelper.h"
 
 #include <omnetpp.h>
 
@@ -41,15 +42,6 @@ const char *userMsgs[] =
 
 void EigrpDual::invalidateRoute(EigrpRouteSource<IPv4Address> *routeSrc)
 {
-    // Source can not be removed if it must be sent in Reply to neighbor (only if there is no successor)
-    // Note: there is no problem if old successor is NULL (Reply is not sent)
-    /*if (succ == NULL && oldSucc != NULL)
-    { // Do not remove source from TT
-        // Route via old successor must be unreachable (FC not satisfied with FD = inf)
-        // Route will be removed after router receives Ack from neighbor for Reply
-        pdm->setDelayedRemove(oldSucc->getNexthopId(), routeToInvalidate);
-    }*/
-
     if (routeSrc->isValid())
     {
         routeSrc->setValid(false);
@@ -63,7 +55,7 @@ void EigrpDual::invalidateRoute(EigrpRouteSource<IPv4Address> *routeSrc)
  *        then it is not inserted into route.
  * @param route Contains actual metric and RD. Dij remains unchanged.
  */
-void EigrpDual::processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *source, int neighborId)
+void EigrpDual::processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *source, int neighborId, bool isSourceNew)
 {
     EigrpRoute<IPv4Address> *route = source->getRouteInfo();
 
@@ -77,26 +69,26 @@ void EigrpDual::processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *sou
     switch (route->getQueryOrigin())
     {
     case 0: // active state
-        processQo0(event, source, route, neighborId);
+        processQo0(event, source, route, neighborId, isSourceNew);
         break;
 
     case 1:
         if (route->getReplyStatusSum() == 0)
         { // passive state
-            processQo1Passive(event, source, route, neighborId);
+            processQo1Passive(event, source, route, neighborId, isSourceNew);
         }
         else
         { // active state
-            processQo1Active(event, source, route, neighborId);
+            processQo1Active(event, source, route, neighborId, isSourceNew);
         }
         break;
 
     case 2: // active state
-        processQo2(event, source, route, neighborId);
+        processQo2(event, source, route, neighborId, isSourceNew);
         break;
 
     case 3: // active state
-        processQo3(event, source, route, neighborId);
+        processQo3(event, source, route, neighborId, isSourceNew);
         break;
 
     default:
@@ -110,9 +102,9 @@ void EigrpDual::processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *sou
 // States of DUAL
 //
 
-void EigrpDual::processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
-    uint32_t dmin;
+    uint64_t dmin;
     bool hasReplyStatus;
 
     switch (event)
@@ -144,7 +136,7 @@ void EigrpDual::processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
         }
         else if (hasReplyStatus)
         { // As not last reply from neighbor
-            processTransition8(event, source, route, neighborId);
+            processTransition8(event, source, route, neighborId, isSourceNew);
         }
         // else do nothing (connected source)
         break;
@@ -160,9 +152,9 @@ void EigrpDual::processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
     }
 }
 
-void EigrpDual::processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
-    uint32_t dmin;
+    uint64_t dmin;
 
     switch (event)
     {
@@ -220,7 +212,7 @@ void EigrpDual::processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address>
     }
 }
 
-void EigrpDual::processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
     bool hasReplyStatus;
 
@@ -247,7 +239,7 @@ void EigrpDual::processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> 
         if (route->getReplyStatusSum() == 0) // Last reply
             processTransition15(event, source, route, neighborId);
         else if (hasReplyStatus) // Not last reply
-            processTransition18(event, source, route, neighborId);
+            processTransition18(event, source, route, neighborId, isSourceNew);
         // else do nothing
         break;
 
@@ -268,7 +260,7 @@ void EigrpDual::processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> 
         }
         else if (hasReplyStatus)
         { // As not last reply from neighbor
-            processTransition18(event, source, route, neighborId);
+            processTransition18(event, source, route, neighborId, isSourceNew);
         }
         // else do nothing
         break;
@@ -284,9 +276,9 @@ void EigrpDual::processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> 
     }
 }
 
-void EigrpDual::processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
-    uint32_t dmin;
+    uint64_t dmin;
     bool hasReplyStatus;
 
     switch (event)
@@ -302,7 +294,7 @@ void EigrpDual::processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
         else
         {
             ASSERT(false);
-            // do nothing (DUAL can not receive Query form S when it is in active state)
+            // do nothing (DUAL can not receive Query form S when it is in active state oij=2)
         }
         break;
 
@@ -322,7 +314,7 @@ void EigrpDual::processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
         }
         else if (hasReplyStatus)
         { // As not last reply from neighbor
-            processTransition8(event, source, route, neighborId);
+            processTransition8(event, source, route, neighborId, isSourceNew);
         }
         // else do nothing (connected source)
         break;
@@ -338,7 +330,7 @@ void EigrpDual::processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
     }
 }
 
-void EigrpDual::processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
     bool hasReplyStatus;
 
@@ -357,7 +349,7 @@ void EigrpDual::processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
         else
         {
             ASSERT(false);
-            // do nothing (DUAL can not receive Query form S when it is in active state)
+            // do nothing (DUAL can not receive Query form S when it is in active state oij=3)
         }
         break;
 
@@ -368,7 +360,7 @@ void EigrpDual::processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
         if (route->getReplyStatusSum() == 0) // Last reply
             processTransition13(event, source, route, neighborId);
         else if (hasReplyStatus) // Not last reply
-            processTransition18(event, source, route, neighborId);
+            processTransition18(event, source, route, neighborId, isSourceNew);
         // else do nothing
         break;
 
@@ -389,7 +381,7 @@ void EigrpDual::processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
         }
         else if (hasReplyStatus)
         { // As not last reply from neighbor
-            processTransition18(event, source, route, neighborId);
+            processTransition18(event, source, route, neighborId, isSourceNew);
         }
         // else do nothing
         break;
@@ -409,43 +401,48 @@ void EigrpDual::processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *sourc
 // Transitions of DUAL
 //
 
-void EigrpDual::processTransition1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=1 (passive) to oij=1 (passive) by transition 1" << endl;
 
     EigrpRouteSource<IPv4Address> *successor = pdm->getFirstSuccessor(route);
     if (successor == NULL)
-    {
-        pdm->sendReply(route, neighborId, source);
-        // Route will be removed after router receives Ack from neighbor for Reply
-        pdm->setDelayedRemove(neighborId, source);
+    { // There is no successor, reply with unreachable route
+        pdm->sendReply(route, neighborId, source, false, true);
     }
     else
         pdm->sendReply(route, neighborId, successor);
 
-    if (source->isUnreachable() && !source->isSetDelayedRemove())
-        invalidateRoute(source);
+    // Route will be removed after router receives Ack from neighbor for Reply
+    if (source->isUnreachable())
+        pdm->setDelayedRemove(neighborId, source);
 }
 
-void EigrpDual::processTransition2(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition2(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=1 (passive) to oij=1 (passive) by transition 2" << endl;
 
     EigrpRouteSource<IPv4Address> *successor;
-    uint32_t oldDij;    // Dij before the event
+    uint64_t oldDij;    // Dij before the event
     bool rtableChanged = false;
 
     oldDij = route->getDij();
 
     // Find successors and update route in TT and RT
     successor = pdm->updateRoute(route, dmin, &rtableChanged);
-    if (source->isUnreachable())
-         invalidateRoute(source);
 
     if (event == RECV_QUERY)
     {
         ASSERT(successor != NULL);
-        pdm->sendReply(route, neighborId, successor);
+        pdm->sendReply(route, neighborId, successor, true);
+        // When Reply is sent, remove unreachable route after receiving Ack (According to Cisco EIGRP 10.0)
+        if (source->isUnreachable())
+            pdm->setDelayedRemove(neighborId, source);
+    }
+    else
+    { // When Reply is not sent, remove unreachable route immediately
+        if (source->isUnreachable())
+            invalidateRoute(source);
     }
 
     // Send Update about new Successor
@@ -458,7 +455,7 @@ void EigrpDual::processTransition2(int event, EigrpRouteSource<IPv4Address> *sou
     }
 }
 
-void EigrpDual::processTransition3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=1 (passive) to oij=3 (active) by transition 3" << endl;
     // Note: source is successor
@@ -488,7 +485,7 @@ void EigrpDual::processTransition3(int event, EigrpRouteSource<IPv4Address> *sou
     // Do not remove source
 }
 
-void EigrpDual::processTransition4(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition4(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=1 (passive) to oij=1 (active) by transition 4" << endl;
 
@@ -543,13 +540,17 @@ void EigrpDual::processTransition6(int event, EigrpRouteSource<IPv4Address> *sou
     EV << "DUAL: transit from oij=" << route->getQueryOrigin() << " (active) to oij=" << route->getQueryOrigin() << " (active) by transition 6" << endl;
 
     EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
+    ASSERT(oldSuccessor != NULL);   // Old successor must be available until transition to passive state
+    /*if (oldSuccessor == NULL) // Send route with unreachable distance (not Poison Reverse)
+        pdm->sendReply(route, neighborId, source, false, true);
+    else*/
 
-    if (oldSuccessor == NULL)
-        pdm->sendReply(route, neighborId, source);
+    if (source->isSuccessor()) // Send route with unreachable distance to old Successor (Poison Reverse)
+        pdm->sendReply(route, neighborId, oldSuccessor, true);
     else
         pdm->sendReply(route, neighborId, oldSuccessor);
 
-
+    // Do not remove unreachable route (this will be done after transition to passive state)
 }
 
 void EigrpDual::processTransition7(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
@@ -562,15 +563,14 @@ void EigrpDual::processTransition7(int event, EigrpRouteSource<IPv4Address> *sou
     // Actualize Dij of route by new distance via successor
     route->setDij(source->getMetric());
 
-    if (source->isUnreachable())
-        invalidateRoute(source);
+    // Do not remove unreachable route (this will be done after transition to passive state)
 }
 
-void EigrpDual::processTransition8(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processTransition8(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
     EV << "DUAL: transit from oij=" << route->getQueryOrigin() << " (active) to oij=" << route->getQueryOrigin() << " (active) by transition 8" << endl;
 
-    if (source->isUnreachable() && !source->isSuccessor())
+    if (source->isUnreachable() && isSourceNew)
         invalidateRoute(source);
 }
 
@@ -585,14 +585,14 @@ void EigrpDual::processTransition9(int event, EigrpRouteSource<IPv4Address> *sou
 
     if (route->getReplyStatusSum() == 0)
     { // Reply status table is empty, go to passive state or start new diffusing computation
-        uint32_t dmin;
+        uint64_t dmin;
         if (pdm->hasFeasibleSuccessor(route, dmin))
             processTransition14(event, source, route, dmin, neighborId);
         else
             processTransition11(event, source, route, dmin, neighborId);
     }
 
-    // zatím zde cestu nemazat
+    // Do not remove unreachable route (this will be done after transition to passive state)
 }
 
 void EigrpDual::processTransition10(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
@@ -606,17 +606,17 @@ void EigrpDual::processTransition10(int event, EigrpRouteSource<IPv4Address> *so
 
     if (route->getReplyStatusSum() == 0)
     { // Reply status table is empty, go to passive state or start new diffusing computation
-        uint32_t dmin;
+        uint64_t dmin;
         if (pdm->hasFeasibleSuccessor(route, dmin))
             processTransition16(event, source, route, dmin, neighborId);
         else
             processTransition12(event, source, route, dmin, neighborId);
     }
 
-    // zatím zde cestu nemazat
+    // Do not remove unreachable route (this will be done after transition to passive state)
 }
 
-void EigrpDual::processTransition11(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition11(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=0 (active) to oij=1 (active) by transition 11" << endl;
 
@@ -637,10 +637,10 @@ void EigrpDual::processTransition11(int event, EigrpRouteSource<IPv4Address> *so
         return;
     }
 
-    // zatím zde cestu nemazat
+    // Do not remove unreachable route (this will be done after transition to passive state)
 }
 
-void EigrpDual::processTransition12(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition12(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=2 (active) to oij=3 (active) by transition 12" << endl;
 
@@ -660,7 +660,7 @@ void EigrpDual::processTransition12(int event, EigrpRouteSource<IPv4Address> *so
         return;
     }
 
-    // zatím zde cestu nemazat
+    // Do not remove unreachable route (this will be done after transition to passive state)
 }
 
 void EigrpDual::processTransition13(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
@@ -670,32 +670,32 @@ void EigrpDual::processTransition13(int event, EigrpRouteSource<IPv4Address> *so
     EigrpRouteSource<IPv4Address> *successor;
     // Old successor is originator of Query
     EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
-    uint32_t oldDij = route->getDij();
-    uint32_t dmin;
+    uint64_t oldDij = route->getDij();
+    uint64_t dmin;
     bool rtableChanged = false;
 
     route->setQueryOrigin(1);
 
     // Set FD to max
-    route->setFd(UINT32_MAX);
+    route->setFd(EigrpMetricHelper::METRIC_INF);
 
     // Find min distance
     dmin = pdm->findRouteDMin(route);
 
     // Find successor and update distance of the route
     successor = pdm->updateRoute(route, dmin, &rtableChanged, true);
-    if (source->isUnreachable() && !source->isSetDelayedRemove())
+    if (source->isUnreachable())
         invalidateRoute(source);
 
-    // Send Reply to old successor about unreachable route
+    // Send Reply to old successor
     if (oldSuccessor != NULL)
     {
         if (successor == NULL) // Send old Successor
         {
-            ASSERT(oldSuccessor == source); // There can be only 1 route for the network
-            pdm->sendReply(route, oldSuccessor->getNexthopId(), oldSuccessor, true);
             // Route will be removed after router receives Ack from neighbor for Reply
-            pdm->setDelayedRemove(neighborId, source);
+            if (oldSuccessor->isUnreachable())
+                pdm->setDelayedRemove(neighborId, oldSuccessor);
+            pdm->sendReply(route, oldSuccessor->getNexthopId(), oldSuccessor, true);
         }
         else
             pdm->sendReply(route, oldSuccessor->getNexthopId(), successor, true);
@@ -716,8 +716,8 @@ void EigrpDual::goToPassiveFromQo3(int event, EigrpRouteSource<IPv4Address> *sou
 {
     EV << "DUAL: transit to oij=1 (passive) by optimized transition 13" << endl;
 
-    uint32_t dmin;
-    uint32_t oldDij = route->getDij();
+    uint64_t dmin;
+    uint64_t oldDij = route->getDij();
     EigrpRouteSource<IPv4Address> *successor = NULL;
     // Old successor is originator of Query
     EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
@@ -727,7 +727,7 @@ void EigrpDual::goToPassiveFromQo3(int event, EigrpRouteSource<IPv4Address> *sou
     // Do not record receive of Reply
 
     // Set FD to max
-    route->setFd(UINT32_MAX);
+    route->setFd(EigrpMetricHelper::METRIC_INF);
 
     // Find min distance
     dmin = pdm->findRouteDMin(route);
@@ -762,12 +762,12 @@ void EigrpDual::goToPassiveFromQo3(int event, EigrpRouteSource<IPv4Address> *sou
         invalidateRoute(source);
 } */
 
-void EigrpDual::processTransition14(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition14(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=0 (active) to oij=1 (passive) by transition 14" << endl;
 
     EigrpRouteSource<IPv4Address> *successor;
-    uint32_t oldDij = route->getDij();
+    uint64_t oldDij = route->getDij();
     bool rtableChanged = false;
 
     route->setQueryOrigin(1);
@@ -796,12 +796,12 @@ void EigrpDual::processTransition15(int event, EigrpRouteSource<IPv4Address> *so
     EV << "DUAL: transit from oij=1 (active) to oij=1 (passive) by transition 15" << endl;
 
     EigrpRouteSource<IPv4Address> *successor = NULL;
-    uint32_t oldDij = route->getDij();
-    uint32_t dmin;
+    uint64_t oldDij = route->getDij();
+    uint64_t dmin;
     bool rtableChanged = false;
 
     // Set FD to max
-    route->setFd(UINT32_MAX);
+    route->setFd(EigrpMetricHelper::METRIC_INF);
 
     // Find min distance
     dmin = pdm->findRouteDMin(route);
@@ -830,14 +830,14 @@ void EigrpDual::gotoPassiveFromQo1(int event, EigrpRouteSource<IPv4Address> *sou
     EV << "DUAL: transit to oij=1 (passive) by optimized transition 15" << endl;
 
     EigrpRouteSource<IPv4Address> *successor = NULL;
-    uint32_t dmin;
-    uint32_t oldDij = route->getDij();
+    uint64_t dmin;
+    uint64_t oldDij = route->getDij();
     bool rtableChanged = false;
 
     // Do not record receive of Reply
 
     // Set FD to max
-    route->setFd(UINT32_MAX);
+    route->setFd(EigrpMetricHelper::METRIC_INF);
 
     // Find min distance
     dmin = pdm->findRouteDMin(route);
@@ -861,14 +861,14 @@ void EigrpDual::gotoPassiveFromQo1(int event, EigrpRouteSource<IPv4Address> *sou
     }
 }*/
 
-void EigrpDual::processTransition16(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint32_t dmin, int neighborId)
+void EigrpDual::processTransition16(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId)
 {
     EV << "DUAL: transit from oij=2 (active) to oij=1 (passive) by transition 16" << endl;
 
     EigrpRouteSource<IPv4Address> *successor;
     // Old successor is originator of Query
     EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
-    uint32_t oldDij = route->getDij();
+    uint64_t oldDij = route->getDij();
     bool rtableChanged = false;
 
     route->setQueryOrigin(1);
@@ -882,11 +882,10 @@ void EigrpDual::processTransition16(int event, EigrpRouteSource<IPv4Address> *so
         invalidateRoute(source);
     }
 
-    // Send Reply to old successor about new successor or unreachable route (successor = NULL)
+    // Send Reply to old successor
     if (oldSuccessor != NULL)
-    {
-        pdm->sendReply(route, oldSuccessor->getNexthopId(), successor);
-    }
+        pdm->sendReply(route, oldSuccessor->getNexthopId(), successor, true);
+
     // Send update about change of metric
     if (pdm->hasNeighborForUpdate(successor))
     {
@@ -906,16 +905,13 @@ void EigrpDual::processTransition17(int event, EigrpRouteSource<IPv4Address> *so
 
     // Actualize Dij of route by new distance via successor
     route->setDij(source->getMetric());
-
-    if (source->isUnreachable())
-        invalidateRoute(source);
 }
 
-void EigrpDual::processTransition18(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId)
+void EigrpDual::processTransition18(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew)
 {
     EV << "DUAL: transit from oij=" << route->getQueryOrigin() << " (active) to oij=" << route->getQueryOrigin() << " (active) by transition 18" << endl;
 
-    if (source->isUnreachable() && !source->isSuccessor())
+    if (source->isUnreachable() && isSourceNew)
         invalidateRoute(source);
 }
 

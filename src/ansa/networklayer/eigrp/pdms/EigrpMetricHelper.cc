@@ -15,31 +15,24 @@
 
 #include <EigrpMetricHelper.h>
 
-EigrpMetricHelper::EigrpMetricHelper()
+EigrpMetricHelper::EigrpMetricHelper() :
+    DELAY_PICO(1000000), BANDWIDTH(10000000), CLASSIC_SCALE(256), WIDE_SCALE(65536)
 {
-    // TODO Auto-generated constructor stub
 }
 
 EigrpMetricHelper::~EigrpMetricHelper()
 {
-    // TODO Auto-generated destructor stub
 }
 
 /**
  * Sets parameters from interface for metric computation.
  */
-EigrpMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface)
+EigrpWideMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface)
 {
-    EigrpMetricPar newMetricPar;
-    uint32_t bw, dly;
+    EigrpWideMetricPar newMetricPar;
 
-    bw = eigrpIface->getBandwidth();
-    dly = eigrpIface->getDelay();
-
-    if (bw != 0)
-        newMetricPar.bandwidth = 10000000 / bw * 256;
-
-    newMetricPar.delay = dly / 10 * 256;
+    newMetricPar.bandwidth = eigrpIface->getBandwidth();
+    newMetricPar.delay = eigrpIface->getDelay() * DELAY_PICO;
     newMetricPar.load = eigrpIface->getLoad();
     newMetricPar.reliability = eigrpIface->getReliability();
     newMetricPar.hopCount = 0;
@@ -51,44 +44,80 @@ EigrpMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface)
 /**
  * Adjust parameters of metric by interface parameters.
  */
-EigrpMetricPar EigrpMetricHelper::adjustParam(const EigrpMetricPar& ifParam, const EigrpMetricPar& neighParam)
+EigrpWideMetricPar EigrpMetricHelper::adjustParam(const EigrpWideMetricPar& ifParam, const EigrpWideMetricPar& neighParam)
 {
-    EigrpMetricPar newMetricPar;
+    EigrpWideMetricPar newMetricPar;
 
-    // Bandwidth and delay are precomputed
-    newMetricPar.bandwidth = getMax(ifParam.bandwidth, neighParam.bandwidth);
     newMetricPar.load = getMax(ifParam.load, neighParam.delay);
     newMetricPar.reliability = getMin(ifParam.reliability, neighParam.reliability);
     newMetricPar.mtu = getMin(ifParam.mtu, neighParam.mtu);
     newMetricPar.hopCount++;
 
-    if (neighParam.delay == UINT32_MAX)
-        newMetricPar.delay = UINT32_MAX;   // Infinite metric
+    if (isParamMaximal(neighParam))
+    {
+        newMetricPar.delay = DELAY_INF;
+        newMetricPar.bandwidth = BANDWIDTH_INF;
+    }
     else
+    {
         newMetricPar.delay = ifParam.delay + neighParam.delay;
+        newMetricPar.bandwidth = getMax(ifParam.bandwidth, neighParam.bandwidth);
+    }
 
     return newMetricPar;
 }
 
 /**
  * Computes classic metric.
- * TODO: nahradit hodnoty konstantami, viz RFC (i pro případní rozšíření o Wild metric)
  */
-uint32_t EigrpMetricHelper::computeMetric(const EigrpMetricPar& par, const EigrpKValues& kValues)
+uint64_t EigrpMetricHelper::computeClassicMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues)
 {
     uint32_t metric;
+    uint32_t classicDelay = 0, classicBw = 0;
 
-    if (par.delay == UINT32_MAX)
-        return UINT32_MAX;  // Infinite metric
+    if (isParamMaximal(par))
+        return METRIC_INF;
 
-    metric = kValues.K1*par.bandwidth + kValues.K2*par.bandwidth / (256 - par.load) + kValues.K3 * par.delay;
+    // Adjust delay and bandwidth
+    if (kValues.K3)
+    { // Note: delay is in pico seconds and must be converted to micro seconds for classic metric
+        classicDelay = par.delay / 10000000;
+        classicDelay = classicDelay * CLASSIC_SCALE;
+    }
+    if (kValues.K1)
+        classicBw = BANDWIDTH / par.bandwidth  * CLASSIC_SCALE;
+
+    metric = kValues.K1*classicBw + kValues.K2*classicBw / (256 - par.load) + kValues.K3 * classicDelay;
     if (kValues.K5 != 0)
         metric = metric * kValues.K5 / (par.reliability + kValues.K4);
 
     return metric;
 }
 
-bool EigrpMetricHelper::compareParamters(const EigrpMetricPar& par1, const EigrpMetricPar& par2, EigrpKValues& kValues)
+/**
+ * Computes wide metric.
+ */
+uint64_t EigrpMetricHelper::computeWideMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues)
+{
+    uint64_t metric, throughput, latency;
+
+    if (isParamMaximal(par))
+        return METRIC_INF;
+
+    // TODO: compute delay from bandwidth if bandwidth is greater than 1 Gb/s
+    // TODO: include also additional parameters associated with K6
+
+    throughput = (BANDWIDTH * WIDE_SCALE) / par.bandwidth;
+    latency = (par.delay * WIDE_SCALE) / DELAY_PICO;
+
+    metric = kValues.K1*throughput + kValues.K2*kValues.K1*throughput/(256 - par.load) + kValues.K3*latency /*+ kValues.K6*extAttr*/;
+    if (kValues.K5 != 0)
+        metric = metric * kValues.K5 / (par.reliability + kValues.K4);
+
+    return metric;
+}
+
+bool EigrpMetricHelper::compareParameters(const EigrpWideMetricPar& par1, const EigrpWideMetricPar& par2, EigrpKValues& kValues)
 {
     if (kValues.K1 && par1.bandwidth != par2.bandwidth)
         return false;

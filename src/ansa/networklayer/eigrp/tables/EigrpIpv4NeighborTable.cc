@@ -21,13 +21,14 @@ Define_Module(EigrpIpv4NeighborTable);
 std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPv4Address>& neigh)
 {
     const char *state = neigh.isStateUp() ? "up" : "pending";
+
     os << "ID:" << neigh.getNeighborId();
-    os << "  IP = " << neigh.getIPAddress();
-    os << "  IF ID:" << neigh.getIfaceId();
-    os << "  holdInt = " << neigh.getHoldInt();
+    os << "  IP:" << neigh.getIPAddress();
+    os << "  IF:" << neigh.getIfaceName() << "(" << neigh.getIfaceId() << ")";
+    os << "  holdInt:" << neigh.getHoldInt();
     os << "  state is " << state;
-    os << "  lastSeqNum = " << neigh.getSeqNumber();
-    os << "  waitForAck = " << neigh.getAck();
+    os << "  lastSeqNum:" << neigh.getSeqNumber();
+    os << "  waitForAck:" << neigh.getAck();
     return os;
 }
 

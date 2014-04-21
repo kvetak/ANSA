@@ -18,24 +18,36 @@
 
 #include "InterfaceEntry.h"
 
-#include "EigrpRoute.h"
 #include "EigrpInterfaceTable.h"
 #include "EigrpMessage_m.h"
 
 class EigrpMetricHelper
 {
   private:
+    // Constants for metric computation
+    const uint32_t DELAY_PICO;
+    const uint32_t BANDWIDTH;
+    const uint32_t CLASSIC_SCALE;
+    const uint32_t WIDE_SCALE;
+
     unsigned int getMin(unsigned int p1, unsigned int p2) { return (p1 < p2) ? p1 : p2; }
     unsigned int getMax(unsigned int p1, unsigned int p2) { return (p1 < p2) ? p2 : p1; }
 
   public:
+    // Constants for unreachable route
+    static const uint64_t DELAY_INF = 0xFFFFFFFFFFFF;       // 2^48
+    static const uint64_t BANDWIDTH_INF = 0xFFFFFFFFFFFF;   // 2^48
+    static const uint64_t METRIC_INF = 0xFFFFFFFFFFFFFF;    // 2^56
+
     EigrpMetricHelper();
     virtual ~EigrpMetricHelper();
 
-    EigrpMetricPar getParam(EigrpInterface *eigrpIface);
-    EigrpMetricPar adjustParam(const EigrpMetricPar& ifParam, const EigrpMetricPar& neighParam);
-    uint32_t computeMetric(const EigrpMetricPar& par, const EigrpKValues& kValues);
-    bool compareParamters(const EigrpMetricPar& par1, const EigrpMetricPar& par2, EigrpKValues& kValues);
+    EigrpWideMetricPar getParam(EigrpInterface *eigrpIface);
+    EigrpWideMetricPar adjustParam(const EigrpWideMetricPar& ifParam, const EigrpWideMetricPar& neighParam);
+    uint64_t computeClassicMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues);
+    uint64_t computeWideMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues);
+    bool compareParameters(const EigrpWideMetricPar& par1, const EigrpWideMetricPar& par2, EigrpKValues& kValues);
+    bool isParamMaximal(const EigrpWideMetricPar& par) { return par.delay == DELAY_INF && par.bandwidth == BANDWIDTH_INF; }
 };
 
 #endif /* EIGRPMETRICHELPER_H_ */

@@ -106,8 +106,8 @@ class INET_API InterfaceEntry : public cNamedObject
     TRILLInterfaceData *trilldata; ///< TRILL-specific interface info
     std::vector<MacEstimateCostProcess *> estimateCostProcessArray;
 
-    double bandwidth;   ///< Configrued bandwidth in Kbps
-    double delay;       ///< Configrued delay in microseconds
+    uint64_t bandwidth;   ///< Configured bandwidth in Kbps
+    uint64_t delay;       ///< Configured delay in microseconds
     int reliability;    ///< Reliability (<1-255>), in percent (x/255)
     int recvLoad;       ///< Load for outgoing traffic (<1-255>), in percent (x/255)
     int transLoad;      ///< Load for incoming traffic (<1-255>), in percent (x/255)
@@ -173,8 +173,8 @@ class INET_API InterfaceEntry : public cNamedObject
     const MACAddress& getMacAddress() const  {return macAddr;}
     const InterfaceToken& getInterfaceToken() const {return token;}
 
-    double getBandwidth() const     { return bandwidth; }
-    double getDelay() const         { return delay; }
+    uint64_t getBandwidth() const     { return bandwidth; }
+    uint64_t getDelay() const         { return delay; }
     int getReliability() const      { return reliability; }
     int getRecvLoad() const         { return recvLoad; }
     int getTransLoad() const        { return transLoad; }
@@ -197,8 +197,8 @@ class INET_API InterfaceEntry : public cNamedObject
     virtual void setMACAddress(const MACAddress& addr) {macAddr = addr; configChanged();}
     virtual void setInterfaceToken(const InterfaceToken& t) {token = t; configChanged();}
 
-    void setBandwidth(int bandwidth)    { if (this->bandwidth != bandwidth) { this->bandwidth = bandwidth; configChanged(); } }
-    void setDelay(int delay)            { if (this->delay != delay) { this->delay = delay; configChanged(); } }
+    void setBandwidth(uint64_t bandwidth)    { if (this->bandwidth != bandwidth) { this->bandwidth = bandwidth; configChanged(); } }
+    void setDelay(uint64_t delay)            { if (this->delay != delay) { this->delay = delay; configChanged(); } }
     void setReliability(int reliability) { if (this->reliability != reliability) { this->reliability = reliability; configChanged(); } }
     void setRecvLoad(int recvLoad)      { if (this->recvLoad != recvLoad) { this->recvLoad = recvLoad; configChanged(); } }
     void setTransLoad(int transLoad)    { if (this->transLoad != transLoad) { this->transLoad = transLoad; configChanged(); } }

@@ -18,6 +18,7 @@ class EigrpNeighbor : public cObject
 {
   protected:
     int ifaceId;        /**< ID of interface that is connected to the neighbor. */
+    const char *ifaceName;
     int neighborId;     /**< ID of neighbor */
     // TODO - tady se uloží RID směrovače (ještě ověřit na novém IOSu), které je vždy Ipv4 adresa (i při Ipv6 směrování)
     IPAddress ipAddress;/**< IP address of neighbor. */
@@ -33,8 +34,8 @@ class EigrpNeighbor : public cObject
     static const int UNSPEC_ID = 0;
 
     virtual ~EigrpNeighbor() { delete holdt; holdt = NULL; }
-    EigrpNeighbor(int ifaceId, IPAddress ipAddress) :
-        ifaceId(ifaceId), neighborId(UNSPEC_ID), ipAddress(ipAddress), isUp(false), holdt(NULL)
+    EigrpNeighbor(int ifaceId, const char *ifaceNname, IPAddress ipAddress) :
+        ifaceId(ifaceId), ifaceName(ifaceNname), neighborId(UNSPEC_ID), ipAddress(ipAddress), isUp(false), holdt(NULL)
     { seqNumber = 0; holdInt = 0; routesForDeletion = false; waitForAck = 0; }
 
     void setStateUp(bool stateUp) { this->isUp = stateUp; }
@@ -56,6 +57,8 @@ class EigrpNeighbor : public cObject
     int getSeqNumber() const { return seqNumber; }
     uint32_t getAck() const { return waitForAck; }
     bool getRoutesForDeletion() const { return this->routesForDeletion; }
+
+    const char *getIfaceName() const { return ifaceName; }
 };
 
 /**

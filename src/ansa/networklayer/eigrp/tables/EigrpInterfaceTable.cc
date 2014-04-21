@@ -22,7 +22,7 @@ Define_Module(EigrpInterfaceTable);
 
 std::ostream& operator<<(std::ostream& out, const EigrpInterface& iface)
 {
-    out << "ID:" << iface.getInterfaceId();
+    out << iface.getInterfaceName() << "(" << iface.getInterfaceId() << ")";
     out << "  peers:" << iface.getNumOfNeighbors();
     out << "  helloInt:" << iface.getHelloInt();
     out << "  holdInt:" << iface.getHoldInt();
@@ -53,7 +53,7 @@ EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enable
     reliability = iface->getReliability();
     load = iface->getTransLoad();
     mtu = iface->getMTU();
-
+    interfaceName = iface->getName();
     relMsgs = 0;
     pendingMsgs = 0;
 

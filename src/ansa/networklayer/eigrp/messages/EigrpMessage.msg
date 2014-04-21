@@ -15,11 +15,9 @@
 
 cplusplus {{
 #include "IPv4Address.h"
-#include "EigrpRoute.h"
 }}
 
 class noncobject IPv4Address;
-struct EigrpMetricPar;
 
 // Codes of EIGRP messages
 enum HeaderOpcode
@@ -36,22 +34,34 @@ enum HeaderOpcode
 // Struct for K-values
 struct EigrpKValues
 {
-	uint16_t K1;
-	uint16_t K2;
-	uint16_t K3;
-	uint16_t K4;
-	uint16_t K5;
-	uint16_t K6;
+	uint16_t K1 = 1;
+	uint16_t K2 = 0;
+	uint16_t K3 = 1;
+	uint16_t K4 = 0;
+	uint16_t K5 = 0;
+	uint16_t K6 = 0;
 };
 
+// 8 bit flags field, only three flags specified
 struct EigrpRouteFlags
 {
-    // 8 bit flags field, only three flags specified
     bool SW;				// Source Withdraw			
     bool CD;				// Candidate Default
     bool active;			// Active path
 }
 
+// Struct for wild metric paramaters
+struct EigrpWideMetricPar
+{
+    uint8_t offset = 0;
+    uint8_t priority = 0;
+    uint8_t reliability = 0;    // Min rel. on path
+    uint8_t load = 0;           // Max load on path
+    uint32_t mtu = 0;           // Min MTU on path, only 24 bits used
+    uint8_t hopCount = 0;       // Hop count to destination
+    uint64_t delay = 0;         // Delay sum on path, only 48 bits used
+    uint64_t bandwidth = 0;     // Min BW on path, only 48 bits used
+}
 
 // TLV Parameter Type for Hello message
 struct EigrpTlvParameter
@@ -67,19 +77,40 @@ struct EigrpTlvParameter
 };
 
 // IPv4 TLV Internal route
-struct EigrpIpv4Internal
+//struct EigrpIpv4Internal
+//{
+//    // type
+//    char typeHigh = 1;
+//    char typeLow = 2;
+//    // length
+//    uint16_t length = 28;
+//    // value
+//    IPv4Address routerID;		// IP of originating router (also in exterior TLV)
+// 	IPv4Address nextHop;   
+// 	EigrpMetricPar metric;
+// 	EigrpRouteFlags flags;
+// 	IPv4Address destMask;	 	// Destination
+// 	IPv4Address destAddress;
+//};
+
+// Multiprotocol Ipv4 (IPv4Address used) Internal TLV route
+struct EigrpMpIpv4Internal
 {
     // type
-    char typeHigh = 1;
+    char typeHigh = 6;
     char typeLow = 2;
     // length
-    uint16_t length = 28;
+    uint16_t length = 44;
     // value
-    IPv4Address routerID;		// IP of originating router (also in exterior TLV)
- 	IPv4Address nextHop;   
- 	EigrpMetricPar metric;
+    uint16_t afi;				// Address Family ID, IPv4 = 1, Ipv6 = 2
+    uint16_t tid;				// Topology ID
+    IPv4Address routerID;		// Router ID
+
+ 	EigrpWideMetricPar metric;
  	EigrpRouteFlags flags;
- 	IPv4Address destMask;	 	// Destination
+ 	
+ 	IPv4Address nextHop;
+ 	IPv4Address destMask;
  	IPv4Address destAddress;
 };
 
@@ -118,7 +149,7 @@ packet EigrpIpv4Ack extends EigrpMessage
 
 packet EigrpIpv4Message extends EigrpMessage
 {
-    EigrpIpv4Internal interRoutes[];
+    EigrpMpIpv4Internal interRoutes[];
 };
 
 // EIGRP Update Message
@@ -139,14 +170,6 @@ packet EigrpIpv4Reply extends EigrpIpv4Message
 //
 // EIGRP RTP
 //
-cplusplus 
-{{ 
-    class EigrpMessage;
-    typedef EigrpMessage *EigrpMessagePtr; 
-}} // C++ typedef
-
-class noncobject EigrpMessagePtr;
-
 struct EigrpMsgRoute
 {
     int sourceId;           // ID of source for route

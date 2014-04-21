@@ -19,6 +19,7 @@
 
 #include "EigrpIpv4TopologyTable.h"
 #include "EigrpMessage_m.h"
+#include "EigrpMetricHelper.h"
 
 #define EIGRP_TT_DEBUG
 
@@ -41,7 +42,7 @@ std::ostream& operator<<(std::ostream& os, const EigrpRouteSource<IPv4Address>& 
         os << "  via " << source.getNextHop();
     os << " (" << source.getMetric() << "/" << source.getRd() << ")";
     if (source.isSuccessor()) os << "  is successor";
-    os << ",  IF ID:" << source.getIfaceId();
+    os << ",  IF:" << source.getIfaceName() << "(" << source.getIfaceId() << ")";
     os << "  state:" << state;
     os << "  originator:" << source.getOriginator();
 
@@ -63,7 +64,7 @@ void EigrpIpv4TopologyTable::initialize()
     WATCH(routerID);
     WATCH_PTRVECTOR(routeVec);
 #ifdef EIGRP_TT_DEBUG
-    WATCH_PTRVECTOR(routeInfoVec);
+    //WATCH_PTRVECTOR(routeInfoVec);
 #endif
 }
 
@@ -124,10 +125,10 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRoute(const IPv4Addre
     return NULL;
 }
 
-uint32_t EigrpIpv4TopologyTable::findRouteDMin(EigrpRoute<IPv4Address> *route)
+uint64_t EigrpIpv4TopologyTable::findRouteDMin(EigrpRoute<IPv4Address> *route)
 {
-    uint32_t dmin = UINT32_MAX;
-    uint32_t tempD;
+    uint64_t dmin = EigrpMetricHelper::METRIC_INF;
+    uint64_t tempD;
     RouteVector::iterator it;
     int routeId = route->getRouteId();
 
@@ -208,14 +209,14 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessorByIf(Eig
  *
  * @params resultDmin Return value with minimal distance of all FS.
  */
-bool EigrpIpv4TopologyTable::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint32_t& resultDmin)
+bool EigrpIpv4TopologyTable::hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint64_t& resultDmin)
 {
     RouteVector::iterator it;
     int routeId = route->getRouteId();
     bool hasFs = false;
-    uint32_t tempD;
+    uint64_t tempD;
 
-    resultDmin = UINT32_MAX;
+    resultDmin = EigrpMetricHelper::METRIC_INF;
     ev << "EIGRP: Search feasible successor for route " << route->getRouteAddress();
     ev << ", FD is " << route->getFd() << endl;
 
@@ -430,7 +431,7 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRouteByNextHop(int ro
  * @param sourceNewResult return value.
  */
 EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId,
-        int ifaceId, int nextHopId, bool *sourceNew)
+        EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew)
 {
     EigrpRoute<IPv4Address> *route = NULL;
     EigrpRouteSource<IPv4Address> *source = NULL;
@@ -446,7 +447,7 @@ EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Ad
             addRouteInfo(route);
         }
         // Create source of route
-        source = new EigrpRouteSource<IPv4Address>(ifaceId, nextHopId, route->getRouteId(), route);
+        source = new EigrpRouteSource<IPv4Address>(eigrpIface->getInterfaceId(), eigrpIface->getInterfaceName(), nextHopId, route->getRouteId(), route);
         source->setOriginator(routerId);
         (*sourceNew) = true;
         addRoute(source);

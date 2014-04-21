@@ -29,6 +29,7 @@ class EigrpInterface: public cObject
 {
   protected:
     int interfaceId;        /**< ID of interface */
+    const char *interfaceName;  /**< Name of interface */
     int networkId;          /**< ID of network in RoutingOfNetworks table */
     int helloInt;           /**< Hello interval in seconds (<1-65535>) */
     int holdInt;            /**< Router's hold interval in seconds (<1-65535>) */
@@ -39,8 +40,8 @@ class EigrpInterface: public cObject
     int pacingTime;         /**< Pacing time in milliseconds */
     bool passive;           /**< Interface is passive */
 
-    double bandwidth;       /**< Bandwidth in Kbps (<1-10 000 000>) */
-    double delay;           /**< Delay in us (<1-16 777 215>) */
+    uint64_t bandwidth;       /**< Bandwidth in Kbps (<1-10 000 000>) */
+    uint64_t delay;           /**< Delay in us (<1-16 777 215>) */
     int reliability;        /**< Reliability in percent (<1-255>) */
     int load;               /**< Load in percent (<1-255>) */
     int mtu;                /**< MTU of interface in B */
@@ -80,12 +81,11 @@ class EigrpInterface: public cObject
     void incNumOfNeighbors() { this->neighborCount++; }
     int getNumOfNeighbors() const { return this->neighborCount; }
 
-    void setBandwidth(int bw) { this->bandwidth = bw; }
-    // TODO vraci uint misto double! Stejne tak delay
-    unsigned int getBandwidth() const { return bandwidth; }
+    void setBandwidth(uint64_t bw) { this->bandwidth = bw; }
+    uint64_t getBandwidth() const { return bandwidth; }
 
-    void setDelay(int dly) { this->delay = dly; }
-    unsigned int getDelay() const { return delay; }
+    void setDelay(uint64_t dly) { this->delay = dly; }
+    uint64_t getDelay() const { return delay; }
 
     void setReliability(int rel) { this->reliability = rel; }
     int getReliability() const { return reliability; }
@@ -113,6 +113,8 @@ class EigrpInterface: public cObject
     bool getPassive() const { return this->passive; }
 
     int computePacingTime() const { return 30; }
+
+    const char *getInterfaceName() const { return this->interfaceName; }
 };
 
 /**

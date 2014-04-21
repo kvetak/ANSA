@@ -27,9 +27,11 @@
 #include <algorithm>
 
 #include "IPv4Address.h"
+#include "EigrpMessage_m.h"
+#include "EigrpMetricHelper.h"
 
 
-// Struct for metric parameters
+/* Struct for metric parameters
 struct EigrpMetricPar
 {
     uint32_t delay;         // Delay sum on path
@@ -41,7 +43,7 @@ struct EigrpMetricPar
     uint8_t internalTag;    // Tag for filtering
 
     EigrpMetricPar() : delay(0), bandwidth(0), reliability(0), load(0), mtu(0), hopCount(0), internalTag(0) {}
-};
+};*/
 
 template<typename IPAddress> class EigrpRouteSource;
 
@@ -56,9 +58,9 @@ class EigrpRoute : public cObject
 
     int queryOrigin;        /**< State of DUAL */
     std::vector<int> replyStatusTable;  /**< Reply status for each neighbor*/
-    uint32_t fd;            /**< Feasible distance */
-    EigrpMetricPar rd;      /**< Parameters for computation of reported distance that belongs to this router */
-    uint32_t Dij;           /**< Shortest distance (Dij) */
+    uint64_t fd;            /**< Feasible distance */
+    EigrpWideMetricPar rd;      /**< Parameters for computation of reported distance that belongs to this router */
+    uint64_t Dij;           /**< Shortest distance (Dij) */
     EigrpRouteSource<IPAddress> *successor; /**< Actual successor for route reported to neighbors of router */
     int numSuccessors;      /** Number of successors for the route */
 
@@ -80,14 +82,14 @@ class EigrpRoute : public cObject
     int getRouteId() const {return routeId; }
     void setRouteId(int routeId) { this->routeId = routeId; }
 
-    uint32_t getFd() const { return fd; }
-    void setFd(uint32_t fd) { this->fd = fd; }
+    uint64_t getFd() const { return fd; }
+    void setFd(uint64_t fd) { this->fd = fd; }
 
-    EigrpMetricPar getRdPar() const { return rd; }
-    void setRdPar(EigrpMetricPar rd) { this->rd = rd; }
+    EigrpWideMetricPar getRdPar() const { return rd; }
+    void setRdPar(EigrpWideMetricPar rd) { this->rd = rd; }
 
-    uint32_t getDij() const { return Dij; }
-    void setDij(uint32_t Dij) { this->Dij = Dij; }
+    uint64_t getDij() const { return Dij; }
+    void setDij(uint64_t Dij) { this->Dij = Dij; }
 
     int getQueryOrigin() const {return queryOrigin; }
     void setQueryOrigin(int queryOrigin) { this->queryOrigin = queryOrigin; }
@@ -133,11 +135,12 @@ class EigrpRouteSource : public cObject
     int nextHopId;                  /**< Id of next hop neighbor (usually same as sourceId, 0 -> connected) */
     IPAddress nextHop;              /**< IP address of next hop router (0.0.0.0 -> connected), only informational. It does not correspond to the sourceId (next hop may not be source of the route). */
     int interfaceId;                /** ID of outgoing interface for next hop */
+    const char *interfaceName;
     bool internal;                  /**< Source of the route (internal or external) */
-    uint32_t rd;                    /**< Reported distance from neighbor (RDkj) */
-    uint32_t metric;                /**< Actual metric value via that next Hop (not Dij - shortest distance) */
-    EigrpMetricPar metricParams;    /**< Parameters for metric computation */
-    EigrpMetricPar rdParams;        /**< Parameters from neighbor */
+    uint64_t rd;                    /**< Reported distance from neighbor (RDkj) */
+    uint64_t metric;                /**< Actual metric value via that next Hop (not Dij - shortest distance) */
+    EigrpWideMetricPar metricParams;    /**< Parameters for metric computation */
+    EigrpWideMetricPar rdParams;        /**< Parameters from neighbor */
     bool successor;                 /**< If next hop is successor */
     // TODO oznaceni sumarizovane cesty
     bool valid;                     /**< Invalid sources will be deleted */
@@ -147,7 +150,7 @@ class EigrpRouteSource : public cObject
 
   public:
 
-    EigrpRouteSource(int interfaceId, int nextHopId, int routeId, EigrpRoute<IPAddress> *routeInfo);
+    EigrpRouteSource(int interfaceId, const char *ifaceName, int nextHopId, int routeId, EigrpRoute<IPAddress> *routeInfo);
     virtual ~EigrpRouteSource();
 
     bool operator==(const EigrpRouteSource<IPAddress>& source) const
@@ -155,23 +158,23 @@ class EigrpRouteSource : public cObject
         return sourceId == source.getSourceId();
     }
 
-    uint32_t getRd() const { return rd; }
-    void setRd(uint32_t rd) { this->rd = rd; }
+    uint64_t getRd() const { return rd; }
+    void setRd(uint64_t rd) { this->rd = rd; }
 
     bool isInternal() const { return internal; }
     void setInternal(bool internal) { this->internal = internal; }
 
-    uint32_t getMetric() const { return metric; }
-    void setMetric(uint32_t metric) { this->metric = metric; }
+    uint64_t getMetric() const { return metric; }
+    void setMetric(uint64_t metric) { this->metric = metric; }
 
     IPAddress getNextHop() const { return nextHop; }
     void setNextHop(IPAddress& nextHop) { this->nextHop = nextHop; }
 
-    EigrpMetricPar getMetricParams() const { return metricParams; }
-    void setMetricParams(EigrpMetricPar& par) { this->metricParams = par; }
+    EigrpWideMetricPar getMetricParams() const { return metricParams; }
+    void setMetricParams(EigrpWideMetricPar& par) { this->metricParams = par; }
 
-    EigrpMetricPar getRdParams() const { return rdParams; }
-    void setRdParams(EigrpMetricPar& rdParams) { this->rdParams = rdParams; }
+    EigrpWideMetricPar getRdParams() const { return rdParams; }
+    void setRdParams(EigrpWideMetricPar& rdParams) { this->rdParams = rdParams; }
 
     bool isSuccessor() const { return successor; }
     void setSuccessor(bool successor) { this->successor = successor; }
@@ -181,8 +184,6 @@ class EigrpRouteSource : public cObject
 
     int getIfaceId() const { return interfaceId; }
     void setIfaceId(int interfaceId) { this->interfaceId = interfaceId; }
-
-    bool isUnreachable() const { return metric == UINT32_MAX; }
 
     EigrpRoute<IPAddress> *getRouteInfo() const { return routeInfo; }
     void setRouteInfo(EigrpRoute<IPAddress> *routeInfo) { this->routeInfo = routeInfo; }
@@ -199,11 +200,17 @@ class EigrpRouteSource : public cObject
     bool isValid() const { return valid; }
     void setValid(bool valid) { this->valid = valid; }
 
+    bool isUnreachable() const { return metric == EigrpMetricHelper::METRIC_INF; }
     /** Sets metric and RD to infinity */
-    void setUnreachableMetric() { metric = UINT32_MAX; metricParams.delay = UINT32_MAX; rd = UINT32_MAX; rdParams.delay = UINT32_MAX; }
+    void setUnreachableMetric()
+    {
+        metric = EigrpMetricHelper::METRIC_INF; metricParams.bandwidth = EigrpMetricHelper::BANDWIDTH_INF; metricParams.delay = EigrpMetricHelper::DELAY_INF;
+        rd = EigrpMetricHelper::METRIC_INF; rdParams.bandwidth = EigrpMetricHelper::BANDWIDTH_INF; rdParams.delay = EigrpMetricHelper::DELAY_INF; }
 
     bool isSetDelayedRemove() const { return delayedRemove; }
     void setDelayedRemove(bool delayedRemove) { this->delayedRemove = delayedRemove; }
+
+    const char *getIfaceName() const { return interfaceName; }
 };
 
 
@@ -211,10 +218,10 @@ class EigrpRouteSource : public cObject
 template class EigrpRouteSource<IPv4Address>;
 
 template<typename IPAddress>
-EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, int nextHopId, int routeId, EigrpRoute<IPAddress> *routeInfo) :
-    routeId(routeId), nextHopId(nextHopId), interfaceId(interfaceId), routeInfo(routeInfo)
+EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, const char *ifaceName, int nextHopId, int routeId, EigrpRoute<IPAddress> *routeInfo) :
+    routeId(routeId), nextHopId(nextHopId), interfaceId(interfaceId), interfaceName(ifaceName), routeInfo(routeInfo)
 {
-    metric = UINT32_MAX;
+    metric = EigrpMetricHelper::METRIC_INF;
     rd = 0;
     internal = true;
     successor = false;
@@ -236,8 +243,8 @@ template<typename IPAddress>
 EigrpRoute<IPAddress>::EigrpRoute(IPAddress& address, IPAddress& mask) :
     routeId(0), routeAddress(address), routeMask(mask)
 {
-    fd = Dij = UINT32_MAX;
-    rd.delay = UINT32_MAX;
+    fd = Dij = EigrpMetricHelper::METRIC_INF;
+    rd.delay = EigrpMetricHelper::METRIC_INF;
 
     successor = NULL;
     queryOrigin = 1;
