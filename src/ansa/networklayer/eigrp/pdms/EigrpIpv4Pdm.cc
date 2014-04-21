@@ -845,6 +845,7 @@ void EigrpIpv4Pdm::addRoutesToMsg(EigrpIpv4Message *msg, const EigrpMsgReq *msgR
         if (eigrpMetric->isParamMaximal(routeTlv.metric)) ev << " (unreachable) ";
         ev << ", bw: " << routeTlv.metric.bandwidth;
         ev << ", dly: " << routeTlv.metric.delay;
+        ev << ", hopcnt: " << routeTlv.metric.hopCount;
         ev << endl;
     }
 #endif
@@ -1397,7 +1398,7 @@ void EigrpIpv4Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
     int neighCount;
     int ifaceId = eigrpIface->getInterfaceId();
 
-    EV << "EIGRP disabled on interface " << ifaceId << endl;
+    EV << "EIGRP disabled on interface " << eigrpIface->getName() << "(" << ifaceId << ")" << endl;
 
     if (iface->isUp() && iface->hasCarrier())
     { // Unregister multicast address on interface (fires notification about change of interface)
@@ -1443,7 +1444,7 @@ void EigrpIpv4Pdm::enableInterface(EigrpInterface *eigrpIface, IPv4Address& ifAd
     EigrpWideMetricPar metricPar;
     bool isSourceNew;
 
-    EV << "EIGRP enabled on interface " << ifaceId << endl;
+    EV << "EIGRP enabled on interface " << eigrpIface->getName() << "(" << ifaceId << ")" << endl;
 
     // Move interface to EIGRP interface table
     eigrpIftDisabled->removeInterface(eigrpIface);

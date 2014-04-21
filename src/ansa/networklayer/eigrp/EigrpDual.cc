@@ -434,7 +434,10 @@ void EigrpDual::processTransition2(int event, EigrpRouteSource<IPv4Address> *sou
     if (event == RECV_QUERY)
     {
         ASSERT(successor != NULL);
-        pdm->sendReply(route, neighborId, successor, true);
+        if (neighborId == successor->getNexthopId()) // Poison Reverse
+            pdm->sendReply(route, neighborId, successor, true);
+        else
+            pdm->sendReply(route, neighborId, successor);
         // When Reply is sent, remove unreachable route after receiving Ack (According to Cisco EIGRP 10.0)
         if (source->isUnreachable())
             pdm->setDelayedRemove(neighborId, source);
