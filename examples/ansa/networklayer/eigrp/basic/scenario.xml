@@ -1,23 +1,16 @@
 <?xml version="1.0"?>
 <scenario>
-  	<!-- <at t="15">
-    	<disconnect src-module="R2" src-gate="ethg[0]"/>
-  	</at>
-  	<at t="30">
-    	<connect src-module="R2" src-gate="ethg[0]" 
-             dest-module="R1" dest-gate="ethg[0]"
-             channel-type="inet.nodes.ethernet.Eth100M"/>
+  	<!-- Change of delay on R2 to PC2
+  	<at t="11">
+		<interfaceconfig delay="11" module="R2.interfaceStateManager" int="eth3" />
   	</at> -->
   	
-  	<!-- t="15">
-		<interfaceconfig delay="1000" module="R3.interfaceStateManager" int="eth2" />
+  	<!-- Fall of interface between R2 and R3
+  	<at t="8.170">
+		<interfacedown module="R2.interfaceStateManager" int="eth1" />
+  	</at>
+  	<at t="41">
+		<interfaceup module="R2.interfaceStateManager" int="eth1" />
   	</at> -->
   
-	<!-- <at t="20">
-		<interfacedown module="R2.interfaceStateManager" int="eth0" />
-  	</at>
-  	
-	<at t="50">
-		<interfaceup module="R2.interfaceStateManager" int="eth0" />
-  	</at> -->
 </scenario>

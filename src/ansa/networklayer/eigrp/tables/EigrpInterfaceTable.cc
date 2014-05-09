@@ -23,11 +23,16 @@ Define_Module(EigrpInterfaceTable);
 std::ostream& operator<<(std::ostream& out, const EigrpInterface& iface)
 {
     out << iface.getInterfaceName() << "(" << iface.getInterfaceId() << ")";
+    out << "  passive:" ;
+    if (iface.isPassive()) out << "en";
+    else out << "dis";
     out << "  peers:" << iface.getNumOfNeighbors();
+    out << "  stubs:" << iface.getNumOfStubs();
     out << "  helloInt:" << iface.getHelloInt();
     out << "  holdInt:" << iface.getHoldInt();
-    const char *shStr = iface.isSplitHorizonEn() ? "en" : "dis";
-    out << "  splitHorizon:" << shStr;
+    out << "  splitHorizon:" ;
+    if (iface.isSplitHorizonEn()) out << "en";
+    else out << "dis";
     out << "  bw:" << iface.getBandwidth();
     out << "  dly:" << iface.getDelay();
     out << "  rel:" << iface.getReliability() << "/255";
@@ -46,7 +51,9 @@ EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enable
 {
     hellot = NULL;
     neighborCount = 0;
+    stubCount = 0;
     splitHorizon = true;
+    passive = false;
 
     bandwidth = iface->getBandwidth();
     delay = iface->getDelay();

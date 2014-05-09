@@ -51,20 +51,22 @@ template<typename IPAddress>
 class EigrpRoute : public cObject
 {
   protected:
-    int routeId;            /** Unique ID of route */
+    int routeId;                        /** Unique ID of route */
 
-    IPAddress routeAddress; /**< IP address of destination */
-    IPAddress routeMask;    /**< Mask of destination */
+    IPAddress routeAddress;             /**< IP address of destination */
+    IPAddress routeMask;                /**< Mask of destination */
 
-    int queryOrigin;        /**< State of DUAL */
+    int queryOrigin;                    /**< State of DUAL */
     std::vector<int> replyStatusTable;  /**< Reply status for each neighbor*/
-    uint64_t fd;            /**< Feasible distance */
-    EigrpWideMetricPar rd;      /**< Parameters for computation of reported distance that belongs to this router */
-    uint64_t Dij;           /**< Shortest distance (Dij) */
+    uint64_t fd;                        /**< Feasible distance */
+    EigrpWideMetricPar rd;              /**< Parameters for computation of reported distance that belongs to this router */
+    uint64_t Dij;                       /**< Shortest distance (Dij) */
     EigrpRouteSource<IPAddress> *successor; /**< Actual successor for route reported to neighbors of router */
-    int numSuccessors;      /** Number of successors for the route */
+    int numSuccessors;                  /**< Number of successors for the route */
+    bool updateSent;                    /**< Sent update with the route */
+    int numOfMsgsSent;                  /**< Number of sent messages with the route */
 
-    int referenceCounter;   /**< Counts amount of references to this object. */
+    int referenceCounter;               /**< Counts amount of references to this object. */
 
   public:
     EigrpRoute(IPAddress& address, IPAddress& mask);
@@ -113,43 +115,41 @@ class EigrpRoute : public cObject
     void setNumSucc(int numSuccessors) { this->numSuccessors = numSuccessors; }
     int getNumSucc() const {return numSuccessors; }
 
-    //void addSource(EigrpRouteSource<IPAddress> *routeSrc) { sourceVec.push_back(routeSrc); }
-    //EigrpRouteSource<IPAddress> *removeSource(EigrpRouteSource<IPAddress> * source);
-    //EigrpRouteSource<IPAddress> *findSource(int sourceId);
-    //int getNumSources() const { return sourceVec.size(); }
-    //EigrpRouteSource<IPAddress> *getSource(int k) const { return sourceVec[k]; }
+    void setUnreachable() { Dij = EigrpMetricHelper::METRIC_INF; rd.delay = EigrpMetricHelper::DELAY_INF; rd.bandwidth = EigrpMetricHelper::BANDWIDTH_INF; }
 
-    //EigrpRouteSource<IPAddreint decrementReplyStatusSum() { return --replyStatus; }ss> *getFirstSuccessor();
-    //bool hasFeasibleSuccessor();
-    //bool satisfiesFC(EigrpRouteSource<IPAddress> *source) const { return source->getRd() < this->fd; }
+    bool isUpdateSent() const { return updateSent; }
+    void setUpdateSent(bool updateSent) { this->updateSent = updateSent; }
+
+    void setNumSentMsgs(int num) { this->numOfMsgsSent = num; }
+    int getNumSentMsgs() const {return numOfMsgsSent; }
 };
 
 template<typename IPAddress>
 class EigrpRouteSource : public cObject
 {
   protected:
-    int sourceId;                   /** Unique ID of source */
-    int routeId;                    /** Unique ID of route (same as in EigrpRoute) */
+    int sourceId;                       /** Unique ID of source */
+    int routeId;                        /** Unique ID of route (same as in EigrpRoute) */
 
-    IPAddress originator;           /**< IP of originating router */
-    int nextHopId;                  /**< Id of next hop neighbor (usually same as sourceId, 0 -> connected) */
-    IPAddress nextHop;              /**< IP address of next hop router (0.0.0.0 -> connected), only informational. It does not correspond to the sourceId (next hop may not be source of the route). */
-    int interfaceId;                /** ID of outgoing interface for next hop */
+    IPAddress originator;               /**< IP of originating router */
+    int nextHopId;                      /**< Id of next hop neighbor (usually same as sourceId, 0 -> connected) */
+    IPAddress nextHop;                  /**< IP address of next hop router (0.0.0.0 -> connected), only informational. It does not correspond to the sourceId (next hop may not be source of the route). */
+    int interfaceId;                    /** ID of outgoing interface for next hop */
     const char *interfaceName;
-    bool internal;                  /**< Source of the route (internal or external) */
-    uint64_t rd;                    /**< Reported distance from neighbor (RDkj) */
-    uint64_t metric;                /**< Actual metric value via that next Hop (not Dij - shortest distance) */
+    bool internal;                      /**< Source of the route (internal or external) */
+    uint64_t rd;                        /**< Reported distance from neighbor (RDkj) */
+    uint64_t metric;                    /**< Actual metric value via that next Hop (not Dij - shortest distance) */
     EigrpWideMetricPar metricParams;    /**< Parameters for metric computation */
     EigrpWideMetricPar rdParams;        /**< Parameters from neighbor */
-    bool successor;                 /**< If next hop is successor */
-    // TODO oznaceni sumarizovane cesty
-    bool valid;                     /**< Invalid sources will be deleted */
-    bool delayedRemove;             /**< Source will be deleted after receiving Ack from neighbor */
+    bool successor;                     /**< Source is successor for route */
+    bool summary;                       /**< Summarized route */
+    bool redistributed;                 /**< Redistributed route */
+    bool valid;                         /**< Invalid sources will be deleted */
+    int delayedRemoveNID;                 /**< Source will be deleted after receiving Ack from neighbor with ID equal to NID */
 
-    EigrpRoute<IPAddress> *routeInfo;          /**< Pointer to route */
+    EigrpRoute<IPAddress> *routeInfo;   /**< Pointer to route */
 
   public:
-
     EigrpRouteSource(int interfaceId, const char *ifaceName, int nextHopId, int routeId, EigrpRoute<IPAddress> *routeInfo);
     virtual ~EigrpRouteSource();
 
@@ -205,12 +205,19 @@ class EigrpRouteSource : public cObject
     void setUnreachableMetric()
     {
         metric = EigrpMetricHelper::METRIC_INF; metricParams.bandwidth = EigrpMetricHelper::BANDWIDTH_INF; metricParams.delay = EigrpMetricHelper::DELAY_INF;
-        rd = EigrpMetricHelper::METRIC_INF; rdParams.bandwidth = EigrpMetricHelper::BANDWIDTH_INF; rdParams.delay = EigrpMetricHelper::DELAY_INF; }
+        rd = EigrpMetricHelper::METRIC_INF; rdParams.bandwidth = EigrpMetricHelper::BANDWIDTH_INF; rdParams.delay = EigrpMetricHelper::DELAY_INF;
+    }
 
-    bool isSetDelayedRemove() const { return delayedRemove; }
-    void setDelayedRemove(bool delayedRemove) { this->delayedRemove = delayedRemove; }
+    int getDelayedRemove() const { return delayedRemoveNID; }
+    void setDelayedRemove(int neighID) { this->delayedRemoveNID = neighID; }
 
     const char *getIfaceName() const { return interfaceName; }
+
+    bool isRedistributed() const { return redistributed; }
+    void setRedistributed(bool redistributed) { this->redistributed = redistributed; }
+
+    bool isSummary() const { return summary; }
+    void setSummary(bool summary) { this->summary = summary; }
 };
 
 
@@ -227,7 +234,10 @@ EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, const char *iface
     successor = false;
     sourceId = 0;
     valid = true;
-    delayedRemove = false;
+    delayedRemoveNID = 0;
+
+    summary = false;
+    redistributed = false;
 
     routeInfo->incrementRefCnt();
 }
@@ -235,8 +245,6 @@ EigrpRouteSource<IPAddress>::EigrpRouteSource(int interfaceId, const char *iface
 template<typename IPAddress>
 EigrpRouteSource<IPAddress>::~EigrpRouteSource()
 {
-    if (getRouteInfo()->decrementRefCnt() == 0)
-        delete getRouteInfo();
 }
 
 template<typename IPAddress>
@@ -251,6 +259,9 @@ EigrpRoute<IPAddress>::EigrpRoute(IPAddress& address, IPAddress& mask) :
 
     numSuccessors = 0;
     referenceCounter = 0;
+
+    updateSent = false;
+    numOfMsgsSent = 0;
 }
 
 template<typename IPAddress>

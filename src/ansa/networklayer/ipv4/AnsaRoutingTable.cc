@@ -120,6 +120,46 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
     return true;
 }
 
+bool AnsaRoutingTable::prepareForAddRouteAndNotify(IPv4Route *route)
+{
+    //TODO: assume only ANSAIPv4Route in the routing table?
+
+    IPv4Route *routeInTable = findRoute(route->getDestination(), route->getNetmask());
+
+    if (routeInTable)
+    {
+        ANSAIPv4Route *ANSARoute = dynamic_cast<ANSAIPv4Route *>(route);
+        ANSAIPv4Route *ANSARouteInTable = dynamic_cast<ANSAIPv4Route *>(routeInTable);
+
+        //Assume that inet routes have AD 255
+        int newAdminDist = ANSAIPv4Route::dUnknown;
+        int oldAdminDist = ANSAIPv4Route::dUnknown;
+
+        if (ANSARoute)
+            newAdminDist = ANSARoute->getAdminDist();
+        if (ANSARouteInTable)
+            oldAdminDist = ANSARouteInTable->getAdminDist();
+
+        if (oldAdminDist > newAdminDist)
+        {
+            deleteRoute(routeInTable);
+        }
+        else if(oldAdminDist == newAdminDist)
+        {
+            if (routeInTable->getMetric() > route->getMetric())
+                deleteRoute(routeInTable);
+            else
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool AnsaRoutingTable::deleteRouteSilent(IPv4Route *entry)
 {
     Enter_Method("deleteRouteSilent(...)");
@@ -155,10 +195,11 @@ void AnsaRoutingTable::updateNetmaskRoutes()
     // then re-add them, according to actual interface configuration
     // TODO: say there's a node somewhere in the network that belongs to the interface's subnet
     // TODO: and it is not on the same link, and the gateway does not use proxy ARP, how will packets reach that node?
+    // Update - process only interfaces in up state
     for (int i=0; i<ift->getNumInterfaces(); i++)
     {
         InterfaceEntry *ie = ift->getInterface(i);
-        if (ie->ipv4Data()->getNetmask()!=IPv4Address::ALLONES_ADDRESS)
+        if (ie->isUp() && ie->ipv4Data()->getNetmask()!=IPv4Address::ALLONES_ADDRESS)
         {
             ANSAIPv4Route *route = new ANSAIPv4Route();
             route->setSource(IPv4Route::IFACENETMASK);
@@ -296,7 +337,7 @@ void AnsaRoutingTable::receiveChangeNotification(int category, const cObject *de
 
         if (entry->isUp())
         { // an interface goes up
-
+            insertConnectedRoute(entry);
         }
         else if (entry->isDown() || !entry->hasCarrier())
         { // an interface goes down
@@ -315,6 +356,81 @@ void AnsaRoutingTable::receiveChangeNotification(int category, const cObject *de
     }
 }
 
+void AnsaRoutingTable::deleteInterfaceRoutes(InterfaceEntry *entry)
+{
+    bool changed = false;
+
+    // delete unicast routes using this interface
+    for (RouteVector::iterator it = routes.begin(); it != routes.end(); )
+    {
+        IPv4Route *route = *it;
+        ANSAIPv4Route *ansaRoute = dynamic_cast<ANSAIPv4Route *>(route);
+        ANSAIPv4Route::RoutingProtocolSource rtSrc = ANSAIPv4Route::pUnknown;
+        if (ansaRoute != NULL)
+            rtSrc = ansaRoute->getRoutingProtocolSource();
+
+        // Do not delete EIGRP routes
+        if (route->getInterface() == entry &&
+                (ansaRoute == NULL || (rtSrc != ANSAIPv4Route::pEIGRP && rtSrc != ANSAIPv4Route::pEIGRPext)))
+        {
+            it = routes.erase(it);
+            ASSERT(route->getRoutingTable() == this); // still filled in, for the listeners' benefit
+            nb->fireChangeNotification(NF_IPv4_ROUTE_DELETED, route);
+            delete route;
+            changed = true;
+        }
+        else
+            ++it;
+    }
+
+    // delete or update multicast routes:
+    //   1. delete routes has entry as input interface
+    //   2. remove entry from output interface list
+    for (routeVector::iterator it = multicastRoutes.begin(); it != multicastRoutes.end(); )
+    {
+        IPv4MulticastRoute *route = *it;
+        if (route->getInInterface() && route->getInInterface()->getInterface() == entry)
+        {
+            it = multicastRoutes.erase(it);
+            ASSERT(route->getRoutingTable() == this); // still filled in, for the listeners' benefit
+            nb->fireChangeNotification(NF_IPv4_MROUTE_DELETED, route);
+            delete route;
+            changed = true;
+        }
+        else
+        {
+            bool removed = route->removeOutInterface(entry);
+            if (removed)
+            {
+                nb->fireChangeNotification(NF_IPv4_MROUTE_CHANGED, route);
+                changed = true;
+            }
+            ++it;
+        }
+    }
+
+    if (changed)
+    {
+        invalidateCache();
+        updateDisplayString();
+    }
+}
+
+void AnsaRoutingTable::insertConnectedRoute(InterfaceEntry *ie)
+{
+    ANSAIPv4Route *route = new ANSAIPv4Route();
+    route->setSource(IPv4Route::IFACENETMASK);
+    route->setDestination(ie->ipv4Data()->getIPAddress().doAnd(ie->ipv4Data()->getNetmask()));
+    route->setNetmask(ie->ipv4Data()->getNetmask());
+    route->setGateway(IPv4Address());
+    route->setMetric(ie->ipv4Data()->getMetric());
+    route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
+    route->setInterface(ie);
+    route->setRoutingTable(this);
+
+    prepareForAddRouteAndNotify(route);
+    addRoute(route);
+}
 
 /**
  * ADD ROUTE

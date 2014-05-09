@@ -33,6 +33,7 @@ class EigrpDual : public cObject /* cSimpleModule */
         NEIGHBOR_DOWN,      /**< Neighbor went down */
         INTERFACE_DOWN,     /**< EIGRP disabled on interface - only for connected route */
         INTERFACE_UP,       /**< EIGRP enabled on interface */
+        LOST_ROUTE,         /**< Route in RT deleted, but not by EIGRP */
     };
 
   protected:

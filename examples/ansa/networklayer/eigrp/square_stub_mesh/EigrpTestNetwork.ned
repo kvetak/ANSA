@@ -17,7 +17,7 @@
 // @date 
 // @author 
 
-package inet.examples.ansa.networklayer.eigrp.basic;
+package inet.examples.ansa.networklayer.eigrp.square_stub_mesh;
 
 import inet.ansa.networklayer.eigrp.EigrpRouter;
 import inet.ansa.nodes.inet.ANSAStandardHost;
@@ -42,56 +42,58 @@ network EigrpTestNetwork
                 addDefaultRoutes = false;
                 addSubnetRoutes = false;
                 optimizeRoutes = false;
-                @display("p=55,203");
+                @display("p=446,223");
         }
 
         R1: EigrpRouter {
             parameters:
-                @display("p=254,38");
+                @display("p=139,38");
             gates:
-                ethg[3];
+                ethg[4];
         }
         R2: EigrpRouter {
             parameters:
-                @display("p=149,143");
+                @display("p=120,159");
             gates:
                 ethg[4];
         }
         R3: EigrpRouter {
-            @display("p=363,143");
+            @display("p=314,38");
             gates:
-                ethg[3];
+                ethg[4];
         }
         R4: EigrpRouter {
-            @display("p=47,38");
+            @display("p=353,159");
             gates:
-                ethg[2];
+                ethg[4];
         }
         LAN1: ANSAStandardHost {
-            @display("p=344,38;i=cloud_s");
+            @display("p=24,38;i=cloud_s");
         }
         LAN2: ANSAStandardHost {
-            @display("p=149,209;i=cloud_s");
+            @display("p=120,246;i=cloud_s");
         }
         LAN3: ANSAStandardHost {
-            @display("p=363,209;i=cloud_s");
+            @display("p=425,38;i=cloud_s");
         }
         LAN4: ANSAStandardHost {
-            @display("p=47,124;i=cloud_s;is=vs");
+            @display("p=353,245;i=cloud_s;is=vs");
         }
         scenarioManager: ScenarioManager {
-            @display("p=55,246;is=s");
+            @display("p=35,246");
         }
 
     connections:
         R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
         R1.ethg[1] <--> Eth100M <--> R3.ethg[0];
-        R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
-        R2.ethg[2] <--> Eth100M <--> R4.ethg[0];
+        R2.ethg[1] <--> Eth100M <--> R4.ethg[0];        
+        R3.ethg[1] <--> Eth100M <--> R4.ethg[1];
+        R1.ethg[2] <--> Eth100M <--> R4.ethg[2];
+        R2.ethg[2] <--> Eth100M <--> R3.ethg[2];
 
-        R1.ethg[2] <--> Eth100M <--> LAN1.ethg++;
+        R1.ethg[3] <--> Eth100M <--> LAN1.ethg++;
         R2.ethg[3] <--> Eth100M <--> LAN2.ethg++;
-        R3.ethg[2] <--> Eth100M <--> LAN3.ethg++;
-        R4.ethg[1] <--> Eth100M <--> LAN4.ethg++;
+        R3.ethg[3] <--> Eth100M <--> LAN3.ethg++;
+        R4.ethg[3] <--> Eth100M <--> LAN4.ethg++;
 }
 

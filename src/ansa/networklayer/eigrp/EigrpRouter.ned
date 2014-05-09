@@ -26,7 +26,6 @@ import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.base.NotificationBoard;
 import inet.linklayer.IWiredNic;
 import inet.networklayer.common.InterfaceTable;
-import inet.world.scenario.ScenarioManager;
 
 
 module EigrpRouter
@@ -45,19 +44,19 @@ module EigrpRouter
     submodules:
 
         deviceConfigurator: DeviceConfigurator {
-            @display("p=53,113");
+            @display("p=71,113");
             deviceId = deviceId;
             deviceType = "Router";
             configFile = configFile;
         }
 
         interfaceStateManager: InterfaceStateManager {
-            @display("p=53,188");
+            @display("p=71,188");
         }
 
         notificationBoard: NotificationBoard {
             parameters:
-                @display("p=53,38");
+                @display("p=71,38");
         }
 
         routingTable: AnsaRoutingTable {
@@ -75,22 +74,22 @@ module EigrpRouter
 
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
-                @display("p=127,317,row,90;q=txQueue");
+                @display("p=138,278,row,90;q=txQueue");
         }
         ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
             parameters:
-                @display("p=290,317,row,90;q=txQueue");
+                @display("p=279,278,row,90;q=txQueue");
         }
 
-        eigrpProcess: eigrpProcess {
-            @display("p=229,153");
+        eigrp: eigrpProcess {
+            @display("p=204,113;i=block/network2");
         }
         ansaNetworkLayer: ansaNetworkLayer {
-            @display("p=236,229");
+            @display("p=204,203");
         }
     connections allowunconnected:
-        eigrpProcess.splitterOut --> ansaNetworkLayer.eigrpIn;
-        eigrpProcess.splitterIn <-- ansaNetworkLayer.eigrpOut;
+        eigrp.splitterOut --> ansaNetworkLayer.eigrpIn;
+        eigrp.splitterIn <-- ansaNetworkLayer.eigrpOut;
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;

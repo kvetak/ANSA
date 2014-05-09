@@ -17,7 +17,7 @@
 // @date 
 // @author 
 
-package inet.examples.ansa.networklayer.eigrp.basic_clanek;
+package inet.examples.ansa.networklayer.eigrp.snake;
 
 import inet.ansa.networklayer.eigrp.EigrpRouter;
 import inet.ansa.nodes.inet.ANSAStandardHost;
@@ -31,7 +31,7 @@ import inet.world.scenario.ScenarioManager;
 //
 network EigrpTestNetwork
 {
-    @display("bgb=448,275");
+    @display("bgb=540,240");
     submodules:
         configurator: IPv4NetworkConfigurator {
             parameters:
@@ -42,56 +42,45 @@ network EigrpTestNetwork
                 addDefaultRoutes = false;
                 addSubnetRoutes = false;
                 optimizeRoutes = false;
-                @display("p=446,223");
+                @display("p=29,213");
         }
 
         R1: EigrpRouter {
             parameters:
-                @display("p=254,38");
+                @display("p=46,37");
             gates:
-                ethg[3];
+                ethg[2];
         }
         R2: EigrpRouter {
             parameters:
-                @display("p=149,143");
-            gates:
-                ethg[4];
-        }
-        R3: EigrpRouter {
-            @display("p=363,143");
+                @display("p=275,37");
             gates:
                 ethg[3];
         }
-        R4: EigrpRouter {
-            @display("p=47,38");
+        R3: EigrpRouter {
+            parameters:
+                @display("p=494,37");
             gates:
                 ethg[2];
         }
         LAN1: ANSAStandardHost {
-            @display("p=415,38;i=cloud_s");
+            @display("p=46,150;i=cloud_s");
         }
         LAN2: ANSAStandardHost {
-            @display("p=149,246;i=cloud_s");
+            @display("p=275,150;i=cloud_s");
         }
         LAN3: ANSAStandardHost {
-            @display("p=363,246;i=cloud_s");
-        }
-        LAN4: ANSAStandardHost {
-            @display("p=47,190;i=cloud_s;is=vs");
+            @display("p=494,150;i=cloud_s");
         }
         scenarioManager: ScenarioManager {
-            @display("p=35,246");
+            @display("p=117,213");
         }
-
     connections:
         R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
-        R1.ethg[1] <--> Eth100M <--> R3.ethg[0];
-        R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
-        R2.ethg[2] <--> Eth100M <--> R4.ethg[0];
+        R2.ethg[1] <--> Eth100M <--> R3.ethg[0];
 
-        R1.ethg[2] <--> Eth100M <--> LAN1.ethg++;
-        R2.ethg[3] <--> Eth100M <--> LAN2.ethg++;
-        R3.ethg[2] <--> Eth100M <--> LAN3.ethg++;
-        R4.ethg[1] <--> Eth100M <--> LAN4.ethg++;
+        R1.ethg[1] <--> Eth100M <--> LAN1.ethg++;
+        R2.ethg[2] <--> Eth100M <--> LAN2.ethg++;
+        R3.ethg[1] <--> Eth100M <--> LAN3.ethg++;
 }
 

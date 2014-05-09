@@ -33,24 +33,24 @@ module eigrpProcess
     submodules:
         // vlevo nazev, vpravo typ
         pdmv4: EigrpIpv4Pdm {
-            @display("p=78,68");
+            @display("p=64,66;i=block/circle");
         }
         eigrpInterfaceTable: EigrpInterfaceTable {
-            @display("p=207,188");
+            @display("p=185,180");
         }
         eigrpIpv4NeighborTable: EigrpIpv4NeighborTable {
-            @display("p=207,29");
+            @display("p=185,45");
         }
         eigrpIpv4TopologyTable: EigrpIpv4TopologyTable {
-            @display("p=207,105");
+            @display("p=185,112");
         }
         rtp: EigrpRtp {
-            @display("p=78,156");
+            @display("p=64,157;i=block/dispatch");
         }
     connections:
         splitterIn --> pdmv4.splitterIn;
         splitterOut <-- pdmv4.splitterOut;
-        
+
         pdmv4.rtpOut --> rtp.pdmIn;
         pdmv4.rtpIn <-- rtp.pdmOut;
 }

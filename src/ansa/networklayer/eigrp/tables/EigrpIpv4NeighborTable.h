@@ -31,7 +31,8 @@ class EigrpIpv4NeighborTable : public cSimpleModule
     typedef typename std::vector<EigrpNeighbor<IPv4Address> *> NeighborVector;
 
     NeighborVector neighborVec;    /**< Table with neighbors. */
-    int neighborCounter;        /**< For unique ID of neighbor */
+    int neighborCounter;            /**< For unique ID of neighbor */
+    int stubCount;                  /**< Number of stub neighbors for optimization */
 
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
@@ -39,7 +40,7 @@ class EigrpIpv4NeighborTable : public cSimpleModule
     virtual void cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh);
 
   public:
-    EigrpIpv4NeighborTable() { neighborCounter = 1; }
+    EigrpIpv4NeighborTable() { neighborCounter = 1; stubCount = 0; }
     virtual ~EigrpIpv4NeighborTable();
     int addNeighbor(EigrpNeighbor<IPv4Address> *neighbor);
     /**< Find neighbor by IP address and interface ID. If the neighbor
@@ -51,6 +52,9 @@ class EigrpIpv4NeighborTable : public cSimpleModule
     int getNumNeighbors() const { return neighborVec.size(); }
     EigrpNeighbor<IPv4Address> *getNeighbor(int k) const { return neighborVec[k]; }
     int setAckOnIface(int ifaceId, uint32_t ackNum);
+    int getStubCount() const { return stubCount; }
+    void incStubCount() { stubCount++; }
+    void decStubCount() { stubCount--; }
 };
 
 #endif

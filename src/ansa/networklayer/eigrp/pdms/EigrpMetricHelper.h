@@ -47,7 +47,7 @@ class EigrpMetricHelper
     uint64_t computeClassicMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues);
     uint64_t computeWideMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues);
     bool compareParameters(const EigrpWideMetricPar& par1, const EigrpWideMetricPar& par2, EigrpKValues& kValues);
-    bool isParamMaximal(const EigrpWideMetricPar& par) { return par.delay == DELAY_INF && par.bandwidth == BANDWIDTH_INF; }
+    bool isParamMaximal(const EigrpWideMetricPar& par) { return par.delay == DELAY_INF; }
 };
 
 #endif /* EIGRPMETRICHELPER_H_ */

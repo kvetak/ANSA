@@ -45,6 +45,16 @@ class INET_API AnsaRoutingTable : public RoutingTable {
         virtual void initialize(int stage);
         virtual void receiveChangeNotification(int category, const cObject *details);
 
+        /**
+         * reimplemented - delete routes for the given interface except EIGRP routes
+         */
+        void deleteInterfaceRoutes(InterfaceEntry *entry);
+
+        /**
+         * Insert connected route into the routing table.
+         */
+        void insertConnectedRoute(InterfaceEntry *ie);
+
     public:
       AnsaRoutingTable(){};
       virtual ~AnsaRoutingTable();
@@ -72,6 +82,15 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        *         false otherwise
        */
       virtual bool prepareForAddRoute(IPv4Route *route);
+
+      /**
+       * Prepares routing table for adding new route.
+       * e.g. removes route with the same prefix, prefix length and lower administrative distance,
+       * purge destination cache and notify about removing.
+       * @return true, if it is safe to add route,
+       *         false otherwise
+       */
+      virtual bool prepareForAddRouteAndNotify(IPv4Route *route);
 
       /**
        * @see removeRouteSilent and prepareForAddRoute in @class ANSARoutingTable6

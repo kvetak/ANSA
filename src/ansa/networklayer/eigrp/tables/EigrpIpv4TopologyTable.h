@@ -66,15 +66,15 @@ class EigrpIpv4TopologyTable : public cSimpleModule
 
     uint64_t findRouteDMin(EigrpRoute<IPv4Address> *route);
     bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint64_t &resultDmin);
-    EigrpRouteSource<IPv4Address> *getFirstSuccessor(EigrpRoute<IPv4Address> *route);
-    //EigrpRouteSource<IPv4Address> *getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask);
-    EigrpRouteSource<IPv4Address> *getFirstSuccessorByIf(EigrpRoute<IPv4Address> *route, int ifaceId);
+    EigrpRouteSource<IPv4Address> *getBestSuccessor(EigrpRoute<IPv4Address> *route);
+    EigrpRouteSource<IPv4Address> *getBestSuccessorByIf(EigrpRoute<IPv4Address> *route, int ifaceId);
 
     int getNumRouteInfo() const { return routeInfoVec.size(); }
     EigrpRoute<IPv4Address> *getRouteInfo(int k) { return routeInfoVec[k]; }
     void addRouteInfo(EigrpRoute<IPv4Address> *route) { route->setRouteId(routeIdCounter); routeInfoVec.push_back(route); routeIdCounter++; }
     EigrpRoute<IPv4Address> *removeRouteInfo(EigrpRoute<IPv4Address> *route);
     EigrpRoute<IPv4Address> *findRouteInfo(const IPv4Address& routeAddr, const IPv4Address& routeMask);
+    EigrpRoute<IPv4Address> *findRouteInfoById(int routeId);
 
     IPv4Address& getRouterId() { return routerID; }
     void setRouterId(IPv4Address& routerID) { this->routerID = routerID; }

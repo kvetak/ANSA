@@ -159,6 +159,8 @@ class DeviceConfigurator : public cSimpleModule {
       void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule);
       /**< Loads K-value and converts it to number */
       int loadEigrpKValue(cXMLElement *node, const char *attrName, const char *attrValue);
+      /**< Loads stub configuration */
+      bool loadEigrpStubConf(cXMLElement *node, const char *attrName);
 
    public:
       // global configuration for PIM

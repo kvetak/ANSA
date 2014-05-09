@@ -13,8 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
+
+
 cplusplus {{
-#include "IPv4Address.h"
+    #include "IPv4Address.h"   
 }}
 
 class noncobject IPv4Address;
@@ -29,7 +31,14 @@ enum HeaderOpcode
     EIGRP_HELLO_MSG = 5;
     EIGRP_SIAQUERY_MSG = 10;
     EIGRP_SIAREPLY_MSG = 11;
-};
+}
+
+enum EigrpTlvTypeLow
+{
+    EIGRP_TLV_PARAM = 0;
+    EIGRP_TLV_ROUTE = 2;
+    EIGRP_TLV_STUB = 6;
+}
 
 // Struct for K-values
 struct EigrpKValues
@@ -40,7 +49,7 @@ struct EigrpKValues
 	uint16_t K4 = 0;
 	uint16_t K5 = 0;
 	uint16_t K6 = 0;
-};
+}
 
 // 8 bit flags field, only three flags specified
 struct EigrpRouteFlags
@@ -63,12 +72,41 @@ struct EigrpWideMetricPar
     uint64_t bandwidth = 0;     // Min BW on path, only 48 bits used
 }
 
+struct EigrpTlv 
+{
+    // type
+    char typeHigh;
+    char typeLow;
+    // length
+    uint16_t length;
+}
+
+// Struct for EIGRP stub
+struct EigrpStub
+{
+    bool connectedRt = false;
+    bool staticRt = false;
+    bool summaryRt = false;
+    bool redistributedRt = false;
+    bool leakMapRt = false;
+    bool recvOnlyRt = false;
+}
+
+// TLV Stub for Hello message
+struct EigrpTlvStub extends EigrpTlv
+{
+    typeHigh = 0;
+    typeLow = EIGRP_TLV_STUB;
+    length = 6;
+    EigrpStub stub;
+}
+
 // TLV Parameter Type for Hello message
 struct EigrpTlvParameter
 {
     // type
     char typeHigh = 0;
-    char typeLow = 0;
+    char typeLow = EIGRP_TLV_PARAM;
     // length
     uint16_t length = 12;
     // value
@@ -98,7 +136,7 @@ struct EigrpMpIpv4Internal
 {
     // type
     char typeHigh = 6;
-    char typeLow = 2;
+    char typeLow = EIGRP_TLV_ROUTE;
     // length
     uint16_t length = 44;
     // value
@@ -135,7 +173,8 @@ packet EigrpMessage
 // EIGRP Hello message
 packet EigrpHello extends EigrpMessage
 {
-	EigrpTlvParameter parameterTlv;
+	EigrpTlvParameter parameterTlv;		// Always present
+	EigrpTlvStub stubTlv;
 };
 
 packet EigrpIpv4Hello extends EigrpHello
@@ -176,6 +215,7 @@ struct EigrpMsgRoute
     int routeId;           	// ID of route 
     bool unreachable;       // Route with maximal metric 
     bool invalid;
+    IPv4Address originator;
 };
 
 // Message request

@@ -22,6 +22,7 @@ class IEigrpModule
     virtual void setKValues(const EigrpKValues& kValues) = 0;
     virtual void setMaximumPath(int maximumPath) = 0;
     virtual void setVariance(int variance) = 0;
+    virtual void setStub(const EigrpStub& stub) = 0;
 
     // Interface configuration
     virtual void setHelloInt(int interval, int interfaceId) = 0;

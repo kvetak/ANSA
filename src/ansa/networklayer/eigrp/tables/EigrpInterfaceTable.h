@@ -34,8 +34,9 @@ class EigrpInterface: public cObject
     int helloInt;           /**< Hello interval in seconds (<1-65535>) */
     int holdInt;            /**< Router's hold interval in seconds (<1-65535>) */
     EigrpTimer *hellot;     /**< pointer to hello timer */
-    bool enabled;           /**< true, if EIGRP is enabled on interface */
+    bool enabled;           /**< EIGRP is enabled on interface */
     int neighborCount;      /**< Number of neighbors on interface */
+    int stubCount;          /**< Number of stub neighbors on interface */
     bool splitHorizon;      /**< Split horizon rule enabled */
     int pacingTime;         /**< Pacing time in milliseconds */
     bool passive;           /**< Interface is passive */
@@ -81,6 +82,10 @@ class EigrpInterface: public cObject
     void incNumOfNeighbors() { this->neighborCount++; }
     int getNumOfNeighbors() const { return this->neighborCount; }
 
+    void decNumOfStubs() { this->stubCount--; }
+    void incNumOfStubs() { this->stubCount++; }
+    int getNumOfStubs() const { return this->stubCount; }
+
     void setBandwidth(uint64_t bw) { this->bandwidth = bw; }
     uint64_t getBandwidth() const { return bandwidth; }
 
@@ -110,7 +115,7 @@ class EigrpInterface: public cObject
     void decPendingMsgs() { this->pendingMsgs--; }
 
     void setPassive(bool passive) { this->passive = passive; }
-    bool getPassive() const { return this->passive; }
+    bool isPassive() const { return this->passive; }
 
     int computePacingTime() const { return 30; }
 

@@ -20,15 +20,29 @@ Define_Module(EigrpIpv4NeighborTable);
 
 std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPv4Address>& neigh)
 {
-    const char *state = neigh.isStateUp() ? "up" : "pending";
+    //const char *state = neigh.isStateUp() ? "up" : "pending";
 
     os << "ID:" << neigh.getNeighborId();
-    os << "  IP:" << neigh.getIPAddress();
+    os << "  Address:" << neigh.getIPAddress();
     os << "  IF:" << neigh.getIfaceName() << "(" << neigh.getIfaceId() << ")";
-    os << "  holdInt:" << neigh.getHoldInt();
-    os << "  state is " << state;
-    os << "  lastSeqNum:" << neigh.getSeqNumber();
-    os << "  waitForAck:" << neigh.getAck();
+    os << "  HoldInt:" << neigh.getHoldInt();
+    //os << "  state is " << state;
+    os << "  SeqNum:" << neigh.getSeqNumber();
+    //os << "  waitForAck:" << neigh.getAck();
+    /*if (neigh.isStubEnabled())
+    {
+        os << "  stub:enabled (";
+        EigrpStub stub = neigh.getStubConf();
+        if (stub.connectedRt) os << "connected ";
+        if (stub.leakMapRt) os << "leak-map ";
+        if (stub.recvOnlyRt) os << "recv-only ";
+        if (stub.redistributedRt) os << "redistrib ";
+        if (stub.staticRt) os << "static ";
+        if (stub.summaryRt) os << "summary ";
+        os << ")";
+    }
+    else
+        os << "  stub:disabled";*/
     return os;
 }
 

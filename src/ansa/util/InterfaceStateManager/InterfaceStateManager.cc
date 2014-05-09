@@ -102,7 +102,6 @@ void InterfaceStateManager::changeInterfaceState(InterfaceEntry *targetInt, bool
 void InterfaceStateManager::processInterfaceConfigCommand(const cXMLElement& node)
 {
     InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
-    EV << "interface " << node.getAttribute("int") << " change bandwidth" << endl;
     if (targetInt == NULL)
         throw cRuntimeError("Interface %s not found", node.getAttribute("int"));
 
@@ -111,6 +110,7 @@ void InterfaceStateManager::processInterfaceConfigCommand(const cXMLElement& nod
 
     if (node.getAttribute("bandwidth") != NULL)
     {
+        EV << "Interface " << node.getAttribute("int") << " change bandwidth" << endl;
         os << node.getAttribute("bandwidth");
         if (!(os >> ifParam))
             throw cRuntimeError("Bad value for bandwidth on interface %s", node.getAttribute("int"));
@@ -118,6 +118,7 @@ void InterfaceStateManager::processInterfaceConfigCommand(const cXMLElement& nod
     }
     else if (node.getAttribute("delay") != NULL)
     {
+        EV << "Interface " << node.getAttribute("int") << " change delay" << endl;
         os << node.getAttribute("delay");
         if (!(os >> ifParam))
             throw cRuntimeError("Bad value for delay on interface %s", node.getAttribute("int"));

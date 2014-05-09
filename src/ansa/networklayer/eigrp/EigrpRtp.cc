@@ -276,15 +276,6 @@ void EigrpRtp::processRequest(cMessage *msg)
 {
     EigrpMsgReq *msgReq = check_and_cast<EigrpMsgReq *>(msg);
 
-    /* Create and start pacing timer
-    EigrpTimer *pacingt = new EigrpTimer();
-    pacingt->setTimerKind(EIGRP_PACING_TIMER);
-    pacingt->setContextPointer(msgReq);
-    msgReq->setPacingTimer(pacingt);
-    // TODO zadat spravny cas
-    scheduleAt(simTime() + 0.030, pacingt);
-    */
-
     scheduleNewMsg(msgReq);
 }
 
@@ -357,39 +348,21 @@ void EigrpRtp::acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum)
 {
     EigrpMsgReq *msgReq = NULL;
 
-    if ((msgReq = requestQ->findReqByIf(ifaceId, false)) != NULL && msgReq->getDestNeighbor() == neighId)
+    /*if ((msgReq = requestQ->findReqByIf(ifaceId, false)) != NULL && msgReq->getDestNeighbor() == neighId)
     { // Use scheduled message as acknowledge
+        ev << "EIGRP RTP: do not create Ack message, use existing message to neighbor " << neighId << endl;
         msgReq->setAckNumber(ackNum);
     }
-    else
-    { // Create Ack message and send it
-        msgReq = new EigrpMsgReq("Ack");
-        msgReq->setOpcode(EIGRP_HELLO_MSG);
-        msgReq->setDestNeighbor(neighId);
-        msgReq->setDestInterface(ifaceId);
-        msgReq->setAckNumber(ackNum);
+    else*/
+    // Create Ack message and send it
+    msgReq = new EigrpMsgReq("Ack");
+    msgReq->setOpcode(EIGRP_HELLO_MSG);
+    msgReq->setDestNeighbor(neighId);
+    msgReq->setDestInterface(ifaceId);
+    msgReq->setAckNumber(ackNum);
 
-        scheduleNewMsg(msgReq);
-    }
+    scheduleNewMsg(msgReq);
 }
-
-/*bool EigrpRtp::getNeighborInfoByMsg(EigrpMessage *msg, EigrpRtp::NeighborInfo *info)
-{
-    IPv4ControlInfo *ctrlInfo =check_and_cast<IPv4ControlInfo *>(msg->getControlInfo());
-    IPv4Address srcAddr = ctrlInfo->getSrcAddr();
-
-    // Find neighbor if exists
-    EigrpNeighbor<IPv4Address> *neigh;
-    if ((neigh = eigrpNt->findNeighbor(srcAddr)) != NULL)
-    {
-        info->neighborId = neigh->getNeighborId();
-        info->neighborIfaceId = neigh->getIfaceId();
-        info->lastSeqNum = neigh->getSeqNumber();
-        return true;
-    }
-
-    return false;
-}*/
 
 EigrpNeighbor<IPv4Address> *EigrpRtp::getNeighborId(EigrpMessage *msg)
 {
@@ -436,6 +409,12 @@ void EigrpRtp::scheduleNextMsg(int ifaceId)
 {
     EigrpMsgReq *msgReq = NULL;
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
+
+    if (eigrpIface == NULL)
+    {
+        requestQ->removeAllMsgsToIf(ifaceId);
+        return;
+    }
 
     if (eigrpIface->getPendingMsgs() == 0)
     { // Try to send first rel/unrel message

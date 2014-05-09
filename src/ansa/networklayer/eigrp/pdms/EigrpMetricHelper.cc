@@ -51,7 +51,7 @@ EigrpWideMetricPar EigrpMetricHelper::adjustParam(const EigrpWideMetricPar& ifPa
     newMetricPar.load = getMax(ifParam.load, neighParam.delay);
     newMetricPar.reliability = getMin(ifParam.reliability, neighParam.reliability);
     newMetricPar.mtu = getMin(ifParam.mtu, neighParam.mtu);
-    newMetricPar.hopCount++;
+    newMetricPar.hopCount = neighParam.hopCount + 1;
 
     if (isParamMaximal(neighParam))
     {

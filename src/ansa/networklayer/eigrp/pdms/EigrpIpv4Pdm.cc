@@ -99,6 +99,17 @@ std::ostream& operator<<(std::ostream& os, const EigrpKValues& kval)
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const EigrpStub& stub)
+{
+    if (stub.connectedRt) os << "connected ";
+    if (stub.leakMapRt) os << "leak-map ";
+    if (stub.recvOnlyRt) os << "recv-only ";
+    if (stub.redistributedRt) os << "redistrib ";
+    if (stub.staticRt) os << "static ";
+    if (stub.summaryRt) os << "summary";
+    return os;
+}
+
 bool operator==(const EigrpKValues& k1, const EigrpKValues& k2)
 {
     return k1.K1 == k2.K1 && k1.K2 == k2.K2 &&
@@ -112,8 +123,7 @@ EigrpIpv4Pdm::EigrpIpv4Pdm() : EIGRP_IPV4_MULT(IPv4Address(224, 0, 0, 10))
     SPLITTER_OUTGW = "splitterOut";
     RTP_OUTGW = "rtpOut";
 
-    KVALUES_MAX.K1 = KVALUES_MAX.K2 = KVALUES_MAX.K3 = KVALUES_MAX.K4 = KVALUES_MAX.K5 = 255;
-    KVALUES_MAX.K6 = 0;
+    KVALUES_MAX.K1 = KVALUES_MAX.K2 = KVALUES_MAX.K3 = KVALUES_MAX.K4 = KVALUES_MAX.K5 = KVALUES_MAX.K6 = 255;
 
     asNum = -1;
     maximumPath = 4;
@@ -124,6 +134,8 @@ EigrpIpv4Pdm::EigrpIpv4Pdm() : EIGRP_IPV4_MULT(IPv4Address(224, 0, 0, 10))
 
     kValues.K1 = kValues.K3 = 1;
     kValues.K2 = kValues.K4 = kValues.K5 = kValues.K6 = 0;
+
+    eigrpStubEnabled = false;
 }
 
 EigrpIpv4Pdm::~EigrpIpv4Pdm()
@@ -168,6 +180,7 @@ void EigrpIpv4Pdm::initialize(int stage)
         WATCH(kValues);
         WATCH(maximumPath);
         WATCH(variance);
+        WATCH(eigrpStub);
 
         // Subscribe for changes in the device
         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
@@ -216,6 +229,51 @@ void EigrpIpv4Pdm::receiveChangeNotification(int category, const cObject *detail
         }
         // TODO reagovat na zmenu load, reliability (vyvolani upraveni cest podminit k-hodnotami) a mtu (zmena pacing time)
     }
+    else if (category == NF_IPv4_ROUTE_DELETED)
+    { //
+        processRTRouteDel(details);
+    }
+}
+
+void EigrpIpv4Pdm::processRTRouteDel(const cObject *details)
+{
+    IPv4Route *changedRt = check_and_cast<IPv4Route *>(details);
+    ANSAIPv4Route *changedAnsaRt = dynamic_cast<ANSAIPv4Route *>(changedRt);
+    unsigned adminDist;
+    EigrpRouteSource<IPv4Address> *source = NULL;
+
+    if (changedAnsaRt != NULL)
+        adminDist = changedAnsaRt->getAdminDist();
+    else
+        adminDist = changedRt->getAdminDist();
+
+#ifdef EIGRP_DEBUG
+    //ev << "EIGRP: received notification about deletion of route in RT with AD=" << adminDist << endl;
+#endif
+
+    if (adminDist == this->adminDistInt)
+    { // Deletion of EIGRP internal route
+        source = eigrpTt->findRoute(changedRt->getDestination(), changedRt->getNetmask(), changedRt->getGateway());
+        if (source == NULL)
+        {
+            ASSERT(false);
+            ev << "EIGRP: removed EIGRP route from RT, not found corresponding route source in TT" << endl;
+            return;
+        }
+
+        if (source->isSuccessor())
+        {
+            if (!source->getRouteInfo()->isActive())
+            { // Process route in DUAL (no change of metric)
+                this->eigrpDual->processEvent(EigrpDual::LOST_ROUTE, source, IEigrpPdm::UNSPEC_SENDER, false);
+            }
+        }
+        // Else do nothing - EIGRP itself removed route from RT
+    }
+    else
+    { // Deletion of non EIGRP route
+
+    }
 }
 
 void EigrpIpv4Pdm::handleMessage(cMessage *msg)
@@ -249,6 +307,12 @@ void EigrpIpv4Pdm::processMsgFromNetwork(cMessage *msg)
     IPv4Address srcAddr = ctrlInfo->getSrcAddr();
     int ifaceId = ctrlInfo->getInterfaceId();
     cMessage *msgDup = NULL;
+
+#ifdef EIGRP_DEBUG
+    EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
+    ASSERT(eigrpIface != NULL);
+    ASSERT(!eigrpIface->isPassive());
+#endif
 
     // Find neighbor if exists
     EigrpNeighbor<IPv4Address> *neigh;
@@ -302,6 +366,11 @@ void EigrpIpv4Pdm::processMsgFromRtp(cMessage *msg)
     IPv4Address destAddress;
     int destIface = msgReq->getDestInterface();
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(destIface);
+    int64_t sizeOfMsg = 20;
+
+#ifdef EIGRP_DEBUG
+    ASSERT(eigrpIface != NULL && !eigrpIface->isPassive());
+#endif
 
     if (!getDestIpAddress(msgReq->getDestNeighbor(), &destAddress) || eigrpIface == NULL)
     { // Discard message request
@@ -315,18 +384,27 @@ void EigrpIpv4Pdm::processMsgFromRtp(cMessage *msg)
     switch (msgReq->getOpcode())
     {
     case EIGRP_HELLO_MSG:
-        if (msgReq->getGoodbyeMsg() == true)        // Goodbye message
+        if (msgReq->getGoodbyeMsg() == true) {       // Goodbye message
             eigrpMsg = createHelloMsg(eigrpIface->getHoldInt(), this->KVALUES_MAX, destAddress, msgReq);
+            sizeOfMsg += 12;
+        }
         else if (msgReq->getAckNumber() > 0)    // Ack message
+        {
             eigrpMsg = createAckMsg(destAddress, msgReq);
+        }
         else // Hello message
+        {
             eigrpMsg = createHelloMsg(eigrpIface->getHoldInt(), this->kValues, destAddress, msgReq);
+            sizeOfMsg += 12;
+        }
         break;
 
     case EIGRP_UPDATE_MSG:
         eigrpMsgRt = createUpdateMsg(destAddress, msgReq);
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
+
+        sizeOfMsg += routeCnt * 44;
 
         eigrpMsg = eigrpMsgRt;
         break;
@@ -336,6 +414,8 @@ void EigrpIpv4Pdm::processMsgFromRtp(cMessage *msg)
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
 
+        sizeOfMsg += routeCnt * 44;
+
         eigrpMsg = eigrpMsgRt;
         break;
 
@@ -343,6 +423,8 @@ void EigrpIpv4Pdm::processMsgFromRtp(cMessage *msg)
         eigrpMsgRt = createReplyMsg(destAddress, msgReq);
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
+
+        sizeOfMsg += routeCnt * 44;
 
         eigrpMsg = eigrpMsgRt;
         break;
@@ -353,6 +435,7 @@ void EigrpIpv4Pdm::processMsgFromRtp(cMessage *msg)
         break;
     }
 
+    eigrpMsg->setByteLength(sizeOfMsg);
     // Send message to network
     send(eigrpMsg, SPLITTER_OUTGW);
 }
@@ -436,7 +519,7 @@ void EigrpIpv4Pdm::processTimer(cMessage *msg)
         eigrpIface = check_and_cast<EigrpInterface *>(contextBasePtr);
 
         // schedule Hello timer
-        scheduleAt(simTime() + eigrpIface->getHelloInt() /*- uniform(0, 0.4)*/, timer);
+        scheduleAt(simTime() + eigrpIface->getHelloInt() - 0.5, timer);
 
         // send Hello message
         msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv4Address>::UNSPEC_ID, eigrpIface->getInterfaceId());
@@ -458,7 +541,7 @@ void EigrpIpv4Pdm::processTimer(cMessage *msg)
 
         // Send goodbye and restart Hello timer
         eigrpIface = eigrpIft->findInterfaceById(ifaceId);
-        resetTimer(eigrpIface->getHelloTimer(), eigrpIface->getHelloInt());
+        resetTimer(eigrpIface->getHelloTimer(), eigrpIface->getHelloInt() - 0.5);
         msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv4Address>::UNSPEC_ID, ifaceId);
         msgReq->setGoodbyeMsg(true);
         send(msgReq, RTP_OUTGW);
@@ -507,10 +590,8 @@ void EigrpIpv4Pdm::processHelloMsg(cMessage *msg, IPv4Address& srcAddress, int i
             flushMsgRequests();
             eigrpTt->purgeTable();
         }
-        return;
     }
-
-    if (neigh == NULL)
+    else if (neigh == NULL)
     { // New neighbor
         processNewNeighbor(ifaceId, srcAddress, hello);
     }
@@ -526,16 +607,12 @@ void EigrpIpv4Pdm::processHelloMsg(cMessage *msg, IPv4Address& srcAddress, int i
 
             // send Goodbye message and reset Hello timer
             EigrpInterface *iface = this->eigrpIft->findInterfaceById(ifaceId);
-            resetTimer(iface->getHelloTimer(), iface->getHelloInt());
+            resetTimer(iface->getHelloTimer(), iface->getHelloInt() - 0.5);
             EigrpMsgReq *msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv4Address>::UNSPEC_ID, ifaceId);
             msgReq->setGoodbyeMsg(true);
             send(msgReq, RTP_OUTGW);
-
-            return;
         }
-
-        // Save Hold interval
-        if (tlvParam.holdTimer != neigh->getHoldInt())
+        else if (tlvParam.holdTimer != neigh->getHoldInt()) // Save Hold interval
             neigh->setHoldInt(tlvParam.holdTimer);
     }
 }
@@ -705,17 +782,6 @@ EigrpTimer *EigrpIpv4Pdm::createTimer(char timerKind, void *context)
     return timer;
 }
 
-inline void EigrpIpv4Pdm::resetTimer(EigrpTimer *timer, int interval)
-{
-    cancelEvent(timer);
-    // Uniform je zde, protoze bez nej nefunguje simulace jak by mela
-    // (pri ustaveni sousedstvi se detekuji spatne K-hodnoty (coz je spravne),
-    // odesle se Goodbye (spravne), ale hned po ni take Hello (spatne, goodbye by
-    // mela resetovat Hello timer, ale asi to nestihne).
-    //      UZ TO NEDELA - NEVIM PROC
-    scheduleAt(simTime() + interval /*- uniform(0,0.4)*/, timer);
-}
-
 EigrpIpv4Hello *EigrpIpv4Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, IPv4Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv4Hello *msg = new EigrpIpv4Hello("EIGRPHello");
@@ -724,10 +790,18 @@ EigrpIpv4Hello *EigrpIpv4Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, 
     addMessageHeader(msg, EIGRP_HELLO_MSG, msgReq);
     addCtrInfo(msg, msgReq->getDestInterface(), destAddress);
 
-    // add parameter type TLV
+    // Add parameter type TLV
     paramTlv.holdTimer = holdInt;
     paramTlv.kValues = kValues;
     msg->setParameterTlv(paramTlv);
+
+    // Add stub TLV
+    if (this->eigrpStubEnabled)
+    {
+        EigrpTlvStub stubTlv;
+        stubTlv.stub = this->eigrpStub;
+        msg->setStubTlv(stubTlv);
+    }
 
     return msg;
 }
@@ -741,7 +815,7 @@ EigrpIpv4Ack *EigrpIpv4Pdm::createAckMsg(IPv4Address& destAddress, EigrpMsgReq *
     return msg;
 }
 
-EigrpIpv4Update *EigrpIpv4Pdm::createUpdateMsg(IPv4Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv4Update *EigrpIpv4Pdm::createUpdateMsg(const IPv4Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv4Update *msg = new EigrpIpv4Update("EIGRPUpdate");
     addMessageHeader(msg, EIGRP_UPDATE_MSG, msgReq);
@@ -828,24 +902,35 @@ void EigrpIpv4Pdm::addRoutesToMsg(EigrpIpv4Message *msg, const EigrpMsgReq *msgR
     // Add routes to the message
     int reqCnt = msgReq->getRoutesArraySize();
     EigrpRouteSource<IPv4Address> *source = NULL;
+    EigrpRoute<IPv4Address> *route = NULL;
 
     msg->setInterRoutesArraySize(reqCnt);
     for (int i = 0; i < reqCnt; i++)
     {
-        EigrpMsgRoute req = msgReq->getRoutes(i);
-        source = eigrpTt->findRouteById(req.sourceId);
         EigrpMpIpv4Internal routeTlv;
-        createRouteTlv(&routeTlv, source->getRouteInfo(), req.unreachable);
-        routeTlv.routerID = source->getOriginator();
+        EigrpMsgRoute req = msgReq->getRoutes(i);
+
+        if ((source = eigrpTt->findRouteById(req.sourceId)) == NULL)
+        { // Route was removed (only for sent Update messages to stub routers)
+            route = eigrpTt->findRouteInfoById(req.routeId);
+            ASSERT(route != NULL);
+        }
+        else
+        {
+            route = source->getRouteInfo();
+        }
+        routeTlv.routerID = req.originator;
+        createRouteTlv(&routeTlv, route, req.unreachable);
+
         msg->setInterRoutes(i, routeTlv);
 
 #ifdef EIGRP_DEBUG
-        ev << "     route: " << source->getRouteInfo()->getRouteAddress() << "/" << source->getRouteInfo()->getRouteMask().getNetmaskLength();
-        ev << " originator: " << source->getOriginator();
+        ev << "     route: " << routeTlv.destAddress << "/" << routeTlv.destMask.getNetmaskLength();
+        ev << " originator: " << routeTlv.routerID;
         if (eigrpMetric->isParamMaximal(routeTlv.metric)) ev << " (unreachable) ";
         ev << ", bw: " << routeTlv.metric.bandwidth;
         ev << ", dly: " << routeTlv.metric.delay;
-        ev << ", hopcnt: " << routeTlv.metric.hopCount;
+        ev << ", hopcnt: " << (int)routeTlv.metric.hopCount;
         ev << endl;
     }
 #endif
@@ -882,16 +967,18 @@ void EigrpIpv4Pdm::sendAllEigrpPaths(EigrpInterface *eigrpIface, EigrpNeighbor<I
         if (route->isActive())
             continue;
 
-        if ((source = eigrpTt->getFirstSuccessor(route)) != NULL)
+        if ((source = eigrpTt->getBestSuccessor(route)) != NULL)
         {
-            if (applySplitHorizon(eigrpIface, source, route))
-            { // Apply Split Horizon rule
-                continue;
-            }
+            if (this->eigrpStubEnabled && applyStubToUpdate(source))
+                continue;   // Apply stub settings to the route
+            if (eigrpIface->isSplitHorizonEn() && applySplitHorizon(eigrpIface, source, route))
+                continue;   // Apply Split Horizon rule
 
             EigrpMsgRoute routeReq;
             routeReq.sourceId = source->getSourceId();
             routeReq.routeId = source->getRouteId();
+            routeReq.originator = source->getOriginator();
+            routeReq.invalid = false;
             msgReq->setRoutes(addedRoutes /* not variable i */, routeReq);
             addedRoutes++;
         }
@@ -918,6 +1005,7 @@ void EigrpIpv4Pdm::processNewNeighbor(int ifaceId, IPv4Address &srcAddress, Eigr
     EigrpNeighbor<IPv4Address> *neigh;
     EigrpInterface *iface = eigrpIft->findInterfaceById(ifaceId);
     EigrpTlvParameter paramTlv = rcvMsg->getParameterTlv();
+    EigrpStub stubConf = rcvMsg->getStubTlv().stub;
     int ecode;      // Code of user message
 
     // Check rules for establishing neighborship
@@ -928,7 +1016,7 @@ void EigrpIpv4Pdm::processNewNeighbor(int ifaceId, IPv4Address &srcAddress, Eigr
 
         if (ecode == eigrp::M_NEIGH_BAD_KVALUES)
         { // Send Goodbye message and reset Hello timer
-            resetTimer(iface->getHelloTimer(), iface->getHelloInt());
+            resetTimer(iface->getHelloTimer(), iface->getHelloInt() - 0.5);
             msgReqHello = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv4Address>::UNSPEC_ID, ifaceId);
             msgReqHello->setGoodbyeMsg(true);
             send(msgReqHello, RTP_OUTGW);
@@ -940,8 +1028,16 @@ void EigrpIpv4Pdm::processNewNeighbor(int ifaceId, IPv4Address &srcAddress, Eigr
 
     neigh = createNeighbor(iface, srcAddress, paramTlv.holdTimer);
 
+    if (stubConf.connectedRt || stubConf.leakMapRt || stubConf.recvOnlyRt || stubConf.redistributedRt || stubConf.staticRt || stubConf.summaryRt)
+    { // Process stub configuration
+        neigh->setStubEnable(true);
+        neigh->setStubConf(stubConf);
+        iface->incNumOfStubs();
+        eigrpNt->incStubCount();
+    }
+
     // Reply with Hello message and reset Hello timer
-    resetTimer(iface->getHelloTimer(), iface->getHelloInt());
+    resetTimer(iface->getHelloTimer(), iface->getHelloInt() - 0.5);
     msgReqHello = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv4Address>::UNSPEC_ID, ifaceId);
     send(msgReqHello, RTP_OUTGW);
 
@@ -1003,7 +1099,6 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4Pdm::createNeighbor(EigrpInterface *eigrpIf
     // Start Hold timer
     scheduleAt(simTime() + holdInt, holdt);
 
-    // Increase number of neighbors on interface
     eigrpIface->incNumOfNeighbors();
 
     return neigh;
@@ -1027,6 +1122,11 @@ void EigrpIpv4Pdm::removeNeighbor(EigrpNeighbor<IPv4Address> *neigh)
     // Remove neighbor from NT
     this->eigrpNt->removeNeighbor(neigh);
     eigrpIface->decNumOfNeighbors();
+    if (neigh->isStubEnabled())
+    {
+        eigrpIface->decNumOfStubs();
+        eigrpNt->decStubCount();
+    }
     delete neigh;
     neigh = NULL;
 
@@ -1130,53 +1230,74 @@ bool EigrpIpv4Pdm::createOrUpdateRouteInRT(EigrpRoute<IPv4Address> *route, Eigrp
  * @param srcNeighbor ID of neighbor that sends Query message. Neighbor is successor for the route.
  * Should be set only if DUAL sends Query message.
  */
-void EigrpIpv4Pdm::msgToAllIfaces(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, bool updateFromS)
+void EigrpIpv4Pdm::msgToAllIfaces(int destination, HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, bool forceUnreachable)
 {
     EigrpInterface *eigrpIface;
     int ifCount = eigrpIft->getNumInterfaces();
-    bool forcePoisonRev = updateFromS == true;
+    int numOfNeigh;
 
     for (int i = 0; i < ifCount; i++)
     {
         eigrpIface = eigrpIft->getInterface(i);
-        if (eigrpIface != NULL)
-            msgToIface(msgType, source, eigrpIface, forcePoisonRev);
+
+        // Send message only to interface with stub neighbor
+        if (destination == IEigrpPdm::STUB_RECEIVER && eigrpIface->getNumOfStubs() == 0)
+            continue;
+
+        if ((numOfNeigh = eigrpIface->getNumOfNeighbors()) > 0)
+        {
+            if (msgType == EIGRP_QUERY_MSG)
+            {
+                if (!applyStubToQuery(eigrpIface, numOfNeigh))
+                    msgToIface(msgType, source, eigrpIface, forcePoisonRev);
+                // Else do not send Query to stub router (skip the route on interface)
+            }
+            else
+                msgToIface(msgType, source, eigrpIface, forcePoisonRev, forceUnreachable);
+        }
     }
 }
 
-void EigrpIpv4Pdm::msgToIface(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, EigrpInterface *eigrpIface, bool forcePoisonRev)
+bool EigrpIpv4Pdm::applyStubToQuery(EigrpInterface *eigrpIface, int numOfNeigh)
+{
+    if (this->eigrpStubEnabled)
+        return false;   // Send Query to all neighbors
+    if (numOfNeigh == eigrpIface->getNumOfStubs())
+        return true;    // Do not send Query to stub router
+    return false;
+}
+
+void EigrpIpv4Pdm::msgToIface(HeaderOpcode msgType, EigrpRouteSource<IPv4Address> *source, EigrpInterface *eigrpIface, bool forcePoisonRev, bool forceUnreachable)
 {
     EigrpNeighbor<IPv4Address> *neigh = NULL;
     EigrpMsgRoute msgRt;
     int ifaceId, destNeigh = 0;
-    int numOfNeigh;
 
-    if ((numOfNeigh = eigrpIface->getNumOfNeighbors()) == 0)
-        return;
-
-    if (applySplitHorizon(eigrpIface, source, source->getRouteInfo()))
+    if (eigrpIface->isSplitHorizonEn() && applySplitHorizon(eigrpIface, source, source->getRouteInfo()))
     {
         if (forcePoisonRev)
         { // Apply Poison Reverse instead of Split Horizon
             msgRt.unreachable = true;
         }
-        else // Apply Split Horizon rule - do not send message to the interface
+        else // Apply Split Horizon rule - do not send route to the interface
             return;
     }
 
     msgRt.sourceId = source->getSourceId();
     msgRt.routeId = source->getRouteId();
+    msgRt.originator = source->getOriginator();
     msgRt.invalid = false;
 
     // Get destination interface ID and destination neighbor ID
     ifaceId = eigrpIface->getInterfaceId();
-    if (numOfNeigh > 1 && ift->getInterfaceById(ifaceId)->isMulticast())
+    if (ift->getInterfaceById(ifaceId)->isMulticast())
     { // Multicast
         destNeigh = IEigrpPdm::UNSPEC_RECEIVER;
     }
     else
     { // Unicast
-        neigh = eigrpNt->getFirstNeighborOnIf(ifaceId);
+        if (neigh == NULL)
+            neigh = eigrpNt->getFirstNeighborOnIf(ifaceId);
         destNeigh = neigh->getNeighborId();
     }
 
@@ -1228,12 +1349,30 @@ EigrpMsgReq *EigrpIpv4Pdm::pushMsgRouteToQueue(HeaderOpcode msgType, int ifaceId
 
 bool EigrpIpv4Pdm::applySplitHorizon(EigrpInterface *destInterface, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route)
 {
-    if (!destInterface->isSplitHorizonEn())
-        return false;
-    if (route->getNumSucc() <= 1)
+    if (route->getNumSucc() <= 1)   // Only 1 successor, check its interface ID (source is always successor)
         return destInterface->getInterfaceId() == source->getIfaceId();
-    else
-        return eigrpTt->getFirstSuccessorByIf(route, destInterface->getInterfaceId()) != NULL;
+    else    // There is more than 1 successor. Is any of them on the interface?
+        return eigrpTt->getBestSuccessorByIf(route, destInterface->getInterfaceId()) != NULL;
+}
+
+bool EigrpIpv4Pdm::applyStubToUpdate(EigrpRouteSource<IPv4Address> *src)
+{
+    if (this->eigrpStub.recvOnlyRt)
+        return true;    // Do not send any route
+
+    // Send only specified type of route
+    else if (this->eigrpStub.connectedRt && src->getNexthopId() == EigrpNeighbor<IPv4Address>::UNSPEC_ID)
+        return false;
+    else if (this->eigrpStub.redistributedRt && src->isRedistributed())
+        return false;
+    else if (this->eigrpStub.summaryRt && src->isSummary())
+        return false;
+    else if (this->eigrpStub.staticRt && src->isRedistributed())
+        return false;
+
+    // TODO: leakMapRt
+
+    return true;
 }
 
 /*
@@ -1261,12 +1400,30 @@ void EigrpIpv4Pdm::flushMsgRequests()
     RequestVector::iterator it;
     IPv4Address destAddress;
 
+    // Send Query
+    for (it = reqQueue.begin(); it != reqQueue.end(); it++)
+    {
+        if ((*it)->getOpcode() == EIGRP_QUERY_MSG)
+        {
+            // Check if interface exists
+            if (eigrpIft->findInterfaceById((*it)->getDestInterface()) == NULL)
+                continue;
+            else
+                send(*it, RTP_OUTGW);
+        }
+    }
+
+    // Send other messages
     for (it = reqQueue.begin(); it != reqQueue.end(); it++)
     {
         // Check if interface exists
         if (eigrpIft->findInterfaceById((*it)->getDestInterface()) == NULL)
+        {
             delete *it; // Discard request
-        else
+            continue;
+        }
+
+        if ((*it)->getOpcode() != EIGRP_QUERY_MSG)
             send(*it, RTP_OUTGW);
     }
 
@@ -1337,7 +1494,10 @@ void EigrpIpv4Pdm::processIfaceStateChange(InterfaceEntry *iface)
                 eigrpIface = new EigrpInterface(iface, networkId, false);
             }
             if (!eigrpIface->isEnabled())
+            {
                 enableInterface(eigrpIface, ifAddress, ifMask, networkId);
+                startHelloTimer(eigrpIface, simTime() + eigrpIface->getHelloInt() - 0.5);
+            }
         }
     }
     else if (iface->isDown() || !iface->hasCarrier())
@@ -1400,14 +1560,14 @@ void EigrpIpv4Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
 
     EV << "EIGRP disabled on interface " << eigrpIface->getName() << "(" << ifaceId << ")" << endl;
 
-    if (iface->isUp() && iface->hasCarrier())
-    { // Unregister multicast address on interface (fires notification about change of interface)
-        iface->ipv4Data()->leaveMulticastGroup(EIGRP_IPV4_MULT);
-    }
+    //if (iface->isUp() && iface->hasCarrier())
+    //{ // Unregister multicast address on interface (fires notification about change of interface and occurs re-built of RT - i.e. reinsert connected routes)
+    iface->ipv4Data()->leaveMulticastGroup(EIGRP_IPV4_MULT);
+    //}
 
     // stop hello timer
-    hellot = eigrpIface->getHelloTimer();
-    cancelEvent(hellot);
+    if ((hellot = eigrpIface->getHelloTimer()) != NULL)
+        cancelEvent(hellot);
 
     // First process route on the interface
     IPv4Address ifNetwork = ifAddress.doAnd(ifMask);
@@ -1417,9 +1577,12 @@ void EigrpIpv4Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
     eigrpDual->processEvent(EigrpDual::INTERFACE_DOWN, source, EigrpNeighbor<IPv4Address>::UNSPEC_ID, false);
 
     // Remove interface from EIGRP interface table (must be there)
-    eigrpIft->removeInterface(eigrpIface);
-    eigrpIftDisabled->addInterface(eigrpIface);
-    eigrpIface->setEnabling(false);
+    if (eigrpIface->isEnabled())
+    {
+        eigrpIft->removeInterface(eigrpIface);
+        eigrpIftDisabled->addInterface(eigrpIface);
+        eigrpIface->setEnabling(false);
+    }
 
     // Delete all neighbors on the interface
     neighCount = eigrpNt->getNumNeighbors();
@@ -1438,7 +1601,6 @@ void EigrpIpv4Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
 
 void EigrpIpv4Pdm::enableInterface(EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask, int networkId)
 {
-    EigrpTimer* hellot;
     int ifaceId = eigrpIface->getInterfaceId();
     EigrpRouteSource<IPv4Address> *src;
     EigrpWideMetricPar metricPar;
@@ -1447,27 +1609,22 @@ void EigrpIpv4Pdm::enableInterface(EigrpInterface *eigrpIface, IPv4Address& ifAd
     EV << "EIGRP enabled on interface " << eigrpIface->getName() << "(" << ifaceId << ")" << endl;
 
     // Move interface to EIGRP interface table
-    eigrpIftDisabled->removeInterface(eigrpIface);
-    eigrpIft->addInterface(eigrpIface);
+    if (!eigrpIface->isEnabled())
+    {
+        eigrpIftDisabled->removeInterface(eigrpIface);
+        eigrpIft->addInterface(eigrpIface);
+        eigrpIface->setEnabling(true);
+    }
 
     // Register multicast address on interface
     IPv4InterfaceData *ifaceIpv4 = ift->getInterfaceById(ifaceId)->ipv4Data();
     ifaceIpv4->joinMulticastGroup(EIGRP_IPV4_MULT);
 
-    eigrpIface->setEnabling(true);
     eigrpIface->setNetworkId(networkId);
-
-    // Start Hello timer on interface
-    if ((hellot = eigrpIface->getHelloTimer()) == NULL)
-    {
-        hellot = createTimer(EIGRP_HELLO_TIMER, eigrpIface);
-        eigrpIface->setHelloTimerPtr(hellot);
-    }
-    scheduleAt(simTime() + uniform(0, 5), hellot);
 
     // Create route
     src = eigrpTt->findOrCreateRoute(ifAddress, ifMask, eigrpTt->getRouterId(), eigrpIface, EigrpNeighbor<IPv4Address>::UNSPEC_ID, &isSourceNew);
-
+    ASSERT(isSourceNew == true);
     // Compute metric
     metricPar = eigrpMetric->getParam(eigrpIface);
     src->setMetricParams(metricPar);
@@ -1484,8 +1641,8 @@ EigrpInterface *EigrpIpv4Pdm::addInterfaceToEigrp(int ifaceId, int networkId, bo
 {
     InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
     IPv4Address ifAddress, ifMask;
-    // create EIGRP interface and hello timer
-    EigrpInterface *eigrpIface = new EigrpInterface(iface, networkId, enabled);
+    // create EIGRP interface
+    EigrpInterface *eigrpIface = new EigrpInterface(iface, networkId, false);
 
     if (enabled)
     {
@@ -1494,6 +1651,7 @@ EigrpInterface *EigrpIpv4Pdm::addInterfaceToEigrp(int ifaceId, int networkId, bo
         ifAddress = iface->ipv4Data()->getIPAddress().doAnd(ifMask);
 
         enableInterface(eigrpIface, ifAddress, ifMask, networkId);
+        startHelloTimer(eigrpIface, simTime() + uniform(0,1));
     }
     else
     {
@@ -1503,13 +1661,28 @@ EigrpInterface *EigrpIpv4Pdm::addInterfaceToEigrp(int ifaceId, int networkId, bo
     return eigrpIface;
 }
 
+void EigrpIpv4Pdm::startHelloTimer(EigrpInterface *eigrpIface, simtime_t interval)
+{
+    EigrpTimer *hellot;
+
+    // Start Hello timer on interface
+    if (!eigrpIface->isPassive())
+    {
+        if ((hellot = eigrpIface->getHelloTimer()) == NULL)
+        {
+            hellot = createTimer(EIGRP_HELLO_TIMER, eigrpIface);
+            eigrpIface->setHelloTimerPtr(hellot);
+        }
+        scheduleAt(interval, hellot);
+    }
+}
+
 //
 // interface IEigrpModule
 //
 
 EigrpNetwork *EigrpIpv4Pdm::addNetwork(IPv4Address address, IPv4Address mask)
 {
-    // TODO duplicity control
     return routingForNetworks->addNetwork(address, mask);
 }
 
@@ -1539,10 +1712,27 @@ void EigrpIpv4Pdm::setSplitHorizon(bool shenabled, int ifaceId)
 
 void EigrpIpv4Pdm::setPassive(bool passive, int ifaceId)
 {
-    EigrpInterface *iface = getInterfaceById(ifaceId);
-    if (iface == NULL)
-        iface = addInterfaceToEigrp(ifaceId, EigrpNetworkTable::UNSPEC_NETID, true);
-    iface->setPassive(passive);
+    EigrpInterface *eigrpIface = getInterfaceById(ifaceId);
+
+    if (eigrpIface == NULL)
+        eigrpIface = addInterfaceToEigrp(ifaceId, EigrpNetworkTable::UNSPEC_NETID, false);
+    else if (eigrpIface->isEnabled())
+    { // Disable sending and receiving of messages
+        InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
+        iface->ipv4Data()->leaveMulticastGroup(EIGRP_IPV4_MULT);
+
+        // Stop and delete hello timer
+        EigrpTimer *hellot = eigrpIface->getHelloTimer();
+        if (hellot != NULL)
+        {
+            cancelEvent(hellot);
+            delete hellot;
+            eigrpIface->setHelloTimerPtr(NULL);
+        }
+    }
+    // Else do nothing (interface is not part of EIGRP)
+
+    eigrpIface->setPassive(passive);
 }
 
 //
@@ -1550,22 +1740,40 @@ void EigrpIpv4Pdm::setPassive(bool passive, int ifaceId)
 //
 
 /**
- * @param destiation If dest is 0.0.0.0, then send message to all neighbors.
+ *
  */
-void EigrpIpv4Pdm::sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, const char *reason)
+void EigrpIpv4Pdm::sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, const char *reason)
 {
     ev << "DUAL: send Update message about " << route->getRouteAddress() << " to all neighbors, " << reason << endl;
-    msgToAllIfaces(EIGRP_UPDATE_MSG, source, true /* Use Poison Reverse instead of Split Horizon */);
+    if (this->eigrpStubEnabled && applyStubToUpdate(source))
+    {
+        ev << "     Stub routing applied, message will not be sent" << endl;
+        return;
+    }
+    msgToAllIfaces(destNeighbor, EIGRP_UPDATE_MSG, source, forcePoisonRev, false);
 }
 
 /**
  * @param destNeighbor If parameter is 0 then sends message to all neighbors.
- * @param updateFromS If input event of DUAL is Update from successor.
+ * @param forcePoisonRev Apply Poison Reverse instead of Split Horizon to the route
  */
-void EigrpIpv4Pdm::sendQuery(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool updateFromS)
+void EigrpIpv4Pdm::sendQuery(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev)
 {
+    bool forceUnreachable = false;
+
     ev << "DUAL: send Query message about " << route->getRouteAddress() << " to all neighbors" << endl;
-    msgToAllIfaces(EIGRP_QUERY_MSG, source, updateFromS);
+
+    if (this->eigrpStubEnabled)
+        forceUnreachable = true;    // Send Query with infinite metric to all neighbors
+    else
+    {
+        if (this->eigrpNt->getStubCount() > 0)
+        { // Apply Poison Reverse instead of Split Horizon rule
+            forcePoisonRev = true;
+        }
+    }
+
+    msgToAllIfaces(destNeighbor, EIGRP_QUERY_MSG, source, forcePoisonRev, forceUnreachable);
 }
 
 /**
@@ -1581,11 +1789,14 @@ void EigrpIpv4Pdm::sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     if (neigh == NULL)
         return;
 
-
     msgRt.invalid = false;
     msgRt.sourceId = source->getSourceId();
     msgRt.routeId = source->getRouteId();
+    msgRt.originator = source->getOriginator();
     msgRt.unreachable = isUnreachable;
+
+    if (this->eigrpStubEnabled)
+        msgRt.unreachable = true;   // Stub router always reply with infinite metric
 
     // Apply Poison Reverse (instead of Split Horizon)
     if (!isUnreachable && eigrpIft->findInterfaceById(neigh->getIfaceId())->isSplitHorizonEn())
@@ -1657,24 +1868,31 @@ void EigrpIpv4Pdm::sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, E
     }
 }*/
 
-bool EigrpIpv4Pdm::removeRouteFromRT(EigrpRouteSource<IPv4Address> *source)
+/**
+ * @return if route is found in routing table then returns true.
+ */
+bool EigrpIpv4Pdm::removeRouteFromRT(EigrpRouteSource<IPv4Address> *source, ANSAIPv4Route::RoutingProtocolSource *removedRtSrc)
 {
     EigrpRoute<IPv4Address> *route = source->getRouteInfo();
     IPv4Route *rtEntry =rt->findRoute(route->getRouteAddress(), route->getRouteMask(), source->getNextHop());
-    ANSAIPv4Route *ansaRtEntry = NULL;
+    ANSAIPv4Route *ansaRtEntry = dynamic_cast<ANSAIPv4Route *>(rtEntry);
 
-    if (rtEntry != NULL && (ansaRtEntry = dynamic_cast<ANSAIPv4Route *>(rtEntry)) != NULL &&
-            ansaRtEntry->getRoutingProtocolSource() == ANSAIPv4Route::pEIGRP)
+    if (rtEntry != NULL && ansaRtEntry != NULL)
     {
-        EV << "EIGRP: delete route " << route->getRouteAddress() << " via " << source->getNextHop() << " from RT" << endl;
-        rt->deleteRoute(rtEntry);
-        return true;
+        *removedRtSrc = ansaRtEntry->getRoutingProtocolSource();
+        if (*removedRtSrc == ANSAIPv4Route::pEIGRP)
+        {
+            EV << "EIGRP: delete route " << route->getRouteAddress() << " via " << source->getNextHop() << " from RT" << endl;
+            rt->deleteRoute(rtEntry);
+        }
     }
-
+    else
+    {
 #ifdef EIGRP_DEBUG
-    EV << "EIGRP: EIGRP route "<< route->getRouteAddress() << " via " << source->getNextHop() << " can not be removed, not found in RT" << endl;
+        EV << "EIGRP: EIGRP route "<< route->getRouteAddress() << " via " << source->getNextHop() << " can not be removed, not found in RT" << endl;
 #endif
-    return false;
+    }
+    return rtEntry != NULL;
 }
 
 /*void EigrpIpv4Pdm::removeSourceFromTT(EigrpRouteSource<IPv4Address> *source)
@@ -1717,7 +1935,6 @@ bool EigrpIpv4Pdm::isRTSafeForAdd(EigrpRoute<IPv4Address> *route, unsigned int e
 }
 
 /**
- * @param sentUpdate return parameter. True if input event of DUAL is Update message.
  * @param removeUnreach invalidate unreachable sources of the route.
  * @return pointer to successor or NULL.
  */
@@ -1748,7 +1965,7 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4Pdm::updateRoute(EigrpRoute<IPv4Address>
 
             if ((rtEntry = rt->findRoute(route->getRouteAddress(), route->getRouteMask(), source->getNextHop())) == NULL)
                 if (!isRTSafeForAdd(route, adminDistInt))
-                { // In RT exists route with smaller AD, do not mark the route as Successor
+                { // In RT exists route with smaller AD, do not mark the route source as successor
                     source->setSuccessor(false);
                     ev << "           route can not be added into RT, there is route with smaller AD" << endl;
                     continue;   // Skip the route
@@ -1762,16 +1979,11 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4Pdm::updateRoute(EigrpRoute<IPv4Address>
         }
         else if (source->isSuccessor())
         { // Remove old successor from RT
-            if (removeRouteFromRT(source) || source->isSuccessor() /* when route is deleted in AnsaRoutingTable */)
-            { // Route from other sources can not be removed, do not change Successor's record in TT
-                source->setSuccessor(false);
-                if (route->getSuccessor() == source)
-                    route->setSuccessor(NULL);
-
+            if (removeOldSuccessor(source, route))
                 *rtableChanged = true;
-            }
         }
-        if (removeUnreach && source->isUnreachable() && !source->isSetDelayedRemove() && source->isValid())
+
+        if (removeUnreach && source->isUnreachable() && source->getDelayedRemove() == 0 && source->isValid())
         { // Invalidate unreachable routes in TT
             source->setValid(false);
             ev << "     invalidate route via " << source->getNextHop() << " in TT" << endl;
@@ -1780,7 +1992,7 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4Pdm::updateRoute(EigrpRoute<IPv4Address>
 
     route->setNumSucc(pathsInRT);
 
-    if ((bestSuccessor = eigrpTt->getFirstSuccessor(route)) != NULL)
+    if ((bestSuccessor = eigrpTt->getBestSuccessor(route)) != NULL)
     { // Update route with best Successor
         if (dmin < routeFd) // Set only if there is a successor
             route->setFd(dmin);
@@ -1797,6 +2009,31 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4Pdm::updateRoute(EigrpRoute<IPv4Address>
         route->setSuccessor(NULL);
 
     return bestSuccessor;
+}
+
+bool EigrpIpv4Pdm::removeOldSuccessor(EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route)
+{
+    ANSAIPv4Route::RoutingProtocolSource srcProto = ANSAIPv4Route::pUnknown;
+    bool rtFound, rtableChanged = false;
+
+    // To distinguish the route deleted by EIGRP in ReceiveChangeNotification method
+    source->setSuccessor(false);
+
+    rtFound = removeRouteFromRT(source, &srcProto);
+#ifdef EIGRP_DEBUG
+    //ev << "EIGRP: removing old successor: rt found: " << rtFound << " src: " << srcProto << endl;
+#endif
+
+    if (!rtFound || (rtFound && (srcProto == ANSAIPv4Route::pEIGRP || srcProto == ANSAIPv4Route::pEIGRPext)))
+    {
+        if (route->getSuccessor() == source)
+            route->setSuccessor(NULL);
+        rtableChanged = true;
+    }
+    else // Route from other sources can not be removed, do not change Successor's record in TT
+        source->setSuccessor(true);
+
+    return rtableChanged;
 }
 
 bool EigrpIpv4Pdm::installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, uint64_t dmin, IPv4Route *rtEntry)
@@ -1818,7 +2055,7 @@ bool EigrpIpv4Pdm::installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSo
     { // Insert new route to RT
         EV << "EIGRP: add EIGRP route " << route->getRouteAddress() << " via " << source->getNextHop() << " to RT" << endl;
         ansaRtEntry = createRTRoute(source);
-        rt->prepareForAddRoute(ansaRtEntry);    // Do not check safety (already checked)
+        // rt->prepareForAddRoute(ansaRtEntry);    // Do not check safety (already checked)
         rt->addRoute(ansaRtEntry);
 
         rtableChanged = true;
@@ -1828,31 +2065,53 @@ bool EigrpIpv4Pdm::installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSo
 }
 
 /**
- * @param updateFromS If input event of DUAL was Update from successor.
+ * @param forcePoisonRev use Poison Reverse instead of Split Horizon
  */
-int EigrpIpv4Pdm::setReplyStatusTable(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool updateFromS)
+bool EigrpIpv4Pdm::setReplyStatusTable(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, int *neighCount, int *stubCount)
 {
-    int neighCount = eigrpNt->getNumNeighbors();
+    int neighTotalCount = eigrpNt->getNumNeighbors();
     EigrpNeighbor<IPv4Address> *neigh;
     EigrpInterface *eigrpIface = NULL;
 
-    for (int i = 0; i < neighCount; i++)
+    for (int i = 0; i < neighTotalCount; i++)
     {
         neigh = eigrpNt->getNeighbor(i);
         if ((eigrpIface = eigrpIft->findInterfaceById(neigh->getIfaceId())) == NULL)
             continue;   // The interface has been removed
 
-        if (applySplitHorizon(eigrpIface, source, route))
+        // Apply stub routing
+        if (!this->eigrpStubEnabled)
         {
-            if (updateFromS)
+            if (neigh->isStubEnabled())
+            {
+                (*stubCount)++;
+                (*neighCount)++;
+                continue;   // Non stub router can not send Query to stub router
+            }
+
+            if (this->eigrpNt->getStubCount() > 0)
+            { // Apply Poison Reverse instead of Split Horizon rule
+                forcePoisonRev = true;
+            }
+        }
+
+        // Apply Split Horizon and Poison Reverse
+        if (eigrpIface->isSplitHorizonEn() && applySplitHorizon(eigrpIface, source, route))
+        {
+            if (forcePoisonRev)
             { // Apply Poison Reverse instead of Split Horizon
                 route->setReplyStatus(neigh->getNeighborId());
             }
+            else
+                continue;   // Do not send route
         } else
             route->setReplyStatus(neigh->getNeighborId());
+
+
+        (*neighCount)++;
     }
 
-    return route->getReplyStatusSum();
+    return route->getReplyStatusSum() > 0;
 }
 
 bool EigrpIpv4Pdm::hasNeighborForUpdate(EigrpRouteSource<IPv4Address> *source)
@@ -1875,7 +2134,7 @@ bool EigrpIpv4Pdm::hasNeighborForUpdate(EigrpRouteSource<IPv4Address> *source)
 }
 
 /**
- * After receiving Ack from neighbor with neighId will be source removed from TT.
+ * After receiving Ack from neighbor with neighId will be src removed from TT.
  */
 void EigrpIpv4Pdm::setDelayedRemove(int neighId, EigrpRouteSource<IPv4Address> *src)
 {
@@ -1883,12 +2142,31 @@ void EigrpIpv4Pdm::setDelayedRemove(int neighId, EigrpRouteSource<IPv4Address> *
 
     ASSERT(neigh != NULL);
     neigh->setRoutesForDeletion(true);
-    src->setDelayedRemove(true);
+    src->setDelayedRemove(neighId);
     src->setValid(true);    // Can not be invalid
 
 #ifdef EIGRP_DEBUG
-        ev << "DUAL: route via " << src->getNextHop() << " will be removed from TT after receiving Ack from neighbor for Reply" << endl;
+        ev << "DUAL: route via " << src->getNextHop() << " will be removed from TT after receiving Ack from neighbor" << endl;
 #endif
+}
+
+void EigrpIpv4Pdm::sendUpdateToStubs(EigrpRouteSource<IPv4Address> *succ ,EigrpRouteSource<IPv4Address> *oldSucc, EigrpRoute<IPv4Address> *route)
+{
+    if (!this->eigrpStubEnabled && eigrpNt->getStubCount() > 0)
+    {
+        if (succ == NULL)
+        { // Send old successor
+            // Route will be removed after router receives Ack from neighbor
+            if (oldSucc->isUnreachable())
+            {
+                route->setUpdateSent(true);
+                route->setNumSentMsgs(route->getNumSentMsgs() + 1);
+            }
+            sendUpdate(IEigrpPdm::STUB_RECEIVER, route, oldSucc, true, "notify stubs about change");
+        }
+        else // Send successor
+            sendUpdate(IEigrpPdm::STUB_RECEIVER, route, succ, true, "notify stubs about change");
+    }
 }
 
 

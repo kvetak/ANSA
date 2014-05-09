@@ -17,7 +17,7 @@
 // @date 
 // @author 
 
-package inet.examples.ansa.networklayer.eigrp.twoNode;
+package inet.examples.ansa.networklayer.eigrp.two_node;
 
 import inet.ansa.networklayer.eigrp.EigrpRouter;
 import inet.ansa.nodes.inet.ANSAStandardHost;

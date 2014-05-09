@@ -15,6 +15,12 @@
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth2">
+                <IPAddress>10.0.14.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
+            </Interface>
+            <Interface name="eth3">
                 <IPAddress>10.0.1.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <EIGRP-IPv4 asNumber='1'>
@@ -32,6 +38,10 @@
 						</Network>
 						<Network> 
 	        				<IPAddress>10.0.13.1</IPAddress>						 
+						 	<Wildcard>0.0.0.3</Wildcard>
+						</Network>
+						<Network> 
+	        				<IPAddress>10.0.14.1</IPAddress>						 
 						 	<Wildcard>0.0.0.3</Wildcard>
 						</Network>
 						<Network> 
@@ -59,13 +69,13 @@
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
-                <IPAddress>10.0.23.1</IPAddress>
+                <IPAddress>10.0.24.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth2">
-                <IPAddress>10.0.24.1</IPAddress>
+                <IPAddress>10.0.23.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
@@ -87,11 +97,11 @@
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network> 
 						<Network> 
-	        				<IPAddress>10.0.23.2</IPAddress>						 
+	        				<IPAddress>10.0.24.2</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network>
 						<Network> 
-	        				<IPAddress>10.0.24.2</IPAddress>						 
+	        				<IPAddress>10.0.23.2</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network>
 						<Network> 
@@ -100,6 +110,7 @@
 						</Network>
 	        		</Networks>
 	        		
+	        		<Stub connected='enabled' summary='enabled'/>
 	        	</ProcessIPv4>
         	</EIGRP>
         </Routing>
@@ -119,12 +130,18 @@
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
-                <IPAddress>10.0.23.2</IPAddress>
+                <IPAddress>10.0.34.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <EIGRP-IPv4 asNumber='1'>
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth2">
+                <IPAddress>10.0.23.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
+            </Interface>
+            <Interface name="eth3">
                 <IPAddress>10.0.3.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <EIGRP-IPv4 asNumber='1'>
@@ -141,7 +158,11 @@
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network> 
 						<Network> 
-	        				<IPAddress>10.0.23.2</IPAddress>						 
+	        				<IPAddress>10.0.34.0</IPAddress>						 
+						 	<Wildcard>255.255.255.252</Wildcard>
+						</Network> 
+						<Network> 
+	        				<IPAddress>10.0.23.0</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network> 
 						<Network> 
@@ -169,6 +190,18 @@
                 </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
+                <IPAddress>10.0.34.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>10.0.14.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
+            </Interface>
+            <Interface name="eth3">
                 <IPAddress>10.0.4.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
             </Interface>
@@ -183,12 +216,20 @@
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network> 
 						<Network> 
+	        				<IPAddress>10.0.34.0</IPAddress>						 
+						 	<Wildcard>255.255.255.252</Wildcard>
+						</Network> 
+						<Network> 
+	        				<IPAddress>10.0.14.0</IPAddress>						 
+						 	<Wildcard>255.255.255.252</Wildcard>
+						</Network> 
+						<Network> 
 	        				<IPAddress>10.0.4.0</IPAddress>						 
 						 	<Wildcard>0.0.0.255</Wildcard>
 						</Network>
 	        		</Networks>
 	        		
-	        		<MaximumPath>1</MaximumPath>
+	        		<Stub connected='enabled' summary='enabled'/>
 	        	</ProcessIPv4>
         	</EIGRP>
         </Routing>

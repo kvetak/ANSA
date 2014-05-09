@@ -2427,6 +2427,19 @@ void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpMod
                 int ifaceId = iface->getInterfaceId();
                 eigrpModule->setPassive(true, ifaceId);
             }
+            else if (nodeName == "Stub")
+            {
+                EigrpStub stub;
+                stub.connectedRt = loadEigrpStubConf((*procElem), "connected");
+                stub.leakMapRt = loadEigrpStubConf((*procElem), "leakMap");
+                stub.recvOnlyRt = loadEigrpStubConf((*procElem), "receiveOnly");
+                stub.redistributedRt = loadEigrpStubConf((*procElem), "redistributed");
+                stub.staticRt = loadEigrpStubConf((*procElem), "static");
+                stub.summaryRt = loadEigrpStubConf((*procElem), "summary");
+                if (!(stub.connectedRt || stub.leakMapRt || stub.recvOnlyRt || stub.redistributedRt || stub.staticRt || stub.summaryRt))
+                    stub.connectedRt = stub.summaryRt = true;   // Default values
+                eigrpModule->setStub(stub);
+            }
         }
 
         processElem = xmlParser::GetEigrpProcess(processElem, NULL);
@@ -2442,6 +2455,20 @@ int DeviceConfigurator::loadEigrpKValue(cXMLElement *node, const char *attrName,
     success = xmlParser::Str2Int(&result, kvalueStr);
     if (!success || result < 0 || result > 255)
         throw cRuntimeError("Bad value for EIGRP metric weights (<0, 255>)");
+    return result;
+}
+
+bool DeviceConfigurator::loadEigrpStubConf(cXMLElement *node, const char *attrName)
+{
+    bool result;
+    bool success;
+    const char *stubConf = xmlParser::GetNodeAttrConfig(node, attrName, NULL);
+    if (stubConf == NULL)
+        return false;
+
+    success = xmlParser::Str2Bool(&result, stubConf);
+    if (!success)
+        throw cRuntimeError("Bad value for EIGRP stub configuration of parameter %s", attrName);
     return result;
 }
 

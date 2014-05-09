@@ -5,14 +5,14 @@
             <Interface name="eth0">
                 <IPAddress>10.0.12.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
-                <IPAddress>10.0.13.1</IPAddress>
-                <Mask>255.255.255.252</Mask>
-            </Interface>
-            <Interface name="eth2">
                 <IPAddress>10.0.1.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface>        
         </Interfaces>
         
@@ -25,15 +25,10 @@
 						 	<Wildcard>0.0.0.3</Wildcard>
 						</Network>
 						<Network> 
-	        				<IPAddress>10.0.13.1</IPAddress>						 
-						 	<Wildcard>0.0.0.3</Wildcard>
-						</Network>
-						<Network> 
 	        				<IPAddress>10.0.1.0</IPAddress>						 
 						 	<Wildcard>0.0.0.255</Wildcard>
 						</Network>
 	        		</Networks>
-	        		<PassiveInterface>eth2</PassiveInterface>
 	        	</ProcessIPv4>
         	</EIGRP>
         </Routing>
@@ -49,18 +44,20 @@
             <Interface name="eth0">
                 <IPAddress>10.0.12.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.23.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface>
             <Interface name="eth2">
-                <IPAddress>10.0.24.1</IPAddress>
-                <Mask>255.255.255.252</Mask>
-            </Interface>
-            <Interface name="eth3">
                 <IPAddress>10.0.2.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface> 
         </Interfaces>
         
@@ -75,17 +72,12 @@
 						<Network> 
 	        				<IPAddress>10.0.23.2</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
-						</Network>
-						<Network> 
-	        				<IPAddress>10.0.24.2</IPAddress>						 
-						 	<Wildcard>255.255.255.252</Wildcard>
-						</Network>
+						</Network> 
 						<Network> 
 	        				<IPAddress>10.0.2.0</IPAddress>						 
 						 	<Wildcard>0.0.0.255</Wildcard>
 						</Network>
 	        		</Networks>
-	        		<PassiveInterface>eth3</PassiveInterface>
 	        	</ProcessIPv4>
         	</EIGRP>
         </Routing>
@@ -99,16 +91,16 @@
     <Router id="10.0.3.0">
         <Interfaces>
             <Interface name="eth0">
-                <IPAddress>10.0.13.2</IPAddress>
-                <Mask>255.255.255.252</Mask>
-            </Interface>
-            <Interface name="eth1">
                 <IPAddress>10.0.23.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface>
-            <Interface name="eth2">
+            <Interface name="eth1">
                 <IPAddress>10.0.3.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
+                <EIGRP-IPv4 asNumber='1'>
+                </EIGRP-IPv4>
             </Interface> 
         </Interfaces>
         
@@ -117,10 +109,6 @@
 	        	<ProcessIPv4 asNumber="1">
 	        		<Networks>
 	        			<Network> 
-	        				<IPAddress>10.0.13.0</IPAddress>						 
-						 	<Wildcard>255.255.255.252</Wildcard>
-						</Network> 
-						<Network> 
 	        				<IPAddress>10.0.23.2</IPAddress>						 
 						 	<Wildcard>255.255.255.252</Wildcard>
 						</Network> 
@@ -129,7 +117,6 @@
 						 	<Wildcard>0.0.0.255</Wildcard>
 						</Network>
 	        		</Networks>
-	        		<PassiveInterface>eth2</PassiveInterface>
 	        	</ProcessIPv4>
         	</EIGRP>
         </Routing>
@@ -139,43 +126,7 @@
         
     </Router>
     
-    <!-- R4 -->
-    <Router id="10.0.4.0">
-        <Interfaces>
-            <Interface name="eth0">
-                <IPAddress>10.0.24.2</IPAddress>
-                <Mask>255.255.255.252</Mask>
-            </Interface>
-            <Interface name="eth1">
-                <IPAddress>10.0.4.1</IPAddress>
-                <Mask>255.255.255.0</Mask>
-            </Interface>
-        </Interfaces>
-        
-        <Routing>
-        	<EIGRP>
-	        	<ProcessIPv4 asNumber="1">
-	        		<Networks>
-	        			<Network> 
-	        				<IPAddress>10.0.24.0</IPAddress>						 
-						 	<Wildcard>255.255.255.252</Wildcard>
-						</Network> 
-						<Network> 
-	        				<IPAddress>10.0.4.0</IPAddress>						 
-						 	<Wildcard>0.0.0.255</Wildcard>
-						</Network>
-	        		</Networks>	        		
-	        		<PassiveInterface>eth1</PassiveInterface>
-	        	</ProcessIPv4>
-        	</EIGRP>
-        </Routing>
-        
-        <Routing6>    
-        </Routing6>
-        
-    </Router>
-	
-    <Host id="10.0.1.2">
+    	<Host id="10.0.1.2">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>10.0.1.2</IPAddress>
@@ -184,7 +135,7 @@
 		</Interfaces>
 		<DefaultRouter>10.0.1.1</DefaultRouter>
 	</Host>
-	<Host id="10.0.2.2">
+		<Host id="10.0.2.2">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>10.0.2.2</IPAddress>
@@ -193,7 +144,7 @@
 		</Interfaces>
 		<DefaultRouter>10.0.2.1</DefaultRouter>
 	</Host>
-	    <Host id="10.0.3.2">
+		<Host id="10.0.3.2">
 		<Interfaces>
 			<Interface name="eth0">
 				<IPAddress>10.0.3.2</IPAddress>
@@ -201,15 +152,6 @@
 			</Interface>
 		</Interfaces>
 		<DefaultRouter>10.0.3.1</DefaultRouter>
-	</Host>
-	<Host id="10.0.4.2">
-		<Interfaces>
-			<Interface name="eth0">
-				<IPAddress>10.0.4.2</IPAddress>
-                <Mask>255.255.255.0</Mask>
-			</Interface>
-		</Interfaces>
-		<DefaultRouter>10.0.4.1</DefaultRouter>
 	</Host>
 
 </Devices>
