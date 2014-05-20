@@ -11,12 +11,23 @@
 #include "EigrpMessage_m.h"
 #include "EigrpNetworkTable.h"
 
+/**
+ * Interface for EIGRP configuration.
+ */
 class IEigrpModule
 {
   public:
     virtual ~IEigrpModule() {}
-    // Process configuration
+    //-- Process configuration
+    /**
+     * Adds interface to EIGRP.
+     * @param interfaceId ID of interface
+     * @param networkID ID of network in EigrpNetworkTable
+     */
     virtual void addInterface(int interfaceId, int networkId, bool enabled) = 0;
+    /**
+     * Adds new network to EigrpNetworkTable for routing.
+     */
     virtual EigrpNetwork *addNetwork(IPv4Address address, IPv4Address mask) = 0;
     virtual void setASNum(int asNum) = 0;
     virtual void setKValues(const EigrpKValues& kValues) = 0;

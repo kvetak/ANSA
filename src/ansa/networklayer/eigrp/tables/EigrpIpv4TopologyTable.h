@@ -18,12 +18,13 @@
 
 #include <omnetpp.h>
 
+#include "ModuleAccess.h"
+
 #include "EigrpRoute.h"
 #include "EigrpInterfaceTable.h"
 
 /**
- * V tabulce muze byt vice zaznamu do stejneho cile pres ruzne next hopy. Vyhledavat se musi podle
- * souseda (co treba handle?) a adresy a masky cesty (bez masky to asi nepujde).
+ * Class represents EIGRP Topology Table.
  */
 class EigrpIpv4TopologyTable : public cSimpleModule
 {
@@ -49,6 +50,7 @@ class EigrpIpv4TopologyTable : public cSimpleModule
     EigrpIpv4TopologyTable() { routeIdCounter = 1; sourceIdCounter = 1; }
     virtual ~EigrpIpv4TopologyTable();
 
+    //-- Methods for routes
     void addRoute(EigrpRouteSource<IPv4Address> *source);
     EigrpRouteSource<IPv4Address> *findRoute(const IPv4Address& routeAddr, const IPv4Address& routeMask, const IPv4Address& nextHop);
     EigrpRouteSource<IPv4Address> *findRoute(const IPv4Address& routeAddr, const IPv4Address& routeMask, int nextHopId);
@@ -57,18 +59,30 @@ class EigrpIpv4TopologyTable : public cSimpleModule
     EigrpRouteSource<IPv4Address> *removeRoute(EigrpRouteSource<IPv4Address> *source);
     EigrpRouteSource<IPv4Address> *findRouteById(int sourceId);
     EigrpRouteSource<IPv4Address> *findRouteByNextHop(int routeId, int nextHopId);
+    /**
+     * Finds and returns source with given address or create one.
+     * @param sourceNew return parameter, it is true if source was created. Else false.
+     */
     EigrpRouteSource<IPv4Address> * findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId, EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew);
-    /**< Deletes unreachable routes from the topology table. */
+    /**
+     * Deletes unreachable routes from the topology table.
+     */
     void purgeTable();
     void delayedRemove(int neighId);
-    //void moveSuccessorAhead(EigrpRouteSource<IPv4Address> *source);
-    //void moveRouteBack(EigrpRouteSource<IPv4Address> *source);
+
 
     uint64_t findRouteDMin(EigrpRoute<IPv4Address> *route);
     bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint64_t &resultDmin);
+    /**
+     * Returns best successor to the destination.
+     */
     EigrpRouteSource<IPv4Address> *getBestSuccessor(EigrpRoute<IPv4Address> *route);
+    /**
+     * Returns first successor on specified interface.
+     */
     EigrpRouteSource<IPv4Address> *getBestSuccessorByIf(EigrpRoute<IPv4Address> *route, int ifaceId);
 
+    //-- Methods for destination networks
     int getNumRouteInfo() const { return routeInfoVec.size(); }
     EigrpRoute<IPv4Address> *getRouteInfo(int k) { return routeInfoVec[k]; }
     void addRouteInfo(EigrpRoute<IPv4Address> *route) { route->setRouteId(routeIdCounter); routeInfoVec.push_back(route); routeIdCounter++; }
@@ -78,6 +92,12 @@ class EigrpIpv4TopologyTable : public cSimpleModule
 
     IPv4Address& getRouterId() { return routerID; }
     void setRouterId(IPv4Address& routerID) { this->routerID = routerID; }
+};
+
+class INET_API Eigrpv4TopolTableAccess : public ModuleAccess<EigrpIpv4TopologyTable>
+{
+    public:
+    Eigrpv4TopolTableAccess() : ModuleAccess<EigrpIpv4TopologyTable>("eigrpIpv4TopologyTable") {}
 };
 
 #endif

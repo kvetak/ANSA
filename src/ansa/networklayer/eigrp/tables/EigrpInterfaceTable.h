@@ -18,12 +18,13 @@
 
 #include <omnetpp.h>
 
+#include "ModuleAccess.h"
+
 #include "EigrpTimer_m.h"
 #include "InterfaceEntry.h"
 
 /**
- * TODO nastavovat BW, DLY dle typu linky, Reliability pocitat
- * na zacatku simulace, Load prubezne po 5 min (melo by byt konfigurovatelne)
+ * Represent EIGRP interface.
  */
 class EigrpInterface: public cObject
 {
@@ -35,10 +36,7 @@ class EigrpInterface: public cObject
     int holdInt;            /**< Router's hold interval in seconds (<1-65535>) */
     EigrpTimer *hellot;     /**< pointer to hello timer */
     bool enabled;           /**< EIGRP is enabled on interface */
-    int neighborCount;      /**< Number of neighbors on interface */
-    int stubCount;          /**< Number of stub neighbors on interface */
     bool splitHorizon;      /**< Split horizon rule enabled */
-    int pacingTime;         /**< Pacing time in milliseconds */
     bool passive;           /**< Interface is passive */
 
     uint64_t bandwidth;       /**< Bandwidth in Kbps (<1-10 000 000>) */
@@ -51,6 +49,9 @@ class EigrpInterface: public cObject
     int relMsgs;            /**< Number of messages waiting for sending on the interface */
     int pendingMsgs;        /**< Number of reliable sent messages but not acknowledged */
 
+    int neighborCount;      /**< Number of neighbors on interface */
+    int stubCount;          /**< Number of stub neighbors on interface */
+
   public:
     EigrpInterface(InterfaceEntry *iface, int networkId, bool enabled);
     ~EigrpInterface();
@@ -60,6 +61,7 @@ class EigrpInterface: public cObject
         return interfaceId == iface.getInterfaceId();
     }
 
+    //-- Setters and getters
     void setInterfaceId(int id) { interfaceId = id; }
     int getInterfaceId() const { return interfaceId; }
 
@@ -117,13 +119,11 @@ class EigrpInterface: public cObject
     void setPassive(bool passive) { this->passive = passive; }
     bool isPassive() const { return this->passive; }
 
-    int computePacingTime() const { return 30; }
-
     const char *getInterfaceName() const { return this->interfaceName; }
 };
 
 /**
- * TODO - Generated class
+ * Class represents EIGRP Interface Table.
  */
 class EigrpInterfaceTable : public cSimpleModule
 {
@@ -136,20 +136,41 @@ class EigrpInterfaceTable : public cSimpleModule
     virtual void handleMessage(cMessage *msg);
     virtual int numInitStages() const { return 4; }
 
+    /**
+     * Stops hello timer.
+     */
     void cancelHelloTimer(EigrpInterface *iface);
 
   public:
     ~EigrpInterfaceTable();
 
-    /**< Adds interface to table. */
+    /**
+     * Adds interface to table.
+     */
     void addInterface(EigrpInterface *interface);
-    /**< Removes interface from table */
+    /**
+     * Removes interface from table
+     */
     EigrpInterface *removeInterface(EigrpInterface *iface);
 
-    /**< Gets interface from table by interface ID */
+    /**
+     * Gets interface from table by interface ID.
+     */
     EigrpInterface *findInterfaceById(int ifaceId);
+    /**
+     * Returns number of interfaces in the table.
+     */
     int getNumInterfaces() const { return eigrpInterfaces.size(); }
+    /**
+     * Returns interface by its position in the table.
+     */
     EigrpInterface *getInterface(int k) const { return eigrpInterfaces[k]; }
+};
+
+class INET_API EigrpIfTableAccess : public ModuleAccess<EigrpInterfaceTable>
+{
+    public:
+    EigrpIfTableAccess() : ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable") {}
 };
 
 #endif

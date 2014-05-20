@@ -22,6 +22,9 @@
 #include "EigrpRoute.h"
 #include "IEigrpPdm.h"
 
+/**
+ * Class represents DUAL automaton.
+ */
 class EigrpDual : public cObject /* cSimpleModule */
 {
   public:
@@ -39,14 +42,19 @@ class EigrpDual : public cObject /* cSimpleModule */
   protected:
     IEigrpPdm *pdm;     /**< Protocol dependent module interface */
 
+    /**
+     * Invalidates specified route.
+     */
     void invalidateRoute(EigrpRouteSource<IPv4Address> *routeSrc);
 
+    //-- DUAL states
     void processQo0(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew);
     void processQo1Passive(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew);
     void processQo1Active(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew);
     void processQo2(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew);
     void processQo3(DualEvent event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, int neighborId, bool isSourceNew);
 
+    //-- DUAL transitions
     void processTransition1(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId);
     void processTransition2(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId);
     void processTransition3(int event, EigrpRouteSource<IPv4Address> *source, EigrpRoute<IPv4Address> *route, uint64_t dmin, int neighborId);
@@ -69,6 +77,13 @@ class EigrpDual : public cObject /* cSimpleModule */
   public:
     EigrpDual(IEigrpPdm *pdm) { this->pdm = pdm; }
 
+    /**
+     * The entry point for processing events.
+     * @param event type of event
+     * @param source route
+     * @param neighborId source of the event
+     * @param isSourceNew if route was created now
+     */
     void processEvent(DualEvent event, EigrpRouteSource<IPv4Address> *source, int neighborId, bool isSourceNew);
 };
 

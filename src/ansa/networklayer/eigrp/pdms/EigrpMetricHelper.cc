@@ -24,9 +24,6 @@ EigrpMetricHelper::~EigrpMetricHelper()
 {
 }
 
-/**
- * Sets parameters from interface for metric computation.
- */
 EigrpWideMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface)
 {
     EigrpWideMetricPar newMetricPar;
@@ -41,9 +38,6 @@ EigrpWideMetricPar EigrpMetricHelper::getParam(EigrpInterface *eigrpIface)
     return newMetricPar;
 }
 
-/**
- * Adjust parameters of metric by interface parameters.
- */
 EigrpWideMetricPar EigrpMetricHelper::adjustParam(const EigrpWideMetricPar& ifParam, const EigrpWideMetricPar& neighParam)
 {
     EigrpWideMetricPar newMetricPar;
@@ -67,9 +61,6 @@ EigrpWideMetricPar EigrpMetricHelper::adjustParam(const EigrpWideMetricPar& ifPa
     return newMetricPar;
 }
 
-/**
- * Computes classic metric.
- */
 uint64_t EigrpMetricHelper::computeClassicMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues)
 {
     uint32_t metric;
@@ -94,9 +85,6 @@ uint64_t EigrpMetricHelper::computeClassicMetric(const EigrpWideMetricPar& par, 
     return metric;
 }
 
-/**
- * Computes wide metric.
- */
 uint64_t EigrpMetricHelper::computeWideMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues)
 {
     uint64_t metric, throughput, latency;

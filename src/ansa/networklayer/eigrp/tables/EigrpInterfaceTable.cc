@@ -23,21 +23,21 @@ Define_Module(EigrpInterfaceTable);
 std::ostream& operator<<(std::ostream& out, const EigrpInterface& iface)
 {
     out << iface.getInterfaceName() << "(" << iface.getInterfaceId() << ")";
-    out << "  passive:" ;
-    if (iface.isPassive()) out << "en";
-    else out << "dis";
-    out << "  peers:" << iface.getNumOfNeighbors();
-    out << "  stubs:" << iface.getNumOfStubs();
-    out << "  helloInt:" << iface.getHelloInt();
-    out << "  holdInt:" << iface.getHoldInt();
-    out << "  splitHorizon:" ;
-    if (iface.isSplitHorizonEn()) out << "en";
-    else out << "dis";
-    out << "  bw:" << iface.getBandwidth();
+    out << "  Peers:" << iface.getNumOfNeighbors();
+    out << "  Passive:";
+    if (iface.isPassive()) out << "enabled";
+    else out << "disabled";
+    //out << "  stubs:" << iface.getNumOfStubs();
+    out << "  HelloInt:" << iface.getHelloInt();
+    out << "  HoldInt:" << iface.getHoldInt();
+    out << "  SplitHorizon:" ;
+    if (iface.isSplitHorizonEn()) out << "enabled";
+    else out << "disabled";
+    /*out << "  bw:" << iface.getBandwidth();
     out << "  dly:" << iface.getDelay();
     out << "  rel:" << iface.getReliability() << "/255";
     out << "  rLoad:" << iface.getLoad() << "/255";
-    out << "  pendingRt:" << iface.getPendingMsgs();
+    out << "  pendingMsgs:" << iface.getPendingMsgs();*/
     return out;
 }
 

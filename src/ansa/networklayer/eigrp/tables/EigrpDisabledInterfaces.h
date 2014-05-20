@@ -29,8 +29,17 @@ class EigrpDisabledInterfaces {
     EigrpDisabledInterfaces();
     virtual ~EigrpDisabledInterfaces();
 
+    /**
+     * Removes specified interface from table and returns it. If interface does not exist in the table, returns null.
+     */
     EigrpInterface *removeInterface(EigrpInterface *iface);
+    /**
+     * Adds interface to the table.
+     */
     void addInterface(EigrpInterface *interface);
+    /**
+     * Finds interface by ID in table and returns it. If interface with specified ID does not exist in the table, returns null.
+     */
     EigrpInterface *findInterface(int ifaceId);
 };
 

@@ -18,6 +18,9 @@
 
 #include "IPv4Address.h"
 
+/**
+ * Network for EIGRP routing.
+ */
 class EigrpNetwork
 {
   protected:
@@ -54,6 +57,9 @@ class EigrpNetwork
     }
 };
 
+/**
+ * Table with networks for routing.
+ */
 class EigrpNetworkTable : cObject
 {
   protected:
@@ -70,6 +76,11 @@ class EigrpNetworkTable : cObject
     EigrpNetwork *findNetworkById(int netId);
     std::vector<EigrpNetwork *> *getAllNetworks() { return &networkVec; }
     bool isAddressIncluded(IPv4Address& address, IPv4Address& mask);
+    /**
+     * Returns true if interface with specified address is contained in EIGRP.
+     * @param resultNetId ID of network that belongs to the interface. If the interface does not
+     * belong to any network, it has undefined value.
+     */
     bool isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId);
 };
 

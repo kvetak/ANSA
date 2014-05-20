@@ -18,12 +18,15 @@
 
 #include <omnetpp.h>
 
-#include "EigrpTransQueue.h"
+#include "EigrpMsgReq.h"
 #include "EigrpInterfaceTable.h"
 #include "EigrpIpv4NeighborTable.h"
 
 class EigrpRtp;
 
+/**
+ * Queue for storing requests for message sending.
+ */
 class EigrpRequestQueue: public cObject
 {
   private:
@@ -31,8 +34,8 @@ class EigrpRequestQueue: public cObject
 
     MessageQueue reqQueue;          /**< Queue with requests waiting for sending (rel/unrel) */
 
-    // TODO: dat pryc, pouze pro testovani
-    friend class EigrpRtp;
+    // Only for debugging
+    //friend class EigrpRtp;
 
   public:
     virtual ~EigrpRequestQueue();
@@ -51,7 +54,7 @@ class EigrpRequestQueue: public cObject
 };
 
 /**
- * TODO - Generated class
+ * Class represents Reliable Transport Protocol for reliable transmission of EIGRP messages.
  */
 class EigrpRtp : public cSimpleModule
 {
@@ -73,23 +76,48 @@ class EigrpRtp : public cSimpleModule
     EigrpInterfaceTable *eigrpIft;
     EigrpIpv4NeighborTable *eigrpNt;
 
+    /**
+     * Process request for message sending.
+     */
     void processRequest(cMessage *msg);
-    void processTimer(cMessage *msg);
+    /**
+     * Process message header for ensuring reliable transmission.
+     */
     void processHeader(cMessage *msg);
 
-    EigrpTimer *createTimer(char timerKind, void *context);
-
+    /**
+     * Schedule sending next reliable/unreliable message in transmission queue.
+     */
     void scheduleNextMsg(int ifaceId);
-    void scheduleMsg(EigrpMsgReq *msgReq);
+    /**
+     * Schedule new request for sending message.
+     */
     void scheduleNewMsg(EigrpMsgReq *msgReq);
+    /**
+     * Send reliable/unreliable message
+     */
+    void sendMsg(EigrpMsgReq *msgReq);
+    /**
+     * Send reliable message.
+     */
     void sendRelMsg(EigrpMsgReq *msgReq);
+    /**
+     * Send unreliable message.
+     */
     void sendUnrelMsg(EigrpMsgReq *msgReq);
+    /**
+     * Delete request.
+     */
     void discardMsg(EigrpMsgReq *msgReq);
 
+    /**
+     * Return informations about neighbor.
+     */
     EigrpNeighbor<IPv4Address> *getNeighborId(EigrpMessage *msg);
-
+    /**
+     * Send message with specified acknowledge number to neighbor.
+     */
     void acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum);
-    void tryToSuppressAck();
 
   protected:
     virtual void initialize(int stage);

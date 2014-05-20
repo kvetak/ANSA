@@ -25,6 +25,7 @@ import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.isis.ISIS;
 import inet.ansa.networklayer.pim.pim;
+import inet.ansa.networklayer.eigrp.eigrpProcess;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.applications.IPingApp;
@@ -180,7 +181,7 @@ module ANSARouter
                 @display("p=110,574,row,60;q=queue");
         }
         ospf: OSPFRouting {
-            @display("p=116,302");
+            @display("p=83,302");
         }
         isis: ISIS {
             parameters:
@@ -193,7 +194,10 @@ module ANSARouter
                 lowerLayerOut[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
         }
         pim: pim {
-            @display("p=37,302");
+            @display("p=28,302");
+        }
+        eigrp: eigrpProcess {
+            @display("p=140,302;i=block/network2");
         }
     //Connections between submodules    
     connections allowunconnected:
@@ -250,4 +254,6 @@ module ANSARouter
         ospf.ipOut --> networkLayer.ospfIn;
         pim.networkLayerOut --> networkLayer.pimIn;
         networkLayer.pimOut --> pim.networkLayerIn;
+        eigrp.splitterOut --> networkLayer.eigrpIn;
+        networkLayer.eigrpOut --> eigrp.splitterIn;
 }

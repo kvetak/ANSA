@@ -14,6 +14,9 @@
 #include "EigrpTimer_m.h"
 #include "EigrpMessage_m.h"
 
+/**
+ * Class represents one entry in EIGRP Neighbor Table.
+ */
 template<typename IPAddress>
 class EigrpNeighbor : public cObject
 {
@@ -41,9 +44,10 @@ class EigrpNeighbor : public cObject
     { seqNumber = 0; holdInt = 0; routesForDeletion = false; waitForAck = 0; stubEnabled = false; }
 
     void setStateUp(bool stateUp) { this->isUp = stateUp; }
-    /**< Sets neighbor's Hold interval value */
     void setHoldInt(int holdInt) { this->holdInt = holdInt; }
-    /**< Sets timer for a neighbor */
+    /**
+     * Sets timer for a neighbor
+     */
     void setHoldTimer(EigrpTimer *holdt) { ASSERT(this->holdt == NULL); this->holdt = holdt; }
     void setNeighborId(int neighborId) {  this->neighborId = neighborId; }
     void setSeqNumber(int seqNumber) { this->seqNumber = seqNumber; }

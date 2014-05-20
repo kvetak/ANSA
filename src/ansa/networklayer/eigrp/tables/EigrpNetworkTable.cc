@@ -48,10 +48,6 @@ EigrpNetwork *EigrpNetworkTable::findNetworkById(int netId)
     return NULL;
 }
 
-/**
- * @param resultNetId ID of network that belongs to the interface. If the interface does not
- * belong to any network, it has undefined value.
- */
 bool EigrpNetworkTable::isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId)
 {
     std::vector<EigrpNetwork *>::iterator it;

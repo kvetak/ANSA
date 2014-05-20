@@ -59,7 +59,7 @@ struct EigrpRouteFlags
     bool active;			// Active path
 }
 
-// Struct for wild metric paramaters
+// Struct for wide metric paramaters
 struct EigrpWideMetricPar
 {
     uint8_t offset = 0;
@@ -70,15 +70,6 @@ struct EigrpWideMetricPar
     uint8_t hopCount = 0;       // Hop count to destination
     uint64_t delay = 0;         // Delay sum on path, only 48 bits used
     uint64_t bandwidth = 0;     // Min BW on path, only 48 bits used
-}
-
-struct EigrpTlv 
-{
-    // type
-    char typeHigh;
-    char typeLow;
-    // length
-    uint16_t length;
 }
 
 // Struct for EIGRP stub
@@ -93,11 +84,10 @@ struct EigrpStub
 }
 
 // TLV Stub for Hello message
-struct EigrpTlvStub extends EigrpTlv
+struct EigrpTlvStub
 {
-    typeHigh = 0;
-    typeLow = EIGRP_TLV_STUB;
-    length = 6;
+    char typeHigh = 0;
+    char typeLow = EIGRP_TLV_STUB;
     EigrpStub stub;
 }
 
@@ -107,8 +97,6 @@ struct EigrpTlvParameter
     // type
     char typeHigh = 0;
     char typeLow = EIGRP_TLV_PARAM;
-    // length
-    uint16_t length = 12;
     // value
     EigrpKValues kValues;
     uint16_t holdTimer;
@@ -137,8 +125,6 @@ struct EigrpMpIpv4Internal
     // type
     char typeHigh = 6;
     char typeLow = EIGRP_TLV_ROUTE;
-    // length
-    uint16_t length = 44;
     // value
     uint16_t afi;				// Address Family ID, IPv4 = 1, Ipv6 = 2
     uint16_t tid;				// Topology ID
@@ -171,14 +157,11 @@ packet EigrpMessage
 };
 
 // EIGRP Hello message
-packet EigrpHello extends EigrpMessage
-{
-	EigrpTlvParameter parameterTlv;		// Always present
-	EigrpTlvStub stubTlv;
-};
 
-packet EigrpIpv4Hello extends EigrpHello
+packet EigrpIpv4Hello extends EigrpMessage
 {
+    EigrpTlvParameter parameterTlv;		// Always present
+	EigrpTlvStub stubTlv;
 };
 
 // Ack message - temporarily

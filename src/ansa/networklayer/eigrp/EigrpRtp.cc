@@ -240,12 +240,12 @@ void EigrpRtp::initialize(int stage)
     {
         seqNumber = 1;
 
-        this->eigrpIft = ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable").get();
-        this->eigrpNt = ModuleAccess<EigrpIpv4NeighborTable>("eigrpIpv4NeighborTable").get();
+        this->eigrpIft = EigrpIfTableAccess().get();
+        this->eigrpNt = Eigrpv4NeighTableAccess().get();
 
         requestQ = new EigrpRequestQueue();
 
-        WATCH_PTRLIST(requestQ->reqQueue);
+        //WATCH_PTRLIST(requestQ->reqQueue);
     }
 }
 
@@ -253,7 +253,6 @@ void EigrpRtp::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     { // Timer
-        processTimer(msg);
     }
     else
     {
@@ -277,13 +276,6 @@ void EigrpRtp::processRequest(cMessage *msg)
     EigrpMsgReq *msgReq = check_and_cast<EigrpMsgReq *>(msg);
 
     scheduleNewMsg(msgReq);
-}
-
-void EigrpRtp::processTimer(cMessage *msg)
-{
-    // Send request to the PDM
-    // Only if previous message has been acknowledged (else do not send message)
-
 }
 
 void EigrpRtp::processHeader(cMessage *msg)
@@ -337,13 +329,6 @@ void EigrpRtp::processHeader(cMessage *msg)
     }
 }
 
-/**
- * Send message with specified acknowledge number to neighbor.
- *
- * TODO: pri odesilani (ne enqueueing, ale sending) spolehlive zpravy se podivat, jestli neni
- * neni naplanovana po teto zprave na danem rozhrani pro daneho souseda zprava ack (jedno na kdy, ale musi to byt po teto zprave). Jesli
- * ano, pak ack zahodit a nechat potvrzeni na spolehlive zprave.
- */
 void EigrpRtp::acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum)
 {
     EigrpMsgReq *msgReq = NULL;
@@ -372,9 +357,6 @@ EigrpNeighbor<IPv4Address> *EigrpRtp::getNeighborId(EigrpMessage *msg)
     return eigrpNt->findNeighbor(srcAddr);
 }
 
-/**
- * Schedule new request for sending message.
- */
 void EigrpRtp::scheduleNewMsg(EigrpMsgReq *msgReq)
 {
     requestQ->pushReq(msgReq);
@@ -387,24 +369,6 @@ void EigrpRtp::scheduleNewMsg(EigrpMsgReq *msgReq)
     scheduleNextMsg(msgReq->getDestInterface());
 }
 
-/**
- * Schedule sending reliable/unreliable message (message is not in any queue)
- */
-void EigrpRtp::scheduleMsg(EigrpMsgReq *msgReq)
-{
-    if (msgReq->isMsgReliable())
-    { // Reliable
-        sendRelMsg(msgReq);
-    }
-    else
-    { // Unreliable
-        sendUnrelMsg(msgReq);
-    }
-}
-
-/**
- * Schedule sending next reliable/unreliable message in transmission queue.
- */
 void EigrpRtp::scheduleNextMsg(int ifaceId)
 {
     EigrpMsgReq *msgReq = NULL;
@@ -421,7 +385,7 @@ void EigrpRtp::scheduleNextMsg(int ifaceId)
         if ((msgReq = requestQ->findReqByIf(ifaceId)) != NULL)
         {
             ASSERT(msgReq->getNumOfAck() == 0);
-            scheduleMsg(msgReq);
+            sendMsg(msgReq);
         }
     }
     else
@@ -451,6 +415,18 @@ void EigrpRtp::sendUnrelMsg(EigrpMsgReq *msgReq)
     send(msgReq, RTP_OUTPUT_GW); /* Do not duplicate EigrpMsgReq */
     // Schedule next waiting message
     scheduleNextMsg(ifaceId);
+}
+
+void EigrpRtp::sendMsg(EigrpMsgReq *msgReq)
+{
+    if (msgReq->isMsgReliable())
+    { // Reliable
+        sendRelMsg(msgReq);
+    }
+    else
+    { // Unreliable
+        sendUnrelMsg(msgReq);
+    }
 }
 
 void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
@@ -499,18 +475,4 @@ void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
     send(msgToSend, RTP_OUTPUT_GW);
 
     scheduleNextMsg(info.neighborIfaceId);
-}
-
-void EigrpRtp::tryToSuppressAck()
-{
-
-}
-
-EigrpTimer *EigrpRtp::createTimer(char timerKind, void *context)
-{
-    EigrpTimer *timer = new EigrpTimer();
-    timer->setTimerKind(timerKind);
-    timer->setContextPointer(context);
-
-    return timer;
 }

@@ -413,7 +413,7 @@ void EigrpDual::processTransition1(int event, EigrpRouteSource<IPv4Address> *sou
 {
     EV << "DUAL: transit from oij=1 (passive) to oij=1 (passive) by transition 1" << endl;
 
-    EigrpRouteSource<IPv4Address> *successor = pdm->getFirstSuccessor(route);
+    EigrpRouteSource<IPv4Address> *successor = pdm->getBestSuccessor(route);
     if (successor == NULL)
     { // There is no successor, reply with unreachable route
         pdm->sendReply(route, neighborId, source, false, true);
@@ -512,7 +512,7 @@ void EigrpDual::processTransition4(int event, EigrpRouteSource<IPv4Address> *sou
     route->setQueryOrigin(1);
 
     // Get old successor
-    oldSuccessor = pdm->getFirstSuccessor(route);
+    oldSuccessor = pdm->getBestSuccessor(route);
     // Old successor may not be null
     if (oldSuccessor == NULL) oldSuccessor = source;
 
@@ -560,7 +560,7 @@ void EigrpDual::processTransition6(int event, EigrpRouteSource<IPv4Address> *sou
 {
     EV << "DUAL: transit from oij=" << route->getQueryOrigin() << " (active) to oij=" << route->getQueryOrigin() << " (active) by transition 6" << endl;
 
-    EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
+    EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getBestSuccessor(route);
     ASSERT(oldSuccessor != NULL);   // Old successor must be available until transition to passive state
     /*if (oldSuccessor == NULL) // Send route with unreachable distance (not Poison Reverse)
         pdm->sendReply(route, neighborId, source, false, true);
@@ -689,7 +689,7 @@ void EigrpDual::processTransition13(int event, EigrpRouteSource<IPv4Address> *so
 
     EigrpRouteSource<IPv4Address> *successor;
     // Old successor is originator of Query
-    EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
+    EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getBestSuccessor(route);
     uint64_t oldDij = route->getDij();
     uint64_t dmin;
     bool rtableChanged = false;
@@ -745,7 +745,7 @@ void EigrpDual::processTransition14(int event, EigrpRouteSource<IPv4Address> *so
     bool rtableChanged = false;
 
     route->setQueryOrigin(1);
-    oldSuccessor = pdm->getFirstSuccessor(route);
+    oldSuccessor = pdm->getBestSuccessor(route);
 
     // Find successor and update distance of the route
     successor = pdm->updateRoute(route, dmin, &rtableChanged, true);
@@ -782,7 +782,7 @@ void EigrpDual::processTransition15(int event, EigrpRouteSource<IPv4Address> *so
 
     // Set FD to max
     route->setFd(EigrpMetricHelper::METRIC_INF);
-    oldSuccessor = pdm->getFirstSuccessor(route);
+    oldSuccessor = pdm->getBestSuccessor(route);
 
     // Find min distance
     dmin = pdm->findRouteDMin(route);
@@ -816,7 +816,7 @@ void EigrpDual::processTransition16(int event, EigrpRouteSource<IPv4Address> *so
 
     EigrpRouteSource<IPv4Address> *successor;
     // Old successor is originator of Query
-    EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getFirstSuccessor(route);
+    EigrpRouteSource<IPv4Address> *oldSuccessor = pdm->getBestSuccessor(route);
     uint64_t oldDij = route->getDij();
     bool rtableChanged = false;
 

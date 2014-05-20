@@ -443,11 +443,6 @@ EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::findRouteByNextHop(int ro
     return NULL;
 }
 
-
-
-/**
- * @param sourceNewResult return value.
- */
 EigrpRouteSource<IPv4Address> * EigrpIpv4TopologyTable::findOrCreateRoute(IPv4Address& routeAddr, IPv4Address& routeMask, IPv4Address& routerId,
         EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew)
 {

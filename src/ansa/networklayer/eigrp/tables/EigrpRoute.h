@@ -31,22 +31,11 @@
 #include "EigrpMetricHelper.h"
 
 
-/* Struct for metric parameters
-struct EigrpMetricPar
-{
-    uint32_t delay;         // Delay sum on path
-    uint32_t bandwidth;     // Min BW on path
-    uint8_t reliability;    // Min rel. on path
-    uint8_t load;           // Max load on path
-    uint32_t mtu;           // Min MTU on path, only 24 bits used
-    uint8_t hopCount;       // Hop count to destination
-    uint8_t internalTag;    // Tag for filtering
-
-    EigrpMetricPar() : delay(0), bandwidth(0), reliability(0), load(0), mtu(0), hopCount(0), internalTag(0) {}
-};*/
-
 template<typename IPAddress> class EigrpRouteSource;
 
+/**
+ * Network destination, it contains state for DUAL.
+ */
 template<typename IPAddress>
 class EigrpRoute : public cObject
 {
@@ -124,6 +113,9 @@ class EigrpRoute : public cObject
     int getNumSentMsgs() const {return numOfMsgsSent; }
 };
 
+/**
+ * Class represents EIGRP route to a destination network.
+ */
 template<typename IPAddress>
 class EigrpRouteSource : public cObject
 {
@@ -295,72 +287,5 @@ bool EigrpRoute<IPAddress>::unsetReplyStatus(int neighborId)
     }
     return false;
 }
-
-
-/*
-template<typename IPAddress>
-EigrpRouteSource<IPAddress> *EigrpRoute<IPAddress>::removeSource(EigrpRouteSource<IPAddress> * source)
-{
-    typename std::vector<EigrpRouteSource<IPv4Address> *>::iterator it;
-
-    for (it = sourceVec.begin(); it != sourceVec.end(); it++)
-    {
-        if ((*it) == source)
-        {
-            return source;
-        }
-    }
-
-    return NULL;
-}
-
-template<typename IPAddress>
-EigrpRouteSource<IPAddress> *EigrpRoute<IPAddress>::findSource(int sourceId)
-{
-    typename std::vector<EigrpRouteSource<IPv4Address> *>::iterator it;
-
-    for (it = sourceVec.begin(); it != sourceVec.end(); it++)
-    {
-        if ((*it)->getSourceId() == sourceId)
-        {
-            return *it;
-        }
-    }
-
-    return NULL;
-}
-
-template<typename IPAddress>
-EigrpRouteSource<IPAddress> *EigrpRoute<IPAddress>::getFirstSuccessor()
-{
-    typename std::vector<EigrpRouteSource<IPv4Address> *>::iterator it;
-
-    for (it = sourceVec.begin(); it != sourceVec.end(); it++)
-    {
-        if ((*it)->isSuccessor())
-        {
-            return *it;
-        }
-    }
-
-    return NULL;
-}
-
-template<typename IPAddress>
-bool EigrpRoute<IPAddress>::hasFeasibleSuccessor()
-{
-    typename std::vector<EigrpRouteSource<IPAddress> *>::iterator it;
-
-    for (it = sourceVec.begin(); it != sourceVec.end(); it++)
-    {
-        if ((*it)->getRd() < this->fd)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-*/
 
 #endif /* EIGRPROUTE_H_ */

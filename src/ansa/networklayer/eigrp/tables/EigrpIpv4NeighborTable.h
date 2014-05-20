@@ -19,11 +19,12 @@
 #include <omnetpp.h>
 
 #include "IPv4Address.h"
+#include "ModuleAccess.h"
 
 #include "EigrpNeighborTable.h"
 
 /**
- * TODO - Generated class
+ * Class represents EIGRP Neighbor Table.
  */
 class EigrpIpv4NeighborTable : public cSimpleModule
 {
@@ -37,17 +38,30 @@ class EigrpIpv4NeighborTable : public cSimpleModule
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 
+    /**
+     * Stops Hold timer.
+     */
     virtual void cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh);
 
   public:
     EigrpIpv4NeighborTable() { neighborCounter = 1; stubCount = 0; }
     virtual ~EigrpIpv4NeighborTable();
+    /**
+     * Adds neighbor to the table.
+     */
     int addNeighbor(EigrpNeighbor<IPv4Address> *neighbor);
-    /**< Find neighbor by IP address and interface ID. If the neighbor
-     * is not found, it returns NULL. */
+    /**
+     * Finds neighbor by IP address. Returns null if neighbor is not found.
+     */
     EigrpNeighbor<IPv4Address> *findNeighbor(const IPv4Address& ipAddress);
+    /**
+     * Finds neighbor by ID.
+     */
     EigrpNeighbor<IPv4Address> *findNeighborById(int id);
     EigrpNeighbor<IPv4Address> * removeNeighbor(EigrpNeighbor<IPv4Address> *neighbor);
+    /**
+     * Returns first neighbor that resides on specified interface.
+     */
     EigrpNeighbor<IPv4Address> *getFirstNeighborOnIf(int ifaceId);
     int getNumNeighbors() const { return neighborVec.size(); }
     EigrpNeighbor<IPv4Address> *getNeighbor(int k) const { return neighborVec[k]; }
@@ -55,6 +69,12 @@ class EigrpIpv4NeighborTable : public cSimpleModule
     int getStubCount() const { return stubCount; }
     void incStubCount() { stubCount++; }
     void decStubCount() { stubCount--; }
+};
+
+class INET_API Eigrpv4NeighTableAccess : public ModuleAccess<EigrpIpv4NeighborTable>
+{
+    public:
+    Eigrpv4NeighTableAccess() : ModuleAccess<EigrpIpv4NeighborTable>("eigrpIpv4NeighborTable") {}
 };
 
 #endif

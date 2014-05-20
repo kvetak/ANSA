@@ -25,14 +25,14 @@ module eigrpProcess
 {
     parameters:
 
-        @display("bgb=263,229");
+        @display("bgb=263,229,white");
     gates:
         input splitterIn;
         output splitterOut;
 
     submodules:
         // vlevo nazev, vpravo typ
-        pdmv4: EigrpIpv4Pdm {
+        eigrpIpv4Pdm: EigrpIpv4Pdm {
             @display("p=64,66;i=block/circle");
         }
         eigrpInterfaceTable: EigrpInterfaceTable {
@@ -44,13 +44,13 @@ module eigrpProcess
         eigrpIpv4TopologyTable: EigrpIpv4TopologyTable {
             @display("p=185,112");
         }
-        rtp: EigrpRtp {
+        eigrpRtp: EigrpRtp {
             @display("p=64,157;i=block/dispatch");
         }
     connections:
-        splitterIn --> pdmv4.splitterIn;
-        splitterOut <-- pdmv4.splitterOut;
+        splitterIn --> eigrpIpv4Pdm.splitterIn;
+        splitterOut <-- eigrpIpv4Pdm.splitterOut;
 
-        pdmv4.rtpOut --> rtp.pdmIn;
-        pdmv4.rtpIn <-- rtp.pdmOut;
+        eigrpIpv4Pdm.rtpOut --> eigrpRtp.pdmIn;
+        eigrpIpv4Pdm.rtpIn <-- eigrpRtp.pdmOut;
 }

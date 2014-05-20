@@ -21,6 +21,9 @@
 #include "EigrpInterfaceTable.h"
 #include "EigrpMessage_m.h"
 
+/**
+ * Class for EIGRP metric computation.
+ */
 class EigrpMetricHelper
 {
   private:
@@ -30,7 +33,13 @@ class EigrpMetricHelper
     const uint32_t CLASSIC_SCALE;
     const uint32_t WIDE_SCALE;
 
+    /**
+     * Returns smaller of two parameters.
+     */
     unsigned int getMin(unsigned int p1, unsigned int p2) { return (p1 < p2) ? p1 : p2; }
+    /**
+     * Returns greater of two parameters.
+     */
     unsigned int getMax(unsigned int p1, unsigned int p2) { return (p1 < p2) ? p2 : p1; }
 
   public:
@@ -42,11 +51,29 @@ class EigrpMetricHelper
     EigrpMetricHelper();
     virtual ~EigrpMetricHelper();
 
+    /**
+     * Sets parameters from interface for metric computation.
+     */
     EigrpWideMetricPar getParam(EigrpInterface *eigrpIface);
+    /**
+     * Adjust parameters of metric by interface parameters.
+     */
     EigrpWideMetricPar adjustParam(const EigrpWideMetricPar& ifParam, const EigrpWideMetricPar& neighParam);
+    /**
+     * Computes classic metric.
+     */
     uint64_t computeClassicMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues);
+    /**
+     * Computes wide metric.
+     */
     uint64_t computeWideMetric(const EigrpWideMetricPar& par, const EigrpKValues& kValues);
+    /**
+     * Compares metric enabled parameters.
+     */
     bool compareParameters(const EigrpWideMetricPar& par1, const EigrpWideMetricPar& par2, EigrpKValues& kValues);
+    /**
+     * Returns true, if parameters are set to infinite, otherwise false.
+     */
     bool isParamMaximal(const EigrpWideMetricPar& par) { return par.delay == DELAY_INF; }
 };
 
