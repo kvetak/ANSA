@@ -21,14 +21,19 @@
 
 #include <omnetpp.h>
 #include "UDPSocket.h"
-#include "IPv4Address.h"
+#include "LISPServerEntry.h"
 #include "AnsaRoutingTable.h"
 #include "AnsaRoutingTableAccess.h"
 #include "IInterfaceTable.h"
 #include "InterfaceTableAccess.h"
-#include "NotificationBoard.h"
 #include "LISPMapCache.h"
-#include "LISPStructures.h"
+
+typedef std::list< LISPServerEntry > ServerAddresses;
+
+extern const char* MAPSERVER_TAG;
+extern const char* MAPRESOLVER_TAG;
+extern const char* MAPSERVERADDR_TAG;
+extern const char* MAPRESOLVERADDR_TAG;
 
 class LISPCore : public cSimpleModule, protected INotifiable
 {
@@ -36,22 +41,33 @@ class LISPCore : public cSimpleModule, protected INotifiable
     LISPCore();
     virtual ~LISPCore();
 
+    bool isMapResolverV4() const;
+    void setMapResolverV4(bool mapResolverV4);
+    bool isMapResolverV6() const;
+    void setMapResolverV6(bool mapResolverV6);
+    bool isMapServerV4() const;
+    void setMapServerV4(bool mapServerV4);
+    bool isMapServerV6() const;
+    void setMapServerV6(bool mapServerV6);
+
   protected:
     const char  *deviceId;   ///< Id of the device which contains this routing process.
     std::string hostName;    ///< Device name from the network topology.
 
-    IInterfaceTable*    ift;                ///< Provides access to the interface table.
-    AnsaRoutingTable*   rt;                 ///< Provides access to the IPv4 routing table.
-    NotificationBoard*  nb;                 ///< Provides access to the notification board
-    LISPMapCache*       lmc;
+    IInterfaceTable*    Ift;                ///< Provides access to the interface table.
+    AnsaRoutingTable*   Rt;                 ///< Provides access to the IPv4 routing table.
+    LISPMapCache*       Lmc;
 
-    MapServersList*     mss;
-    MapResolversList*   mrs;
+    ServerAddresses        MapServers;
+    ServerAddresses        MapResolvers;
 
-    bool MapResolver;
-    bool MapServer;
-    bool isMapResolver()    {return MapResolver;}
-    bool isMapServer()      {return MapServer;}
+    bool mapServerV4;
+    bool mapServerV6;
+    bool mapResolverV4;
+    bool mapResolverV6;
+
+    bool isMapResolver() {return mapServerV4 || mapServerV6;}
+    bool isMapServer()   {return mapResolverV4 || mapResolverV6;}
 
     UDPSocket socket;
 
@@ -60,6 +76,8 @@ class LISPCore : public cSimpleModule, protected INotifiable
     virtual void handleMessage(cMessage *msg);
     virtual void receiveChangeNotification(int category, const cObject *details);
     virtual void updateDisplayString();
+
+    void parseConfig(cXMLElement* config);
 };
 
 #endif

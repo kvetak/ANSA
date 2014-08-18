@@ -20,48 +20,22 @@
 #define __INET_LISPMAPCACHE_H_
 
 #include <omnetpp.h>
-#include "LISPStructures.h"
+#include "LISPMapStorageBase.h"
 
-class LISPMapCache : public cSimpleModule
+class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
 {
+    public:
+        LISPMapCache();
+        virtual ~LISPMapCache();
 
-  protected:
+    protected:
+        const char  *deviceId;   ///< Id of the device which contains this routing process.
 
-    /**
-     * Main ADT that acts as mapping cache/database
-     */
-    MapCache MappingCache;
+        void parseConfig(cXMLElement* config);
 
-  public:
-
-    LISPMapCache();
-    virtual ~LISPMapCache();
-
-    virtual bool isMapCacheItemExist(EidPrefix prefix);
-    virtual void clear();
-
-    virtual void addEntry(IPvXAddress eid, int length);
-    virtual void updateEntryState(MapCacheEntry* mcentry, MapState state);
-    virtual void updateEntryExpiry(MapCacheEntry* mcentry, simtime_t time);
-    virtual void removeEntry(IPvXAddress address, int length);
-    virtual MapCacheItem* lookup(IPvXAddress address);
-    virtual MapCacheItem* getEntry(IPvXAddress address, int length);
-
-    virtual bool isLocatorExist(MapCacheEntry* mcentry, IPvXAddress address);
-    virtual void addLocator(MapCacheEntry* mcentry, IPvXAddress address);
-    virtual void updateLocatorState(Locator* loc, LocatorState state);
-    virtual void updateLocatorPriority(Locator* loc, unsigned char priority);
-    virtual void updateLocatorWeight(Locator* loc, unsigned char weight);
-    virtual Locator* getLocator(MapCacheEntry* mcentry, IPvXAddress address);
-    virtual void removeLocator(MapCacheEntry* mcentry, IPvXAddress address);
-
-    virtual int size() const;
-
-  protected:
-    const char  *deviceId;   ///< Id of the device which contains this routing process.
-    virtual int numInitStages() const { return 4; }
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+        virtual int numInitStages() const { return 4; }
+        virtual void initialize(int stage);
+        virtual void handleMessage(cMessage *msg);
 };
 
 #endif

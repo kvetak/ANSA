@@ -1,6 +1,4 @@
 //
-// Copyright (C) 2013 Brno University of Technology
-//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +12,23 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-//@author Vladimir Vesely (<a href="mailto:ivesely@fit.vutbr.cz">ivesely@fit.vutbr.cz</a>)
 
-package inet.ansa.networklayer.lisp;
+#ifndef LISPCOMMON_H_
+#define LISPCOMMON_H_
 
-simple LISPMapCache
-{
-    parameters:
-    	@display("i=block/table2");
-    	string deviceId;
-    	xml configData = default(xml("<MapEntry />"));
-}
+#include <string>
+
+extern const char* ADDRESS_ATTR;
+extern const char* IPV4_ATTR;
+extern const char* IPV6_ATTR;
+extern const char* ENABLED_VAL;
+
+class LISPCommon {
+public:
+    LISPCommon();
+    virtual ~LISPCommon();
+
+    static void parseIpAddress(const char* str, std::string &address, std::string &length);
+};
+
+#endif /* LISPCOMMON_H_ */

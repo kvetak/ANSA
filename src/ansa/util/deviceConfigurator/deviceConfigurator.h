@@ -61,7 +61,7 @@
 #include "VRRPv2VirtualRouter.h"
 #include "IEigrpModule.h"
 #include "EigrpNetworkTable.h"
-#include "LISPCore.h"
+
 /* TRILL */
 #include "TRILLAccess.h"
 /* IS-IS */
@@ -69,7 +69,9 @@
 /* END IS-IS */
 /* END TRILL */
 
-
+//LISP
+//#include "LISPCore.h"
+//#include "LISPMapDatabase.h"
 
 class DeviceConfigurator : public cSimpleModule {
 
@@ -236,13 +238,20 @@ class DeviceConfigurator : public cSimpleModule {
       //////////////////////////////
       // Configuration for LISP   //
       //////////////////////////////
+
+      /*
       void loadLISPMapServerAddresses(cXMLElement* lisp);
       void loadLISPMapResolverAddresses(cXMLElement* lisp);
-      void loadLISPSite(cXMLElement* lisp);
-      void loadLISPMapServer(cXMLElement* lisp);
-      void loadLISPMapResolver(cXMLElement* lisp);
+      void loadLISPSite(cXMLElement* lisp, LISPMapDatabase* LISPMapDbModule);
       void loadLISPMapping(cXMLElement* lisp);
-      void loadLISPConfig(LISPCore* LISPModule);
+      */
+
+      /*
+      cXMLElement* findLISPElement();
+      void loadlLISPConfigForMapServer(LISPMapDatabase* LISPMapDbModule);
+      void loadlLISPConfigForMapResolver(LISPMapDatabase* LISPMapDbModule);
+      void loadLISPPConfigForRouter(LISPCore* LISPModule);
+      */
 
 };
 

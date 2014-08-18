@@ -23,7 +23,12 @@ simple LISPCore
 {
     parameters:
         @display("i=block/switch");        
-        string deviceId;                                   
+        string deviceId;    
+        xml configData = default(xml("<MapServerAddress /><MapResolverAddress />"));
+        bool mapServerV4 = default(false);
+        bool mapServerV6 = default(false);
+		bool mapResolverV4 = default(false);
+        bool mapResolverV6 = default(false);                                                
     gates:
         input udpIn @labels(UDPControlInfo/up);
         output udpOut @labels(UDPControlInfo/down);

@@ -5,23 +5,47 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 //@author Vladimir Vesely (<a href="mailto:ivesely@fit.vutbr.cz">ivesely@fit.vutbr.cz</a>)
 
-package inet.ansa.networklayer.lisp;
+#ifndef __INET_LISPMAPDATABASE_H_
+#define __INET_LISPMAPDATABASE_H_
 
-simple LISPMapCache
+#include <omnetpp.h>
+#include "LISPSiteInfo.h"
+
+typedef std::list<LISPSiteInfo> SiteStorage;
+typedef SiteStorage::iterator SiteStorageItem;
+
+extern const char* SITE_TAG;
+extern const char* NAME_ATTR;
+extern const char* KEY_ATTR;
+
+class LISPMapDatabase : public cSimpleModule
 {
-    parameters:
-    	@display("i=block/table2");
-    	string deviceId;
-    	xml configData = default(xml("<MapEntry />"));
-}
+    public:
+        LISPMapDatabase();
+        virtual ~LISPMapDatabase();
+
+        virtual void addSite(LISPSiteInfo& si);
+
+    protected:
+        const char  *deviceId;
+        SiteStorage SiteDatabase;
+
+        void parseConfig(cXMLElement* config);
+
+        virtual int numInitStages() const { return 4; }
+        virtual void initialize(int stage);
+        virtual void handleMessage(cMessage *msg);
+};
+
+#endif

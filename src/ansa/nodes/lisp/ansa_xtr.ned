@@ -38,7 +38,9 @@ import inet.ansa.nodes.ANSA_RouterRIPDual;
 
 module ANSA_xTR extends ANSA_RouterRIPDual
 {
-    @display("i2=status/busy;bgb=626,569");
+    parameters:
+    	@display("i2=status/busy;bgb=626,569");
+    	
     submodules:
         LISP: LISPRouting {
             @display("p=429,311");

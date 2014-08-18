@@ -17,75 +17,134 @@
 //@author Vladimir Vesely (<a href="mailto:ivesely@fit.vutbr.cz">ivesely@fit.vutbr.cz</a>)
 
 
-#include "IPvXAddress.h"
-#include "IPv6Address.h"
-
 #ifndef LISPSTRUCTURES_H_
 #define LISPSTRUCTURES_H_
 
+#include "IPvXAddress.h"
+#include "IPv6Address.h"
+
+/**
+ * Enumeration of mapping states
+
+enum MapState {INCOMPLETE, COMPLETE};
+*/
+/**
+ * Enumeration of locator states
+
+enum LocatorState {DOWN, UP};
+*/
+
+/**
+ * EID Prefix
+
+struct EidPrefix
+{
+    IPvXAddress eid;
+    int eidLen;
+
+    bool operator< (const EidPrefix& other) const {
+        if(eid != other.eid)
+            return eid < other.eid;
+        else
+            return eidLen < other.eidLen;
+    }
+};
+ */
+/**
+ * RLOC
+
+struct Locator
+{
+    LocatorState state;
+    unsigned char priority;
+    unsigned char weight;
+};
+
+typedef std::map<IPvXAddress, Locator> Locators;
+typedef Locators::iterator LocatorItem;
+*/
+/**
+ * Vector of Mapping Cache entries
+
+struct MapEntry
+{
+    simtime_t expiry;
+    MapState mapState;
+    Locators rloc;
+};
+
+struct SiteInfo
+{
+    simtime_t lastTime;
+    std::string registredBy;
+    std::string name;
+    std::string key;
+
+    bool operator< (const SiteInfo& other) const {
+        if ( strcmp(name.c_str(), other.name.c_str() ) < 0)
+            return true;
+        else
+            return false;
+    }
+};
+*/
+
+//typedef std::map<EidPrefix, MapEntry> MapStorage;
+//typedef std::map<EidPrefix, MapEntry>::iterator MapStorageItem;
+
+//typedef std::map<SiteInfo, MapStorage> SiteStorage;
+//typedef std::map<SiteInfo, MapStorage>::iterator SiteStorageItem;
+
+//typedef std::map<LISPEidPrefix, LISPMapEntry> MapStorage;
+//typedef std::map<LISPEidPrefix, LISPMapEntry>::iterator MapStorageItem;
+//typedef std::map<LISPSiteInfo, MapStorage> SiteStorage;
+//typedef std::map<LISPSiteInfo, MapStorage>::iterator SiteStorageItem;
 
 
-    /**
-     * Enumeration of mapping states
-     */
-    enum MapState {COMPLETE, INCOMPLETE};
+/*
+std::ostream& operator<< (std::ostream& os, const EidPrefix& ep)
+{
+    os << "" << ep.eid << "/" << ep.eidLen << ", ";
+    return os;
+}
 
-    /**
-     * Enumeration of locator states
-     */
-    enum LocatorState {UP, DOWN};
+std::ostream& operator<< (std::ostream& os, const Locator& loc)
+{
+    os << loc.state << "\t" << loc.priority << "\t" << loc.weight;
+    return os;
+}
 
-    /**
-     * EID Prefix
-     */
-    struct EidPrefix
-    {
-        IPvXAddress eid;
-        int eidLen;
+std::ostream& operator<< (std::ostream& os, MapEntry& me)
+{
+    os << "expires: " << me.expiry << ", " << "state: " << me.mapState << endl;
 
-        bool operator<(const EidPrefix& other) const {
-            if(eid!=other.eid){
-                return eid<other.eid;
-            }else{
-                return eidLen<other.eidLen;
-            }
-        }
-    };
+    os << "\tLocator\tState\tPriority\tWeight" << endl;
+    for (LocatorItem it = me.rloc.begin(); it != me.rloc.end(); ++it) {
+        os << it->first << "\t" << it->second << endl;
+    }
+    return os;
+}
 
-    /**
-     * RLOC
-     */
-    struct Locator
-    {
-        LocatorState state;
-        unsigned char priority;
-        unsigned char weight;
+std::ostream& operator<< (std::ostream& os, MapStorage& mc)
+{
+    for (MapStorageItem it = mc.begin(); it != mc.end(); ++it)
+        os << it->first << it->second;
+    return os;
+}
 
-    };
-    /**
-     * Vector of RLOCs
-     */
-    typedef std::map<IPvXAddress, Locator> Locators;
+std::ostream& operator<< (std::ostream& os, const SiteInfo& si)
+{
+    os << "Site " << si.name << ", key " << si.key << ", registered by " << si.registredBy << ", last time " << si.lastTime << endl;
+    return os;
+}
 
-    /**
-     * Vector of Mapping Cache entries
-     */
-    struct MapCacheEntry
-    {
-        simtime_t expiry;
-        MapState mapState;
-        Locators rloc;
-    };
-
-    /**
-     * MapCache is database of EidPrefixes and relevant Entries
-     */
-    typedef std::map<EidPrefix, MapCacheEntry> MapCache;
-
-    typedef std::map<EidPrefix, MapCacheEntry>::iterator MapCacheItem;
-
-    typedef std::list< std::pair<IPv4Address, IPv6Address> > MapServersList;
-    typedef std::list< std::pair<IPv4Address, IPv6Address> > MapResolversList;
+std::ostream& operator<< (std::ostream& os, SiteStorage& ss)
+{
+    for (SiteStorageItem it = ss.begin(); it != ss.end(); ++it)
+        os << it->first << it->second;
+    return os;
+}
+*/
 
 
 class LISPStructures

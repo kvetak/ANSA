@@ -29,14 +29,16 @@
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
         	<LISP>
-        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO"></MapServerAddress>
-        		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>        	
-        		<Mapping>
-        			<EID>10.0.1.0/24</EID>
-        			<RLOC>10.0.12.1</RLOC>
-        			<Priority>1</Priority>
-        			<Weight>100</Weight>
-        		</Mapping>     	
+        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
+        		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" />        	
+        		<MapCache>
+        		    <EID address="10.0.1.0/24">
+        		     	<RLOC address="10.0.12.1" priority="1" weight ="100" />
+        		    </EID>
+        		    <EID address="10.0.3.0/24">
+        		     	<RLOC address="10.0.23.2" priority="1" weight ="100" />
+        		    </EID>        		
+        		</MapCache>     	
         	</LISP>
         </Routing>
         
@@ -68,18 +70,17 @@
         	<RIP>
         		<Network>0.0.0.0</Network>
         	</RIP>
-        	<LISP>
-        		<MapServer ipv4="enable" ipv6="enable">
-        			<Site name="Site A">
-        				<EID>10.0.1.0/24</EID>
-        				<Key>HESLO</Key>
+        	<LISP>        	
+        		<MapServer ipv4="enabled" ipv6="enabled">
+        			<Site name="Site A" key="HESLO">
+        				<EID address="10.0.1.0/24" />        				
         			</Site>
-        			<Site name="Site B">
-        				<EID>10.0.3.0/24</EID>
-        				<Key>HESLO</Key>
-        			</Site>
+        			<Site name="Site B" key="HESLO">
+    	    			<EID address="10.0.3.0/24" />
+	       			</Site>
         		</MapServer>
-        		<MapResolver ipv4="enable" ipv6="disable" />
+        		<MapResolver ipv4="enabled" ipv6="disabled" />
+        		<MapCache />
         	</LISP>
         </Routing>
         
@@ -117,12 +118,14 @@
         	<LISP>
         		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
         		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>   
-        		<Mapping>
-        			<EID>10.0.3.0/24</EID>
-        			<RLOC>10.0.23.2</RLOC>
-        			<Priority>1</Priority>
-        			<Weight>100</Weight>
-        		</Mapping>     	
+        		<MapCache>
+        		    <EID address="10.0.1.0/24">
+        		     	<RLOC address="10.0.12.1" priority="1" weight ="100" />
+        		    </EID>
+        		    <EID address="10.0.3.0/24">
+        		     	<RLOC address="10.0.23.2" priority="1" weight ="100" />
+        		    </EID>
+        		</MapCache>     	
         	</LISP>        	
         </Routing>
         

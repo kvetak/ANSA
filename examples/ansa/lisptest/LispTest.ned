@@ -25,9 +25,6 @@ import inet.world.scenario.ScenarioManager;
 import inet.nodes.ethernet.Eth100M;
 import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
-//
-// TODO Auto-generated network
-//
 network LispTest
 {
     @display("bgb=665,263");
