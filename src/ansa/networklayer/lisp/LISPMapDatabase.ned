@@ -18,7 +18,6 @@ package inet.ansa.networklayer.lisp;
 simple LISPMapDatabase
 {
     parameters:
-    	@display("i=block/buffer2");
-    	string deviceId;
+    	@display("i=block/buffer2");    	
     	xml configData = default(xml("<MapServer />"));
 }

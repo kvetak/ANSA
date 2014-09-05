@@ -4,7 +4,7 @@
 	
         <Interfaces>
             <Interface name="eth0">
-                <IPAddress>10.0.12.1</IPAddress>
+             	<IPAddress>10.0.12.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:0:12::1/64</IPv6Address>
                 <RIPng name="RIPng1"/>                

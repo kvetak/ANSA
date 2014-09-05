@@ -273,11 +273,11 @@ void InterfaceTable::updateLinkDisplayString(InterfaceEntry *entry)
         }
 #endif
 #ifdef WITH_IPv6
-        if (entry->ipv6Data() && entry->ipv6Data()->getNumAddresses() > 0) {
-            sprintf(buf, "%s\n%s", entry->getFullName(), entry->ipv6Data()->getPreferredAddress().str().c_str());
-            displayString.setTagArg("t", 0, buf);
-            displayString.setTagArg("t", 1, "l");
-        }
+//        if (entry->ipv6Data() && entry->ipv6Data()->getNumAddresses() > 0) {
+//            sprintf(buf, "%s\n%s", entry->getFullName(), entry->ipv6Data()->getPreferredAddress().str().c_str());
+//            displayString.setTagArg("t", 0, buf);
+//            displayString.setTagArg("t", 1, "l");
+//        }
 #endif
     }
 }

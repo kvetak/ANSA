@@ -17,11 +17,8 @@
 #define LISPRLOCATOR_H_
 
 #include "IPvXAddress.h"
+#include "LISPCommon.h"
 #include <sstream>
-
-extern const int LISP_DEFAULT_PRIORITY;
-extern const int LISP_DEFAULT_WEIGHT;
-extern const int LISP_DEFAULT_RLOCSTATE;
 
 class LISPRLocator {
   public:
@@ -32,30 +29,45 @@ class LISPRLocator {
     LISPRLocator();
     LISPRLocator(const char* addr);
     LISPRLocator(const char* addr, const char* prio, const char* wei);
-    LISPRLocator(IPvXAddress addr);
-    LISPRLocator(IPvXAddress addr, short prio, short wei);
-    LISPRLocator(IPvXAddress addr, LocatorState state, short pri, short wei);
     virtual ~LISPRLocator();
 
     std::string info() const;
 
-    short getPriority() const;
-    void setPriority(short priority);
     const IPvXAddress& getRloc() const;
     void setRloc(const IPvXAddress& rloc);
     LocatorState getState() const;
+    std::string getStateString() const;
     void setState(LocatorState state);
-    short getWeight() const;
-    void setWeight(short weight);
+    unsigned char getPriority() const;
+    void setPriority(unsigned char priority);
+    unsigned char getWeight() const;
+    void setWeight(unsigned char weight);
+    unsigned char getMpriority() const;
+    void setMpriority(unsigned char mpriority);
+    unsigned char getMweight() const;
+    void setMweight(unsigned char mweight);
 
   private:
     IPvXAddress rloc;
     LocatorState state;
-    short priority;
-    short weight;
+    unsigned char priority;
+    unsigned char weight;
+    unsigned char mpriority;
+    unsigned char mweight;
+};
+
+class TLocator {
+  public:
+    bool LocalLocBit;                   // local locator Bit
+    bool piggybackBit;                  // piggyback Bit
+    bool RouteRlocBit;                  // route RLOC Bit
+    LISPRLocator RLocator;              //<-- see LISP class struct
+
+    std::string info() const;
 };
 
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPRLocator& locator);
+std::ostream& operator<< (std::ostream& os, const TLocator& tloc);
 
 #endif /* LISPRLOCATOR_H_ */

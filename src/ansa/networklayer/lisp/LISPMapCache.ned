@@ -21,7 +21,6 @@ package inet.ansa.networklayer.lisp;
 simple LISPMapCache
 {
     parameters:
-    	@display("i=block/table2");
-    	string deviceId;
-    	xml configData = default(xml("<MapEntry />"));
+        @display("i=block/table2");        
+        xml configData = default(xml("<MapCache></MapCache>"));
 }

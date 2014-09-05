@@ -21,21 +21,25 @@
 
 #include <omnetpp.h>
 #include "UDPSocket.h"
-#include "LISPServerEntry.h"
+#include "UDPControlInfo.h"
+
 #include "AnsaRoutingTable.h"
 #include "AnsaRoutingTableAccess.h"
+
 #include "IInterfaceTable.h"
 #include "InterfaceTableAccess.h"
+
+#include "LISPServerEntry.h"
 #include "LISPMapCache.h"
+#include "LISPMapDatabase.h"
+#include "LISPMessages_m.h"
+#include "LISPCommon.h"
+
 
 typedef std::list< LISPServerEntry > ServerAddresses;
+typedef ServerAddresses::iterator ServerItem;
 
-extern const char* MAPSERVER_TAG;
-extern const char* MAPRESOLVER_TAG;
-extern const char* MAPSERVERADDR_TAG;
-extern const char* MAPRESOLVERADDR_TAG;
-
-class LISPCore : public cSimpleModule, protected INotifiable
+class LISPCore : public cSimpleModule
 {
   public:
     LISPCore();
@@ -51,15 +55,17 @@ class LISPCore : public cSimpleModule, protected INotifiable
     void setMapServerV6(bool mapServerV6);
 
   protected:
-    const char  *deviceId;   ///< Id of the device which contains this routing process.
-    std::string hostName;    ///< Device name from the network topology.
-
     IInterfaceTable*    Ift;                ///< Provides access to the interface table.
     AnsaRoutingTable*   Rt;                 ///< Provides access to the IPv4 routing table.
-    LISPMapCache*       Lmc;
+    LISPMapCache*       MapCache;
+    LISPMapDatabase*    MapDb;
 
-    ServerAddresses        MapServers;
-    ServerAddresses        MapResolvers;
+    LISPMapStorageBase  EtrMapping;
+
+    ServerAddresses     MapServers;
+    ServerAddresses     MapResolvers;
+
+    UDPSocket controlTraf;
 
     bool mapServerV4;
     bool mapServerV6;
@@ -69,15 +75,25 @@ class LISPCore : public cSimpleModule, protected INotifiable
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}
 
-    UDPSocket socket;
-
     virtual int numInitStages() const { return 4; }
     virtual void initialize(int stage);
+
+    void handleTimer(cMessage *msg);
+    void handleCotrol(cMessage *msg);
+    void handleData(cMessage *msg);
+
     virtual void handleMessage(cMessage *msg);
-    virtual void receiveChangeNotification(int category, const cObject *details);
+
     virtual void updateDisplayString();
 
     void parseConfig(cXMLElement* config);
+    void initSockets();
+
+    void registerSite();
+    void sendMapRegister(LISPServerEntry& se);
+    void receiveMapRegister(LISPMapRegister* lmr);
+
+
 };
 
 #endif

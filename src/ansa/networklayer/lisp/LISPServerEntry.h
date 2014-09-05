@@ -18,12 +18,13 @@
 
 #include <omnetpp.h>
 #include "IPvXAddress.h"
+#include "LISPCommon.h"
 
 class LISPServerEntry {
   public:
     LISPServerEntry();
-    LISPServerEntry(const char* nipv4, const char* nipv6);
-    LISPServerEntry(const char* nipv4, const char* nipv6, const char* nkey);
+    LISPServerEntry(std::string nipv4, std::string nipv6);
+    LISPServerEntry(std::string nipv4, std::string nipv6, std::string nkey);
     virtual ~LISPServerEntry();
 
     bool operator== (const LISPServerEntry& other) const;

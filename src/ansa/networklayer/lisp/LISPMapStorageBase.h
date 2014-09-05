@@ -28,48 +28,31 @@ typedef std::list<LISPMapEntry> MapStorage;
 typedef MapStorage::iterator MapStorageItem;
 typedef MapStorage::const_iterator MapStorageCItem;
 
-extern const char* EID_TAG;
-extern const char* RLOC_TAG;
-extern const char* PRIORITY_ATTR;
-extern const char* WEIGHT_ATTR;
-
 class LISPMapStorageBase
 {
-    public:
-        LISPMapStorageBase();
-        virtual ~LISPMapStorageBase();
+  public:
+    LISPMapStorageBase();
+    virtual ~LISPMapStorageBase();
 
-        std::string info() const;
-        void parseMapEntry(cXMLElement* config);
+    std::string info() const;
+    void parseMapEntry(cXMLElement* config);
 
-    protected:
-        /**
-         * Main ADT that acts as mapping cache/database
-         */
-        MapStorage MappingStorage;
+    void clear();
+    void addMapEntry(LISPMapEntry& entry);
+    void removeMapEntry(const LISPMapEntry& entry);
+    LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
+    LISPMapEntry* lookupMapEntry(IPvXAddress& address);
 
-        void clear();
-        void addMapEntry(LISPMapEntry& entry);
-        void removeMapEntry(const LISPMapEntry& entry);
-        LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
-        LISPMapEntry* lookupMapEntry(IPvXAddress& address);
+    static int doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2);
+    static int getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2);
 
-        static int doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2);
-        static int getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2);
+    MapStorage& getMappingStorage();
 
-/*
-        virtual bool isMapEntryExisting(LISPEidPrefix prefix);
-
-
-        virtual void addEntry(IPvXAddress eid, int length);
-        virtual void updateEntryState(LISPMapEntry* mcentry, LISPMapEntry::MapState state);
-        virtual void updateEntryExpiry(LISPMapEntry* mcentry, simtime_t time);
-        virtual void removeEntry(IPvXAddress address, int length);
-        virtual MapStorageItem* lookup(IPvXAddress address);
-        virtual MapStorageItem* getEntry(IPvXAddress address, int length);
-
-        virtual int size() const;
-*/
+  protected:
+    /**
+      * Main ADT that acts as mapping cache/database
+      */
+    MapStorage MappingStorage;
 };
 
 //Free function

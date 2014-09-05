@@ -24,7 +24,7 @@ simple LISPCore
     parameters:
         @display("i=block/switch");        
         string deviceId;    
-        xml configData = default(xml("<MapServerAddress /><MapResolverAddress />"));
+        xml configData = default(xml("<LISP />"));
         bool mapServerV4 = default(false);
         bool mapServerV6 = default(false);
 		bool mapResolverV4 = default(false);
@@ -32,8 +32,10 @@ simple LISPCore
     gates:
         input udpIn @labels(UDPControlInfo/up);
         output udpOut @labels(UDPControlInfo/down);
-        input mrIn;
-        output mrOut;
-        input msIn;
-        output msOut;
+        input  ipv4In;
+        output ipv4Out;
+        input  ipv6In;
+        output ipv6Out;
+        
 }
+

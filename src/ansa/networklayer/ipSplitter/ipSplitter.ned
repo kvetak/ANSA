@@ -32,5 +32,4 @@ simple IpSplitter
         output ipv6Out[];
         input isisIn[];
         output isisOut[];
-        input lispIn;
 }

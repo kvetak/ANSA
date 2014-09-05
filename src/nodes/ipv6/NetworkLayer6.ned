@@ -54,6 +54,9 @@ module NetworkLayer6
         output ospfOut @labels(IPv6ControlInfo/up);
         input pingIn[];
         output pingOut[];
+        input  lispIn;
+        output lispOut;
+        
     submodules:
         ipv6: IPv6 {
             parameters:

@@ -18,11 +18,6 @@
 
 #include "LISPMapStorageBase.h"
 
-const char* EID_TAG         = "EID";
-const char* RLOC_TAG        = "RLOC";
-const char* PRIORITY_ATTR   = "priority";
-const char* WEIGHT_ATTR     = "weight";
-
 LISPMapStorageBase::LISPMapStorageBase() {}
 
 LISPMapStorageBase::~LISPMapStorageBase()
@@ -69,7 +64,7 @@ LISPMapEntry* LISPMapStorageBase::lookupMapEntry(IPvXAddress& address) {
 
 std::string LISPMapStorageBase::info() const {
     std::stringstream os;
-    for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
+    for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); it++) {
         os << it->info() << endl;
     }
     return os.str();
@@ -100,6 +95,10 @@ void LISPMapStorageBase::parseMapEntry(cXMLElement* config) {
 
         LISPEidPrefix pref = LISPEidPrefix(addr.c_str(), leng.c_str());
         LISPMapEntry me = LISPMapEntry(pref);
+        //me.setLastTime(0.0001);
+        //me.setRegistredBy("xTR_AB");
+        //me.setMapState(LISPMapEntry::COMPLETE);
+        //me.setExpiry(86400);
 
         //Parse RLOCs
         cXMLElementList loc = m->getChildrenByTagName(RLOC_TAG);
@@ -180,6 +179,9 @@ int LISPMapStorageBase::doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2)
     return getNumMatchingPrefixBits6(addr1.get6(), addr2.get6());
 }
 
+MapStorage& LISPMapStorageBase::getMappingStorage() {
+    return MappingStorage;
+}
 /*
 bool LISPMapStorageBase::isMapEntryExisting(LISPEidPrefix prefix)
 {

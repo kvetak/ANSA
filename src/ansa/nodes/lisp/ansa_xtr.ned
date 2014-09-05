@@ -39,16 +39,17 @@ import inet.ansa.nodes.ANSA_RouterRIPDual;
 module ANSA_xTR extends ANSA_RouterRIPDual
 {
     parameters:
-    	@display("i2=status/busy;bgb=626,569");
-    	
+        @display("i2=status/busy;bgb=626,569");
+
     submodules:
         LISP: LISPRouting {
-            @display("p=429,311");
-            deviceId = deviceId;
-            deviceType = "Router";           
+            @display("p=386,311");
         }
     connections:
         UDP.appOut++ --> LISP.udpIn;
         UDP.appIn++ <-- LISP.udpOut;
-        ipSplitter.lispIn <-- LISP.ipsplitOut;
+        networkLayer.lispOut --> LISP.ipv4In;
+        networkLayer.lispIn <-- LISP.ipv4Out;
+        networkLayer6.lispOut --> LISP.ipv6In;
+        networkLayer6.lispIn <-- LISP.ipv6Out;
 }

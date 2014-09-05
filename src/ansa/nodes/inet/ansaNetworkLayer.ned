@@ -66,6 +66,8 @@ module ansaNetworkLayer
         output igmpOut;
         output pimOut;
         output eigrpOut;
+        input  lispIn;
+        output lispOut;        
 
     submodules:
         ip: AnsaIPv4 {

@@ -15,59 +15,44 @@
 
 #include <LISPRLocator.h>
 
-const int LISP_DEFAULT_PRIORITY = 100;
-const int LISP_DEFAULT_WEIGHT = 100;
-
-LISPRLocator::LISPRLocator() {
-
+LISPRLocator::LISPRLocator() :
+    //FIXME: Create IPvXAddress:: unspecified address const
+    rloc (IPv4Address::UNSPECIFIED_ADDRESS),
+    state(DOWN),
+    priority(DEFAULT_PRIORITY_VAL), weight(DEFAULT_WEIGHT_VAL),
+    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL)
+{
 }
 
-LISPRLocator::LISPRLocator(const char* addr) {
-   rloc      = IPvXAddress(addr);
-   state     = this->DOWN;
-   priority  = LISP_DEFAULT_PRIORITY;
-   weight    = LISP_DEFAULT_WEIGHT;
+LISPRLocator::LISPRLocator(const char* addr) :
+    rloc( addr ),
+    state(DOWN),
+    priority(DEFAULT_PRIORITY_VAL), weight(DEFAULT_WEIGHT_VAL),
+    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL)
+{
 }
 
-LISPRLocator::LISPRLocator(const char* addr, const char* prio, const char* wei) {
-    rloc      = IPvXAddress(addr);
-    state     = this->DOWN;
-    priority  = (short)atoi(prio);
-    weight    = (short)atoi(wei);
-}
-
-LISPRLocator::LISPRLocator(IPvXAddress addr) {
-    rloc      = addr;
-    state     = this->DOWN;
-    priority  = LISP_DEFAULT_PRIORITY;
-    weight    = LISP_DEFAULT_WEIGHT;
-}
-
-LISPRLocator::LISPRLocator(IPvXAddress addr, short prio, short wei) {
-    rloc      = addr;
-    state     = this->DOWN;
-    priority  = prio;
-    weight    = wei;
-}
-
-LISPRLocator::LISPRLocator(IPvXAddress addr, LocatorState stat, short prio, short wei) {
-    rloc      = addr;
-    state     = stat;
-    priority  = prio;
-    weight    = wei;
+LISPRLocator::LISPRLocator(const char* addr, const char* prio, const char* wei) :
+    rloc( IPvXAddress(addr) ),
+    state(DOWN),
+    priority((unsigned char)atoi(prio)), weight((unsigned char)atoi(wei)),
+    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL)
+{
 }
 
 LISPRLocator::~LISPRLocator() {
     state     = DOWN;
-    priority  = LISP_DEFAULT_PRIORITY;
-    weight    = LISP_DEFAULT_WEIGHT;
+    priority  = DEFAULT_PRIORITY_VAL;
+    weight    = DEFAULT_WEIGHT_VAL;
+    mpriority = DEFAULT_MPRIORITY_VAL;
+    mweight   = DEFAULT_MWEIGHT_VAL;
 }
 
-short LISPRLocator::getPriority() const {
+unsigned char LISPRLocator::getPriority() const {
     return priority;
 }
 
-void LISPRLocator::setPriority(short priority) {
+void LISPRLocator::setPriority(unsigned char priority) {
     this->priority = priority;
 }
 
@@ -87,7 +72,7 @@ void LISPRLocator::setState(LocatorState state) {
     this->state = state;
 }
 
-short LISPRLocator::getWeight() const {
+unsigned char LISPRLocator::getWeight() const {
     return weight;
 }
 
@@ -98,11 +83,23 @@ bool LISPRLocator::operator ==(const LISPRLocator& other) const {
 
 std::string LISPRLocator::info() const {
     std::stringstream os;
-    os << this->rloc << "\t(" << this->state << ")\t" << this->priority << "/" << weight;
+    os << this->rloc << "\t(" << this->getStateString() << ")\t" << short(this->priority) << "/" << short(weight);
     return os.str();
 }
 
-void LISPRLocator::setWeight(short weight) {
+std::string LISPRLocator::getStateString() const {
+    switch(this->getState()) {
+        case UP:
+            return "up";
+        case ADMIN_DOWN:
+            return "admin-down";
+        case DOWN:
+        default:
+            return "down";
+    }
+}
+
+void LISPRLocator::setWeight(unsigned char weight) {
     this->weight = weight;
 }
 
@@ -110,3 +107,33 @@ std::ostream& operator <<(std::ostream& os, const LISPRLocator& locator) {
     return os << locator.info();
 }
 
+unsigned char LISPRLocator::getMpriority() const {
+    return mpriority;
+}
+
+void LISPRLocator::setMpriority(unsigned char mpriority) {
+    this->mpriority = mpriority;
+}
+
+unsigned char LISPRLocator::getMweight() const {
+    return mweight;
+}
+
+void LISPRLocator::setMweight(unsigned char mweight) {
+    this->mweight = mweight;
+}
+
+std::string TLocator::info() const {
+    std::stringstream os;
+    os << this->RLocator.getRloc()
+       << ", priority: " << short(this->RLocator.getPriority())
+       << ", weight: " << short(this->RLocator.getWeight())
+       << ", Local: " << this->LocalLocBit
+       << ", probing: " << this->piggybackBit
+       << ", Reachable: " << this->RouteRlocBit;
+    return os.str();
+}
+
+std::ostream& operator <<(std::ostream& os, const TLocator& tloc) {
+    return os << tloc.info();
+}

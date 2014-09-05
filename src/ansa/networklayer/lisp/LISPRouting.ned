@@ -22,33 +22,35 @@ package inet.ansa.networklayer.lisp;
 module LISPRouting
 {
     parameters:
-        @display("i=block/network2;bgb=256,179");
-        string deviceId;
-        string deviceType;               
+        @display("i=block/network2;bgb=256,179,white");
         bool hasMapDB = default(false);
-        
+
     gates:
         input udpIn @labels(UDPControlInfo/up);
         output udpOut @labels(UDPControlInfo/down);
-        output ipsplitOut @labels(IPControlInfo/down);
+        output ipv4Out;
+        input ipv4In;
+        output ipv6Out;
+        input ipv6In;
 
-        submodules:
+    submodules:
         lispMapCache: LISPMapCache {
             @display("p=63,40");
-            deviceId = deviceId;
         }
         lispCore: LISPCore {
-            @display("p=124,125");
-            deviceId = deviceId;
+            @display("p=124,109");
         }
         lispMapDatabase: LISPMapDatabase if hasMapDB {
             @display("p=185,40");
-            deviceId = deviceId;
         }
 
     connections allowunconnected:
+
         lispCore.udpOut --> udpOut;
         lispCore.udpIn <-- udpIn;
 
-
+        lispCore.ipv4Out --> ipv4Out;
+        lispCore.ipv6Out --> ipv6Out;
+        ipv4In --> lispCore.ipv4In;
+        ipv6In --> lispCore.ipv6In;
 }

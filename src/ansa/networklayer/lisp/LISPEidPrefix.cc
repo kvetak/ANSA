@@ -16,17 +16,18 @@
 #include <LISPEidPrefix.h>
 
 LISPEidPrefix::LISPEidPrefix() {
-    this->eidLen = LISP_DEFAULT_LENGTH;
+    this->eidLen = DEFAULT_EIDLENGTH_VAL;
 }
 
-LISPEidPrefix::LISPEidPrefix(IPvXAddress addr, short len) {
-    this->eid = addr;
-    this->eidLen = len;
+LISPEidPrefix::LISPEidPrefix(const char* address, const char* length) {
+    eid = IPvXAddress(address);
+    eidLen = (unsigned char)atoi(length);
+    setEidAfi();
 }
 
 LISPEidPrefix::~LISPEidPrefix() {
-    this->eidLen = LISP_DEFAULT_LENGTH;
-
+    this->eidLen = DEFAULT_EIDLENGTH_VAL;
+    eidAfi = AFI_UKNOWN;
 }
 
 const IPvXAddress& LISPEidPrefix::getEid() const {
@@ -37,19 +38,19 @@ void LISPEidPrefix::setEid(const IPvXAddress& eid) {
     this->eid = eid;
 }
 
-short LISPEidPrefix::getEidLen() const {
+unsigned char LISPEidPrefix::getEidLen() const {
     return eidLen;
 }
 
 std::string LISPEidPrefix::info() const {
     std::stringstream os;
 
-    os << this->eid << "/" << this->eidLen;
+    os << this->eid << "/" << short(this->eidLen);
     return os.str();
 
 }
 
-void LISPEidPrefix::setEidLen(short eidLen) {
+void LISPEidPrefix::setEidLen(unsigned char eidLen) {
     this->eidLen = eidLen;
 }
 
@@ -61,7 +62,13 @@ std::ostream& operator <<(std::ostream& os, const LISPEidPrefix& ep) {
     return os << ep.info();
 }
 
-LISPEidPrefix::LISPEidPrefix(const char* address, const char* length) {
-    eid = IPvXAddress(address);
-    eidLen = (short)atoi(length);
+LISPEidPrefix::Afi LISPEidPrefix::getEidAfi() const {
+    return eidAfi;
+}
+
+void LISPEidPrefix::setEidAfi() {
+    if ( eid.isIPv6() )
+        eidAfi = AFI_IPV6;
+    else
+        eidAfi = AFI_IPV4;
 }

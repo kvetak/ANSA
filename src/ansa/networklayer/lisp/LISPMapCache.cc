@@ -29,6 +29,7 @@ LISPMapCache::~LISPMapCache()
 
 void LISPMapCache::parseConfig(cXMLElement* config) {
     this->parseMapEntry(config);
+
 }
 
 void LISPMapCache::initialize(int stage)
@@ -36,7 +37,6 @@ void LISPMapCache::initialize(int stage)
     if (stage < 3)
         return;
 
-    deviceId = par("deviceId");
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     parseConfig( par("configData").xmlValue() );
 

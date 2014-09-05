@@ -20,6 +20,7 @@
 #include <sstream>
 #include <string>
 #include "LISPMapStorageBase.h"
+#include "LISPCommon.h"
 
 class LISPSiteInfo : public LISPMapStorageBase
 {
@@ -33,19 +34,15 @@ class LISPSiteInfo : public LISPMapStorageBase
 
     const std::string& getKey() const;
     void setKey(const std::string& key);
-    const simtime_t& getLastTime() const;
-    void setLastTime(const simtime_t& lastTime);
     const std::string& getName() const;
     void setName(const std::string& name);
-    const std::string& getRegistredBy() const;
-    void setRegistredBy(const std::string& registredBy);
+    bool isProxyReply() const;
+    void setProxyReply(bool proxyReply);
 
   private:
-    simtime_t lastTime;
-    std::string registredBy;
     std::string name;
     std::string key;
-
+    bool proxyReply;
 };
 
 std::ostream& operator<< (std::ostream& os, const LISPSiteInfo& si);

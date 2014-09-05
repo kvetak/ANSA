@@ -29,8 +29,6 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
         virtual ~LISPMapCache();
 
     protected:
-        const char  *deviceId;   ///< Id of the device which contains this routing process.
-
         void parseConfig(cXMLElement* config);
 
         virtual int numInitStages() const { return 4; }

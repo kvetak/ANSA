@@ -17,14 +17,18 @@
 #define LISPMAPENTRY_H_
 
 #include <omnetpp.h>
+#include "LISPCommon.h"
 #include "LISPRLocator.h"
 #include "LISPEidPrefix.h"
 
 #define LISP_DEFAULT_MAPSTATE INCOMPLETE
 
+
 typedef std::list<LISPRLocator> Locators;
-typedef std::list<LISPRLocator>::iterator LocatorItem;
-typedef std::list<LISPRLocator>::const_iterator LocatorCItem;
+typedef Locators::iterator LocatorItem;
+typedef Locators::const_iterator LocatorCItem;
+typedef std::list<TLocator> TLocators;
+typedef TLocators::const_iterator TLocatorCItem;
 
 class LISPMapEntry {
   public:
@@ -32,9 +36,7 @@ class LISPMapEntry {
 
     LISPMapEntry();
     LISPMapEntry(LISPEidPrefix neid);
-    LISPMapEntry(LISPEidPrefix neid, simtime_t time);
-    LISPMapEntry(LISPEidPrefix neid, simtime_t time, MapState state);
-    LISPMapEntry(LISPEidPrefix neid, simtime_t time, MapState state, Locators rlocs);
+
     virtual ~LISPMapEntry();
 
     bool operator== (const LISPMapEntry& other) const;
@@ -45,9 +47,12 @@ class LISPMapEntry {
     void setExpiry(const simtime_t& expiry);
     MapState getMapState() const;
     std::string getMapStateString() const;
-    void setMapState(MapState mapState);
     const Locators& getRlocs() const;
     void setRlocs(const Locators& rloCs);
+    const std::string& getRegistredBy() const;
+    void setRegistredBy(const std::string& registredBy);
+    const simtime_t& getLastTime() const;
+    void setLastTime(const simtime_t& lastTime);
 
     std::string info() const;
 
@@ -56,14 +61,37 @@ class LISPMapEntry {
     virtual LISPRLocator* getLocator(IPvXAddress& address);
     virtual void removeLocator(IPvXAddress& address);
 
+
   private:
     LISPEidPrefix EID;
+    Locators RLOCs;
+
+    //Map-cache entry
     simtime_t expiry;
     MapState mapState;
-    Locators RLOCs;
+    //SiteInfo entry
+    simtime_t lastTime;
+    std::string registredBy;
 };
+
+class TRecord {
+  public:
+    unsigned int recordTTL;             // TTL
+    unsigned char locatorCount;         // locator count
+    unsigned char ACT;                  // Action flags
+    bool ABit;                          // Authoritative Bit
+    unsigned short mapVersion;          // Map-Version
+    LISPEidPrefix EidPrefix;            //<-- see LISP class struct
+    TLocators locators;                 //<-- see struct above
+
+    std::string info() const;
+};
+
+typedef std::list<TRecord> TRecords;
+typedef TRecords::const_iterator TRecordCItem;
 
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPMapEntry& me);
+std::ostream& operator<< (std::ostream& os, const TRecord& trec);
 
 #endif /* LISPMAPENTRY_H_ */

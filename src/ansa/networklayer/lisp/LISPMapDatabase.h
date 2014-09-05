@@ -24,10 +24,7 @@
 
 typedef std::list<LISPSiteInfo> SiteStorage;
 typedef SiteStorage::iterator SiteStorageItem;
-
-extern const char* SITE_TAG;
-extern const char* NAME_ATTR;
-extern const char* KEY_ATTR;
+typedef SiteStorage::const_iterator SiteStorageCItem;
 
 class LISPMapDatabase : public cSimpleModule
 {
@@ -35,10 +32,10 @@ class LISPMapDatabase : public cSimpleModule
         LISPMapDatabase();
         virtual ~LISPMapDatabase();
 
-        virtual void addSite(LISPSiteInfo& si);
+        void addSite(LISPSiteInfo& si);
+        LISPSiteInfo* findSiteInfoByKey(std::string& siteKey);
 
     protected:
-        const char  *deviceId;
         SiteStorage SiteDatabase;
 
         void parseConfig(cXMLElement* config);

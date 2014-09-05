@@ -138,24 +138,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.1590007136.357597536" name="/" resourcePath="src/transport/tcp_common">
-						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.441870524" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.700686213" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.966631206"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.833253684" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.2043257036">
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1122335245" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.498047214" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.1946472760">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1613919397" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.587183629" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.1402469929"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1000571047" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.148623617"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.base.565274989" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.1457288082">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1804255989" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
-						<entry excluding="transport/tcp_common|applications/voipstream|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="applications/voipstream|transport/tcp_common|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/transport/tcp_common"/>
 					</sourceEntries>
 				</configuration>

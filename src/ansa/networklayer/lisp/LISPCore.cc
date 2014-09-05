@@ -18,11 +18,6 @@
 
 #include "LISPCore.h"
 
-const char* MAPSERVERADDR_TAG   = "MapServerAddress";
-const char* MAPRESOLVERADDR_TAG = "MapResolverAddress";
-const char* MAPSERVER_TAG       = "MapServer";
-const char* MAPRESOLVER_TAG     = "MapResolver";
-
 Define_Module(LISPCore);
 
 LISPCore::LISPCore()
@@ -78,11 +73,36 @@ void LISPCore::parseConfig(cXMLElement* config)
     for (cXMLElementList::iterator i = msa.begin(); i != msa.end(); ++i) {
         cXMLElement* m = *i;
         //EV << "IPv4: " << m->getAttribute("ipv4") << "\tIPv6: " << m->getAttribute("ipv6");
-        std::string mipv4 = m->getAttribute(IPV4_ATTR);
-        std::string mipv6 = m->getAttribute(IPV6_ATTR);
-        std::string mk = m->getAttribute("key");
+
+        //Integrity checks and retrieving ipv4 attribute value
+        std::string mipv4;
+        if (!m->getAttribute(IPV4_ATTR)) {
+            EV << "Config XML file missing tag or attribute - IPv4 - replaced by empty" << endl;
+            mipv4 = EMPTY_STRING_VAL;
+        }
+        else
+            mipv4 = m->getAttribute(IPV4_ATTR);
+
+        //Integrity checks and retrieving ipv6 attribute value
+        std::string mipv6;
+        if (!m->getAttribute(IPV6_ATTR)) {
+            EV << "Config XML file missing tag or attribute - IPv6 - replaced by empty" << endl;
+            mipv6 = EMPTY_STRING_VAL;
+        }
+        else
+            mipv6 = m->getAttribute(IPV6_ATTR);
+
+        //Integrity checks and retrieving ipv6 attribute value
+        if (!m->getAttribute(KEY_ATTR)) {
+            EV << "Config XML file missing tag or attribute - KEY" << endl;
+            continue;
+        }
+        std::string mk = m->getAttribute(KEY_ATTR);
+
         if ( (!mipv4.empty() || !mipv6.empty()) && !mk.empty())
-            MapServers.push_back(LISPServerEntry(mipv4.c_str(), mipv6.c_str(), mk.c_str()));
+            MapServers.push_back(LISPServerEntry(mipv4, mipv6, mk));
+        else
+            EV << "Skipping XML MapServerAddress configuration" << endl;
     }
 
     //Map resolver addresses initial setup
@@ -90,15 +110,34 @@ void LISPCore::parseConfig(cXMLElement* config)
     for (cXMLElementList::iterator i = mra.begin(); i != mra.end(); ++i) {
         cXMLElement* m = *i;
         //EV << "IPv4: " << m->getAttribute("ipv4") << "\tIPv6: " << m->getAttribute("ipv6");
-        std::string mipv4 = m->getAttribute(IPV4_ATTR);
-        std::string mipv6 = m->getAttribute(IPV6_ATTR);
+
+        //Integrity checks and retrieving ipv4 attribute value
+        std::string mipv4;
+        if (!m->getAttribute(IPV4_ATTR)) {
+            EV << "Config XML file missing tag or attribute - IPv4 - replaced by empty" << endl;
+            mipv4 = EMPTY_STRING_VAL;
+        }
+        else
+            mipv4 = m->getAttribute(IPV4_ATTR);
+
+        //Integrity checks and retrieving ipv6 attribute value
+        std::string mipv6;
+        if (!m->getAttribute(IPV6_ATTR)) {
+            EV << "Config XML file missing tag or attribute - IPv6 - replaced by empty" << endl;
+            mipv6 = EMPTY_STRING_VAL;
+        }
+        else
+            mipv6 = m->getAttribute(IPV6_ATTR);
+
         if ( !mipv4.empty() || !mipv6.empty() )
-            MapResolvers.push_back(LISPServerEntry(mipv4.c_str(),  mipv6.c_str()));
+            MapResolvers.push_back(LISPServerEntry(mipv4,  mipv6));
+        else
+            EV << "Skipping XML MapResolverAddress configuration" << endl;
     }
 
     //Enable MS functionality
-    mapServerV4 = par("mapServerV4");
-    mapServerV4 = par("mapServerV6");
+    mapServerV4 = par(MS4_PAR).boolValue();
+    mapServerV6 = par(MS6_PAR).boolValue();
     cXMLElement* ms = config->getFirstChildWithTag(MAPSERVER_TAG);
     if (ms != NULL) {
         if ( !strcmp(ms->getAttribute(IPV4_ATTR), ENABLED_VAL) )
@@ -108,16 +147,25 @@ void LISPCore::parseConfig(cXMLElement* config)
     }
 
     //Enable MR functionality
-    mapResolverV4 = par("mapResolverV4");
-    mapResolverV4 = par("mapResolverV6");
+    mapResolverV4 = par(MR4_PAR).boolValue();
+    mapResolverV6 = par(MR6_PAR).boolValue();
     cXMLElement* mr = config->getFirstChildWithTag(MAPRESOLVER_TAG);
     if ( mr != NULL) {
-        if ( !strcmp(mr->getAttribute("ipv4"), "enabled") )
+        if ( !strcmp(mr->getAttribute(IPV4_ATTR), ENABLED_VAL) )
             mapResolverV4 = true;
-        if ( !strcmp(mr->getAttribute("ipv6"), "enabled") )
+        if ( !strcmp(mr->getAttribute(IPV6_ATTR), ENABLED_VAL) )
             mapResolverV6 = true;
     }
 
+    //EtrMappings
+    cXMLElement* etrm = config->getFirstChildWithTag(ETRMAP_TAG);
+    if (etrm)
+        this->EtrMapping.parseMapEntry(etrm);
+}
+
+void LISPCore::registerSite() {
+    for (ServerItem it = MapServers.begin(); it != MapServers.end(); ++it)
+        sendMapRegister(*it);
 }
 
 void LISPCore::initialize(int stage)
@@ -127,31 +175,69 @@ void LISPCore::initialize(int stage)
     // access to the routing and interface table
     Rt = AnsaRoutingTableAccess().get();
     Ift = InterfaceTableAccess().get();
-    // get deviceId
-    deviceId = par("deviceId");
     // local MapCache
-    Lmc =  ModuleAccess<LISPMapCache>("lispMapCache").get();
+    MapCache =  ModuleAccess<LISPMapCache>(MAPCACHE_MOD).get();
 
-    parseConfig(par("configData").xmlValue());
+    parseConfig(par(CONFIG_PAR).xmlValue());
+
+    //MapDb pointer when needed
+    bool hasMapDB = this->getParentModule()->par(HASMAPDB_PAR).boolValue();
+    if (hasMapDB)
+        MapDb = ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
+
+    //If node is acting as MS and it has not MapDB then throw error
+    if ( !hasMapDB && (mapServerV4 || mapServerV6)  ) {
+        throw cException("Cannot act as Map Server without Mapping Database!");
+    }
+
+    //Acts as ETR register for LISP sites
+    if (!MapServers.empty())
+        scheduleAt(simTime(), new cMessage(REGISTER_TIMER));
+
+    initSockets();
 
     //Watchers
     WATCH_LIST(MapResolvers);
     WATCH_LIST(MapServers);
-    WATCH(mapServerV4);
-    WATCH(mapServerV6);
-    WATCH(mapResolverV4);
-    WATCH(mapResolverV6);
+    WATCH_LIST(EtrMapping.getMappingStorage());
+}
 
-    //socket.setOutputGate(gate("udpOut"));
-    //socket.bind(4341);
-    //setSocketOptions();
+void LISPCore::handleTimer(cMessage* msg) {
+    //Register timer expires
+    if ( !strcmp(msg->getName(), REGISTER_TIMER) ) {
+        registerSite();
+        //Reschedule timer to execute after next 60 seconds
+        scheduleAt(simTime() + 60, msg);
+    }
+    else {
+        error("Unrecognized timer (%s)", msg->getClassName());
+        cancelAndDelete(msg);
+    }
+}
+
+void LISPCore::handleCotrol(cMessage* msg) {
+    EV << "Control" << endl;
+    if ( dynamic_cast<LISPMapRegister*>(msg) ) {
+        receiveMapRegister(dynamic_cast<LISPMapRegister*>(msg));
+    }
+    delete msg;
+}
+
+void LISPCore::handleData(cMessage* msg) {
 }
 
 void LISPCore::handleMessage(cMessage *msg)
 {
-
-
-
+    if (msg->isSelfMessage())
+        handleTimer(msg);
+    else if (msg->arrivedOn("ipv4In") || msg->arrivedOn("ipv6In"))
+        handleData(msg);
+    else if (msg->arrivedOn("udpIn"))
+        handleCotrol(msg);
+    else {
+        error("Unrecognized message (%s)", msg->getClassName());
+        delete msg;
+    }
 }
 
 void LISPCore::updateDisplayString()
@@ -162,8 +248,94 @@ void LISPCore::updateDisplayString()
     }
 }
 
-void LISPCore::receiveChangeNotification(int category, const cObject *details)
-{
-    //TODO
+void LISPCore::initSockets() {
+    controlTraf.setOutputGate(gate("udpOut"));
+    controlTraf.setReuseAddress(true);
+    controlTraf.bind(CONTROL_PORT);
 }
 
+void LISPCore::sendMapRegister(LISPServerEntry& se) {
+    if (se.getIpv4() == IPv4Address::UNSPECIFIED_ADDRESS && se.getIpv6() == IPv6Address::UNSPECIFIED_ADDRESS )
+        return;
+
+    LISPMapRegister* lmr = new LISPMapRegister(REGISTER_MSG);
+
+    //General fields
+    lmr->setNonce(DEFAULT_NONCE_VAL);
+    lmr->setRecordCount(EtrMapping.getMappingStorage().size());
+
+    //Authentication data
+    lmr->setKeyId(LISPCommon::NONE);
+    lmr->setAuthDataLen(se.getKey().size());
+    lmr->setAuthData(se.getKey().c_str());
+
+    //TRecords
+    for (MapStorageCItem it = EtrMapping.getMappingStorage().begin(); it != EtrMapping.getMappingStorage().end(); ++it) {
+        TRecord rec;
+        rec.recordTTL = DEFAULT_TTL_VAL;
+        rec.EidPrefix = it->getEidPrefix();
+        rec.mapVersion = DEFAULT_MAPVER_VAL;
+        rec.ABit = true;
+        rec.ACT = LISPCommon::NO_ACTION;
+        rec.locatorCount = it->getRlocs().size();
+        for (LocatorCItem jt = it->getRlocs().begin(); jt != it->getRlocs().end(); ++jt) {
+            TLocator loc;
+            loc.RLocator = *jt;
+            loc.LocalLocBit = true;
+            loc.piggybackBit = false;
+            loc.RouteRlocBit = true;
+            rec.locators.push_back(loc);
+        }
+        lmr->getRecords().push_back(rec);
+    }
+
+    if (se.getIpv4() != IPv4Address::UNSPECIFIED_ADDRESS)
+        controlTraf.sendTo(lmr, se.getIpv4() , CONTROL_PORT);
+    if (se.getIpv6() != IPv6Address::UNSPECIFIED_ADDRESS) {
+        LISPMapRegister* lmrcopy = lmr->dup();
+        controlTraf.sendTo(lmrcopy, se.getIpv6() , CONTROL_PORT);
+    }
+}
+
+void LISPCore::receiveMapRegister(LISPMapRegister* lmr) {
+    //Check whether device has MapDB
+    if (!mapServerV4 && !mapServerV6) {
+        EV << "non-MS device received Map-Register!" << endl;
+        return;
+    }
+
+    //Check for 0 records
+    if (lmr->getRecordCount() == 0) {
+        EV << "Map-Register contained zero records!" << endl;
+        return;
+    }
+
+    //Check the authentication method
+    if (lmr->getKeyId() != 0) {
+        EV << "Map-Register contained unsupported authentication method!" << endl;
+        return;
+    }
+    std::string authData = lmr->getAuthData();
+    LISPSiteInfo* si = MapDb->findSiteInfoByKey(authData);
+    if (si) {
+        //Set Proxy-reply settings
+        si->setProxyReply(lmr->getProxyBit());
+        for (TRecordCItem it = lmr->getRecords().begin(); it != lmr->getRecords().end(); ++it) {
+            //EID found in MS database
+            LISPMapEntry* me = si->findMapEntryByEidPrefix(it->EidPrefix);
+            if (me) {
+
+                me->setRegistredBy(lmr->getSenderModule()->getParentModule()->getName());
+                me->setLastTime(simTime());
+                for (TLocatorCItem jt = it->locators.begin(); jt != it->locators.end(); ++jt) {
+                    LISPRLocator rloc = jt->RLocator;
+                    rloc.setState(LISPRLocator::UP);
+                    me->addLocator(rloc);
+                }
+            }
+        }
+    }
+
+
+
+}

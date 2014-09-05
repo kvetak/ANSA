@@ -17,14 +17,14 @@
 #define LISPEIDPREFIX_H_
 
 #include "IPvXAddress.h"
-
-#define LISP_DEFAULT_LENGTH     0
+#include "LISPCommon.h"
 
 class LISPEidPrefix {
+
   public:
+    enum Afi {AFI_UKNOWN = 0, AFI_IPV4 = 1, AFI_IPV6 = 2};
     LISPEidPrefix();
     LISPEidPrefix(const char* address, const char* length);
-    LISPEidPrefix(IPvXAddress addr, short len);
     virtual ~LISPEidPrefix();
 
     bool operator== (const LISPEidPrefix& other) const;
@@ -33,12 +33,17 @@ class LISPEidPrefix {
 
     const IPvXAddress& getEid() const;
     void setEid(const IPvXAddress& eid);
-    short getEidLen() const;
-    void setEidLen(short eidLen);
+    unsigned char getEidLen() const;
+    void setEidLen(unsigned char eidLen);
+    Afi getEidAfi() const;
 
   private:
     IPvXAddress eid;
-    short eidLen;
+    unsigned char eidLen;
+    Afi eidAfi;
+
+    void setEidAfi();
+
 };
 
 //Free function

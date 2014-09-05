@@ -21,23 +21,22 @@ LISPServerEntry::LISPServerEntry() {
     key = "";
 }
 
-LISPServerEntry::LISPServerEntry(const char* nipv4, const char* nipv6) {
-    ipv4 = IPv4Address(nipv4);
-    ipv6 = IPv6Address(nipv6);
-    key = "";
+LISPServerEntry::LISPServerEntry(std::string nipv4, std::string nipv6) {
+    ipv4 = !nipv4.empty() ? IPv4Address(nipv4.c_str()) : IPv4Address::UNSPECIFIED_ADDRESS;
+    ipv6 = !nipv6.empty() ? IPv6Address(nipv6.c_str()) : IPv6Address::UNSPECIFIED_ADDRESS;
+    key = EMPTY_STRING_VAL;
 }
 
-LISPServerEntry::LISPServerEntry(const char* nipv4, const char* nipv6,
-        const char* nkey) {
-    ipv4 = IPv4Address(nipv4);
-    ipv6 = IPv6Address(nipv6);
-    key = key;
+LISPServerEntry::LISPServerEntry(std::string nipv4, std::string nipv6, std::string nkey) {
+    ipv4 = !nipv4.empty() ? IPv4Address(nipv4.c_str()) : IPv4Address::UNSPECIFIED_ADDRESS;
+    ipv6 = !nipv6.empty() ? IPv6Address(nipv6.c_str()) : IPv6Address::UNSPECIFIED_ADDRESS;
+    key = nkey;
 }
-
 
 LISPServerEntry::~LISPServerEntry() {
-    // TODO Auto-generated destructor stub
-
+    ipv4 = IPv4Address::UNSPECIFIED_ADDRESS;
+    ipv6 = IPv6Address::UNSPECIFIED_ADDRESS;
+    key = EMPTY_STRING_VAL;
 }
 
 const IPv4Address& LISPServerEntry::getIpv4() const {

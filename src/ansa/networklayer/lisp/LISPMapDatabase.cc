@@ -18,13 +18,10 @@
 
 #include "LISPMapDatabase.h"
 
-const char* SITE_TAG    = "Site";
-const char* NAME_ATTR   = "name";
-const char* KEY_ATTR    = "key";
-
 Define_Module(LISPMapDatabase);
 
 LISPMapDatabase::LISPMapDatabase(){}
+
 LISPMapDatabase::~LISPMapDatabase()
 {
 
@@ -34,16 +31,11 @@ void LISPMapDatabase::addSite(LISPSiteInfo& si)
 {
     SiteDatabase.push_back(si);
 }
+
 void LISPMapDatabase::initialize(int stage)
 {
     if (stage < 3)
         return;
-
-    deviceId = par("deviceId");
-
-    //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    //devConf->loadlLISPConfigForMapServer(this);
-    //devConf->loadlLISPConfigForMapResolver(this);
 
     parseConfig( par("configData").xmlValue() );
 
@@ -86,4 +78,12 @@ void LISPMapDatabase::parseConfig(cXMLElement* config) {
 void LISPMapDatabase::handleMessage(cMessage *msg)
 {
     // TODO - Generated method body
+}
+
+LISPSiteInfo* LISPMapDatabase::findSiteInfoByKey(std::string& siteKey) {
+    for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
+        if ( !it->getKey().compare(siteKey) )
+            return &(*it);
+    }
+    return NULL;
 }

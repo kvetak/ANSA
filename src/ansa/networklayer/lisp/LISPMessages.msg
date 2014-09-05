@@ -18,76 +18,41 @@
 //@author Vladimir Vesely (<a href="mailto:ivesely@fit.vutbr.cz">ivesely@fit.vutbr.cz</a>)
 
 cplusplus {{
-    #include "INETDefs.h"
-    #include "IPvXAddress.h"       
-    // ---------- Locators ---------- 
-    typedef struct 
-    {       
-        unsigned char priority;				// unicast priority
-        unsigned char weight;				// unicast weight
-        unsigned char Mpriority;			// multicast priority
-        unsigned char Mweight;				// multicast weight
-        bool LocalLocBit;					// local locator Bit
-        bool piggybackBit;					// piggyback Bit
-        bool RouteRlocBit;					// route RLOC Bit
-        unsigned short locAFI;				// locator AFI
-        IPvXAddress rloc;       			// locator
-    } Locator;
-    typedef std::vector<Locator> Locators;
+    #include "INETDefs.h"    
+    #include "LISPMapEntry.h"              
     
-    // ---------- Map-Request Recs ----------
-    typedef struct 
-    {
-        unsigned short eidLen;				// EID length
-        unsigned short eidPrefixAFI;		// eid-prefix AFIs     
-        IPvXAddress eid; 					// eid-prefix    
-    } RequestRecs;
+    // ---------- Map-Request Rec ----------
+    typedef std::list<LISPEidPrefix> TRecs;       		
+            
+    // ---------- AFI-Address tupple ---------- 
+    typedef std::pair<unsigned char, IPvXAddress> TAfiAddr;
+    typedef std::list<TAfiAddr> TAfiAddrs;
     
-    // ---------- Map-Reply Recs ----------
-    typedef struct 
-    {
-        unsigned short mapVersion;			// EID length
-        unsigned short eidPrefixAFI;		// eid-prefix AFIs     
-        IPvXAddress eid;	 				// eid-prefix 
-           
-        Locators locators;      			//<-- see struct above    
-    } ReplyRecs;
-    
-    
-    // ---------- Map-Reply/Register Records ----------
-    typedef struct 
-    {
-        simtime_t recordTTL;				// TTL
-        unsigned char locatorCount;   		// locator count
-        unsigned char eidMaskLen;			// EID mask
-        unsigned char ACT;					// Action flags
-        bool ABit; 							// Authoritative Bit
-        ReplyRecs recs;             		//<-- see struct above
-    } Records;
 }}
-//struct records;
-//struct locators;
+
 class noncobject IPvXAddress;
-class noncobject Records;
-class noncobject ReplyRecs;
-class noncobject RequestRecs;
+class noncobject TRecord;
+class noncobject TRecords;
+class noncobject TRecs;
+class noncobject TAfiAddr;
+class noncobject TAfiAddrs;
 
 enum LISP_MsgType
 {
-    REQUEST  = 1;
-    REPLY    = 2;
-    REGISTER = 3;
-    NOTIFY	 = 4;
+    REQUEST  	= 1;
+    REPLY    	= 2;
+    REGISTER 	= 3;
+    NOTIFY		= 4;
 }
 
 packet LISPHeader {
-    string displayString = "b=15,15,oval,blue,black,2"; 
+    string displayString = "b=15,15,oval,blue,blue,0"; 
     bool NonceBit; 						// nonce-present Bit
     bool LocStatBit; 					// locator-status-Bits field enabled
     bool EchoNonceBit; 					// echo-nonce-request Bit
     bool VerMapBit; 					// map-version persent Bit
     bool InstanceBit; 					// instance id Bit
-    char flags;							// currently unused flags
+    unsigned char flags;							// currently unused flags
     unsigned int nonce; 				// nonce
     unsigned int mapVersion; 			// map-version
     unsigned int instanceId; 			// instanceId
@@ -97,12 +62,36 @@ packet LISPHeader {
 packet LISPMessage {
     string displayString;
     unsigned char type enum(LISP_MsgType);	// message type    
-    unsigned char recordCount;			// number of records
-    unsigned long nonce; 				// nonce
+    unsigned char recordCount;				// number of records
+    unsigned long nonce; 					// nonce
 }
 
+//        0                   1                   2                   3
+//        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |Type=1 |A|M|P|S|p|s|    Reserved     |   IRC   | Record Count  |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         Nonce . . .                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         . . . Nonce                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |         Source-EID-AFI        |   Source EID Address  ...     |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |         ITR-RLOC-AFI 1        |    ITR-RLOC Address 1  ...    |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                              ...                              |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |         ITR-RLOC-AFI n        |    ITR-RLOC Address n  ...    |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     / |   Reserved    | EID mask-len  |        EID-Prefix-AFI         |
+//   Rec +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     \ |                       EID-Prefix  ...                         |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                   Map-Reply Record  ...                       |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 packet LISPMapRequest extends LISPMessage {
-    string displayString = "b=15,15,oval,red,black,2";
+    string displayString = "b=15,15,oval,orange,orange,0";
     type = REQUEST;    
     bool ABit;							// Authoritative Bit 
     bool MapDataBit;					// Map-data-present Bit
@@ -113,36 +102,118 @@ packet LISPMapRequest extends LISPMessage {
     
     unsigned char itrRlocCount;			// number of itrRlocs       
     
-	unsigned short itrAFI[];			// list of eid-prefix AFIs         
-    IPvXAddress itrRlocs[]; 			// addresses of itr used to send map-reply to
+    TAfiAddr sourceEid;					// source AFIs-addresses
+    TAfiAddrs itrRlocs;					// list of ITR's AFIs-addresses    
     
-    RequestRecs recs[];					// <-- see structure above 
+    TRecs recs;							// <-- see structure above 
     
-    Records mapReply; 					//Map-Reply with own info
+    TRecord mapReply; 					// Map-Reply with own info
 }
+
+//        0                   1                   2                   3
+//        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |Type=2 |P|E|S|          Reserved               | Record Count  |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         Nonce . . .                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         . . . Nonce                           |
+//   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |   |                          Record TTL                           |
+//   |   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   R   | Locator Count | EID mask-len  | ACT |A|      Reserved         |
+//   e   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   c   | Rsvd  |  Map-Version Number   |       EID-Prefix-AFI          |
+//   o   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   r   |                          EID-Prefix                           |
+//   d   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//  |  /|    Priority   |    Weight     |  M Priority   |   M Weight    |
+//   | L +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   | o |        Unused Flags     |L|p|R|           Loc-AFI             |
+//   | c +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |  \|                             Locator                           |
+//   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapReply extends LISPMessage {
-    string displayString = "b=15,15,oval,green,black,2";
+	string displayString = "b=15,15,oval,green,green,0";
 	type = REPLY;    
-    bool EchoNonceBit;					// Echo-Nonce Bit
-    bool SecBit;						// Security Bit       
-    
-    Records records[];    				// <-- see structure above 
+	bool ProbeBit;						//Proxy Map-Reply Bit
+	bool EchoNonceBit;					// Echo-Nonce Bit
+	bool SecBit;						// Security Bit       
+        
+    TRecords records;    				// <-- see structure above 
 }
+
+//        0                   1                   2                   3
+//        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |Type=3 |P|            Reserved               |M| Record Count  |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         Nonce . . .                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         . . . Nonce                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |            Key ID             |  Authentication Data Length   |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       ~                     Authentication Data                       ~
+//   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |   |                          Record TTL                           |
+//   |   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   R   | Locator Count | EID mask-len  | ACT |A|      Reserved         |
+//   e   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   c   | Rsvd  |  Map-Version Number   |        EID-Prefix-AFI         |
+//   o   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   r   |                          EID-Prefix                           |
+//   d   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |  /|    Priority   |    Weight     |  M Priority   |   M Weight    |
+//   | L +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   | o |        Unused Flags     |L|p|R|           Loc-AFI             |
+//   | c +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |  \|                             Locator                           |
+//   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapRegister extends LISPMessage {
-    string displayString = "b=15,15,oval,yellow,black,2";
- 	type = REGISTER; 	
- 	bool MapNotifyBit; 					// map-notify
+	string displayString = "b=15,15,oval,yellow,yellow,0";
+	type = REGISTER; 	
+	bool ProxyBit;							//Proxy Map-Reply Bit
+ 	bool MapNotifyBit; 						// map-notify
  	 	
- 	unsigned short keyId;				// HMAC key id
- 	unsigned short authDataLen;			// length of authentization data
- 	char authData[];					// authentization data
+ 	unsigned char keyId; 					// key id
+ 	unsigned short authDataLen;				// length of authentization data
+ 	string authData;						// authentization data
  	
- 	Records records[];					// <-- see structure above      
+ 	TRecords records;					// <-- see structure above      
 }
 
+//        0                   1                   2                   3
+//        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |Type=4 |              Reserved                 | Record Count  |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         Nonce . . .                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         . . . Nonce                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |            Key ID             |  Authentication Data Length   |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       ~                     Authentication Data                       ~
+//   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |   |                          Record TTL                           |
+//   |   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   R   | Locator Count | EID mask-len  | ACT |A|      Reserved         |
+//   e   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   c   | Rsvd  |  Map-Version Number   |         EID-Prefix-AFI        |
+//   o   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   r   |                          EID-Prefix                           |
+//   d   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |  /|    Priority   |    Weight     |  M Priority   |   M Weight    |
+//   | L +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   | o |        Unused Flags     |L|p|R|           Loc-AFI             |
+//   | c +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   |  \|                             Locator                           |
+//   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 packet LISPMapNotify extends LISPMapRegister {
-    string displayString = "b=15,15,oval,orange,black,2";
+    string displayString = "b=15,15,oval,cyan,cyan,0";
     type = NOTIFY;
 }

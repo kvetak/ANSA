@@ -20,6 +20,7 @@
 
 package inet.ansa.applications.rip;
 
+import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.applications.rip.RIPRouting;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
@@ -35,7 +36,7 @@ import inet.linklayer.IWiredNic;
 module RIPRouter
 {
     parameters:
-        @display("i=abstract/router");
+        @display("i=abstract/router;bgb=402,421");
         @node;
         @labels(node,ethernet-node);
         xml routingTable = default(xml("<routingTable/>"));  // Routing table is filled by deviceConfigurator
@@ -53,7 +54,7 @@ module RIPRouter
             deviceType = "Router";
             configFile = configFile;
         }
-        
+
         interfaceStateManager: InterfaceStateManager {
             @display("p=53,188");
         }
@@ -83,7 +84,10 @@ module RIPRouter
         // network layer
         networkLayer: NetworkLayer {
             parameters:
-                @display("p=204,240;q=queue");
+                @display("p=204,221;q=queue");            
+            gates:
+                ifIn[sizeof(ethg)+sizeof(pppg)];
+                ifOut[sizeof(ethg)+sizeof(pppg)];                
         }
 
         routingTable: AnsaRoutingTable {
@@ -98,14 +102,27 @@ module RIPRouter
                 @display("p=204,38");
         }
 
+        ipSplitter: IpSplitter {
+            parameters:
+            	@display("p=204,304");
+            gates:
+                ifIn[sizeof(ethg)+sizeof(pppg)];
+                ifOut[sizeof(ethg)+sizeof(pppg)];
+                ipv4In[sizeof(ethg)+sizeof(pppg)];
+                ipv4Out[sizeof(ethg)+sizeof(pppg)];
+                ipv6In[sizeof(ethg)+sizeof(pppg)];
+                ipv6Out[sizeof(ethg)+sizeof(pppg)];
+                isisIn[sizeof(ethg)+sizeof(pppg)];
+                isisOut[sizeof(ethg)+sizeof(pppg)];            	
+        }
 
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
-                @display("p=127,317,row,90;q=txQueue");
+                @display("p=127,361,row,90;q=txQueue");
         }
         ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
             parameters:
-                @display("p=290,317,row,90;q=txQueue");
+                @display("p=290,361,row,90;q=txQueue");
         }
 
     connections allowunconnected:
@@ -117,13 +134,17 @@ module RIPRouter
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
-            eth[i].upperLayerOut --> networkLayer.ifIn++;
-            eth[i].upperLayerIn <-- networkLayer.ifOut++;
+            eth[i].upperLayerOut  -->  ipSplitter.ifIn[i];
+            eth[i].upperLayerIn   <--  ipSplitter.ifOut[i];
+            ipSplitter.ipv4Out[i] -->  networkLayer.ifIn[i];
+            ipSplitter.ipv4In[i]  <--  networkLayer.ifOut[i];
         }
 
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
-            ppp[i].upperLayerOut --> networkLayer.ifIn++;
-            ppp[i].upperLayerIn <-- networkLayer.ifOut++;
+            ppp[i].upperLayerOut  				-->  ipSplitter.ifIn[sizeof(ethg)+i];
+            ppp[i].upperLayerIn   				<--  ipSplitter.ifOut[sizeof(ethg)+i];
+            ipSplitter.ipv4Out[sizeof(ethg)+i] 	-->  networkLayer.ifIn[sizeof(ethg)+i];
+            ipSplitter.ipv4In[sizeof(ethg)+i]  	<--  networkLayer.ifOut[sizeof(ethg)+i];            
         }
 }
