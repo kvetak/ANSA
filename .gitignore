@@ -39,6 +39,7 @@ gcc-debug
 # ignore backup and temp files
 *.bak
 .tmp*
+.sta*
 backups
 *~
 xxx
