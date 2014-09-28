@@ -45,13 +45,14 @@ LISPMapEntry* LISPMapStorageBase::findMapEntryByEidPrefix(const LISPEidPrefix& e
     return NULL;
 }
 
-LISPMapEntry* LISPMapStorageBase::lookupMapEntry(IPvXAddress& address) {
+LISPMapEntry* LISPMapStorageBase::lookupMapEntry(IPvXAddress address) {
     LISPMapEntry* tmpit;
     int tmplen = 0;
 
     for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
-        int len = doPrefixMatch(it->getEidPrefix().getEid(), address);
-        if (len > tmplen && len >= it->getEidPrefix().getEidLen() ) {
+        int len = LISPCommon::doPrefixMatch(it->getEidPrefix().getEidAddr(), address);
+        if (len > tmplen && len >= it->getEidPrefix().getEidLength() ) {
+            //EV << "Hledam " << address << " a nachazim " << it->getEidPrefix() << endl;
             tmpit = &(*it);
             tmplen = len;
         }
@@ -64,9 +65,8 @@ LISPMapEntry* LISPMapStorageBase::lookupMapEntry(IPvXAddress& address) {
 
 std::string LISPMapStorageBase::info() const {
     std::stringstream os;
-    for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); it++) {
+    for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it)
         os << it->info() << endl;
-    }
     return os.str();
 }
 
@@ -130,12 +130,19 @@ void LISPMapStorageBase::parseMapEntry(cXMLElement* config) {
                 wei = "";
             }
 
+            //Check LOCAL integrity
+            bool local = false;
+            if (n->getAttribute(LOCAL_ATTR)) {
+                if (!strcmp(n->getAttribute(LOCAL_ATTR), ENABLED_VAL))
+                    local = true;
+            }
+
             //Add RLOC if parsed successfully
             if (!rlocaddr.empty())
             {
                 LISPRLocator locator;
                 if (!pri.empty() && !wei.empty()) {
-                    locator = LISPRLocator(rlocaddr.c_str(), pri.c_str(), wei.c_str());
+                    locator = LISPRLocator(rlocaddr.c_str(), pri.c_str(), wei.c_str(), local);
                     me.addLocator(locator);
                 }
                 else {
@@ -150,114 +157,26 @@ void LISPMapStorageBase::parseMapEntry(cXMLElement* config) {
     }
 }
 
-int LISPMapStorageBase::getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2)
-{
-    for (int j = 3; j != 0; j--)
-    {
-        const uint32 *w1 = addr1.words();
-        const uint32 *w2 = addr2.words();
-        uint32 res = w1[j] ^ w2[j];
-        for (int i = 31; i >= 0; i--) {
-            if (res & (1 << i)) {
-               // 1, means not equal, so stop
-               return 32 * j + 31 - i;
-            }
-        }
-    }
-    return !addr1.compare(addr2) ? 0 : -1;
-}
-
-int LISPMapStorageBase::doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2)
-{
-    //IPv4 vs IPv6 incomparable
-    if (addr1.isIPv6() xor addr2.isIPv6())
-        return -1;
-    //IPv4
-    if (!addr1.isIPv6())
-        return addr1.get4().getNumMatchingPrefixBits(addr2.get4());
-    //IPv6
-    return getNumMatchingPrefixBits6(addr1.get6(), addr2.get6());
-}
-
 MapStorage& LISPMapStorageBase::getMappingStorage() {
     return MappingStorage;
 }
-/*
-bool LISPMapStorageBase::isMapEntryExisting(LISPEidPrefix prefix)
-{
-    return MappingStorage.find(prefix) != MappingStorage.end() ? true : false;
-}
 
-
-void LISPMapStorageBase::addEntry(IPvXAddress eid, int length)
-{
-    LISPEidPrefix pref = new LISPEidPrefix(eid, length);
-    //pref.eid = eid;
-    //pref.eidLen = length;
-
-    //Brand new record
-    if (!isMapEntryExisting(pref))
-    {
-        LISPMapEntry& mce = MappingStorage[pref];
-        mce = new LISPMapEntry(simTime() + 300, LISPMapEntry::INCOMPLETE);
-        //mce.mapState = INCOMPLETE;
-        //mce.expiry = simTime() + 300;
-    }
-};
-
-void LISPMapStorageBase::updateEntryState(LISPMapEntry* mcentry, LISPMapEntry::MapState state)
-{
-    mcentry->mapState = state;
-};
-
-void LISPMapStorageBase::updateEntryExpiry(LISPMapEntry* mcentry, simtime_t time)
-{
-    mcentry->expiry = time;
-};
-
-void LISPMapStorageBase::removeEntry(IPvXAddress address, int length)
-{
-    LISPEidPrefix pref;
-    pref.eid = address;
-    pref.eidLen = length;
-
-    MapStorageItem it = MappingStorage.find(pref);
-    MappingStorage.erase(it);
-};
-
-MapStorageItem* LISPMapStorageBase::lookup(IPvXAddress address)
-{
-    MapStorageItem* tmpit;
-    int tmplen = 0;
-
-    for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
-        int len = LISPStructures::doPrefixMatch(it->first.eid, address);
-        if (len > tmplen && len >= it->first.eidLen) {
-            tmpit = &it;
-            tmplen = len;
+LISPMapEntry* LISPMapStorageBase::findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref) {
+    MapStorageItem startme;
+    if (eidPref == LISPEidPrefix() || eidPref == MappingStorage.back().getEidPrefix() )
+        startme = MappingStorage.begin();
+    else {
+        for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
+            if (it->getEidPrefix() == eidPref) {
+                startme = it;
+                break;
+            }
         }
     }
-    if (tmplen > 0)
-        return tmpit;
+
+    for (MapStorageItem it = startme; it != MappingStorage.end(); ++it) {
+        if (it->isLocatorExisting(rloc))
+            return &(*it);
+    }
     return NULL;
-};
-
-MapStorageItem* LISPMapStorageBase::getEntry(IPvXAddress address, int length)
-{
-    LISPEidPrefix pref;
-    pref.eid = address;
-    pref.eidLen = length;
-
-    if (!isMapEntryExisting(pref))
-        return NULL;
-    //TODO: Vesely - Clean local variable
-    //MapStorageItem ite = MappingStorage.find(pref);
-    return &(MappingStorage.find(pref));
 }
-
-int LISPMapStorageBase::size() const
-{
-    return MappingStorage.size();
-};
-
-*/

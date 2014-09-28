@@ -27,7 +27,7 @@ LISPMapDatabase::~LISPMapDatabase()
 
 }
 
-void LISPMapDatabase::addSite(LISPSiteInfo& si)
+void LISPMapDatabase::addSite(LISPSite& si)
 {
     SiteDatabase.push_back(si);
 }
@@ -64,15 +64,23 @@ void LISPMapDatabase::parseConfig(cXMLElement* config) {
 
         if (!nam.empty() && ! ke.empty()) {
             //Create new SiteInfo entry
-            LISPSiteInfo si = LISPSiteInfo(nam, ke);
+            LISPSite site = LISPSite(nam, ke);
 
             //Parse potential EIDs
-            si.parseMapEntry(m);
+            site.parseMapEntry(m);
 
             //Add entry to SiteStorage
-            this->addSite(si);
+            this->addSite(site);
         }
     }
+}
+
+LISPSite* LISPMapDatabase::findSiteByAggregate(const IPvXAddress& addr) {
+    for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
+        if ( it->lookupMapEntry(addr) )
+            return &(*it);
+    }
+    return NULL;
 }
 
 void LISPMapDatabase::handleMessage(cMessage *msg)
@@ -80,10 +88,11 @@ void LISPMapDatabase::handleMessage(cMessage *msg)
     // TODO - Generated method body
 }
 
-LISPSiteInfo* LISPMapDatabase::findSiteInfoByKey(std::string& siteKey) {
+LISPSite* LISPMapDatabase::findSiteInfoByKey(std::string& siteKey) {
     for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
         if ( !it->getKey().compare(siteKey) )
             return &(*it);
     }
     return NULL;
 }
+

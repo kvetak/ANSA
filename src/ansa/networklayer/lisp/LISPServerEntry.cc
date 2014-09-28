@@ -16,43 +16,40 @@
 #include <LISPServerEntry.h>
 
 LISPServerEntry::LISPServerEntry() {
-    ipv4 = IPv4Address::UNSPECIFIED_ADDRESS;
-    ipv6 = IPv6Address::UNSPECIFIED_ADDRESS;
+    address = IPvXAddress();
     key = "";
+    proxyReply = false;
+    mapNotify  = false;
+    quickRegistration = false;
+    lastTime = SIMTIME_ZERO;
 }
 
-LISPServerEntry::LISPServerEntry(std::string nipv4, std::string nipv6) {
-    ipv4 = !nipv4.empty() ? IPv4Address(nipv4.c_str()) : IPv4Address::UNSPECIFIED_ADDRESS;
-    ipv6 = !nipv6.empty() ? IPv6Address(nipv6.c_str()) : IPv6Address::UNSPECIFIED_ADDRESS;
+LISPServerEntry::LISPServerEntry(std::string nipv) {
+    address = !nipv.empty() ? IPvXAddress(nipv.c_str()) : IPvXAddress();
     key = EMPTY_STRING_VAL;
+    proxyReply = false;
+    mapNotify  = false;
+    quickRegistration = false;
+    lastTime = SIMTIME_ZERO;
 }
 
-LISPServerEntry::LISPServerEntry(std::string nipv4, std::string nipv6, std::string nkey) {
-    ipv4 = !nipv4.empty() ? IPv4Address(nipv4.c_str()) : IPv4Address::UNSPECIFIED_ADDRESS;
-    ipv6 = !nipv6.empty() ? IPv6Address(nipv6.c_str()) : IPv6Address::UNSPECIFIED_ADDRESS;
+LISPServerEntry::LISPServerEntry(std::string nipv, std::string nkey,
+                                 bool proxy, bool notify, bool quick) {
+    address = !nipv.empty() ? IPvXAddress(nipv.c_str()) : IPvXAddress();
     key = nkey;
+    proxyReply = proxy;
+    mapNotify  = notify;
+    quickRegistration = quick;
+    lastTime = simTime();
 }
 
 LISPServerEntry::~LISPServerEntry() {
-    ipv4 = IPv4Address::UNSPECIFIED_ADDRESS;
-    ipv6 = IPv6Address::UNSPECIFIED_ADDRESS;
+    address = IPvXAddress();
     key = EMPTY_STRING_VAL;
-}
-
-const IPv4Address& LISPServerEntry::getIpv4() const {
-    return ipv4;
-}
-
-void LISPServerEntry::setIpv4(const IPv4Address& ipv4) {
-    this->ipv4 = ipv4;
-}
-
-const IPv6Address& LISPServerEntry::getIpv6() const {
-    return ipv6;
-}
-
-void LISPServerEntry::setIpv6(const IPv6Address& ipv6) {
-    this->ipv6 = ipv6;
+    proxyReply = false;
+    mapNotify = false;
+    quickRegistration = false;
+    lastTime = SIMTIME_ZERO;
 }
 
 const std::string& LISPServerEntry::getKey() const {
@@ -60,14 +57,27 @@ const std::string& LISPServerEntry::getKey() const {
 }
 
 bool LISPServerEntry::operator ==(const LISPServerEntry& other) const {
-    return ipv4 == other.ipv4 && ipv6 == other.ipv6 && key == other.key;
+    return address == other.address &&
+           key == other.key &&
+           proxyReply == other.proxyReply &&
+           mapNotify == other.mapNotify &&
+           quickRegistration == other.quickRegistration &&
+           lastTime == other.lastTime;
 }
 
 std::string LISPServerEntry::info() const {
     std::stringstream os;
-    os << "IPv4: " << ipv4.str() << "\tIPv6: " << ipv6.str();
-    if (!this->key.empty())
-        os << "\tkey: " << this->key;
+    os << address.str();
+    if (!key.empty())
+        os << ", key: \"" << key << "\"";
+    if (lastTime != SIMTIME_ZERO)
+        os << ", last at: " << lastTime;
+    if (proxyReply)
+        os << ", proxy-reply";
+    if (mapNotify)
+        os << ", map-notify";
+    if (quickRegistration)
+        os << ", quick-registration";
     return os.str();
 }
 
@@ -77,4 +87,44 @@ void LISPServerEntry::setKey(const std::string& key) {
 
 std::ostream& operator <<(std::ostream& os, const LISPServerEntry& entry) {
     return os << entry.info();
+}
+
+bool LISPServerEntry::isMapNotify() const {
+    return mapNotify;
+}
+
+void LISPServerEntry::setMapNotify(bool mapNotify) {
+    this->mapNotify = mapNotify;
+}
+
+bool LISPServerEntry::isProxyReply() const {
+    return proxyReply;
+}
+
+void LISPServerEntry::setProxyReply(bool proxyReply) {
+    this->proxyReply = proxyReply;
+}
+
+bool LISPServerEntry::isQuickRegistration() const {
+    return quickRegistration;
+}
+
+void LISPServerEntry::setQuickRegistration(bool quickRegistration) {
+    this->quickRegistration = quickRegistration;
+}
+
+const IPvXAddress& LISPServerEntry::getAddress() const {
+    return address;
+}
+
+void LISPServerEntry::setAddress(const IPvXAddress& address) {
+    this->address = address;
+}
+
+simtime_t LISPServerEntry::getLastTime() const {
+    return lastTime;
+}
+
+void LISPServerEntry::setLastTime(simtime_t lastTime) {
+    this->lastTime = lastTime;
 }

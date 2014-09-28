@@ -44,6 +44,8 @@ simple RIPngRouting
         string deviceId;                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPngRouting)
         string deviceType;
         
+        bool enabled = default(true);
+        
         @display("i=block/network2");  
        
     gates:

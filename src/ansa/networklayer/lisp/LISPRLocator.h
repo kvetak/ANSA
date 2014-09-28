@@ -18,23 +18,23 @@
 
 #include "IPvXAddress.h"
 #include "LISPCommon.h"
-#include <sstream>
 
 class LISPRLocator {
   public:
     enum LocatorState {DOWN, ADMIN_DOWN, UP};
 
     bool operator== (const LISPRLocator& other) const;
+    bool operator== (const LISPRLocator& other);
 
     LISPRLocator();
     LISPRLocator(const char* addr);
-    LISPRLocator(const char* addr, const char* prio, const char* wei);
+    LISPRLocator(const char* addr, const char* prio, const char* wei, bool loca);
     virtual ~LISPRLocator();
 
     std::string info() const;
 
-    const IPvXAddress& getRloc() const;
-    void setRloc(const IPvXAddress& rloc);
+    const IPvXAddress& getRlocAddr() const;
+    void setRlocAddr(const IPvXAddress& rloc);
     LocatorState getState() const;
     std::string getStateString() const;
     void setState(LocatorState state);
@@ -46,28 +46,23 @@ class LISPRLocator {
     void setMpriority(unsigned char mpriority);
     unsigned char getMweight() const;
     void setMweight(unsigned char mweight);
+    bool isLocal() const;
+    void setLocal(bool local);
+
+    void update(const LISPRLocator& rloc);
 
   private:
     IPvXAddress rloc;
     LocatorState state;
     unsigned char priority;
     unsigned char weight;
+    //TODO: Vesely - Multicast support
     unsigned char mpriority;
     unsigned char mweight;
-};
-
-class TLocator {
-  public:
-    bool LocalLocBit;                   // local locator Bit
-    bool piggybackBit;                  // piggyback Bit
-    bool RouteRlocBit;                  // route RLOC Bit
-    LISPRLocator RLocator;              //<-- see LISP class struct
-
-    std::string info() const;
+    bool local;
 };
 
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPRLocator& locator);
-std::ostream& operator<< (std::ostream& os, const TLocator& tloc);
 
 #endif /* LISPRLOCATOR_H_ */

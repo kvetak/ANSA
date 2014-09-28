@@ -19,18 +19,9 @@
 
 cplusplus {{
     #include "INETDefs.h"    
-    #include "LISPMapEntry.h"              
-    
-    // ---------- Map-Request Rec ----------
-    typedef std::list<LISPEidPrefix> TRecs;       		
-            
-    // ---------- AFI-Address tupple ---------- 
-    typedef std::pair<unsigned char, IPvXAddress> TAfiAddr;
-    typedef std::list<TAfiAddr> TAfiAddrs;
-    
+    #include "LISPTStructs.h"                       		            
 }}
 
-class noncobject IPvXAddress;
 class noncobject TRecord;
 class noncobject TRecords;
 class noncobject TRecs;
@@ -39,14 +30,15 @@ class noncobject TAfiAddrs;
 
 enum LISP_MsgType
 {
-    REQUEST  	= 1;
-    REPLY    	= 2;
-    REGISTER 	= 3;
-    NOTIFY		= 4;
+    REQUEST  				= 1;
+    REPLY    				= 2;
+    REGISTER 				= 3;
+    NOTIFY					= 4;
+    ENCAPSULATED_REQUEST 	= 8; 
 }
 
 packet LISPHeader {
-    string displayString = "b=15,15,oval,blue,blue,0"; 
+    string displayString = "b=15,15,oval,green,green,0"; 
     bool NonceBit; 						// nonce-present Bit
     bool LocStatBit; 					// locator-status-Bits field enabled
     bool EchoNonceBit; 					// echo-nonce-request Bit
@@ -91,7 +83,7 @@ packet LISPMessage {
 //       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapRequest extends LISPMessage {
-    string displayString = "b=15,15,oval,orange,orange,0";
+    string displayString = "b=15,15,oval,blue,blue,0";
     type = REQUEST;    
     bool ABit;							// Authoritative Bit 
     bool MapDataBit;					// Map-data-present Bit
@@ -127,7 +119,7 @@ packet LISPMapRequest extends LISPMessage {
 //   o   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //   r   |                          EID-Prefix                           |
 //   d   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//  |  /|    Priority   |    Weight     |  M Priority   |   M Weight    |
+//   |  /|    Priority   |    Weight     |  M Priority   |   M Weight    |
 //   | L +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //   | o |        Unused Flags     |L|p|R|           Loc-AFI             |
 //   | c +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -135,7 +127,7 @@ packet LISPMapRequest extends LISPMessage {
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapReply extends LISPMessage {
-	string displayString = "b=15,15,oval,green,green,0";
+	string displayString = "b=15,15,oval,lightblue,lightblue,0";
 	type = REPLY;    
 	bool ProbeBit;						//Proxy Map-Reply Bit
 	bool EchoNonceBit;					// Echo-Nonce Bit
@@ -182,7 +174,7 @@ packet LISPMapRegister extends LISPMessage {
  	unsigned short authDataLen;				// length of authentization data
  	string authData;						// authentization data
  	
- 	TRecords records;					// <-- see structure above      
+ 	TRecords records;						// <-- see structure above      
 }
 
 //        0                   1                   2                   3
@@ -214,6 +206,38 @@ packet LISPMapRegister extends LISPMessage {
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapNotify extends LISPMapRegister {
-    string displayString = "b=15,15,oval,cyan,cyan,0";
-    type = NOTIFY;
+	string displayString = "b=15,15,oval,ligthyellow,ligthyellow,0";
+	type = NOTIFY;    
 }
+
+//        0                   1                   2                   3
+//        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     / |                       IPv4 or IPv6 Header                     |
+//   OH  |                      (uses RLOC addresses)                    |
+//     \ |                                                               |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     / |       Source Port = xxxx      |       Dest Port = 4342        |
+//   UDP +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     \ |           UDP Length          |        UDP Checksum           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   LH  |Type=8 |S|D|                Reserved                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     / |                       IPv4 or IPv6 Header                     |
+//   IH  |                  (uses RLOC or EID addresses)                 |
+//     \ |                                                               |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     / |       Source Port = xxxx      |       Dest Port = yyyy        |
+//   UDP +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//     \ |           UDP Length          |        UDP Checksum           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//   LCM |                      LISP Control Message                     |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+packet LISPEncapsulated {
+   string displayString = "b=15,15,oval,darkblue,darkblue,0";
+   unsigned char type = ENCAPSULATED_REQUEST;
+   bool SecBit;						// Security Bit
+   bool DDTBit;						// DDTOrigin Bit
+}
+

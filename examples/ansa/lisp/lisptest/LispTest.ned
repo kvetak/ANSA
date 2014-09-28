@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-package inet.examples.ansa.lisptest;
+package inet.examples.ansa.lisp.lisptest;
 
 import inet.ansa.ANSASwitch;
 import inet.ansa.nodes.ANSA_DualStackHost;

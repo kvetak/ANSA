@@ -611,6 +611,7 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
 
     if (!destIE) // no route found
     {
+
 #ifdef WITH_MANET
             if (manetRouting)
                sendNoRouteMessageToManet(datagram);

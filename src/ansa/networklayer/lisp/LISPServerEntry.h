@@ -23,28 +23,43 @@
 class LISPServerEntry {
   public:
     LISPServerEntry();
-    LISPServerEntry(std::string nipv4, std::string nipv6);
-    LISPServerEntry(std::string nipv4, std::string nipv6, std::string nkey);
+    LISPServerEntry(std::string nipv);
+    LISPServerEntry(std::string nipv, std::string nkey,
+                    bool proxy, bool notify, bool quick);
     virtual ~LISPServerEntry();
 
     bool operator== (const LISPServerEntry& other) const;
 
     std::string info() const;
 
-    const IPv4Address& getIpv4() const;
-    void setIpv4(const IPv4Address& ipv4);
-    const IPv6Address& getIpv6() const;
-    void setIpv6(const IPv6Address& ipv6);
     const std::string& getKey() const;
     void setKey(const std::string& key);
+    bool isMapNotify() const;
+    void setMapNotify(bool mapNotify);
+    bool isProxyReply() const;
+    void setProxyReply(bool proxyReply);
+    bool isQuickRegistration() const;
+    void setQuickRegistration(bool quickRegistration);
+    const IPvXAddress& getAddress() const;
+    void setAddress(const IPvXAddress& address);
+    simtime_t getLastTime() const;
+    void setLastTime(simtime_t lastTime);
 
   private:
-    IPv4Address ipv4;
-    IPv6Address ipv6;
+    IPvXAddress address;
     std::string key;
+    bool proxyReply;
+    bool mapNotify;
+    bool quickRegistration;
+    simtime_t lastTime;
 };
+
+typedef std::list< LISPServerEntry > ServerAddresses;
+typedef ServerAddresses::iterator ServerItem;
+typedef ServerAddresses::const_iterator ServerCItem;
 
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPServerEntry& entry);
+
 
 #endif /* LISPSERVERENTRY_H_ */

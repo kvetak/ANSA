@@ -41,10 +41,8 @@ class LISPMapStorageBase
     void addMapEntry(LISPMapEntry& entry);
     void removeMapEntry(const LISPMapEntry& entry);
     LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
-    LISPMapEntry* lookupMapEntry(IPvXAddress& address);
-
-    static int doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2);
-    static int getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2);
+    LISPMapEntry* findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref);
+    LISPMapEntry* lookupMapEntry(IPvXAddress address);
 
     MapStorage& getMappingStorage();
 

@@ -17,17 +17,21 @@
 //@author Vladimir Vesely (<a href="mailto:ivesely@fit.vutbr.cz">ivesely@fit.vutbr.cz</a>)
 
 #include "LISPCore.h"
+#include "IPv4InterfaceData.h"
+#include "IPv6InterfaceData.h"
 
 Define_Module(LISPCore);
 
 LISPCore::LISPCore()
 {
-
+    acceptMapRequestMapping = false;
+    mapCacheTtl = DEFAULT_TTL_VAL;
 }
+
 LISPCore::~LISPCore()
 {
-    //mss->clear();
-    //mrs->clear();
+    MapServers.clear();
+    MapResolvers.clear();
 }
 
 bool LISPCore::isMapResolverV4() const {
@@ -62,6 +66,114 @@ void LISPCore::setMapServerV6(bool mapServerV6) {
     this->mapServerV6 = mapServerV6;
 }
 
+void LISPCore::parseMapServerConfig(cXMLElement* config) {
+    //Map server addresses initial setup
+    cXMLElementList msa = config->getChildrenByTagName(ETRMAPSERVER_TAG);
+    for (cXMLElementList::iterator i = msa.begin(); i != msa.end(); ++i) {
+        cXMLElement* m = *i;
+
+        //Integrity checks and retrieving address attribute value
+        std::string mipv;
+        if (!m->getAttribute(ADDRESS_ATTR)) {
+            EV << "Config XML file missing tag or attribute - ADDRESS" << endl;
+            continue;
+        } else
+            mipv = m->getAttribute(ADDRESS_ATTR);
+
+        //Integrity checks and retrieving key attribute value
+        if (!m->getAttribute(KEY_ATTR)
+                || m->getAttribute(KEY_ATTR)[0] == '\0') {
+            EV << "Config XML file missing tag or attribute - KEY" << endl;
+            continue;
+        }
+        std::string mk = m->getAttribute(KEY_ATTR);
+
+        //Integrity checks and retrieving proxy attribute value
+        bool proxy = false;
+        if (m->getAttribute(PROXY_ATTR)) {
+            if (!strcmp(m->getAttribute(PROXY_ATTR), ENABLED_VAL))
+                proxy = true;
+        }
+
+        //Integrity checks and retrieving proxy attribute value
+        bool notify = false;
+        if (m->getAttribute(NOTIFY_ATTR)) {
+            if (!strcmp(m->getAttribute(NOTIFY_ATTR), ENABLED_VAL))
+                notify = true;
+        }
+
+        //Integrity checks and retrieving proxy attribute value
+        bool quickreg = false;
+        if (m->getAttribute(QUICKREG_ATTR)) {
+            if (!strcmp(m->getAttribute(QUICKREG_ATTR), ENABLED_VAL))
+                quickreg = true;
+        }
+
+        MapServers.push_back(
+                    LISPServerEntry(mipv, mk, proxy, notify, quickreg));
+    }
+}
+
+LISPServerEntry* LISPCore::findServerEntryByAddress(ServerAddresses& list,
+        IPvXAddress& addr) {
+    for (ServerItem it = list.begin(); it != list.end(); ++it ) {
+        if (it->getAddress() == addr)
+            return &(*it);
+    }
+    return NULL;
+}
+
+void LISPCore::parseMapResolverConfig(cXMLElement* config) {
+    //Map resolver addresses initial setup
+    cXMLElementList mra = config->getChildrenByTagName(ITRMAPRESOLVER_TAG);
+    for (cXMLElementList::iterator i = mra.begin(); i != mra.end(); ++i) {
+        cXMLElement* m = *i;
+
+        //Integrity checks and retrieving address attribute value
+        std::string mipv;
+        if (!m->getAttribute(ADDRESS_ATTR)) {
+            EV << "Config XML file missing tag or attribute - ADDRESS" << endl;
+            continue;
+        } else
+            mipv = m->getAttribute(ADDRESS_ATTR);
+
+        MapResolvers.push_back(LISPServerEntry(mipv));
+    }
+
+    //Init Resolver queue
+    MapResolverQueue = MapResolvers.begin();
+}
+
+void LISPCore::parseEtrMappings(cXMLElement* config) {
+    //EtrMappings
+    cXMLElement* etrm = config->getFirstChildWithTag(ETRMAP_TAG);
+    if (etrm)
+        this->EtrMapping.parseMapEntry(etrm);
+
+    //Set EtrMappings LOCAL locators and add other locators to probingset
+    for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
+        IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+        IPv4Address adr4 =
+                (int4Data) ?
+                        int4Data->getIPAddress() :
+                        IPv4Address::UNSPECIFIED_ADDRESS;
+        IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+        IPv6Address adr6 =
+                (int6Data) ?
+                        int6Data->getPreferredAddress() :
+                        IPv6Address::UNSPECIFIED_ADDRESS;
+        for (MapStorageItem it = EtrMapping.getMappingStorage().begin();
+                it != EtrMapping.getMappingStorage().end(); ++it) {
+            for (LocatorItem jt = it->getRlocs().begin();
+                    jt != it->getRlocs().end(); ++jt) {
+                //IF locator is local THEN mark it...
+                if (jt->getRlocAddr().equals(adr4) || jt->getRlocAddr().equals(adr6))
+                    jt->setLocal(true);
+            }
+        }
+    }
+}
+
 void LISPCore::parseConfig(cXMLElement* config)
 {
     //Config element is empty
@@ -69,71 +181,10 @@ void LISPCore::parseConfig(cXMLElement* config)
         return;
 
     //Map server addresses initial setup
-    cXMLElementList msa = config->getChildrenByTagName(MAPSERVERADDR_TAG);
-    for (cXMLElementList::iterator i = msa.begin(); i != msa.end(); ++i) {
-        cXMLElement* m = *i;
-        //EV << "IPv4: " << m->getAttribute("ipv4") << "\tIPv6: " << m->getAttribute("ipv6");
-
-        //Integrity checks and retrieving ipv4 attribute value
-        std::string mipv4;
-        if (!m->getAttribute(IPV4_ATTR)) {
-            EV << "Config XML file missing tag or attribute - IPv4 - replaced by empty" << endl;
-            mipv4 = EMPTY_STRING_VAL;
-        }
-        else
-            mipv4 = m->getAttribute(IPV4_ATTR);
-
-        //Integrity checks and retrieving ipv6 attribute value
-        std::string mipv6;
-        if (!m->getAttribute(IPV6_ATTR)) {
-            EV << "Config XML file missing tag or attribute - IPv6 - replaced by empty" << endl;
-            mipv6 = EMPTY_STRING_VAL;
-        }
-        else
-            mipv6 = m->getAttribute(IPV6_ATTR);
-
-        //Integrity checks and retrieving ipv6 attribute value
-        if (!m->getAttribute(KEY_ATTR)) {
-            EV << "Config XML file missing tag or attribute - KEY" << endl;
-            continue;
-        }
-        std::string mk = m->getAttribute(KEY_ATTR);
-
-        if ( (!mipv4.empty() || !mipv6.empty()) && !mk.empty())
-            MapServers.push_back(LISPServerEntry(mipv4, mipv6, mk));
-        else
-            EV << "Skipping XML MapServerAddress configuration" << endl;
-    }
+    parseMapServerConfig(config);
 
     //Map resolver addresses initial setup
-    cXMLElementList mra = config->getChildrenByTagName(MAPRESOLVERADDR_TAG);
-    for (cXMLElementList::iterator i = mra.begin(); i != mra.end(); ++i) {
-        cXMLElement* m = *i;
-        //EV << "IPv4: " << m->getAttribute("ipv4") << "\tIPv6: " << m->getAttribute("ipv6");
-
-        //Integrity checks and retrieving ipv4 attribute value
-        std::string mipv4;
-        if (!m->getAttribute(IPV4_ATTR)) {
-            EV << "Config XML file missing tag or attribute - IPv4 - replaced by empty" << endl;
-            mipv4 = EMPTY_STRING_VAL;
-        }
-        else
-            mipv4 = m->getAttribute(IPV4_ATTR);
-
-        //Integrity checks and retrieving ipv6 attribute value
-        std::string mipv6;
-        if (!m->getAttribute(IPV6_ATTR)) {
-            EV << "Config XML file missing tag or attribute - IPv6 - replaced by empty" << endl;
-            mipv6 = EMPTY_STRING_VAL;
-        }
-        else
-            mipv6 = m->getAttribute(IPV6_ATTR);
-
-        if ( !mipv4.empty() || !mipv6.empty() )
-            MapResolvers.push_back(LISPServerEntry(mipv4,  mipv6));
-        else
-            EV << "Skipping XML MapResolverAddress configuration" << endl;
-    }
+    parseMapResolverConfig(config);
 
     //Enable MS functionality
     mapServerV4 = par(MS4_PAR).boolValue();
@@ -158,14 +209,70 @@ void LISPCore::parseConfig(cXMLElement* config)
     }
 
     //EtrMappings
-    cXMLElement* etrm = config->getFirstChildWithTag(ETRMAP_TAG);
-    if (etrm)
-        this->EtrMapping.parseMapEntry(etrm);
+    parseEtrMappings(config);
 }
 
-void LISPCore::registerSite() {
-    for (ServerItem it = MapServers.begin(); it != MapServers.end(); ++it)
-        sendMapRegister(*it);
+void LISPCore::scheduleRegistration() {
+    //Acts as ETR register for LISP sites and schedule registration for each MS
+    for (ServerCItem it = MapServers.begin(); it != MapServers.end(); ++it) {
+        LISPRegisterTimer* regtim = new LISPRegisterTimer(REGISTER_TIMER);
+        if (it->isQuickRegistration())
+            regtim->setQuickRegCycles(QUICKREG_CYCLES_VAL);
+        else
+            regtim->setQuickRegCycles(0);
+
+        regtim->setServerAddress(it->getAddress());
+        scheduleAt(simTime(), regtim);
+    }
+}
+
+void LISPCore::scheduleRlocProbing() {
+    //Cycle through all Local locators
+    for (MapStorageItem it = EtrMapping.getMappingStorage().begin();
+            it != EtrMapping.getMappingStorage().end(); ++it) {
+        for (LocatorItem jt = it->getRlocs().begin();
+                jt != it->getRlocs().end(); ++jt) {
+            if (jt->isLocal()) {
+                //Local RLOC is marked as up TODO: Vesely - Periodic checks?
+                jt->setState(LISPRLocator::UP);
+                continue;
+            }
+
+            //Non-local RLOC is marked as down
+            jt->setState(LISPRLocator::DOWN);
+
+            //Probe is configured for each RLOC and each of its EID...
+            if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_CISCO_PARVAL) ) {
+                LISPProbeEntry probe = LISPProbeEntry(jt->getRlocAddr());
+                probe.addEid(it->getEidPrefix(), &(*jt) );
+                ProbingSet.addProbeEntry(probe);
+            }
+            //...or each RLOC has all EIDs assigned to it
+            else{
+                LISPProbeEntry* probe = ProbingSet.findFirstProbeEntryByRloc(jt->getRlocAddr());
+                //IF RLOC exists THEN append EID
+                if (probe)
+                    probe->addEid(it->getEidPrefix(), &(*jt) );
+                //...OTHERWISE create new Probe
+                else {
+                    probe = new LISPProbeEntry(jt->getRlocAddr());
+                    probe->addEid(it->getEidPrefix(), &(*jt) );
+                    ProbingSet.addProbeEntry(*probe);
+                }
+            }
+        }
+    }
+
+    //Schedule RlocProbes
+    for (ProbeItem it = ProbingSet.getProbes().begin(); it != ProbingSet.getProbes().end(); ++it) {
+        LISPRlocProbeTimer* rlocprobe = new LISPRlocProbeTimer(REQUESTPROBE_TIMER);
+        //EV << it->getRlocAddr() << "\n" << it->getEids() << endl;
+        rlocprobe->setRlocAddr(it->getRlocAddr());
+        rlocprobe->setEidPref(it->getNextEid());
+        rlocprobe->setPreviousNonce(DEFAULT_NONCE_VAL);
+        rlocprobe->setRetryCount(0);
+        scheduleAt(simTime(), rlocprobe);
+    }
 }
 
 void LISPCore::initialize(int stage)
@@ -177,6 +284,14 @@ void LISPCore::initialize(int stage)
     Ift = InterfaceTableAccess().get();
     // local MapCache
     MapCache =  ModuleAccess<LISPMapCache>(MAPCACHE_MOD).get();
+
+    //Set by parameters
+    acceptMapRequestMapping = par(ACCEPTREQMAPPING_PAR).boolValue();
+
+    if (par(MAPCACHETTL_PAR).longValue() <= 0)
+        mapCacheTtl = DEFAULT_TTL_VAL;
+    else
+        mapCacheTtl = (unsigned short) ( par(MAPCACHETTL_PAR).longValue() );
 
     parseConfig(par(CONFIG_PAR).xmlValue());
 
@@ -190,9 +305,16 @@ void LISPCore::initialize(int stage)
         throw cException("Cannot act as Map Server without Mapping Database!");
     }
 
-    //Acts as ETR register for LISP sites
-    if (!MapServers.empty())
-        scheduleAt(simTime(), new cMessage(REGISTER_TIMER));
+    //Acts as ETR register for LISP sites and schedule registration for each MS
+    if ( MapServers.empty() && !EtrMapping.getMappingStorage().empty() ) {
+        EV << "EtrMappings are present but no MapServer is configured!" << endl;
+    }
+    else
+        scheduleRegistration();
+
+    //TODO: Vesely - What about local locators? How should check the reachibility?
+    //Schedule MapETR RLOC probing where each non-local locator is tested for its EID every 60 seconds
+    scheduleRlocProbing();
 
     initSockets();
 
@@ -200,14 +322,124 @@ void LISPCore::initialize(int stage)
     WATCH_LIST(MapResolvers);
     WATCH_LIST(MapServers);
     WATCH_LIST(EtrMapping.getMappingStorage());
+    WATCH_LIST(MsgLog.getMsgLogger());
+    WATCH_LIST(ProbingSet.getProbes());
+}
+
+void LISPCore::expireRegisterTimer(LISPRegisterTimer* regtim) {
+    //Retrieve ServerEntry
+    LISPServerEntry* se = findServerEntryByAddress(MapServers, regtim->getServerAddress());
+    if (se) {
+        //Register LISP Site
+        sendMapRegister(*se);
+        //TODO: Vesely - Not very nice QuickRegistration handling
+        //Handle QuickRegistration
+        if (regtim->getQuickRegCycles())
+            regtim->setQuickRegCycles(regtim->getQuickRegCycles() - 1);
+
+        se->setQuickRegistration(regtim->getQuickRegCycles());
+        //Reschedule timer to expire
+        if (se->isQuickRegistration())
+            scheduleAt(simTime() + QUICK_REGTIMER_VAL, regtim);
+        else
+            scheduleAt(simTime() + DEFAULT_REGTIMER_VAL, regtim);
+    } else
+        //IF ServerEntry seized to exist THEN delete
+        cancelAndDelete(regtim);
+}
+
+void LISPCore::expireRequestTimer(LISPRequestTimer* reqtim) {
+    //Check whether previous request was replied. IF true THEN cancel ELSE retry sending Map-Request
+    if (reqtim->getRetryCount() && MsgLog.findMsg(LISPMsgEntry::REPLY, reqtim->getPreviousNonce()))
+        cancelAndDelete(reqtim);
+    else {
+        //Send Map-Request message
+        unsigned long nonce;
+        nonce = sendEncapsulatedMapRequest(reqtim->getSrcEid(), reqtim->getDstEid());
+
+        //Iterate ResolverQueue to deterministically change queried MR
+        //FIXME: Vesely - What if MR from unsupported AFI?
+        MapResolverQueue++;
+        if (MapResolverQueue == MapResolvers.end())
+            MapResolverQueue = MapResolvers.begin();
+
+        //Plan next timeout our cancel timer when number of retries is reached
+        if (reqtim->getRetryCount() + 1 <= DEFAULT_MAXREQRETRIES_VAL) {
+            scheduleAt(simTime() + (simtime_t) pow(DEFAULT_REQMULTIPLIER_VAL,
+                       reqtim->getRetryCount()), reqtim);
+            reqtim->setRetryCount(reqtim->getRetryCount() + 1);
+            reqtim->setPreviousNonce(nonce);
+        } else {
+            EV << "Map-Request for EID " << reqtim->getDstEid()
+                      << " timed out after " << (short) reqtim->getRetryCount()
+                      << " retries!" << endl;
+            cancelAndDelete(reqtim);
+        }
+    }
+}
+
+void LISPCore::expireRlocProbeTimer(LISPRlocProbeTimer* probetim) {
+    //EV << "LISPRLOCPROBE" << endl;
+    simtime_t nexttime;
+    //IF last RLOC-Probe was successfully replied...
+    if ( MsgLog.findMsg(LISPMsgEntry::RLOC_PROBE_REPLY, probetim->getPreviousNonce()) ) {
+        nexttime = DEFAULT_REGTIMER_VAL;
+        probetim->setRetryCount(0);
+        probetim->setPreviousNonce(DEFAULT_NONCE_VAL);
+        scheduleAt(simTime() + nexttime, probetim);
+    }
+    //...OR max-retrycount reached THEN timeout and mark locator as down
+    else if (probetim->getRetryCount() + 1 == DEFAULT_MAXREQRETRIES_VAL) {
+        LISPProbeEntry* probe =
+                        ProbingSet.findProbeEntryByRlocAndEid(probetim->getRlocAddr(), probetim->getEidPref());
+        EV << "Probe RetryCount reached, marking RLOC " << probetim->getRlocAddr() << " as down!" << endl;
+        probe->setRlocStatusForAllEids(LISPRLocator::DOWN);
+
+        nexttime = DEFAULT_REGTIMER_VAL;
+        probetim->setRetryCount(0);
+        probetim->setPreviousNonce(DEFAULT_NONCE_VAL);
+        scheduleAt(simTime() + nexttime, probetim);
+    }
+    //...otherwise send RLOC-Probe, iterate RetryCount and prepare next probe
+    else {
+        //Send Map-Request RLOC-Probe message
+        //EV << "RLOC: " << probetim->getRlocAddr() << "  EID: " << probetim->getEidPref() << endl;
+        unsigned long nonce;
+        nonce = sendRlocProbe(probetim->getRlocAddr(), probetim->getEidPref());
+
+        LISPProbeEntry* probe =
+                ProbingSet.findProbeEntryByRlocAndEid(probetim->getRlocAddr(), probetim->getEidPref());
+        if (!probe)
+            throw cException("Could not find record!");
+        probe->setLastTimeProbed(simTime());
+
+
+        if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDRR_PARVAL) ) {
+            //Round-robin throuh EIDs using this locator
+            LISPEidPrefix eidPref = ProbingSet.findFirstProbeEntryByRloc(probetim->getRlocAddr())->getNextEid();
+            EV << "Before " << probetim->getEidPref() << " / after " << eidPref << endl;
+            probetim->setEidPref(eidPref);
+        }
+
+        nexttime = (simtime_t) pow(DEFAULT_REQMULTIPLIER_VAL, probetim->getRetryCount());
+        probetim->setRetryCount(probetim->getRetryCount() + 1);
+        probetim->setPreviousNonce(nonce);
+        //Schedule next RLOC-Probe check
+        scheduleAt(simTime() + nexttime, probetim);
+    }
 }
 
 void LISPCore::handleTimer(cMessage* msg) {
     //Register timer expires
-    if ( !strcmp(msg->getName(), REGISTER_TIMER) ) {
-        registerSite();
-        //Reschedule timer to execute after next 60 seconds
-        scheduleAt(simTime() + 60, msg);
+    if ( dynamic_cast<LISPRegisterTimer*>(msg) ) {
+        expireRegisterTimer(check_and_cast<LISPRegisterTimer*>(msg));
+    }
+    //Request timer expires
+    else if (dynamic_cast<LISPRequestTimer*>(msg)) {
+        expireRequestTimer(check_and_cast<LISPRequestTimer*>(msg));
+    }
+    else if (dynamic_cast<LISPRlocProbeTimer*>(msg)) {
+        expireRlocProbeTimer(check_and_cast<LISPRlocProbeTimer*>(msg));
     }
     else {
         error("Unrecognized timer (%s)", msg->getClassName());
@@ -216,9 +448,59 @@ void LISPCore::handleTimer(cMessage* msg) {
 }
 
 void LISPCore::handleCotrol(cMessage* msg) {
-    EV << "Control" << endl;
-    if ( dynamic_cast<LISPMapRegister*>(msg) ) {
-        receiveMapRegister(dynamic_cast<LISPMapRegister*>(msg));
+    //EV << "Control" << endl;
+    //If encapsulated control message THEN decapsulate
+    if (dynamic_cast<LISPEncapsulated*>(msg)) {
+        //EV << "Vevnitr" << endl;
+        //Get top most ControlInfo because other are empty
+        cPacket* plispenc = (cPacket*)msg;
+        cObject* control = plispenc->removeControlInfo();
+
+        //Unwrap unnecessary envelopes
+        cPacket* pip = plispenc->decapsulate();
+        cPacket* pudp = pip->decapsulate();
+        cPacket* plispmap = pudp->decapsulate();
+
+        //Copy control info
+        plispmap ->setControlInfo(control);
+
+        //Delete other outer layers
+        delete plispenc;
+        delete pip;
+        delete pudp;
+
+        //Set msg pointer to inner LISP message
+        msg = plispmap;
+    }
+    //Map-Notify must be evaluated earlier because it is inherited from Map-Register
+    if ( dynamic_cast<LISPMapNotify*>(msg) ) {
+            receiveMapNotify( dynamic_cast<LISPMapNotify*>(msg) );
+    }
+    else if ( dynamic_cast<LISPMapRegister*>(msg) ) {
+        LISPMapRegister* lmreg = check_and_cast<LISPMapRegister*>(msg);
+        //Register site
+        receiveMapRegister( lmreg );
+        //Send Map-Notify if solicited
+        if (lmreg->getMapNotifyBit())
+            sendMapNotify(lmreg);
+    }
+    else if ( dynamic_cast<LISPMapRequest*>(msg) ) {
+        LISPMapRequest* lmreq = check_and_cast<LISPMapRequest*>(msg);
+        //Process RLOC-Probe
+        if ( lmreq->getProbeBit() )
+            receiveRlocProbe(lmreq);
+        //Process ordinary Map-Request
+        else
+            receiveMapRequest( lmreq );
+    }
+    else if ( dynamic_cast<LISPMapReply*>(msg) ) {
+        LISPMapReply* lmrep = check_and_cast<LISPMapReply*>(msg);
+        //Process RLOC-Probe-Reply
+        if ( lmrep->getProbeBit() )
+            receiveRlocProbeReply(lmrep);
+        //Process ordinary Map-Reply
+        else
+            receiveMapReply( lmrep );
     }
     delete msg;
 }
@@ -226,7 +508,7 @@ void LISPCore::handleCotrol(cMessage* msg) {
 void LISPCore::handleData(cMessage* msg) {
 }
 
-void LISPCore::handleMessage(cMessage *msg)
+void LISPCore::handleMessage(cMessage* msg)
 {
     if (msg->isSelfMessage())
         handleTimer(msg);
@@ -251,53 +533,43 @@ void LISPCore::updateDisplayString()
 void LISPCore::initSockets() {
     controlTraf.setOutputGate(gate("udpOut"));
     controlTraf.setReuseAddress(true);
-    controlTraf.bind(CONTROL_PORT);
+    controlTraf.bind(CONTROL_PORT_VAL);
 }
 
 void LISPCore::sendMapRegister(LISPServerEntry& se) {
-    if (se.getIpv4() == IPv4Address::UNSPECIFIED_ADDRESS && se.getIpv6() == IPv6Address::UNSPECIFIED_ADDRESS )
-        return;
-
-    LISPMapRegister* lmr = new LISPMapRegister(REGISTER_MSG);
+    LISPMapRegister* lmreg = new LISPMapRegister(REGISTER_MSG);
 
     //General fields
-    lmr->setNonce(DEFAULT_NONCE_VAL);
-    lmr->setRecordCount(EtrMapping.getMappingStorage().size());
+    unsigned long newnonce = (unsigned long) rand();
+    lmreg->setNonce(newnonce);
+
+    lmreg->setProxyBit(se.isProxyReply());
+    lmreg->setMapNotifyBit(se.isMapNotify());
 
     //Authentication data
-    lmr->setKeyId(LISPCommon::NONE);
-    lmr->setAuthDataLen(se.getKey().size());
-    lmr->setAuthData(se.getKey().c_str());
+    lmreg->setKeyId(LISPCommon::NONE);
+    lmreg->setAuthDataLen(se.getKey().size());
+    lmreg->setAuthData(se.getKey().c_str());
 
     //TRecords
-    for (MapStorageCItem it = EtrMapping.getMappingStorage().begin(); it != EtrMapping.getMappingStorage().end(); ++it) {
-        TRecord rec;
-        rec.recordTTL = DEFAULT_TTL_VAL;
-        rec.EidPrefix = it->getEidPrefix();
-        rec.mapVersion = DEFAULT_MAPVER_VAL;
-        rec.ABit = true;
-        rec.ACT = LISPCommon::NO_ACTION;
-        rec.locatorCount = it->getRlocs().size();
-        for (LocatorCItem jt = it->getRlocs().begin(); jt != it->getRlocs().end(); ++jt) {
-            TLocator loc;
-            loc.RLocator = *jt;
-            loc.LocalLocBit = true;
-            loc.piggybackBit = false;
-            loc.RouteRlocBit = true;
-            rec.locators.push_back(loc);
-        }
-        lmr->getRecords().push_back(rec);
+    for (MapStorageItem it = EtrMapping.getMappingStorage().begin(); it != EtrMapping.getMappingStorage().end(); ++it) {
+        TRecord rec = prepareTRecord(&(*it), true, LISPCommon::NO_ACTION);
+        lmreg->getRecords().push_back(rec);
     }
+    //As many records as there are EtrMappings
+    lmreg->setRecordCount(lmreg->getRecords().size());
 
-    if (se.getIpv4() != IPv4Address::UNSPECIFIED_ADDRESS)
-        controlTraf.sendTo(lmr, se.getIpv4() , CONTROL_PORT);
-    if (se.getIpv6() != IPv6Address::UNSPECIFIED_ADDRESS) {
-        LISPMapRegister* lmrcopy = lmr->dup();
-        controlTraf.sendTo(lmrcopy, se.getIpv6() , CONTROL_PORT);
-    }
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::REGISTER, lmreg->getNonce(), se.getAddress(), true);
+    controlTraf.sendTo(lmreg, se.getAddress() , CONTROL_PORT_VAL);
 }
 
-void LISPCore::receiveMapRegister(LISPMapRegister* lmr) {
+void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
+    //Log
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+    MsgLog.addMsg(LISPMsgEntry::REGISTER, lmreg->getNonce(), src, false);
+
     //Check whether device has MapDB
     if (!mapServerV4 && !mapServerV6) {
         EV << "non-MS device received Map-Register!" << endl;
@@ -305,37 +577,626 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmr) {
     }
 
     //Check for 0 records
-    if (lmr->getRecordCount() == 0) {
-        EV << "Map-Register contained zero records!" << endl;
+    if (lmreg->getRecordCount() == 0) {
+        EV << "Map-Register contains zero records!" << endl;
         return;
     }
 
     //Check the authentication method
-    if (lmr->getKeyId() != 0) {
-        EV << "Map-Register contained unsupported authentication method!" << endl;
+    if (lmreg->getKeyId() != 0) {
+        EV << "Map-Register contains unsupported authentication method!" << endl;
         return;
     }
-    std::string authData = lmr->getAuthData();
-    LISPSiteInfo* si = MapDb->findSiteInfoByKey(authData);
-    if (si) {
-        //Set Proxy-reply settings
-        si->setProxyReply(lmr->getProxyBit());
-        for (TRecordCItem it = lmr->getRecords().begin(); it != lmr->getRecords().end(); ++it) {
-            //EID found in MS database
-            LISPMapEntry* me = si->findMapEntryByEidPrefix(it->EidPrefix);
-            if (me) {
 
-                me->setRegistredBy(lmr->getSenderModule()->getParentModule()->getName());
-                me->setLastTime(simTime());
-                for (TLocatorCItem jt = it->locators.begin(); jt != it->locators.end(); ++jt) {
-                    LISPRLocator rloc = jt->RLocator;
-                    rloc.setState(LISPRLocator::UP);
-                    me->addLocator(rloc);
-                }
+    //FIXME: Vesely - Searching for SiteInfo should NOT be done based on key. Remove simplification!
+    std::string authData = lmreg->getAuthData();
+    LISPSite* si = MapDb->findSiteInfoByKey(authData);
+
+    if (si) {
+        UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
+        IPvXAddress src = udpi->getSrcAddr();
+
+        LISPSiteRecord* srec;
+        LISPServerEntry* se;
+        //Create new record ...
+        if ( !si->findRecordByAddress(src) ) {
+            srec = new LISPSiteRecord();
+            se = new LISPServerEntry(src.str(), "", lmreg->getProxyBit(), false, false);
+            srec->setServerEntry(*se);
+            //Store new record into SiteStorage
+            si->addRecord(*srec);
+        }
+        //...and/or retrieve record
+        srec = si->findRecordByAddress(src);
+
+        //Update Record parameters
+        srec->getServerEntry().setLastTime(simTime());
+        srec->getServerEntry().setProxyReply(lmreg->getProxyBit());
+
+        for (TRecordCItem it = lmreg->getRecords().begin(); it != lmreg->getRecords().end(); ++it) {
+            if (!it->locatorCount) {
+                EV << "Map-register with EID " << it->EidPrefix << " has zero locators!";
+                continue;
+            }
+
+
+            //Trying to store EID from AF that server does not operate
+            if ( (it->EidPrefix.getEidAddr().isIPv6()  && !mapServerV6)
+                 || (!it->EidPrefix.getEidAddr().isIPv6() && !mapServerV4) ) {
+                EV << "Map-register contains EID " << it->EidPrefix << " with AF not recognized by map server!";
+                continue;
+            }
+
+            LISPMapEntry* entry;
+            //Create new MapEntry ...
+            if ( !srec->findMapEntryByEidPrefix(it->EidPrefix) ) {
+                //IF new ME has not EID supported by Site THEN skip
+                if (!si->findMapEntryByEidPrefix(it->EidPrefix))
+                    continue;
+                entry = new LISPMapEntry(it->EidPrefix);
+                srec->addMapEntry(*entry);
+            }
+            //... and/or ... retrieve MapEntry
+            entry = srec->findMapEntryByEidPrefix(it->EidPrefix);
+
+            //Update MapEntry parameters
+            entry->setExpiry(simTime() + it->recordTTL * 60);
+
+            //Fill it with EID-to-RLOC mappings
+            for (TLocatorCItem jt = it->locators.begin(); jt != it->locators.end(); ++jt) {
+                LISPRLocator rloc = jt->RLocator;
+                if (!entry->isLocatorExisting(rloc.getRlocAddr()))
+                    entry->addLocator(rloc);
+
+                //Update state
+                LISPRLocator* rl = entry->getLocator( rloc.getRlocAddr() );
+                //TODO: Vesely - more research opportunity
+                //IF RlocRoute bit set THEN consider RLOC up
+                if (jt->RouteRlocBit)
+                    rl->setState(LISPRLocator::UP);
             }
         }
     }
+    else {
+        EV << "Map-Register contains unknown LISP site!" << endl;
+    }
+}
+
+void LISPCore::sendMapNotify(LISPMapRegister* lmreg) {
+    LISPMapNotify* lmnot = new LISPMapNotify(NOTIFY_MSG);
+
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
+    IPvXAddress dst = udpi->getSrcAddr();
+
+    //Copy Map-Register content onto Map-Notify
+    lmnot->setNonce(lmreg->getNonce());
+    lmnot->setRecordCount(lmreg->getRecordCount());
+    //lmnot->setProxyBit(lmreg->getProxyBit());
+    //lmnot->setMapNotifyBit(lmreg->getMapNotifyBit());
+    lmnot->setKeyId(lmreg->getKeyId());
+    lmnot->setAuthDataLen(lmreg->getAuthDataLen());
+    lmnot->setAuthData(lmreg->getAuthData());
+    lmnot->setRecords(lmreg->getRecords());
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::NOTIFY, lmnot->getNonce(), dst, true);
+    controlTraf.sendTo(lmnot, dst, CONTROL_PORT_VAL);
+}
+
+void LISPCore::receiveMapNotify(LISPMapNotify* lmnot) {
+    //Retrieve source IP address
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmnot->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+
+    //Log
+    MsgLog.addMsg(LISPMsgEntry::NOTIFY, lmnot->getNonce(), src, false);
+
+    //Check whether last Map-Register was acknowledged
+    if ( MsgLog.findMsg(LISPMsgEntry::REGISTER, lmnot->getNonce() ) ) {
+        EV << "Map-Register was acknowledged by Map-Notify with nonce " << lmnot->getNonce() << endl;
+        //Retrieve appropriate ServerEntry
+        LISPServerEntry* se = findServerEntryByAddress(MapServers, src);
+        if (se) {
+            //TODO: Instead of parsing some simple check that every ETR was replied
+                //FIXME: Vesely - Testing purposes MapRequest generation
+                IPvXAddress src = IPvXAddress("192.168.2.1");
+                IPvXAddress dst = IPvXAddress("192.168.1.1");
+
+                LISPRequestTimer* reqtim = new LISPRequestTimer(REQUEST_TIMER);
+                reqtim->setSrcEid(src);
+                reqtim->setDstEid(dst);
+                reqtim->setRetryCount(0);
+                reqtim->setPreviousNonce(DEFAULT_NONCE_VAL);
+                scheduleAt(simTime(), reqtim);
+        }
+        else
+            EV << "ServerEntry has not been found!" << endl;
+    }
+    else
+        EV << "Unsolicited Map-Notify received!" << endl;
+}
+
+TRecord LISPCore::prepareTRecord(LISPMapEntry* me, bool Abit, LISPCommon::EAct action) {
+    TRecord rec;
+    rec.recordTTL = mapCacheTtl;
+    rec.EidPrefix = me->getEidPrefix();
+    rec.mapVersion = DEFAULT_MAPVER_VAL;
+    rec.ABit = Abit;
+    rec.ACT = action;
+    rec.locatorCount = me->getRlocs().size();
+    for (LocatorCItem jt = me->getRlocs().begin(); jt != me->getRlocs().end(); ++jt) {
+        TLocator loc;
+        loc.RLocator = *jt;
+        //IF ETR is responding THEN local is relevant...
+        if (Abit)
+            loc.LocalLocBit = jt->isLocal();
+        //...otherwise MS is responding
+        else
+            loc.LocalLocBit = false;
+        loc.piggybackBit = false;
+        //Reachbility is measured according to RLOC state
+        loc.RouteRlocBit = (jt->getState() == LISPRLocator::UP) ? true : false;
+        rec.locators.push_back(loc);
+    }
+    return rec;
+}
+
+unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddress& dstEid) {
+    LISPMapRequest* lmreq = new LISPMapRequest(REQUEST_MSG);
+
+    //General fields
+    unsigned long newnonce = (unsigned long) rand();
+    lmreq->setNonce(newnonce);
+
+    lmreq->setProbeBit(false);
+
+    lmreq->setSourceEid(TAfiAddr(srcEid));
+
+    LISPMapEntry* me = EtrMapping.lookupMapEntry(srcEid);
 
 
+    //TODO: Vesely - If there is no ME match THEN send it without MapReply
+    if (me) {
+        //Prepare ITR-RLOCs
+        for (LocatorCItem it = me->getRlocs().begin(); it != me->getRlocs().end(); ++it)
+            if (it->isLocal())
+                lmreq->getItrRlocs().push_back(TAfiAddr(it->getRlocAddr()));
+        lmreq->setItrRlocCount(lmreq->getItrRlocs().size() - 1);
 
+        //Multiple Recs in Map-Request, TODO: Vesely - Currently it is not supported yet
+        lmreq->setRecordCount(1);
+        LISPEidPrefix irec = dstEid.isIPv6() ? LISPEidPrefix(dstEid, 128) : LISPEidPrefix(dstEid, 32);
+        lmreq->getRecs().push_back(irec);
+
+        //Map-Reply Record
+        lmreq->setMapDataBit(true);
+        TRecord rep = prepareTRecord(me, true, LISPCommon::NO_ACTION);
+        lmreq->setMapReply(rep);
+    }
+    else {
+        error("Cannot send Map-Request because srcEID does not have ME!");
+        return DEFAULT_NONCE_VAL;
+    }
+
+    //Create UDP Envelope
+    UDPPacket* udpPacket = new UDPPacket(REQUEST_MSG);
+    udpPacket->setByteLength(UDP_HEADER_BYTES);
+    udpPacket->encapsulate(lmreq);
+    udpPacket->setSourcePort(CONTROL_PORT_VAL);
+    udpPacket->setDestinationPort(CONTROL_PORT_VAL);
+
+    cPacket* middle;
+    //Create IPv6 envelope
+    if (srcEid.isIPv6() && dstEid.isIPv6()) {
+        IPv6Datagram *datagram = new IPv6Datagram(REQUEST_MSG);
+        datagram->setByteLength(IPv6_HEADER_BYTES);
+        datagram->encapsulate(udpPacket);
+        datagram->setSrcAddress(srcEid.get6());
+        datagram->setDestAddress(dstEid.get6());
+        datagram->setHopLimit(DEFAULT_IPTTL_VAL);
+        datagram->setTransportProtocol(IP_PROT_UDP);
+        middle = datagram;
+
+    }
+    //...else IPv4 envelope
+    else {
+        IPv4Datagram *datagram = new IPv4Datagram(REQUEST_MSG);
+        datagram->setByteLength(IP_HEADER_BYTES);
+        datagram->encapsulate(udpPacket);
+        datagram->setSrcAddress(srcEid.get4());
+        datagram->setDestAddress(dstEid.get4());
+        datagram->setTimeToLive(DEFAULT_IPTTL_VAL);
+        datagram->setTransportProtocol(IP_PROT_UDP);
+        middle = datagram;
+    }
+
+    //LISPHeader
+    LISPEncapsulated* lencreq = new LISPEncapsulated(ENCAPSULATEDREQUEST_MSG);
+    lencreq->encapsulate(middle);
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), MapResolverQueue->getAddress(), true);
+    controlTraf.sendTo(lencreq, MapResolverQueue->getAddress(), CONTROL_PORT_VAL);
+
+    return lmreq->getNonce();
+}
+
+void LISPCore::receiveMapRequest(LISPMapRequest* lmreq) {
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+    //Log
+    MsgLog.addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), src, true);
+
+    //Process as MR-MS
+    if ( ( this->mapResolverV4 && !src.isIPv6() ) || ( this->mapResolverV6 && src.isIPv6() ) ) {
+
+        //Parse request(s)
+        //Vesely - Current version should contain single request, thus FOR has 1 iteration
+        for (TRecsCItem it = lmreq->getRecs().begin(); it != lmreq->getRecs().end(); ++it) {
+            //EV << "EID> " << it->getEidAddr() << endl;
+            LISPSite* si = MapDb->findSiteByAggregate(it->getEidAddr());
+            if (si) {
+                //EV << "Site> " << si->info() << endl;
+                Etrs res = si->findAllRecordsByEid(it->getEidAddr());
+                //EV << "ResSIze> " << res.size() << endl;
+                if ( !res.size() ) {
+                    EV << "Site with aggregate but without specific EIDs. Sending Negative Map-Reply!" << endl;
+                    sendNegativeMapReply(lmreq, *it, true);
+                    continue;
+                }
+
+                //Filter retrieve records according to address family
+                bool proxyReply = false;
+                for (EtrItem jt = res.begin(); jt != res.end(); ++jt) {
+                    //TODO: Vesely - Is it okay to erase ETR servers which have different AFI?
+                    if ( (*jt).getServerEntry().getAddress().isIPv6() xor src.isIPv6() )
+                        res.erase(jt++);
+                    //Filter only the best EID from each ETR TODO: Vesely - What if I want more less precise mapping answers?
+                    LISPMapEntry me = *( (*jt).lookupMapEntry( it->getEidAddr() ) );
+                    (*jt).clear();
+                    (*jt).addMapEntry(me);
+                    if ( (*jt).getServerEntry().isProxyReply() )
+                        proxyReply = true;
+                }
+
+                //TODO: Vesely - EID inconsistency check
+                //      Cisco assumes that all ETRs registered same EID-to-RLOC mapping
+                //Check whether all uses the same EID result. Take the first as template.
+                LISPMapEntry me = res.begin()->getMappingStorage().front();
+                for (EtrItem jt = res.begin(); jt != res.end(); ++jt) {
+                    LISPEidPrefix pref = (*jt).getMappingStorage().front().getEidPrefix();
+                    if ( ! (me.getEidPrefix() == pref) ) {
+                        EV << "Precision inconsistency exists for EID " << it->getEidAddr() << endl;
+                        EV << me.getEidPrefix() << " versus " << pref;
+                        continue;
+                    }
+                }
+                //Check whether all uses the same locator set. Take the first one as template.
+                for (EtrItem jt = res.begin(); jt != res.end(); ++jt) {
+                    if (me.getRlocs() != (*jt).getMappingStorage().front().getRlocs()) {
+                        EV << "Locator inconsistency exists for EID " << it->getEidAddr() << endl;
+                        EV << me.getRlocs() << endl << (*jt).getMappingStorage().front().getRlocs();
+                        continue;
+                    }
+                }
+
+                if (res.size()) {
+                    //Check whether there are ETRs requesting proxy-reply
+                    if (proxyReply) {
+                        //Proxy-reply instead of authoritative ETRs
+                        //FIXME: If there are multiple Recs then what about Nonces?
+                        sendMapReplyFromMs(lmreq, res);
+                    }
+                    //...otherwise delegate Map-Request towards ETR
+                    else {
+                        delegateMapRequest(lmreq, res);
+                    }
+                }
+                else {
+                    EV << "No ME left in answer! Sending Negative Map-Reply!" << endl;
+                    sendNegativeMapReply(lmreq, *it, true);
+                    continue;
+                }
+            }
+            else {
+                EV << "No site with aggregate matching EID. Sending Negative Map-Reply!" << endl;
+                sendNegativeMapReply(lmreq, *it, false);
+                continue;
+            }
+        }
+
+    }
+    //Process as ETR (who knows the answer)
+    else {
+        //Parse request(s)
+        for (TRecsCItem it = lmreq->getRecs().begin(); it != lmreq->getRecs().end(); ++it) {
+            sendMapReplyFromEtr(lmreq, it->getEidAddr());
+        }
+    }
+    //Cache MapReply record
+    if (acceptMapRequestMapping)
+        cacheMapping(lmreq->getMapReply());
+}
+
+void LISPCore::delegateMapRequest(LISPMapRequest* lmreq, Etrs& etrs) {
+    //TODO: Vesely - Which ETR to use? First one, the last performing registration?
+    //               Currently the first one is used!
+    LISPMapRequest* copy = lmreq->dup();
+
+    //Log and send
+    IPvXAddress dst = etrs.front().getServerEntry().getAddress();
+    MsgLog.addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), dst, true);
+    controlTraf.sendTo(copy, dst, CONTROL_PORT_VAL);
+}
+
+void LISPCore::sendMapReplyFromMs(LISPMapRequest* lmreq, Etrs& etrs) {
+    LISPMapReply* lmrep = new LISPMapReply(REPLY_MSG);
+
+    //General fields
+    lmrep->setNonce( lmreq->getNonce() );
+    lmrep->setProbeBit(false);
+    //TODO: Vesely - Work on EchoNonceBack algorithm, currently off
+    //lmrep->setEchoNonceBit(false);
+    //TODO: Vesely - Work on SecurityBit fields, currently off
+    //lmrep->setSecBit(false);
+
+    //Currently the first ETR info is used because they should be all same
+    //TODO: Vesely - Work on merging
+    LISPMapEntry& me = etrs.front().getMappingStorage().front();
+
+    TRecord rec = prepareTRecord(&me, false, LISPCommon::NO_ACTION);
+
+    lmrep->getRecords().push_back(rec);
+    //Record count should be 1 for Map-Reply
+    lmrep->setRecordCount(lmrep->getRecords().size());
+
+    //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
+    //Log and send
+    IPvXAddress dst = lmreq->getItrRlocs().front().address;
+    MsgLog.addMsg(LISPMsgEntry::REPLY, lmrep->getNonce(), dst, true);
+    controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
+}
+
+void LISPCore::sendMapReplyFromEtr(LISPMapRequest* lmreq, const IPvXAddress& eidAddress) {
+    LISPMapReply* lmrep = new LISPMapReply(REPLY_MSG);
+
+    //General fields
+    lmrep->setNonce( lmreq->getNonce() );
+    lmrep->setProbeBit(false);
+    //TODO: Vesely - Work on EchoNonceBack algorithm, currently off
+    //lmrep->setEchoNonceBit(false);
+    //TODO: Vesely - Work on SecurityBit fields, currently off
+    //lmrep->setSecBit(false);
+
+    LISPMapEntry* me = EtrMapping.lookupMapEntry( eidAddress );
+    if (!me)
+        error("ETR does not have EID in its ETRMappings. Inconsistency between MRMS and ETR.");
+
+    TRecord rec = prepareTRecord(me, true, LISPCommon::NO_ACTION);
+    lmrep->getRecords().push_back(rec);
+    lmrep->setRecordCount(lmrep->getRecords().size());
+
+    //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
+    //Log and send
+    IPvXAddress dst = lmreq->getItrRlocs().front().address;
+    MsgLog.addMsg(LISPMsgEntry::REPLY, lmreq->getNonce(), dst, true);
+    controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
+}
+
+void LISPCore::receiveMapReply(LISPMapReply* lmrep) {
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmrep->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+    //Log
+    MsgLog.addMsg(LISPMsgEntry::REPLY, lmrep->getNonce(), src, false);
+    if ( !MsgLog.findMsg(LISPMsgEntry::REQUEST, lmrep->getNonce()) ) {
+        EV << "Received unsolicited Map-Reply with nonce " << lmrep->getNonce() << endl;
+        return;
+    }
+    else
+        EV << "Map-Reply is response to previous Map-Request with nonce " << lmrep->getNonce() << endl;
+
+    //Iterate through records and store them into map-cache
+    for (TRecordCItem it = lmrep->getRecords().begin(); it != lmrep->getRecords().end(); ++it) {
+        cacheMapping(*it);
+    }
+}
+
+void LISPCore::sendNegativeMapReply(LISPMapRequest* lmreq, const LISPEidPrefix& eidPref, bool hasSite) {
+    LISPMapReply* lmrep = new LISPMapReply(NEGATIVEREPLY_MSG);
+
+    //General fields
+    lmrep->setNonce( lmreq->getNonce() );
+    lmrep->setProbeBit( false );
+    //TODO: Vesely - Work on EchoNonceBack algorithm, currently off
+    lmrep->setEchoNonceBit(false);
+    //TODO: Vesely - Work on SecurityBit fields, currently off
+    lmrep->setSecBit(false);
+
+    TRecord rec;
+    //If aggregate exist then 1 minute TTL otherwise 15
+    rec.recordTTL = hasSite ? NOETR_TTL_VAL : NOEID_TTL_VAL;
+    rec.EidPrefix = eidPref;
+    rec.mapVersion = DEFAULT_MAPVER_VAL;
+    rec.ABit = false;
+    rec.ACT = LISPCommon::NATIVELY_FORWARD;
+    rec.locatorCount = 0;
+    lmrep->getRecords().push_back(rec);
+    //RecordCount should be 1 in case of Negative Map-Reply
+    lmrep->setRecordCount(lmrep->getRecords().size());
+
+    //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
+    //Log and send
+    IPvXAddress dst = lmreq->getItrRlocs().front().address;
+    MsgLog.addMsg(LISPMsgEntry::REPLY, lmrep->getNonce(), dst, true);
+    controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
+}
+
+unsigned long LISPCore::sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid) {
+    LISPMapRequest* lmreq = new LISPMapRequest(REQUESTPROBE_MSG);
+    lmreq->setDisplayString("b=15,15,oval,green,green,0");
+
+    //General fields
+    unsigned long newnonce = (unsigned long) rand();
+    lmreq->setNonce(newnonce);
+    //It is RLOC-Probe, hebce set the Probebit
+    lmreq->setProbeBit(true);
+
+    lmreq->setSourceEid( TAfiAddr( eid.getEidAddr() ) );
+
+    //TODO: Vesely - What about sending more RLOCs at once?
+    LISPMapEntry* me = EtrMapping.findMapEntryByEidPrefix(eid);
+    //TODO: Vesely - If there is no ME match THEN send it without MapReply
+    if (me) {
+        //Prepare ITR-RLOCs
+        for (LocatorCItem it = me->getRlocs().begin(); it != me->getRlocs().end(); ++it)
+            if (it->isLocal())
+                lmreq->getItrRlocs().push_back(TAfiAddr(it->getRlocAddr()));
+
+        //Multiple Recs in Map-Request, TODO: Vesely - Currently it is not supported yet
+        lmreq->setRecordCount(1);
+        lmreq->getRecs().push_back(eid);
+
+        //Map-Reply Record
+        lmreq->setMapDataBit(true);
+        TRecord rep = prepareTRecord( &(*me), true, LISPCommon::NO_ACTION );
+        lmreq->setMapReply(rep);
+    }
+    else {
+        error("Cannot send RLOC-Probe because srcEID does not have ME!");
+        return DEFAULT_NONCE_VAL;
+    }
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::RLOC_PROBE, lmreq->getNonce(), dstLoc, true);
+    controlTraf.sendTo(lmreq, dstLoc, CONTROL_PORT_VAL);
+
+    return lmreq->getNonce();
+}
+
+void LISPCore::receiveRlocProbe(LISPMapRequest* lmreq) {
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+    IPvXAddress dst = udpi->getSrcAddr();
+    //Log
+    MsgLog.addMsg(LISPMsgEntry::RLOC_PROBE, lmreq->getNonce(), src, false);
+
+    long bitmask = 0;
+    unsigned char i = 0;
+
+    for (TRecsCItem it = lmreq->getRecs().begin(); it != lmreq->getRecs().end(); ++it) {
+        LISPEidPrefix eidPref = LISPEidPrefix(it->getEidAddr(), it->getEidLength());
+        LISPMapEntry* me = EtrMapping.findMapEntryByEidPrefix(eidPref);
+        if (me) {
+            if (!me->isLocatorExisting(src) || !me->isLocatorExisting(dst))
+                EV << "Source RLOC "<< src << " or probed RLOC " << dst << " are not part of EID " << eidPref <<" MapEntry!" << endl;
+            bitmask |= 1 << i;
+        }
+        else
+            EV << "Received RLOC-Probe for unknown EID (none ME found)!" << endl;
+        //Iterate bitmask pointer
+        i++;
+    }
+
+    //TODO: Vesely - Process MapReply Record. Potentially save them into MapCache
+    if (lmreq->getMapDataBit())
+        ;
+
+    //Use bitmask
+    sendRlocProbeReply(lmreq, bitmask);
+}
+
+void LISPCore::sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask) {
+    LISPMapReply* lmrep = new LISPMapReply(REPLYPROBE_MSG);
+    lmrep->setDisplayString("b=15,15,oval,lightgreen,lightgreen,0");
+
+    //Retrieve source IP address
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+
+    EV << "Bitmask is: " << bitmask;
+    lmrep->setNonce(lmreq->getNonce());
+    //It is RLOC-Probe-Reply, hence set the Probebit
+    lmrep->setProbeBit(true);
+
+    //TODO: Vesely - Work on EchoNonceBack algorithm, currently off
+    //lmrep->setEchoNonceBit(false);
+    //TODO: Vesely - Work on SecurityBit fields, currently off
+    //lmrep->setSecBit(false);
+
+    unsigned char i = 0;
+    for (TRecsCItem it = lmreq->getRecs().begin(); it != lmreq->getRecs().end(); ++it) {
+        if (! (bitmask & (1 << i) ) )
+           continue;
+
+        LISPMapEntry* me = EtrMapping.findMapEntryByEidPrefix(*it);
+
+        TRecord rec = prepareTRecord(me, true, LISPCommon::NO_ACTION);
+        lmrep->getRecords().push_back(rec);
+        lmrep->setRecordCount(lmrep->getRecords().size());
+
+        i++;
+    }
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::RLOC_PROBE_REPLY, lmrep->getNonce(), src, true);
+    controlTraf.sendTo(lmrep, src, CONTROL_PORT_VAL);
+}
+
+void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmrep->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+    //Log
+    MsgLog.addMsg(LISPMsgEntry::RLOC_PROBE_REPLY, lmrep->getNonce(), src, false);
+    if ( !MsgLog.findMsg(LISPMsgEntry::RLOC_PROBE, lmrep->getNonce()) ) {
+        EV << "Received unsolicited RLOC-Probe Reply with nonce " << lmrep->getNonce() << endl;
+        return;
+    }
+    else
+        EV << "RLOC-Probe-Reply is response to previous Probe with nonce " << lmrep->getNonce() << endl;
+
+    //Mark RLOC as up
+    for (TRecordCItem it = lmrep->getRecords().begin(); it != lmrep->getRecords().end(); ++it) {
+        LISPProbeEntry* probe =
+                        ProbingSet.findProbeEntryByRlocAndEid(src, it->EidPrefix);
+        if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
+            probe->setRlocStatusForEid(it->EidPrefix, LISPRLocator::UP);
+        else
+            probe->setRlocStatusForAllEids(LISPRLocator::UP);
+
+        //TODO: Vesely - Process MapReply Records. Potentially save them into MapCache
+    }
+}
+
+void LISPCore::cacheMapping(const TRecord& rec) {
+    LISPMapEntry* entry;
+    //Create new MapEntry ...
+    if ( !MapCache->findMapEntryByEidPrefix(rec.EidPrefix) ) {
+        //IF new ME has not EID supported THEN skip
+        entry = new LISPMapEntry(rec.EidPrefix);
+        MapCache->addMapEntry(*entry);
+    }
+    //... and/or ... retrieve MapEntry
+    entry = MapCache->findMapEntryByEidPrefix(rec.EidPrefix);
+
+    //Update MapEntry parameters
+    entry->setExpiry(simTime() + rec.recordTTL * 60);
+
+    //Update action
+    entry->setAction( (LISPCommon::EAct)rec.ACT );
+
+    //TODO: Abit is not processed. Authoritative reply is same as unauthoritative
+
+    //Ordinary Map-Reply
+    if (rec.locatorCount) {
+        //Fill it with EID-to-RLOC mappings
+        for (TLocatorCItem jt = rec.locators.begin(); jt != rec.locators.end(); ++jt) {
+            LISPRLocator rloc = jt->RLocator;
+            if (!entry->isLocatorExisting(rloc.getRlocAddr()))
+                entry->addLocator(rloc);
+
+            //Update state
+            LISPRLocator* rl = entry->getLocator(rloc.getRlocAddr());
+            rl->update(jt->RLocator);
+        }
+    }
 }

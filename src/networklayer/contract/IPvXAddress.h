@@ -117,12 +117,14 @@ class INET_API IPvXAddress
      */
     void set(const IPv6Address& addr)
     {
+        /* Vesely - There is a difference between ::0 and 0.0.0.0, hence commented
         if (addr.isUnspecified())
         {
             // we always represent nulls as IPv4 null
             isv6 = false; d[0] = 0;
             return;
         }
+        */
 
         isv6 = true;
         const uint32 *w = addr.words();

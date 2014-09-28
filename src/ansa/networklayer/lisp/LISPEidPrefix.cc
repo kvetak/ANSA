@@ -16,41 +16,55 @@
 #include <LISPEidPrefix.h>
 
 LISPEidPrefix::LISPEidPrefix() {
+    eid = IPv4Address::UNSPECIFIED_ADDRESS;
     this->eidLen = DEFAULT_EIDLENGTH_VAL;
 }
 
 LISPEidPrefix::LISPEidPrefix(const char* address, const char* length) {
     eid = IPvXAddress(address);
     eidLen = (unsigned char)atoi(length);
-    setEidAfi();
 }
+
+LISPEidPrefix::LISPEidPrefix(IPvXAddress address, unsigned char length) {
+    eid = address;
+    eidLen = length;
+}
+
 
 LISPEidPrefix::~LISPEidPrefix() {
     this->eidLen = DEFAULT_EIDLENGTH_VAL;
-    eidAfi = AFI_UKNOWN;
+    eidAfi = LISPCommon::AFI_UNKNOWN;
 }
 
-const IPvXAddress& LISPEidPrefix::getEid() const {
+const IPvXAddress& LISPEidPrefix::getEidAddr() const {
     return eid;
 }
 
-void LISPEidPrefix::setEid(const IPvXAddress& eid) {
+void LISPEidPrefix::setEidAddr(const IPvXAddress& eid) {
     this->eid = eid;
 }
 
-unsigned char LISPEidPrefix::getEidLen() const {
+unsigned char LISPEidPrefix::getEidLength() const {
     return eidLen;
 }
 
 std::string LISPEidPrefix::info() const {
     std::stringstream os;
 
-    os << this->eid << "/" << short(this->eidLen);
+    /*
+    if (eid.isIPv6() && eid == IPv6Address::UNSPECIFIED_ADDRESS)
+        os << "::0";
+    else if (!eid.isIPv6() && eid == IPv4Address::UNSPECIFIED_ADDRESS)
+        os << "0.0.0.0";
+    else
+    */
+        os << eid;
+    os << "/" << short(this->eidLen);
     return os.str();
 
 }
 
-void LISPEidPrefix::setEidLen(unsigned char eidLen) {
+void LISPEidPrefix::setEidLength(unsigned char eidLen) {
     this->eidLen = eidLen;
 }
 
@@ -62,13 +76,17 @@ std::ostream& operator <<(std::ostream& os, const LISPEidPrefix& ep) {
     return os << ep.info();
 }
 
-LISPEidPrefix::Afi LISPEidPrefix::getEidAfi() const {
-    return eidAfi;
+LISPCommon::Afi LISPEidPrefix::getEidAfi() const {
+    return eid.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
 }
 
-void LISPEidPrefix::setEidAfi() {
-    if ( eid.isIPv6() )
-        eidAfi = AFI_IPV6;
-    else
-        eidAfi = AFI_IPV4;
+bool LISPEidPrefix::isComponentOf(const LISPEidPrefix& coarserEid) const {
+    //Component has coarser mask or AFIs do not match
+    if (eidLen > coarserEid.eidLen || eidAfi != coarserEid.eidAfi)
+        return false;
+
+    int result = LISPCommon::doPrefixMatch(eid, coarserEid.eid);
+
+    return (result == -1 || result >= coarserEid.eidLen ) ? true : false;
 }
+

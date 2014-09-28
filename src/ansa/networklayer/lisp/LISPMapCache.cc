@@ -40,6 +40,12 @@ void LISPMapCache::initialize(int stage)
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     parseConfig( par("configData").xmlValue() );
 
+    //Create default record
+    LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
+    m1.setAction(LISPCommon::SEND_MAP_REQUEST);
+    this->addMapEntry(m1);
+
+    //Watchers
     WATCH_LIST(MappingStorage);
 }
 

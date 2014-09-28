@@ -15,24 +15,20 @@
 
 #include <LISPMapEntry.h>
 
-LISPMapEntry::LISPMapEntry() {
-    expiry = SIMTIME_ZERO;
-    mapState = this->INCOMPLETE;
+LISPMapEntry::LISPMapEntry() : expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
+{
 }
 
 LISPMapEntry::LISPMapEntry(LISPEidPrefix neid) :
     EID(neid),
-    expiry(NONE_SIMTIME), mapState (LISP_DEFAULT_MAPSTATE),
-    lastTime(NONE_SIMTIME), registredBy ("")
+    expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
 {
-
 }
-
 
 LISPMapEntry::~LISPMapEntry() {
     expiry = SIMTIME_ZERO;
-    mapState = LISP_DEFAULT_MAPSTATE;
     RLOCs.clear();
+    Action = LISPCommon::NO_ACTION;
 }
 
 const LISPEidPrefix& LISPMapEntry::getEidPrefix() const {
@@ -55,7 +51,6 @@ LISPMapEntry::MapState LISPMapEntry::getMapState() const {
     return this->RLOCs.size() ? COMPLETE : INCOMPLETE;
 }
 
-
 const Locators& LISPMapEntry::getRlocs() const {
     return RLOCs;
 }
@@ -64,22 +59,31 @@ void LISPMapEntry::setRlocs(const Locators& rloCs) {
     RLOCs = rloCs;
 }
 
-bool LISPMapEntry::isLocatorExisting(IPvXAddress& address)
+const LISPCommon::EAct LISPMapEntry::getAction() const {
+    return Action;
+}
+
+
+void LISPMapEntry::setAction(const LISPCommon::EAct& action) {
+    Action = action;
+}
+
+bool LISPMapEntry::isLocatorExisting(const IPvXAddress& address) const
 {
-    for (LocatorItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
+    for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
     {
-        if (it->getRloc() == address)
+        if (it->getRlocAddr() == address)
             return true;
     }
     return false;
     //return mcentry->rloc.find(address) != mcentry->rloc.end() ? true : false;
 }
 
-LISPRLocator* LISPMapEntry::getLocator(IPvXAddress& address)
+LISPRLocator* LISPMapEntry::getLocator(const IPvXAddress& address)
 {
     for (LocatorItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
     {
-        if (it->getRloc() == address)
+        if (it->getRlocAddr() == address)
             return &(*it);
     }
     return NULL;
@@ -91,22 +95,37 @@ void LISPMapEntry::addLocator(LISPRLocator& entry)
 };
 
 bool LISPMapEntry::operator ==(const LISPMapEntry& other) const {
-    //TODO: Add RLOCs checks
-    return this->EID == other.EID &&
-           this->expiry == other.expiry &&
-           this->mapState == other.mapState &&
-           this->registredBy == other.registredBy &&
-           this->lastTime == other.lastTime;
+    return EID == other.EID &&
+           expiry == other.expiry &&
+           RLOCs == other.RLOCs;
 }
 
 std::string LISPMapEntry::getMapStateString() const {
-    switch (this->mapState) {
+    switch (this->getMapState()) {
         case INCOMPLETE:
             return "incomplete";
         case COMPLETE:
             return "complete";
         default:
             return "UNKNOWN";
+    }
+}
+
+Locators& LISPMapEntry::getRlocs() {
+    return RLOCs;
+}
+
+const std::string LISPMapEntry::getActionString() const {
+    switch (Action) {
+    case LISPCommon::DROP:
+      return "drop";
+    case LISPCommon::SEND_MAP_REQUEST:
+      return "send-map-request";
+    case LISPCommon::NATIVELY_FORWARD:
+      return "natively-forward";
+      case LISPCommon::NO_ACTION:
+      default:
+        return "no-action";
     }
 }
 
@@ -119,16 +138,24 @@ void LISPMapEntry::removeLocator(IPvXAddress& address) {
 
 std::string LISPMapEntry::info() const {
     std::stringstream os;
+
     os << EID;
+
     //map-cache entry
-    if (expiry != NONE_SIMTIME)
-        os << ", expires: " << expiry << ", state: " << getMapStateString();
-    else if (lastTime != NONE_SIMTIME && !registredBy.empty())
-        os << ", last registred by: " << registredBy << ", at: " << lastTime;
-    os << endl;
-    for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); it++) {
-        os << "  " << it->info() << endl;
+    os << ", expires: ";
+    if (expiry == SIMTIME_ZERO)
+         os << " never";
+    else
+        os << expiry;
+
+    os << ", state: " << getMapStateString();
+
+    os << ", action: " << getActionString();
+
+    for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); ++it) {
+        os << "\n   " << it->info();
     }
+
     return os.str();
 }
 
@@ -136,36 +163,8 @@ std::ostream& operator <<(std::ostream& os, const LISPMapEntry& me) {
     return os << me.info();
 }
 
-const std::string& LISPMapEntry::getRegistredBy() const {
-    return registredBy;
-}
-
-void LISPMapEntry::setRegistredBy(const std::string& registredBy) {
-    this->registredBy = registredBy;
-}
-
-const simtime_t& LISPMapEntry::getLastTime() const {
-    return lastTime;
-}
-
-void LISPMapEntry::setLastTime(const simtime_t& lastTime) {
-    this->lastTime = lastTime;
-}
-
-std::string TRecord::info() const {
-    std::stringstream os;
-    os << this->EidPrefix << endl
-       << "TTL: " << this->recordTTL << " minutes, "
-       << ", action: " << short(ACT)
-       << ", Authoritative: " << this->ABit
-       << ", map-version: " << this->mapVersion
-       << ", locator-count: " << short(this->locatorCount) << endl;
-    for (TLocatorCItem it = locators.begin(); it != this->locators.end(); ++it)
+std::ostream& operator <<(std::ostream& os, const Locators& rlocs) {
+    for (LocatorCItem it = rlocs.begin(); it != rlocs.end(); ++it)
         os << it->info() << endl;
-    return os.str();
+    return os;
 }
-
-std::ostream& operator <<(std::ostream& os, const TRecord& trec) {
-    return os << trec.info();
-}
-

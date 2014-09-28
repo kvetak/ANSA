@@ -20,24 +20,28 @@
 #define __INET_LISPCORE_H_
 
 #include <omnetpp.h>
-#include "UDPSocket.h"
-#include "UDPControlInfo.h"
 
 #include "AnsaRoutingTable.h"
 #include "AnsaRoutingTableAccess.h"
-
 #include "IInterfaceTable.h"
 #include "InterfaceTableAccess.h"
+
+#include "IPv6Datagram.h"
+#include "IPv4Datagram.h"
+#include "IPProtocolId_m.h"
+#include "UDP.h"
+#include "UDPPacket.h"
+#include "UDPSocket.h"
+#include "UDPControlInfo.h"
 
 #include "LISPServerEntry.h"
 #include "LISPMapCache.h"
 #include "LISPMapDatabase.h"
 #include "LISPMessages_m.h"
+#include "LISPTimers_m.h"
 #include "LISPCommon.h"
-
-
-typedef std::list< LISPServerEntry > ServerAddresses;
-typedef ServerAddresses::iterator ServerItem;
+#include "LISPMsgLogger.h"
+#include "LISPProbeSet.h"
 
 class LISPCore : public cSimpleModule
 {
@@ -61,9 +65,13 @@ class LISPCore : public cSimpleModule
     LISPMapDatabase*    MapDb;
 
     LISPMapStorageBase  EtrMapping;
+    LISPProbeSet        ProbingSet;
 
     ServerAddresses     MapServers;
     ServerAddresses     MapResolvers;
+    ServerCItem         MapResolverQueue;
+
+    LISPMsgLogger       MsgLog;
 
     UDPSocket controlTraf;
 
@@ -71,6 +79,9 @@ class LISPCore : public cSimpleModule
     bool mapServerV6;
     bool mapResolverV4;
     bool mapResolverV6;
+
+    bool acceptMapRequestMapping;
+    unsigned short mapCacheTtl;
 
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}
@@ -81,7 +92,6 @@ class LISPCore : public cSimpleModule
     void handleTimer(cMessage *msg);
     void handleCotrol(cMessage *msg);
     void handleData(cMessage *msg);
-
     virtual void handleMessage(cMessage *msg);
 
     virtual void updateDisplayString();
@@ -89,11 +99,40 @@ class LISPCore : public cSimpleModule
     void parseConfig(cXMLElement* config);
     void initSockets();
 
-    void registerSite();
+    LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, IPvXAddress& addr);
+
     void sendMapRegister(LISPServerEntry& se);
-    void receiveMapRegister(LISPMapRegister* lmr);
+    void receiveMapRegister(LISPMapRegister* lmreg);
+    void sendMapNotify(LISPMapRegister* lmreg);
+    void receiveMapNotify(LISPMapNotify* lmnot);
 
+    unsigned long sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddress& dstEid);
+    void receiveMapRequest(LISPMapRequest* lmreq);
+    void delegateMapRequest(LISPMapRequest* lmreq, Etrs& etrs);
 
+    void sendMapReplyFromMs(LISPMapRequest* lmreq, Etrs& etrs);
+    void sendMapReplyFromEtr(LISPMapRequest* lmreq, const IPvXAddress& eidAddress);
+    void sendNegativeMapReply(LISPMapRequest* lmreq, const LISPEidPrefix& eidPref, bool hasSite);
+    void receiveMapReply(LISPMapReply* lmrep);
+
+    unsigned long sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid);
+    void receiveRlocProbe(LISPMapRequest* lmreq);
+    void sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask);
+    void receiveRlocProbeReply(LISPMapReply* lmrep);
+
+    TRecord prepareTRecord(LISPMapEntry* me, bool Abit, LISPCommon::EAct action);
+    void expireRegisterTimer(LISPRegisterTimer* regtim);
+    void expireRequestTimer(LISPRequestTimer* reqtim);
+    void expireRlocProbeTimer(LISPRlocProbeTimer* probetim);
+
+  private:
+    void parseMapServerConfig(cXMLElement* config);
+    void parseMapResolverConfig(cXMLElement* config);
+    void parseEtrMappings(cXMLElement* config);
+    void scheduleRegistration();
+    void scheduleRlocProbing();
+
+    void cacheMapping(const TRecord& rec);
 };
 
 #endif

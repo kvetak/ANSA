@@ -13,22 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef LISPSITEINFO_H_
-#define LISPSITEINFO_H_
+#ifndef LISPSITE_H_
+#define LISPSITE_H_
 
 #include <omnetpp.h>
-#include <sstream>
-#include <string>
-#include "LISPMapStorageBase.h"
 #include "LISPCommon.h"
+#include "LISPSiteRecord.h"
 
-class LISPSiteInfo : public LISPMapStorageBase
+class LISPSite : public LISPMapStorageBase
 {
   public:
-    LISPSiteInfo();
-    LISPSiteInfo(std::string nam, std::string ke);
-    LISPSiteInfo(simtime_t time, std::string nam, std::string ke, std::string reg);
-    virtual ~LISPSiteInfo();
+    LISPSite();
+    LISPSite(std::string nam, std::string ke);
+    virtual ~LISPSite();
 
     std::string info() const;
 
@@ -36,15 +33,23 @@ class LISPSiteInfo : public LISPMapStorageBase
     void setKey(const std::string& key);
     const std::string& getName() const;
     void setName(const std::string& name);
-    bool isProxyReply() const;
-    void setProxyReply(bool proxyReply);
+    const Etrs& getETRs() const;
+    void setETRs(const Etrs& etRs);
+    void clearETRs();
+
+    void addRecord(LISPSiteRecord& srec);
+    LISPSiteRecord* findRecordByAddress(IPvXAddress& address);
+    Etrs findAllRecordsByEid(const IPvXAddress& address);
+    void removeRecord(LISPSiteRecord& srec);
 
   private:
     std::string name;
     std::string key;
-    bool proxyReply;
+    Etrs ETRs;
+
 };
 
-std::ostream& operator<< (std::ostream& os, const LISPSiteInfo& si);
+//Free function
+std::ostream& operator<< (std::ostream& os, const LISPSite& si);
 
-#endif /* LISPSITEINFO_H_ */
+#endif /* LISPSITE_H_ */

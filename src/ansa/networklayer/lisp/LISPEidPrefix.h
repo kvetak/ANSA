@@ -22,31 +22,35 @@
 class LISPEidPrefix {
 
   public:
-    enum Afi {AFI_UKNOWN = 0, AFI_IPV4 = 1, AFI_IPV6 = 2};
+
     LISPEidPrefix();
     LISPEidPrefix(const char* address, const char* length);
+    LISPEidPrefix(IPvXAddress address, unsigned char length);
     virtual ~LISPEidPrefix();
 
     bool operator== (const LISPEidPrefix& other) const;
 
     std::string info() const;
 
-    const IPvXAddress& getEid() const;
-    void setEid(const IPvXAddress& eid);
-    unsigned char getEidLen() const;
-    void setEidLen(unsigned char eidLen);
-    Afi getEidAfi() const;
+    const IPvXAddress& getEidAddr() const;
+    void setEidAddr(const IPvXAddress& eid);
+    unsigned char getEidLength() const;
+    void setEidLength(unsigned char eidLen);
+    LISPCommon::Afi getEidAfi() const;
+
+    bool isComponentOf(const LISPEidPrefix& coarserEid) const;
 
   private:
     IPvXAddress eid;
     unsigned char eidLen;
-    Afi eidAfi;
-
-    void setEidAfi();
+    LISPCommon::Afi eidAfi;
 
 };
 
+
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPEidPrefix& ep);
+
+
 
 #endif /* LISPEIDPREFIX_H_ */

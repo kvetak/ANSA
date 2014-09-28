@@ -3,17 +3,17 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
-package inet.examples.ansa.lispSimple;
+package inet.examples.ansa.lisp.lispHA;
 
 import inet.ansa.ANSASwitch;
 import inet.ansa.applications.rip.RIPRouter;
@@ -26,9 +26,9 @@ import inet.world.scenario.ScenarioManager;
 import inet.nodes.ethernet.Eth100M;
 import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
-network lispSimple
+network LispHA
 {
-    @display("bgb=665,374,white");
+    @display("bgb=623,387");
     submodules:
         configurator: IPv4NetworkConfigurator {
             parameters:
@@ -41,44 +41,65 @@ network lispSimple
                 optimizeRoutes = false;
                 @display("p=55,34");
         }
-        xTR_A: ANSA_xTR {
-            @display("p=206,145");
+        xTR_A1: ANSA_xTR {
+            @display("p=186,92");
+            gates:
+                ethg[2];
         }
         MRMS: ANSA_xTR {
-            @display("p=337,34");
+            @display("p=306,34");
         }
-        xTR_B: ANSA_xTR {
-            @display("p=461,145");
+        xTR_B1: ANSA_xTR {
+            @display("p=434,92");
+            gates:
+                ethg[2];
         }
         S1: EtherSwitch {
-            @display("p=206,244");
+            @display("p=86,140");
         }
         S2: EtherSwitch {
-            @display("p=461,244");
+            @display("p=546,140");
         }
         Hv4_A: ANSA_DualStackHost {
-            @display("p=206,338");
+            @display("p=27,277");
         }
         Hv6_A: ANSA_DualStackHost {
-            @display("p=293,245");
+            @display("p=150,277");
         }
         Hv4_B: ANSA_DualStackHost {
-            @display("p=461,338");
+            @display("p=490,267");
         }
         Hv6_B: ANSA_DualStackHost {
-            @display("p=385,245");
+            @display("p=589,267");
         }
         Core: RIPRouter {
-            @display("p=337,145");
+            @display("p=306,145");
+        }
+        xTR_A2: ANSA_xTR {
+            @display("p=186,176");
+            gates:
+                ethg[2];
+        }
+        xTR_B2: ANSA_xTR {
+            @display("p=434,176");
+            gates:
+                ethg[2];
         }
     connections:
-        S1.ethg++ <--> Eth100M <--> xTR_A.ethg++;
-        xTR_B.ethg++ <--> Eth100M <--> S2.ethg++;
-        Hv4_A.ethg++ <--> Eth100M <--> S1.ethg++;
-        S1.ethg++ <--> Eth100M <--> Hv6_A.ethg++;
-        Hv4_B.ethg++ <--> Eth100M <--> S2.ethg++;
-        Hv6_B.ethg++ <--> Eth100M <--> S2.ethg++;
-        xTR_A.ethg++ <--> Eth100M <--> Core.ethg++;
-        Core.ethg++ <--> Eth100M <--> xTR_B.ethg++;
+        S1.ethg++ <--> Eth100M <--> xTR_A1.ethg[1];
+        S1.ethg++ <--> Eth100M <--> xTR_A2.ethg[1];
+        S1.ethg++ <--> Eth100M <--> Hv4_A.ethg++;        
+        S1.ethg++ <--> Eth100M <--> Hv6_A.ethg++;        
+
+        S2.ethg++ <--> Eth100M <--> xTR_B1.ethg[1];
+        S2.ethg++ <--> Eth100M <--> xTR_B2.ethg[1];        
+        S2.ethg++ <--> Eth100M <--> Hv4_B.ethg++;
+        S2.ethg++ <--> Eth100M <--> Hv6_B.ethg++;
+
         Core.ethg++ <--> Eth100M <--> MRMS.ethg++;
+        Core.ethg++ <--> Eth100M <--> xTR_A1.ethg[0];
+        Core.ethg++ <--> Eth100M <--> xTR_A2.ethg[0];
+        Core.ethg++ <--> Eth100M <--> xTR_B1.ethg[0];
+        Core.ethg++ <--> Eth100M <--> xTR_B2.ethg[0];
+        
 }

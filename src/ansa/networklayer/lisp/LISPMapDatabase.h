@@ -20,9 +20,9 @@
 #define __INET_LISPMAPDATABASE_H_
 
 #include <omnetpp.h>
-#include "LISPSiteInfo.h"
+#include "LISPSite.h"
 
-typedef std::list<LISPSiteInfo> SiteStorage;
+typedef std::list<LISPSite> SiteStorage;
 typedef SiteStorage::iterator SiteStorageItem;
 typedef SiteStorage::const_iterator SiteStorageCItem;
 
@@ -32,8 +32,9 @@ class LISPMapDatabase : public cSimpleModule
         LISPMapDatabase();
         virtual ~LISPMapDatabase();
 
-        void addSite(LISPSiteInfo& si);
-        LISPSiteInfo* findSiteInfoByKey(std::string& siteKey);
+        void addSite(LISPSite& si);
+        LISPSite* findSiteInfoByKey(std::string& siteKey);
+        LISPSite* findSiteByAggregate(const IPvXAddress& addr);
 
     protected:
         SiteStorage SiteDatabase;
@@ -43,6 +44,7 @@ class LISPMapDatabase : public cSimpleModule
         virtual int numInitStages() const { return 4; }
         virtual void initialize(int stage);
         virtual void handleMessage(cMessage *msg);
+
 };
 
 #endif

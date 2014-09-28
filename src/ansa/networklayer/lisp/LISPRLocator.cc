@@ -20,7 +20,8 @@ LISPRLocator::LISPRLocator() :
     rloc (IPv4Address::UNSPECIFIED_ADDRESS),
     state(DOWN),
     priority(DEFAULT_PRIORITY_VAL), weight(DEFAULT_WEIGHT_VAL),
-    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL)
+    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL),
+    local(false)
 {
 }
 
@@ -28,15 +29,17 @@ LISPRLocator::LISPRLocator(const char* addr) :
     rloc( addr ),
     state(DOWN),
     priority(DEFAULT_PRIORITY_VAL), weight(DEFAULT_WEIGHT_VAL),
-    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL)
+    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL),
+    local(false)
 {
 }
 
-LISPRLocator::LISPRLocator(const char* addr, const char* prio, const char* wei) :
+LISPRLocator::LISPRLocator(const char* addr, const char* prio, const char* wei, bool loca) :
     rloc( IPvXAddress(addr) ),
     state(DOWN),
     priority((unsigned char)atoi(prio)), weight((unsigned char)atoi(wei)),
-    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL)
+    mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL),
+    local(loca)
 {
 }
 
@@ -56,11 +59,11 @@ void LISPRLocator::setPriority(unsigned char priority) {
     this->priority = priority;
 }
 
-const IPvXAddress& LISPRLocator::getRloc() const {
+const IPvXAddress& LISPRLocator::getRlocAddr() const {
     return rloc;
 }
 
-void LISPRLocator::setRloc(const IPvXAddress& rloc) {
+void LISPRLocator::setRlocAddr(const IPvXAddress& rloc) {
     this->rloc = rloc;
 }
 
@@ -77,18 +80,37 @@ unsigned char LISPRLocator::getWeight() const {
 }
 
 bool LISPRLocator::operator ==(const LISPRLocator& other) const {
-    return this->priority == other.priority && this->state == other.state &&
-           this->weight == other.weight && this->rloc == other.rloc;
+    return this->rloc == other.rloc &&
+           this->priority == other.priority &&
+           this->weight == other.weight &&
+           this->mpriority == other.mpriority &&
+           this->mweight == other.mweight &&
+           this->state == other.state;
+
+}
+
+bool LISPRLocator::operator ==(const LISPRLocator& other) {
+    return this->rloc == other.rloc &&
+           this->priority == other.priority &&
+           this->weight == other.weight &&
+           this->mpriority == other.mpriority &&
+           this->mweight == other.mweight &&
+           this->state == other.state;
 }
 
 std::string LISPRLocator::info() const {
     std::stringstream os;
-    os << this->rloc << "\t(" << this->getStateString() << ")\t" << short(this->priority) << "/" << short(weight);
+    os << this->rloc << "\t(" << getStateString() << ")\t"
+       << "pri/wei=" << short(priority) << "/" << short(weight);
+    if (local)
+        os << "\tLocal";
+    if (mpriority != DEFAULT_MPRIORITY_VAL && mweight != DEFAULT_MWEIGHT_VAL )
+        os << "mpri/mwei=" << short(mpriority) << "/" << short(mweight);
     return os.str();
 }
 
 std::string LISPRLocator::getStateString() const {
-    switch(this->getState()) {
+    switch(state) {
         case UP:
             return "up";
         case ADMIN_DOWN:
@@ -123,17 +145,19 @@ void LISPRLocator::setMweight(unsigned char mweight) {
     this->mweight = mweight;
 }
 
-std::string TLocator::info() const {
-    std::stringstream os;
-    os << this->RLocator.getRloc()
-       << ", priority: " << short(this->RLocator.getPriority())
-       << ", weight: " << short(this->RLocator.getWeight())
-       << ", Local: " << this->LocalLocBit
-       << ", probing: " << this->piggybackBit
-       << ", Reachable: " << this->RouteRlocBit;
-    return os.str();
+bool LISPRLocator::isLocal() const {
+    return local;
 }
 
-std::ostream& operator <<(std::ostream& os, const TLocator& tloc) {
-    return os << tloc.info();
+void LISPRLocator::setLocal(bool local) {
+    this->local = local;
+}
+
+void LISPRLocator::update(const LISPRLocator& rloc) {
+    state = rloc.getState();
+    priority = rloc.getPriority();
+    weight = rloc.getWeight();
+    mpriority = rloc.getMpriority();
+    mweight = rloc.getMweight();
+    local = rloc.isLocal();
 }

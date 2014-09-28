@@ -1030,6 +1030,10 @@ void RIPRouting::initialize(int stage)
     if (stage != 3)
         return;
 
+    //RIP is disabled
+    if (!par("enabled").boolValue())
+        return;
+
     // get the hostname
     cModule *containingMod = findContainingNode(this);
     if (!containingMod)
