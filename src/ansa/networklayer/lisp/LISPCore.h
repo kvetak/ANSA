@@ -126,15 +126,21 @@ class LISPCore : public cSimpleModule
     void expireRegisterTimer(LISPRegisterTimer* regtim);
     void expireRequestTimer(LISPRequestTimer* reqtim);
     void expireRlocProbeTimer(LISPRlocProbeTimer* probetim);
+    void expireSyncTimer(LISPSyncTimer* synctim);
 
-  private:
+    unsigned long sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eidPref);
+    void receiveCacheSync(LISPCacheSync* lcs);
+    void sendCacheSyncAck(LISPCacheSync* lcs);
+    void receiveCacheSyncAck(LISPCacheSyncAck* lcsa);
+
     void parseMapServerConfig(cXMLElement* config);
     void parseMapResolverConfig(cXMLElement* config);
     void parseEtrMappings(cXMLElement* config);
     void scheduleRegistration();
     void scheduleRlocProbing();
+    void scheduleCacheSync(const LISPEidPrefix& eidPref);
 
-    void cacheMapping(const TRecord& rec);
+    void cacheMapping(const TRecord& record);
 };
 
 #endif

@@ -44,7 +44,7 @@ network LispHA
         xTR_A1: ANSA_xTR {
             @display("p=186,92");
             gates:
-                ethg[2];
+                ethg[3];
         }
         MRMS: ANSA_xTR {
             @display("p=306,34");
@@ -52,7 +52,7 @@ network LispHA
         xTR_B1: ANSA_xTR {
             @display("p=434,92");
             gates:
-                ethg[2];
+                ethg[3];
         }
         S1: EtherSwitch {
             @display("p=86,140");
@@ -78,14 +78,17 @@ network LispHA
         xTR_A2: ANSA_xTR {
             @display("p=186,176");
             gates:
-                ethg[2];
+                ethg[3];
         }
         xTR_B2: ANSA_xTR {
             @display("p=434,176");
             gates:
-                ethg[2];
+                ethg[3];
         }
     connections:
+        xTR_A1.ethg[2] <--> Eth100M <--> xTR_A2.ethg[2];
+        xTR_B1.ethg[2] <--> Eth100M <--> xTR_B2.ethg[2];
+        
         S1.ethg++ <--> Eth100M <--> xTR_A1.ethg[1];
         S1.ethg++ <--> Eth100M <--> xTR_A2.ethg[1];
         S1.ethg++ <--> Eth100M <--> Hv4_A.ethg++;        

@@ -17,24 +17,60 @@
 /**
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
+
 #ifndef __INET_LISPMAPCACHE_H_
 #define __INET_LISPMAPCACHE_H_
 
 #include <omnetpp.h>
 #include "LISPMapStorageBase.h"
+#include "LISPTimers_m.h"
+#include "LISPServerEntry.h"
+
+typedef std::list <LISPMapEntryTimer*> CacheEntriesTimeouts;
+typedef CacheEntriesTimeouts::const_iterator TimeoutCItem;
+typedef CacheEntriesTimeouts::iterator TimeoutItem;
 
 class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
 {
-    public:
-        LISPMapCache();
-        virtual ~LISPMapCache();
+  public:
+    enum EMapSync
+    {
+        SYNC_NONE,
+        SYNC_NAIVE,
+        SYNC_SMART
+    };
 
-    protected:
-        void parseConfig(cXMLElement* config);
+    LISPMapCache();
+    virtual ~LISPMapCache();
 
-        virtual int numInitStages() const { return 4; }
-        virtual void initialize(int stage);
-        virtual void handleMessage(cMessage *msg);
+    const std::string& getSyncKey() const;
+    const ServerAddresses& getSyncSet() const;
+    LISPMapCache::EMapSync getSyncType() const;
+    bool isSyncAck() const;
+
+
+    LISPMapEntryTimer* findExpirationTimer(const LISPEidPrefix& eidPref);
+    void updateTimeout(const LISPEidPrefix& eidPref, simtime_t time);
+
+    void updateCacheEntry(const TRecord& record);
+    void syncCacheEntry(LISPMapEntry& entry);
+
+
+
+  protected:
+     CacheEntriesTimeouts CacheTimeouts;
+
+     EMapSync syncType;
+     ServerAddresses SyncSet;
+     std::string syncKey;
+     bool syncAck;
+
+     void parseConfig(cXMLElement* config);
+     void parseSyncSetup(cXMLElement* config);
+
+     virtual int numInitStages() const { return 4; }
+     virtual void initialize(int stage);
+     virtual void handleMessage(cMessage *msg);
 };
 
 #endif

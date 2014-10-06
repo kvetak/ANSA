@@ -27,7 +27,6 @@ LISPMsgEntry::LISPMsgEntry(
 {
 }
 
-
 LISPMsgEntry::~LISPMsgEntry() {
    nonce = DEFAULT_NONCE_VAL;
    type = LISPMsgEntry::UNKNOWN;

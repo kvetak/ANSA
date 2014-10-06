@@ -158,7 +158,7 @@ void LISPRLocator::setLocal(bool local) {
     this->local = local;
 }
 
-void LISPRLocator::update(const LISPRLocator& rloc) {
+void LISPRLocator::updateRlocator(const LISPRLocator& rloc) {
     state = rloc.getState();
     priority = rloc.getPriority();
     weight = rloc.getWeight();

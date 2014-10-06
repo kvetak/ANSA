@@ -198,6 +198,8 @@ void LISPCore::parseConfig(cXMLElement* config)
         if ( !strcmp(ms->getAttribute(IPV6_ATTR), ENABLED_VAL) )
             mapServerV6 = true;
     }
+    par(MS4_PAR).setBoolValue(mapServerV4);
+    par(MS6_PAR).setBoolValue(mapServerV6);
 
     //Enable MR functionality
     mapResolverV4 = par(MR4_PAR).boolValue();
@@ -209,6 +211,8 @@ void LISPCore::parseConfig(cXMLElement* config)
         if ( !strcmp(mr->getAttribute(IPV6_ATTR), ENABLED_VAL) )
             mapResolverV6 = true;
     }
+    par(MR4_PAR).setBoolValue(mapResolverV4);
+    par(MR6_PAR).setBoolValue(mapResolverV6);
 
     //EtrMappings
     parseEtrMappings(config);
@@ -277,6 +281,22 @@ void LISPCore::scheduleRlocProbing() {
     }
 }
 
+void LISPCore::scheduleCacheSync(const LISPEidPrefix& eidPref) {
+    //IF map-cache content changes AND cache synchronization is enabled THEN
+    if (MapCache->getSyncType() != LISPMapCache::SYNC_NONE) {
+        for (ServerCItem it = MapCache->getSyncSet().begin();
+                it != MapCache->getSyncSet().end(); ++it) {
+            //EV << "Sync for " << it->getAddress() << endl;
+            LISPSyncTimer* synctim = new LISPSyncTimer(CACHESYNC_TIMER);
+            synctim->setSetMember(it->getAddress());
+            synctim->setEidPref(eidPref);
+            synctim->setPreviousNonce(DEFAULT_NONCE_VAL);
+            synctim->setRetryCount(0);
+            scheduleAt(simTime(), synctim);
+        }
+    }
+}
+
 void LISPCore::initialize(int stage)
 {
     if (stage < 3)
@@ -290,8 +310,10 @@ void LISPCore::initialize(int stage)
     //Set by parameters
     acceptMapRequestMapping = par(ACCEPTREQMAPPING_PAR).boolValue();
 
-    if (par(MAPCACHETTL_PAR).longValue() <= 0)
+    if (par(MAPCACHETTL_PAR).longValue() <= 0) {
         mapCacheTtl = DEFAULT_TTL_VAL;
+        par(MAPCACHETTL_PAR).setLongValue(DEFAULT_TTL_VAL);
+    }
     else
         mapCacheTtl = (unsigned short) ( par(MAPCACHETTL_PAR).longValue() );
 
@@ -431,6 +453,31 @@ void LISPCore::expireRlocProbeTimer(LISPRlocProbeTimer* probetim) {
     }
 }
 
+void LISPCore::expireSyncTimer(LISPSyncTimer* synctim) {
+    //Check whether previous request was replied. IF true THEN cancel ELSE retry sending Map-Request
+    if (synctim->getRetryCount() && MsgLog.findMsg(LISPMsgEntry::CACHE_SYNC_ACK, synctim->getPreviousNonce()))
+        cancelAndDelete(synctim);
+    else {
+        //EV << "MemberIP: " << synctim->getSetMember() << ", EID: " << synctim->getEidPref() << endl;
+        //Send CacheSync message
+        unsigned long nonce;
+        nonce = sendCacheSync(synctim->getSetMember(), synctim->getEidPref());
+
+        //Plan next timeout our cancel timer when number of retries is reached
+        if (MapCache->isSyncAck() && synctim->getRetryCount() + 1 <= DEFAULT_MAXREQRETRIES_VAL) {
+            scheduleAt(simTime()
+                    + (simtime_t)pow(DEFAULT_REQMULTIPLIER_VAL,synctim->getRetryCount()), synctim);
+            synctim->setRetryCount(synctim->getRetryCount() + 1);
+            synctim->setPreviousNonce(nonce);
+        }
+        else {
+            EV << "CacheSync for synchronization set member " << synctim->getSetMember()
+               << " timed out or is not set for acknowledgment!" << endl;
+            cancelAndDelete(synctim);
+        }
+    }
+}
+
 void LISPCore::handleTimer(cMessage* msg) {
     //Register timer expires
     if ( dynamic_cast<LISPRegisterTimer*>(msg) ) {
@@ -442,6 +489,10 @@ void LISPCore::handleTimer(cMessage* msg) {
     }
     else if (dynamic_cast<LISPRlocProbeTimer*>(msg)) {
         expireRlocProbeTimer(check_and_cast<LISPRlocProbeTimer*>(msg));
+    }
+    else if (dynamic_cast<LISPSyncTimer*>(msg)) {
+        EV << "SyncTimer expired" << endl;
+        expireSyncTimer(check_and_cast<LISPSyncTimer*>(msg));
     }
     else {
         error("Unrecognized timer (%s)", msg->getClassName());
@@ -476,7 +527,7 @@ void LISPCore::handleCotrol(cMessage* msg) {
     }
     //Map-Notify must be evaluated earlier because it is inherited from Map-Register
     if ( dynamic_cast<LISPMapNotify*>(msg) ) {
-            receiveMapNotify( dynamic_cast<LISPMapNotify*>(msg) );
+            receiveMapNotify( check_and_cast<LISPMapNotify*>(msg) );
     }
     else if ( dynamic_cast<LISPMapRegister*>(msg) ) {
         LISPMapRegister* lmreg = check_and_cast<LISPMapRegister*>(msg);
@@ -503,6 +554,19 @@ void LISPCore::handleCotrol(cMessage* msg) {
         //Process ordinary Map-Reply
         else
             receiveMapReply( lmrep );
+    }
+    //Cache-Sync must be evaluated earlier because it is inherited from Cache-Sync-Ack
+    else if ( dynamic_cast<LISPCacheSync*>(msg) ) {
+        LISPCacheSync* lcs = check_and_cast<LISPCacheSync*>(msg);
+        receiveCacheSync(lcs);
+
+        //Send Ack if necessary
+        if (lcs->getAckBit())
+            sendCacheSyncAck(lcs);
+    }
+    else if ( dynamic_cast<LISPCacheSyncAck*>(msg) ) {
+        LISPCacheSyncAck* lcsa = check_and_cast<LISPCacheSyncAck*>(msg);
+        receiveCacheSyncAck(lcsa);
     }
     delete msg;
 }
@@ -542,14 +606,14 @@ void LISPCore::sendMapRegister(LISPServerEntry& se) {
     LISPMapRegister* lmreg = new LISPMapRegister(REGISTER_MSG);
 
     //General fields
-    unsigned long newnonce = (unsigned long) rand();
+    unsigned long newnonce = (unsigned long) ev.getRNG(0)->intRand();
     lmreg->setNonce(newnonce);
 
     lmreg->setProxyBit(se.isProxyReply());
     lmreg->setMapNotifyBit(se.isMapNotify());
 
     //Authentication data
-    lmreg->setKeyId(LISPCommon::NONE);
+    lmreg->setKeyId(LISPCommon::KID_NONE);
     lmreg->setAuthDataLen(se.getKey().size());
     lmreg->setAuthData(se.getKey().c_str());
 
@@ -562,6 +626,7 @@ void LISPCore::sendMapRegister(LISPServerEntry& se) {
     lmreg->setRecordCount(lmreg->getRecords().size());
 
     //Log and send
+    //EV << "Map-Register message generated." << endl;
     MsgLog.addMsg(LISPMsgEntry::REGISTER, lmreg->getNonce(), se.getAddress(), true);
     controlTraf.sendTo(lmreg, se.getAddress() , CONTROL_PORT_VAL);
 }
@@ -603,7 +668,7 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
         //Create new record ...
         if ( !si->findRecordByAddress(src) ) {
             srec = new LISPSiteRecord();
-            se = new LISPServerEntry(src.str(), "", lmreg->getProxyBit(), false, false);
+            se = new LISPServerEntry(src.str(), EMPTY_STRING_VAL, lmreg->getProxyBit(), false, false);
             srec->setServerEntry(*se);
             //Store new record into SiteStorage
             si->addRecord(*srec);
@@ -616,12 +681,6 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
         srec->getServerEntry().setProxyReply(lmreg->getProxyBit());
 
         for (TRecordCItem it = lmreg->getRecords().begin(); it != lmreg->getRecords().end(); ++it) {
-            if (!it->locatorCount) {
-                EV << "Map-register with EID " << it->EidPrefix << " has zero locators!";
-                continue;
-            }
-
-
             //Trying to store EID from AF that server does not operate
             if ( (it->EidPrefix.getEidAddr().isIPv6()  && !mapServerV6)
                  || (!it->EidPrefix.getEidAddr().isIPv6() && !mapServerV4) ) {
@@ -629,34 +688,7 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
                 continue;
             }
 
-            LISPMapEntry* entry;
-            //Create new MapEntry ...
-            if ( !srec->findMapEntryByEidPrefix(it->EidPrefix) ) {
-                //IF new ME has not EID supported by Site THEN skip
-                if (!si->findMapEntryByEidPrefix(it->EidPrefix))
-                    continue;
-                entry = new LISPMapEntry(it->EidPrefix);
-                srec->addMapEntry(*entry);
-            }
-            //... and/or ... retrieve MapEntry
-            entry = srec->findMapEntryByEidPrefix(it->EidPrefix);
-
-            //Update MapEntry parameters
-            entry->setExpiry(simTime() + it->recordTTL * 60);
-
-            //Fill it with EID-to-RLOC mappings
-            for (TLocatorCItem jt = it->locators.begin(); jt != it->locators.end(); ++jt) {
-                LISPRLocator rloc = jt->RLocator;
-                if (!entry->isLocatorExisting(rloc.getRlocAddr()))
-                    entry->addLocator(rloc);
-
-                //Update state
-                LISPRLocator* rl = entry->getLocator( rloc.getRlocAddr() );
-                //TODO: Vesely - more research opportunity
-                //IF RlocRoute bit set THEN consider RLOC up
-                if (jt->RouteRlocBit)
-                    rl->setState(LISPRLocator::UP);
-            }
+            srec->updateMapEntry(*it);
         }
     }
     else {
@@ -747,7 +779,7 @@ unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddr
     LISPMapRequest* lmreq = new LISPMapRequest(REQUEST_MSG);
 
     //General fields
-    unsigned long newnonce = (unsigned long) rand();
+    unsigned long newnonce = (unsigned long) ev.getRNG(0)->intRand();
     lmreq->setNonce(newnonce);
 
     lmreq->setProbeBit(false);
@@ -855,7 +887,7 @@ void LISPCore::receiveMapRequest(LISPMapRequest* lmreq) {
                         res.erase(jt++);
                     //Filter only the best EID from each ETR TODO: Vesely - What if I want more less precise mapping answers?
                     LISPMapEntry me = *( (*jt).lookupMapEntry( it->getEidAddr() ) );
-                    (*jt).clear();
+                    (*jt).clearMappingStorage();
                     (*jt).addMapEntry(me);
                     if ( (*jt).getServerEntry().isProxyReply() )
                         proxyReply = true;
@@ -930,6 +962,7 @@ void LISPCore::delegateMapRequest(LISPMapRequest* lmreq, Etrs& etrs) {
     MsgLog.addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), dst, true);
     controlTraf.sendTo(copy, dst, CONTROL_PORT_VAL);
 }
+
 void LISPCore::sendMapReplyFromMs(LISPMapRequest* lmreq, Etrs& etrs) {
     LISPMapReply* lmrep = new LISPMapReply(REPLY_MSG);
 
@@ -1037,7 +1070,7 @@ unsigned long LISPCore::sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid) {
     lmreq->setDisplayString("b=15,15,oval,green,green,0");
 
     //General fields
-    unsigned long newnonce = (unsigned long) rand();
+    unsigned long newnonce = (unsigned long) ev.getRNG(0)->intRand();
     lmreq->setNonce(newnonce);
     //It is RLOC-Probe, hebce set the Probebit
     lmreq->setProbeBit(true);
@@ -1098,9 +1131,9 @@ void LISPCore::receiveRlocProbe(LISPMapRequest* lmreq) {
         i++;
     }
 
-    //TODO: Vesely - Process MapReply Record. Potentially save them into MapCache
-    if (lmreq->getMapDataBit())
-        ;
+    //Cache Map-Reply data
+    if (acceptMapRequestMapping && lmreq->getMapDataBit())
+        cacheMapping(lmreq->getMapReply());
 
     //Use bitmask
     sendRlocProbeReply(lmreq, bitmask);
@@ -1114,7 +1147,7 @@ void LISPCore::sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask) {
     UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
     IPvXAddress src = udpi->getSrcAddr();
 
-    EV << "Bitmask is: " << bitmask;
+    //EV << "Bitmask is: " << bitmask;
     lmrep->setNonce(lmreq->getNonce());
     //It is RLOC-Probe-Reply, hence set the Probebit
     lmrep->setProbeBit(true);
@@ -1164,40 +1197,139 @@ void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
         else
             probe->setRlocStatusForAllEids(LISPRLocator::UP);
 
-        //TODO: Vesely - Process MapReply Records. Potentially save them into MapCache
+        if (acceptMapRequestMapping)
+            cacheMapping(*it);
     }
 }
 
-void LISPCore::cacheMapping(const TRecord& rec) {
-    LISPMapEntry* entry;
-    //Create new MapEntry ...
-    if ( !MapCache->findMapEntryByEidPrefix(rec.EidPrefix) ) {
-        //IF new ME has not EID supported THEN skip
-        entry = new LISPMapEntry(rec.EidPrefix);
-        MapCache->addMapEntry(*entry);
+unsigned long LISPCore::sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eidPref) {
+    //EV << "sendCacheSync() - " << setmember << "   EID: " << eidPref << endl;
+    if (eidPref.getEidAddr().isUnspecified()) {
+        EV << "Cannot send CacheSync containing default MapCache record!" << endl;
+        return DEFAULT_NONCE_VAL;
     }
-    //... and/or ... retrieve MapEntry
-    entry = MapCache->findMapEntryByEidPrefix(rec.EidPrefix);
 
-    //Update MapEntry parameters
-    entry->setExpiry(simTime() + rec.recordTTL * 60);
+    LISPCacheSync* lcs = new LISPCacheSync(CACHESYNC_MSG);
 
-    //Update action
-    entry->setAction( (LISPCommon::EAct)rec.ACT );
+    //General fields
+    unsigned long newnonce = (unsigned long) ev.getRNG(0)->intRand();
+    lcs->setNonce(newnonce);
 
-    //TODO: Abit is not processed. Authoritative reply is same as unauthoritative
+    //Authentication data
+    lcs->setKeyId(LISPCommon::KID_NONE);
+    lcs->setAuthDataLen(MapCache->getSyncKey().size());
+    lcs->setAuthData(MapCache->getSyncKey().c_str());
 
-    //Ordinary Map-Reply
-    if (rec.locatorCount) {
-        //Fill it with EID-to-RLOC mappings
-        for (TLocatorCItem jt = rec.locators.begin(); jt != rec.locators.end(); ++jt) {
-            LISPRLocator rloc = jt->RLocator;
-            if (!entry->isLocatorExisting(rloc.getRlocAddr()))
-                entry->addLocator(rloc);
+    lcs->setAckBit(MapCache->isSyncAck() ? true : false);
 
-            //Update state
-            LISPRLocator* rl = entry->getLocator(rloc.getRlocAddr());
-            rl->update(jt->RLocator);
+    if (MapCache->getSyncType() == LISPMapCache::SYNC_NAIVE) {
+        //TRecords
+        for (MapStorageItem it = MapCache->getMappingStorage().begin();
+                it != MapCache->getMappingStorage().end(); ++it) {
+            if (it->getEidPrefix().getEidAddr().isUnspecified())
+                continue;
+            lcs->getMapEntries().push_back(*it);
         }
+    } else if (MapCache->getSyncType() == LISPMapCache::SYNC_SMART) {
+        LISPMapEntry* me = MapCache->findMapEntryByEidPrefix(eidPref);
+        if (me)
+            lcs->getMapEntries().push_back(*me);
+        else
+            error("ME seizes to exist between method calls!");
     }
+    else {
+        EV << "MapCache is not configured with supported synchronization capability!" << endl;
+        return DEFAULT_NONCE_VAL;
+    }
+
+    //As many records as there are EtrMappings
+    lcs->setRecordCount(lcs->getMapEntries().size());
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::CACHE_SYNC, lcs->getNonce(), setmember, true);
+    controlTraf.sendTo(lcs, setmember, CONTROL_PORT_VAL);
+
+    return lcs->getNonce();
+}
+
+void LISPCore::receiveCacheSync(LISPCacheSync* lcs) {
+    //Log
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lcs->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+    MsgLog.addMsg(LISPMsgEntry::CACHE_SYNC, lcs->getNonce(), src, false);
+
+    //Check for 0 records
+    if (lcs->getRecordCount() == 0) {
+        EV << "Cache-Sync contains zero records!" << endl;
+        return;
+    }
+
+    //Check the authentication method
+    if (lcs->getKeyId() != 0) {
+        EV << "Cache-Sync contains unsupported authentication method!" << endl;
+        return;
+    }
+
+    //Check authentication data
+    std::string authData = lcs->getAuthData();
+    if (MapCache->getSyncKey() != authData) {
+        EV << "Password " << authData << " in Cache-Sync does not matched configured one " << MapCache->getSyncKey() << endl;
+        return;
+    }
+
+    //Check whether map cache synchronization is enabled
+    if (MapCache->getSyncType() == LISPMapCache::SYNC_NONE) {
+        EV << "MapCache is not configured with synchronization capability!" << endl;
+        return;
+    }
+
+    if (MapCache->getMappingStorage().size() != lcs->getRecordCount()) {
+        EV << "State prior to synchronization:\n\tLocal MapCache: "
+           << MapCache->getMappingStorage().size() << " entries, CacheSync: "
+           << (unsigned short) lcs->getRecordCount() << " entries." << endl;
+    }
+
+    for (TMEItem it = lcs->getMapEntries().begin(); it != lcs->getMapEntries().end(); ++it)
+        MapCache->syncCacheEntry(it->MapEntry);
+
+}
+
+void LISPCore::sendCacheSyncAck(LISPCacheSync* lcs) {
+    LISPCacheSyncAck* lca = new LISPCacheSyncAck(CACHESYNCACK_MSG);
+
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lcs->getControlInfo());
+    IPvXAddress dst = udpi->getSrcAddr();
+
+    //Copy Map-Register content onto Map-Notify
+    lca->setNonce(lcs->getNonce());
+    lca->setRecordCount(lcs->getRecordCount());
+    lca->setKeyId(lcs->getKeyId());
+    lca->setAuthDataLen(lcs->getAuthDataLen());
+    lca->setAuthData(lcs->getAuthData());
+    lca->setMapEntries(lcs->getMapEntries());
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::CACHE_SYNC_ACK, lca->getNonce(), dst, true);
+    controlTraf.sendTo(lca, dst, CONTROL_PORT_VAL);
+}
+
+void LISPCore::receiveCacheSyncAck(LISPCacheSyncAck* lca) {
+    //Retrieve source IP address
+    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lca->getControlInfo());
+    IPvXAddress src = udpi->getSrcAddr();
+
+    //Log
+    MsgLog.addMsg(LISPMsgEntry::CACHE_SYNC_ACK, lca->getNonce(), src, false);
+
+    //Check whether last Map-Register was acknowledged
+    if ( MsgLog.findMsg(LISPMsgEntry::CACHE_SYNC, lca->getNonce() ) ) {
+        EV << "Cache-Sync was acknowledged by Cache-Sync-Ack with nonce " << lca->getNonce() << endl;
+    }
+    else
+        EV << "Unsolicited Cache-Sync-Ack received!" << endl;
+}
+
+void LISPCore::cacheMapping(const TRecord& record) {
+    MapCache->updateCacheEntry(record);
+    scheduleCacheSync(record.EidPrefix);
 }

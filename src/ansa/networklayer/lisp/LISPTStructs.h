@@ -73,6 +73,17 @@ typedef TRecs::const_iterator TRecsCItem;
 typedef std::list<TAfiAddr> TAfiAddrs;
 typedef TAfiAddrs::const_iterator TAfiAddrCItem;
 
+class TMapEntry {
+  public:
+    TMapEntry() : MapEntry(LISPMapEntry()) {};
+    TMapEntry(LISPMapEntry me) : MapEntry(me) {};
+
+    LISPMapEntry MapEntry;
+};
+
+typedef std::list<TMapEntry> TMapEntries;
+typedef TMapEntries::iterator TMEItem;
+typedef TMapEntries::const_iterator TMECItem;
 
 //Free functions
 std::ostream& operator<< (std::ostream& os, const TAfiAddr& taa);
@@ -81,7 +92,7 @@ std::ostream& operator<< (std::ostream& os, const TRecs& recs);
 std::ostream& operator<< (std::ostream& os, const TLocator& tloc);
 std::ostream& operator<< (std::ostream& os, const TRecord& trec);
 std::ostream& operator<< (std::ostream& os, const TRecords& trecs);
-
-
+std::ostream& operator<< (std::ostream& os, const TMapEntry& tme);
+std::ostream& operator<< (std::ostream& os, const TMapEntries& tmes);
 
 #endif /* LISPTSTRUCTS_H_ */

@@ -56,7 +56,9 @@ void LISPSite::setName(const std::string& name) {
 std::string LISPSite::info() const {
     std::stringstream os;
     os << name << ", key: \"" << key << "\"" << endl
-       << "Maintained EIDs>" << endl << LISPMapStorageBase::info();
+       << "Maintained EIDs>" << endl;
+    for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it)
+        os << it->getEidPrefix() << endl;
     if (ETRs.size()) {
         os << "\nRegistered ETRs>" << endl;
         for (EtrCItem it = ETRs.begin(); it != ETRs.end(); ++it)
@@ -72,7 +74,6 @@ std::ostream& operator <<(std::ostream& os, const LISPSite& si) {
 const Etrs& LISPSite::getETRs() const {
     return ETRs;
 }
-
 
 void LISPSite::setETRs(const Etrs& etrs) {
     ETRs = etrs;

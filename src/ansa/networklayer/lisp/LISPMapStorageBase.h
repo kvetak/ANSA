@@ -22,9 +22,9 @@
 #ifndef LISPMAPSTORAGEBASE_H_
 #define LISPMAPSTORAGEBASE_H_
 
-//#include "ILISPMapStorage.h"
 #include "LISPEidPrefix.h"
 #include "LISPMapEntry.h"
+#include "LISPTStructs.h"
 #include "LISPCommon.h"
 
 typedef std::list<LISPMapEntry> MapStorage;
@@ -37,17 +37,22 @@ class LISPMapStorageBase
     LISPMapStorageBase();
     virtual ~LISPMapStorageBase();
 
-    std::string info() const;
-    void parseMapEntry(cXMLElement* config);
+    MapStorage& getMappingStorage();
+    void clearMappingStorage();
 
-    void clear();
+    std::string info() const;
+
+    void parseMapEntry(cXMLElement* config);
     void addMapEntry(LISPMapEntry& entry);
+    bool updateMapEntry(const TRecord& record);
+    bool syncMapEntry(LISPMapEntry& entry);
     void removeMapEntry(const LISPMapEntry& entry);
+
     LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
     LISPMapEntry* findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref);
     LISPMapEntry* lookupMapEntry(IPvXAddress address);
 
-    MapStorage& getMappingStorage();
+
 
   protected:
     /**
@@ -58,5 +63,6 @@ class LISPMapStorageBase
 
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPMapStorageBase& msb);
+std::ostream& operator<< (std::ostream& os, const MapStorage& mapstor);
 
 #endif /* LISPMAPSTORAGEBASE_H_ */

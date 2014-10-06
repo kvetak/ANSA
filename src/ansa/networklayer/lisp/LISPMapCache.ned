@@ -23,5 +23,7 @@ simple LISPMapCache
 {
     parameters:
         @display("i=block/table2");        
-        xml configData = default(xml("<MapCache></MapCache>"));
+        xml 	configData 			 = default(xml("<MapCache></MapCache>"));        
+        string 	cacheSynchronization = default("None"); //None OR Naive OR Smart
+        bool   	cacheSyncAck 		 = default(true);   
 }

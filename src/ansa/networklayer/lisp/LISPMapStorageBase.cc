@@ -25,10 +25,10 @@ LISPMapStorageBase::LISPMapStorageBase() {}
 
 LISPMapStorageBase::~LISPMapStorageBase()
 {
-    this->clear();
+    this->clearMappingStorage();
 }
 
-void LISPMapStorageBase::clear() {
+void LISPMapStorageBase::clearMappingStorage() {
     MappingStorage.clear();
 }
 
@@ -182,4 +182,90 @@ LISPMapEntry* LISPMapStorageBase::findMapEntryFromByLocator(const IPvXAddress& r
             return &(*it);
     }
     return NULL;
+}
+
+bool LISPMapStorageBase::updateMapEntry(const TRecord& rec) {
+    bool isnew = false;
+    LISPMapEntry* entry;
+    //Create new MapEntry ...
+    if ( !findMapEntryByEidPrefix(rec.EidPrefix) ) {
+        //IF new ME has not EID supported THEN skip
+        entry = new LISPMapEntry(rec.EidPrefix);
+        isnew = true;
+        addMapEntry(*entry);
+    }
+    //... and/or ... retrieve MapEntry
+    entry = findMapEntryByEidPrefix(rec.EidPrefix);
+
+    //Update MapEntry parameters
+    entry->setExpiry(simTime() + rec.recordTTL * 60);
+
+    //Update action
+    entry->setAction( (LISPCommon::EAct)rec.ACT );
+
+    //TODO: Abit is not processed. Authoritative reply is same as unauthoritative
+
+    //Ordinary Map-Reply
+    if (rec.locatorCount) {
+        //Fill it with EID-to-RLOC mappings
+        for (TLocatorCItem jt = rec.locators.begin(); jt != rec.locators.end(); ++jt) {
+            LISPRLocator rloc = jt->RLocator;
+            if (!entry->isLocatorExisting(rloc.getRlocAddr()))
+                entry->addLocator(rloc);
+
+            //Update state
+            LISPRLocator* rl = entry->getLocator(rloc.getRlocAddr());
+            rl->updateRlocator(jt->RLocator);
+            if (jt->RouteRlocBit)
+                rl->setState(LISPRLocator::UP);
+        }
+    }
+    else {
+        EV << "Record for EID " << rec.EidPrefix << " has zero locators!";
+    }
+    return isnew;
+}
+
+bool LISPMapStorageBase::syncMapEntry(LISPMapEntry& mapentry) {
+    bool isnew = false;
+    LISPMapEntry* entry = findMapEntryByEidPrefix(mapentry.getEidPrefix());
+    //Create new MapEntry ...
+    if ( !entry ) {
+        isnew = true;
+        addMapEntry(mapentry);
+    }
+    //...or ... retrieve MapEntry
+    else {
+        //Update MapEntry parameters
+        entry->setExpiry(mapentry.getExpiry());
+        //Update action
+        entry->setAction(mapentry.getAction());
+
+        //Ordinary Map-Reply
+        if (mapentry.getRlocs().size()) {
+            //Fill it with EID-to-RLOC mappings
+            for (LocatorCItem jt = mapentry.getRlocs().begin(); jt != mapentry.getRlocs().end(); ++jt) {
+                LISPRLocator rloc = *jt;
+                if (!entry->isLocatorExisting(rloc.getRlocAddr()))
+                    entry->addLocator(rloc);
+                else {
+                    //Update state
+                    LISPRLocator* rl = entry->getLocator(rloc.getRlocAddr());
+                    rl->updateRlocator(rloc);
+                }
+            }
+        }
+        else {
+            EV << "Record for EID " << mapentry.getEidPrefix() << " has zero locators!";
+        }
+
+    }
+
+    return isnew;
+}
+
+std::ostream& operator <<(std::ostream& os, const MapStorage& mapstor) {
+    for (MapStorageCItem it = mapstor.begin(); it != mapstor.end(); ++it)
+        os << it->info() << endl;
+    return os;
 }

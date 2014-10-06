@@ -44,3 +44,14 @@ message LISPRlocProbeTimer {
     unsigned long previousNonce;
     unsigned char retryCount;    
 }
+
+message LISPSyncTimer {
+    IPvXAddress setMember;
+    LISPEidPrefix eidPref;
+    unsigned long previousNonce;
+    unsigned char retryCount;      
+}
+
+message LISPMapEntryTimer {
+    LISPEidPrefix eidPref;
+}

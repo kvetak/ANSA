@@ -36,7 +36,9 @@ class LISPMsgEntry {
         NOTIFY,
         ENCAPSULATED_REQUEST,
         RLOC_PROBE,
-        RLOC_PROBE_REPLY
+        RLOC_PROBE_REPLY,
+        CACHE_SYNC,
+        CACHE_SYNC_ACK
     };
 
     LISPMsgEntry(LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl);

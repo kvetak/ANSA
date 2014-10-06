@@ -27,6 +27,7 @@ class noncobject TRecords;
 class noncobject TRecs;
 class noncobject TAfiAddr;
 class noncobject TAfiAddrs;
+class noncobject TMapEntries;
 
 enum LISP_MsgType
 {
@@ -35,10 +36,12 @@ enum LISP_MsgType
     REGISTER 				= 3;
     NOTIFY					= 4;
     ENCAPSULATED_REQUEST 	= 8; 
+    CACHE_SYNC				= 6;
+    CACHE_SYNC_ACK			= 7;
 }
 
 packet LISPHeader {
-    string displayString = "b=15,15,oval,green,green,0"; 
+    string displayString = "b=15,15,oval,violet,violet,0"; 
     bool NonceBit; 						// nonce-present Bit
     bool LocStatBit; 					// locator-status-Bits field enabled
     bool EchoNonceBit; 					// echo-nonce-request Bit
@@ -83,7 +86,7 @@ packet LISPMessage {
 //       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapRequest extends LISPMessage {
-    string displayString = "b=15,15,oval,blue,blue,0";
+    displayString = "b=15,15,oval,blue,blue,0";
     type = REQUEST;    
     bool ABit;							// Authoritative Bit 
     bool MapDataBit;					// Map-data-present Bit
@@ -127,7 +130,7 @@ packet LISPMapRequest extends LISPMessage {
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapReply extends LISPMessage {
-	string displayString = "b=15,15,oval,lightblue,lightblue,0";
+	displayString = "b=15,15,oval,lightblue,lightblue,0";
 	type = REPLY;    
 	bool ProbeBit;						//Proxy Map-Reply Bit
 	bool EchoNonceBit;					// Echo-Nonce Bit
@@ -165,7 +168,7 @@ packet LISPMapReply extends LISPMessage {
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapRegister extends LISPMessage {
-	string displayString = "b=15,15,oval,yellow,yellow,0";
+	displayString = "b=15,15,oval,yellow,yellow,0";
 	type = REGISTER; 	
 	bool ProxyBit;							//Proxy Map-Reply Bit
  	bool MapNotifyBit; 						// map-notify
@@ -206,7 +209,7 @@ packet LISPMapRegister extends LISPMessage {
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPMapNotify extends LISPMapRegister {
-	string displayString = "b=15,15,oval,ligthyellow,ligthyellow,0";
+	displayString = "b=15,15,oval,#ffff99,#ffff99,0";
 	type = NOTIFY;    
 }
 
@@ -235,9 +238,51 @@ packet LISPMapNotify extends LISPMapRegister {
 //       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 packet LISPEncapsulated {
-   string displayString = "b=15,15,oval,darkblue,darkblue,0";
-   unsigned char type = ENCAPSULATED_REQUEST;
-   bool SecBit;						// Security Bit
-   bool DDTBit;						// DDTOrigin Bit
+    string displayString = "b=15,15,oval,darkblue,darkblue,0";
+    unsigned char type = ENCAPSULATED_REQUEST;
+    bool SecBit;						// Security Bit
+    bool DDTBit;						// DDTOrigin Bit
 }
+
+
+//        0                   1                   2                   3
+//        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |Type=6/7 | AckBit                              | Record Count  |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         Nonce . . .                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                         . . . Nonce                           |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |            Key ID             |  Authentication Data Length   |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       ~                     Authentication Data                       ~
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                        LISP MapEntry #1                       |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       ~                                                               ~
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//       |                        LISP MapEntry #n                       |
+//       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+packet LISPCacheSyncAck extends LISPMessage {
+    displayString = "b=15,15,oval,#cc6633,#cc6633,0";
+    type = CACHE_SYNC_ACK;   
+
+ 	unsigned char keyId; 				// key id
+ 	unsigned short authDataLen;			// length of authentization data
+ 	string authData;					// authentization data
+      
+    TMapEntries MapEntries;    
+}
+
+packet LISPCacheSync extends LISPCacheSyncAck {
+    displayString = "b=15,15,oval,#663300,#663300,0";
+    type = CACHE_SYNC;   
+    
+    bool AckBit;						// whether sender requires confirmation    
+}
+
+
+
 

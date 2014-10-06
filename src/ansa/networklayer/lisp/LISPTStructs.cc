@@ -100,3 +100,13 @@ const std::string TRecord::getActionString() const {
             return "No-Action";
     }
 }
+
+std::ostream& operator <<(std::ostream& os, const TMapEntry& tme) {
+    return os << tme.MapEntry.info();
+}
+
+std::ostream& operator <<(std::ostream& os, const TMapEntries& tmes) {
+    for (TMECItem it = tmes.begin(); it != tmes.end(); ++it )
+        os << *it << endl << endl;
+    return os;
+}

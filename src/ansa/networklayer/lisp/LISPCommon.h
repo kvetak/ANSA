@@ -55,6 +55,8 @@ extern const char* MAPRESOLVER_TAG;
 extern const char* ETRMAPSERVER_TAG;
 extern const char* ITRMAPRESOLVER_TAG;
 extern const char* ETRMAP_TAG;
+extern const char* SYNCSET_TAG;
+extern const char* SETMEMBER_TAG;
 
 extern const char* ADDRESS_ATTR;
 extern const char* IPV4_ATTR;
@@ -71,6 +73,8 @@ extern const char* LOCAL_ATTR;
 extern const char* REGISTER_TIMER;
 extern const char* REQUEST_TIMER;
 extern const char* REQUESTPROBE_TIMER;
+extern const char* CACHE_TIMER;
+extern const char* CACHESYNC_TIMER;
 
 extern const char* REGISTER_MSG;
 extern const char* NOTIFY_MSG;
@@ -80,6 +84,8 @@ extern const char* REPLY_MSG;
 extern const char* ENCAPSULATEDREQUEST_MSG;
 extern const char* REQUESTPROBE_MSG;
 extern const char* REPLYPROBE_MSG;
+extern const char* CACHESYNC_MSG;
+extern const char* CACHESYNCACK_MSG;
 
 extern const char* CONFIG_PAR;
 extern const char* MS4_PAR;
@@ -94,6 +100,11 @@ extern const char* RLOCPROBINGALGO_PAR;
 extern const char* ALGO_CISCO_PARVAL;
 extern const char* ALGO_EIDRR_PARVAL;
 extern const char* ALGO_EIDGROUPED_PARVAL;
+extern const char* CACHESYNC_PAR;
+extern const char* SYNCNONE_PARVAL;
+extern const char* SYNCNAIVE_PARVAL;
+extern const char* SYNCSMART_PARVAL;
+extern const char* SYNCACK_PAR;
 
 extern const char* MAPCACHE_MOD;
 extern const char* MAPDB_MOD;
@@ -105,9 +116,9 @@ class LISPCommon {
 
     enum EKeyIds
     {
-        NONE                = 0,
-        HMAC_SHA_1_96       = 1,
-        HMAC_SHA_256_128    = 2,
+        KID_NONE                = 0,
+        KID_HMAC_SHA_1_96       = 1,
+        KID_HMAC_SHA_256_128    = 2,
     };
 
     enum EAct {

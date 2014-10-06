@@ -54,7 +54,7 @@ class LISPRLocator {
     bool isLocal() const;
     void setLocal(bool local);
 
-    void update(const LISPRLocator& rloc);
+    void updateRlocator(const LISPRLocator& rloc);
 
   private:
     IPvXAddress rloc;

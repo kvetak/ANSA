@@ -10,7 +10,11 @@
                 <IPAddress>192.168.1.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:db8:a::1/64</IPv6Address>
-            </Interface>            
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>10.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                        
         </Interfaces>
                                 
         <Routing>
@@ -22,11 +26,13 @@
         		</Route>
         	</Static>
         
-        	<LISP>
+        	<LISP>       	
         		<EtrMapServer address="31.0.0.1" key="HesloA" proxy="enabled" />
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
-
+	        		<SynchronizationSet key="SSKeyA">
+	        			<SetMember address="192.168.1.2"/>
+	        		</SynchronizationSet> 
         		</MapCache>
         		<EtrMapping>
         			<EID address="192.168.1.0/24">
@@ -54,6 +60,10 @@
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:db8:a::2/64</IPv6Address>
             </Interface>            
+            <Interface name="eth2">
+                <IPAddress>10.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                        
         </Interfaces>
                                 
         <Routing>
@@ -65,11 +75,13 @@
         		</Route>
         	</Static>
         
-        	<LISP>
+        	<LISP>       	        	
         		<EtrMapServer address="31.0.0.1" key="HesloA" proxy="enabled" />
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
-
+	        		<SynchronizationSet key="SSKeyA">
+	        			<SetMember address="192.168.1.1"/>
+	        		</SynchronizationSet> 
         		</MapCache>
         		<EtrMapping>
         			<EID address="192.168.1.0/24">
@@ -97,6 +109,10 @@
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:db8:b::1/64</IPv6Address>
             </Interface>            
+            <Interface name="eth2">
+                <IPAddress>20.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                                    
         </Interfaces>
                                 
         <Routing>
@@ -108,11 +124,13 @@
         		</Route>
         	</Static>
         
-        	<LISP>
+        	<LISP>        	        	
         		<EtrMapServer address="31.0.0.1" key="HesloB" want-map-notify="enabled" quick-registration="enabled"/>
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
-
+	        		<SynchronizationSet key="SSKeyB">
+	        			<SetMember address="192.168.2.2"/>
+	        		</SynchronizationSet>
         		</MapCache>
         		<EtrMapping>
         			<EID address="192.168.2.0/24">
@@ -136,10 +154,14 @@
                 <Mask>255.255.255.252</Mask>
             </Interface>
             <Interface name="eth1">
-                <IPAddress>192.168.2.1</IPAddress>
+                <IPAddress>192.168.2.2</IPAddress>
                 <Mask>255.255.255.0</Mask>
-                <IPv6Address>2001:db8:b::1/64</IPv6Address>
+                <IPv6Address>2001:db8:b::2/64</IPv6Address>
             </Interface>            
+            <Interface name="eth2">
+                <IPAddress>20.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                                    
         </Interfaces>
                                 
         <Routing>
@@ -151,11 +173,13 @@
         		</Route>
         	</Static>
         
-        	<LISP>
+        	<LISP>       	        	
         		<EtrMapServer address="31.0.0.1" key="HesloB" />
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
-
+	        		<SynchronizationSet key="SSKeyB">
+	        			<SetMember address="192.168.2.1"/>
+	        		</SynchronizationSet> 
         		</MapCache>
         		<EtrMapping>
         			<EID address="192.168.2.0/24">

@@ -21,28 +21,28 @@
 #include <LISPCommon.h>
 
 // --------------- VALUES ---------------
-const           char*   ENABLED_VAL             = "enabled";
-const           char*   EMPTY_STRING_VAL        = "";
-const unsigned  char    DEFAULT_EIDLENGTH_VAL   = 0;
-const unsigned  char    DEFAULT_PRIORITY_VAL    = 1;
-const unsigned  char    DEFAULT_WEIGHT_VAL      = 100;
-const unsigned  char    DEFAULT_MPRIORITY_VAL   = 255;
-const unsigned  char    DEFAULT_MWEIGHT_VAL     = 0;
-const unsigned  char    DEFAULT_NONCE_VAL       = 0;
-const unsigned  short   DEFAULT_TTL_VAL         = 1440;
-const unsigned  short   NOETR_TTL_VAL           = 1;
-const unsigned  short   NOEID_TTL_VAL           = 15;
-const unsigned  short   DEFAULT_MAPVER_VAL      = 0;
-const           short   DATA_PORT_VAL           = 4341;
-const           short   CONTROL_PORT_VAL        = 4342;
-const unsigned  short   QUICK_REGTIMER_VAL      = 20;                       //20 seconds
-const unsigned  short   QUICKREG_PERIOD_VAL     = 300;                      //5 minutes
-const unsigned  short   QUICKREG_CYCLES_VAL     = QUICKREG_PERIOD_VAL / QUICK_REGTIMER_VAL + 1; //15+1 cycles
-const unsigned  short   DEFAULT_REGTIMER_VAL    = 60;                       //60 seconds
-const unsigned short    DEFAULT_REQTIMEOUT_VAL  = 1;
-const unsigned short    DEFAULT_REQMULTIPLIER_VAL= 2;
-const unsigned short    DEFAULT_MAXREQRETRIES_VAL= 3;
-const unsigned short    DEFAULT_IPTTL_VAL       = 32;
+const           char*   ENABLED_VAL                 = "enabled";
+const           char*   EMPTY_STRING_VAL            = "";
+const unsigned  char    DEFAULT_EIDLENGTH_VAL       = 0;
+const unsigned  char    DEFAULT_PRIORITY_VAL        = 1;
+const unsigned  char    DEFAULT_WEIGHT_VAL          = 100;
+const unsigned  char    DEFAULT_MPRIORITY_VAL       = 255;
+const unsigned  char    DEFAULT_MWEIGHT_VAL         = 0;
+const unsigned  char    DEFAULT_NONCE_VAL           = 0;
+const unsigned  short   DEFAULT_TTL_VAL             = 1440;
+const unsigned  short   NOETR_TTL_VAL               = 1;
+const unsigned  short   NOEID_TTL_VAL               = 15;
+const unsigned  short   DEFAULT_MAPVER_VAL          = 0;
+const           short   DATA_PORT_VAL               = 4341;
+const           short   CONTROL_PORT_VAL            = 4342;
+const unsigned  short   QUICK_REGTIMER_VAL          = 20;                       //20 seconds
+const unsigned  short   QUICKREG_PERIOD_VAL         = 300;                      //5 minutes
+const unsigned  short   QUICKREG_CYCLES_VAL         = QUICKREG_PERIOD_VAL / QUICK_REGTIMER_VAL + 1; //15+1 cycles
+const unsigned  short   DEFAULT_REGTIMER_VAL        = 60;                       //60 seconds
+const unsigned short    DEFAULT_REQTIMEOUT_VAL      = 1;
+const unsigned short    DEFAULT_REQMULTIPLIER_VAL   = 2;
+const unsigned short    DEFAULT_MAXREQRETRIES_VAL   = 3;
+const unsigned short    DEFAULT_IPTTL_VAL           = 32;
 
 // --------------- TAGS/ATTRIBUTE ---------------
 const           char*   ETRMAPSERVER_TAG        = "EtrMapServer";
@@ -53,6 +53,8 @@ const           char*   ETRMAP_TAG              = "EtrMapping";
 const           char*   SITE_TAG                = "Site";
 const           char*   EID_TAG                 = "EID";
 const           char*   RLOC_TAG                = "RLOC";
+const           char*   SYNCSET_TAG             = "SynchronizationSet";
+const           char*   SETMEMBER_TAG           = "SetMember";
 
 const           char*   ADDRESS_ATTR            = "address";
 const           char*   IPV4_ATTR               = "ipv4";
@@ -70,6 +72,9 @@ const           char*   LOCAL_ATTR              = "local";
 const           char*   REGISTER_TIMER          = "LISP Register Timer";
 const           char*   REQUEST_TIMER           = "LISP Request Timer";
 const           char*   REQUESTPROBE_TIMER      = "LISP RLOC-Probe Timer";
+const           char*   CACHE_TIMER             = "LISP Cache Timer";
+const           char*   CACHESYNC_TIMER         = "LISP CacheSync Timer";
+
 const           char*   REGISTER_MSG            = "LISP Map-Register";
 const           char*   NOTIFY_MSG              = "LISP Map-Notify";
 const           char*   REQUEST_MSG             = "LISP Map-Request";
@@ -78,6 +83,8 @@ const           char*   REPLY_MSG               = "LISP Map-Reply";
 const           char*   ENCAPSULATEDREQUEST_MSG = "LISP Encapsulated Map-Request";
 const           char*   REQUESTPROBE_MSG        = "LISP Map-Request RLOC-Probe";
 const           char*   REPLYPROBE_MSG          = "LISP Map-Reply RLOC-Probe-Reply";
+const           char*   CACHESYNC_MSG           = "LISP Cache-Sync";
+const           char*   CACHESYNCACK_MSG        = "LISP Cache-Sync-Ack";
 
 // --------------- PARAMETERS ---------------
 const           char*   CONFIG_PAR              = "configData";
@@ -93,7 +100,11 @@ const           char*   RLOCPROBINGALGO_PAR     = "rlocProbingAlgo";
 const           char*   ALGO_CISCO_PARVAL       = "Cisco";
 const           char*   ALGO_EIDRR_PARVAL       = "EidRoundRobin";
 const           char*   ALGO_EIDGROUPED_PARVAL  = "EidGrouped";
-
+const           char*   CACHESYNC_PAR           = "cacheSynchronization";
+const           char*   SYNCNONE_PARVAL         = "None";
+const           char*   SYNCNAIVE_PARVAL        = "Naive";
+const           char*   SYNCSMART_PARVAL        = "Smart";
+const           char*   SYNCACK_PAR             = "cacheSyncAck";
 // --------------- MODULES ---------------
 const           char*   MAPCACHE_MOD            = "lispMapCache";
 const           char*   MAPDB_MOD               = "lispMapDatabase";
