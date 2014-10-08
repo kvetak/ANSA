@@ -34,10 +34,12 @@ void LISPMapStorageBase::clearMappingStorage() {
 
 void LISPMapStorageBase::addMapEntry(LISPMapEntry& entry) {
     MappingStorage.push_back(entry);
+    MappingStorage.sort();
 }
 
 void LISPMapStorageBase::removeMapEntry(const LISPMapEntry& entry) {
     MappingStorage.remove(entry);
+    MappingStorage.sort();
 }
 
 LISPMapEntry* LISPMapStorageBase::findMapEntryByEidPrefix(const LISPEidPrefix& eidpref) {
@@ -219,6 +221,7 @@ bool LISPMapStorageBase::updateMapEntry(const TRecord& rec) {
             if (jt->RouteRlocBit)
                 rl->setState(LISPRLocator::UP);
         }
+        entry->getRlocs().sort();
     }
     else {
         EV << "Record for EID " << rec.EidPrefix << " has zero locators!";
@@ -254,6 +257,7 @@ bool LISPMapStorageBase::syncMapEntry(LISPMapEntry& mapentry) {
                     rl->updateRlocator(rloc);
                 }
             }
+            mapentry.getRlocs().sort();
         }
         else {
             EV << "Record for EID " << mapentry.getEidPrefix() << " has zero locators!";

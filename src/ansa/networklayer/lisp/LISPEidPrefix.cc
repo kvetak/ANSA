@@ -21,17 +21,17 @@
 #include <LISPEidPrefix.h>
 
 LISPEidPrefix::LISPEidPrefix() {
-    eid = IPv4Address::UNSPECIFIED_ADDRESS;
+    eidAddr = IPv4Address::UNSPECIFIED_ADDRESS;
     this->eidLen = DEFAULT_EIDLENGTH_VAL;
 }
 
 LISPEidPrefix::LISPEidPrefix(const char* address, const char* length) {
-    eid = IPvXAddress(address);
+    eidAddr = IPvXAddress(address);
     eidLen = (unsigned char)atoi(length);
 }
 
 LISPEidPrefix::LISPEidPrefix(IPvXAddress address, unsigned char length) {
-    eid = address;
+    eidAddr = address;
     eidLen = length;
 }
 
@@ -42,11 +42,11 @@ LISPEidPrefix::~LISPEidPrefix() {
 }
 
 const IPvXAddress& LISPEidPrefix::getEidAddr() const {
-    return eid;
+    return eidAddr;
 }
 
 void LISPEidPrefix::setEidAddr(const IPvXAddress& eid) {
-    this->eid = eid;
+    this->eidAddr = eid;
 }
 
 unsigned char LISPEidPrefix::getEidLength() const {
@@ -63,7 +63,7 @@ std::string LISPEidPrefix::info() const {
         os << "0.0.0.0";
     else
     */
-        os << eid;
+        os << eidAddr;
     os << "/" << short(this->eidLen);
     return os.str();
 
@@ -74,7 +74,7 @@ void LISPEidPrefix::setEidLength(unsigned char eidLen) {
 }
 
 bool LISPEidPrefix::operator ==(const LISPEidPrefix& other) const {
-    return this->eid == other.eid && this->eidLen == other.eidLen;
+    return this->eidAddr == other.eidAddr && this->eidLen == other.eidLen;
 }
 
 std::ostream& operator <<(std::ostream& os, const LISPEidPrefix& ep) {
@@ -82,7 +82,20 @@ std::ostream& operator <<(std::ostream& os, const LISPEidPrefix& ep) {
 }
 
 LISPCommon::Afi LISPEidPrefix::getEidAfi() const {
-    return eid.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+    return eidAddr.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+}
+
+bool LISPEidPrefix::operator <(const LISPEidPrefix& other) const {
+    if (eidAfi < other.eidAfi) return true;
+    //if (eidAfi > other.eidAfi) return false;
+
+    if (eidAddr < other.eidAddr) return true;
+    //if (eidAddr > other.eidAddr) return false;
+
+    if (eidLen < other.eidLen) return true;
+    //if (eidLen > other.eidLen) return false;
+
+    return false;
 }
 
 bool LISPEidPrefix::isComponentOf(const LISPEidPrefix& coarserEid) const {
@@ -90,7 +103,7 @@ bool LISPEidPrefix::isComponentOf(const LISPEidPrefix& coarserEid) const {
     if (eidLen > coarserEid.eidLen || eidAfi != coarserEid.eidAfi)
         return false;
 
-    int result = LISPCommon::doPrefixMatch(eid, coarserEid.eid);
+    int result = LISPCommon::doPrefixMatch(eidAddr, coarserEid.eidAddr);
 
     return (result == -1 || result >= coarserEid.eidLen ) ? true : false;
 }

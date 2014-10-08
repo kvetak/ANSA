@@ -166,3 +166,25 @@ void LISPRLocator::updateRlocator(const LISPRLocator& rloc) {
     mweight = rloc.getMweight();
     local = rloc.isLocal();
 }
+
+bool LISPRLocator::operator< (const LISPRLocator& other) const {
+    if (rloc < other.rloc) return true;
+    //if (rloc > other.rloc) return false;
+
+    if (state < other.state) return true;
+    //if (state > other.state) return false;
+
+    if (priority < other.priority) return true;
+    //if (priority > other.priority) return false;
+
+    if (weight < other.weight) return true;
+    //if (weight > other.weight) return false;
+
+    if (mpriority < other.mpriority) return true;
+    //if (mpriority > other.mpriority) return false;
+
+    if (mweight < other.mweight) return true;
+    //if (mweight > other.mweight) return false;
+
+    return false;
+}

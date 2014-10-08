@@ -30,6 +30,7 @@ class LISPRLocator {
 
     bool operator== (const LISPRLocator& other) const;
     bool operator== (const LISPRLocator& other);
+    bool operator< (const LISPRLocator& other) const;
 
     LISPRLocator();
     LISPRLocator(const char* addr);

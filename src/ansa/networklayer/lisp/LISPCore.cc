@@ -1330,6 +1330,8 @@ void LISPCore::receiveCacheSyncAck(LISPCacheSyncAck* lca) {
 }
 
 void LISPCore::cacheMapping(const TRecord& record) {
+    //Insert into mapcache
     MapCache->updateCacheEntry(record);
+    //Schedule cache synchronization procedure
     scheduleCacheSync(record.EidPrefix);
 }

@@ -43,6 +43,7 @@ class LISPMapEntry {
     virtual ~LISPMapEntry();
 
     bool operator== (const LISPMapEntry& other) const;
+    bool operator< (const LISPMapEntry& other) const;
 
     const LISPEidPrefix& getEidPrefix() const;
     void setEidPrefix(const LISPEidPrefix& eidPrefix);

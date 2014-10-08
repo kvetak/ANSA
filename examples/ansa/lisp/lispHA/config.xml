@@ -31,7 +31,7 @@
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
 	        		<SynchronizationSet key="SSKeyA">
-	        			<SetMember address="192.168.1.2"/>
+	        			<SetMember address="10.0.0.2"/>
 	        		</SynchronizationSet> 
         		</MapCache>
         		<EtrMapping>
@@ -80,8 +80,8 @@
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
 	        		<SynchronizationSet key="SSKeyA">
-	        			<SetMember address="192.168.1.1"/>
-	        		</SynchronizationSet> 
+	        			<SetMember address="10.0.0.1"/>
+	        		</SynchronizationSet>
         		</MapCache>
         		<EtrMapping>
         			<EID address="192.168.1.0/24">
@@ -129,7 +129,7 @@
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
 	        		<SynchronizationSet key="SSKeyB">
-	        			<SetMember address="192.168.2.2"/>
+	        			<SetMember address="20.0.0.2"/>
 	        		</SynchronizationSet>
         		</MapCache>
         		<EtrMapping>
@@ -178,7 +178,7 @@
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
 	        		<SynchronizationSet key="SSKeyB">
-	        			<SetMember address="192.168.2.1"/>
+	        			<SetMember address="20.0.0.1"/>
 	        		</SynchronizationSet> 
         		</MapCache>
         		<EtrMapping>

@@ -69,7 +69,6 @@ const LISPCommon::EAct LISPMapEntry::getAction() const {
     return Action;
 }
 
-
 void LISPMapEntry::setAction(const LISPCommon::EAct& action) {
     Action = action;
 }
@@ -98,6 +97,7 @@ LISPRLocator* LISPMapEntry::getLocator(const IPvXAddress& address)
 void LISPMapEntry::addLocator(LISPRLocator& entry)
 {
     RLOCs.push_back(entry);
+    RLOCs.sort();
 };
 
 bool LISPMapEntry::operator ==(const LISPMapEntry& other) const {
@@ -135,10 +135,28 @@ const std::string LISPMapEntry::getActionString() const {
     }
 }
 
+bool LISPMapEntry::operator <(const LISPMapEntry& other) const {
+    if (EID < other.EID) return true;
+    //if (EID > other.EID) return false;
+
+    if (expiry < other.expiry) return true;
+    //if (expiry > other.expiry) return false;
+
+    if (Action < other.Action) return true;
+    //if (Action > other.Action) return false;
+
+    if (RLOCs < other.RLOCs) return true;
+    //if (RLOCs > other.RLOCs) return false;
+
+    return false;
+}
+
 void LISPMapEntry::removeLocator(IPvXAddress& address) {
     LISPRLocator* rloc = getLocator(address);
-    if (rloc)
+    if (rloc) {
         RLOCs.remove(*rloc);
+        RLOCs.sort();
+    }
     return;
 }
 

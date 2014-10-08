@@ -23,7 +23,7 @@ package inet.ansa.networklayer.lisp;
 module LISPRouting
 {
     parameters:
-        @display("i=block/network2;bgb=256,179,white");
+        @display("i=block/network2;bgb=329,179,white");
         bool hasMapDB = default(false);
 
     gates:
@@ -36,15 +36,18 @@ module LISPRouting
 
     submodules:
         lispMapCache: LISPMapCache {
-            @display("p=63,40");
+            @display("p=163,41");
         }
         lispCore: LISPCore {
-            @display("p=124,109");
+            @display("p=163,108");
         }
         lispMapDatabase: LISPMapDatabase if hasMapDB {
-            @display("p=185,40");
+            @display("p=57,41");
         }
 
+        lispSiteDatabase: LISPSiteDatabase {
+            @display("p=268,41");
+        }
     connections allowunconnected:
 
         lispCore.udpOut --> udpOut;

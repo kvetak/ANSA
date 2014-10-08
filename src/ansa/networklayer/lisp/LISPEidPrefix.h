@@ -34,6 +34,7 @@ class LISPEidPrefix {
     virtual ~LISPEidPrefix();
 
     bool operator== (const LISPEidPrefix& other) const;
+    bool operator< (const LISPEidPrefix& other) const;
 
     std::string info() const;
 
@@ -46,7 +47,7 @@ class LISPEidPrefix {
     bool isComponentOf(const LISPEidPrefix& coarserEid) const;
 
   private:
-    IPvXAddress eid;
+    IPvXAddress eidAddr;
     unsigned char eidLen;
     LISPCommon::Afi eidAfi;
 
