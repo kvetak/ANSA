@@ -27,6 +27,7 @@
 #include <algorithm>
 
 #include "IPv4Address.h"
+#include "IPv6Address.h"
 #include "EigrpMessage_m.h"
 #include "EigrpMetricHelper.h"
 
@@ -123,7 +124,7 @@ class EigrpRouteSource : public cObject
     int sourceId;                       /** Unique ID of source */
     int routeId;                        /** Unique ID of route (same as in EigrpRoute) */
 
-    IPAddress originator;               /**< IP of originating router */
+    IPv4Address originator;               /**< IP of originating router */      //TODO - PROB-04 - is it address or RouterID? (I think it should be routerID)
     int nextHopId;                      /**< Id of next hop neighbor (usually same as sourceId, 0 -> connected) */
     IPAddress nextHop;                  /**< IP address of next hop router (0.0.0.0 -> connected), only informational. It does not correspond to the sourceId (next hop may not be source of the route). */
     int interfaceId;                    /** ID of outgoing interface for next hop */
@@ -186,8 +187,8 @@ class EigrpRouteSource : public cObject
     int getSourceId() const { return sourceId; }
     void setSourceId(int sourceId) { this->sourceId = sourceId; }
 
-    IPAddress getOriginator() const { return originator; }
-    void setOriginator(IPAddress& originator) { this->originator = originator; }
+    IPv4Address getOriginator() const { return originator; }
+    void setOriginator(IPv4Address& originator) { this->originator = originator; }
 
     bool isValid() const { return valid; }
     void setValid(bool valid) { this->valid = valid; }

@@ -147,16 +147,16 @@ class DeviceConfigurator : public cSimpleModule {
       // configuration for EIGRP //
       /////////////////////////////
       /**< Gets interfaces that correspond to the IP address and mask */
-      EigrpNetwork *isEigrpInterface(std::vector<EigrpNetwork *>& networks, InterfaceEntry *interface);
+      EigrpNetwork<IPv4Address> *isEigrpInterface(std::vector<EigrpNetwork<IPv4Address> *>& networks, InterfaceEntry *interface);
       /**< Converts wildcard to netmask and check validity */
       bool wildcardToMask(const char *wildcard, IPv4Address& result);
       /**< Loads configuration of EIGRP process */
-      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule *eigrpModule);
+      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule);
       /**< Loads configuration of interfaces for EIGRP */
-      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule *eigrpModule);
-      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule *eigrpModule, int ifaceId, const char *ifaceName);
+      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName);
       /**< Loads networks added to EIGRP */
-      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule);
+      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<IPv4Address> *eigrpModule);
       /**< Loads K-value and converts it to number */
       int loadEigrpKValue(cXMLElement *node, const char *attrName, const char *attrValue);
       /**< Loads stub configuration */
@@ -234,7 +234,7 @@ class DeviceConfigurator : public cSimpleModule {
        * Loads configuration for EIGRP
        * @param eigrpModule [in]
        */
-      void loadEigrpIPv4Config(IEigrpModule *eigrpModule);
+      void loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule);
 
 };
 

@@ -20,12 +20,15 @@ import inet.ansa.networklayer.eigrp.tables.EigrpInterfaceTable;
 import inet.ansa.networklayer.eigrp.tables.EigrpIpv4NeighborTable;
 import inet.ansa.networklayer.eigrp.tables.EigrpIpv4TopologyTable;
 
+import inet.ansa.networklayer.eigrp.tables.EigrpIpv6NeighborTable;
+import inet.ansa.networklayer.eigrp.tables.EigrpIpv6TopologyTable;
+
 
 module eigrpProcess
 {
     parameters:
 
-        @display("bgb=263,229,white");
+        @display("bgb=626,229,white");
     gates:
         input splitterIn;
         output splitterOut;
@@ -46,6 +49,13 @@ module eigrpProcess
         }
         eigrpRtp: EigrpRtp {
             @display("p=64,157;i=block/dispatch");
+        }
+
+        eigrpIpv6NeighborTable: EigrpIpv6NeighborTable {
+            @display("p=320,45");
+        }
+        eigrpIpv6TopologyTable: EigrpIpv6TopologyTable {
+            @display("p=320,112");
         }
     connections:
         splitterIn --> eigrpIpv4Pdm.splitterIn;

@@ -13,12 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "EigrpIpv4NeighborTable.h"
-#include "IPv4Address.h"
+//IPv6 ready
+#include "EigrpNeighborTable.h"
 
-Define_Module(EigrpIpv4NeighborTable);
 
-std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPv4Address>& neigh)
+Define_Module(EigrpIpv4NeighborTable);      //TODO - PROB-01 - How to register template class? Define_Module(EigrpNeighborTable<IPv4Address>)
+
+#ifndef DISABLE_EIGRP_IPV6
+Define_Module(EigrpIpv6NeighborTable);
+#endif /* DISABLE_EIGRP_IPV6 */
+
+
+template<typename IPAddress>
+std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPAddress>& neigh)
 {
     //const char *state = neigh.isStateUp() ? "up" : "pending";
 
@@ -47,10 +54,11 @@ std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPv4Address>& nei
 }
 
 // Must be there (cancelHoldTimer method)
-EigrpIpv4NeighborTable::~EigrpIpv4NeighborTable()
+template<typename IPAddress>
+EigrpNeighborTable<IPAddress>::~EigrpNeighborTable()
 {
     int cnt = neighborVec.size();
-    EigrpNeighbor<IPv4Address> *neigh;
+    EigrpNeighbor<IPAddress> *neigh;
 
     for (int i = 0; i < cnt; i++)
     {
@@ -61,18 +69,21 @@ EigrpIpv4NeighborTable::~EigrpIpv4NeighborTable()
     neighborVec.clear();
 }
 
-void EigrpIpv4NeighborTable::initialize()
+template<typename IPAddress>
+void EigrpNeighborTable<IPAddress>::initialize()
 {
     WATCH_PTRVECTOR(neighborVec);
 }
 
-void EigrpIpv4NeighborTable::handleMessage(cMessage *msg)
+template<typename IPAddress>
+void EigrpNeighborTable<IPAddress>::handleMessage(cMessage *msg)
 {
     throw cRuntimeError("This module does not process messages");
 }
 
 // Must be there (EigrpNeighborTable has no method cancelEvent)
-void EigrpIpv4NeighborTable::cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh)
+template<typename IPAddress>
+void EigrpNeighborTable<IPAddress>::cancelHoldTimer(EigrpNeighbor<IPAddress> *neigh)
 {
     EigrpTimer *timer;
 
@@ -83,11 +94,12 @@ void EigrpIpv4NeighborTable::cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh)
     }
 }
 
-EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::findNeighbor(
-        const IPv4Address& ipAddress)
+template<typename IPAddress>
+EigrpNeighbor<IPAddress> *EigrpNeighborTable<IPAddress>::findNeighbor(
+        const IPAddress& ipAddress)
 {
-    NeighborVector::iterator it;
-    EigrpNeighbor<IPv4Address> * neigh;
+    typename NeighborVector::iterator it;
+    EigrpNeighbor<IPAddress> * neigh;
 
     for (it = neighborVec.begin(); it != neighborVec.end(); it++)
     {
@@ -101,9 +113,10 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::findNeighbor(
     return NULL;
 }
 
-EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::findNeighborById(int id)
+template<typename IPAddress>
+EigrpNeighbor<IPAddress> *EigrpNeighborTable<IPAddress>::findNeighborById(int id)
 {
-    NeighborVector::iterator it;
+    typename NeighborVector::iterator it;
 
     for (it = neighborVec.begin(); it != neighborVec.end(); it++)
     {
@@ -116,7 +129,8 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::findNeighborById(int id)
     return NULL;
 }
 
-int EigrpIpv4NeighborTable::addNeighbor(EigrpNeighbor<IPv4Address> *neighbor)
+template<typename IPAddress>
+int EigrpNeighborTable<IPAddress>::addNeighbor(EigrpNeighbor<IPAddress> *neighbor)
 {
     neighbor->setNeighborId(neighborCounter);
     this->neighborVec.push_back(neighbor);
@@ -126,9 +140,10 @@ int EigrpIpv4NeighborTable::addNeighbor(EigrpNeighbor<IPv4Address> *neighbor)
 /**
  * Removes neighbor form the table, but the record still exists.
  */
-EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::removeNeighbor(EigrpNeighbor<IPv4Address> *neighbor)
+template<typename IPAddress>
+EigrpNeighbor<IPAddress> *EigrpNeighborTable<IPAddress>::removeNeighbor(EigrpNeighbor<IPAddress> *neighbor)
 {
-    NeighborVector::iterator it;
+    typename NeighborVector::iterator it;
 
     cancelHoldTimer(neighbor);
 
@@ -144,9 +159,10 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::removeNeighbor(EigrpNeighbor
     return NULL;
 }
 
-EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::getFirstNeighborOnIf(int ifaceId)
+template<typename IPAddress>
+EigrpNeighbor<IPAddress> *EigrpNeighborTable<IPAddress>::getFirstNeighborOnIf(int ifaceId)
 {
-    NeighborVector::iterator it;
+    typename NeighborVector::iterator it;
 
     for (it = neighborVec.begin(); it != neighborVec.end(); ++it)
     {
@@ -157,9 +173,10 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4NeighborTable::getFirstNeighborOnIf(int ifa
     return NULL;
 }
 
-int EigrpIpv4NeighborTable::setAckOnIface(int ifaceId, uint32_t ackNum)
+template<typename IPAddress>
+int EigrpNeighborTable<IPAddress>::setAckOnIface(int ifaceId, uint32_t ackNum)
 {
-    NeighborVector::iterator it;
+    typename NeighborVector::iterator it;
     int neighCnt = 0;
 
     for (it = neighborVec.begin(); it != neighborVec.end(); ++it)
@@ -174,3 +191,8 @@ int EigrpIpv4NeighborTable::setAckOnIface(int ifaceId, uint32_t ackNum)
     return neighCnt;
 }
 
+template class EigrpNeighborTable<IPv4Address>;
+
+#ifndef DISABLE_EIGRP_IPV6
+template class EigrpNeighborTable<IPv6Address>;
+#endif /* DISABLE_EIGRP_IPV6 */

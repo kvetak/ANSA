@@ -2241,14 +2241,14 @@ bool DeviceConfigurator::wildcardToMask(const char *wildcard, IPv4Address& resul
     return true;
 }
 
-EigrpNetwork *DeviceConfigurator::isEigrpInterface(std::vector<EigrpNetwork *>& networks, InterfaceEntry *interface)
+EigrpNetwork<IPv4Address> *DeviceConfigurator::isEigrpInterface(std::vector<EigrpNetwork<IPv4Address> *>& networks, InterfaceEntry *interface)
 {
     IPv4Address prefix, mask;
     IPv4Address ifAddress = interface->ipv4Data()->getIPAddress();
     IPv4Address ifmask = interface->ipv4Data()->getNetmask();
     vector<int> resultIfs;
     int maskLength, ifMaskLength;
-    std::vector<EigrpNetwork *>::iterator it;
+    std::vector<EigrpNetwork<IPv4Address> *>::iterator it;
 
     if (ifAddress.isUnspecified())
                 return false;
@@ -2275,12 +2275,12 @@ EigrpNetwork *DeviceConfigurator::isEigrpInterface(std::vector<EigrpNetwork *>& 
     return NULL;
 }
 
-void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule *eigrpModule)
+void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<IPv4Address> *eigrpModule)
 {
     const char *addressStr, *wildcardStr;
     IPv4Address address, mask;
-    std::vector<EigrpNetwork *> networks;
-    EigrpNetwork *net;
+    std::vector<EigrpNetwork<IPv4Address> *> networks;
+    EigrpNetwork<IPv4Address> *net;
     InterfaceEntry *iface;
 
     cXMLElement *netoworkParentElem = processElem->getFirstChildWithTag("Networks");
@@ -2333,7 +2333,7 @@ void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpM
     }
 }
 
-void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule *eigrpModule)
+void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule)
 {
     ASSERT(eigrpModule != NULL);
 
@@ -2355,7 +2355,7 @@ void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule *eigrpModule)
     loadEigrpInterfacesConfig(device, eigrpModule);
 }
 
-void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule *eigrpModule)
+void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *processElem = NULL;
@@ -2472,7 +2472,7 @@ bool DeviceConfigurator::loadEigrpStubConf(cXMLElement *node, const char *attrNa
     return result;
 }
 
-void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule *eigrpModule)
+void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *eigrpIfaceElem = NULL;
@@ -2514,7 +2514,7 @@ void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpMo
     }
 }
 
-void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule *eigrpModule, int ifaceId, const char *ifaceName)
+void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName)
 {
     int tempNumber;
     bool tempBool, success;

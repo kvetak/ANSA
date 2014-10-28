@@ -15,6 +15,7 @@
 /**
  * Interface for DUAL automaton.
  */
+template <typename IPAddress>
 class IEigrpPdm
 {
   public:
@@ -33,7 +34,7 @@ class IEigrpPdm
      * @param removeUnreach invalidate unreachable sources of the route.
      * @return pointer to successor or NULL.
      */
-    virtual EigrpRouteSource<IPv4Address> *updateRoute(EigrpRoute<IPv4Address> *route, uint64_t dmin, bool *rtableChanged, bool removeUnreach = false) = 0;
+    virtual EigrpRouteSource<IPAddress> *updateRoute(EigrpRoute<IPAddress> *route, uint64_t dmin, bool *rtableChanged, bool removeUnreach = false) = 0;
     /**
      * Sends update message to specified neighbor.
      * @param destNeighbor ID of destination neighbor. If parameter is  set to 0 then sends message to all neighbors.
@@ -42,7 +43,7 @@ class IEigrpPdm
      * @param forcePoisonRev force poison reverse rule instead of split horizon
      * @param reason text description for user.
      */
-    virtual void sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, const char *reason) = 0;
+    virtual void sendUpdate(int destNeighbor, EigrpRoute<IPAddress> *route, EigrpRouteSource<IPAddress> *source, bool forcePoisonRev, const char *reason) = 0;
     /**
      * Sends query message to specified neighbor.
      * @param destNeighbor ID of destination neighbor. If parameter is  set to 0 then sends message to all neighbors.
@@ -50,7 +51,7 @@ class IEigrpPdm
      * @param source route
      * @param forcePoisonRev apply Poison Reverse instead of Split Horizon to the route.
      */
-    virtual void sendQuery(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev = false) = 0;
+    virtual void sendQuery(int destNeighbor, EigrpRoute<IPAddress> *route, EigrpRouteSource<IPAddress> *source, bool forcePoisonRev = false) = 0;
     /**
      * Sends reply message to specified neighbor.
      * @param route route network
@@ -59,16 +60,16 @@ class IEigrpPdm
      * @param forcePoisonRev apply Poison Reverse rule to the route
      * @param isUnreachable route in message will have inf metric (regardless of Poisson Reverse)
      */
-    virtual void sendReply(EigrpRoute<IPv4Address> *route, int destNeighbor, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev = false, bool isUnreachable = false) = 0;
+    virtual void sendReply(EigrpRoute<IPAddress> *route, int destNeighbor, EigrpRouteSource<IPAddress> *source, bool forcePoisonRev = false, bool isUnreachable = false) = 0;
     /**
      * Returns minimal distance to destination network.
      */
-    virtual uint64_t findRouteDMin(EigrpRoute<IPv4Address> *route) = 0;
+    virtual uint64_t findRouteDMin(EigrpRoute<IPAddress> *route) = 0;
     /**
      * Determine whether there are Feasibles Successors for specified route.
      * @param resultDmin return parameter with minimal distance to the destination.
      */
-    virtual bool hasFeasibleSuccessor(EigrpRoute<IPv4Address> *route, uint64_t &resultDmin) = 0;
+    virtual bool hasFeasibleSuccessor(EigrpRoute<IPAddress> *route, uint64_t &resultDmin) = 0;
     /**
      * Sets Reply Status Table for specified network.
      * @param route route network
@@ -76,25 +77,25 @@ class IEigrpPdm
      * @param neighCount number of all neighbors.
      * @param stubCount number of stub neighbors.
      */
-    virtual bool setReplyStatusTable(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, int *neighCount, int *stubCount) = 0;
+    virtual bool setReplyStatusTable(EigrpRoute<IPAddress> *route, EigrpRouteSource<IPAddress> *source, bool forcePoisonRev, int *neighCount, int *stubCount) = 0;
     /**
      * Returns tru if there are recipients for update message, else false.
      */
-    virtual bool hasNeighborForUpdate(EigrpRouteSource<IPv4Address> *source) = 0;
+    virtual bool hasNeighborForUpdate(EigrpRouteSource<IPAddress> *source) = 0;
     /**
      * Returns best successor for specified network.
      */
-    virtual EigrpRouteSource<IPv4Address> *getBestSuccessor(EigrpRoute<IPv4Address> *route) = 0;
+    virtual EigrpRouteSource<IPAddress> *getBestSuccessor(EigrpRoute<IPAddress> *route) = 0;
     /**
      * After receiving Ack from neighbor with neighId will be route removed from TT.
      * @param neighId ID of neighbor
      * @param src route
      */
-    virtual void setDelayedRemove(int neighId, EigrpRouteSource<IPv4Address> *src) = 0;
+    virtual void setDelayedRemove(int neighId, EigrpRouteSource<IPAddress> *src) = 0;
     /**
      * Sends update message to all stub neighbors.
      */
-    virtual void sendUpdateToStubs(EigrpRouteSource<IPv4Address> *succ ,EigrpRouteSource<IPv4Address> *oldSucc, EigrpRoute<IPv4Address> *route) = 0;
+    virtual void sendUpdateToStubs(EigrpRouteSource<IPAddress> *succ ,EigrpRouteSource<IPAddress> *oldSucc, EigrpRoute<IPAddress> *route) = 0;
 };
 
 

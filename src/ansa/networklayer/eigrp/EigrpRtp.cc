@@ -14,6 +14,7 @@
 // 
 
 #include "IPv4ControlInfo.h"
+#include "IPv6ControlInfo.h"
 #include "ModuleAccess.h"
 
 #include "EigrpNeighborTable.h"
@@ -23,6 +24,10 @@
 #define EIGRP_RTP_DEBUG
 
 Define_Module(EigrpRtp);
+
+#ifndef DISABLE_EIGRP_IPV6
+Define_Module(EigrpRtp6);
+#endif /* DISABLE_EIGRP_IPV6 */
 
 /*
  * TODO: resit pad rozhrani -> smazani zprav pres dane rozhrani (bud receive notification (asi lepsi) nebo kontrolovat existenci rozhrani)
@@ -224,17 +229,20 @@ void EigrpRequestQueue::removeAllMsgsToNeigh(int neighborId)
     }
 }
 
-EigrpRtp::EigrpRtp()
+template <typename IPAddress>
+EigrpRtpT<IPAddress>::EigrpRtpT()
 {
     RTP_OUTPUT_GW = "pdmOut";
 }
 
-EigrpRtp::~EigrpRtp()
+template <typename IPAddress>
+EigrpRtpT<IPAddress>::~EigrpRtpT()
 {
     delete requestQ;
 }
 
-void EigrpRtp::initialize(int stage)
+template <>
+void EigrpRtpT<IPv4Address>::initialize(int stage)
 {
     if (stage == 3)
     {
@@ -249,7 +257,26 @@ void EigrpRtp::initialize(int stage)
     }
 }
 
-void EigrpRtp::handleMessage(cMessage *msg)
+#ifndef DISABLE_EIGRP_IPV6
+template <>
+void EigrpRtpT<IPv6Address>::initialize(int stage)
+{
+    if (stage == 3)
+    {
+        seqNumber = 1;
+
+        this->eigrpIft = EigrpIfTableAccess().get();
+        this->eigrpNt = Eigrpv6NeighTableAccess().get();
+
+        requestQ = new EigrpRequestQueue();
+
+        //WATCH_PTRLIST(requestQ->reqQueue);
+    }
+}
+#endif /* DISABLE_EIGRP_IPV6 */
+
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     { // Timer
@@ -271,21 +298,23 @@ void EigrpRtp::handleMessage(cMessage *msg)
     }
 }
 
-void EigrpRtp::processRequest(cMessage *msg)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::processRequest(cMessage *msg)
 {
     EigrpMsgReq *msgReq = check_and_cast<EigrpMsgReq *>(msg);
 
     scheduleNewMsg(msgReq);
 }
 
-void EigrpRtp::processHeader(cMessage *msg)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::processHeader(cMessage *msg)
 {
     EigrpMessage *header = check_and_cast<EigrpMessage *>(msg);
     uint32_t seqNumNeigh;   // Sequence number of neighbor
     uint32_t ackNum;        // Acknowledge number
     EigrpMsgReq *msgReq = NULL;
     int numOfAck;
-    EigrpNeighbor<IPv4Address> *neigh = NULL;
+    EigrpNeighbor<IPAddress> *neigh = NULL;
     EigrpInterface *eigrpIface = NULL;
 
     if ((neigh = getNeighborId(header)) == NULL)
@@ -329,7 +358,8 @@ void EigrpRtp::processHeader(cMessage *msg)
     }
 }
 
-void EigrpRtp::acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum)
 {
     EigrpMsgReq *msgReq = NULL;
 
@@ -349,7 +379,8 @@ void EigrpRtp::acknowledgeMsg(int neighId, int ifaceId, uint32_t ackNum)
     scheduleNewMsg(msgReq);
 }
 
-EigrpNeighbor<IPv4Address> *EigrpRtp::getNeighborId(EigrpMessage *msg)
+template <>
+EigrpNeighbor<IPv4Address> *EigrpRtpT<IPv4Address>::getNeighborId(EigrpMessage *msg)
 {
     IPv4ControlInfo *ctrlInfo =check_and_cast<IPv4ControlInfo *>(msg->getControlInfo());
     IPv4Address srcAddr = ctrlInfo->getSrcAddr();
@@ -357,7 +388,19 @@ EigrpNeighbor<IPv4Address> *EigrpRtp::getNeighborId(EigrpMessage *msg)
     return eigrpNt->findNeighbor(srcAddr);
 }
 
-void EigrpRtp::scheduleNewMsg(EigrpMsgReq *msgReq)
+#ifndef DISABLE_EIGRP_IPV6
+template <>
+EigrpNeighbor<IPv6Address> *EigrpRtpT<IPv6Address>::getNeighborId(EigrpMessage *msg)
+{
+    IPv6ControlInfo *ctrlInfo =check_and_cast<IPv6ControlInfo *>(msg->getControlInfo());
+    IPv6Address srcAddr = ctrlInfo->getSrcAddr();
+
+    return eigrpNt->findNeighbor(srcAddr);
+}
+#endif /* DISABLE_EIGRP_IPV6 */
+
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::scheduleNewMsg(EigrpMsgReq *msgReq)
 {
     requestQ->pushReq(msgReq);
 
@@ -369,7 +412,8 @@ void EigrpRtp::scheduleNewMsg(EigrpMsgReq *msgReq)
     scheduleNextMsg(msgReq->getDestInterface());
 }
 
-void EigrpRtp::scheduleNextMsg(int ifaceId)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::scheduleNextMsg(int ifaceId)
 {
     EigrpMsgReq *msgReq = NULL;
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
@@ -398,7 +442,8 @@ void EigrpRtp::scheduleNextMsg(int ifaceId)
 
 }
 
-void EigrpRtp::discardMsg(EigrpMsgReq *msgReq)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::discardMsg(EigrpMsgReq *msgReq)
 {
     ev << "EIGRP RTP: discard message " << eigrpRtp::UserMsgs[msgReq->getOpcode()] << endl;
     requestQ->removeReq(msgReq);
@@ -407,7 +452,8 @@ void EigrpRtp::discardMsg(EigrpMsgReq *msgReq)
     scheduleNextMsg(msgReq->getDestInterface());
 }
 
-void EigrpRtp::sendUnrelMsg(EigrpMsgReq *msgReq)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::sendUnrelMsg(EigrpMsgReq *msgReq)
 {
     int ifaceId = msgReq->getDestInterface();
 
@@ -417,7 +463,8 @@ void EigrpRtp::sendUnrelMsg(EigrpMsgReq *msgReq)
     scheduleNextMsg(ifaceId);
 }
 
-void EigrpRtp::sendMsg(EigrpMsgReq *msgReq)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::sendMsg(EigrpMsgReq *msgReq)
 {
     if (msgReq->isMsgReliable())
     { // Reliable
@@ -429,11 +476,12 @@ void EigrpRtp::sendMsg(EigrpMsgReq *msgReq)
     }
 }
 
-void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
+template <typename IPAddress>
+void EigrpRtpT<IPAddress>::sendRelMsg(EigrpMsgReq *msgReq)
 {
     NeighborInfo info;
     EigrpMsgReq *msgToSend = NULL;
-    EigrpNeighbor<IPv4Address> *neigh = NULL;
+    EigrpNeighbor<IPAddress> *neigh = NULL;
     EigrpInterface *eigrpIface = NULL;
 
     info.neighborId = msgReq->getDestNeighbor();
@@ -476,3 +524,9 @@ void EigrpRtp::sendRelMsg(EigrpMsgReq *msgReq)
 
     scheduleNextMsg(info.neighborIfaceId);
 }
+
+template class EigrpRtpT<IPv4Address>;
+
+#ifndef DISABLE_EIGRP_IPV6
+template class EigrpRtpT<IPv6Address>;
+#endif /* DISABLE_EIGRP_IPV6 */

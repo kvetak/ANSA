@@ -14,6 +14,8 @@
 /**
  * Interface for EIGRP configuration.
  */
+
+template <typename IPAddress>
 class IEigrpModule
 {
   public:
@@ -28,7 +30,7 @@ class IEigrpModule
     /**
      * Adds new network to EigrpNetworkTable for routing.
      */
-    virtual EigrpNetwork *addNetwork(IPv4Address address, IPv4Address mask) = 0;
+    virtual EigrpNetwork<IPAddress> *addNetwork(IPAddress address, IPAddress mask) = 0;
     virtual void setASNum(int asNum) = 0;
     virtual void setKValues(const EigrpKValues& kValues) = 0;
     virtual void setMaximumPath(int maximumPath) = 0;

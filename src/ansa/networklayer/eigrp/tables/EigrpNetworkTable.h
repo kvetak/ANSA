@@ -17,34 +17,37 @@
 #define EIGRPNETWORKTABLE_H_
 
 #include "IPv4Address.h"
+#include "IPv6Address.h"
+#include "EigrpDualStack.h"
 
 /**
  * Network for EIGRP routing.
  */
+template<typename IPAddress>
 class EigrpNetwork
 {
   protected:
     int networkId;
-    IPv4Address address;
-    IPv4Address mask;
+    IPAddress address;
+    IPAddress mask;
 
   public:
-    EigrpNetwork(IPv4Address &address, IPv4Address &mask, int id) :
+    EigrpNetwork(IPAddress &address, IPAddress &mask, int id) :
             networkId(id), address(address), mask(mask) {}
 
-    const IPv4Address& getAddress() const {
+    const IPAddress& getAddress() const {
         return address;
     }
 
-    void setAddress(const IPv4Address& address) {
+    void setAddress(const IPAddress& address) {
         this->address = address;
     }
 
-    const IPv4Address& getMask() const {
+    const IPAddress& getMask() const {
         return mask;
     }
 
-    void setMask(const IPv4Address& mask) {
+    void setMask(const IPAddress& mask) {
         this->mask = mask;
     }
 
@@ -60,10 +63,11 @@ class EigrpNetwork
 /**
  * Table with networks for routing.
  */
+template<typename IPAddress>
 class EigrpNetworkTable : cObject
 {
   protected:
-    std::vector<EigrpNetwork *> networkVec;
+    std::vector<EigrpNetwork<IPAddress> *> networkVec;
     int networkCnt;
 
   public:
@@ -72,16 +76,16 @@ class EigrpNetworkTable : cObject
     EigrpNetworkTable() : networkCnt(1) { }
     virtual ~EigrpNetworkTable();
 
-    EigrpNetwork *addNetwork(IPv4Address& address, IPv4Address& mask);
-    EigrpNetwork *findNetworkById(int netId);
-    std::vector<EigrpNetwork *> *getAllNetworks() { return &networkVec; }
-    bool isAddressIncluded(IPv4Address& address, IPv4Address& mask);
+    EigrpNetwork<IPAddress> *addNetwork(IPAddress& address, IPAddress& mask);
+    EigrpNetwork<IPAddress> *findNetworkById(int netId);
+    typename std::vector<EigrpNetwork<IPAddress> *> *getAllNetworks() { return &networkVec; }
+    bool isAddressIncluded(IPAddress& address, IPAddress& mask);
     /**
      * Returns true if interface with specified address is contained in EIGRP.
      * @param resultNetId ID of network that belongs to the interface. If the interface does not
      * belong to any network, it has undefined value.
      */
-    bool isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId);
+    bool isInterfaceIncluded(const IPAddress& ifAddress, const IPAddress& ifMask, int *resultNetId);
 };
 
 #endif /* EIGRPNETWORKTABLE_H_ */

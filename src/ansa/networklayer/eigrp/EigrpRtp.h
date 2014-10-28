@@ -20,7 +20,8 @@
 
 #include "EigrpMsgReq.h"
 #include "EigrpInterfaceTable.h"
-#include "EigrpIpv4NeighborTable.h"
+#include "EigrpNeighborTable.h"
+#include "EigrpDualStack.h"
 
 class EigrpRtp;
 
@@ -56,7 +57,8 @@ class EigrpRequestQueue: public cObject
 /**
  * Class represents Reliable Transport Protocol for reliable transmission of EIGRP messages.
  */
-class EigrpRtp : public cSimpleModule
+template <typename IPAddress>
+class EigrpRtpT : public cSimpleModule
 {
     struct NeighborInfo
     {
@@ -74,7 +76,7 @@ class EigrpRtp : public cSimpleModule
     EigrpRequestQueue *requestQ;
 
     EigrpInterfaceTable *eigrpIft;
-    EigrpIpv4NeighborTable *eigrpNt;
+    EigrpNeighborTable<IPAddress> *eigrpNt; //TODO - verify! Should I use EigrpIpv4NeighborTable?
 
     /**
      * Process request for message sending.
@@ -113,7 +115,7 @@ class EigrpRtp : public cSimpleModule
     /**
      * Return informations about neighbor.
      */
-    EigrpNeighbor<IPv4Address> *getNeighborId(EigrpMessage *msg);
+    EigrpNeighbor<IPAddress> *getNeighborId(EigrpMessage *msg);
     /**
      * Send message with specified acknowledge number to neighbor.
      */
@@ -125,9 +127,25 @@ class EigrpRtp : public cSimpleModule
     virtual int numInitStages() const { return 4; }
 
   public:
-    EigrpRtp();
-    virtual ~EigrpRtp();
+    EigrpRtpT();
+    virtual ~EigrpRtpT();
 
 };
+
+class EigrpRtp : public EigrpRtpT<IPv4Address>
+{
+//container class for IPv4RTP, must exist because of Define_Module()
+public:
+    virtual ~EigrpRtp() {};
+};
+
+#ifndef DISABLE_EIGRP_IPV6
+class EigrpRtp6 : public EigrpRtpT<IPv6Address>
+{
+//container class for IPv6RTP, must exist because of Define_Module()
+public:
+    virtual ~EigrpRtp6() {};
+};
+#endif /* DISABLE_EIGRP_IPV6 */
 
 #endif
