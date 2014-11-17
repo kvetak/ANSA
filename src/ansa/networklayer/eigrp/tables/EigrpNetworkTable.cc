@@ -30,7 +30,7 @@ EigrpNetworkTable<IPAddress>::~EigrpNetworkTable()
 template<typename IPAddress>
 EigrpNetwork<IPAddress> *EigrpNetworkTable<IPAddress>::addNetwork(IPAddress& address, IPAddress& mask)
 {
-   /* typename std::vector<EigrpNetwork<IPAddress> *>::iterator it;
+    typename std::vector<EigrpNetwork<IPAddress> *>::iterator it;
     for (it = networkVec.begin(); it != networkVec.end(); ++it)
     {// through all networks search same
         if((*it)->getAddress() == address && (*it)->getMask() == mask)
@@ -38,7 +38,7 @@ EigrpNetwork<IPAddress> *EigrpNetworkTable<IPAddress>::addNetwork(IPAddress& add
             return (*it);
         }
     }
-*/
+
     // Not found -> add new
     EigrpNetwork<IPAddress> *net = new EigrpNetwork<IPAddress>(address, mask, networkCnt++);
     networkVec.push_back(net);
