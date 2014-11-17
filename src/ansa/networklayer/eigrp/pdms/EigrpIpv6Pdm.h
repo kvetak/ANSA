@@ -1,17 +1,25 @@
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
-
+//
+/**
+* @file EigrpIpv6Pdm.h
+* @author Vit Rek, xrekvi00@stud.fit.vutbr.cz
+* @date 6. 11. 2014
+* @brief EIGRP IPv6 Protocol Dependent Module header file
+* @detail Main module, it mediates control exchange between DUAL, routing table and
+topology table.
+*/
 
 #ifndef EIGRPIPV6PDM_H_
 #define EIGRPIPV6PDM_H_
@@ -26,7 +34,7 @@
 
 #include "EigrpInterfaceTable.h"
 #include "EigrpNeighborTable.h"
-#include "EigrpNeighborTable.h"
+//#include "EigrpNeighborTable.h"
 #include "EigrpRoute.h"
 #include "EigrpTopologyTable.h"
 
@@ -41,17 +49,23 @@
 #include "EigrpMsgReq.h"
 
 #include "EigrpDualStack.h"
-#include "AnsaRoutingTable6.h"
+#include "ANSARoutingTable6.h"
+#include "IPv6InterfaceData.h"
 
-#define IPV6_WORDS (IPV6_WORDS[0],IPV6_WORDS[1],IPV6_WORDS[2],IPV6_WORDS[3])
 /**
  * Class represents EIGRP Protocol Dependent Module for IPv6. It contains IPv6 specific things.
  */
 class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, public IEigrpPdm<IPv6Address>, public INotifiable
 {
   protected:
+    struct IPv6netPrefix {
+       int ifaceId;
+       IPv6Address network;
+       short int prefixLength;
+    };
     typedef std::vector<ANSAIPv6Route *> RouteVector;
     typedef std::vector<EigrpMsgReq *> RequestVector;
+    typedef std::vector<IPv6netPrefix> PrefixVector;
 
     const char* SPLITTER_OUTGW;         /**< Output gateway to the EIGRP Splitter module */
     const char* RTP_OUTGW;              /**< Output gateway to the RTP module */
@@ -70,7 +84,7 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     EigrpStub eigrpStub;        /**< EIGRP stub configuration */
 
     IInterfaceTable *ift;
-    AnsaRoutingTable *rt;
+    ANSARoutingTable6 *rt;
     NotificationBoard *nb;
 
     EigrpDual<IPv6Address> *eigrpDual;
@@ -81,6 +95,7 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     EigrpTopologyTable<IPv6Address> *eigrpTt;                /**< Topology table */
     EigrpNetworkTable<IPv6Address> *routingForNetworks;          /**< Networks included in EIGRP */
     RequestVector reqQueue;                         /**< Requests for sending EIGRP messages from DUAL */
+    PrefixVector netPrefixes;
 
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
@@ -108,21 +123,21 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
 
 
     //-- METHODS FOR CREATING MESSAGES  //TODO
-    EigrpIpv4Hello *createHelloMsg(int holdInt, EigrpKValues kValues, IPv6Address& destAddress, EigrpMsgReq *msgReq);
-    EigrpIpv4Ack *createAckMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq);
-    EigrpIpv4Update *createUpdateMsg(const IPv6Address& destAddress, EigrpMsgReq *msgReq);
-    EigrpIpv4Query *createQueryMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq);
-    EigrpIpv4Reply *createReplyMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq);
+    EigrpIpv6Hello *createHelloMsg(int holdInt, EigrpKValues kValues, IPv6Address& destAddress, EigrpMsgReq *msgReq);
+    EigrpIpv6Ack *createAckMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq);
+    EigrpIpv6Update *createUpdateMsg(const IPv6Address& destAddress, EigrpMsgReq *msgReq);
+    EigrpIpv6Query *createQueryMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq);
+    EigrpIpv6Reply *createReplyMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq);
     /**
      * Adds ControlInfo for network layer module.
      */
     void addCtrInfo(EigrpMessage *msg, int ifaceId, const IPv6Address &destAddress);
     void addMessageHeader(EigrpMessage *msg, int opcode, EigrpMsgReq *msgReq);
-    void createRouteTlv(EigrpMpIpv4Internal *routeTlv, EigrpRoute<IPv6Address> *route, bool unreachable = false);
+    void createRouteTlv(EigrpMpIpv6Internal *routeTlv, EigrpRoute<IPv6Address> *route, bool unreachable = false);
     /**
      * Add routes from request to the message.
      */
-    void addRoutesToMsg(EigrpIpv4Message *msg, const EigrpMsgReq *msgReq);
+    void addRoutesToMsg(EigrpIpv6Message *msg, const EigrpMsgReq *msgReq);
     void setRouteTlvMetric(EigrpWideMetricPar *msgMetric, EigrpWideMetricPar *rtMetric);
     /**
      * Creates request for sending of EIGRP message for RTP.
@@ -148,7 +163,7 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     /**
      * Process route TLV.
      */
-    EigrpRouteSource<IPv6Address> *processInterRoute(EigrpMpIpv4Internal& tlv, IPv6Address& nextHop, int sourceNeighId, EigrpInterface *eigrpIface, bool *notifyDual, bool *isSourceNew);
+    EigrpRouteSource<IPv6Address> *processInterRoute(EigrpMpIpv6Internal& tlv, IPv6Address& nextHop, int sourceNeighId, EigrpInterface *eigrpIface, bool *notifyDual, bool *isSourceNew);
 
 
     //-- NEIGHBORSHIP MANAGEMENT
@@ -161,7 +176,7 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
      * @param srcAddress address of the neighbor
      * @param ifaceId ID of interface where the neighbor is connected
      */
-    void processNewNeighbor(int ifaceId, IPv6Address &srcAddress, EigrpIpv4Hello *helloMessage);
+    void processNewNeighbor(int ifaceId, IPv6Address &srcAddress, EigrpIpv6Hello *helloMessage);
     /**
      * Checks neighborship rules.
      * @param ifaceId ID of interface where the neighbor is connected.
@@ -183,11 +198,13 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     /**
      * Remove interface from EIGRP interface table. Removes all neighbors on the interface.
      */
-    void disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv6Address& ifAddress, IPv6Address& ifMask);
+    //void disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv6Address& ifAddress, IPv6Address& ifMask);
+    void disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface);
     /**
      * Add interface to the EIGRP interface table and notifies DUAL.
      */
-    void enableInterface(EigrpInterface *eigrpIface, IPv6Address& ifAddress, IPv6Address& ifMask, int networkId);
+    //void enableInterface(EigrpInterface *eigrpIface, IPv6Address& ifAddress, IPv6Address& ifMask, int networkId);
+    void enableInterface(EigrpInterface *eigrpIface);
     /**
      * Returns EIGRP interface (enabled or disabled) or NULL.
      */
@@ -195,8 +212,10 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     /**
      * Creates interface and inserts it to the table.
      */
-    EigrpInterface *addInterfaceToEigrp(int ifaceId, int networkId, bool enabled);
+    //EigrpInterface *addInterfaceToEigrp(int ifaceId, int networkId, bool enabled);
 
+
+    EigrpInterface *addInterfaceToEigrp(int ifaceId, bool enabled);
 
     //-- PROCESSING EVENTS FROM NOTIFICATION BOARD
     void processIfaceStateChange(InterfaceEntry *iface);
@@ -277,9 +296,11 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     ~EigrpIpv6Pdm();
 
     //-- INTERFACE IEigrpModule
-    void addInterface(int ifaceId, int networkId, bool enabled) { addInterfaceToEigrp(ifaceId, networkId, enabled); }
+    void addInterface(int ifaceId, int networkId, bool enabled) { /* useful only for IPv4 */ }
+    void addInterface(int ifaceId, bool enabled) { addInterfaceToEigrp(ifaceId, enabled); }
     EigrpNetwork<IPv6Address> *addNetwork(IPv6Address address, IPv6Address mask);
     void setASNum(int asNum) { this->asNum = asNum; }
+    int getASNum() {return this->asNum; }
     void setKValues(const EigrpKValues& kValues) { this->kValues = kValues; }
     void setMaximumPath(int maximumPath) { this->maximumPath = maximumPath; }
     void setVariance(int variance) { this->variance = variance; }
@@ -288,6 +309,7 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     void setSplitHorizon(bool shenabled, int ifaceId);
     void setPassive(bool passive, int ifaceId);
     void setStub(const EigrpStub& stub) { this->eigrpStub = stub; this->eigrpStubEnabled = true; }
+    void setRouterId(IPv4Address routerID) { this->eigrpTt->setRouterId(routerID); }
 
     //-- INTERFACE IEigrpPdm;
     void sendUpdate(int destNeighbor, EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, bool forcePoisonRev, const char *reason);
@@ -301,6 +323,8 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
     bool hasNeighborForUpdate(EigrpRouteSource<IPv6Address> *source);
     void setDelayedRemove(int neighId, EigrpRouteSource<IPv6Address> *src);
     void sendUpdateToStubs(EigrpRouteSource<IPv6Address> *succ ,EigrpRouteSource<IPv6Address> *oldSucc, EigrpRoute<IPv6Address> *route);
+
+    bool addNetPrefix(const IPv6Address &network, const short int prefixLen, const int ifaceId);
 };
 
 /**

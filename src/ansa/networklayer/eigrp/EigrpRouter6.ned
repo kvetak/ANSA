@@ -26,10 +26,13 @@ import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.base.NotificationBoard;
 import inet.linklayer.IWiredNic;
 import inet.networklayer.common.InterfaceTable;
-import inet.ansa.networklayer.ipSplitter.IpSplitter;
+//import inet.ansa.networklayer.ipSplitter.IpSplitter;
 
-import inet.nodes.ipv6.NetworkLayer6;
+//import inet.nodes.ipv6.NetworkLayer6;
+import inet.ansa.nodes.ipv6.AnsaNetworkLayer6;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
+
+
 
 module EigrpRouter6
 {
@@ -62,33 +65,33 @@ module EigrpRouter6
                 @display("p=71,62");
         }
 
-        routingTable: AnsaRoutingTable {
-            parameters:
-                @display("p=290,62");
-                routingTable = routingTable;
-        }
+//        routingTable: AnsaRoutingTable {
+//            parameters:
+//                @display("p=290,62");
+//                routingTable = routingTable;
+//        }
 
 
         routingTable6: ANSARoutingTable6 {
             parameters:
                 @display("p=380,62");
-                routingTable = routingTable;
+                //routingTable = routingTable6;
                 isRouter = IPForward;
         }
 
-        ipSplitter: IpSplitter {
-            parameters:
-                @display("p=262,304");
-            gates:
-                ifIn[sizeof(ethg)+sizeof(pppg)];
-                ifOut[sizeof(ethg)+sizeof(pppg)];
-                ipv4In[sizeof(ethg)+sizeof(pppg)];
-                ipv4Out[sizeof(ethg)+sizeof(pppg)];
-                ipv6In[sizeof(ethg)+sizeof(pppg)];
-                ipv6Out[sizeof(ethg)+sizeof(pppg)];
+//        ipSplitter: IpSplitter {
+//            parameters:
+//                @display("p=262,304");
+//            gates:
+//                ifIn[sizeof(ethg)+sizeof(pppg)];
+//                ifOut[sizeof(ethg)+sizeof(pppg)];
+//                ipv4In[sizeof(ethg)+sizeof(pppg)];
+//                ipv4Out[sizeof(ethg)+sizeof(pppg)];
+//                ipv6In[sizeof(ethg)+sizeof(pppg)];
+//                ipv6Out[sizeof(ethg)+sizeof(pppg)];
                // isisIn[sizeof(ethg)+sizeof(pppg)];
                // isisOut[sizeof(ethg)+sizeof(pppg)];
-        }
+//        }
 
 
         // linklayer
@@ -107,18 +110,18 @@ module EigrpRouter6
    //             @display("p=323,382,row,90;q=txQueue");
    //     }
 
-        eigrp: eigrpProcess {
+        eigrp: eigrpProcess6 {
             @display("p=262,137;i=block/network2");
         }
-        ansaNetworkLayer: ansaNetworkLayer {
-            parameters:
-                @display("p=211,212");
-            gates:
-                ifIn[sizeof(ethg)+sizeof(pppg)];
-                ifOut[sizeof(ethg)+sizeof(pppg)];
-        }
+//        ansaNetworkLayer: ansaNetworkLayer {
+//            parameters:
+//                @display("p=211,212");
+//            gates:
+//                ifIn[sizeof(ethg)+sizeof(pppg)];
+//                ifOut[sizeof(ethg)+sizeof(pppg)];
+//        }
 
-        NetworkLayer6: NetworkLayer6 {
+        AnsaNetworkLayer6: AnsaNetworkLayer6 {
             parameters:
                 @display("p=323,212");
             gates:
@@ -126,17 +129,24 @@ module EigrpRouter6
                 ifOut[sizeof(ethg)+sizeof(pppg)];
         }
     connections allowunconnected:
-        eigrp.splitterOut --> ansaNetworkLayer.eigrpIn;
-        eigrp.splitterIn <-- ansaNetworkLayer.eigrpOut;
+        //eigrp.splitterOut --> ansaNetworkLayer.eigrpIn;
+        //eigrp.splitterIn <-- ansaNetworkLayer.eigrpOut;
+        
+        eigrp.splitter6Out --> AnsaNetworkLayer6.eigrpIn;
+        eigrp.splitter6In <-- AnsaNetworkLayer6.eigrpOut;
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
-            eth[i].upperLayerOut --> ipSplitter.ifIn[i];
-            eth[i].upperLayerIn <-- ipSplitter.ifOut[i];
-            ipSplitter.ipv6Out[i] --> NetworkLayer6.ifIn[i];
-            ipSplitter.ipv6In[i] <-- NetworkLayer6.ifOut[i];
-            ipSplitter.ipv4Out[i] --> ansaNetworkLayer.ifIn[i];
-            ipSplitter.ipv4In[i] <-- ansaNetworkLayer.ifOut[i];
+            eth[i].upperLayerOut --> AnsaNetworkLayer6.ifIn[i];
+            eth[i].upperLayerIn <-- AnsaNetworkLayer6.ifOut[i];
+
+
+//            eth[i].upperLayerOut --> ipSplitter.ifIn[i];
+//            eth[i].upperLayerIn <-- ipSplitter.ifOut[i];
+//            ipSplitter.ipv6Out[i] --> AnsaNetworkLayer6.ifIn[i];
+//            ipSplitter.ipv6In[i] <-- AnsaNetworkLayer6.ifOut[i];
+//            ipSplitter.ipv4Out[i] --> ansaNetworkLayer.ifIn[i];
+//            ipSplitter.ipv4In[i] <-- ansaNetworkLayer.ifOut[i];
             //ethg[i] <--> eth[i].phys;
             //eth[i].upperLayerOut --> ansaNetworkLayer.ifIn++;
             //eth[i].upperLayerIn <-- ansaNetworkLayer.ifOut++;

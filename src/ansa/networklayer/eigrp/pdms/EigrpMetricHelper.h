@@ -21,6 +21,8 @@
 #include "EigrpInterfaceTable.h"
 #include "EigrpMessage_m.h"
 
+bool operator==(const EigrpKValues& k1, const EigrpKValues& k2);
+
 /**
  * Class for EIGRP metric computation.
  */

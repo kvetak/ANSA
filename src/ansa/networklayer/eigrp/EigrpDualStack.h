@@ -26,11 +26,9 @@
 
 #include "IPv4Address.h"
 #include "IPv6Address.h"
+//#include "ANSAIPv6Address.h"
 
 //#define DISABLE_EIGRP_IPV6
-
-
-//#define IPV6_WORDS (IPV6_WORDS[0],IPV6_WORDS[1],IPV6_WORDS[2],IPV6_WORDS[3])
 
 
 /**
@@ -49,11 +47,43 @@ int getNetmaskLength(const IPv4Address &netmask);
  */
 int getNetmaskLength(const IPv6Address &netmask);
 
-
+/**
+ * Compare two IPv4 addresses masked by netmask
+ *
+ * @param   addr1   first address to compare
+ * @param   addr2   second address to compare
+ * @param   netmask network mask used for masking
+ * @return  True if masked addresses are equal, otherwise false
+ */
 bool maskedAddrAreEqual(const IPv4Address& addr1, const IPv4Address& addr2, const IPv4Address& netmask);
 
+/**
+ * Compare two IPv6 addresses masked by netmask
+ *
+ * @param   addr1   first address to compare
+ * @param   addr2   second address to compare
+ * @param   netmask network mask used for masking
+ * @return  True if masked addresses are equal, otherwise false
+ */
 bool maskedAddrAreEqual(const IPv6Address& addr1, const IPv6Address& addr2, const IPv6Address& netmask);
 
+/**
+ * Get prefix from IPv6 address and network mask (represented as address)
+ *
+ * @param   addr    address
+ * @param   netmask network mask
+ * @return  IPv6 network prefix
+ */
 IPv6Address getPrefix(const IPv6Address& addr, const IPv6Address& netmask);
+
+/**
+ * Make network mask represented as IPv6 address from netmask length
+ *
+ * @param   mask length
+ * @return  network mask represented as IPv6 address
+ *
+ * @note    Instead of this function, you can simply use: IPv6Address(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).getPrefix(prefixLength)
+ */
+IPv6Address makeNetmask(int length);
 
 #endif /* EIGRPDUALSTACK_H_ */

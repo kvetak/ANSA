@@ -16,10 +16,12 @@
 
 
 cplusplus {{
-    #include "IPv4Address.h"   
+    #include "IPv4Address.h"
+    #include "IPv6Address.h"   
 }}
 
 class noncobject IPv4Address;
+class noncobject IPv6Address;
 
 // Codes of EIGRP messages
 enum HeaderOpcode
@@ -139,6 +141,26 @@ struct EigrpMpIpv4Internal
 };
 
 
+// Multiprotocol Ipv6 (IPv6Address used) Internal TLV route
+struct EigrpMpIpv6Internal
+{
+    // type
+    char typeHigh = 6;
+    char typeLow = EIGRP_TLV_ROUTE;
+    // value
+    uint16_t afi = 2;				// Address Family ID, IPv4 = 1, Ipv6 = 2
+    uint16_t tid;				// Topology ID
+    IPv4Address routerID;		// Router ID
+
+ 	EigrpWideMetricPar metric;
+ 	EigrpRouteFlags flags;
+ 	
+ 	IPv6Address nextHop;
+ 	IPv6Address destMask;
+ 	IPv6Address destAddress;
+};
+
+
 // General structure of EIGRP message with header
 packet EigrpMessage 
 {
@@ -164,18 +186,39 @@ packet EigrpIpv4Hello extends EigrpMessage
 	EigrpTlvStub stubTlv;
 };
 
+packet EigrpIpv6Hello extends EigrpMessage
+{
+    EigrpTlvParameter parameterTlv;		// Always present
+	EigrpTlvStub stubTlv;
+};
+
 // Ack message - temporarily
 packet EigrpIpv4Ack extends EigrpMessage
 {
 };
 
+// Ack message - temporarily
+packet EigrpIpv6Ack extends EigrpMessage
+{
+};
+
 packet EigrpIpv4Message extends EigrpMessage
 {
-    EigrpMpIpv4Internal interRoutes[];
+    EigrpMpIpv4Internal interRoutes[]; //TODO - dost zvlastni pouziti, jestli bude cas tak predelat
+};
+
+packet EigrpIpv6Message extends EigrpMessage
+{
+    EigrpMpIpv6Internal interRoutes[]; //TODO - dost zvlastni pouziti, jestli bude cas tak predelat - pouze kopiruji pristup z IPv4
 };
 
 // EIGRP Update Message
 packet EigrpIpv4Update extends EigrpIpv4Message
+{ 
+};
+
+// EIGRP Update Message
+packet EigrpIpv6Update extends EigrpIpv6Message
 { 
 };
 
@@ -184,8 +227,18 @@ packet EigrpIpv4Query extends EigrpIpv4Message
 {
 };
 
+// EIGRP Query Message
+packet EigrpIpv6Query extends EigrpIpv6Message
+{
+};
+
 // EIGRP Reply Message
 packet EigrpIpv4Reply extends EigrpIpv4Message
+{
+};
+
+// EIGRP Reply Message
+packet EigrpIpv6Reply extends EigrpIpv6Message
 {
 };
 

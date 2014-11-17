@@ -564,6 +564,37 @@ cXMLElement *xmlParser::GetEigrpIPv4Network(cXMLElement *network, cXMLElement *p
     return network;
 }
 
+//EIGRP for IPv6
+
+cXMLElement *xmlParser::GetEigrpProcess6(cXMLElement *process, cXMLElement *device)
+{
+    // initial call of the method - get first "AS" child node in "EIGRP"
+    if (device != NULL)
+    {
+        cXMLElement *routing = device->getFirstChildWithTag("Routing6");
+        if (routing == NULL)
+            return NULL;
+
+        cXMLElement *eigrp = routing->getFirstChildWithTag("EIGRP");
+        if (eigrp == NULL)
+            return NULL;
+
+        process = eigrp->getFirstChildWithTag("ProcessIPv6");
+
+    // repeated call - get another "AS" sibling node
+    }
+    else if (process != NULL)
+    {
+        process = process->getNextSiblingWithTag("ProcessIPv6");
+    }
+    else
+    {
+        process = NULL;
+    }
+
+    return process;
+}
+
 cXMLElement* xmlParser::GetLISPMapServers(cXMLElement *ms, cXMLElement *device)
 {
     if (device != NULL){

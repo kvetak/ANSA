@@ -100,7 +100,14 @@ void IpSplitter::handleMessage(cMessage *msg){
         // IPv6 datagram, send it to networkLayer6 via ipv6Out
         if (dynamic_cast<IPv6Datagram *>(msg))
         {
-            this->send(msg, "ipv6Out", gateIndex);
+            //NetworkLayer6 is connected
+            if (this->gate("ipv6Out", gateIndex)->isConnected())
+                this->send(msg, "ipv6Out", gateIndex);
+            //NetworkLayer6 is probably missing, hence not a dual-stack
+            else {
+                delete msg;
+                return;
+            }
         }
         else
         {

@@ -247,6 +247,7 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
          addr = xmlParser::GetIPv6Address(addr, NULL);
       }
 
+      setInterfaceParamters(ie); //TODO - verify
 
       // for each parameter
       for (cXMLElement *param = iface->getFirstChild(); param; param = param->getNextSibling()){
@@ -2251,7 +2252,7 @@ EigrpNetwork<IPv4Address> *DeviceConfigurator::isEigrpInterface(std::vector<Eigr
     std::vector<EigrpNetwork<IPv4Address> *>::iterator it;
 
     if (ifAddress.isUnspecified())
-                return false;
+                return NULL;
 
     for (it = networks.begin(); it != networks.end(); it++)
     {
@@ -2547,3 +2548,231 @@ void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModul
     }
 }
 
+
+//EIGRP - IPv6
+
+void DeviceConfigurator::loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule)
+{//TODO
+    ASSERT(eigrpModule != NULL);
+
+    // get access to device node from XML
+    const char *deviceType = par("deviceType");
+    const char *deviceId = par("deviceId");
+    const char *configFile = par("configFile");
+    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
+
+    if (device == NULL)
+    {
+       EV << "No configuration found for this device (" << deviceType <<
+               " id=" << deviceId << ")" << endl;
+       return;
+    }
+
+    loadEigrpProcesses6Config(device, eigrpModule);
+
+    loadEigrpInterfaces6Config(device, eigrpModule);
+}
+
+void DeviceConfigurator::loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule)
+{
+    // XML nodes for EIGRP
+    cXMLElement *processElem = NULL;
+    cXMLElementList procDetails;
+
+    int asNum;              // converted AS number
+    const char *asNumStr;   // string with AS number
+    const char *rIdStr;     // string with routerID
+    int tempNumber;
+    bool success;
+
+    processElem = xmlParser::GetEigrpProcess6(processElem, device);
+    if (processElem == NULL)
+    {
+        EV << "No EIGRP configuration found." << endl;
+        return;
+    }
+
+    // AS number of process
+    if ((asNumStr = processElem->getAttribute("asNumber")) == NULL)
+        throw cRuntimeError("No EIGRP autonomous system number specified");
+    success = xmlParser::Str2Int(&asNum, asNumStr);
+    if (!success || asNum < 1 || asNum > 65535)
+        throw cRuntimeError("Bad value for EIGRP autonomous system number (<1, 65535>)");
+    eigrpModule->setASNum(asNum);
+
+    // routerID for process
+    if ((rIdStr = processElem->getAttribute("routerId")) == NULL)
+        throw cRuntimeError("No EIGRP routerID specified"); // routerID must be specified
+    eigrpModule->setRouterId(IPv4Address(rIdStr));
+
+    procDetails = processElem->getChildren();
+    for (cXMLElementList::iterator procElem = procDetails.begin(); procElem != procDetails.end(); procElem++)
+    {
+        std::string nodeName = (*procElem)->getTagName();
+
+        if (nodeName == "MetricWeights")
+        {
+            EigrpKValues kval;
+            kval.K1 = loadEigrpKValue((*procElem), "k1", "1");
+            kval.K2 = loadEigrpKValue((*procElem), "k2", "0");
+            kval.K3 = loadEigrpKValue((*procElem), "k3", "1");
+            kval.K4 = loadEigrpKValue((*procElem), "k4", "0");
+            kval.K5 = loadEigrpKValue((*procElem), "k5", "0");
+            kval.K6 = loadEigrpKValue((*procElem), "k6", "0");
+            eigrpModule->setKValues(kval);
+        }
+        else if (nodeName == "MaximumPath")
+        {
+            success = xmlParser::Str2Int(&tempNumber, (*procElem)->getNodeValue());
+            if (!success || tempNumber < 1)
+                throw cRuntimeError("Bad value for EIGRP maximum paths for load balancing <1, 255>");
+            eigrpModule->setMaximumPath(tempNumber);
+        }
+        else if (nodeName == "Variance")
+        {
+            success = xmlParser::Str2Int(&tempNumber, (*procElem)->getNodeValue());
+            if (!success || tempNumber < 1 || tempNumber > 128)
+                throw cRuntimeError("Bad value for EIGRP variance (<1, 128>)");
+            eigrpModule->setVariance(tempNumber);
+        }
+        else if (nodeName == "PassiveInterface")
+        {
+            // Get interface ID
+            const char *ifaceName = (*procElem)->getNodeValue();
+            InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+            if (iface == NULL){
+                throw cRuntimeError("No interface called %s on this device", ifaceName);
+            }
+            int ifaceId = iface->getInterfaceId();
+            eigrpModule->setPassive(true, ifaceId);
+        }
+        else if (nodeName == "Stub")
+        {
+            EigrpStub stub;
+            stub.connectedRt = loadEigrpStubConf((*procElem), "connected");
+            stub.leakMapRt = loadEigrpStubConf((*procElem), "leakMap");
+            stub.recvOnlyRt = loadEigrpStubConf((*procElem), "receiveOnly");
+            stub.redistributedRt = loadEigrpStubConf((*procElem), "redistributed");
+            stub.staticRt = loadEigrpStubConf((*procElem), "static");
+            stub.summaryRt = loadEigrpStubConf((*procElem), "summary");
+            if (!(stub.connectedRt || stub.leakMapRt || stub.recvOnlyRt || stub.redistributedRt || stub.staticRt || stub.summaryRt))
+                stub.connectedRt = stub.summaryRt = true;   // Default values
+            eigrpModule->setStub(stub);
+        }
+    }
+
+    return;
+}
+
+void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule)
+{
+    // XML nodes for EIGRP
+    cXMLElement *eigrpIfaceElem = NULL;
+    cXMLElement *ifaceElem = NULL;
+    cXMLElement *ipv6AddrElem = NULL;
+
+    bool success;
+    int tempNumber;
+
+    if ((ifaceElem = xmlParser::GetInterface(ifaceElem, device)) == NULL)
+        return;
+
+    while (ifaceElem != NULL)
+    {
+        // Get interface ID
+        const char *ifaceName = ifaceElem->getAttribute("name");
+        InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+        if (iface == NULL){
+            throw cRuntimeError("No interface called %s on this device", ifaceName);
+        }
+
+        // for each IPv6 address - save info about network prefix
+        ipv6AddrElem = xmlParser::GetIPv6Address(NULL, ifaceElem);
+        while (ipv6AddrElem != NULL)
+        {
+
+            // get address string
+            string addrFull = ipv6AddrElem->getNodeValue();
+            IPv6Address ipv6;
+            int prefixLen;
+
+            // check if it's a valid IPv6 address string with prefix and get prefix
+            if (!ipv6.tryParseAddrWithPrefix(addrFull.c_str(), prefixLen)){
+            throw cRuntimeError("Unable to set IPv6 address %s on interface %s", addrFull.c_str(), ifaceName);
+            }
+
+            ipv6 = IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+
+            //EV << "IPv6 address: " << ipv6 << "/" << prefixLen << " on iface " << ifaceName << endl;
+
+            if(!eigrpModule->addNetPrefix(ipv6.getPrefix(prefixLen), prefixLen, iface->getInterfaceId())) //only saves information about prefix - does not enable in EIGRP
+            {// failure - same prefix on different interfaces
+                //throw cRuntimeError("Same IPv6 network prefix (%s/%i) on different interfaces (%s)", ipv6.getPrefix(prefixLen).str().c_str(), prefixLen, ifaceName);
+                EV << "ERROR: Same IPv6 network prefix (" << ipv6.getPrefix(prefixLen) << "/" << prefixLen << ") on different interfaces (prefix ignored on " << ifaceName << ")" << endl;
+            }
+            // get next IPv6 address
+            ipv6AddrElem = xmlParser::GetIPv6Address(ipv6AddrElem, NULL);
+        }
+
+
+        int ifaceId = iface->getInterfaceId();
+        // Get EIGRP configuration for interface
+        eigrpIfaceElem = ifaceElem->getFirstChildWithTag("EIGRP-IPv6");
+
+        // Load EIGRP IPv6 configuration
+        if (eigrpIfaceElem != NULL)
+        {
+            // Get EIGRP AS number
+            const char *asNumStr;
+            if ((asNumStr = eigrpIfaceElem->getAttribute("asNumber")) == NULL)
+                throw cRuntimeError("No EIGRP autonomous system number specified in settings of interface %s", ifaceName);
+            success = xmlParser::Str2Int(&tempNumber, asNumStr);
+            if (!success || tempNumber < 1 || tempNumber > 65535)
+                throw cRuntimeError("Bad value for EIGRP autonomous system number (<1, 65535>) on interface %s", ifaceName);
+            // TODO vybrat podle AS spravny PDM a pro ten nastavovat nasledujici
+
+            if( tempNumber == eigrpModule->getASNum())
+            {// same AS number of process
+                loadEigrpInterface6(eigrpIfaceElem, eigrpModule, ifaceId, ifaceName);
+
+                eigrpModule->addInterface(iface->getInterfaceId(), true); // interface included to EIGRP process -> add
+
+            }
+        }
+
+        ifaceElem = xmlParser::GetInterface(ifaceElem, NULL);
+    }
+}
+
+void DeviceConfigurator::loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName)
+{
+    int tempNumber;
+    bool tempBool, success;
+
+    cXMLElementList ifDetails = eigrpIface->getChildren();
+    for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
+    {
+        std::string nodeName = (*ifElemIt)->getTagName();
+
+        if (nodeName == "HelloInterval")
+        {
+            success = xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 1 || tempNumber > 65535)
+                throw cRuntimeError("Bad value for EIGRP Hello interval (<1, 65535>) on interface %s", ifaceName);
+            eigrpModule->setHelloInt(tempNumber, ifaceId);
+        }
+        else if (nodeName == "HoldInterval")
+        {
+            success = xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 1 || tempNumber > 65535)
+                throw cRuntimeError("Bad value for EIGRP Hold interval (<1, 65535>) on interface %s", ifaceName);
+            eigrpModule->setHoldInt(tempNumber, ifaceId);
+        }
+        else if (nodeName == "SplitHorizon")
+        {
+            if (!xmlParser::Str2Bool(&tempBool, (*ifElemIt)->getNodeValue()))
+                throw cRuntimeError("Bad value for EIGRP Split Horizon on interface %s", ifaceName);
+            eigrpModule->setSplitHorizon(tempBool, ifaceId);
+        }
+    }
+}

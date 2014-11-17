@@ -25,96 +25,14 @@ topology table.
 #include "IPv4ControlInfo.h"
 #include "deviceConfigurator.h"
 #include "AnsaIPv4Route.h"
-
+#include "EigrpPrint.h"
 #include "EigrpIpv4Pdm.h"
 
-
+#include "ANSAIPv6Address.h"
 #define EIGRP_DEBUG
 
 Define_Module(EigrpIpv4Pdm);
 
-namespace eigrp
-{
-
-// User message codes
-enum UserMsgCodes
-{
-  M_OK = 0,                             // no message
-  M_UPDATE_SEND = EIGRP_UPDATE_MSG,     // send Update message
-  M_REQUEST_SEND = EIGRP_REQUEST_MSG,   // send Request message
-  M_QUERY_SEND = EIGRP_QUERY_MSG,       // send Query message
-  M_REPLY_SEND = EIGRP_REPLY_MSG,       // send Query message
-  M_HELLO_SEND = EIGRP_HELLO_MSG,       // send Hello message
-  M_DISABLED_ON_IF,                     // EIGRP is disabled on interface
-  M_NEIGH_BAD_AS,                       // neighbor has bad AS number
-  M_NEIGH_BAD_KVALUES,                  // neighbor has bad K-values
-  M_NEIGH_BAD_SUBNET,                   // neighbor isn't on common subnet
-  M_SIAQUERY_SEND = EIGRP_SIAQUERY_MSG, // send SIA Query message
-  M_SIAREPLY_SEND = EIGRP_SIAREPLY_MSG, // send SIA Reply message
-};
-
-// User messages
-const char *UserMsgs[] =
-{
-  // M_OK
-  "OK",
-  // M_UPDATE_SEND
-  "Update",
-  // M_REQUEST_SEND
-  "Request",
-  // M_QUERY_SEND
-  "Query",
-  // M_REPLY_SEND
-  "Reply",
-  // M_HELLO_SEND
-  "Hello",
-  // M_DISABLED_ON_IF
-  "EIGRP process isn't enabled on interface",
-  // M_NEIGH_BAD_AS
-  "AS number is different",
-  // M_NEIGH_BAD_KVALUES
-  "K-value mismatch",
-  // M_NEIGH_BAD_SUBNET
-  "Not on the common subnet",
-  // M_SIAQUERY_SEND
-  "Send SIA Query message",
-  // M_SIAREPLY_SEND
-  "Send SIA Reply message",
-};
-
-}; // end of namespace eigrp
-
-
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv4Address>& network)
-{
-    os << "Address:" << network.getAddress() << " Mask:" << network.getMask();
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const EigrpKValues& kval)
-{
-    os << "K1:" << kval.K1 << " K2:" << kval.K2 << " K3:" << kval.K3;
-    os << "K4:" << kval.K4 << " K5:" << kval.K5 << " K6:" << kval.K6;
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const EigrpStub& stub)
-{
-    if (stub.connectedRt) os << "connected ";
-    if (stub.leakMapRt) os << "leak-map ";
-    if (stub.recvOnlyRt) os << "recv-only ";
-    if (stub.redistributedRt) os << "redistrib ";
-    if (stub.staticRt) os << "static ";
-    if (stub.summaryRt) os << "summary";
-    return os;
-}
-
-bool operator==(const EigrpKValues& k1, const EigrpKValues& k2)
-{
-    return k1.K1 == k2.K1 && k1.K2 == k2.K2 &&
-            k1.K3 == k2.K3 && k1.K4 == k2.K4 &&
-            k1.K5 == k2.K5 && k1.K6 == k2.K6;
-}
 
 
 EigrpIpv4Pdm::EigrpIpv4Pdm() : EIGRP_IPV4_MULT(IPv4Address(224, 0, 0, 10))
@@ -185,6 +103,40 @@ void EigrpIpv4Pdm::initialize(int stage)
         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
         nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
         nb->subscribe(this, NF_IPv4_ROUTE_DELETED);
+
+
+/*
+        //ANSAIPv6Address testing
+        ANSAIPv6Address ipv6("FF02::A");
+        EV << "IPv6 address: " << ipv6.str() << endl;
+        EV << "dptr: " << ipv6.dptr << ", .words(): " << ipv6.words() << endl;
+
+        ANSAIPv6Address ipv62 = ANSAIPv6Address();
+        EV << "IPv62 address: " << ipv62.str() << endl;
+        EV << "dptr: " << ipv62.dptr << ", .words(): " << ipv62.words() << endl;
+        EV << "netmask length: " << ipv62.getNetmaskLength() << endl;
+
+        ANSAIPv6Address ipv63(ipv6);
+        EV << "IPv63 address: " << ipv63.str() << endl;
+        EV << "dptr: " << ipv63.dptr << ", .words(): " << ipv63.words() << endl;
+
+        ANSAIPv6Address ipv64(1,0,5,8);
+        EV << "IPv64 address: " << ipv64.str() << endl;
+        EV << "dptr: " << ipv64.dptr << ", .words(): " << ipv64.words() << endl;
+
+        ANSAIPv6Address ipv65(ipv64.words());
+        EV << "IPv65 address: " << ipv65.str() << endl;
+        EV << "dptr: " << ipv65.dptr << ", .words(): " << ipv65.words() << endl;
+
+        ANSAIPv6Address ipv66 = ANSAIPv6Address(0xffffffff, 0xffffffff,0xffffffff,0xffffffff);
+        EV << "IPv66 address: " << ipv66.str() << endl;
+        EV << "dptr: " << ipv66.dptr << ", .words(): " << ipv66.words() << endl;
+        EV << "netmask length: " << ipv66.getNetmaskLength() << endl;
+        EV << "ANDed:" << ipv6.doAnd(ipv62).str() << endl;
+
+        EV << "match? :" << ANSAIPv6Address::maskedAddrAreEqual(ipv6, ipv63, ipv62) << endl;
+        EV << "match? :" << ANSAIPv6Address::maskedAddrAreEqual(ipv6, ipv62, ipv62) << endl;
+*/
     }
 }
 

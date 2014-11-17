@@ -77,3 +77,24 @@ IPv6Address getPrefix(const IPv6Address& addr, const IPv6Address& netmask)
 
     return IPv6Address(addrp[0] & netmaskp[0], addrp[1] & netmaskp[1], addrp[2] & netmaskp[2], addrp[3] & netmaskp[3]); //TODO - verify
 }
+
+IPv6Address makeNetmask(int length) //TODO - verify
+{
+    uint32 netmask[4] = {0, 0, 0, 0};
+
+    for(int i = 0; i < 4; ++i)
+    {//through 4 parts of address
+        int wlen = length - (i * 32);   //computes number of ones bits in part
+
+        if(wlen > 0)
+        {//some bits to set
+            netmask[i] = (wlen >= 32) ? 0xffffffffu : ~(0xffffffffu >> wlen);   //(Implementation note: MSVC refuses to shift by 32 bits!)
+        }
+        else
+        {// nothing to set
+            break;
+        }
+    }
+
+    return IPv6Address(netmask[0], netmask[1], netmask[2], netmask[3]);
+}

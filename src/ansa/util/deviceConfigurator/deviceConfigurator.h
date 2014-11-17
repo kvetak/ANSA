@@ -162,6 +162,14 @@ class DeviceConfigurator : public cSimpleModule {
       /**< Loads stub configuration */
       bool loadEigrpStubConf(cXMLElement *node, const char *attrName);
 
+      /**< Loads configuration of EIGRP IPv6 process */
+      void loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule);
+      /**< Loads configuration of interfaces for EIGRP IPv6 */
+      void loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule);
+      /**< Loads interfaces for EIGRP IPv6 */
+      void loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName);
+
+
    public:
       // global configuration for PIM
       void loadPimGlobalConfig(pimSM *pimSMModule);
@@ -235,6 +243,12 @@ class DeviceConfigurator : public cSimpleModule {
        * @param eigrpModule [in]
        */
       void loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule);
+
+      /**
+       * Loads configuration for EIGRP IPv6
+       * @param eigrpModule [in]
+       */
+      void loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule);
 
 };
 

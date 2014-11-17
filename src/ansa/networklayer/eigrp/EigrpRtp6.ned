@@ -13,21 +13,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.ansa.networklayer.eigrp.pdms;
-
-import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
+package inet.ansa.networklayer.eigrp;
 
 //
 // TODO auto-generated module
 //
-simple EigrpIpv6Pdm
+simple EigrpRtp6
 {
     parameters:
         
     gates:
-        input splitterIn;
-        input rtpIn;
+        input pdmIn;
         
-        output splitterOut;
-        output rtpOut;
+        output pdmOut;
 }

@@ -15,6 +15,13 @@
 
 #include <EigrpMetricHelper.h>
 
+bool operator==(const EigrpKValues& k1, const EigrpKValues& k2)
+{
+    return k1.K1 == k2.K1 && k1.K2 == k2.K2 &&
+            k1.K3 == k2.K3 && k1.K4 == k2.K4 &&
+            k1.K5 == k2.K5 && k1.K6 == k2.K6;
+}
+
 EigrpMetricHelper::EigrpMetricHelper() :
     DELAY_PICO(1000000), BANDWIDTH(10000000), CLASSIC_SCALE(256), WIDE_SCALE(65536)
 {
@@ -75,6 +82,8 @@ uint64_t EigrpMetricHelper::computeClassicMetric(const EigrpWideMetricPar& par, 
         classicDelay = par.delay / 10000000;
         classicDelay = classicDelay * CLASSIC_SCALE;
     }
+
+    ASSERT(par.bandwidth > 0);
     if (kValues.K1)
         classicBw = BANDWIDTH / par.bandwidth  * CLASSIC_SCALE;
 

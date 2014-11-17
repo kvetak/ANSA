@@ -32,6 +32,7 @@ class EigrpInterface: public cObject
     int interfaceId;        /**< ID of interface */
     const char *interfaceName;  /**< Name of interface */
     int networkId;          /**< ID of network in RoutingOfNetworks table */ //TODO - PROB-03 - only 1 network per interface
+    std::set<int>networksIds; /**< IDs of IPv6 networks in RoutingOfNetworks table */
     int helloInt;           /**< Hello interval in seconds (<1-65535>) */
     int holdInt;            /**< Router's hold interval in seconds (<1-65535>) */
     EigrpTimer *hellot;     /**< pointer to hello timer */
@@ -120,6 +121,23 @@ class EigrpInterface: public cObject
     bool isPassive() const { return this->passive; }
 
     const char *getInterfaceName() const { return this->interfaceName; }
+
+    /**
+     * Get networkIds set .begin()
+     */
+    std::set<int>::iterator getNetworksIdsBegin() {return networksIds.begin();}
+    /**
+     * Get networksIds set .end()
+     */
+    std::set<int>::iterator getNetworksIdsEnd() {return networksIds.end();}
+    /**
+     * Insert networkID into set
+     */
+    std::pair<std::set<int>::iterator, bool> insertToNetworksIds(int netId) {return networksIds.insert(netId);}
+    /**
+     * Clears networksIds set
+     */
+    void clearNetworkIds() {networksIds.clear();}
 };
 
 /**

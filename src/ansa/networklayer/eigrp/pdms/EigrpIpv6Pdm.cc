@@ -12,17 +12,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-
+/**
+* @file EigrpIpv6Pdm.cc
+* @author Vit Rek, xrekvi00@stud.fit.vutbr.cz
+* @date 6. 11. 2014
+* @brief EIGRP IPv6 Protocol Dependent Module
+* @detail Main module, it mediates control exchange between DUAL, routing table and
+topology table.
+*/
 
 #include <algorithm>
 
 #include "IPv6ControlInfo.h"
 #include "deviceConfigurator.h"
 #include "AnsaIPv4Route.h"
-
+#include "EigrpPrint.h"
 #include "EigrpIpv6Pdm.h"
 #include "IPv6Address.h"
 
+#include "ANSARoutingTable6.h"
 
 
 
@@ -30,89 +38,6 @@
 #define EIGRP_DEBUG
 
 Define_Module(EigrpIpv6Pdm);
-
-namespace eigrp
-{
-
-// User message codes
-enum UserMsgCodes
-{
-  M_OK = 0,                             // no message
-  M_UPDATE_SEND = EIGRP_UPDATE_MSG,     // send Update message
-  M_REQUEST_SEND = EIGRP_REQUEST_MSG,   // send Request message
-  M_QUERY_SEND = EIGRP_QUERY_MSG,       // send Query message
-  M_REPLY_SEND = EIGRP_REPLY_MSG,       // send Query message
-  M_HELLO_SEND = EIGRP_HELLO_MSG,       // send Hello message
-  M_DISABLED_ON_IF,                     // EIGRP is disabled on interface
-  M_NEIGH_BAD_AS,                       // neighbor has bad AS number
-  M_NEIGH_BAD_KVALUES,                  // neighbor has bad K-values
-  M_NEIGH_BAD_SUBNET,                   // neighbor isn't on common subnet
-  M_SIAQUERY_SEND = EIGRP_SIAQUERY_MSG, // send SIA Query message
-  M_SIAREPLY_SEND = EIGRP_SIAREPLY_MSG, // send SIA Reply message
-};
-
-// User messages
-const char *UserMsgs[] =
-{
-  // M_OK
-  "OK",
-  // M_UPDATE_SEND
-  "Update",
-  // M_REQUEST_SEND
-  "Request",
-  // M_QUERY_SEND
-  "Query",
-  // M_REPLY_SEND
-  "Reply",
-  // M_HELLO_SEND
-  "Hello",
-  // M_DISABLED_ON_IF
-  "EIGRP process isn't enabled on interface",
-  // M_NEIGH_BAD_AS
-  "AS number is different",
-  // M_NEIGH_BAD_KVALUES
-  "K-value mismatch",
-  // M_NEIGH_BAD_SUBNET
-  "Not on the common subnet",
-  // M_SIAQUERY_SEND
-  "Send SIA Query message",
-  // M_SIAREPLY_SEND
-  "Send SIA Reply message",
-};
-
-}; // end of namespace eigrp
-
-
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv6Address>& network)
-{
-    os << "Address:" << network.getAddress() << " Mask:" << network.getMask();
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const EigrpKValues& kval)
-{
-    os << "K1:" << kval.K1 << " K2:" << kval.K2 << " K3:" << kval.K3;
-    os << "K4:" << kval.K4 << " K5:" << kval.K5 << " K6:" << kval.K6;
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const EigrpStub& stub)
-{
-    if (stub.connectedRt) os << "connected ";
-    if (stub.leakMapRt) os << "leak-map ";
-    if (stub.recvOnlyRt) os << "recv-only ";
-    if (stub.redistributedRt) os << "redistrib ";
-    if (stub.staticRt) os << "static ";
-    if (stub.summaryRt) os << "summary";
-    return os;
-}
-
-bool operator==(const EigrpKValues& k1, const EigrpKValues& k2)
-{
-    return k1.K1 == k2.K1 && k1.K2 == k2.K2 &&
-            k1.K3 == k2.K3 && k1.K4 == k2.K4 &&
-            k1.K5 == k2.K5 && k1.K6 == k2.K6;
-}
 
 
 EigrpIpv6Pdm::EigrpIpv6Pdm() : EIGRP_IPV6_MULT(IPv6Address("FF02::A"))
@@ -153,7 +78,7 @@ void EigrpIpv6Pdm::initialize(int stage)
         this->eigrpIft = EigrpIfTableAccess().get();
         this->eigrpNt = Eigrpv6NeighTableAccess().get();
         this->eigrpTt = Eigrpv6TopolTableAccess().get();
-        this->rt = AnsaRoutingTableAccess().get();
+        this->rt = ANSARoutingTable6Access().get();
         //this->eigrpDual = ModuleAccess<EigrpDual>("eigrpDual").get();
 
         this->ift = InterfaceTableAccess().get();
@@ -164,13 +89,9 @@ void EigrpIpv6Pdm::initialize(int stage)
         this->eigrpDual = new EigrpDual<IPv6Address>(this);
         this->eigrpMetric = new EigrpMetricHelper();
 
-        // Set router ID
-        IPv4Address rid = rt->getRouterId();
-        this->eigrpTt->setRouterId(rid);
-
         // Load configuration of EIGRP
         DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-//TODO        conf->loadEigrpIPv4Config(this);
+        conf->loadEigrpIPv6Config(this);
 
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
         WATCH(asNum);
@@ -183,6 +104,9 @@ void EigrpIpv6Pdm::initialize(int stage)
         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
         nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
         nb->subscribe(this, NF_IPv4_ROUTE_DELETED);
+
+/*        EV << "velikost MpIpv4: " << sizeof(EigrpMpIpv4Internal) << endl;
+        EV << "velikost MpIpv6: " << sizeof(EigrpMpIpv6Internal) << endl;*/
     }
 }
 
@@ -236,25 +160,14 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
 {
     EigrpInterface *eigrpIface;
     int ifaceId = iface->getInterfaceId();
-    // Get address and mask of interface
-//TODO    IPv6Address ifMask = iface->ipv6Data()->getNetmask();
-//TODO    IPv6Address ifAddress = iface->ipv6Data()->getIPAddress().doAnd(ifMask);
-    IPv6Address ifMask;
-    IPv6Address ifAddress;
-
-    int networkId;
 
     if (iface->isUp())
     { // an interface goes up
-        if (routingForNetworks->isInterfaceIncluded(ifAddress, ifMask, &networkId))
-        { // Interface is included in EIGRP
-            if ((eigrpIface = getInterfaceById(ifaceId)) == NULL)
-            { // Create EIGRP interface
-                eigrpIface = new EigrpInterface(iface, networkId, false);
-            }
+        if((eigrpIface = getInterfaceById(ifaceId)) != NULL)
+        {// interface is included in EIGRP process
             if (!eigrpIface->isEnabled())
-            {
-                enableInterface(eigrpIface, ifAddress, ifMask, networkId);
+            {// interface disabled -> enable
+                enableInterface(eigrpIface);
                 startHelloTimer(eigrpIface, simTime() + eigrpIface->getHelloInt() - 0.5);
             }
         }
@@ -265,7 +178,7 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
 
         if (eigrpIface != NULL && eigrpIface->isEnabled())
         {
-            disableInterface(iface, eigrpIface, ifAddress, ifMask);
+            disableInterface(iface, eigrpIface);
         }
     }
 }
@@ -327,7 +240,7 @@ void EigrpIpv6Pdm::processRTRouteDel(const cObject *details)
 
     if (adminDist == this->adminDistInt)
     { // Deletion of EIGRP internal route
-        source = eigrpTt->findRoute(changedRt->getDestination(), changedRt->getNetmask(), changedRt->getNextHop()); //TODO - verify getNextHop method, chaned from getGateway (IPv4)
+        source = eigrpTt->findRoute(changedRt->getDestPrefix(), makeNetmask(changedRt->getPrefixLength()), changedRt->getNextHop()); //TODO - verify getNextHop method, chaned from getGateway (IPv4)
         if (source == NULL)
         {
             ASSERT(false);
@@ -382,6 +295,13 @@ void EigrpIpv6Pdm::processMsgFromNetwork(cMessage *msg)
     int ifaceId = ctrlInfo->getInterfaceId();
     cMessage *msgDup = NULL;
 
+    InterfaceEntry::State status = ift->getInterfaceById(ifaceId)->getState();
+    if(status == InterfaceEntry::DOWN || status == InterfaceEntry::GOING_UP )
+    {// message received on DOWN or GOING_UP iface -> ignore
+        EV << "Received message on DOWN interface - message ignored" << endl;
+        return;
+    }
+
 #ifdef EIGRP_DEBUG
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
     ASSERT(eigrpIface != NULL);
@@ -400,23 +320,23 @@ void EigrpIpv6Pdm::processMsgFromNetwork(cMessage *msg)
     msgDup->setControlInfo(ctrlInfo->dup());
     send(msgDup, RTP_OUTGW);
 
-    if (dynamic_cast<EigrpIpv4Ack*>(msg) && neigh != NULL)
+    if (dynamic_cast<EigrpIpv6Ack*>(msg) && neigh != NULL)
     {
         processAckMsg(msg, srcAddr, ifaceId, neigh);
     }
-    else if (dynamic_cast<EigrpIpv4Hello*>(msg))
+    else if (dynamic_cast<EigrpIpv6Hello*>(msg))
     {
         processHelloMsg(msg, srcAddr, ifaceId, neigh);
     }
-    else if (dynamic_cast<EigrpIpv4Update*>(msg) && neigh != NULL)
+    else if (dynamic_cast<EigrpIpv6Update*>(msg) && neigh != NULL)
     {
         processUpdateMsg(msg, srcAddr, ifaceId, neigh);
     }
-    else if (dynamic_cast<EigrpIpv4Query*>(msg) && neigh != NULL)
+    else if (dynamic_cast<EigrpIpv6Query*>(msg) && neigh != NULL)
     {
         processQueryMsg(msg, srcAddr, ifaceId, neigh);
     }
-    else if (dynamic_cast<EigrpIpv4Reply*>(msg) && neigh != NULL)
+    else if (dynamic_cast<EigrpIpv6Reply*>(msg) && neigh != NULL)
     {
         processReplyMsg(msg, srcAddr, ifaceId, neigh);
     }
@@ -434,7 +354,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
 {
     EigrpMsgReq *msgReq = check_and_cast<EigrpMsgReq *>(msg);
     EigrpMessage *eigrpMsg = NULL;
-    EigrpIpv4Message *eigrpMsgRt = NULL;
+    EigrpIpv6Message *eigrpMsgRt = NULL;
     int routeCnt = msgReq->getRoutesArraySize();
     IPv6Address destAddress;
     int destIface = msgReq->getDestInterface();
@@ -477,7 +397,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
 
-        sizeOfMsg += routeCnt * 44;
+        sizeOfMsg += routeCnt * 68; //magic size TODO - verify
 
         eigrpMsg = eigrpMsgRt;
         break;
@@ -487,7 +407,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
 
-        sizeOfMsg += routeCnt * 44;
+        sizeOfMsg += routeCnt * 68; //magic size;
 
         eigrpMsg = eigrpMsgRt;
         break;
@@ -497,7 +417,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
 
-        sizeOfMsg += routeCnt * 44;
+        sizeOfMsg += routeCnt * 68; //magic size;
 
         eigrpMsg = eigrpMsgRt;
         break;
@@ -517,15 +437,15 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
 bool EigrpIpv6Pdm::getDestIpAddress(int destNeigh, IPv6Address *resultAddress)
 {
     EigrpNeighbor<IPv6Address> *neigh = NULL;
-    const uint32 *addr = NULL; //TODO - predelat na makro
+    const uint32 *addr = NULL; //TODO - prace s tridou IPv6Address je pekne blba, predelat
 
     if (destNeigh == EigrpNeighbor<IPv6Address>::UNSPEC_ID)
-    {
+    {// destination neighbor unset -> use multicast
         addr = EIGRP_IPV6_MULT.words();
         resultAddress->set(addr[0],addr[1],addr[2],addr[3]);
     }
     else
-    {
+    {// destination neighbor set -> use unicast
         if ((neigh = eigrpNt->findNeighborById(destNeigh)) == NULL)
             return false;
         addr = neigh->getIPAddress().words();
@@ -636,7 +556,7 @@ void EigrpIpv6Pdm::processTimer(cMessage *msg)
 
 void EigrpIpv6Pdm::processAckMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
 {
-    printRecvMsg(check_and_cast<EigrpIpv4Ack*>(msg), srcAddress, ifaceId);
+    printRecvMsg(check_and_cast<EigrpIpv6Ack*>(msg), srcAddress, ifaceId);
     if (neigh->isStateUp() == false)
     {
         // If neighbor is "pending", then change its state to "up"
@@ -654,7 +574,7 @@ void EigrpIpv6Pdm::processAckMsg(cMessage *msg, IPv6Address& srcAddress, int ifa
 
 void EigrpIpv6Pdm::processHelloMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
 {
-    EigrpIpv4Hello *hello = check_and_cast<EigrpIpv4Hello *>(msg);
+    EigrpIpv6Hello *hello = check_and_cast<EigrpIpv6Hello *>(msg);
     EigrpTlvParameter tlvParam = hello->getParameterTlv();
 
     printRecvMsg(hello, srcAddress, ifaceId);
@@ -698,7 +618,7 @@ void EigrpIpv6Pdm::processHelloMsg(cMessage *msg, IPv6Address& srcAddress, int i
 
 void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
 {
-    EigrpIpv4Update *update = check_and_cast<EigrpIpv4Update *>(msg);
+    EigrpIpv6Update *update = check_and_cast<EigrpIpv6Update *>(msg);
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
     EigrpRouteSource<IPv6Address> *src;
     bool skipRoute, notifyDual, isSourceNew;
@@ -731,7 +651,7 @@ void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int 
         {
             skipRoute = false;
             notifyDual = false;
-            EigrpMpIpv4Internal tlv = update->getInterRoutes(i);
+            EigrpMpIpv6Internal tlv = update->getInterRoutes(i);
 
             if (tlv.routerID == eigrpTt->getRouterId() || eigrpMetric->isParamMaximal(tlv.metric))
             { // Route with RID is equal to RID of router or tlv is unreachable route
@@ -761,7 +681,7 @@ void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int 
 
 void EigrpIpv6Pdm::processQueryMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
 {
-    EigrpIpv4Query *query = check_and_cast<EigrpIpv4Query *>(msg);
+    EigrpIpv6Query *query = check_and_cast<EigrpIpv6Query *>(msg);
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
     EigrpRouteSource<IPv6Address> *src = NULL;
     bool notifyDual, isSourceNew;
@@ -785,7 +705,7 @@ void EigrpIpv6Pdm::processQueryMsg(cMessage *msg, IPv6Address& srcAddress, int i
 
 void EigrpIpv6Pdm::processReplyMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
 {
-    EigrpIpv4Reply *reply = check_and_cast<EigrpIpv4Reply *>(msg);
+    EigrpIpv6Reply *reply = check_and_cast<EigrpIpv6Reply *>(msg);
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
     EigrpRouteSource<IPv6Address> *src;
     bool notifyDual, isSourceNew;
@@ -810,7 +730,7 @@ void EigrpIpv6Pdm::processReplyMsg(cMessage *msg, IPv6Address& srcAddress, int i
 /**
  * @param neigh Neighbor which is next hop for a route in TLV.
  */
-EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::processInterRoute(EigrpMpIpv4Internal& tlv, IPv6Address& srcAddr,
+EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::processInterRoute(EigrpMpIpv6Internal& tlv, IPv6Address& srcAddr,
         int sourceNeighId, EigrpInterface *eigrpIface, bool *notifyDual, bool *isSourceNew)
 {
     IPv6Address nextHop = getNextHopAddr(tlv.nextHop, srcAddr);
@@ -861,9 +781,9 @@ EigrpTimer *EigrpIpv6Pdm::createTimer(char timerKind, void *context)
     return timer;
 }
 
-EigrpIpv4Hello *EigrpIpv6Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Hello *EigrpIpv6Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
-    EigrpIpv4Hello *msg = new EigrpIpv4Hello("EIGRPHello");
+    EigrpIpv6Hello *msg = new EigrpIpv6Hello("EIGRPHello");
     EigrpTlvParameter paramTlv;
 
     addMessageHeader(msg, EIGRP_HELLO_MSG, msgReq);
@@ -885,18 +805,18 @@ EigrpIpv4Hello *EigrpIpv6Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, 
     return msg;
 }
 
-EigrpIpv4Ack *EigrpIpv6Pdm::createAckMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Ack *EigrpIpv6Pdm::createAckMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
-    EigrpIpv4Ack *msg = new EigrpIpv4Ack("EIGRPAck");
+    EigrpIpv6Ack *msg = new EigrpIpv6Ack("EIGRPAck");
     addMessageHeader(msg, EIGRP_HELLO_MSG, msgReq);
     msg->setAckNum(msgReq->getAckNumber());
     addCtrInfo(msg, msgReq->getDestInterface(), destAddress);
     return msg;
 }
 
-EigrpIpv4Update *EigrpIpv6Pdm::createUpdateMsg(const IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Update *EigrpIpv6Pdm::createUpdateMsg(const IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
-    EigrpIpv4Update *msg = new EigrpIpv4Update("EIGRPUpdate");
+    EigrpIpv6Update *msg = new EigrpIpv6Update("EIGRPUpdate");
     addMessageHeader(msg, EIGRP_UPDATE_MSG, msgReq);
     msg->setAckNum(msgReq->getAckNumber());
     msg->setSeqNum(msgReq->getSeqNumber());
@@ -905,9 +825,9 @@ EigrpIpv4Update *EigrpIpv6Pdm::createUpdateMsg(const IPv6Address& destAddress, E
     return msg;
 }
 
-EigrpIpv4Query *EigrpIpv6Pdm::createQueryMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Query *EigrpIpv6Pdm::createQueryMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
-    EigrpIpv4Query *msg = new EigrpIpv4Query("EIGRPQuery");
+    EigrpIpv6Query *msg = new EigrpIpv6Query("EIGRPQuery");
     addMessageHeader(msg, EIGRP_QUERY_MSG, msgReq);
     msg->setAckNum(msgReq->getAckNumber());
     msg->setSeqNum(msgReq->getSeqNumber());
@@ -915,9 +835,9 @@ EigrpIpv4Query *EigrpIpv6Pdm::createQueryMsg(IPv6Address& destAddress, EigrpMsgR
     return msg;
 }
 
-EigrpIpv4Reply *EigrpIpv6Pdm::createReplyMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Reply *EigrpIpv6Pdm::createReplyMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
-    EigrpIpv4Reply *msg = new EigrpIpv4Reply("EIGRPReply");
+    EigrpIpv6Reply *msg = new EigrpIpv6Reply("EIGRPReply");
     addMessageHeader(msg, EIGRP_REPLY_MSG, msgReq);
     msg->setAckNum(msgReq->getAckNumber());
     msg->setSeqNum(msgReq->getSeqNumber());
@@ -939,15 +859,16 @@ void EigrpIpv6Pdm::addCtrInfo(EigrpMessage *msg, int ifaceId,
         const IPv6Address &destAddress)
 {
     IPv6ControlInfo *ctrl = new IPv6ControlInfo();
+    ctrl->setSrcAddr(ift->getInterfaceById(ifaceId)->ipv6Data()->getLinkLocalAddress());   //use link-local address as source address
     ctrl->setDestAddr(destAddress);
     ctrl->setProtocol(88);
-    ctrl->setHopLimit(1); //TODO - verify
+    ctrl->setHopLimit(1);
     ctrl->setInterfaceId(ifaceId);
 
     msg->setControlInfo(ctrl);
 }
 
-void EigrpIpv6Pdm::createRouteTlv(EigrpMpIpv4Internal *routeTlv, EigrpRoute<IPv6Address> *route, bool unreachable)
+void EigrpIpv6Pdm::createRouteTlv(EigrpMpIpv6Internal *routeTlv, EigrpRoute<IPv6Address> *route, bool unreachable)
 {
     EigrpWideMetricPar rtMetric = route->getRdPar();
     routeTlv->destAddress = route->getRouteAddress();
@@ -973,7 +894,7 @@ void EigrpIpv6Pdm::setRouteTlvMetric(EigrpWideMetricPar *msgMetric, EigrpWideMet
     msgMetric->reliability = rtMetric->reliability;
 }
 
-void EigrpIpv6Pdm::addRoutesToMsg(EigrpIpv4Message *msg, const EigrpMsgReq *msgReq)
+void EigrpIpv6Pdm::addRoutesToMsg(EigrpIpv6Message *msg, const EigrpMsgReq *msgReq)
 {
     // Add routes to the message
     int reqCnt = msgReq->getRoutesArraySize();
@@ -983,7 +904,7 @@ void EigrpIpv6Pdm::addRoutesToMsg(EigrpIpv4Message *msg, const EigrpMsgReq *msgR
     msg->setInterRoutesArraySize(reqCnt);
     for (int i = 0; i < reqCnt; i++)
     {
-        EigrpMpIpv4Internal routeTlv;
+        EigrpMpIpv6Internal routeTlv;
         EigrpMsgRoute req = msgReq->getRoutes(i);
 
         if ((source = eigrpTt->findRouteById(req.sourceId)) == NULL)
@@ -1001,7 +922,7 @@ void EigrpIpv6Pdm::addRoutesToMsg(EigrpIpv4Message *msg, const EigrpMsgReq *msgR
         msg->setInterRoutes(i, routeTlv);
 
 #ifdef EIGRP_DEBUG
-        ev << "     route: " << routeTlv.destAddress << "/" << routeTlv.destMask.getNetmaskLength();
+        ev << "     route: " << routeTlv.destAddress << "/" << getNetmaskLength(routeTlv.destMask);
         ev << " originator: " << routeTlv.routerID;
         if (eigrpMetric->isParamMaximal(routeTlv.metric)) ev << " (unreachable) ";
         ev << ", bw: " << routeTlv.metric.bandwidth;
@@ -1064,7 +985,7 @@ void EigrpIpv6Pdm::sendAllEigrpPaths(EigrpInterface *eigrpIface, EigrpNeighbor<I
     send(msgReq, RTP_OUTGW);
 }
 
-void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, IPv6Address &srcAddress, EigrpIpv4Hello *rcvMsg)
+void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, IPv6Address &srcAddress, EigrpIpv6Hello *rcvMsg)
 {
     EigrpMsgReq *msgReqUpdate = NULL, *msgReqHello = NULL;
     EigrpNeighbor<IPv6Address> *neigh;
@@ -1131,20 +1052,9 @@ int EigrpIpv6Pdm::checkNeighborshipRules(int ifaceId, int neighAsNum,
     }
     else
     {
-        // get IP address of interface and mask
-        InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
-/*
-        const uint32 *addr = NULL; //TODO - predelat na makro
-        addr = iface->ipv6Data()->getIPAddress().words();
-        ifaceAddr.set(addr[0],addr[1],addr[2],addr[3]);
-
-        addr = iface->ipv6Data()->getNetmask().words(); //TODO - zjistit jak vycucat netmask z ipv6Data
-        ifaceMask.set(addr[0],addr[1],addr[2],addr[3]);
-        addr = NULL;
-*/
-        // check, if the neighbor is on same subnet
-        if (!maskedAddrAreEqual(ifaceAddr, neighAddr, ifaceMask))
-        {
+        // check, if the neighbor uses as source address Link-local address
+        if (neighAddr.getScope() != IPv6Address::LINK)
+        {//source address is not Link-local address -> bad
             return eigrp::M_NEIGH_BAD_SUBNET;
         }
     }
@@ -1228,25 +1138,23 @@ void EigrpIpv6Pdm::removeNeighbor(EigrpNeighbor<IPv6Address> *neigh)
 
 ANSAIPv6Route *EigrpIpv6Pdm::createRTRoute(EigrpRouteSource<IPv6Address> *successor)
 {
-    ANSAIPv6Route *rtEntry = new ANSAIPv6Route();
-    int ifaceId = successor->getIfaceId();
     EigrpRoute<IPv6Address> *route = successor->getRouteInfo();
-
-    rtEntry->setDestination(route->getRouteAddress());
-    rtEntry->setNetmask(route->getRouteMask());
-    rtEntry->setInterface(this->ift->getInterfaceById(ifaceId));
-    rtEntry->setGateway(successor->getNextHop());
+    ANSAIPv6Route *rtEntry = new ANSAIPv6Route(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), IPv6Route::ROUTING_PROT);
+    rtEntry->setInterfaceId(successor->getIfaceId());
+    rtEntry->setNextHop(successor->getNextHop());
     setRTRouteMetric(rtEntry, successor->getMetric());
 
+    // Set protocol source and AD
     if (successor->isInternal())
     {
-        // Set any source except IFACENETMASK and MANUAL
-        rtEntry->setSource(IPv6Route::ZEBRA);
-        // Set right protocol source
         rtEntry->setRoutingProtocolSource(ANSAIPv6Route::pEIGRP);
         rtEntry->setAdminDist(ANSAIPv6Route::dEIGRPInternal);
     }
-
+    else
+    {
+        rtEntry->setRoutingProtocolSource(ANSAIPv6Route::pEIGRPext);
+        rtEntry->setAdminDist(ANSAIPv6Route::dEIGRPExternal);
+    }
     return rtEntry;
 }
 
@@ -1427,39 +1335,6 @@ void EigrpIpv6Pdm::flushMsgRequests()
     reqQueue.clear();
 }
 
-/*bool EigrpIpv6Pdm::getRoutesFromRequests(RequestVector *msgReqs)
-{
-    bool emptyQueue = true;
-    EigrpMsgRequest *request = NULL;
-    EigrpMsgRequest *reqToSend = NULL;
-    RequestVector::iterator it;
-
-    for (it = transmitionQueue.begin(); it != transmitionQueue.end(); it++)
-    {
-        if ((*it)->invalid)
-            continue;
-
-        request = *it;
-        if (reqToSend == NULL)
-        {
-            emptyQueue = false;
-            reqToSend = request;
-        }
-
-        if (reqToSend != NULL)
-        {
-            if (reqToSend->type == request->type && reqToSend->destInterface == request->destInterface &&
-                    reqToSend->destNeighbor == request->destNeighbor)
-            {
-                request->invalid = true;
-                msgReqs->push_back(request);
-            }
-        }
-    }
-
-    return emptyQueue;
-}*/
-
 EigrpInterface *EigrpIpv6Pdm::getInterfaceById(int ifaceId)
 {
     EigrpInterface *iface;
@@ -1470,7 +1345,7 @@ EigrpInterface *EigrpIpv6Pdm::getInterfaceById(int ifaceId)
         return eigrpIftDisabled->findInterface(ifaceId);
 }
 
-void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv6Address& ifAddress, IPv6Address& ifMask)
+void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface)
 {
     EigrpTimer* hellot;
     EigrpNeighbor<IPv6Address> *neigh;
@@ -1480,18 +1355,32 @@ void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
 
     EV << "EIGRP disabled on interface " << eigrpIface->getName() << "(" << ifaceId << ")" << endl;
 
+    // Unregister multicast address
     iface->ipv6Data()->leaveMulticastGroup(EIGRP_IPV6_MULT);
+    iface->ipv6Data()->removeAddress(EIGRP_IPV6_MULT);
 
     // stop hello timer
     if ((hellot = eigrpIface->getHelloTimer()) != NULL)
         cancelEvent(hellot);
 
-    // First process route on the interface
-    IPv6Address ifNetwork = getPrefix(ifAddress, ifMask);
-    source = eigrpTt->findRoute(ifNetwork, ifMask, EigrpNeighbor<IPv6Address>::UNSPEC_ID);
-    ASSERT(source != NULL);
-    // Notify DUAL about event
-    eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_DOWN, source, EigrpNeighbor<IPv6Address>::UNSPEC_ID, false);
+    std::set<int>::iterator it;
+    EigrpNetwork<IPv6Address> *eigrpnet = NULL;
+
+    for (it = eigrpIface->getNetworksIdsBegin(); it != eigrpIface->getNetworksIdsEnd(); ++it)
+    {
+        eigrpnet = routingForNetworks->findNetworkById(*it);
+        source = eigrpTt->findRoute(eigrpnet->getAddress(), eigrpnet->getMask(), EigrpNeighbor<IPv6Address>::UNSPEC_ID);
+        ASSERT(source != NULL);
+        // Notify DUAL about event
+        eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_DOWN, source, EigrpNeighbor<IPv6Address>::UNSPEC_ID, false);
+
+        //TODO - nemel bych tu sit z TT vymazat?
+    }
+
+    //TODO - mazat site i z routingForNetworks ??
+
+
+    eigrpIface->clearNetworkIds(); //TODO - nevim jestli pri dalsim zavolani enableIface se set znovu naplni - overit
 
     // Remove interface from EIGRP interface table (must be there)
     if (eigrpIface->isEnabled())
@@ -1516,7 +1405,34 @@ void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
     eigrpTt->purgeTable();
 }
 
-void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface, IPv6Address& ifAddress, IPv6Address& ifMask, int networkId)
+EigrpInterface *EigrpIpv6Pdm::addInterfaceToEigrp(int ifaceId, bool enabled)
+{
+    InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
+    // create EIGRP interface
+    EigrpInterface *eigrpIface = NULL;
+
+    eigrpIface = getInterfaceById(ifaceId); //search for existing iface
+
+    if(eigrpIface == NULL)
+    {// iface not found -> create new
+        eigrpIface = new EigrpInterface(iface, EigrpNetworkTable<IPv6Address>::UNSPEC_NETID, false);
+    }
+
+    if (enabled)
+    {
+        enableInterface(eigrpIface);
+        startHelloTimer(eigrpIface, simTime() + uniform(0,1));
+    }
+    else
+    {
+        eigrpIftDisabled->addInterface(eigrpIface);
+    }
+
+    return eigrpIface;
+}
+
+
+void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface)
 {
     int ifaceId = eigrpIface->getInterfaceId();
     EigrpRouteSource<IPv6Address> *src;
@@ -1533,49 +1449,50 @@ void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface, IPv6Address& ifAd
         eigrpIface->setEnabling(true);
     }
 
-    // Register multicast address on interface
+    // Register multicast address on interface      //TODO - should be passive interface joined in multicast group?
     IPv6InterfaceData *ifaceIpv6 = ift->getInterfaceById(ifaceId)->ipv6Data();
-    ifaceIpv6->joinMulticastGroup(EIGRP_IPV6_MULT);
-    eigrpIface->setNetworkId(networkId);
+    ifaceIpv6->joinMulticastGroup(EIGRP_IPV6_MULT); //join to group FF02::A, optionally
+    ifaceIpv6->assignAddress(EIGRP_IPV6_MULT, false, 0, 0); //add group address to interface, mandatory
 
-    // Create route
-    src = eigrpTt->findOrCreateRoute(ifAddress, ifMask, eigrpTt->getRouterId(), eigrpIface, EigrpNeighbor<IPv6Address>::UNSPEC_ID, &isSourceNew);
-    ASSERT(isSourceNew == true);
-    // Compute metric
-    metricPar = eigrpMetric->getParam(eigrpIface);
-    src->setMetricParams(metricPar);
-    uint64_t metric = eigrpMetric->computeClassicMetric(metricPar, this->kValues);
-    src->setMetric(metric);
 
-    // Notify DUAL about event
-    eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_UP, src, EigrpNeighbor<IPv6Address>::UNSPEC_ID, isSourceNew);
+    PrefixVector::iterator it;
+    EigrpNetwork<IPv6Address> *eigrpnet = NULL;
+    IPv6Address network;
+    IPv6Address mask;
+
+    for (it = netPrefixes.begin(); it != netPrefixes.end(); ++it)
+    {// through all known prefixes search prefixes belonging to enabling interface
+        if (it->ifaceId == ifaceId)
+        {// found prefix belonging to interface
+            network = it->network;
+            mask = IPv6Address(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).getPrefix(it->prefixLength);
+
+            eigrpnet = addNetwork(network, mask);
+
+            if(eigrpnet)
+            {//successfully added to EigrpNetworkTable -> tie with interface
+                eigrpIface->insertToNetworksIds(eigrpnet->getNetworkId()); //pak predelat na protected a pridat metody
+            }
+
+            // Create route
+            src = eigrpTt->findOrCreateRoute(network, mask, eigrpTt->getRouterId(), eigrpIface, EigrpNeighbor<IPv6Address>::UNSPEC_ID, &isSourceNew);
+            ASSERT(isSourceNew == true);
+            // Compute metric
+            metricPar = eigrpMetric->getParam(eigrpIface);
+            src->setMetricParams(metricPar);
+            uint64_t metric = eigrpMetric->computeClassicMetric(metricPar, this->kValues);
+            src->setMetric(metric);
+
+            // Notify DUAL about event
+            eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_UP, src, EigrpNeighbor<IPv6Address>::UNSPEC_ID, isSourceNew);
+        }
+    }
+
+
     flushMsgRequests();
     eigrpTt->purgeTable();
 }
 
-EigrpInterface *EigrpIpv6Pdm::addInterfaceToEigrp(int ifaceId, int networkId, bool enabled)
-{
-    InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
-    IPv6Address ifAddress, ifMask;
-    // create EIGRP interface
-    EigrpInterface *eigrpIface = new EigrpInterface(iface, networkId, false);
-
-    if (enabled)
-    {
-        // Get address and mask of interface
-//TODO        ifMask = iface->ipv6Data()->getNetmask();
-//TODO        ifAddress = iface->ipv6Data()->getIPAddress().doAnd(ifMask);
-
-        enableInterface(eigrpIface, ifAddress, ifMask, networkId);
-        startHelloTimer(eigrpIface, simTime() + uniform(0,1));
-    }
-    else
-    {
-        eigrpIftDisabled->addInterface(eigrpIface);
-    }
-
-    return eigrpIface;
-}
 
 void EigrpIpv6Pdm::startHelloTimer(EigrpInterface *eigrpIface, simtime_t interval)
 {
@@ -1606,7 +1523,7 @@ void EigrpIpv6Pdm::setHelloInt(int interval, int ifaceId)
 {
     EigrpInterface *iface = getInterfaceById(ifaceId);
     if (iface == NULL)
-        iface = addInterfaceToEigrp(ifaceId, EigrpNetworkTable<IPv6Address>::UNSPEC_NETID, false);
+        iface = addInterfaceToEigrp(ifaceId, false);
     iface->setHelloInt(interval);
 }
 
@@ -1614,7 +1531,7 @@ void EigrpIpv6Pdm::setHoldInt(int interval, int ifaceId)
 {
     EigrpInterface *iface = getInterfaceById(ifaceId);
     if (iface == NULL)
-        iface = addInterfaceToEigrp(ifaceId, EigrpNetworkTable<IPv6Address>::UNSPEC_NETID, false);
+        iface = addInterfaceToEigrp(ifaceId, false);
     iface->setHoldInt(interval);
 }
 
@@ -1622,7 +1539,7 @@ void EigrpIpv6Pdm::setSplitHorizon(bool shenabled, int ifaceId)
 {
     EigrpInterface *iface = getInterfaceById(ifaceId);
     if (iface == NULL)
-        iface = addInterfaceToEigrp(ifaceId, EigrpNetworkTable<IPv6Address>::UNSPEC_NETID, false);
+        iface = addInterfaceToEigrp(ifaceId, false);
     iface->setSplitHorizon(shenabled);
 }
 
@@ -1631,11 +1548,12 @@ void EigrpIpv6Pdm::setPassive(bool passive, int ifaceId)
     EigrpInterface *eigrpIface = getInterfaceById(ifaceId);
 
     if (eigrpIface == NULL)
-        eigrpIface = addInterfaceToEigrp(ifaceId, EigrpNetworkTable<IPv6Address>::UNSPEC_NETID, false);
+        eigrpIface = addInterfaceToEigrp(ifaceId, false);
     else if (eigrpIface->isEnabled())
     { // Disable sending and receiving of messages
         InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
         iface->ipv6Data()->leaveMulticastGroup(EIGRP_IPV6_MULT);
+        iface->ipv6Data()->removeAddress(EIGRP_IPV6_MULT);
 
         // Stop and delete hello timer
         EigrpTimer *hellot = eigrpIface->getHelloTimer();
@@ -1717,19 +1635,19 @@ void EigrpIpv6Pdm::sendReply(EigrpRoute<IPv6Address> *route, int destNeighbor, E
 /**
  * @return if route is found in routing table then returns true.
  */
-bool EigrpIpv6Pdm::removeRouteFromRT(EigrpRouteSource<IPv6Address> *source, ANSAIPv4Route::RoutingProtocolSource *removedRtSrc)
+bool EigrpIpv6Pdm::removeRouteFromRT(EigrpRouteSource<IPv6Address> *source, ANSAIPv6Route::RoutingProtocolSource *removedRtSrc)
 {
     EigrpRoute<IPv6Address> *route = source->getRouteInfo();
-    IPv4Route *rtEntry =rt->findRoute(route->getRouteAddress(), route->getRouteMask(), source->getNextHop());
-    ANSAIPv4Route *ansaRtEntry = dynamic_cast<ANSAIPv4Route *>(rtEntry);
+    IPv6Route *rtEntry =rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), source->getNextHop());
+    ANSAIPv6Route *ansaRtEntry = dynamic_cast<ANSAIPv6Route *>(rtEntry);
 
     if (rtEntry != NULL && ansaRtEntry != NULL)
     {
         *removedRtSrc = ansaRtEntry->getRoutingProtocolSource();
-        if (*removedRtSrc == ANSAIPv4Route::pEIGRP)
+        if (*removedRtSrc == ANSAIPv6Route::pEIGRP)
         {
             EV << "EIGRP: delete route " << route->getRouteAddress() << " via " << source->getNextHop() << " from RT" << endl;
-            rt->deleteRoute(rtEntry);
+            rt->removeRoute(rtEntry);
         }
     }
     else
@@ -1741,36 +1659,22 @@ bool EigrpIpv6Pdm::removeRouteFromRT(EigrpRouteSource<IPv6Address> *source, ANSA
     return rtEntry != NULL;
 }
 
-/*void EigrpIpv6Pdm::removeSourceFromTT(EigrpRouteSource<IPv6Address> *source)
-{
-    EV << "EIGRP remove route " << source->getRouteInfo()->getRouteAddress();
-    EV << " via " << source->getNextHop() << " from TT" << endl;
-
-    if (eigrpTt->removeRoute(source) != NULL)
-    {
-        // Remove also route if there is no source (only if the route is not active)
-        if (source->getRouteInfo()->getRefCnt() == 1 && !source->getRouteInfo()->isActive())
-            eigrpTt->removeRouteInfo(source->getRouteInfo());
-        delete source;
-    }
-}*/
-
 bool EigrpIpv6Pdm::isRTSafeForAdd(EigrpRoute<IPv6Address> *route, unsigned int eigrpAd)
 {
-    IPv4Route *routeInTable = rt->findRoute(route->getRouteAddress(), route->getRouteMask());
-    ANSAIPv4Route *ansaRoute = NULL;
+    IPv6Route *routeInTable = rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()));
+    ANSAIPv6Route *ansaRoute = NULL;
 
     if (routeInTable == NULL)
         return true; // Route not found
 
-    ansaRoute = dynamic_cast<ANSAIPv4Route*>(routeInTable);
+    ansaRoute = dynamic_cast<ANSAIPv6Route*>(routeInTable);
     if (ansaRoute != NULL)
     { // AnsaIPv4Route use own AD attribute
         if (ansaRoute->getAdminDist() < eigrpAd)
             return false;
         return true;
     }
-    if (ansaRoute == NULL && routeInTable->getAdminDist() == IPv4Route::dUnknown)
+    if (ansaRoute == NULL && routeInTable->getAdminDist() == IPv6Route::dUnknown)
         return false;   // Connected route has AD = 255 (dUnknown) in IPv4Route
     if (routeInTable != NULL && routeInTable->getAdminDist() < eigrpAd)
         return false;   // Other IPv4Route with right AD
@@ -1780,7 +1684,7 @@ bool EigrpIpv6Pdm::isRTSafeForAdd(EigrpRoute<IPv6Address> *route, unsigned int e
 EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::updateRoute(EigrpRoute<IPv6Address> *route, uint64_t dmin, bool *rtableChanged, bool removeUnreach)
 {
     EigrpRouteSource<IPv6Address> *source = NULL, *bestSuccessor = NULL;
-    IPv4Route *rtEntry = NULL;
+    IPv6Route *rtEntry = NULL;
     int routeNum = eigrpTt->getNumRoutes();
     int routeId = route->getRouteId();
     int pathsInRT = 0;      // Number of paths in RT (equal to number of successors)
@@ -1802,7 +1706,7 @@ EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::updateRoute(EigrpRoute<IPv6Address>
         {
             ev << "     successor " << source->getNextHop() << " (" << source->getMetric() << "/" << source->getRd() << ")" << endl;
 
-            if ((rtEntry = rt->findRoute(route->getRouteAddress(), route->getRouteMask(), source->getNextHop())) == NULL)
+            if ((rtEntry = rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), source->getNextHop())) == NULL)
                 if (!isRTSafeForAdd(route, adminDistInt))
                 { // In RT exists route with smaller AD, do not mark the route source as successor
                     source->setSuccessor(false);
@@ -1852,7 +1756,7 @@ EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::updateRoute(EigrpRoute<IPv6Address>
 
 bool EigrpIpv6Pdm::removeOldSuccessor(EigrpRouteSource<IPv6Address> *source, EigrpRoute<IPv6Address> *route)
 {
-    ANSAIPv4Route::RoutingProtocolSource srcProto = ANSAIPv4Route::pUnknown;
+    ANSAIPv6Route::RoutingProtocolSource srcProto = ANSAIPv6Route::pUnknown;
     bool rtFound, rtableChanged = false;
 
     // To distinguish the route deleted by EIGRP in ReceiveChangeNotification method
@@ -1863,7 +1767,7 @@ bool EigrpIpv6Pdm::removeOldSuccessor(EigrpRouteSource<IPv6Address> *source, Eig
     //ev << "EIGRP: removing old successor: rt found: " << rtFound << " src: " << srcProto << endl;
 #endif
 
-    if (!rtFound || (rtFound && (srcProto == ANSAIPv4Route::pEIGRP || srcProto == ANSAIPv4Route::pEIGRPext)))
+    if (!rtFound || (rtFound && (srcProto == ANSAIPv6Route::pEIGRP || srcProto == ANSAIPv6Route::pEIGRPext)))
     {
         if (route->getSuccessor() == source)
             route->setSuccessor(NULL);
@@ -1875,14 +1779,14 @@ bool EigrpIpv6Pdm::removeOldSuccessor(EigrpRouteSource<IPv6Address> *source, Eig
     return rtableChanged;
 }
 
-bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, uint64_t dmin, IPv4Route *rtEntry)
+bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, uint64_t dmin, IPv6Route *rtEntry)
 {
-    ANSAIPv4Route *ansaRtEntry = NULL;
+    ANSAIPv6Route *ansaRtEntry = NULL;
     bool rtableChanged = false;
 
-    if (rtEntry != NULL && (ansaRtEntry = dynamic_cast<ANSAIPv4Route *>(rtEntry)) != NULL)
+    if (rtEntry != NULL && (ansaRtEntry = dynamic_cast<ANSAIPv6Route *>(rtEntry)) != NULL)
     {
-        if (ansaRtEntry->getRoutingProtocolSource() != ANSAIPv4Route::pEIGRP)
+        if (ansaRtEntry->getRoutingProtocolSource() != ANSAIPv6Route::pEIGRP)
             return rtableChanged;   // Do not add route to RT
         else if ((unsigned int)ansaRtEntry->getMetric() != source->getMetric())
         { // Update EIGRP route in RT
@@ -1895,7 +1799,7 @@ bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<IPv6Address> *route, EigrpRouteSo
         EV << "EIGRP: add EIGRP route " << route->getRouteAddress() << " via " << source->getNextHop() << " to RT" << endl;
         ansaRtEntry = createRTRoute(source);
         // rt->prepareForAddRoute(ansaRtEntry);    // Do not check safety (already checked)
-        rt->addRoute(ansaRtEntry);
+        rt->addRoutingProtocolRoute(ansaRtEntry);
 
         rtableChanged = true;
     }
@@ -2003,4 +1907,33 @@ void EigrpIpv6Pdm::sendUpdateToStubs(EigrpRouteSource<IPv6Address> *succ ,EigrpR
     }
 }
 
+bool EigrpIpv6Pdm::addNetPrefix(const IPv6Address &network, const short int prefixLen, const int ifaceId)
+{
+    PrefixVector::iterator it;
 
+    for (it = netPrefixes.begin(); it != netPrefixes.end(); ++it)
+    {// through all known prefixes search same prefix
+        if(it->network == network && it->prefixLength == prefixLen)
+        {// found same prefix
+            if(it->ifaceId == ifaceId)
+            {// belonging to same interface = more than one IPv6 addresses from same prefix on interface = ok -> already added
+                return true;
+            }
+            else
+            {// same prefix on different interfaces = bad -> do not add
+                return false;
+            }
+        }
+    }
+
+    // Add new prefix
+    IPv6netPrefix newprefix;
+    newprefix.network = network;
+    newprefix.prefixLength = prefixLen;
+    newprefix.ifaceId = ifaceId;
+    this->netPrefixes.push_back(newprefix);
+
+    //EV << "Added prefix: " << this->netPrefixes.back().network << "/" << this->netPrefixes.back().prefixLength << " on iface " << this->netPrefixes.back().ifaceId << endl;
+
+    return true;
+}

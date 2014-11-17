@@ -150,6 +150,16 @@ class ANSARoutingTable6 : public RoutingTable6
     virtual IPv6Route *findRoute(const IPv6Address& prefix, int prefixLength);
 
     /**
+     * Finds route with the given prefix, prefix length and nexthop.
+     *
+     * @param   prefix  Network prefix
+     * @param   prefixLength    Length of netwok prefix
+     * @param   nexthop     Next-hop address
+     * @return  If found return pointer to route, otherwise NULL
+     */
+    virtual IPv6Route *findRoute(const IPv6Address& prefix, int prefixLength, const IPv6Address& nexthop);
+
+    /**
      * Prepares routing table for adding new route.
      * e.g. removes route with the same prefix, prefix length and lower administrative distance
      * and purge destination cache

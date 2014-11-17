@@ -73,6 +73,7 @@ class xmlParser {
       // configuration for EIGRP
       static cXMLElement *GetEigrpProcess(cXMLElement *process, cXMLElement *device);
       static cXMLElement *GetEigrpIPv4Network(cXMLElement *network, cXMLElement *process);
+      static cXMLElement *GetEigrpProcess6(cXMLElement *process, cXMLElement *device);
 
       // configuration for LISP
       static cXMLElement* GetLISPMapServers(cXMLElement *ms, cXMLElement *device);

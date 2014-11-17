@@ -156,6 +156,23 @@ IPv6Route *ANSARoutingTable6::findRoute(const IPv6Address& prefix, int prefixLen
     return route;
 }
 
+IPv6Route *ANSARoutingTable6::findRoute(const IPv6Address& prefix, int prefixLength, const IPv6Address& nexthop)
+{
+    //TODO: assume only ANSAIPv6Route in the routing table?
+
+    IPv6Route *route = NULL;
+    for (RouteList::iterator it=routeList.begin(); it!=routeList.end(); it++)
+    {
+        if ((*it)->getDestPrefix()==prefix && (*it)->getPrefixLength()==prefixLength && (*it)->getNextHop()==nexthop)
+        {
+            route = (*it);
+            break;
+        }
+    }
+
+    return route;
+}
+
 bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
 {
     //TODO: assume only ANSAIPv6Route in the routing table?

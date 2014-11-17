@@ -280,8 +280,10 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule<IPv4Address>, pub
 
     //-- INTERFACE IEigrpModule
     void addInterface(int ifaceId, int networkId, bool enabled) { addInterfaceToEigrp(ifaceId, networkId, enabled); }
+    void addInterface(int ifaceId, bool enabled) { /* useful only for IPv6 */ }
     EigrpNetwork<IPv4Address> *addNetwork(IPv4Address address, IPv4Address mask);
     void setASNum(int asNum) { this->asNum = asNum; }
+    int getASNum() {return this->asNum; }
     void setKValues(const EigrpKValues& kValues) { this->kValues = kValues; }
     void setMaximumPath(int maximumPath) { this->maximumPath = maximumPath; }
     void setVariance(int variance) { this->variance = variance; }
@@ -290,6 +292,8 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule<IPv4Address>, pub
     void setSplitHorizon(bool shenabled, int ifaceId);
     void setPassive(bool passive, int ifaceId);
     void setStub(const EigrpStub& stub) { this->eigrpStub = stub; this->eigrpStubEnabled = true; }
+    void setRouterId(IPv4Address routerID) { this->eigrpTt->setRouterId(routerID); }
+    bool addNetPrefix(const IPv4Address &network, const short int prefixLen, const int ifaceId) { /* useful only for IPv6 */ }
 
     //-- INTERFACE IEigrpPdm;
     void sendUpdate(int destNeighbor, EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, const char *reason);
