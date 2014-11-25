@@ -28,7 +28,6 @@ topology table.
 #include "EigrpPrint.h"
 #include "EigrpIpv4Pdm.h"
 
-#include "ANSAIPv6Address.h"
 #define EIGRP_DEBUG
 
 Define_Module(EigrpIpv4Pdm);
