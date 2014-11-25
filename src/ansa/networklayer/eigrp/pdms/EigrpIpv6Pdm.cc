@@ -240,7 +240,7 @@ void EigrpIpv6Pdm::processRTRouteDel(const cObject *details)
 
     if (adminDist == this->adminDistInt)
     { // Deletion of EIGRP internal route
-        source = eigrpTt->findRoute(changedRt->getDestPrefix(), makeNetmask(changedRt->getPrefixLength()), changedRt->getNextHop()); //TODO - verify getNextHop method, chaned from getGateway (IPv4)
+        source = eigrpTt->findRoute(changedRt->getDestPrefix(), makeNetmask(changedRt->getPrefixLength()), changedRt->getNextHop());
         if (source == NULL)
         {
             ASSERT(false);
@@ -397,7 +397,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
         // Add route TLV
         if (routeCnt > 0) addRoutesToMsg(eigrpMsgRt, msgReq);
 
-        sizeOfMsg += routeCnt * 68; //magic size TODO - verify
+        sizeOfMsg += routeCnt * 68; //magic size
 
         eigrpMsg = eigrpMsgRt;
         break;
@@ -437,7 +437,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
 bool EigrpIpv6Pdm::getDestIpAddress(int destNeigh, IPv6Address *resultAddress)
 {
     EigrpNeighbor<IPv6Address> *neigh = NULL;
-    const uint32 *addr = NULL; //TODO - prace s tridou IPv6Address je pekne blba, predelat
+    const uint32 *addr = NULL;
 
     if (destNeigh == EigrpNeighbor<IPv6Address>::UNSPEC_ID)
     {// destination neighbor unset -> use multicast
@@ -1373,14 +1373,9 @@ void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
         ASSERT(source != NULL);
         // Notify DUAL about event
         eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_DOWN, source, EigrpNeighbor<IPv6Address>::UNSPEC_ID, false);
-
-        //TODO - nemel bych tu sit z TT vymazat?
     }
 
-    //TODO - mazat site i z routingForNetworks ??
-
-
-    eigrpIface->clearNetworkIds(); //TODO - nevim jestli pri dalsim zavolani enableIface se set znovu naplni - overit
+    eigrpIface->clearNetworkIds();
 
     // Remove interface from EIGRP interface table (must be there)
     if (eigrpIface->isEnabled())
@@ -1791,7 +1786,7 @@ bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<IPv6Address> *route, EigrpRouteSo
         else if ((unsigned int)ansaRtEntry->getMetric() != source->getMetric())
         { // Update EIGRP route in RT
             EV << "EIGRP: Update EIGRP route " << route->getRouteAddress() << " via " << source->getNextHop() << " in RT" << endl;
-            setRTRouteMetric(ansaRtEntry, route->getDij());
+            setRTRouteMetric(ansaRtEntry, source->getMetric());
         }
     }
     else
