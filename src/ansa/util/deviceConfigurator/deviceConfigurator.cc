@@ -2705,10 +2705,13 @@ void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpM
 
             //EV << "IPv6 address: " << ipv6 << "/" << prefixLen << " on iface " << ifaceName << endl;
 
-            if(!eigrpModule->addNetPrefix(ipv6.getPrefix(prefixLen), prefixLen, iface->getInterfaceId())) //only saves information about prefix - does not enable in EIGRP
-            {// failure - same prefix on different interfaces
-                //throw cRuntimeError("Same IPv6 network prefix (%s/%i) on different interfaces (%s)", ipv6.getPrefix(prefixLen).str().c_str(), prefixLen, ifaceName);
-                EV << "ERROR: Same IPv6 network prefix (" << ipv6.getPrefix(prefixLen) << "/" << prefixLen << ") on different interfaces (prefix ignored on " << ifaceName << ")" << endl;
+            if(ipv6.getScope() != IPv6Address::LINK)
+            {// is not link-local -> add
+                if(!eigrpModule->addNetPrefix(ipv6.getPrefix(prefixLen), prefixLen, iface->getInterfaceId())) //only saves information about prefix - does not enable in EIGRP
+                {// failure - same prefix on different interfaces
+                    //throw cRuntimeError("Same IPv6 network prefix (%s/%i) on different interfaces (%s)", ipv6.getPrefix(prefixLen).str().c_str(), prefixLen, ifaceName);
+                    EV << "ERROR: Same IPv6 network prefix (" << ipv6.getPrefix(prefixLen) << "/" << prefixLen << ") on different interfaces (prefix ignored on " << ifaceName << ")" << endl;
+                }
             }
             // get next IPv6 address
             ipv6AddrElem = xmlParser::GetIPv6Address(ipv6AddrElem, NULL);
