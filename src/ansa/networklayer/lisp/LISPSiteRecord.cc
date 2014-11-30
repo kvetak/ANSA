@@ -26,7 +26,7 @@ LISPSiteRecord::LISPSiteRecord() {
 }
 
 LISPSiteRecord::~LISPSiteRecord() {
-
+    MappingStorage.clear();
 }
 
 LISPServerEntry& LISPSiteRecord::getServerEntry() {
@@ -51,4 +51,14 @@ std::ostream& operator <<(std::ostream& os, const LISPSiteRecord& sr) {
 bool LISPSiteRecord::operator ==(const LISPSiteRecord& other) const {
     return ServerEntry == other.ServerEntry &&
            MappingStorage == other.MappingStorage;
+}
+
+bool LISPSiteRecord::operator <(const LISPSiteRecord& other) const {
+    if (ServerEntry < other.ServerEntry)
+        return true;
+
+    if (MappingStorage < other.MappingStorage)
+        return true;
+
+    return false;
 }

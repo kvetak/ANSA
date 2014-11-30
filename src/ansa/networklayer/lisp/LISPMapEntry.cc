@@ -155,7 +155,6 @@ void LISPMapEntry::removeLocator(IPvXAddress& address) {
     LISPRLocator* rloc = getLocator(address);
     if (rloc) {
         RLOCs.remove(*rloc);
-        RLOCs.sort();
     }
     return;
 }

@@ -35,6 +35,7 @@ class LISPServerEntry {
     virtual ~LISPServerEntry();
 
     bool operator== (const LISPServerEntry& other) const;
+    bool operator< (const LISPServerEntry& other) const;
 
     std::string info() const;
 

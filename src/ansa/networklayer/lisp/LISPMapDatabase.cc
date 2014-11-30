@@ -19,82 +19,62 @@
  */
 
 #include "LISPMapDatabase.h"
+#include "IPv4InterfaceData.h"
+#include "IPv6InterfaceData.h"
 
 Define_Module(LISPMapDatabase);
 
-LISPMapDatabase::LISPMapDatabase(){}
-
-LISPMapDatabase::~LISPMapDatabase()
-{
-
-}
-
-void LISPMapDatabase::addSite(LISPSite& si)
-{
-    SiteDatabase.push_back(si);
-}
-
 void LISPMapDatabase::initialize(int stage)
 {
-    if (stage < 3)
+    if (stage < numInitStages() - 1)
         return;
 
-    parseConfig( par("configData").xmlValue() );
+    Ift = InterfaceTableAccess().get();
 
-    //Display in simulation
-    WATCH_LIST(SiteDatabase);
-}
+    //EtrMappings
+    parseEtrMappings( par(CONFIG_PAR).xmlValue() );
 
-void LISPMapDatabase::parseConfig(cXMLElement* config) {
-    if (!config)
-        return;
-
-    cXMLElementList map = config->getChildrenByTagName(SITE_TAG);
-
-    for (cXMLElementList::iterator i = map.begin(); i != map.end(); ++i) {
-        cXMLElement* m = *i;
-
-        //Check integrity
-        if (!m->getAttribute(NAME_ATTR) || !m->getAttribute(KEY_ATTR)) {
-            EV << "Config XML file missing tag or attribute - NAME/KEY" << endl;
-            continue;
-        }
-
-        //Parse Site tag
-        std::string nam = m->getAttribute(NAME_ATTR);
-        std::string ke  = m->getAttribute(KEY_ATTR);
-
-        if (!nam.empty() && ! ke.empty()) {
-            //Create new SiteInfo entry
-            LISPSite site = LISPSite(nam, ke);
-
-            //Parse potential EIDs
-            site.parseMapEntry(m);
-
-            //Add entry to SiteStorage
-            this->addSite(site);
-        }
-    }
-}
-
-LISPSite* LISPMapDatabase::findSiteByAggregate(const IPvXAddress& addr) {
-    for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
-        if ( it->lookupMapEntry(addr) )
-            return &(*it);
-    }
-    return NULL;
+    WATCH_LIST(MappingStorage);
 }
 
 void LISPMapDatabase::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+
 }
 
-LISPSite* LISPMapDatabase::findSiteInfoByKey(std::string& siteKey) {
-    for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
-        if ( !it->getKey().compare(siteKey) )
-            return &(*it);
+void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
+    //EtrMappings
+    if ( opp_strcmp(config->getTagName(), ETRMAP_TAG) )
+        config = config->getFirstChildWithTag(ETRMAP_TAG);
+
+    if (config)
+        parseMapEntry(config);
+    else {
+        EV << "Does not contain any EtrMappings. This may be undesirable for xTR functionality!" << endl;
+        return;
     }
-    return NULL;
+
+    //Set EtrMappings LOCAL locators and add other locators to probingset
+    for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
+        IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+        IPv4Address adr4 =
+                (int4Data) ?
+                        int4Data->getIPAddress() :
+                        IPv4Address::UNSPECIFIED_ADDRESS;
+        IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+        IPv6Address adr6 =
+                (int6Data) ?
+                        int6Data->getPreferredAddress() :
+                        IPv6Address::UNSPECIFIED_ADDRESS;
+        for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
+            for (LocatorItem jt = it->getRlocs().begin();
+                    jt != it->getRlocs().end(); ++jt) {
+                //IF locator is local THEN mark it...
+                if (jt->getRlocAddr().equals(adr4) || jt->getRlocAddr().equals(adr6))
+                    jt->setLocal(true);
+            }
+        }
+    }
 }
+
 

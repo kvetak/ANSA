@@ -22,31 +22,24 @@
 #define __INET_LISPMAPDATABASE_H_
 
 #include <omnetpp.h>
-#include "LISPSite.h"
+#include "IInterfaceTable.h"
+#include "InterfaceTableAccess.h"
 
-typedef std::list<LISPSite> SiteStorage;
-typedef SiteStorage::iterator SiteStorageItem;
-typedef SiteStorage::const_iterator SiteStorageCItem;
+#include "LISPCommon.h"
+#include "LISPMapStorageBase.h"
 
-class LISPMapDatabase : public cSimpleModule
+class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
 {
-    public:
-        LISPMapDatabase();
-        virtual ~LISPMapDatabase();
+  public:
+    virtual int numInitStages() const { return 4; }
+    virtual void initialize(int stage);
+    virtual void handleMessage(cMessage *msg);
 
-        void addSite(LISPSite& si);
-        LISPSite* findSiteInfoByKey(std::string& siteKey);
-        LISPSite* findSiteByAggregate(const IPvXAddress& addr);
 
-    protected:
-        SiteStorage SiteDatabase;
+  protected:
+    IInterfaceTable*    Ift;                ///< Provides access to the interface table.
 
-        void parseConfig(cXMLElement* config);
-
-        virtual int numInitStages() const { return 4; }
-        virtual void initialize(int stage);
-        virtual void handleMessage(cMessage *msg);
-
+    void parseEtrMappings(cXMLElement* config);
 };
 
 #endif

@@ -55,8 +55,6 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
     void updateCacheEntry(const TRecord& record);
     void syncCacheEntry(LISPMapEntry& entry);
 
-
-
   protected:
      CacheEntriesTimeouts CacheTimeouts;
 

@@ -82,6 +82,31 @@
 	        		<SynchronizationSet key="SSKeyA">
 	        			<SetMember address="10.0.0.1"/>
 	        		</SynchronizationSet>
+	        		<EID address="192.168.111.0/24">
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="2001:db8:aaaa::/64">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>  
+	        		<EID address="192.168.11.0/24">
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="2001:db8:aa::/64">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>  
+	        		<EID address="192.168.111.0/24">
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="2001:db8:aaa::/64">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>  
+	        		
         		</MapCache>
         		<EtrMapping>
         			<EID address="192.168.1.0/24">

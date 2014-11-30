@@ -47,7 +47,7 @@ import inet.ansa.nodes.inet.ansaNetworkLayer;
 module ANSARouter
 {
     parameters:
-        @display("i=abstract/router;bgb=436,637,white");
+        @display("i=abstract/router;bgb=647,573,white");
         @node;
         @labels(node,ethernet-node,wireless-node);
 
@@ -80,22 +80,22 @@ module ANSARouter
 
         notificationBoard: NotificationBoard {
             parameters:
-                @display("p=71,36;is=n");
+                @display("p=56,43;is=n");
         }
         udp: <udpType> like IUDP if hasUdp {
             parameters:
-                @display("p=218,266");
+                @display("p=342,211");
         }
         rip: RIPRouting {
             parameters:
-                @display("p=140,182");
+                @display("p=264,127");
                 configFile = configFile;
                 deviceId = deviceId;
                 deviceType = "Router";
         }
         ripng: RIPngRouting {
             parameters:
-                @display("p=295,182");
+                @display("p=419,127");
                 configFile = configFile;
                 deviceId = deviceId;
                 deviceType = "Router";
@@ -104,14 +104,14 @@ module ANSARouter
         // network layers        
         networkLayer: ansaNetworkLayer {
             parameters:
-                @display("p=71,381;q=queue");
+                @display("p=195,326;q=queue");
             gates:
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
         }
         networkLayer6: NetworkLayer6 {
             parameters:
-                @display("p=359,381");
+                @display("p=483,326");
             gates:
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
@@ -120,30 +120,30 @@ module ANSARouter
         //routing tables
         routingTable: AnsaRoutingTable {
             parameters:
-                @display("p=71,104");
+                @display("p=497,43");
                 routingTable = routingTable;
         }
         routingTable6: ANSARoutingTable6 {
             parameters:
-                @display("p=359,104");
+                @display("p=597,43");
                 isRouter = IPForward;
                 routingTable = routingTable;
         }
 
         pcapRecorder[numPcapRecorders]: PcapRecorder {
             parameters:
-                @display("p=351,257,r,10;i=abstract/cache;is=n");
+                @display("p=530,184,r,10;i=abstract/cache;is=n");
         }
 
 
         interfaceStateManager: InterfaceStateManager {
             parameters:
-                @display("p=359,36");
+                @display("p=283,43");
         }
 
         deviceConfigurator: DeviceConfigurator {
             parameters:
-                @display("p=217,36");
+                @display("p=166,43");
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
@@ -151,7 +151,7 @@ module ANSARouter
 
         ipSplitter: IpSplitter {
             parameters:
-                @display("p=218,489");
+                @display("p=342,434");
             gates:
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
@@ -166,38 +166,38 @@ module ANSARouter
         // linklayer
         interfaceTable: InterfaceTable {
             parameters:
-                @display("p=217,104;is=n");
+                @display("p=391,43;is=n");
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
-                @display("p=218,574,row,60;q=txQueue");
+                @display("p=342,519,row,60;q=txQueue");
         }
         ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
             parameters:
-                @display("p=335,574,row,60;q=txQueue");
+                @display("p=459,519,row,60;q=txQueue");
         }
         wlan[numRadios]: <default("Ieee80211Nic")> like IWirelessNic {
             parameters:
-                @display("p=110,574,row,60;q=queue");
+                @display("p=234,519,row,60;q=queue");
         }
         ospf: OSPFRouting {
-            @display("p=116,266");
+            @display("p=240,211");
         }
         isis: ISIS {
             parameters:
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
-                @display("p=218,409");
+                @display("p=342,353");
             gates:
                 lowerLayerIn[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
                 lowerLayerOut[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
         }
         lisp: LISPRouting {
-            @display("p=217,342");
+            @display("p=342,287");
         }
         pim: pim {
-            @display("p=37,266");
+            @display("p=161,211");
         }
     //Connections between submodules    
     connections allowunconnected:

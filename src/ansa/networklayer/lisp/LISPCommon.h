@@ -57,6 +57,7 @@ extern const char* ITRMAPRESOLVER_TAG;
 extern const char* ETRMAP_TAG;
 extern const char* SYNCSET_TAG;
 extern const char* SETMEMBER_TAG;
+extern const char* MAPCACHE_TAG;
 
 extern const char* ADDRESS_ATTR;
 extern const char* IPV4_ATTR;
@@ -92,7 +93,7 @@ extern const char* MS4_PAR;
 extern const char* MS6_PAR;
 extern const char* MR4_PAR;
 extern const char* MR6_PAR;
-extern const char* HASMAPDB_PAR;
+extern const char* HASSITEDB_PAR;
 extern const char* ACCEPTREQMAPPING_PAR;
 extern const char* MAPCACHETTL_PAR;
 extern const char* SMARTRLOCPROBE_PAR;
@@ -106,14 +107,12 @@ extern const char* SYNCNAIVE_PARVAL;
 extern const char* SYNCSMART_PARVAL;
 extern const char* SYNCACK_PAR;
 
-extern const char* MAPCACHE_MOD;
 extern const char* MAPDB_MOD;
+extern const char* MAPCACHE_MOD;
+extern const char* SITEDB_MOD;
 
 class LISPCommon {
   public:
-    LISPCommon();
-    virtual ~LISPCommon();
-
     enum EKeyIds
     {
         KID_NONE                = 0,

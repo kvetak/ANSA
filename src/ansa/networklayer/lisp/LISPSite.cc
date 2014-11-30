@@ -95,6 +95,12 @@ LISPSiteRecord* LISPSite::findRecordByAddress(IPvXAddress& address) {
     return NULL;
 }
 
+bool LISPSite::operator ==(const LISPSite& other) const {
+    return name == other.name
+           && key == other.key
+           && ETRs == other.ETRs;
+}
+
 void LISPSite::removeRecord(LISPSiteRecord& srec) {
     ETRs.remove(srec);
 }

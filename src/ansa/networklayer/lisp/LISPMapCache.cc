@@ -17,6 +17,7 @@
 /**
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
+
 #include "LISPMapCache.h"
 
 Define_Module(LISPMapCache);
@@ -29,6 +30,9 @@ LISPMapCache::~LISPMapCache()
 }
 
 void LISPMapCache::parseConfig(cXMLElement* config) {
+    if ( opp_strcmp(config->getTagName(), MAPCACHE_TAG) )
+        config = config->getFirstChildWithTag(MAPCACHE_TAG);
+
     this->parseMapEntry(config);
 
     if (!opp_strcmp(par(CACHESYNC_PAR), SYNCNAIVE_PARVAL))
@@ -46,7 +50,7 @@ void LISPMapCache::parseConfig(cXMLElement* config) {
 
 void LISPMapCache::initialize(int stage)
 {
-    if (stage < 3)
+    if (stage < numInitStages() - 1)
         return;
 
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
@@ -72,6 +76,7 @@ void LISPMapCache::updateCacheEntry(const TRecord& record) {
 
     //Add to mapping storage
     updateMapEntry(record);
+    MappingStorage.sort();
 
     //Change Timeout message appropriately
     updateTimeout(record.EidPrefix, simTime() + record.recordTTL * 60);

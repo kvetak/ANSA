@@ -62,6 +62,24 @@ const std::string& LISPServerEntry::getKey() const {
     return key;
 }
 
+std::ostream& operator <<(std::ostream& os, const LISPServerEntry& entry) {
+    return os << entry.info();
+}
+
+
+bool LISPServerEntry::operator <(const LISPServerEntry& other) const {
+    if (!address.isIPv6() && other.address.isIPv6())
+        return true;
+    else if (address.isIPv6() && !other.address.isIPv6())
+        return false;
+    if (address < other.address)
+        return true;
+    if (lastTime < other.lastTime)
+        return true;
+    return false;
+}
+
+
 bool LISPServerEntry::operator ==(const LISPServerEntry& other) const {
     return address == other.address &&
            key == other.key &&
@@ -89,10 +107,6 @@ std::string LISPServerEntry::info() const {
 
 void LISPServerEntry::setKey(const std::string& key) {
     this->key = key;
-}
-
-std::ostream& operator <<(std::ostream& os, const LISPServerEntry& entry) {
-    return os << entry.info();
 }
 
 bool LISPServerEntry::isMapNotify() const {
@@ -134,3 +148,4 @@ simtime_t LISPServerEntry::getLastTime() const {
 void LISPServerEntry::setLastTime(simtime_t lastTime) {
     this->lastTime = lastTime;
 }
+

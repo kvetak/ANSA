@@ -38,7 +38,6 @@ LISPEidPrefix::LISPEidPrefix(IPvXAddress address, unsigned char length) {
 
 LISPEidPrefix::~LISPEidPrefix() {
     this->eidLen = DEFAULT_EIDLENGTH_VAL;
-    eidAfi = LISPCommon::AFI_UNKNOWN;
 }
 
 const IPvXAddress& LISPEidPrefix::getEidAddr() const {
@@ -86,7 +85,7 @@ LISPCommon::Afi LISPEidPrefix::getEidAfi() const {
 }
 
 bool LISPEidPrefix::operator <(const LISPEidPrefix& other) const {
-    if (eidAfi < other.eidAfi) return true;
+    if (getEidAfi() < other.getEidAfi()) return true;
     //if (eidAfi > other.eidAfi) return false;
 
     if (eidAddr < other.eidAddr) return true;
@@ -100,7 +99,7 @@ bool LISPEidPrefix::operator <(const LISPEidPrefix& other) const {
 
 bool LISPEidPrefix::isComponentOf(const LISPEidPrefix& coarserEid) const {
     //Component has coarser mask or AFIs do not match
-    if (eidLen > coarserEid.eidLen || eidAfi != coarserEid.eidAfi)
+    if (eidLen > coarserEid.eidLen || getEidAfi() != coarserEid.getEidAfi())
         return false;
 
     int result = LISPCommon::doPrefixMatch(eidAddr, coarserEid.eidAddr);

@@ -49,8 +49,6 @@ class LISPEidPrefix {
   private:
     IPvXAddress eidAddr;
     unsigned char eidLen;
-    LISPCommon::Afi eidAfi;
-
 };
 
 

@@ -17,11 +17,27 @@
 #define __ANSA_LISPSITEDATABASE_H_
 
 #include <omnetpp.h>
+#include "LISPSite.h"
+
+typedef std::list<LISPSite> SiteStorage;
+typedef SiteStorage::iterator SiteStorageItem;
+typedef SiteStorage::const_iterator SiteStorageCItem;
 
 class LISPSiteDatabase : public cSimpleModule
 {
+  public:
+    void addSite(LISPSite& si);
+    LISPSite* findSiteInfoByKey(std::string& siteKey);
+    LISPSite* findSiteByAggregate(const IPvXAddress& addr);
+
   protected:
-    virtual void initialize();
+
+    SiteStorage SiteDatabase;
+
+    void parseConfig(cXMLElement* config);
+
+    virtual void initialize(int stage);
+    virtual int numInitStages() const { return 4; }
     virtual void handleMessage(cMessage *msg);
 };
 

@@ -20,5 +20,7 @@ package inet.ansa.networklayer.lisp;
 //
 simple LISPSiteDatabase
 {
-    @display("i=block/buffer2");
+    parameters:
+    	@display("i=block/buffer2");
+    	xml configData = default(xml("<MapServer />"));
 }

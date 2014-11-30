@@ -52,8 +52,6 @@ class LISPMapStorageBase
     LISPMapEntry* findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref);
     LISPMapEntry* lookupMapEntry(IPvXAddress address);
 
-
-
   protected:
     /**
       * Main ADT that acts as mapping cache/database

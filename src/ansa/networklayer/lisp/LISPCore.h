@@ -25,8 +25,6 @@
 
 #include "AnsaRoutingTable.h"
 #include "AnsaRoutingTableAccess.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
 
 #include "IPv6Datagram.h"
 #include "IPv4Datagram.h"
@@ -39,6 +37,7 @@
 #include "LISPServerEntry.h"
 #include "LISPMapCache.h"
 #include "LISPMapDatabase.h"
+#include "LISPSiteDatabase.h"
 #include "LISPMessages_m.h"
 #include "LISPTimers_m.h"
 #include "LISPCommon.h"
@@ -61,12 +60,11 @@ class LISPCore : public cSimpleModule
     void setMapServerV6(bool mapServerV6);
 
   protected:
-    IInterfaceTable*    Ift;                ///< Provides access to the interface table.
     AnsaRoutingTable*   Rt;                 ///< Provides access to the IPv4 routing table.
     LISPMapCache*       MapCache;
+    LISPSiteDatabase*   SiteDb;
     LISPMapDatabase*    MapDb;
 
-    LISPMapStorageBase  EtrMapping;
     LISPProbeSet        ProbingSet;
 
     ServerAddresses     MapServers;
@@ -88,7 +86,9 @@ class LISPCore : public cSimpleModule
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}
 
-    virtual int numInitStages() const { return 4; }
+    virtual int numInitStages() const { return 5; }
+    void initPointers();
+    void initSockets();
     virtual void initialize(int stage);
 
     void handleTimer(cMessage *msg);
@@ -99,9 +99,7 @@ class LISPCore : public cSimpleModule
     virtual void updateDisplayString();
 
     void parseConfig(cXMLElement* config);
-    void initSockets();
-
-    LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, IPvXAddress& addr);
+        LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, IPvXAddress& addr);
 
     void sendMapRegister(LISPServerEntry& se);
     void receiveMapRegister(LISPMapRegister* lmreg);
@@ -135,7 +133,7 @@ class LISPCore : public cSimpleModule
 
     void parseMapServerConfig(cXMLElement* config);
     void parseMapResolverConfig(cXMLElement* config);
-    void parseEtrMappings(cXMLElement* config);
+
     void scheduleRegistration();
     void scheduleRlocProbing();
     void scheduleCacheSync(const LISPEidPrefix& eidPref);

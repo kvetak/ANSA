@@ -23,5 +23,5 @@ simple LISPMapDatabase
 {
     parameters:
         @display("i=block/table");
-        xml configData = default(xml("<MapServer />"));
+        xml configData = default(xml("<EtrMapping />"));
 }

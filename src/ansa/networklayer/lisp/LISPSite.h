@@ -33,6 +33,8 @@ class LISPSite : public LISPMapStorageBase
     LISPSite(std::string nam, std::string ke);
     virtual ~LISPSite();
 
+    bool operator== (const LISPSite& other) const;
+
     std::string info() const;
 
     const std::string& getKey() const;

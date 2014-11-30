@@ -24,7 +24,9 @@ module LISPRouting
 {
     parameters:
         @display("i=block/network2;bgb=329,179,white");
-        bool hasMapDB = default(false);
+        bool hasSiteDB = default(false);
+        xml configData = default(xml("<LISP />"));
+        string packetHandling = default("Vanilla"); //Either Vanilla or Symmetric
 
     gates:
         input udpIn @labels(UDPControlInfo/up);
@@ -36,18 +38,26 @@ module LISPRouting
 
     submodules:
         lispMapCache: LISPMapCache {
+          parameters:  
             @display("p=163,41");
+            configData = configData;
         }
         lispCore: LISPCore {
+          parameters:  
             @display("p=163,108");
+            configData = configData;
         }
-        lispMapDatabase: LISPMapDatabase if hasMapDB {
+        lispMapDatabase: LISPMapDatabase  {
+          parameters:  
             @display("p=57,41");
+            configData = configData;
         }
-
-        lispSiteDatabase: LISPSiteDatabase {
+        lispSiteDatabase: LISPSiteDatabase if hasSiteDB {
+          parameters:  
             @display("p=268,41");
+            configData = configData;
         }
+        
     connections allowunconnected:
 
         lispCore.udpOut --> udpOut;

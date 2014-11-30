@@ -33,6 +33,7 @@ class LISPSiteRecord : public LISPMapStorageBase {
     virtual ~LISPSiteRecord();
 
     bool operator== (const LISPSiteRecord& other) const;
+    bool operator< (const LISPSiteRecord& other) const;
 
     LISPServerEntry& getServerEntry();
     void setServerEntry(const LISPServerEntry& serverEntry);

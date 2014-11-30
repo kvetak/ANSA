@@ -39,7 +39,6 @@ void LISPMapStorageBase::addMapEntry(LISPMapEntry& entry) {
 
 void LISPMapStorageBase::removeMapEntry(const LISPMapEntry& entry) {
     MappingStorage.remove(entry);
-    MappingStorage.sort();
 }
 
 LISPMapEntry* LISPMapStorageBase::findMapEntryByEidPrefix(const LISPEidPrefix& eidpref) {
@@ -100,10 +99,6 @@ void LISPMapStorageBase::parseMapEntry(cXMLElement* config) {
 
         LISPEidPrefix pref = LISPEidPrefix(addr.c_str(), leng.c_str());
         LISPMapEntry me = LISPMapEntry(pref);
-        //me.setLastTime(0.0001);
-        //me.setRegistredBy("xTR_AB");
-        //me.setMapState(LISPMapEntry::COMPLETE);
-        //me.setExpiry(86400);
 
         //Parse RLOCs
         cXMLElementList loc = m->getChildrenByTagName(RLOC_TAG);
@@ -262,7 +257,6 @@ bool LISPMapStorageBase::syncMapEntry(LISPMapEntry& mapentry) {
         else {
             EV << "Record for EID " << mapentry.getEidPrefix() << " has zero locators!";
         }
-
     }
 
     return isnew;

@@ -55,6 +55,7 @@ const           char*   EID_TAG                 = "EID";
 const           char*   RLOC_TAG                = "RLOC";
 const           char*   SYNCSET_TAG             = "SynchronizationSet";
 const           char*   SETMEMBER_TAG           = "SetMember";
+const           char*   MAPCACHE_TAG            = "MapCache";
 
 const           char*   ADDRESS_ATTR            = "address";
 const           char*   IPV4_ATTR               = "ipv4";
@@ -92,7 +93,7 @@ const           char*   MS4_PAR                 = "mapServerV4";
 const           char*   MS6_PAR                 = "mapServerV6";
 const           char*   MR4_PAR                 = "mapResolverV4";
 const           char*   MR6_PAR                 = "mapResolverV6";
-const           char*   HASMAPDB_PAR            = "hasMapDB";
+const           char*   HASSITEDB_PAR           = "hasSiteDB";
 const           char*   ACCEPTREQMAPPING_PAR    = "acceptMapRequestMapping";
 const           char*   MAPCACHETTL_PAR         = "mapCacheTtl";
 const           char*   SMARTRLOCPROBE_PAR      = "smartRlocProbing";
@@ -106,19 +107,10 @@ const           char*   SYNCNAIVE_PARVAL        = "Naive";
 const           char*   SYNCSMART_PARVAL        = "Smart";
 const           char*   SYNCACK_PAR             = "cacheSyncAck";
 // --------------- MODULES ---------------
-const           char*   MAPCACHE_MOD            = "lispMapCache";
 const           char*   MAPDB_MOD               = "lispMapDatabase";
+const           char*   MAPCACHE_MOD            = "lispMapCache";
+const           char*   SITEDB_MOD              = "lispSiteDatabase";
 
-
-LISPCommon::LISPCommon() {
-    // TODO Auto-generated constructor stub
-
-}
-
-LISPCommon::~LISPCommon() {
-    // TODO Auto-generated destructor stub
-
-}
 
 void LISPCommon::parseIpAddress(const char* str, std::string& address, std::string& length) {
     std::string addr = str;
