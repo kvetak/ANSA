@@ -3,7 +3,7 @@
 	<Router id="2001:db8:a::1">
         <Interfaces>
             <Interface name="eth2">
-                <IPv6Address>2001:db8:a::1/64</IPv6Address>
+                <IPv6Address>2001:db8:a::1/64</IPv6Address>                
                 <EIGRP-IPv6 asNumber='1'>
                 </EIGRP-IPv6>
             </Interface>
@@ -36,6 +36,7 @@
         <Interfaces>
             <Interface name="eth3">
                 <IPv6Address>2001:db8:b::1/64</IPv6Address>
+                <IPv6Address>fe80:b::1/10</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>
             <Interface name="eth0">
@@ -72,6 +73,7 @@
         <Interfaces>
             <Interface name="eth2">
                 <IPv6Address>2001:db8:c::1/64</IPv6Address>
+                <IPv6Address>fe80:c::1/10</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'>
                 </EIGRP-IPv6>
             </Interface>
@@ -104,6 +106,7 @@
         <Interfaces>
             <Interface name="eth1">
                 <IPv6Address>2001:db8:d::1/64</IPv6Address>
+                <IPv6Address>fe80:d::1/10</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'>
                 </EIGRP-IPv6>
             </Interface>

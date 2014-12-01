@@ -1,16 +1,9 @@
 <?xml version="1.0"?>
 <scenario>
-  	<!-- Change of delay on R2 to PC2 -->
-  	<at t="11">
-		<interfaceconfig delay="11" module="R2.interfaceStateManager" int="eth3" />
+  	<!-- Change of delay on R3 to LAN3 -->
+  	<at t="10">
+		<interfaceconfig delay="1000" module="R3.interfaceStateManager" int="eth2"/>
   	</at>
   	
-  	<!-- Fall of interface between R2 and R3 
-  	<at t="8.170">
-		<interfacedown module="R2.interfaceStateManager" int="eth1" />
-  	</at>
-  	<at t="41">
-		<interfaceup module="R2.interfaceStateManager" int="eth1" />
-  	</at> -->
   
 </scenario>
