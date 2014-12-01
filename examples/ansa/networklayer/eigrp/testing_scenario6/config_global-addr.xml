@@ -2,16 +2,16 @@
 	<!-- R1 -->
 	<Router id="2001:db8:a::1">
         <Interfaces>
-            <Interface name="eth0">
+            <Interface name="eth2">
                 <IPv6Address>2001:db8:a::1/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'>
                 </EIGRP-IPv6>
             </Interface>
-            <Interface name="eth1">
+            <Interface name="eth0">
 				<IPv6Address>2001:db8:12::1/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>
-            <Interface name="eth2">
+            <Interface name="eth1">
 				<IPv6Address>2001:db8:13::1/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>        
@@ -23,7 +23,7 @@
         <Routing6>
         	<EIGRP>
 	        	<ProcessIPv6 asNumber="1" routerId="10.0.1.0">
-	        		<PassiveInterface>eth0</PassiveInterface>
+	        		<PassiveInterface>eth2</PassiveInterface>
 	        	</ProcessIPv6>
         	</EIGRP>
         </Routing6>
@@ -32,19 +32,19 @@
     <!-- R2 -->
     <Router id="2001:db8:b::1">
         <Interfaces>
-            <Interface name="eth0">
+            <Interface name="eth3">
                 <IPv6Address>2001:db8:b::1/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>
-            <Interface name="eth1">
+            <Interface name="eth0">
                 <IPv6Address>2001:db8:12::2/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'/>
             </Interface>
-            <Interface name="eth2">
+            <Interface name="eth1">
                 <IPv6Address>2001:db8:23::2/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'/>
             </Interface> 
-            <Interface name="eth3">
+            <Interface name="eth2">
                 <IPv6Address>2001:db8:24::2/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'/>
             </Interface>
@@ -56,7 +56,7 @@
         <Routing6>
         	<EIGRP>
 	        	<ProcessIPv6 asNumber="1" routerId="10.0.2.0">
-	        		<PassiveInterface>eth0</PassiveInterface>
+	        		<PassiveInterface>eth3</PassiveInterface>
 	        	</ProcessIPv6>
         	</EIGRP>
         </Routing6>
@@ -65,7 +65,7 @@
 	<!-- R3 -->
 	<Router id="2001:db8:c::1">
         <Interfaces>
-            <Interface name="eth0">
+            <Interface name="eth2">
                 <IPv6Address>2001:db8:c::1/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'>
                 </EIGRP-IPv6>
@@ -74,7 +74,7 @@
 				<IPv6Address>2001:db8:23::3/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>
-            <Interface name="eth2">
+            <Interface name="eth0">
 				<IPv6Address>2001:db8:13::3/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>        
@@ -86,7 +86,7 @@
         <Routing6>
         	<EIGRP>
 	        	<ProcessIPv6 asNumber="1" routerId="10.0.3.0">
-	        		<PassiveInterface>eth0</PassiveInterface>
+	        		<PassiveInterface>eth2</PassiveInterface>
 	        	</ProcessIPv6>
         	</EIGRP>
         </Routing6>
@@ -95,12 +95,12 @@
 	<!-- R4 -->
 	<Router id="2001:db8:d::1">
         <Interfaces>
-            <Interface name="eth0">
+            <Interface name="eth1">
                 <IPv6Address>2001:db8:d::1/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1'>
                 </EIGRP-IPv6>
             </Interface>
-            <Interface name="eth1">
+            <Interface name="eth0">
 				<IPv6Address>2001:db8:24::4/64</IPv6Address>
                 <EIGRP-IPv6 asNumber='1' />
             </Interface>        
@@ -112,7 +112,7 @@
         <Routing6>
         	<EIGRP>
 	        	<ProcessIPv6 asNumber="1" routerId="10.0.4.0">
-	        		<PassiveInterface>eth0</PassiveInterface>
+	        		<PassiveInterface>eth1</PassiveInterface>
 	        	</ProcessIPv6>
         	</EIGRP>
         </Routing6>

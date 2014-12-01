@@ -3,6 +3,6 @@
 	<!-- Scenario 2 - link between R2 and R3 goes down -->
 
   	<at t="10">
-		<interfacedown module="R2.interfaceStateManager" int="eth2" />
+		<interfacedown module="R2.interfaceStateManager" int="eth1" />
   	</at>
 </scenario>

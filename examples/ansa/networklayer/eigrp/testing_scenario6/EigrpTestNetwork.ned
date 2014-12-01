@@ -83,14 +83,14 @@ network EigrpTestNetwork
             @display("p=50,57;i=cloud_s");
         }
     connections:
-        R1.ethg[1] <--> Eth100M <--> R2.ethg[1];
-        R1.ethg[2] <--> Eth100M <--> R3.ethg[2];
-        R2.ethg[2] <--> Eth100M <--> R3.ethg[1];
-        R2.ethg[3] <--> Eth100M <--> R4.ethg[1];
+        R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
+        R1.ethg[1] <--> Eth100M <--> R3.ethg[0];
+        R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
+        R2.ethg[2] <--> Eth100M <--> R4.ethg[0];
 
-        R1.ethg[0] <--> Eth100M <--> LAN1.ethg++;
-        R2.ethg[0] <--> Eth100M <--> LAN2.ethg++;
-        R3.ethg[0] <--> Eth100M <--> LAN3.ethg++;
-        R4.ethg[0] <--> Eth100M <--> LAN4.ethg++;
+        R1.ethg[2] <--> Eth100M <--> LAN1.ethg++;
+        R2.ethg[3] <--> Eth100M <--> LAN2.ethg++;
+        R3.ethg[2] <--> Eth100M <--> LAN3.ethg++;
+        R4.ethg[1] <--> Eth100M <--> LAN4.ethg++;
 }
 
