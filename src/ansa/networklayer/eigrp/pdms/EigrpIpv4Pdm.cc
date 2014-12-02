@@ -1826,7 +1826,7 @@ bool EigrpIpv4Pdm::installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSo
         else if ((unsigned int)ansaRtEntry->getMetric() != source->getMetric())
         { // Update EIGRP route in RT
             EV << "EIGRP: Update EIGRP route " << route->getRouteAddress() << " via " << source->getNextHop() << " in RT" << endl;
-            setRTRouteMetric(ansaRtEntry, route->getDij());
+            setRTRouteMetric(ansaRtEntry, source->getMetric());
         }
     }
     else

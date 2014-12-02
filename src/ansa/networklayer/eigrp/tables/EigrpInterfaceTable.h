@@ -191,4 +191,10 @@ class INET_API EigrpIfTableAccess : public ModuleAccess<EigrpInterfaceTable>
     EigrpIfTableAccess() : ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable") {}
 };
 
+class INET_API EigrpIfTable6Access : public ModuleAccess<EigrpInterfaceTable>
+{
+    public:
+    EigrpIfTable6Access() : ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable6") {}
+};
+
 #endif

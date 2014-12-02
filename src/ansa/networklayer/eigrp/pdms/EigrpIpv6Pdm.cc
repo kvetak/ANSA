@@ -25,7 +25,6 @@ topology table.
 
 #include "IPv6ControlInfo.h"
 #include "deviceConfigurator.h"
-#include "AnsaIPv4Route.h"
 #include "EigrpPrint.h"
 #include "EigrpIpv6Pdm.h"
 #include "IPv6Address.h"
@@ -75,7 +74,7 @@ void EigrpIpv6Pdm::initialize(int stage)
     // in stage 3
     if (stage == 3)
     {
-        this->eigrpIft = EigrpIfTableAccess().get();
+        this->eigrpIft = EigrpIfTable6Access().get();
         this->eigrpNt = Eigrpv6NeighTableAccess().get();
         this->eigrpTt = Eigrpv6TopolTableAccess().get();
         this->rt = ANSARoutingTable6Access().get();
@@ -103,10 +102,8 @@ void EigrpIpv6Pdm::initialize(int stage)
         // Subscribe for changes in the device
         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
         nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
-        nb->subscribe(this, NF_IPv4_ROUTE_DELETED);
+        nb->subscribe(this, NF_IPv6_ROUTE_DELETED);
 
-/*        EV << "velikost MpIpv4: " << sizeof(EigrpMpIpv4Internal) << endl;
-        EV << "velikost MpIpv6: " << sizeof(EigrpMpIpv6Internal) << endl;*/
     }
 }
 
@@ -150,7 +147,7 @@ void EigrpIpv6Pdm::receiveChangeNotification(int category, const cObject *detail
         }
 
     }
-    else if (category == NF_IPv4_ROUTE_DELETED)
+    else if (category == NF_IPv6_ROUTE_DELETED)
     { //
         processRTRouteDel(details);
     }
@@ -163,6 +160,21 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
 
     if (iface->isUp())
     { // an interface goes up
+
+        //add directly-connected routes to RT
+        PrefixVector::iterator it;
+
+        for (it = netPrefixes.begin(); it != netPrefixes.end(); ++it)
+        {// through all known prefixes search prefixes belong to this interface
+            if(it->ifaceId == ifaceId)
+            {// belonging to same interface -> add
+                if(rt->findRoute(it->network, it->prefixLength, IPv6Address::UNSPECIFIED_ADDRESS) == NULL)
+                {// route is not in RT -> add
+                    rt->addStaticRoute(it->network, it->prefixLength, ifaceId, IPv6Address::UNSPECIFIED_ADDRESS, 0);
+                }
+            }
+        }
+
         if((eigrpIface = getInterfaceById(ifaceId)) != NULL)
         {// interface is included in EIGRP process
             if (!eigrpIface->isEnabled())
@@ -174,8 +186,22 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
     }
     else if (iface->isDown() || !iface->hasCarrier())
     { // an interface goes down
-        eigrpIface = this->eigrpIft->findInterfaceById(ifaceId);
 
+        //delete all directly-connected routes from RT
+        IPv6Route *route = NULL;
+        for(int i = 0; i < rt->getNumRoutes(); ++i)
+        {
+            route = rt->getRoute(i);
+
+            if(route->getInterfaceId() == ifaceId && route->getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS && route->getDestPrefix() != IPv6Address::LINKLOCAL_PREFIX)
+            {// Found Directly-connected (no link-local) route on interface -> remove
+                rt->removeRoute(route);
+            }
+
+        }
+
+
+        eigrpIface = this->eigrpIft->findInterfaceById(ifaceId);
         if (eigrpIface != NULL && eigrpIface->isEnabled())
         {
             disableInterface(iface, eigrpIface);
@@ -1501,6 +1527,7 @@ void EigrpIpv6Pdm::startHelloTimer(EigrpInterface *eigrpIface, simtime_t interva
             hellot = createTimer(EIGRP_HELLO_TIMER, eigrpIface);
             eigrpIface->setHelloTimerPtr(hellot);
         }
+
         scheduleAt(interval, hellot);
     }
 }
@@ -1548,7 +1575,11 @@ void EigrpIpv6Pdm::setPassive(bool passive, int ifaceId)
     { // Disable sending and receiving of messages
         InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
         iface->ipv6Data()->leaveMulticastGroup(EIGRP_IPV6_MULT);
-        iface->ipv6Data()->removeAddress(EIGRP_IPV6_MULT);
+
+        if(iface->ipv6Data()->hasAddress(EIGRP_IPV6_MULT))
+        {
+            iface->ipv6Data()->removeAddress(EIGRP_IPV6_MULT);
+        }
 
         // Stop and delete hello timer
         EigrpTimer *hellot = eigrpIface->getHelloTimer();

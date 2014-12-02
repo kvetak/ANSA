@@ -265,7 +265,7 @@ void EigrpRtpT<IPv6Address>::initialize(int stage)
     {
         seqNumber = 1;
 
-        this->eigrpIft = EigrpIfTableAccess().get();
+        this->eigrpIft = EigrpIfTable6Access().get();
         this->eigrpNt = Eigrpv6NeighTableAccess().get();
 
         requestQ = new EigrpRequestQueue();

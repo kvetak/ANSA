@@ -26,35 +26,35 @@ import inet.ansa.networklayer.eigrp.tables.EigrpIpv6TopologyTable;
 
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 
-module eigrpProcess6
+module eigrpProcessDS
 {
     parameters:
 
         @display("bgb=494,229,white");
     gates:
-        //input splitterIn;
+        input splitterIn;
         input splitter6In;
-        //output splitterOut;
+        output splitterOut;
         output splitter6Out;
 
     submodules:
         // vlevo nazev, vpravo typ
-//        eigrpIpv4Pdm: EigrpIpv4Pdm {
-//            @display("p=64,66;i=block/circle");
-//        }
-//        eigrpInterfaceTable: EigrpInterfaceTable {
-//            @display("p=185,180");
-//        }
-//        eigrpIpv4NeighborTable: EigrpIpv4NeighborTable {
-//            @display("p=185,45");
-//        }
-//        eigrpIpv4TopologyTable: EigrpIpv4TopologyTable {
-//            @display("p=185,112");
-//        }
-//        eigrpRtp: EigrpRtp {
-//            @display("p=64,157;i=block/dispatch");
-//        }
-
+        eigrpIpv4Pdm: EigrpIpv4Pdm {
+            @display("p=64,66;i=block/circle");
+        }
+        eigrpInterfaceTable: EigrpInterfaceTable {
+            @display("p=185,180");
+        }
+        eigrpIpv4NeighborTable: EigrpIpv4NeighborTable {
+            @display("p=185,45");
+        }
+        eigrpIpv4TopologyTable: EigrpIpv4TopologyTable {
+            @display("p=185,112");
+        }
+        eigrpRtp: EigrpRtp {
+            @display("p=64,157;i=block/dispatch");
+        }
+		
 		eigrpInterfaceTable6: EigrpInterfaceTable {
             @display("p=320,180");
         }
@@ -71,11 +71,11 @@ module eigrpProcess6
             @display("p=433,157;i=block/dispatch");
         }
     connections:
-//        splitterIn --> eigrpIpv4Pdm.splitterIn;
-//        splitterOut <-- eigrpIpv4Pdm.splitterOut;
+        splitterIn --> eigrpIpv4Pdm.splitterIn;
+        splitterOut <-- eigrpIpv4Pdm.splitterOut;
 
-//        eigrpIpv4Pdm.rtpOut --> eigrpRtp.pdmIn;
-//        eigrpIpv4Pdm.rtpIn <-- eigrpRtp.pdmOut;
+        eigrpIpv4Pdm.rtpOut --> eigrpRtp.pdmIn;
+        eigrpIpv4Pdm.rtpIn <-- eigrpRtp.pdmOut;
 
         splitter6In --> eigrpIpv6Pdm.splitterIn;
         splitter6Out <-- eigrpIpv6Pdm.splitterOut;
