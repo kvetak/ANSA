@@ -2,7 +2,7 @@
 <scenario>
 	<!-- Scenario 2 - link between R2 and R3 goes down -->
 
-  	<at t="10">
+  	<at t="9">
 		<interfacedown module="R2.interfaceStateManager" int="eth1" />
   	</at>
 </scenario>
