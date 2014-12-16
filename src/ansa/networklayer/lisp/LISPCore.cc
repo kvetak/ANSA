@@ -710,16 +710,18 @@ void LISPCore::receiveMapNotify(LISPMapNotify* lmnot) {
         LISPServerEntry* se = findServerEntryByAddress(MapServers, src);
         if (se) {
             //TODO: Instead of parsing some simple check that every ETR was replied
-                //FIXME: Vesely - Testing purposes MapRequest generation
-                IPvXAddress src = IPvXAddress("192.168.2.1");
-                IPvXAddress dst = IPvXAddress("192.168.1.1");
+            /*
+             * FIXME: Vesely - Testing purposes MapRequest generation
+            IPvXAddress src = IPvXAddress("192.168.2.1");
+            IPvXAddress dst = IPvXAddress("192.168.1.1");
 
-                LISPRequestTimer* reqtim = new LISPRequestTimer(REQUEST_TIMER);
-                reqtim->setSrcEid(src);
-                reqtim->setDstEid(dst);
-                reqtim->setRetryCount(0);
-                reqtim->setPreviousNonce(DEFAULT_NONCE_VAL);
-                scheduleAt(simTime(), reqtim);
+            LISPRequestTimer* reqtim = new LISPRequestTimer(REQUEST_TIMER);
+            reqtim->setSrcEid(src);
+            reqtim->setDstEid(dst);
+            reqtim->setRetryCount(0);
+            reqtim->setPreviousNonce(DEFAULT_NONCE_VAL);
+            scheduleAt(simTime(), reqtim);
+            */
         }
         else
             EV << "ServerEntry has not been found!" << endl;
