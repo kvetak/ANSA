@@ -23,8 +23,8 @@
 
 #include <omnetpp.h>
 
-#include "AnsaRoutingTable.h"
-#include "AnsaRoutingTableAccess.h"
+//#include "AnsaRoutingTable.h"
+//#include "AnsaRoutingTableAccess.h"
 
 #include "IPv6Datagram.h"
 #include "IPv4Datagram.h"
@@ -59,8 +59,10 @@ class LISPCore : public cSimpleModule
     bool isMapServerV6() const;
     void setMapServerV6(bool mapServerV6);
 
+    bool isOneOfMyEids(IPvXAddress addr);
+
   protected:
-    AnsaRoutingTable*   Rt;                 ///< Provides access to the IPv4 routing table.
+    //AnsaRoutingTable*   Rt;                 ///< Provides access to the IPv4 routing table.
     LISPMapCache*       MapCache;
     LISPSiteDatabase*   SiteDb;
     LISPMapDatabase*    MapDb;
@@ -74,6 +76,7 @@ class LISPCore : public cSimpleModule
     LISPMsgLogger       MsgLog;
 
     UDPSocket controlTraf;
+    UDPSocket dataTraf;
 
     bool mapServerV4;
     bool mapServerV6;
@@ -82,6 +85,7 @@ class LISPCore : public cSimpleModule
 
     bool acceptMapRequestMapping;
     unsigned short mapCacheTtl;
+    bool echoNonceAlgo;
 
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}
@@ -93,7 +97,8 @@ class LISPCore : public cSimpleModule
 
     void handleTimer(cMessage *msg);
     void handleCotrol(cMessage *msg);
-    void handleData(cMessage *msg);
+    void handleDataEncaps(cMessage *msg);
+    void handleDataDecaps(cMessage *msg);
     virtual void handleMessage(cMessage *msg);
 
     virtual void updateDisplayString();
@@ -139,6 +144,8 @@ class LISPCore : public cSimpleModule
     void scheduleCacheSync(const LISPEidPrefix& eidPref);
 
     void cacheMapping(const TRecord& record);
+
+    unsigned long sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAddress dstaddr, LISPMapEntry* mapentry, cPacket* packet);
 };
 
 #endif

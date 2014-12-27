@@ -77,4 +77,6 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
     }
 }
 
-
+bool LISPMapDatabase::isOneOfMyEids(IPvXAddress addr) {
+    return (lookupMapEntry(addr) ? true : false);
+}

@@ -24,7 +24,7 @@
 
 #include <omnetpp.h>
 #include "AnsaIPv4.h"
-
+#include "LISPCore.h"
 #include "AnsaIPv4RoutingDecision_m.h"
 
 Define_Module(AnsaIPv4);
@@ -42,6 +42,8 @@ void AnsaIPv4::initialize(int stage)
     if (stage == 0)
     {
         QueueBase::initialize();
+
+        lispmod = ModuleAccess<LISPCore>("lispCore").getIfExists();
 
         ift = InterfaceTableAccess().get();
         rt = AnsaRoutingTableAccess().get();
@@ -230,6 +232,12 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
             EV << "forwarding off, dropping packet\n";
             numDropped++;
             delete datagram;
+        }
+        else if ( lispmod
+                && lispmod->isOneOfMyEids( datagram->getSrcAddress() )
+                && !lispmod->isOneOfMyEids( datagram->getDestAddress() )
+                ) {
+            send(datagram, "lispOut");
         }
         else
         {
@@ -904,4 +912,5 @@ void AnsaIPv4::sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, 
     datagram->setControlInfo(routingDecision);
     send(datagram, queueOutGate);
 }
+
 

@@ -65,6 +65,8 @@ class LISPMapEntry {
     virtual LISPRLocator* getLocator(const IPvXAddress& address);
     virtual void removeLocator(IPvXAddress& address);
 
+    const LISPRLocator* getBestUnicastLocator();
+
   private:
     LISPEidPrefix EID;
     Locators RLOCs;

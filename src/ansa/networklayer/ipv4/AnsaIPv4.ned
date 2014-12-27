@@ -91,4 +91,7 @@ import inet.networklayer.ipv4.IPv4;
 simple AnsaIPv4 extends IPv4
 {
     @class(AnsaIPv4);
+    gates:
+        output lispOut;
+        input lispIn;
 }

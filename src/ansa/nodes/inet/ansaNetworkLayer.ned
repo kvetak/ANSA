@@ -66,8 +66,8 @@ module ansaNetworkLayer
         output igmpOut;
         output pimOut;
         output eigrpOut;
-        input  lispIn;
-        output lispOut;        
+        input lispIn;
+        output lispOut;
 
     submodules:
         ip: AnsaIPv4 {
@@ -78,7 +78,7 @@ module ansaNetworkLayer
                 transportIn[10];
                 transportOut[10];
                 queueIn[sizeof(ifIn)];
-        }   
+        }
         arp: ARP {
             parameters:
                 proxyARP = proxyARP;
@@ -124,10 +124,10 @@ module ansaNetworkLayer
 
         ip.transportOut[7] --> { @display("m=n"); } --> manetOut;
         ip.transportIn[7] <-- { @display("m=n"); } <-- manetIn;
-        
+
         ip.transportOut[8] --> pimOut;
         ip.transportIn[8] <-- pimIn;
-        
+
         ip.transportOut[9] --> eigrpOut;
         ip.transportIn[9] <-- eigrpIn;
 
@@ -151,4 +151,7 @@ module ansaNetworkLayer
         for i=0..sizeof(ifOut)-1 {
             arp.nicOut[i] --> { @display("m=s"); } --> ifOut[i];
         }
+        
+        ip.lispOut --> lispOut;
+        lispIn --> ip.lispIn;
 }

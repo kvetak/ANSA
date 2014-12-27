@@ -46,8 +46,10 @@ module ANSA_xTR extends ANSA_RouterRIPDual
             @display("p=386,311");
         }
     connections:
-        UDP.appOut++ --> LISP.udpIn;
-        UDP.appIn++ <-- LISP.udpOut;
+        UDP.appOut++ --> LISP.udpContrIn;
+        UDP.appIn++ <-- LISP.udpContrOut;
+        UDP.appOut++ --> LISP.udpDataIn;
+        UDP.appIn++ <-- LISP.udpDataOut;        
         networkLayer.lispOut --> LISP.ipv4In;
         networkLayer.lispIn <-- LISP.ipv4Out;
         networkLayer6.lispOut --> LISP.ipv6In;

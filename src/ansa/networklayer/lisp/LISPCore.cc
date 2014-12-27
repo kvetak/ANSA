@@ -144,7 +144,6 @@ void LISPCore::parseMapResolverConfig(cXMLElement* config) {
     MapResolverQueue = MapResolvers.begin();
 }
 
-
 void LISPCore::parseConfig(cXMLElement* config)
 {
     //Config element is empty
@@ -265,7 +264,7 @@ void LISPCore::scheduleCacheSync(const LISPEidPrefix& eidPref) {
 
 void LISPCore::initPointers() {
     // access to the routing and interface table
-    Rt = AnsaRoutingTableAccess().get();
+    //Rt = AnsaRoutingTableAccess().get();
     // local MapCache
     MapCache = ModuleAccess<LISPMapCache>(MAPCACHE_MOD).get();
     //MapDb
@@ -282,15 +281,19 @@ void LISPCore::initPointers() {
     }
 
 
-    if (!Rt || !MapCache || !MapDb) {
+    if (!MapCache || !MapDb) {
         error("Pointers to RoutingTable or MapCache or MapDatabase were not successfully initialized!");
     }
 }
 
 void LISPCore::initSockets() {
-    controlTraf.setOutputGate(gate("udpOut"));
+    controlTraf.setOutputGate(gate(CONTROL_GATEOUT));
     controlTraf.setReuseAddress(true);
     controlTraf.bind(CONTROL_PORT_VAL);
+
+    dataTraf.setOutputGate(gate(DATA_GATEOUT));
+    dataTraf.setReuseAddress(true);
+    dataTraf.bind(DATA_PORT_VAL);
 }
 
 void LISPCore::initialize(int stage)
@@ -303,6 +306,9 @@ void LISPCore::initialize(int stage)
 
     //Set parameters for MapCache behavior
     acceptMapRequestMapping = par(ACCEPTREQMAPPING_PAR).boolValue();
+
+    //Set EchoNonceAlgorithm
+    echoNonceAlgo = par(ECHONONCEALGO_PAR).boolValue();
 
     if (par(MAPCACHETTL_PAR).longValue() <= 0) {
         mapCacheTtl = DEFAULT_TTL_VAL;
@@ -496,10 +502,10 @@ void LISPCore::handleCotrol(cMessage* msg) {
         //Unwrap unnecessary envelopes
         cPacket* pip = plispenc->decapsulate();
         cPacket* pudp = pip->decapsulate();
-        cPacket* plispmap = pudp->decapsulate();
+        cPacket* plisp = pudp->decapsulate();
 
         //Copy control info
-        plispmap ->setControlInfo(control);
+        plisp ->setControlInfo(control);
 
         //Delete other outer layers
         delete plispenc;
@@ -507,7 +513,7 @@ void LISPCore::handleCotrol(cMessage* msg) {
         delete pudp;
 
         //Set msg pointer to inner LISP message
-        msg = plispmap;
+        msg = plisp;
     }
     //Map-Notify must be evaluated earlier because it is inherited from Map-Register
     if ( dynamic_cast<LISPMapNotify*>(msg) ) {
@@ -552,19 +558,72 @@ void LISPCore::handleCotrol(cMessage* msg) {
         LISPCacheSyncAck* lcsa = check_and_cast<LISPCacheSyncAck*>(msg);
         receiveCacheSyncAck(lcsa);
     }
+
     delete msg;
 }
 
-void LISPCore::handleData(cMessage* msg) {
+void LISPCore::handleDataEncaps(cMessage* msg) {
+    IPvXAddress dstAddr, srcAddr;
+    //IPv4 packet
+    if (msg->arrivedOn(IPV4_GATEIN)) {
+        IPv4Datagram* datagram = check_and_cast<IPv4Datagram*>(msg);
+        srcAddr = datagram->getSrcAddress();
+        dstAddr = datagram->getDestAddress();
+    }
+    //IPv6 packet
+    else if (msg->arrivedOn(IPV6_GATEIN)) {
+        IPv6Datagram* datagram = check_and_cast<IPv6Datagram*>(msg);
+        srcAddr = datagram->getSrcAddress();
+        dstAddr = datagram->getDestAddress();
+    }
+
+    LISPMapEntry* me = MapCache->lookupMapEntry(dstAddr);
+
+    //Known EID-to-RLOC mapping
+    if (me && !me->getEidPrefix().getEidAddr().isUnspecified()) {
+        sendEncapsulatedDataMessage(srcAddr, dstAddr, me, (cPacket*)msg);
+    }
+    //Unknown EID-to-RLOC mapping
+    else {
+        //Schedule LISP Map-Request
+        LISPRequestTimer* reqtim = new LISPRequestTimer(REQUEST_TIMER);
+        reqtim->setSrcEid(srcAddr);
+        reqtim->setDstEid(dstAddr);
+        reqtim->setRetryCount(0);
+        reqtim->setPreviousNonce(DEFAULT_NONCE_VAL);
+        scheduleAt(simTime(), reqtim);
+        //Drop packet
+        EV << "No LISP map-cache record, thus dropping packet" << endl;
+        delete msg;
+    }
+
+}
+
+void LISPCore::handleDataDecaps(cMessage* msg) {
+    if (dynamic_cast<LISPHeader*>(msg)) {
+        cPacket* pip = ((cPacket*)msg)->decapsulate();
+
+        //Ordinary encapsulated data message that should be forwarded by this ETR
+        if (dynamic_cast<IPv4Datagram*>(pip))
+            send(pip, IPV4_GATEOUT);
+        else if (dynamic_cast<IPv6Datagram*>(pip))
+            send(msg, IPV6_GATEOUT);
+    }
+    else
+        error("Unrecognized data packet (%s)", msg->getClassName());
+
+    delete msg;
 }
 
 void LISPCore::handleMessage(cMessage* msg)
 {
     if (msg->isSelfMessage())
         handleTimer(msg);
-    else if (msg->arrivedOn("ipv4In") || msg->arrivedOn("ipv6In"))
-        handleData(msg);
-    else if (msg->arrivedOn("udpIn"))
+    else if (msg->arrivedOn(IPV4_GATEIN) || msg->arrivedOn(IPV6_GATEIN) )
+        handleDataEncaps(msg);
+    else if (msg->arrivedOn(DATA_GATEIN))
+        handleDataDecaps((cPacket*)msg);
+    else if (msg->arrivedOn(CONTROL_GATEIN))
         handleCotrol(msg);
     else {
         error("Unrecognized message (%s)", msg->getClassName());
@@ -1308,9 +1367,47 @@ void LISPCore::receiveCacheSyncAck(LISPCacheSyncAck* lca) {
         EV << "Unsolicited Cache-Sync-Ack received!" << endl;
 }
 
+bool LISPCore::isOneOfMyEids(IPvXAddress addr) {
+    return MapDb->isOneOfMyEids(addr) ;
+}
+
 void LISPCore::cacheMapping(const TRecord& record) {
     //Insert into mapcache
     MapCache->updateCacheEntry(record);
     //Schedule cache synchronization procedure
     scheduleCacheSync(record.EidPrefix);
+}
+
+unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAddress dstaddr, LISPMapEntry* mapentry, cPacket* packet) {
+
+    //LISPHeader
+    LISPHeader* lidata = new LISPHeader(DATA_MSG);
+
+    //TODO: Vesely - Dealing with EchoNonceAlgorithm
+    if (echoNonceAlgo) {
+        //General fields
+        unsigned long newnonce = (unsigned long) ev.getRNG(0)->intRand();
+        lidata->setNonce(newnonce);
+        lidata->setNonceBit(true);
+        lidata->setEchoNonceBit(true);
+    }
+    else {
+        lidata->setNonceBit(false);
+        lidata->setEchoNonceBit(false);
+        lidata->setNonce(DEFAULT_NONCE_VAL);
+    }
+
+    //Envelope around original IP packet
+    lidata->encapsulate(packet);
+
+    //Retrieve the best RLOC
+    const LISPRLocator* rloc = mapentry->getBestUnicastLocator();
+
+    //Log and send
+    MsgLog.addMsg(LISPMsgEntry::DATA, lidata->getNonce(), rloc->getRlocAddr(), true);
+    dataTraf.sendTo(lidata, rloc->getRlocAddr(), DATA_PORT_VAL);
+
+    return lidata->getNonce();
+
+
 }

@@ -191,3 +191,18 @@ std::ostream& operator <<(std::ostream& os, const Locators& rlocs) {
         os << it->info() << endl;
     return os;
 }
+
+const LISPRLocator* LISPMapEntry::getBestUnicastLocator() {
+    //Nondeterministic version
+    double throwdice = (double) ev.getRNG(0)->doubleRandIncl1();
+    EV << "Hod kostkou " << throwdice << endl;
+    double tmp = 0;
+    for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); ++it) {
+        if (throwdice <= it->getPriority() + tmp)
+            return &(*it);
+        else
+            tmp += it->getPriority();
+    }
+    //TODO: Vesely - Deterministic round-robin version of locator usage
+    return &(*RLOCs.begin());
+}

@@ -55,6 +55,7 @@ LISPMapEntry* LISPMapStorageBase::lookupMapEntry(IPvXAddress address) {
 
     for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
         int len = LISPCommon::doPrefixMatch(it->getEidPrefix().getEidAddr(), address);
+        //EV << "Len je " << len << endl;
         if (len > tmplen && len >= it->getEidPrefix().getEidLength() ) {
             //EV << "Hledam " << address << " a nachazim " << it->getEidPrefix() << endl;
             tmpit = &(*it);

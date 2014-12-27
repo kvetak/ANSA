@@ -36,10 +36,13 @@ simple LISPCore
         string rlocProbingAlgo = default("Cisco"); 		// Cisco OR EidRoundRobin OR EidGrouped
         bool acceptMapRequestMapping = default(false);	//Whether MapReplyRecord from Map-Request should be cached
         int mapCacheTtl = default(1440); 				//CacheTTL in minutes for send Map-Replies
-                                                    
+        
+        bool echoNonceAlgo = default(false);			//Whether EchoNonceAlgorithm is on or off                                                    
     gates:
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);
+        input udpContrIn @labels(UDPControlInfo/up);
+        output udpContrOut @labels(UDPControlInfo/down);
+        input udpDataIn @labels(UDPControlInfo/up);
+        output udpDataOut @labels(UDPControlInfo/down);
         input  ipv4In;
         output ipv4Out;
         input  ipv6In;

@@ -35,6 +35,7 @@ class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
 
+    bool isOneOfMyEids(IPvXAddress addr);
 
   protected:
     IInterfaceTable*    Ift;                ///< Provides access to the interface table.

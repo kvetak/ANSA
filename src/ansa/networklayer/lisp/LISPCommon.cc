@@ -19,6 +19,7 @@
  */
 
 #include <LISPCommon.h>
+#include <bitset>
 
 // --------------- VALUES ---------------
 const           char*   ENABLED_VAL                 = "enabled";
@@ -43,6 +44,7 @@ const unsigned short    DEFAULT_REQTIMEOUT_VAL      = 1;
 const unsigned short    DEFAULT_REQMULTIPLIER_VAL   = 2;
 const unsigned short    DEFAULT_MAXREQRETRIES_VAL   = 3;
 const unsigned short    DEFAULT_IPTTL_VAL           = 32;
+
 
 // --------------- TAGS/ATTRIBUTE ---------------
 const           char*   ETRMAPSERVER_TAG        = "EtrMapServer";
@@ -86,6 +88,18 @@ const           char*   REQUESTPROBE_MSG        = "LISP Map-Request RLOC-Probe";
 const           char*   REPLYPROBE_MSG          = "LISP Map-Reply RLOC-Probe-Reply";
 const           char*   CACHESYNC_MSG           = "LISP Cache-Sync";
 const           char*   CACHESYNCACK_MSG        = "LISP Cache-Sync-Ack";
+const           char*   DATA_MSG                = "LISP Data";
+
+// --------------- GATES ---------------
+const           char*   CONTROL_GATEIN          = "udpContrIn";
+const           char*   CONTROL_GATEOUT         = "udpContrOut";
+const           char*   DATA_GATEIN             = "udpDataIn";
+const           char*   DATA_GATEOUT            = "udpDataOut";
+const           char*   IPV4_GATEIN             = "ipv4In";
+const           char*   IPV4_GATEOUT            = "ipv4Out";
+const           char*   IPV6_GATEIN             = "ipv6In";
+const           char*   IPV6_GATEOUT            = "ipv6Out";
+
 
 // --------------- PARAMETERS ---------------
 const           char*   CONFIG_PAR              = "configData";
@@ -95,6 +109,7 @@ const           char*   MR4_PAR                 = "mapResolverV4";
 const           char*   MR6_PAR                 = "mapResolverV6";
 const           char*   HASSITEDB_PAR           = "hasSiteDB";
 const           char*   ACCEPTREQMAPPING_PAR    = "acceptMapRequestMapping";
+const           char*   ECHONONCEALGO_PAR       = "echoNonceAlgo";
 const           char*   MAPCACHETTL_PAR         = "mapCacheTtl";
 const           char*   SMARTRLOCPROBE_PAR      = "smartRlocProbing";
 const           char*   RLOCPROBINGALGO_PAR     = "rlocProbingAlgo";
@@ -124,8 +139,10 @@ void LISPCommon::parseIpAddress(const char* str, std::string& address, std::stri
 
 int LISPCommon::getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2)
 {
-    uint32 w1 = addr1.getInt();
-    uint32 w2 = addr2.getInt();
+    const uint32 w1 = addr1.getInt();
+    const uint32 w2 = addr2.getInt();
+    //EV << "Addr1 - " << std::bitset<32>(w1).to_string() << " - " << addr1.str() << endl;
+    //EV << "Addr2 - " << std::bitset<32>(w2).to_string() << " - " << addr2.str() << endl;
     uint32 res = w1 ^ w2;
     // If the bits are equal, there is a 0, so counting
     // the zeros from the left
@@ -141,11 +158,26 @@ int LISPCommon::getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2)
 
 int LISPCommon::getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2)
 {
-    for (int j = 3; j != 0; j--)
+    //EV << "addr1 " << addr1 << "    addr2 " << addr2 << endl;
+    uint32 *w1 = addr1.words();
+    uint32 *w2 = addr2.words();
+
+    /*
+    EV << "Addr1 - "
+            << std::bitset<32>(w1[0]).to_string() << " "
+            << std::bitset<32>(w1[1]).to_string() << " "
+            << std::bitset<32>(w1[2]).to_string() << " "
+            << std::bitset<32>(w1[3]).to_string() << " - " << addr1.str() << endl;
+    EV << "Addr2 - "
+            << std::bitset<32>(w2[0]).to_string() << " "
+            << std::bitset<32>(w2[1]).to_string() << " "
+            << std::bitset<32>(w2[2]).to_string() << " "
+            << std::bitset<32>(w2[3]).to_string() << " - " << addr2.str() << endl;
+    */
+    for (int j = 0; j <= 3; ++j)
     {
-        const uint32 *w1 = addr1.words();
-        const uint32 *w2 = addr2.words();
         uint32 res = w1[j] ^ w2[j];
+        //EV << "kolo " << j << " ----- "<< w1[j] << " ---- " << w2[j] << endl;
         for (int i = 31; i >= 0; i--) {
             if (res & (1 << i)) {
                // 1, means not equal, so stop
@@ -156,14 +188,26 @@ int LISPCommon::getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2)
     return -1;
 }
 
+/**
+ *
+ * @param addr1 First IPvX address for bit matching
+ * @param addr2 Second IPvX address for bit matching
+ * @return Returns either number of matching bits (N means number of matching bits from left),
+ *         or -1 for exact match,
+ *         or -2 when addresses are imcomparable (one is IPv4, another one IPv6).
+ */
 int LISPCommon::doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2)
 {
     if ( addr1.isIPv6() xor addr2.isIPv6() )
         return -2;
+    int res;
     //IPv4
     if (!addr1.isIPv6())
-        return LISPCommon::getNumMatchingPrefixBits4(addr1.get4(), addr2.get4());
+        res = LISPCommon::getNumMatchingPrefixBits4(addr1.get4(), addr2.get4());
     //IPv6
-    return LISPCommon::getNumMatchingPrefixBits6(addr1.get6(), addr2.get6());
+    else
+        res = LISPCommon::getNumMatchingPrefixBits6(addr1.get6(), addr2.get6());
+    //EV << "Result " << res << endl;
+    return res;
 }
 

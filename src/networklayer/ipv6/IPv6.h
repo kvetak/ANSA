@@ -33,6 +33,7 @@
 #include "ProtocolMap.h"
 
 class ICMPv6Message;
+class LISPCore;
 
 /**
  * IPv6 implementation.
@@ -40,6 +41,7 @@ class ICMPv6Message;
 class INET_API IPv6 : public QueueBase, public ILifecycle
 {
   protected:
+    LISPCore* lispmod;
     IInterfaceTable *ift;
     RoutingTable6 *rt;
     IPv6NeighbourDiscovery *nd;

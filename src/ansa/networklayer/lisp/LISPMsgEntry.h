@@ -38,7 +38,8 @@ class LISPMsgEntry {
         RLOC_PROBE,
         RLOC_PROBE_REPLY,
         CACHE_SYNC,
-        CACHE_SYNC_ACK
+        CACHE_SYNC_ACK,
+        DATA
     };
 
     LISPMsgEntry(LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl);
@@ -65,7 +66,7 @@ class LISPMsgEntry {
     unsigned long nonce;
     IPvXAddress address;
     simtime_t processedAt;
-    bool flag; //received = 0, sent = 2;
+    bool flag; //received = 0, sent = 1;
 };
 
 //Free function

@@ -50,13 +50,18 @@ enum AnsaIPProtocolId
  * @brief Class is extension of the IP protocol implementation for multicast.
  * @details It extends class IP mainly by methods processing multicast stream.
  */
+
+class LISPCore;
+
 class INET_API AnsaIPv4 : public IPv4
 {
     private:
         AnsaRoutingTable            *rt;
         PimInterfaceTable           *pimIft;        /**< Pointer to table of PIM interfaces. */
+        LISPCore* lispmod;
 
     protected:
+
         virtual void handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *fromIE);
         virtual void routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, InterfaceEntry *fromIE);
         virtual void routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute *routeG, IPv4Datagram *datagram, IPv4ControlInfo *ctrl);

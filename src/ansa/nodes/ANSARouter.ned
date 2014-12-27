@@ -250,8 +250,11 @@ module ANSARouter
         udp.appOut++ --> ripng.udpIn;
         ripng.udpOut --> udp.appIn++;
 
-        udp.appOut++ --> lisp.udpIn;
-        udp.appIn++ <-- lisp.udpOut;
+        udp.appOut++ --> lisp.udpContrIn;
+        udp.appIn++ <-- lisp.udpContrOut;
+        udp.appOut++ --> lisp.udpDataIn;
+        udp.appIn++ <-- lisp.udpDataOut;
+        
         networkLayer.ospfOut --> ospf.ipIn;
         ospf.ipOut --> networkLayer.ospfIn;
         pim.networkLayerOut --> networkLayer.pimIn;

@@ -87,6 +87,16 @@ extern const char* REQUESTPROBE_MSG;
 extern const char* REPLYPROBE_MSG;
 extern const char* CACHESYNC_MSG;
 extern const char* CACHESYNCACK_MSG;
+extern const char* DATA_MSG;
+
+extern const char* CONTROL_GATEIN;
+extern const char* CONTROL_GATEOUT;
+extern const char* DATA_GATEIN;
+extern const char* DATA_GATEOUT;
+extern const char* IPV4_GATEIN;
+extern const char* IPV4_GATEOUT;
+extern const char* IPV6_GATEIN;
+extern const char* IPV6_GATEOUT;
 
 extern const char* CONFIG_PAR;
 extern const char* MS4_PAR;
@@ -95,6 +105,7 @@ extern const char* MR4_PAR;
 extern const char* MR6_PAR;
 extern const char* HASSITEDB_PAR;
 extern const char* ACCEPTREQMAPPING_PAR;
+extern const char* ECHONONCEALGO_PAR;
 extern const char* MAPCACHETTL_PAR;
 extern const char* SMARTRLOCPROBE_PAR;
 extern const char* RLOCPROBINGALGO_PAR;

@@ -43,11 +43,19 @@ LISPSite* LISPSiteDatabase::findSiteInfoByKey(std::string& siteKey) {
 }
 
 LISPSite* LISPSiteDatabase::findSiteByAggregate(const IPvXAddress& addr) {
+    LISPSite* res = NULL;
+    int tmplen = 0;
     for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
-        if ( it->lookupMapEntry(addr) )
-            return &(*it);
+        LISPMapEntry* me = it->lookupMapEntry(addr);
+        if ( me ) {
+            int len = LISPCommon::doPrefixMatch(me->getEidPrefix().getEidAddr(), addr);
+            if (len >= tmplen) {
+                tmplen = len;
+                res = &(*it);
+            }
+        }
     }
-    return NULL;
+    return res;
 }
 
 void LISPSiteDatabase::parseConfig(cXMLElement* config) {

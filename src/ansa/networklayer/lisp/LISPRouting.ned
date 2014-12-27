@@ -29,8 +29,10 @@ module LISPRouting
         string packetHandling = default("Vanilla"); //Either Vanilla or Symmetric
 
     gates:
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);
+        input udpContrIn @labels(UDPControlInfo/up);
+        output udpContrOut @labels(UDPControlInfo/down);
+        input udpDataIn @labels(UDPControlInfo/up);
+        output udpDataOut @labels(UDPControlInfo/down);
         output ipv4Out;
         input ipv4In;
         output ipv6Out;
@@ -60,8 +62,10 @@ module LISPRouting
         
     connections allowunconnected:
 
-        lispCore.udpOut --> udpOut;
-        lispCore.udpIn <-- udpIn;
+        lispCore.udpContrOut --> udpContrOut;
+        lispCore.udpContrIn <-- udpContrIn;
+        lispCore.udpDataOut --> udpDataOut;
+        lispCore.udpDataIn <-- udpDataIn;
 
         lispCore.ipv4Out --> ipv4Out;
         lispCore.ipv6Out --> ipv6Out;
