@@ -1,0 +1,74 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+package inet.examples.ansa.lisp.lispTestbed;
+
+import inet.ansa.applications.rip.RIPRouter;
+import inet.ansa.nodes.ANSA_DualStackHost;
+import inet.ansa.nodes.lisp.*;
+import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.nodes.ethernet.EtherSwitch;
+import inet.nodes.ethernet.Eth100M;
+
+network LispTestbed
+{
+    @display("bgb=551,279");
+    submodules:
+        etherSwitch: EtherSwitch {
+            @display("p=148,139");
+        }
+        Host1: ANSA_DualStackHost {
+            @display("p=54,91");
+        }
+        Host2: ANSA_DualStackHost {
+            @display("p=54,187");
+        }
+        xTR1: ANSA_xTR_HA {
+            @display("p=244,87");
+        }
+        xTR2: ANSA_xTR_HA {
+            @display("p=244,191");
+        }
+        MRMS: ANSA_MRMS {
+            @display("p=360,43");
+        }
+        Core: RIPRouter {
+            @display("p=360,137");
+        }
+        xTR_Responder: ANSA_xTR_Responder {
+            @display("p=494,137");
+        }
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+				config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;
+            	@display("p=360,239");
+        }
+    connections:
+        Core.ethg++ <--> Eth100M <--> MRMS.ethg++;
+        xTR1.ethg++ <--> Eth100M <--> Core.ethg++;
+        xTR2.ethg++ <--> Eth100M <--> Core.ethg++;        
+        Core.ethg++ <--> Eth100M <--> xTR_Responder.ethg++;
+        xTR1.ethg++ <--> Eth100M <--> etherSwitch.ethg++;
+        xTR2.ethg++ <--> Eth100M <--> etherSwitch.ethg++;
+        etherSwitch.ethg++ <--> Eth100M <--> Host1.ethg++;
+        etherSwitch.ethg++ <--> Eth100M <--> Host2.ethg++;
+        xTR1.ethg++ <--> Eth100M <--> xTR2.ethg++;
+}

@@ -117,6 +117,7 @@ extern const char* SYNCNONE_PARVAL;
 extern const char* SYNCNAIVE_PARVAL;
 extern const char* SYNCSMART_PARVAL;
 extern const char* SYNCACK_PAR;
+extern const char* ADVERTONLYOWNEID_PAR;
 
 extern const char* MAPDB_MOD;
 extern const char* MAPCACHE_MOD;
@@ -145,6 +146,8 @@ class LISPCommon {
     static int doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2);
     static int getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2);
     static int getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2);
+
+    static IPvXAddress getNetworkAddress(IPvXAddress address, int length);
 
 };
 

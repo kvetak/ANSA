@@ -86,7 +86,6 @@ const IPvXAddress& LISPProbeEntry::getRlocAddr() const {
     return rlocAddr;
 }
 
-
 std::ostream& operator <<(std::ostream& os, const EidStat& es) {
     os << "\tis ";
     if (es.second->getState() == LISPRLocator::UP)

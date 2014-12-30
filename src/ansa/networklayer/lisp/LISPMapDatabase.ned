@@ -24,4 +24,5 @@ simple LISPMapDatabase
     parameters:
         @display("i=block/table");
         xml configData = default(xml("<EtrMapping />"));
+        bool advertOnlyOwnEids = default(true);
 }

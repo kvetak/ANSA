@@ -29,9 +29,9 @@ AnsaEtherMACFullDuplex::AnsaEtherMACFullDuplex()
 {
 }
 
-void AnsaEtherMACFullDuplex::initialize()
+void AnsaEtherMACFullDuplex::initialize(int stage)
 {
-    AnsaEtherMACBaseVF::initialize();
+    AnsaEtherMACBaseVF::initialize(stage);
     if (!par("duplexMode").boolValue())
         throw cRuntimeError("Half duplex operation is not supported by EtherMACFullDuplex, use the EtherMAC module for that! (Please enable csmacdSupport on EthernetInterface)");
 

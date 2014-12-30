@@ -91,6 +91,8 @@ std::string LISPMsgEntry::getTypeString() const {
           return "RLOC-Probe";
       case LISPMsgEntry::RLOC_PROBE_REPLY:
           return "RLOC-Probe-Reply";
+      case LISPMsgEntry::DATA:
+          return "Data";
       case LISPMsgEntry::UNKNOWN:
       default:
         return "unknown";

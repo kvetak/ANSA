@@ -23,6 +23,7 @@ import inet.ansa.applications.ripng.RIPngRouting;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.lisp.LISPRouting;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
+import inet.linklayer.loopback.LoopbackInterface;
 import inet.transport.IUDP;
 import inet.util.PcapRecorder;
 import inet.networklayer.ipv4.RoutingTable;
@@ -49,7 +50,7 @@ module ANSA_xTR extends ANSA_RouterRIPDual
         UDP.appOut++ --> LISP.udpContrIn;
         UDP.appIn++ <-- LISP.udpContrOut;
         UDP.appOut++ --> LISP.udpDataIn;
-        UDP.appIn++ <-- LISP.udpDataOut;        
+        UDP.appIn++ <-- LISP.udpDataOut;
         networkLayer.lispOut --> LISP.ipv4In;
         networkLayer.lispIn <-- LISP.ipv4Out;
         networkLayer6.lispOut --> LISP.ipv6In;

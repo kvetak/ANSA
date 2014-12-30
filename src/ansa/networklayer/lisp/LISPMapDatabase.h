@@ -41,6 +41,7 @@ class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
     IInterfaceTable*    Ift;                ///< Provides access to the interface table.
 
     void parseEtrMappings(cXMLElement* config);
+    bool advertonlyowneids;
 };
 
 #endif

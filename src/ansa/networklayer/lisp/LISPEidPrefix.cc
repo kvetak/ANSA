@@ -22,26 +22,30 @@
 
 LISPEidPrefix::LISPEidPrefix() {
     eidAddr = IPv4Address::UNSPECIFIED_ADDRESS;
-    this->eidLen = DEFAULT_EIDLENGTH_VAL;
+    eidLen = DEFAULT_EIDLENGTH_VAL;
+    eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
 
 LISPEidPrefix::LISPEidPrefix(const char* address, const char* length) {
     eidAddr = IPvXAddress(address);
     eidLen = (unsigned char)atoi(length);
+    eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
 
 LISPEidPrefix::LISPEidPrefix(IPvXAddress address, unsigned char length) {
     eidAddr = address;
     eidLen = length;
+    eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
 
-
 LISPEidPrefix::~LISPEidPrefix() {
-    this->eidLen = DEFAULT_EIDLENGTH_VAL;
+    eidAddr = IPvXAddress();
+    eidNetwork = IPvXAddress();
+    eidLen = DEFAULT_EIDLENGTH_VAL;
 }
 
 const IPvXAddress& LISPEidPrefix::getEidAddr() const {
-    return eidAddr;
+    return eidNetwork;
 }
 
 void LISPEidPrefix::setEidAddr(const IPvXAddress& eid) {

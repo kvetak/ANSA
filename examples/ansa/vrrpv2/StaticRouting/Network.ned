@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
 package inet.examples.ansa.vrrpv2.StaticRouting;
 
@@ -26,17 +26,6 @@ network Network
 {
     @display("bgb=300,415;bgl=2");
     submodules:
-        configurator: IPv4NetworkConfigurator {
-            parameters:
-                config = xml("<config></config>");
-                assignAddresses = false;
-                assignDisjunctSubnetAddresses = false;
-                addStaticRoutes = false;
-                addDefaultRoutes = false;
-                addSubnetRoutes = false;
-                optimizeRoutes = false;
-                @display("p=50,27");
-        }
         ISP: VRRPv2SimpleRouter {
             //@display("p=75,75");
             @display("p=150,50");
@@ -70,6 +59,17 @@ network Network
         Manager: ScenarioManager {
             //@display("p=75,350");
             @display("p=250,50");
+        }
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+				config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;            
+            	@display("p=50,50");
         }
     connections:
         ISP.ethg[0] <--> Eth100M <--> GW1.ethg[0];

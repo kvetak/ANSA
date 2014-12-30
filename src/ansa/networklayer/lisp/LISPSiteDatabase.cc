@@ -65,6 +65,9 @@ void LISPSiteDatabase::parseConfig(cXMLElement* config) {
     if ( opp_strcmp(config->getTagName(), MAPSERVER_TAG) )
         config = config->getFirstChildWithTag(MAPSERVER_TAG);
 
+    if (!config)
+            return;
+
     cXMLElementList map = config->getChildrenByTagName(SITE_TAG);
 
     for (cXMLElementList::iterator i = map.begin(); i != map.end(); ++i) {

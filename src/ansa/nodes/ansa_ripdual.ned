@@ -22,11 +22,11 @@ import inet.ansa.applications.rip.RIPRouting;
 import inet.ansa.applications.ripng.RIPngRouting;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
+import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.transport.IUDP;
 import inet.util.PcapRecorder;
-import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.networklayer.common.InterfaceTable;
 import inet.mobility.IMobility;
 import inet.linklayer.IWirelessNic;
@@ -39,11 +39,14 @@ import inet.nodes.ipv6.NetworkLayer6;
 
 module ANSA_RouterRIPDual
 {
-    parameters:
+    parameters:     
         @display("i=abstract/router;bgb=699,569");
         @node;
         @labels(node,ethernet-node,wireless-node);
-
+        
+        string ethType = default("EthernetInterface"); 
+		int numOfLoopbacks = default(0);
+		
         int numUdpApps = default(2);  // 2 UDPapps for RIP and RIPng
         bool hasUdp = default(numUdpApps>0);
         string udpType = default(firstAvailable("UDP","UDP_None"));
@@ -98,15 +101,15 @@ module ANSA_RouterRIPDual
             parameters:
                 @display("p=242,311;q=queue");
             gates:
-                ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
+                ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
         }
         networkLayer6: NetworkLayer6 {
             parameters:
                 @display("p=546,311");
             gates:
-                ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
+                ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
         }
 
         //routing tables
@@ -145,12 +148,12 @@ module ANSA_RouterRIPDual
             parameters:
                 @display("p=390,418");
             gates:
-                ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ipv4In[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ipv4Out[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ipv6In[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
-                ipv6Out[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
+                ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ipv4In[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ipv4Out[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ipv6In[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
+                ipv6Out[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
                 isisIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 isisOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
         }
@@ -160,7 +163,7 @@ module ANSA_RouterRIPDual
             parameters:
                 @display("p=440,47;is=n");
         }
-        eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
+        eth[sizeof(ethg)]: <ethType> like IWiredNic {
             parameters:
                 @display("p=390,510,row,60;q=txQueue");
         }

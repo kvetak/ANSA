@@ -20,6 +20,7 @@ import inet.nodes.ethernet.Eth100M;
 import inet.nodes.ethernet.EtherSwitch;
 import inet.world.scenario.ScenarioManager;
 import inet.ansa.nodes.inet.ANSAStandardHost;
+import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
 network Network
 {
@@ -54,9 +55,20 @@ network Network
             @display("p=250,350");
             gates:
                 ethg[1];
-        }        
+        }
         Manager: ScenarioManager {
             @display("p=250,50");
+        }
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+				config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;            
+            	@display("p=50,50");
         }
     connections:
         ISP.ethg[0] <--> Eth100M <--> GW1.ethg[0];
@@ -66,5 +78,5 @@ network Network
         GW2.ethg[1] <--> Eth100M <--> SW.ethg[1];
 
         Host1.ethg[0] <--> Eth100M <--> SW.ethg[2];
-		Host2.ethg[0] <--> Eth100M <--> SW.ethg[3];        
+        Host2.ethg[0] <--> Eth100M <--> SW.ethg[3];
 }

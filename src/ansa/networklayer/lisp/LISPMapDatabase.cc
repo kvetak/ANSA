@@ -30,6 +30,7 @@ void LISPMapDatabase::initialize(int stage)
         return;
 
     Ift = InterfaceTableAccess().get();
+    advertonlyowneids = par(ADVERTONLYOWNEID_PAR).boolValue();
 
     //EtrMappings
     parseEtrMappings( par(CONFIG_PAR).xmlValue() );
@@ -54,6 +55,34 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
         return;
     }
 
+    //Filter map-storage so that it contains only EIDs of router interfaces
+    if (advertonlyowneids) {
+        MapStorage mstmp;
+
+        for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
+            for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
+                IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+                IPv4Address adr4 =
+                        (int4Data) ?
+                                int4Data->getIPAddress() :
+                                IPv4Address::UNSPECIFIED_ADDRESS;
+                IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+                IPv6Address adr6 =
+                        (int6Data) ?
+                                int6Data->getPreferredAddress() :
+                                IPv6Address::UNSPECIFIED_ADDRESS;
+                if (it->getEidPrefix().getEidAddr().equals(LISPCommon::getNetworkAddress(adr4, it->getEidPrefix().getEidLength()))
+                    || it->getEidPrefix().getEidAddr().equals(LISPCommon::getNetworkAddress(adr6, it->getEidPrefix().getEidLength()))
+                   ) {
+                    mstmp.push_back(*it);
+                    break;
+                }
+            }
+        }
+
+        MappingStorage = mstmp;
+    }
+
     //Set EtrMappings LOCAL locators and add other locators to probingset
     for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
         IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
@@ -67,6 +96,7 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
                         int6Data->getPreferredAddress() :
                         IPv6Address::UNSPECIFIED_ADDRESS;
         for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
+            //Mark local and foreign locators
             for (LocatorItem jt = it->getRlocs().begin();
                     jt != it->getRlocs().end(); ++jt) {
                 //IF locator is local THEN mark it...

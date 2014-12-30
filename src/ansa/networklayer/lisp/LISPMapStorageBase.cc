@@ -93,6 +93,8 @@ void LISPMapStorageBase::parseMapEntry(cXMLElement* config) {
             continue;
         }
 
+
+
         //Parse EID address
         std::string addr;
         std::string leng;

@@ -1,0 +1,356 @@
+<Devices>
+	<!--				 ROUTER xTR1 					-->
+	<Router id="xTR1">	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>11.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::1/64</IPv6Address>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>HA</Description>
+                		<Priority>150</Priority>
+                	</Group>
+                </VRRP>                
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>10.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                        
+        </Interfaces>
+                                
+        <Routing>
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>11.0.0.2</NextHopAddress>
+        		</Route>
+        		<!--
+        		<Route>
+        			<NetworkAddress>12.0.0.0</NetworkAddress>
+        			<NetworkMask>255.255.255.0</NetworkMask>
+        			<NextHopAddress>10.0.0.2</NextHopAddress>
+        		</Route> 
+        		-->       		
+        	</Static>
+        
+        	<LISP>       	
+        		<EtrMapServer address="31.0.0.1" key="HesloA" proxy="enabled" />
+        		<ItrMapResolver address="31.0.0.1" />        	
+        		<MapCache>
+	        		<SynchronizationSet key="SSKeyA">
+	        			<SetMember address="10.0.0.2"/>
+	        		</SynchronizationSet> 
+        		</MapCache>
+        		<EtrMapping>
+        			<EID address="192.168.1.0/24">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="2001:db8:a::/64">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        		</EtrMapping>     	
+        	</LISP>
+        </Routing>        
+    </Router>
+
+	<!--				 ROUTER xTR2 					-->
+	<Router id="xTR2">	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>12.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>192.168.1.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::2/64</IPv6Address>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>HA</Description>
+                	</Group>
+                </VRRP>                               
+            </Interface>            
+            <Interface name="eth2">
+                <IPAddress>10.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                        
+        </Interfaces>
+                                
+        <Routing>
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>12.0.0.2</NextHopAddress>
+        		</Route>
+        		<!--
+        		<Route>
+        			<NetworkAddress>11.0.0.0</NetworkAddress>
+        			<NetworkMask>255.255.255.0</NetworkMask>
+        			<NextHopAddress>10.0.0.1</NextHopAddress>
+        		</Route> 
+        		-->       		
+        	</Static>
+        
+        	<LISP>       	        	
+        		<EtrMapServer address="31.0.0.1" key="HesloA" proxy="enabled" />
+        		<ItrMapResolver address="31.0.0.1" />        	
+        		<MapCache>
+	        		<SynchronizationSet key="SSKeyA">
+	        			<SetMember address="10.0.0.1"/>
+	        		</SynchronizationSet>	        		
+        		</MapCache>
+        		<EtrMapping>
+        			<EID address="192.168.1.0/24">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="2001:db8:a::/64">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="12.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        		</EtrMapping>     	
+        	</LISP>
+        </Routing>        
+    </Router>
+
+	<!--				 ROUTER Core 					-->
+	<Router id="Core">
+	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>31.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>                
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>11.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>12.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>            
+            <Interface name="eth3">
+                <IPAddress>20.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                    
+        </Interfaces>
+                
+    </Router>
+    
+    <!--				 ROUTER MRMS 					-->
+    <Router id="MRMS">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>31.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>                
+            </Interface>
+        </Interfaces>
+        
+        <Routing> 
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>31.0.0.2</NextHopAddress>
+        		</Route>
+        	</Static>
+               
+        	<LISP>        	
+        		<MapServer ipv4="enabled" ipv6="enabled">
+        			<Site name="Site A" key="HesloA">
+	        			<EID address="192.168.1.0/24" />
+						<EID address="2001:db8:a::/64" />
+        			</Site>
+        			<Site name="Site B" key="HesloB">
+	        		    <EID address="172.16.0.0/16" />	        		     		        		    
+						<EID address="2001:db8:ac10::/48" />
+	       			</Site>
+        		</MapServer>
+        		<MapResolver ipv4="enabled" ipv6="disabled" />
+        		<MapCache />
+        	</LISP>
+        </Routing>       
+    </Router>
+
+    <!--				 ROUTER xTR_Responder 					-->
+    <Router id="xTR_Responder">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>20.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="lo0">
+                <IPAddress>172.16.0.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:0::1/64</IPv6Address>
+            </Interface> 
+			<Interface name="lo1">
+                <IPAddress>172.16.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:1::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo2">
+                <IPAddress>172.16.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:2::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo3">
+                <IPAddress>172.16.3.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:3::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo4">
+                <IPAddress>172.16.4.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:4::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo5">
+                <IPAddress>172.16.5.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:5::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo6">
+                <IPAddress>172.16.6.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:6::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo7">
+                <IPAddress>172.16.7.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:7::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo8">
+                <IPAddress>172.16.8.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:8::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo9">
+                <IPAddress>172.16.9.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:9::1/64</IPv6Address>
+            </Interface>
+        </Interfaces>
+        
+        <Routing> 
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>20.0.0.2</NextHopAddress>
+        		</Route>
+        	</Static>
+               
+        	<LISP>        	
+        		<EtrMapServer address="31.0.0.1" key="HesloB" />
+        		<ItrMapResolver address="31.0.0.1" />        	
+        		<EtrMapping>
+        			<EID address="172.16.0.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.1.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.2.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.3.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.4.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.5.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.6.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.7.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.8.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="172.16.9.0/24">
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		    
+        			<EID address="2001:db8:ac10:0::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>   
+        			<EID address="2001:db8:ac10:1::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:2::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:3::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:4::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:5::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:6::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:7::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:8::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ffff:9::/64">        			
+        		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		          		            		    
+        		         		            		    
+        		</EtrMapping>
+        	</LISP>
+        </Routing>       
+    </Router>    
+    
+    <!--				 HOST Host1 					-->
+    <Host id="Host1">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.101</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::101/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>192.168.1.254</DefaultRouter>
+		<DefaultRouter6>2001:db8:a::1</DefaultRouter6>
+	</Host>	
+	
+    <!--				 HOST Host2 					-->
+    <Host id="Host2">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.102</IPAddress>
+                <Mask>255.255.255.0</Mask>			
+				<IPv6Address>2001:db8:a::102/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>192.168.1.254</DefaultRouter>
+		<DefaultRouter6>2001:db8:a::2</DefaultRouter6>		
+	</Host>
+			
+</Devices>

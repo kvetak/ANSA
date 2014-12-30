@@ -13,27 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSAETHERMACBASEVF_H_
-#define ANSAETHERMACBASEVF_H_
+package inet.ansa.nodes.lisp;
 
-#include "EtherMACBase.h"
+import inet.ansa.networklayer.vrrpv2.VRRPv2;
+import inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF;
 
-// Forward declarations:
-class EtherFrame;
-class EtherTraffic;
-class InterfaceEntry;
-class AnsaInterfaceEntry;
-
-class AnsaEtherMACBaseVF: public EtherMACBase {
-public:
-    AnsaEtherMACBaseVF() {};
-    virtual ~AnsaEtherMACBaseVF() {};
-
-    protected:
-        virtual void initialize(int stage);
-        virtual void registerInterface();
-        virtual bool dropFrameNotForUs(EtherFrame *frame);
-
-};
-
-#endif /* ANSAETHERMACBASEVF_H_ */
+module ANSA_xTR_HA extends ANSA_xTR
+{	
+    parameters:
+        ethType = "AnsaEthernetInterfaceWithVF";
+    submodules:
+        VRRP: VRRPv2 {
+            parameters:
+            	@display("p=242,226");
+            	deviceId = deviceId;
+                configFile = configFile;
+        }
+    connections allowunconnected:
+        VRRP.ipOut --> networkLayer.vrrpIn;
+        VRRP.ipIn <-- networkLayer.vrrpOut;
+}

@@ -25,8 +25,7 @@ package inet.ansa.networklayer.lisp;
 simple LISPCore
 {
     parameters:
-        @display("i=block/switch");        
-        string deviceId;    
+        @display("i=block/switch");                  
         xml configData = default(xml("<LISP />"));
         bool mapServerV4 = default(false);				//Node acts as Map Server for IPv4 EIDs, overriden by XML config
         bool mapServerV6 = default(false);				//Node acts as Map Server for IPv6 EIDs, overriden by XML config

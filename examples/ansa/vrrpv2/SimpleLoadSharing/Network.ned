@@ -16,8 +16,10 @@
 package inet.examples.ansa.vrrpv2.SimpleLoadSharing;
 
 import inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter;
+import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 import inet.nodes.ethernet.Eth100M;
 import inet.nodes.ethernet.EtherSwitch;
+import inet.nodes.internetcloud.InternetCloud;
 import inet.world.scenario.ScenarioManager;
 import inet.ansa.nodes.inet.ANSAStandardHost;
 
@@ -58,6 +60,17 @@ network Network
         Manager: ScenarioManager {
             //@display("p=75,350");
             @display("p=150,258");
+        }
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+				config = xml("<config></config>");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;            
+            	@display("p=155,48");
         }
     connections:
         GW1.ethg[0] <--> Eth100M <--> SW.ethg[0];

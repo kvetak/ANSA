@@ -49,6 +49,7 @@ class LISPSite : public LISPMapStorageBase
     LISPSiteRecord* findRecordByAddress(IPvXAddress& address);
     Etrs findAllRecordsByEid(const IPvXAddress& address);
     void removeRecord(LISPSiteRecord& srec);
+    bool isEidMaintained(const IPvXAddress& address);
 
   private:
     std::string name;

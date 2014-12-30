@@ -192,17 +192,40 @@ std::ostream& operator <<(std::ostream& os, const Locators& rlocs) {
     return os;
 }
 
-const LISPRLocator* LISPMapEntry::getBestUnicastLocator() {
+LISPRLocator* LISPMapEntry::getBestUnicastLocator() {
+    //TODO: Vesely - Deterministic round-robin version of locator usage
+
+    //Create best RLOC list
+    Locators rlocList;
+    unsigned char tmppri = 254;
+    for (LocatorItem it = RLOCs.begin(); it != RLOCs.end(); ++it) {
+        //Skip locator if it is not UP
+        if (it->getState() != LISPRLocator::UP )
+            continue;
+        //IF priority is same THEN expand the list
+        if (it->getPriority() == tmppri) {
+            rlocList.push_back(*it);
+        }
+        //IF priority is lower THEN create a new list
+        else if (it->getPriority() < tmppri) {
+            rlocList.clear();
+            rlocList.push_back(*it);
+            tmppri = it->getPriority();
+        }
+    }
+    //EV << "Vyber z>" << endl << rlocList;
     //Nondeterministic version
     double throwdice = (double) ev.getRNG(0)->doubleRandIncl1();
-    EV << "Hod kostkou " << throwdice << endl;
-    double tmp = 0;
-    for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); ++it) {
-        if (throwdice <= it->getPriority() + tmp)
+    //EV << "Hod kostkou " << throwdice << endl;
+    double tmpwei = 0;
+    for (LocatorItem it = rlocList.begin(); it != rlocList.end(); ++it) {
+        double current = it->getWeight() / 100.0 + tmpwei;
+        //EV << "Vaha " << current << endl;
+        if (throwdice <= current )
             return &(*it);
         else
-            tmp += it->getPriority();
+            tmpwei += it->getWeight() / 100.0;
     }
-    //TODO: Vesely - Deterministic round-robin version of locator usage
-    return &(*RLOCs.begin());
+    //IF previous lookup fails for some reason THEN return first available RLOC
+    return &(rlocList.front());
 }

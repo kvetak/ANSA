@@ -121,6 +121,7 @@ const           char*   SYNCNONE_PARVAL         = "None";
 const           char*   SYNCNAIVE_PARVAL        = "Naive";
 const           char*   SYNCSMART_PARVAL        = "Smart";
 const           char*   SYNCACK_PAR             = "cacheSyncAck";
+const           char*   ADVERTONLYOWNEID_PAR    = "advertOnlyOwnEids";
 // --------------- MODULES ---------------
 const           char*   MAPDB_MOD               = "lispMapDatabase";
 const           char*   MAPCACHE_MOD            = "lispMapCache";
@@ -211,3 +212,18 @@ int LISPCommon::doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2)
     return res;
 }
 
+IPvXAddress LISPCommon::getNetworkAddress(IPvXAddress address, int length) {
+    //IPv6
+    if (address.isIPv6() && length <= 128 && length >= 0) {
+        IPv6Address mask = IPv6Address::constructMask(length);
+        uint32 *w1 = address.get6().words();
+        uint32 *w2 = mask.words();
+        return IPv6Address(w1[0] & w2[0], w1[1] & w2[1], w1[2] & w2[2], w1[3] & w2[3]);
+    }
+    //IPv4
+    else if (!address.isIPv6() && length <= 32 && length >= 0) {
+        IPv4Address mask = IPv4Address::makeNetmask(length);
+        return address.get4().doAnd(mask);
+    }
+    return IPvXAddress();
+}

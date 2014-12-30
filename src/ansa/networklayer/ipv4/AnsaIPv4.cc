@@ -103,7 +103,6 @@ void AnsaIPv4::initialize(int stage)
     }
 }
 
-
 void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *fromIE)
 {
     ASSERT(datagram);
@@ -232,12 +231,6 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
             EV << "forwarding off, dropping packet\n";
             numDropped++;
             delete datagram;
-        }
-        else if ( lispmod
-                && lispmod->isOneOfMyEids( datagram->getSrcAddress() )
-                && !lispmod->isOneOfMyEids( datagram->getDestAddress() )
-                ) {
-            send(datagram, "lispOut");
         }
         else
         {
@@ -390,7 +383,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     // refresh output in MRT
     rt->generateShowIPMroute();
     // only copies sent, delete original datagram
-    //delete datagram;
+    delete datagram;
 }
 
 void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
@@ -582,9 +575,16 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
     }
 }
 
-
 void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, IPv4Address destNextHopAddr)
 {
+    if ( lispmod
+         && lispmod->isOneOfMyEids( datagram->getSrcAddress() )
+         && !lispmod->isOneOfMyEids( datagram->getDestAddress() )
+       ) {
+        EV << "Passing datagram for LISP encapsulation process!" << endl;
+        send(datagram, "lispOut");
+        return;
+    }
     IPv4Address destAddr = datagram->getDestAddress();
 
     EV << "Routing datagram `" << datagram->getName() << "' with dest=" << destAddr << ": ";
@@ -807,7 +807,6 @@ void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4A
 
     delete datagram;
 }
-
 
 IPv4Datagram *AnsaIPv4::encapsulate(cPacket *transportPacket, IPv4ControlInfo *controlInfo)
 {

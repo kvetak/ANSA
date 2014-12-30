@@ -21,44 +21,46 @@
 #include "InterfaceTableAccess.h"
 #include "opp_utils.h"
 
-void AnsaEtherMACBaseVF::initialize()
+void AnsaEtherMACBaseVF::initialize(int stage)
 {
+    MACBase::initialize(stage);
+    if (stage == 0)    {
+        physInGate = gate("phys$i");
+        physOutGate = gate("phys$o");
+        upperLayerInGate = gate("upperLayerIn");
+        transmissionChannel = NULL;
+        interfaceEntry = NULL;
+        curTxFrame = NULL;
 
-    physInGate = gate("phys$i");
-    physOutGate = gate("phys$o");
-    upperLayerInGate = gate("upperLayerIn");
-    transmissionChannel = NULL;
-    interfaceEntry = NULL;
-    curTxFrame = NULL;
+        initializeFlags();
 
-    initializeFlags();
+        initializeMACAddress();
+        initializeQueueModule();
+        initializeStatistics();
 
-    initializeMACAddress();
-    initializeQueueModule();
-    initializeStatistics();
+        registerInterface(); // needs MAC address
 
-    registerInterface(); // needs MAC address
+        readChannelParameters(true);
 
-    readChannelParameters(true);
+        lastTxFinishTime = -1.0; // not equals with current simtime.
 
-    lastTxFinishTime = -1.0; // not equals with current simtime.
+        // initialize self messages
+        endTxMsg = new cMessage("EndTransmission", ENDTRANSMISSION);
+        endIFGMsg = new cMessage("EndIFG", ENDIFG);
+        endPauseMsg = new cMessage("EndPause", ENDPAUSE);
 
-    // initialize self messages
-    endTxMsg = new cMessage("EndTransmission", ENDTRANSMISSION);
-    endIFGMsg = new cMessage("EndIFG", ENDIFG);
-    endPauseMsg = new cMessage("EndPause", ENDPAUSE);
+        // initialize states
+        transmitState = TX_IDLE_STATE;
+        receiveState = RX_IDLE_STATE;
+        WATCH(transmitState);
+        WATCH(receiveState);
 
-    // initialize states
-    transmitState = TX_IDLE_STATE;
-    receiveState = RX_IDLE_STATE;
-    WATCH(transmitState);
-    WATCH(receiveState);
+        // initialize pause
+        pauseUnitsRequested = 0;
+        WATCH(pauseUnitsRequested);
 
-    // initialize pause
-    pauseUnitsRequested = 0;
-    WATCH(pauseUnitsRequested);
-
-    subscribe(POST_MODEL_CHANGE, this);
+        subscribe(POST_MODEL_CHANGE, this);
+    }
 }
 
 

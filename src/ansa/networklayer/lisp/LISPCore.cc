@@ -609,8 +609,8 @@ void LISPCore::handleDataDecaps(cMessage* msg) {
         else if (dynamic_cast<IPv6Datagram*>(pip))
             send(msg, IPV6_GATEOUT);
     }
-    else
-        error("Unrecognized data packet (%s)", msg->getClassName());
+    //else
+    //    error("Unrecognized data packet (%s)", msg->getClassName());
 
     delete msg;
 }
@@ -721,7 +721,12 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
             //Trying to store EID from AF that server does not operate
             if ( (it->EidPrefix.getEidAddr().isIPv6()  && !mapServerV6)
                  || (!it->EidPrefix.getEidAddr().isIPv6() && !mapServerV4) ) {
-                EV << "Map-register contains EID " << it->EidPrefix << " with AF not recognized by map server!";
+                EV << "Map-register contains EID " << it->EidPrefix << " with AF not recognized by map server!" << endl;
+                continue;
+            }
+            //Trying to store EID from different scope then Maintained EIDs
+            if ( !si->isEidMaintained(it->EidPrefix.getEidAddr()) ) {
+                EV << "EID " << it->EidPrefix << " is not recognized for site " << si->getName() << endl;
                 continue;
             }
 
@@ -1230,7 +1235,9 @@ void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
     for (TRecordCItem it = lmrep->getRecords().begin(); it != lmrep->getRecords().end(); ++it) {
         LISPProbeEntry* probe =
                         ProbingSet.findProbeEntryByRlocAndEid(src, it->EidPrefix);
-        if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
+        if (!probe)
+            EV << "RLOC " << src << " does not exist in ProbeSet" << endl;
+        else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
             probe->setRlocStatusForEid(it->EidPrefix, LISPRLocator::UP);
         else
             probe->setRlocStatusForAllEids(LISPRLocator::UP);
@@ -1401,11 +1408,11 @@ unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAdd
     lidata->encapsulate(packet);
 
     //Retrieve the best RLOC
-    const LISPRLocator* rloc = mapentry->getBestUnicastLocator();
-
+    IPvXAddress rlocaddr = mapentry->getBestUnicastLocator()->getRlocAddr();
+    //EV << "Chosen RLOC addr is>" << rlocaddr << endl;
     //Log and send
-    MsgLog.addMsg(LISPMsgEntry::DATA, lidata->getNonce(), rloc->getRlocAddr(), true);
-    dataTraf.sendTo(lidata, rloc->getRlocAddr(), DATA_PORT_VAL);
+    MsgLog.addMsg(LISPMsgEntry::DATA, lidata->getNonce(), rlocaddr, true);
+    dataTraf.sendTo(lidata, rlocaddr, DATA_PORT_VAL);
 
     return lidata->getNonce();
 

@@ -295,7 +295,7 @@
 			</Interface>
 		</Interfaces>
 		
-		<DefaultRouter>192.168.1.1</DefaultRouter>		
+		<DefaultRouter>192.168.1.1</DefaultRouter>				
 	</Host>	
 	
     <!--				 HOST Hv6_A 					-->

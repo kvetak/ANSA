@@ -48,6 +48,7 @@ class LISPEidPrefix {
 
   private:
     IPvXAddress eidAddr;
+    IPvXAddress eidNetwork;
     unsigned char eidLen;
 };
 
