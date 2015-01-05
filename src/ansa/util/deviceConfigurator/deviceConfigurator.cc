@@ -2128,16 +2128,24 @@ void DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
 
     while (interface != NULL)
     {
+
         EV << ift->getInterfaceByName(interface->getAttribute("name")) << endl;
-        int interfaceId = ift->getInterfaceByName(interface->getAttribute("name"))->getInterfaceId();
+        InterfaceEntry* ie = ift->getInterfaceByName(interface->getAttribute("name"));
+        if (!ie) {
+            EV << "Interface " << interface->getAttribute("name") << " does not exist!" << endl;
+            continue;
+        }
+        int interfaceId = ie->getInterfaceId();
 
         cXMLElement *group;
         group = xmlParser::GetVRRPGroup(NULL, interface);
         while (group != NULL)
         {
             int groupId = -1;
-            if (xmlParser::HasVRPPGroup(group, &groupId))
-                VRRPModule->addVirtualRouter(interfaceId, groupId);
+            if (xmlParser::HasVRPPGroup(group, &groupId)) {
+                const char* ifnam = ift->getInterfaceById(interfaceId)->getName();
+                VRRPModule->addVirtualRouter(interfaceId, groupId, ifnam);
+            }
 
             group = xmlParser::GetVRRPGroup(group, NULL);
         }

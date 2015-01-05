@@ -1,0 +1,389 @@
+file 37888 1417463892                                           
+version 2
+run EIGRP-IPv6_exp1_delay-change_global-addr-0-20141201-20:44:37-6032
+attr configname EIGRP-IPv6_exp1_delay-change_global-addr
+attr datetime 20141201-20:44:37
+attr experiment EIGRP-IPv6_exp1_delay-change_global-addr
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network EigrpTestNetwork
+attr processid 6032
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+vector 107  EigrpTestNetwork.R3.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+107	32761 510 7 1599 0.087129296967 13.087145076965 19 60 264 1948 263184
+vector 103  EigrpTestNetwork.R3.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+103	32251 510 8 1601 0.087129296967 13.087145076965 19 78 282 2290 339468
+vector 98  EigrpTestNetwork.R3.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+98	30785 500 9 1603 0.087137136966 13.087152916964 19 78 282 2290 339468
+vector 50  EigrpTestNetwork.R2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+50	23580 501 10 1604 0.087137186966 13.087152966964 19 78 282 2290 339468
+vector 51  EigrpTestNetwork.R2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+51	24081 501 10 1604 0.087137186966 13.087152966964 19 78 282 2290 339468
+vector 59  EigrpTestNetwork.R2.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+59	25524 501 11 1605 0.087137186966 13.087152966964 19 60 264 1948 263184
+vector 58  EigrpTestNetwork.R2.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+58	25053 471 21 1588 0.087137186966 13.087137186966 18 60 264 1740 232432
+vector 54  EigrpTestNetwork.R2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+54	24582 471 23 1589 0.087137186966 13.087137186966 18 78 282 2064 300904
+vector 49  EigrpTestNetwork.R2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+49	23105 475 26 1590 0.087145026965 13.087145026965 18 78 282 2064 300904
+vector 99  EigrpTestNetwork.R3.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+99	31285 474 27 1592 0.087145076965 13.087145076965 18 78 282 2064 300904
+vector 100  EigrpTestNetwork.R3.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+100	31759 492 27 1592 0.087145076965 13.087145076965 18 78 282 2064 300904
+vector 108  EigrpTestNetwork.R3.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+108	33271 492 28 1594 0.087145076965 13.087145076965 18 60 264 1740 232432
+vector 46  EigrpTestNetwork.R2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+46	22181 472 184 1625 0.392784793162 13.39280057316 18 60 400 1820 302288
+vector 42  EigrpTestNetwork.R2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+42	21709 472 185 1627 0.392784793162 13.39280057316 18 78 418 2144 373640
+vector 37  EigrpTestNetwork.R2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+37	20324 481 186 1629 0.392792633161 13.392808413159 18 78 418 2144 373640
+vector 1  EigrpTestNetwork.R1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+1	15254 463 187 1630 0.392792683161 13.392808463159 18 78 418 2144 373640
+vector 2  EigrpTestNetwork.R1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+2	15717 463 187 1630 0.392792683161 13.392808463159 18 78 418 2144 373640
+vector 10  EigrpTestNetwork.R1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+10	17050 481 188 1631 0.392792683161 13.392808463159 18 60 400 1820 302288
+vector 9  EigrpTestNetwork.R1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+9	16615 435 198 1614 0.392792683161 13.392792683161 17 60 332 1816 282144
+vector 5  EigrpTestNetwork.R1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+5	16180 435 200 1615 0.392792683161 13.392792683161 17 78 350 2122 353028
+vector 0  EigrpTestNetwork.R1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+0	14819 435 203 1616 0.39280052316 13.39280052316 17 78 350 2122 353028
+vector 38  EigrpTestNetwork.R2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+38	20805 452 204 1618 0.39280057316 13.39280057316 17 78 350 2122 353028
+vector 39  EigrpTestNetwork.R2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+39	21257 452 204 1618 0.39280057316 13.39280057316 17 78 350 2122 353028
+vector 47  EigrpTestNetwork.R2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+47	22653 452 205 1620 0.39280057316 13.39280057316 17 60 332 1816 282144
+vector 164  EigrpTestNetwork.LAN2.networkLayer.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+164	36830 26 401 401 0.484210466453 0.484210466453 1 1 1 1 1
+vector 177  EigrpTestNetwork.LAN2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+177	37078 111 403 1552 0.484210466453 10.983306289835 4 40 40 160 6400
+vector 173  EigrpTestNetwork.LAN2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+173	36967 111 404 1553 0.484210466453 10.983306289835 4 64 64 256 16384
+vector 168  EigrpTestNetwork.LAN2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+168	36856 111 405 1554 0.484216226453 10.983312049835 4 64 64 256 16384
+vector 74  EigrpTestNetwork.R2.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+74	28017 107 406 1555 0.484216276453 10.983312099835 4 64 64 256 16384
+vector 75  EigrpTestNetwork.R2.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+75	28124 107 406 1555 0.484216276453 10.983312099835 4 64 64 256 16384
+vector 83  EigrpTestNetwork.R2.eth[3].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+83	28231 107 407 1556 0.484216276453 10.983312099835 4 40 40 160 6400
+vector 21  EigrpTestNetwork.R1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+21	19180 422 414 1651 0.528894921531 13.528910701529 16 60 468 1700 341328
+vector 17  EigrpTestNetwork.R1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+17	18758 422 415 1653 0.528894921531 13.528910701529 16 78 486 1988 407712
+vector 12  EigrpTestNetwork.R1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+12	17531 425 416 1655 0.52890276153 13.528918541528 16 78 486 1988 407712
+vector 87  EigrpTestNetwork.R3.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+87	28739 424 417 1656 0.52890281153 13.528918591528 16 78 486 1988 407712
+vector 88  EigrpTestNetwork.R3.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+88	29163 424 417 1656 0.52890281153 13.528918591528 16 78 486 1988 407712
+vector 96  EigrpTestNetwork.R3.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+96	30361 424 418 1657 0.52890281153 13.528918591528 16 60 468 1700 341328
+vector 95  EigrpTestNetwork.R3.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+95	29974 387 428 1640 0.52890281153 13.52890281153 15 60 468 1696 348928
+vector 91  EigrpTestNetwork.R3.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+91	29587 387 430 1641 0.52890281153 13.52890281153 15 78 486 1966 414844
+vector 86  EigrpTestNetwork.R3.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+86	28338 401 433 1642 0.528910651529 13.528910651529 15 78 486 1966 414844
+vector 13  EigrpTestNetwork.R1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+13	17956 401 434 1644 0.528910701529 13.528910701529 15 78 486 1966 414844
+vector 14  EigrpTestNetwork.R1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+14	18357 401 434 1644 0.528910701529 13.528910701529 15 78 486 1966 414844
+vector 22  EigrpTestNetwork.R1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+22	19602 401 435 1646 0.528910701529 13.528910701529 15 60 468 1696 348928
+vector 132  EigrpTestNetwork.R4.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+132	35472 353 635 1677 0.83261984284 13.832635622838 13 60 468 1384 295712
+vector 128  EigrpTestNetwork.R4.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+128	35119 353 636 1679 0.83261984284 13.832635622838 13 78 486 1618 349748
+vector 123  EigrpTestNetwork.R4.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+123	34099 358 637 1681 0.832627682839 13.832643462837 13 78 486 1618 349748
+vector 62  EigrpTestNetwork.R2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+62	26344 345 638 1682 0.832627732839 13.832643512837 13 78 486 1618 349748
+vector 63  EigrpTestNetwork.R2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+63	26689 345 638 1682 0.832627732839 13.832643512837 13 78 486 1618 349748
+vector 71  EigrpTestNetwork.R2.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+71	27672 345 639 1683 0.832627732839 13.832643512837 13 60 468 1384 295712
+vector 70  EigrpTestNetwork.R2.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+70	27353 319 649 1666 0.832627732839 13.832627732839 12 60 468 1312 290528
+vector 66  EigrpTestNetwork.R2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+66	27034 319 651 1667 0.832627732839 13.832627732839 12 78 486 1528 341648
+vector 61  EigrpTestNetwork.R2.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+61	26025 319 654 1668 0.832635572838 13.832635572838 12 78 486 1528 341648
+vector 124  EigrpTestNetwork.R4.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+124	34457 331 655 1670 0.832635622838 13.832635622838 12 78 486 1528 341648
+vector 125  EigrpTestNetwork.R4.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+125	34788 331 655 1670 0.832635622838 13.832635622838 12 78 486 1528 341648
+vector 133  EigrpTestNetwork.R4.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+133	35825 331 656 1672 0.832635622838 13.832635622838 12 60 468 1312 290528
+vector 148  EigrpTestNetwork.LAN1.networkLayer.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+148	36471 26 944 944 0.866894054133 0.866894054133 1 1 1 1 1
+vector 161  EigrpTestNetwork.LAN1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+161	36719 111 946 1542 0.866894054133 10.801981456949 4 40 40 160 6400
+vector 157  EigrpTestNetwork.LAN1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+157	36608 111 947 1543 0.866894054133 10.801981456949 4 64 64 256 16384
+vector 152  EigrpTestNetwork.LAN1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+152	36497 111 948 1544 0.866899814133 10.801987216949 4 64 64 256 16384
+vector 25  EigrpTestNetwork.R1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+25	20003 107 949 1545 0.866899864133 10.801987266949 4 64 64 256 16384
+vector 26  EigrpTestNetwork.R1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+26	20110 107 949 1545 0.866899864133 10.801987266949 4 64 64 256 16384
+vector 34  EigrpTestNetwork.R1.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+34	20217 107 950 1546 0.866899864133 10.801987266949 4 40 40 160 6400
+vector 180  EigrpTestNetwork.LAN3.networkLayer.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+180	37189 26 953 953 0.922007287153 0.922007287153 1 1 1 1 1
+vector 193  EigrpTestNetwork.LAN3.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+193	37439 112 955 1572 0.922007287153 11.501695026642 4 40 40 160 6400
+vector 189  EigrpTestNetwork.LAN3.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+189	37327 112 956 1573 0.922007287153 11.501695026642 4 64 64 256 16384
+vector 184  EigrpTestNetwork.LAN3.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+184	37215 112 957 1574 0.922013047153 11.501700786642 4 64 64 256 16384
+vector 111  EigrpTestNetwork.R3.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+111	33763 112 958 1575 0.922013097153 11.501700836642 4 64 64 256 16384
+vector 112  EigrpTestNetwork.R3.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+112	33875 112 958 1575 0.922013097153 11.501700836642 4 64 64 256 16384
+vector 120  EigrpTestNetwork.R3.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+120	33987 112 959 1576 0.922013097153 11.501700836642 4 40 40 160 6400
+vector 196  EigrpTestNetwork.LAN4.networkLayer.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+196	37551 25 962 962 0.92205235064 0.92205235064 1 1 1 1 1
+vector 209  EigrpTestNetwork.LAN4.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+209	37784 104 964 1562 0.92205235064 11.4018426368 4 40 40 160 6400
+vector 205  EigrpTestNetwork.LAN4.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+205	37680 104 965 1563 0.92205235064 11.4018426368 4 64 64 256 16384
+vector 200  EigrpTestNetwork.LAN4.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+200	37576 104 966 1564 0.92205811064 11.4018483968 4 64 64 256 16384
+vector 136  EigrpTestNetwork.R4.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+136	36156 105 967 1565 0.92205816064 11.4018484468 4 64 64 256 16384
+vector 137  EigrpTestNetwork.R4.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+137	36261 105 967 1565 0.92205816064 11.4018484468 4 64 64 256 16384
+vector 145  EigrpTestNetwork.R4.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+145	36366 105 968 1566 0.92205816064 11.4018484468 4 40 40 160 6400

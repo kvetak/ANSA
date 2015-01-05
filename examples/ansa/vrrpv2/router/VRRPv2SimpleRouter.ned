@@ -19,6 +19,7 @@ import inet.ansa.networklayer.vrrpv2.VRRPv2;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.base.NotificationBoard;
+import inet.linklayer.loopback.LoopbackInterface;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF;
@@ -36,6 +37,8 @@ module VRRPv2SimpleRouter
 
         xml routingTable = default(xml("<routingTable/>"));
         bool IPForward = default(true);
+
+        int numOfLoopbacks = default(1);
 
     gates:
         inout ethg[] @labels(EtherFrame-conn);
@@ -86,11 +89,14 @@ module VRRPv2SimpleRouter
         }
 
         //eth[sizeof(ethg)]: <default("AnsaEthernetInterfaceWithVF")> like IWiredNic {
-        eth[sizeof(ethg)]: AnsaEthernetInterfaceWithVF {		
+        eth[sizeof(ethg)]: AnsaEthernetInterfaceWithVF {
             parameters:
                 @display("p=250,302,row,110;q=l2queue");
         }
 
+        lo[numOfLoopbacks]: LoopbackInterface {
+            @display("p=128,302");
+        }
     connections allowunconnected:
         vrrp.ipOut --> networkLayer.vrrpIn;
         vrrp.ipIn <-- networkLayer.vrrpOut;
@@ -99,5 +105,9 @@ module VRRPv2SimpleRouter
             ethg[i] <--> eth[i].phys;
             eth[i].upperLayerOut --> networkLayer.ifIn++;
             eth[i].upperLayerIn <-- networkLayer.ifOut++;
+        }
+        for i=0..numOfLoopbacks-1 {
+            lo[i].upperLayerOut --> networkLayer.ifIn++;
+            lo[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 }

@@ -63,7 +63,7 @@ void VRRPv2::initialize(int stage)
 
 }
 
-void VRRPv2::addVirtualRouter(int interface, int vrid)
+void VRRPv2::addVirtualRouter(int interface, int vrid, const char* ifnam)
 {
     int gateSize = virtualRouterTable.size() + 1;
     this->setGateSize("vrIn",gateSize);
@@ -71,7 +71,7 @@ void VRRPv2::addVirtualRouter(int interface, int vrid)
 
     // name
     std::stringstream tmp;
-    tmp << "VR_" << interface << "_" << vrid;
+    tmp << "VR_" << ifnam << "_" << vrid;
     std::string name = tmp.str();
 
     // create

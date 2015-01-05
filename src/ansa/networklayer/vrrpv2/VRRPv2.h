@@ -51,7 +51,7 @@ class VRRPv2 : public cSimpleModule
          * @param interface interafceId
          * @param vrid      Virtual Router ID
          */
-        virtual void addVirtualRouter(int interface, int vrid);
+        virtual void addVirtualRouter(int interface, int vrid, const char* ifnam);
 
 };
 
