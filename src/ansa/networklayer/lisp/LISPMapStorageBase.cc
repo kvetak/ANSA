@@ -33,7 +33,7 @@ void LISPMapStorageBase::clearMappingStorage() {
 }
 
 void LISPMapStorageBase::addMapEntry(LISPMapEntry& entry) {
-    MappingStorage.push_back(entry);
+    MappingStorage.push_front(entry);
     MappingStorage.sort();
 }
 

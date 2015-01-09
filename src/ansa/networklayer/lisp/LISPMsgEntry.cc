@@ -55,7 +55,7 @@ std::string LISPMsgEntry::info() const {
     os << getTypeString() << " (" << getNonce() << ") ";
     if (!flag) os << " received from ";
     else os << " sent to ";
-        os << address << " at " << getProcessedAt();
+    os << address << " at " << getProcessedAt();
     return os.str();
 }
 

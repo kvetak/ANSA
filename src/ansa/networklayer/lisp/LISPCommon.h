@@ -42,6 +42,7 @@ extern const unsigned short QUICK_REGTIMER_VAL;
 extern const unsigned short QUICKREG_PERIOD_VAL;
 extern const unsigned short QUICKREG_CYCLES_VAL;
 extern const unsigned short DEFAULT_REGTIMER_VAL;
+extern const unsigned short DEFAULT_PROBETIMER_VAL;
 extern const unsigned short DEFAULT_REQTIMEOUT_VAL;
 extern const unsigned short DEFAULT_REQMULTIPLIER_VAL;
 extern const unsigned short DEFAULT_MAXREQRETRIES_VAL;
@@ -106,6 +107,7 @@ extern const char* MR6_PAR;
 extern const char* HASSITEDB_PAR;
 extern const char* ACCEPTREQMAPPING_PAR;
 extern const char* ECHONONCEALGO_PAR;
+extern const char* CISCOSTARTUPDELAY_PAR;
 extern const char* MAPCACHETTL_PAR;
 extern const char* SMARTRLOCPROBE_PAR;
 extern const char* RLOCPROBINGALGO_PAR;
@@ -122,6 +124,14 @@ extern const char* ADVERTONLYOWNEID_PAR;
 extern const char* MAPDB_MOD;
 extern const char* MAPCACHE_MOD;
 extern const char* SITEDB_MOD;
+extern const char* LOGGER_MOD;
+
+extern const char* SIG_CACHE_LOOKUP;
+extern const char* SIG_CACHE_MISS;
+extern const char* SIG_CACHE_SIZE;
+extern const char* SIG_LOG_SEND;
+extern const char* SIG_LOG_RECV;
+extern const char* SIG_LOG_MSG;
 
 class LISPCommon {
   public:

@@ -52,6 +52,8 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
     LISPMapEntryTimer* findExpirationTimer(const LISPEidPrefix& eidPref);
     void updateTimeout(const LISPEidPrefix& eidPref, simtime_t time);
 
+    LISPMapEntry* lookupMapEntry(IPvXAddress address);
+
     void updateCacheEntry(const TRecord& record);
     void syncCacheEntry(LISPMapEntry& entry);
 
@@ -63,12 +65,20 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
      std::string syncKey;
      bool syncAck;
 
+     simsignal_t sigMiss;
+     simsignal_t sigLookup;
+     simsignal_t sigSize;
+     void initSignals();
+
+
      void parseConfig(cXMLElement* config);
      void parseSyncSetup(cXMLElement* config);
 
      virtual int numInitStages() const { return 4; }
      virtual void initialize(int stage);
      virtual void handleMessage(cMessage *msg);
+
+
 };
 
 #endif

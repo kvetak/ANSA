@@ -61,6 +61,10 @@ void LISPMapCache::initialize(int stage)
     m1.setAction(LISPCommon::SEND_MAP_REQUEST);
     this->addMapEntry(m1);
 
+    //Init signals
+    initSignals();
+    emit(sigMiss, true);
+    emit(sigLookup, true);
     //Watchers
     WATCH_LIST(MappingStorage);
     WATCH(syncType);
@@ -76,10 +80,12 @@ void LISPMapCache::updateCacheEntry(const TRecord& record) {
 
     //Add to mapping storage
     updateMapEntry(record);
-    MappingStorage.sort();
 
     //Change Timeout message appropriately
     updateTimeout(record.EidPrefix, simTime() + record.recordTTL * 60);
+
+    //MappingStorage.sort();
+    emit(sigSize, (long)MappingStorage.size());
 }
 
 void LISPMapCache::syncCacheEntry(LISPMapEntry& entry) {
@@ -153,6 +159,16 @@ void LISPMapCache::parseSyncSetup(cXMLElement* config) {
 
 }
 
+LISPMapEntry* LISPMapCache::lookupMapEntry(IPvXAddress address) {
+    LISPMapEntry* me = LISPMapStorageBase::lookupMapEntry(address);
+    if (!me || me->getEidPrefix().getEidAddr().isUnspecified()) {
+        emit(sigMiss, true);
+    }
+    else
+        emit(sigLookup, true);
+    return me;
+}
+
 void LISPMapCache::handleMessage(cMessage *msg)
 {
     //Receive Map-Entry expiration timer
@@ -190,4 +206,10 @@ const ServerAddresses& LISPMapCache::getSyncSet() const {
 
 LISPMapCache::EMapSync LISPMapCache::getSyncType() const {
     return syncType;
+}
+
+void LISPMapCache::initSignals() {
+    sigMiss     = registerSignal(SIG_CACHE_MISS);
+    sigLookup   = registerSignal(SIG_CACHE_LOOKUP);
+    sigSize     = registerSignal(SIG_CACHE_SIZE);
 }

@@ -62,18 +62,16 @@ class LISPCore : public cSimpleModule
     bool isOneOfMyEids(IPvXAddress addr);
 
   protected:
-    //AnsaRoutingTable*   Rt;                 ///< Provides access to the IPv4 routing table.
     LISPMapCache*       MapCache;
     LISPSiteDatabase*   SiteDb;
     LISPMapDatabase*    MapDb;
+    LISPMsgLogger*      MsgLog;
 
     LISPProbeSet        ProbingSet;
 
     ServerAddresses     MapServers;
     ServerAddresses     MapResolvers;
     ServerCItem         MapResolverQueue;
-
-    LISPMsgLogger       MsgLog;
 
     UDPSocket controlTraf;
     UDPSocket dataTraf;
@@ -86,6 +84,7 @@ class LISPCore : public cSimpleModule
     bool acceptMapRequestMapping;
     unsigned short mapCacheTtl;
     bool echoNonceAlgo;
+    bool ciscoStartupDelays;
 
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}

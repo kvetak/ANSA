@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.lisp.lispHA;
+package inet.examples.ansa.lisp.lispIariaFunc;
 
 import inet.ansa.ANSASwitch;
 import inet.ansa.applications.rip.RIPRouter;
@@ -26,7 +26,8 @@ import inet.world.scenario.ScenarioManager;
 import inet.nodes.ethernet.Eth100M;
 import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 
-network LispHA
+
+network LispIariaFunc
 {
     @display("bgb=623,506,white");
     submodules:
@@ -42,63 +43,50 @@ network LispHA
                 @display("p=55,34");
         }
         xTR_A1: ANSA_xTR {
-            @display("p=186,92");
+            @display("p=169,265");
             gates:
-                ethg[3];
+                ethg[2];
         }
         MRMS: ANSA_MRMS {
-            @display("p=306,34");
+            @display("p=306,53");
         }
         xTR_B1: ANSA_xTR {
-            @display("p=434,92");
+            @display("p=345,265");
             gates:
-                ethg[3];
+                ethg[2];
         }
         S1: EtherSwitch {
-            @display("p=86,140");
+            @display("p=218,341");
         }
         S2: EtherSwitch {
-            @display("p=546,140");
+            @display("p=394,341");
         }
-        Hv4_A: ANSA_DualStackHost {
-            @display("p=27,277");
+        HostA: ANSA_DualStackHost {
+            @display("p=218,407");
         }
-        Hv6_A: ANSA_DualStackHost {
-            @display("p=150,277");
-        }
-        Hv4_B: ANSA_DualStackHost {
-            @display("p=490,267");
-        }
-        Hv6_B: ANSA_DualStackHost {
-            @display("p=589,267");
+        HostB: ANSA_DualStackHost {
+            @display("p=394,407");
         }
         Core: RIPRouter {
             @display("p=306,145");
         }
         xTR_A2: ANSA_xTR {
-            @display("p=186,176");
+            @display("p=267,265");
             gates:
-                ethg[3];
+                ethg[2];
         }
         xTR_B2: ANSA_xTR {
-            @display("p=434,176");
+            @display("p=443,265");
             gates:
-                ethg[3];
+                ethg[2];
         }
     connections:
-        xTR_A1.ethg[2] <--> Eth100M <--> xTR_A2.ethg[2];
-        xTR_B1.ethg[2] <--> Eth100M <--> xTR_B2.ethg[2];
-
         S1.ethg++ <--> Eth100M <--> xTR_A1.ethg[1];
         S1.ethg++ <--> Eth100M <--> xTR_A2.ethg[1];
-        S1.ethg++ <--> Eth100M <--> Hv4_A.ethg++;
-        S1.ethg++ <--> Eth100M <--> Hv6_A.ethg++;
-
+        S1.ethg++ <--> Eth100M <--> HostA.ethg++;
         S2.ethg++ <--> Eth100M <--> xTR_B1.ethg[1];
         S2.ethg++ <--> Eth100M <--> xTR_B2.ethg[1];
-        S2.ethg++ <--> Eth100M <--> Hv4_B.ethg++;
-        S2.ethg++ <--> Eth100M <--> Hv6_B.ethg++;
-
+        S2.ethg++ <--> Eth100M <--> HostB.ethg++;
         Core.ethg++ <--> Eth100M <--> MRMS.ethg++;
         Core.ethg++ <--> Eth100M <--> xTR_A1.ethg[0];
         Core.ethg++ <--> Eth100M <--> xTR_A2.ethg[0];

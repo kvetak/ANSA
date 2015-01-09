@@ -21,6 +21,8 @@
 
 #include <LISPMsgLogger.h>
 
+Define_Module(LISPMsgLogger);
+
 LISPMsgLogger::LISPMsgLogger() {
 
 }
@@ -31,6 +33,13 @@ LISPMsgLogger::~LISPMsgLogger() {
 
 void LISPMsgLogger::addMsg(LISPMsgEntry::EMsgType type, unsigned long nonce, IPvXAddress addr, bool flag) {
     MsgLogger.push_back( LISPMsgEntry(type, nonce, addr, simTime(), flag) );
+
+    if (flag)
+        emit(sigSend, true);
+    else
+        emit(sigRecv, true);
+    emit(sigMsg, (int)type);
+
 }
 
 LISPMsgEntry* LISPMsgLogger::findMsg(LISPMsgEntry::EMsgType type, unsigned long nonce) {
@@ -43,4 +52,19 @@ LISPMsgEntry* LISPMsgLogger::findMsg(LISPMsgEntry::EMsgType type, unsigned long 
 
 MessageLog& LISPMsgLogger::getMsgLogger() {
     return MsgLogger;
+}
+
+void LISPMsgLogger::initialize(int stage) {
+    initSignals();
+    WATCH_LIST(MsgLogger);
+}
+
+void LISPMsgLogger::initSignals() {
+    sigSend     = registerSignal(SIG_LOG_SEND);
+    sigRecv     = registerSignal(SIG_LOG_RECV);
+    sigMsg      = registerSignal(SIG_LOG_MSG);
+}
+
+void LISPMsgLogger::handleMessage(cMessage* msg) {
+    error("LISP MsgLoogger should not receive any messages");
 }

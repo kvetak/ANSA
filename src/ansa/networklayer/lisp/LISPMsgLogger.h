@@ -22,13 +22,14 @@
 #ifndef LISPMSGLOGGER_H_
 #define LISPMSGLOGGER_H_
 
+#include <omnetpp.h>
 #include "LISPMsgEntry.h"
 
 typedef std::list<LISPMsgEntry> MessageLog;
 typedef MessageLog::iterator MsgItem;
 typedef MessageLog::const_iterator MsgCItem;
 
-class LISPMsgLogger {
+class LISPMsgLogger: public cSimpleModule {
   public:
     LISPMsgLogger();
     virtual ~LISPMsgLogger();
@@ -37,8 +38,18 @@ class LISPMsgLogger {
     LISPMsgEntry* findMsg(LISPMsgEntry::EMsgType type, unsigned long nonce);
     MessageLog& getMsgLogger();
 
-  private:
+  protected:
     MessageLog MsgLogger;
+
+    simsignal_t sigSend;
+    simsignal_t sigRecv;
+    simsignal_t sigMsg;
+    void initSignals();
+
+
+    virtual int numInitStages() const { return 4; }
+    virtual void initialize(int stage);
+    virtual void handleMessage(cMessage *msg);
 };
 
 #endif /* LISPMSGLOGGER_H_ */

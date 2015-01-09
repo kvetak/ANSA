@@ -26,4 +26,12 @@ simple LISPMapCache
         xml 	configData 			 = default(xml("<MapCache></MapCache>"));        
         string 	cacheSynchronization = default("None"); //None OR Naive OR Smart
         bool   	cacheSyncAck 		 = default(true);   
+        
+        
+        @signal[sigLispLookup](type=bool);
+        @signal[sigLispMiss](type=bool);
+        @signal[sigLispSize](type=long);
+        @statistic[cache-lookups](title="map-cache lookups"; source=count(sigLispLookup); record=last);
+        @statistic[cache-misses](title="map-cache misses"; source=count(sigLispMiss); record=last);
+        @statistic[cache-size](title="map-cache size"; source=sigLispSize; record=stats,vector);
 }

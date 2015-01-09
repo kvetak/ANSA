@@ -28,7 +28,7 @@
 class LISPMsgEntry {
   public:
     enum EMsgType {
-        UNKNOWN,
+        UNKNOWN = 0,
         REQUEST,
         REPLY,
         NEGATIVE_REPLY,

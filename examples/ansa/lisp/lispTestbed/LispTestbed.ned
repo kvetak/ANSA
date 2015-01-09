@@ -24,16 +24,16 @@ import inet.nodes.ethernet.Eth100M;
 
 network LispTestbed
 {
-    @display("bgb=551,279");
+    @display("bgb=590,279,white");
     submodules:
-        etherSwitch: EtherSwitch {
-            @display("p=148,139");
+        SW: EtherSwitch {
+            @display("p=132,136");
         }
         Host1: ANSA_DualStackHost {
-            @display("p=54,91");
+            @display("p=132,52");
         }
         Host2: ANSA_DualStackHost {
-            @display("p=54,187");
+            @display("p=132,226");
         }
         xTR1: ANSA_xTR_HA {
             @display("p=244,87");
@@ -52,23 +52,23 @@ network LispTestbed
         }
         configurator: IPv4NetworkConfigurator {
             parameters:
-				config = xml("<config></config>");
+                config = xml("<config></config>");
                 assignAddresses = false;
                 assignDisjunctSubnetAddresses = false;
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
                 addSubnetRoutes = false;
                 optimizeRoutes = false;
-            	@display("p=360,239");
+                @display("p=360,239");
         }
     connections:
         Core.ethg++ <--> Eth100M <--> MRMS.ethg++;
         xTR1.ethg++ <--> Eth100M <--> Core.ethg++;
-        xTR2.ethg++ <--> Eth100M <--> Core.ethg++;        
+        xTR2.ethg++ <--> Eth100M <--> Core.ethg++;
         Core.ethg++ <--> Eth100M <--> xTR_Responder.ethg++;
-        xTR1.ethg++ <--> Eth100M <--> etherSwitch.ethg++;
-        xTR2.ethg++ <--> Eth100M <--> etherSwitch.ethg++;
-        etherSwitch.ethg++ <--> Eth100M <--> Host1.ethg++;
-        etherSwitch.ethg++ <--> Eth100M <--> Host2.ethg++;
+        xTR1.ethg++ <--> Eth100M <--> SW.ethg++;
+        xTR2.ethg++ <--> Eth100M <--> SW.ethg++;
+        SW.ethg++ <--> Eth100M <--> Host1.ethg++;
+        SW.ethg++ <--> Eth100M <--> Host2.ethg++;
         xTR1.ethg++ <--> Eth100M <--> xTR2.ethg++;
 }

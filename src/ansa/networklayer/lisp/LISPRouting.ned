@@ -60,6 +60,9 @@ module LISPRouting
                 configData = configData;
         }
 
+        lispMsgLogger: LISPMsgLogger {
+            @display("p=263,105");
+        }
     connections allowunconnected:
 
         lispCore.udpContrOut --> udpContrOut;

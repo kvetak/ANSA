@@ -72,6 +72,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
             MASTERDOWN,
             BROADCAST,
             PREEMTION,
+            INITCHECK
         };
 
     protected:
@@ -111,6 +112,10 @@ class VRRPv2VirtualRouter : public cSimpleModule
         cMessage*   adverTimer;
         cMessage*   broadcastTimer;
         cMessage*   preemtionTimer;
+
+
+        cMessage*   initCheckTimer;
+        void scheduleInitCheck();
 
 
     public:

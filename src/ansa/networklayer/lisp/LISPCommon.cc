@@ -40,6 +40,7 @@ const unsigned  short   QUICK_REGTIMER_VAL          = 20;                       
 const unsigned  short   QUICKREG_PERIOD_VAL         = 300;                      //5 minutes
 const unsigned  short   QUICKREG_CYCLES_VAL         = QUICKREG_PERIOD_VAL / QUICK_REGTIMER_VAL + 1; //15+1 cycles
 const unsigned  short   DEFAULT_REGTIMER_VAL        = 60;                       //60 seconds
+const unsigned  short   DEFAULT_PROBETIMER_VAL      = 60;                       //60 seconds
 const unsigned short    DEFAULT_REQTIMEOUT_VAL      = 1;
 const unsigned short    DEFAULT_REQMULTIPLIER_VAL   = 2;
 const unsigned short    DEFAULT_MAXREQRETRIES_VAL   = 3;
@@ -110,6 +111,7 @@ const           char*   MR6_PAR                 = "mapResolverV6";
 const           char*   HASSITEDB_PAR           = "hasSiteDB";
 const           char*   ACCEPTREQMAPPING_PAR    = "acceptMapRequestMapping";
 const           char*   ECHONONCEALGO_PAR       = "echoNonceAlgo";
+const           char*   CISCOSTARTUPDELAY_PAR   = "ciscoStartupDelays";
 const           char*   MAPCACHETTL_PAR         = "mapCacheTtl";
 const           char*   SMARTRLOCPROBE_PAR      = "smartRlocProbing";
 const           char*   RLOCPROBINGALGO_PAR     = "rlocProbingAlgo";
@@ -122,10 +124,20 @@ const           char*   SYNCNAIVE_PARVAL        = "Naive";
 const           char*   SYNCSMART_PARVAL        = "Smart";
 const           char*   SYNCACK_PAR             = "cacheSyncAck";
 const           char*   ADVERTONLYOWNEID_PAR    = "advertOnlyOwnEids";
+
 // --------------- MODULES ---------------
 const           char*   MAPDB_MOD               = "lispMapDatabase";
 const           char*   MAPCACHE_MOD            = "lispMapCache";
 const           char*   SITEDB_MOD              = "lispSiteDatabase";
+const           char*   LOGGER_MOD              = "lispMsgLogger";
+
+// --------------- SIGNALS ---------------
+const           char*   SIG_CACHE_LOOKUP        = "sigLispLookup";
+const           char*   SIG_CACHE_MISS          = "sigLispMiss";
+const           char*   SIG_CACHE_SIZE          = "sigLispSize";
+const           char*   SIG_LOG_SEND            = "sigLispSend";
+const           char*   SIG_LOG_RECV            = "sigLispRecv";
+const           char*   SIG_LOG_MSG             = "sigLispMsg";
 
 
 void LISPCommon::parseIpAddress(const char* str, std::string& address, std::string& length) {

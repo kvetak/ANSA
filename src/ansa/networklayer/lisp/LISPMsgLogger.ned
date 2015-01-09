@@ -1,0 +1,29 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+package inet.ansa.networklayer.lisp;
+
+simple LISPMsgLogger
+{
+    parameters:
+    	@display("i=block/timer");
+        @signal[sigLispSend](type=bool);
+        @signal[sigLispRecv](type=bool);
+        @signal[sigLispMsg](type=int);
+        @statistic[msg-send](title="msg send"; source=count(sigLispSend); record=last);
+        @statistic[msg-recv](title="msg recieved"; source=count(sigLispRecv); record=last);
+        @statistic[msg-type](title="msg type"; source=sigLispMsg; record=histogram; enum="UNKNOWN=0,REQUEST=1,REPLY=2,NEGREPLY=3,REGISTER=4,NOTIFY=5,ENCREQ=6,PROBEREQUEST=7,PROBEREPLY=8,CACHESYNC=9,CACHESYNCACK=10,DATA=11");
+    	
+}

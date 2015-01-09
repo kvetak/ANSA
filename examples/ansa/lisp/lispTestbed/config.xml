@@ -254,7 +254,7 @@
         	</Static>
                
         	<LISP>        	
-        		<EtrMapServer address="31.0.0.1" key="HesloB" />
+        		<EtrMapServer address="31.0.0.1" key="HesloB" proxy="enabled" />
         		<ItrMapResolver address="31.0.0.1" />        	
         		<EtrMapping>
         			<EID address="172.16.0.0/24">
@@ -314,7 +314,7 @@
         			<EID address="2001:db8:ac10:8::/64">        			
         		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
         		    </EID>        		            		    
-        			<EID address="2001:db8:ffff:9::/64">        			
+        			<EID address="2001:db8:ac10:9::/64">        			
         		     	<RLOC address="20.0.0.1" priority="1" weight="100" />
         		    </EID>        		            		          		            		    
         		         		            		    

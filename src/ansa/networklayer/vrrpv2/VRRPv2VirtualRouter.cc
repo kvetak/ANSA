@@ -39,12 +39,17 @@ VRRPv2VirtualRouter::VRRPv2VirtualRouter()
     masterDownTimer = NULL;
     broadcastTimer = NULL;
     preemtionTimer = NULL;
+    initCheckTimer = NULL;
     vf = NULL;
     arp = NULL;
 }
 
 VRRPv2VirtualRouter::~VRRPv2VirtualRouter()
 {
+    cancelAndDelete(masterDownTimer);
+    cancelAndDelete(broadcastTimer);
+    cancelAndDelete(preemtionTimer);
+    cancelAndDelete(adverTimer);
 }
 
 void VRRPv2VirtualRouter::initialize(int stage)
@@ -61,6 +66,8 @@ void VRRPv2VirtualRouter::initialize(int stage)
     WATCH_PTR(vf);
     WATCH(advertisementInterval);
     WATCH(advertisementIntervalActual);
+    WATCH(priority);
+    WATCH(preemtion);
 
     ift = InterfaceTableAccess().get();
     arp = AnsaArpAccess().get();
@@ -95,6 +102,11 @@ void VRRPv2VirtualRouter::initialize(int stage)
 void VRRPv2VirtualRouter::stateInitialize()
 {
     state = INITIALIZE;
+    if (!ie->isUp()) {
+        scheduleInitCheck();
+        return;
+    }
+
     emit(vrStateSignal, INITIALIZE);
 
     if (priority == ((int) par("priorityOwner")))
@@ -118,7 +130,13 @@ void VRRPv2VirtualRouter::stateInitialize()
 
 void VRRPv2VirtualRouter::stateBackup(VRRPPhase phase)
 {
-    if (phase == INIT)
+    //Check whether interface is disconnected
+    //IF yes THEN transit to INIT state
+    if (!ie->isUp()) {
+        stateInitialize();
+        return;
+    }
+    else if (phase == INIT)
     {
         state = BACKUP;
         emit(vrStateSignal, BACKUP);
@@ -150,7 +168,13 @@ void VRRPv2VirtualRouter::stateBackup(VRRPPhase phase)
 
 void VRRPv2VirtualRouter::stateMaster(VRRPPhase phase)
 {
-    if (phase == INIT)
+    //Check whether interface is disconnected
+    //IF yes THEN transit to INIT state
+    if (!ie->isUp()) {
+        stateInitialize();
+        return;
+    }
+    else if (phase == INIT)
     {
         state = MASTER;
         advertisementIntervalActual = advertisementInterval;
@@ -199,6 +223,9 @@ void VRRPv2VirtualRouter::handleTimer(cMessage* msg)
     else if (category == PREEMTION)
     {
         stateBackup(TIMER_END);
+    }
+    else if (category == INITCHECK) {
+        stateInitialize();
     }
 }
 
@@ -364,14 +391,28 @@ void VRRPv2VirtualRouter::handleAdvertisementBackup(VRRPv2Advertisement* msg)
         stateBackup(TIMER_START);
         return;
     }
-    else if (preemtion == false || ((int) msg->getPriority()) >= priority)
+    else if (preemtion == false || ((int) msg->getPriority()) > priority)
     {
         masterDownTimerInit = getMasterDownInterval();
         stateBackup(TIMER_START);
     }
-    else if (preemtionDelay && ((int) msg->getPriority()) < priority)
+    else if (((int) msg->getPriority()) <= priority)
     {
-        schedulePreemDelayTimer();
+        //Remain Backup
+        if (msg->getPriority() == priority
+                && ((IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()) {
+            masterDownTimerInit = getMasterDownInterval();
+            stateBackup(TIMER_START);
+            return;
+        }
+
+        //Become new Master
+        if (preemtionDelay)
+            schedulePreemDelayTimer();
+        //Let us expire MDI
+        else {
+            //...do nothing
+        }
     }
 }
 
@@ -605,4 +646,10 @@ std::string VRRPv2VirtualRouter::debugEvent() const
     std::stringstream result;
     result << "Grp " << vrid << " Event - Advert higher or equal priority";
     return result.str();
+}
+
+void VRRPv2VirtualRouter::scheduleInitCheck() {
+    if (initCheckTimer == NULL)
+        initCheckTimer = new cMessage("InitCheck", INITCHECK);
+    scheduleAt(simTime() + (double)advertisementInterval/4, initCheckTimer);
 }

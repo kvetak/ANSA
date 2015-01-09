@@ -36,7 +36,9 @@ simple LISPCore
         bool acceptMapRequestMapping = default(false);	//Whether MapReplyRecord from Map-Request should be cached
         int mapCacheTtl = default(1440); 				//CacheTTL in minutes for send Map-Replies
         
-        bool echoNonceAlgo = default(false);			//Whether EchoNonceAlgorithm is on or off                                                    
+        bool echoNonceAlgo = default(false);			//Whether EchoNonceAlgorithm is on or off
+        bool ciscoStartupDelays = default(true);		//Shift rloc probing of IPv4 and IPv6
+                
     gates:
         input udpContrIn @labels(UDPControlInfo/up);
         output udpContrOut @labels(UDPControlInfo/down);

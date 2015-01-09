@@ -69,6 +69,7 @@
                 <VRRP>
                 	<Group id="10">
                 		<IPAddress>192.168.10.254</IPAddress>
+                		<Priority>100</Priority>
                 	</Group>
                 </VRRP>
             </Interface>                                    
