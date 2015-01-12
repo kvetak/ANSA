@@ -34,12 +34,17 @@ LISPMsgLogger::~LISPMsgLogger() {
 void LISPMsgLogger::addMsg(LISPMsgEntry::EMsgType type, unsigned long nonce, IPvXAddress addr, bool flag) {
     MsgLogger.push_back( LISPMsgEntry(type, nonce, addr, simTime(), flag) );
 
-    if (flag)
+    if (flag) {
+        msgsent++;
         emit(sigSend, true);
-    else
+    }
+    else {
+        msgrecv++;
         emit(sigRecv, true);
+    }
     emit(sigMsg, (int)type);
 
+    updateDisplayString();
 }
 
 LISPMsgEntry* LISPMsgLogger::findMsg(LISPMsgEntry::EMsgType type, unsigned long nonce) {
@@ -55,6 +60,11 @@ MessageLog& LISPMsgLogger::getMsgLogger() {
 }
 
 void LISPMsgLogger::initialize(int stage) {
+    if (stage < numInitStages() - 1)
+        return;
+    msgsent = 0;
+    msgrecv = 0;
+    updateDisplayString();
     initSignals();
     WATCH_LIST(MsgLogger);
 }
@@ -67,4 +77,14 @@ void LISPMsgLogger::initSignals() {
 
 void LISPMsgLogger::handleMessage(cMessage* msg) {
     error("LISP MsgLoogger should not receive any messages");
+}
+
+void LISPMsgLogger::updateDisplayString() {
+    if (!ev.isGUI())
+        return;
+    std::ostringstream description;
+    description << msgsent << " sent" << endl
+                << msgrecv << " recv" ;
+    this->getDisplayString().setTagArg("t", 0, description.str().c_str());
+    this->getDisplayString().setTagArg("t", 1, "t");
 }

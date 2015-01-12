@@ -199,6 +199,7 @@ bool LISPMapStorageBase::updateMapEntry(const TRecord& rec) {
 
     //Update MapEntry parameters
     entry->setExpiry(simTime() + rec.recordTTL * 60);
+    entry->setTtl(rec.recordTTL);
 
     //Update action
     entry->setAction( (LISPCommon::EAct)rec.ACT );
@@ -239,6 +240,7 @@ bool LISPMapStorageBase::syncMapEntry(LISPMapEntry& mapentry) {
     else {
         //Update MapEntry parameters
         entry->setExpiry(mapentry.getExpiry());
+        entry->setTtl(mapentry.getTtl());
         //Update action
         entry->setAction(mapentry.getAction());
 

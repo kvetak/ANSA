@@ -21,17 +21,18 @@
 
 #include <LISPMapEntry.h>
 
-LISPMapEntry::LISPMapEntry() : expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
+LISPMapEntry::LISPMapEntry() : ttl(0), expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
 {
 }
 
 LISPMapEntry::LISPMapEntry(LISPEidPrefix neid) :
     EID(neid),
-    expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
+    ttl(0), expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
 {
 }
 
 LISPMapEntry::~LISPMapEntry() {
+    ttl = 0;
     expiry = SIMTIME_ZERO;
     RLOCs.clear();
     Action = LISPCommon::NO_ACTION;
@@ -102,6 +103,7 @@ void LISPMapEntry::addLocator(LISPRLocator& entry)
 
 bool LISPMapEntry::operator ==(const LISPMapEntry& other) const {
     return EID == other.EID &&
+           ttl == other.ttl &&
            expiry == other.expiry &&
            RLOCs == other.RLOCs;
 }
@@ -169,7 +171,7 @@ std::string LISPMapEntry::info() const {
     if (expiry == SIMTIME_ZERO)
          os << " never";
     else
-        os << expiry;
+        os << ttl << "min (" << expiry << ")";
 
     os << ", state: " << getMapStateString();
 
@@ -228,4 +230,12 @@ LISPRLocator* LISPMapEntry::getBestUnicastLocator() {
     }
     //IF previous lookup fails for some reason THEN return first available RLOC
     return &(rlocList.front());
+}
+
+unsigned int LISPMapEntry::getTtl() const {
+    return ttl;
+}
+
+void LISPMapEntry::setTtl(unsigned int ttl) {
+    this->ttl = ttl;
 }

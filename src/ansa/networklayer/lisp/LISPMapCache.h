@@ -48,7 +48,6 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
     LISPMapCache::EMapSync getSyncType() const;
     bool isSyncAck() const;
 
-
     LISPMapEntryTimer* findExpirationTimer(const LISPEidPrefix& eidPref);
     void updateTimeout(const LISPEidPrefix& eidPref, simtime_t time);
 
@@ -56,6 +55,8 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
 
     void updateCacheEntry(const TRecord& record);
     void syncCacheEntry(LISPMapEntry& entry);
+
+    void updateDisplayString();
 
   protected:
      CacheEntriesTimeouts CacheTimeouts;

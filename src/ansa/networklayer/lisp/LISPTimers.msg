@@ -55,3 +55,8 @@ message LISPSyncTimer {
 message LISPMapEntryTimer {
     LISPEidPrefix eidPref;
 }
+
+message LISPEtrTimer {
+    string siteName;
+    IPvXAddress etrAddr;
+}

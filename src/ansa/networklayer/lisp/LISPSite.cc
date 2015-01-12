@@ -45,11 +45,11 @@ void LISPSite::setKey(const std::string& key) {
     this->key = key;
 }
 
-const std::string& LISPSite::getName() const {
+const std::string& LISPSite::getSiteName() const {
     return name;
 }
 
-void LISPSite::setName(const std::string& name) {
+void LISPSite::setSiteName(const std::string& name) {
     this->name = name;
 }
 

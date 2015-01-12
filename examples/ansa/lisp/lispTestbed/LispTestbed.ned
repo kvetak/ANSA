@@ -21,6 +21,8 @@ import inet.ansa.nodes.lisp.*;
 import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 import inet.nodes.ethernet.EtherSwitch;
 import inet.nodes.ethernet.Eth100M;
+import inet.world.scenario.ScenarioManager;
+
 
 network LispTestbed
 {
@@ -60,6 +62,9 @@ network LispTestbed
                 addSubnetRoutes = false;
                 optimizeRoutes = false;
                 @display("p=360,239");
+        }
+        scenarioManager: ScenarioManager {
+            @display("p=452,239");
         }
     connections:
         Core.ethg++ <--> Eth100M <--> MRMS.ethg++;

@@ -47,6 +47,9 @@ extern const unsigned short DEFAULT_REQTIMEOUT_VAL;
 extern const unsigned short DEFAULT_REQMULTIPLIER_VAL;
 extern const unsigned short DEFAULT_MAXREQRETRIES_VAL;
 extern const unsigned short DEFAULT_IPTTL_VAL;
+extern const unsigned short DEFAULT_ETRTIMEOUT_VAL;
+extern const bool PACKET_FORWARD;
+extern const bool PACKET_DROP;
 
 extern const char* SITE_TAG;
 extern const char* EID_TAG;
@@ -77,6 +80,7 @@ extern const char* REQUEST_TIMER;
 extern const char* REQUESTPROBE_TIMER;
 extern const char* CACHE_TIMER;
 extern const char* CACHESYNC_TIMER;
+extern const char* ETRTIMEOUT_TIMER;
 
 extern const char* REGISTER_MSG;
 extern const char* NOTIFY_MSG;
@@ -132,6 +136,9 @@ extern const char* SIG_CACHE_SIZE;
 extern const char* SIG_LOG_SEND;
 extern const char* SIG_LOG_RECV;
 extern const char* SIG_LOG_MSG;
+extern const char* SIG_PACKET_FORWARD;
+extern const char* SIG_PACKET_DROP;
+
 
 class LISPCommon {
   public:

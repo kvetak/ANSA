@@ -23,15 +23,28 @@ typedef std::list<LISPSite> SiteStorage;
 typedef SiteStorage::iterator SiteStorageItem;
 typedef SiteStorage::const_iterator SiteStorageCItem;
 
+typedef std::list <LISPEtrTimer*> EtrTimeouts;
+typedef EtrTimeouts::const_iterator SiteTimeoutCItem;
+typedef EtrTimeouts::iterator SiteTimeoutItem;
+
 class LISPSiteDatabase : public cSimpleModule
 {
   public:
     void addSite(LISPSite& si);
     LISPSite* findSiteInfoByKey(std::string& siteKey);
+    LISPSite* findSiteInfoBySiteName(std::string& siteName);
     LISPSite* findSiteByAggregate(const IPvXAddress& addr);
 
-  protected:
+    LISPEtrTimer* findExpirationTimer(IPvXAddress addr, std::string name);
 
+    LISPSiteRecord* updateSiteEtr(LISPSite* si, IPvXAddress src, bool proxy);
+    void updateEtrEntries(LISPSiteRecord* siteRec, const TRecord& mapEntry, std::string name);
+    void updateTimeout(IPvXAddress addr, std::string name);
+
+
+
+  protected:
+    EtrTimeouts SiteTimeouts;
     SiteStorage SiteDatabase;
 
     void parseConfig(cXMLElement* config);
@@ -39,6 +52,7 @@ class LISPSiteDatabase : public cSimpleModule
     virtual void initialize(int stage);
     virtual int numInitStages() const { return 4; }
     virtual void handleMessage(cMessage *msg);
+    void updateDisplayString();
 };
 
 #endif

@@ -89,9 +89,15 @@ class LISPCore : public cSimpleModule
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}
 
+    simsignal_t sigFrwd, sigDrop;
+    unsigned int packetfrwd, packetdrop;
+    virtual void updateDisplayString();
+    void updateStats(bool flag);
+
     virtual int numInitStages() const { return 5; }
     void initPointers();
     void initSockets();
+    void initSignals();
     virtual void initialize(int stage);
 
     void handleTimer(cMessage *msg);
@@ -99,8 +105,6 @@ class LISPCore : public cSimpleModule
     void handleDataEncaps(cMessage *msg);
     void handleDataDecaps(cMessage *msg);
     virtual void handleMessage(cMessage *msg);
-
-    virtual void updateDisplayString();
 
     void parseConfig(cXMLElement* config);
         LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, IPvXAddress& addr);

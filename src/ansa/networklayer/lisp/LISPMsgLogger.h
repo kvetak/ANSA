@@ -46,10 +46,14 @@ class LISPMsgLogger: public cSimpleModule {
     simsignal_t sigMsg;
     void initSignals();
 
+    unsigned long msgsent;
+    unsigned long msgrecv;
 
     virtual int numInitStages() const { return 4; }
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
+
+    void updateDisplayString();
 };
 
 #endif /* LISPMSGLOGGER_H_ */

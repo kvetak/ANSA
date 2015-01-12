@@ -41,10 +41,13 @@ const unsigned  short   QUICKREG_PERIOD_VAL         = 300;                      
 const unsigned  short   QUICKREG_CYCLES_VAL         = QUICKREG_PERIOD_VAL / QUICK_REGTIMER_VAL + 1; //15+1 cycles
 const unsigned  short   DEFAULT_REGTIMER_VAL        = 60;                       //60 seconds
 const unsigned  short   DEFAULT_PROBETIMER_VAL      = 60;                       //60 seconds
-const unsigned short    DEFAULT_REQTIMEOUT_VAL      = 1;
-const unsigned short    DEFAULT_REQMULTIPLIER_VAL   = 2;
-const unsigned short    DEFAULT_MAXREQRETRIES_VAL   = 3;
-const unsigned short    DEFAULT_IPTTL_VAL           = 32;
+const unsigned  short   DEFAULT_REQTIMEOUT_VAL      = 1;
+const unsigned  short   DEFAULT_REQMULTIPLIER_VAL   = 2;
+const unsigned  short   DEFAULT_MAXREQRETRIES_VAL   = 3;
+const unsigned  short   DEFAULT_IPTTL_VAL           = 32;
+const unsigned  short   DEFAULT_ETRTIMEOUT_VAL      = 180;
+const           bool    PACKET_FORWARD              = true;
+const           bool    PACKET_DROP                 = false;
 
 
 // --------------- TAGS/ATTRIBUTE ---------------
@@ -78,6 +81,7 @@ const           char*   REQUEST_TIMER           = "LISP Request Timer";
 const           char*   REQUESTPROBE_TIMER      = "LISP RLOC-Probe Timer";
 const           char*   CACHE_TIMER             = "LISP Cache Timer";
 const           char*   CACHESYNC_TIMER         = "LISP CacheSync Timer";
+const           char*   ETRTIMEOUT_TIMER        = "LISP ETRTimeout Timer";
 
 const           char*   REGISTER_MSG            = "LISP Map-Register";
 const           char*   NOTIFY_MSG              = "LISP Map-Notify";
@@ -138,6 +142,8 @@ const           char*   SIG_CACHE_SIZE          = "sigLispSize";
 const           char*   SIG_LOG_SEND            = "sigLispSend";
 const           char*   SIG_LOG_RECV            = "sigLispRecv";
 const           char*   SIG_LOG_MSG             = "sigLispMsg";
+const           char*   SIG_PACKET_FORWARD      = "sigLispForward";
+const           char*   SIG_PACKET_DROP         = "sigLispDrop";
 
 
 void LISPCommon::parseIpAddress(const char* str, std::string& address, std::string& length) {

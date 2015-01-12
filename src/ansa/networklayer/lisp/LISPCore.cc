@@ -351,6 +351,11 @@ void LISPCore::initialize(int stage)
     //Register UDP port 4342
     initSockets();
 
+    packetfrwd = 0;
+    packetdrop= 0;
+    updateDisplayString();
+    initSignals();
+
     //Watchers
     WATCH_LIST(MapResolvers);
     WATCH_LIST(MapServers);
@@ -598,6 +603,8 @@ void LISPCore::handleDataEncaps(cMessage* msg) {
     //Known EID-to-RLOC mapping
     if (me && !me->getEidPrefix().getEidAddr().isUnspecified()) {
         sendEncapsulatedDataMessage(srcAddr, dstAddr, me, (cPacket*)msg);
+
+        updateStats(PACKET_FORWARD);
     }
     //Unknown EID-to-RLOC mapping
     else {
@@ -608,9 +615,12 @@ void LISPCore::handleDataEncaps(cMessage* msg) {
         reqtim->setRetryCount(0);
         reqtim->setPreviousNonce(DEFAULT_NONCE_VAL);
         scheduleAt(simTime(), reqtim);
+
         //Drop packet
         EV << "No LISP map-cache record, thus dropping packet" << endl;
         delete msg;
+
+        updateStats(PACKET_DROP);
     }
 
 }
@@ -624,9 +634,11 @@ void LISPCore::handleDataDecaps(cMessage* msg) {
             send(pip, IPV4_GATEOUT);
         else if (dynamic_cast<IPv6Datagram*>(pip))
             send(pip, IPV6_GATEOUT);
+
+        updateStats(PACKET_FORWARD);
     }
-    //else
-    //    error("Unrecognized data packet (%s)", MsgLog->getClassName());
+    else
+        error("Unrecognized data packet (%s)", MsgLog->getClassName());
 
     delete msg;
 }
@@ -649,10 +661,13 @@ void LISPCore::handleMessage(cMessage* msg)
 
 void LISPCore::updateDisplayString()
 {
-    if (ev.isGUI())
-    {
-        //TODO
-    }
+    if (!ev.isGUI())
+        return;
+    std::ostringstream description;
+    description << packetfrwd << " forwarded" << endl
+                << packetdrop << " dropped";
+    this->getDisplayString().setTagArg("t", 0, description.str().c_str());
+    this->getDisplayString().setTagArg("t", 1, "t");
 }
 
 void LISPCore::sendMapRegister(LISPServerEntry& se) {
@@ -716,22 +731,7 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
         UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
         IPvXAddress src = udpi->getSrcAddr();
 
-        LISPSiteRecord* srec;
-        LISPServerEntry* se;
-        //Create new record ...
-        if ( !si->findRecordByAddress(src) ) {
-            srec = new LISPSiteRecord();
-            se = new LISPServerEntry(src.str(), EMPTY_STRING_VAL, lmreg->getProxyBit(), false, false);
-            srec->setServerEntry(*se);
-            //Store new record into SiteStorage
-            si->addRecord(*srec);
-        }
-        //...and/or retrieve record
-        srec = si->findRecordByAddress(src);
-
-        //Update Record parameters
-        srec->getServerEntry().setLastTime(simTime());
-        srec->getServerEntry().setProxyReply(lmreg->getProxyBit());
+        LISPSiteRecord* srec = SiteDb->updateSiteEtr(si, src, lmreg->getProxyBit());
 
         for (TRecordCItem it = lmreg->getRecords().begin(); it != lmreg->getRecords().end(); ++it) {
             //Trying to store EID from AF that server does not operate
@@ -742,11 +742,12 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
             }
             //Trying to store EID from different scope then Maintained EIDs
             if ( !si->isEidMaintained(it->EidPrefix.getEidAddr()) ) {
-                EV << "EID " << it->EidPrefix << " is not recognized for site " << si->getName() << endl;
+                EV << "EID " << it->EidPrefix << " is not recognized for site " << si->getSiteName() << endl;
                 continue;
             }
 
-            srec->updateMapEntry(*it);
+            //Store it into SiteDatabase
+            SiteDb->updateEtrEntries(srec, *it, si->getSiteName());
         }
     }
     else {
@@ -1399,6 +1400,23 @@ void LISPCore::cacheMapping(const TRecord& record) {
     MapCache->updateCacheEntry(record);
     //Schedule cache synchronization procedure
     scheduleCacheSync(record.EidPrefix);
+}
+
+void LISPCore::initSignals() {
+    sigFrwd     = registerSignal(SIG_PACKET_FORWARD);
+    sigDrop     = registerSignal(SIG_PACKET_DROP);
+}
+
+void LISPCore::updateStats(bool flag) {
+    if (flag) {
+        packetfrwd++;
+        emit(sigFrwd, true);
+    }
+    else {
+        packetdrop++;
+        emit(sigDrop, true);
+    }
+    updateDisplayString();
 }
 
 unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAddress dstaddr, LISPMapEntry* mapentry, cPacket* packet) {

@@ -57,6 +57,8 @@ class LISPMapEntry {
     const LISPCommon::EAct getAction() const;
     const std::string getActionString() const;
     void setAction(const LISPCommon::EAct& action);
+    unsigned int getTtl() const;
+    void setTtl(unsigned int ttl);
 
     std::string info() const;
 
@@ -67,11 +69,13 @@ class LISPMapEntry {
 
     LISPRLocator* getBestUnicastLocator();
 
-  private:
+
+  protected:
     LISPEidPrefix EID;
     Locators RLOCs;
 
     //Map-cache entry
+    unsigned int ttl;
     simtime_t expiry;
 
     //Cache-Action

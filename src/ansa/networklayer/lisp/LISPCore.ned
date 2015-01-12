@@ -38,6 +38,12 @@ simple LISPCore
         
         bool echoNonceAlgo = default(false);			//Whether EchoNonceAlgorithm is on or off
         bool ciscoStartupDelays = default(true);		//Shift rloc probing of IPv4 and IPv6
+        
+        @signal[sigLispForward](type=bool);
+        @signal[sigLispDrop](type=bool);        
+        @statistic[packet-frwd](title="packet forwarded"; source=count(sigLispForward); record=last);
+        @statistic[packet-drop](title="packet drop"; source=count(sigLispDrop); record=last);
+        
                 
     gates:
         input udpContrIn @labels(UDPControlInfo/up);

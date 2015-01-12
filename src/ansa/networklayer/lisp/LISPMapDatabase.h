@@ -39,9 +39,10 @@ class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
 
   protected:
     IInterfaceTable*    Ift;                ///< Provides access to the interface table.
+    bool advertonlyowneids;
 
     void parseEtrMappings(cXMLElement* config);
-    bool advertonlyowneids;
+    void updateDisplayString();
 };
 
 #endif

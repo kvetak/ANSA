@@ -25,6 +25,7 @@
 #include <omnetpp.h>
 #include "LISPCommon.h"
 #include "LISPSiteRecord.h"
+#include "LISPTimers_m.h"
 
 class LISPSite : public LISPMapStorageBase
 {
@@ -39,19 +40,20 @@ class LISPSite : public LISPMapStorageBase
 
     const std::string& getKey() const;
     void setKey(const std::string& key);
-    const std::string& getName() const;
-    void setName(const std::string& name);
+    const std::string& getSiteName() const;
+    void setSiteName(const std::string& name);
     const Etrs& getETRs() const;
     void setETRs(const Etrs& etRs);
     void clearETRs();
 
     void addRecord(LISPSiteRecord& srec);
+    void removeRecord(LISPSiteRecord& srec);
     LISPSiteRecord* findRecordByAddress(IPvXAddress& address);
     Etrs findAllRecordsByEid(const IPvXAddress& address);
-    void removeRecord(LISPSiteRecord& srec);
     bool isEidMaintained(const IPvXAddress& address);
 
-  private:
+  protected:
+
     std::string name;
     std::string key;
     Etrs ETRs;

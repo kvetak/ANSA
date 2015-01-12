@@ -63,8 +63,9 @@ void LISPMapCache::initialize(int stage)
 
     //Init signals
     initSignals();
-    emit(sigMiss, true);
-    emit(sigLookup, true);
+
+    updateDisplayString();
+
     //Watchers
     WATCH_LIST(MappingStorage);
     WATCH(syncType);
@@ -82,10 +83,13 @@ void LISPMapCache::updateCacheEntry(const TRecord& record) {
     updateMapEntry(record);
 
     //Change Timeout message appropriately
+    EV << "TTL> " << record.recordTTL << endl;
     updateTimeout(record.EidPrefix, simTime() + record.recordTTL * 60);
 
     //MappingStorage.sort();
     emit(sigSize, (long)MappingStorage.size());
+
+    updateDisplayString();
 }
 
 void LISPMapCache::syncCacheEntry(LISPMapEntry& entry) {
@@ -98,6 +102,11 @@ void LISPMapCache::syncCacheEntry(LISPMapEntry& entry) {
 
     //Change Timeout message appropriately
     updateTimeout(entry.getEidPrefix(), entry.getExpiry());
+
+    //MappingStorage.sort();
+    emit(sigSize, (long)MappingStorage.size());
+
+    updateDisplayString();
 }
 
 LISPMapEntryTimer* LISPMapCache::findExpirationTimer(const LISPEidPrefix& eidPref) {
@@ -212,4 +221,13 @@ void LISPMapCache::initSignals() {
     sigMiss     = registerSignal(SIG_CACHE_MISS);
     sigLookup   = registerSignal(SIG_CACHE_LOOKUP);
     sigSize     = registerSignal(SIG_CACHE_SIZE);
+}
+
+void LISPMapCache::updateDisplayString() {
+    if (!ev.isGUI())
+        return;
+    std::ostringstream description;
+    description << MappingStorage.size() - 1 << " entries";
+    this->getDisplayString().setTagArg("t", 0, description.str().c_str());
+    this->getDisplayString().setTagArg("t", 1, "t");
 }

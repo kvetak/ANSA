@@ -35,6 +35,8 @@ void LISPMapDatabase::initialize(int stage)
     //EtrMappings
     parseEtrMappings( par(CONFIG_PAR).xmlValue() );
 
+    updateDisplayString();
+
     WATCH_LIST(MappingStorage);
 }
 
@@ -109,4 +111,13 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
 
 bool LISPMapDatabase::isOneOfMyEids(IPvXAddress addr) {
     return (lookupMapEntry(addr) ? true : false);
+}
+
+void LISPMapDatabase::updateDisplayString() {
+    if (!ev.isGUI())
+        return;
+    std::ostringstream description;
+    description << MappingStorage.size() << " EIDs";
+    this->getDisplayString().setTagArg("t", 0, description.str().c_str());
+    this->getDisplayString().setTagArg("t", 1, "t");
 }
