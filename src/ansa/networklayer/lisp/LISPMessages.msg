@@ -40,7 +40,17 @@ enum LISP_MsgType
     CACHE_SYNC_ACK			= 7;
 }
 
-packet LISPHeader {
+packet LISPMessage {
+    unsigned long nonce; 				// nonce
+}
+
+//        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//        |N|L|E|V|I|flags|            Nonce/Map-Version                  |
+// LISP \ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+//  Hdr / |                 Instance ID/Locator-Status-Bits               |
+//        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+packet LISPHeader extends LISPMessage {
     string displayString = "b=15,15,oval,violet,violet,0"; 
     bool NonceBit; 						// nonce-present Bit
     bool LocStatBit; 					// locator-status-Bits field enabled
@@ -48,17 +58,15 @@ packet LISPHeader {
     bool VerMapBit; 					// map-version persent Bit
     bool InstanceBit; 					// instance id Bit
     unsigned char flags;							// currently unused flags
-    unsigned int nonce; 				// nonce
     unsigned int mapVersion; 			// map-version
     unsigned int instanceId; 			// instanceId
     unsigned int locatorStatusBits; 	// locator-status-Bits field
 }
 
-packet LISPMessage {
+packet LISPControlMessage extends LISPMessage {
     string displayString;
     unsigned char type enum(LISP_MsgType);	// message type    
-    unsigned char recordCount;				// number of records
-    unsigned long nonce; 					// nonce
+    unsigned char recordCount;				// number of records    
 }
 
 //        0                   1                   2                   3
@@ -85,7 +93,7 @@ packet LISPMessage {
 //       |                   Map-Reply Record  ...                       |
 //       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-packet LISPMapRequest extends LISPMessage {
+packet LISPMapRequest extends LISPControlMessage {
     displayString = "b=15,15,oval,blue,blue,0";
     type = REQUEST;    
     bool ABit;							// Authoritative Bit 
@@ -129,7 +137,7 @@ packet LISPMapRequest extends LISPMessage {
 //   |  \|                             Locator                           |
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-packet LISPMapReply extends LISPMessage {
+packet LISPMapReply extends LISPControlMessage {
 	displayString = "b=15,15,oval,lightblue,lightblue,0";
 	type = REPLY;    
 	bool ProbeBit;						//Proxy Map-Reply Bit
@@ -167,7 +175,7 @@ packet LISPMapReply extends LISPMessage {
 //   |  \|                             Locator                           |
 //   +-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-packet LISPMapRegister extends LISPMessage {
+packet LISPMapRegister extends LISPControlMessage {
 	displayString = "b=15,15,oval,yellow,yellow,0";
 	type = REGISTER; 	
 	bool ProxyBit;							//Proxy Map-Reply Bit
@@ -265,7 +273,7 @@ packet LISPEncapsulated {
 //       |                        LISP MapEntry #n                       |
 //       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-packet LISPCacheSyncAck extends LISPMessage {
+packet LISPCacheSyncAck extends LISPControlMessage {
     displayString = "b=15,15,oval,#cc6633,#cc6633,0";
     type = CACHE_SYNC_ACK;   
 

@@ -24,6 +24,7 @@
 
 #include <omnetpp.h>
 #include "LISPMsgEntry.h"
+#include "LISPMessages_m.h"
 
 typedef std::list<LISPMsgEntry> MessageLog;
 typedef MessageLog::iterator MsgItem;
@@ -34,13 +35,15 @@ class LISPMsgLogger: public cSimpleModule {
     LISPMsgLogger();
     virtual ~LISPMsgLogger();
 
-    void addMsg(LISPMsgEntry::EMsgType type, unsigned long nonce, IPvXAddress addr, bool flag);
+    void addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, IPvXAddress addr, bool flag);
     LISPMsgEntry* findMsg(LISPMsgEntry::EMsgType type, unsigned long nonce);
     MessageLog& getMsgLogger();
 
   protected:
     MessageLog MsgLogger;
 
+    simsignal_t sigSizeSend;
+    simsignal_t sigSizeRecv;
     simsignal_t sigSend;
     simsignal_t sigRecv;
     simsignal_t sigMsg;
@@ -49,11 +52,15 @@ class LISPMsgLogger: public cSimpleModule {
     unsigned long msgsent;
     unsigned long msgrecv;
 
+    unsigned long sizesent;
+    unsigned long sizerecv;
+
     virtual int numInitStages() const { return 4; }
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
 
     void updateDisplayString();
+    void recordStatistics(LISPMessage* lispmsg, int msgtype, bool flag);
 };
 
 #endif /* LISPMSGLOGGER_H_ */

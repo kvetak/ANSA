@@ -693,9 +693,12 @@ void LISPCore::sendMapRegister(LISPServerEntry& se) {
     //As many records as there are EtrMappings
     lmreg->setRecordCount(lmreg->getRecords().size());
 
+    //Count dynamic size
+    lmreg->setByteLength(countPacketSize(lmreg));
+
     //Log and send
     //EV << "Map-Register message generated." << endl;
-    MsgLog->addMsg(LISPMsgEntry::REGISTER, lmreg->getNonce(), se.getAddress(), true);
+    MsgLog->addMsg(lmreg, LISPMsgEntry::REGISTER, se.getAddress(), true);
     controlTraf.sendTo(lmreg, se.getAddress() , CONTROL_PORT_VAL);
 }
 
@@ -703,7 +706,7 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
     //Log
     UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
     IPvXAddress src = udpi->getSrcAddr();
-    MsgLog->addMsg(LISPMsgEntry::REGISTER, lmreg->getNonce(), src, false);
+    MsgLog->addMsg(lmreg, LISPMsgEntry::REGISTER, src, false);
 
     //Check whether device has SiteDB
     if (!mapServerV4 && !mapServerV6) {
@@ -771,8 +774,11 @@ void LISPCore::sendMapNotify(LISPMapRegister* lmreg) {
     lmnot->setAuthData(lmreg->getAuthData());
     lmnot->setRecords(lmreg->getRecords());
 
+    //Count dynamic size
+    lmnot->setByteLength(countPacketSize(lmnot));
+
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::NOTIFY, lmnot->getNonce(), dst, true);
+    MsgLog->addMsg(lmnot, LISPMsgEntry::NOTIFY, dst, true);
     controlTraf.sendTo(lmnot, dst, CONTROL_PORT_VAL);
 }
 
@@ -782,7 +788,7 @@ void LISPCore::receiveMapNotify(LISPMapNotify* lmnot) {
     IPvXAddress src = udpi->getSrcAddr();
 
     //Log
-    MsgLog->addMsg(LISPMsgEntry::NOTIFY, lmnot->getNonce(), src, false);
+    MsgLog->addMsg(lmnot, LISPMsgEntry::NOTIFY, src, false);
 
     //Check whether last Map-Register was acknowledged
     if ( MsgLog->findMsg(LISPMsgEntry::REGISTER, lmnot->getNonce() ) ) {
@@ -872,6 +878,9 @@ unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddr
         return DEFAULT_NONCE_VAL;
     }
 
+    //Count dynamic size
+    lmreq->setByteLength(countPacketSize(lmreq));
+
     //Create UDP Envelope
     UDPPacket* udpPacket = new UDPPacket(REQUEST_MSG);
     udpPacket->setByteLength(UDP_HEADER_BYTES);
@@ -906,10 +915,11 @@ unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddr
 
     //LISPHeader
     LISPEncapsulated* lencreq = new LISPEncapsulated(ENCAPSULATEDREQUEST_MSG);
+    lencreq->setByteLength(4);
     lencreq->encapsulate(middle);
 
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), MapResolverQueue->getAddress(), true);
+    MsgLog->addMsg(lmreq, LISPMsgEntry::REQUEST, MapResolverQueue->getAddress(), true);
     controlTraf.sendTo(lencreq, MapResolverQueue->getAddress(), CONTROL_PORT_VAL);
 
     return lmreq->getNonce();
@@ -919,7 +929,7 @@ void LISPCore::receiveMapRequest(LISPMapRequest* lmreq) {
     UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
     IPvXAddress src = udpi->getSrcAddr();
     //Log
-    MsgLog->addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), src, true);
+    MsgLog->addMsg(lmreq, LISPMsgEntry::REQUEST, src, true);
 
     //Process as MR-MS
     if ( ( this->mapResolverV4 && !src.isIPv6() ) || ( this->mapResolverV6 && src.isIPv6() ) ) {
@@ -1019,7 +1029,7 @@ void LISPCore::delegateMapRequest(LISPMapRequest* lmreq, Etrs& etrs) {
 
     //Log and send
     IPvXAddress dst = etrs.front().getServerEntry().getAddress();
-    MsgLog->addMsg(LISPMsgEntry::REQUEST, lmreq->getNonce(), dst, true);
+    MsgLog->addMsg(lmreq, LISPMsgEntry::REQUEST, dst, true);
     controlTraf.sendTo(copy, dst, CONTROL_PORT_VAL);
 }
 
@@ -1044,10 +1054,13 @@ void LISPCore::sendMapReplyFromMs(LISPMapRequest* lmreq, Etrs& etrs) {
     //Record count should be 1 for Map-Reply
     lmrep->setRecordCount(lmrep->getRecords().size());
 
+    //Count dynamic size
+    lmrep->setByteLength(countPacketSize(lmrep));
+
     //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
     //Log and send
     IPvXAddress dst = lmreq->getItrRlocs().front().address;
-    MsgLog->addMsg(LISPMsgEntry::REPLY, lmrep->getNonce(), dst, true);
+    MsgLog->addMsg(lmrep, LISPMsgEntry::REPLY, dst, true);
     controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
 }
 
@@ -1070,10 +1083,13 @@ void LISPCore::sendMapReplyFromEtr(LISPMapRequest* lmreq, const IPvXAddress& eid
     lmrep->getRecords().push_back(rec);
     lmrep->setRecordCount(lmrep->getRecords().size());
 
+    //Count dynamic size
+    lmrep->setByteLength(countPacketSize(lmrep));
+
     //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
     //Log and send
     IPvXAddress dst = lmreq->getItrRlocs().front().address;
-    MsgLog->addMsg(LISPMsgEntry::REPLY, lmreq->getNonce(), dst, true);
+    MsgLog->addMsg(lmrep, LISPMsgEntry::REPLY, dst, true);
     controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
 }
 
@@ -1081,7 +1097,7 @@ void LISPCore::receiveMapReply(LISPMapReply* lmrep) {
     UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmrep->getControlInfo());
     IPvXAddress src = udpi->getSrcAddr();
     //Log
-    MsgLog->addMsg(LISPMsgEntry::REPLY, lmrep->getNonce(), src, false);
+    MsgLog->addMsg(lmrep, LISPMsgEntry::REPLY, src, false);
     if ( !MsgLog->findMsg(LISPMsgEntry::REQUEST, lmrep->getNonce()) ) {
         EV << "Received unsolicited Map-Reply with nonce " << lmrep->getNonce() << endl;
         return;
@@ -1118,10 +1134,13 @@ void LISPCore::sendNegativeMapReply(LISPMapRequest* lmreq, const LISPEidPrefix& 
     //RecordCount should be 1 in case of Negative Map-Reply
     lmrep->setRecordCount(lmrep->getRecords().size());
 
+    //Count dynamic size
+    lmreq->setByteLength(countPacketSize(lmreq));
+
     //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
     //Log and send
     IPvXAddress dst = lmreq->getItrRlocs().front().address;
-    MsgLog->addMsg(LISPMsgEntry::REPLY, lmrep->getNonce(), dst, true);
+    MsgLog->addMsg(lmrep, LISPMsgEntry::NEGATIVE_REPLY, dst, true);
     controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
 }
 
@@ -1160,8 +1179,11 @@ unsigned long LISPCore::sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid) {
         return DEFAULT_NONCE_VAL;
     }
 
+    //Count dynamic size
+    lmreq->setByteLength(countPacketSize(lmreq));
+
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::RLOC_PROBE, lmreq->getNonce(), dstLoc, true);
+    MsgLog->addMsg(lmreq, LISPMsgEntry::RLOC_PROBE, dstLoc, true);
     controlTraf.sendTo(lmreq, dstLoc, CONTROL_PORT_VAL);
 
     return lmreq->getNonce();
@@ -1172,7 +1194,7 @@ void LISPCore::receiveRlocProbe(LISPMapRequest* lmreq) {
     IPvXAddress src = udpi->getSrcAddr();
     IPvXAddress dst = udpi->getSrcAddr();
     //Log
-    MsgLog->addMsg(LISPMsgEntry::RLOC_PROBE, lmreq->getNonce(), src, false);
+    MsgLog->addMsg(lmreq, LISPMsgEntry::RLOC_PROBE, src, false);
 
     long bitmask = 0;
     unsigned char i = 0;
@@ -1231,8 +1253,11 @@ void LISPCore::sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask) {
         i++;
     }
 
+    //Count dynamic size
+    lmrep->setByteLength(countPacketSize(lmrep));
+
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::RLOC_PROBE_REPLY, lmrep->getNonce(), src, true);
+    MsgLog->addMsg(lmrep, LISPMsgEntry::RLOC_PROBE_REPLY, src, true);
     controlTraf.sendTo(lmrep, src, CONTROL_PORT_VAL);
 }
 
@@ -1240,7 +1265,7 @@ void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
     UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmrep->getControlInfo());
     IPvXAddress src = udpi->getSrcAddr();
     //Log
-    MsgLog->addMsg(LISPMsgEntry::RLOC_PROBE_REPLY, lmrep->getNonce(), src, false);
+    MsgLog->addMsg(lmrep, LISPMsgEntry::RLOC_PROBE_REPLY, src, false);
     if ( !MsgLog->findMsg(LISPMsgEntry::RLOC_PROBE, lmrep->getNonce()) ) {
         EV << "Received unsolicited RLOC-Probe Reply with nonce " << lmrep->getNonce() << endl;
         return;
@@ -1307,8 +1332,11 @@ unsigned long LISPCore::sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eid
     //As many records as there are EtrMappings
     lcs->setRecordCount(lcs->getMapEntries().size());
 
+    //Count dynamic size
+    lcs->setByteLength(countPacketSize(lcs));
+
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::CACHE_SYNC, lcs->getNonce(), setmember, true);
+    MsgLog->addMsg(lcs, LISPMsgEntry::CACHE_SYNC, setmember, true);
     controlTraf.sendTo(lcs, setmember, CONTROL_PORT_VAL);
 
     return lcs->getNonce();
@@ -1318,7 +1346,7 @@ void LISPCore::receiveCacheSync(LISPCacheSync* lcs) {
     //Log
     UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lcs->getControlInfo());
     IPvXAddress src = udpi->getSrcAddr();
-    MsgLog->addMsg(LISPMsgEntry::CACHE_SYNC, lcs->getNonce(), src, false);
+    MsgLog->addMsg(lcs, LISPMsgEntry::CACHE_SYNC, src, false);
 
     //Check for 0 records
     if (lcs->getRecordCount() == 0) {
@@ -1370,8 +1398,11 @@ void LISPCore::sendCacheSyncAck(LISPCacheSync* lcs) {
     lca->setAuthData(lcs->getAuthData());
     lca->setMapEntries(lcs->getMapEntries());
 
+    //Count dynamic size
+    lca->setByteLength(countPacketSize(lca));
+
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::CACHE_SYNC_ACK, lca->getNonce(), dst, true);
+    MsgLog->addMsg(lca, LISPMsgEntry::CACHE_SYNC_ACK, dst, true);
     controlTraf.sendTo(lca, dst, CONTROL_PORT_VAL);
 }
 
@@ -1381,7 +1412,7 @@ void LISPCore::receiveCacheSyncAck(LISPCacheSyncAck* lca) {
     IPvXAddress src = udpi->getSrcAddr();
 
     //Log
-    MsgLog->addMsg(LISPMsgEntry::CACHE_SYNC_ACK, lca->getNonce(), src, false);
+    MsgLog->addMsg(lca, LISPMsgEntry::CACHE_SYNC_ACK, src, false);
 
     //Check whether last Map-Register was acknowledged
     if ( MsgLog->findMsg(LISPMsgEntry::CACHE_SYNC, lca->getNonce() ) ) {
@@ -1438,17 +1469,88 @@ unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAdd
         lidata->setNonce(DEFAULT_NONCE_VAL);
     }
 
-    //Envelope around original IP packet`
+    //Envelope around original IP packet
+    lidata->setByteLength(countPacketSize(lidata));
     lidata->encapsulate(packet);
 
     //Retrieve the best RLOC
     IPvXAddress rlocaddr = mapentry->getBestUnicastLocator()->getRlocAddr();
     //EV << "Chosen RLOC addr is>" << rlocaddr << endl;
     //Log and send
-    MsgLog->addMsg(LISPMsgEntry::DATA, lidata->getNonce(), rlocaddr, true);
+    //Loggin, which also adds packetsize, needs to be done prior to encapsulation
+    MsgLog->addMsg(lidata, LISPMsgEntry::DATA, rlocaddr, true);
+
     dataTraf.sendTo(lidata, rlocaddr, DATA_PORT_VAL);
 
     return lidata->getNonce();
-
-
 }
+
+int64 LISPCore::countPacketSize(LISPMessage* lispmsg) {
+    if (dynamic_cast<LISPHeader*>(lispmsg))
+        return (8);
+    else if (dynamic_cast<LISPMapRequest*>(lispmsg) && !dynamic_cast<LISPEncapsulated*>(lispmsg)) {
+        LISPMapRequest* lmreq = check_and_cast<LISPMapRequest*>(lispmsg);
+        return (16 + getItrRlocSize(lmreq->getItrRlocs()) + getRecsSize(lmreq->getRecs()) + getRecordSize(lmreq->getMapReply()));
+    }
+    else if (dynamic_cast<LISPMapReply*>(lispmsg)) {
+        LISPMapReply* lmrep = check_and_cast<LISPMapReply*>(lispmsg);
+        return (12 + getRecordsSize(lmrep->getRecords()));
+    }
+    else if (dynamic_cast<LISPMapNotify*>(lispmsg)
+            || dynamic_cast<LISPMapRegister*>(lispmsg)) {
+        LISPMapRegister* lmreg = check_and_cast<LISPMapRegister*>(lispmsg);
+        return (20 + getRecordsSize(lmreg->getRecords()));
+    }
+    else if (dynamic_cast<LISPCacheSyncAck*>(lispmsg)
+            || dynamic_cast<LISPCacheSync*>(lispmsg)) {
+        LISPCacheSync* lcs = check_and_cast<LISPCacheSync*>(lispmsg);
+        return (20 + getLispMapEntrySize(lcs->getMapEntries()));
+    }
+    return 0;
+}
+
+unsigned int LISPCore::getItrRlocSize(TAfiAddrs& Itrs) {
+    unsigned int result = 0;
+    for (TAfiAddrCItem it = Itrs.begin(); it != Itrs.end(); ++it) {
+        result += (it->afi() == LISPCommon::AFI_IPV6 ? 16 : 4);
+    }
+    return result;
+}
+
+unsigned int LISPCore::getRecsSize(TRecs& Recs) {
+    unsigned int result = 0;
+    for (TRecsCItem it = Recs.begin(); it != Recs.end(); ++it) {
+        result += 4 + (it->getEidAfi() == LISPCommon::AFI_IPV6 ? 16 : 4);
+    }
+    return result;
+}
+
+unsigned int LISPCore::getRecordSize(TRecord& Record) {
+    unsigned int result = 3;
+    result += Record.EidPrefix.getEidAfi() == LISPCommon::AFI_IPV6 ? 16 : 4;
+    for (TLocatorCItem it = Record.locators.begin(); it != Record.locators.end(); ++it) {
+        result += 8 + (it->RLocator.getRlocAfi() == LISPCommon::AFI_IPV6 ? 16 : 4);
+    }
+    return result;
+}
+
+unsigned int LISPCore::getRecordsSize(TRecords& Records) {
+    unsigned int result = 0;
+    for (TRecordItem it = Records.begin(); it != Records.end(); ++it) {
+        result += getRecordSize((*it));
+    }
+    return result;
+}
+
+unsigned int LISPCore::getLispMapEntrySize(TMapEntries& MapEntries) {
+    unsigned int result = 0;
+    for (TMECItem it = MapEntries.begin(); it != MapEntries.end(); ++it) {
+        result += 3;
+        result += it->MapEntry.getEidPrefix().getEidAfi() == LISPCommon::AFI_IPV6 ? 16 : 4;
+        for (LocatorCItem jt = it->MapEntry.getRlocs().begin(); jt != it->MapEntry.getRlocs().end(); ++it) {
+            result += 8 + (jt->getRlocAfi() == LISPCommon::AFI_IPV6 ? 16 : 4);
+        }
+    }
+    return result;
+}
+

@@ -42,7 +42,7 @@ class LISPMsgEntry {
         DATA
     };
 
-    LISPMsgEntry(LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl);
+    LISPMsgEntry(LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl, int64 siz);
     virtual ~LISPMsgEntry();
 
     bool operator== (const LISPMsgEntry& other) const;
@@ -67,6 +67,7 @@ class LISPMsgEntry {
     IPvXAddress address;
     simtime_t processedAt;
     bool flag; //received = 0, sent = 1;
+    int64 msgsize;
 };
 
 //Free function

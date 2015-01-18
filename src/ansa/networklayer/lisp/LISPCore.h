@@ -149,6 +149,13 @@ class LISPCore : public cSimpleModule
     void cacheMapping(const TRecord& record);
 
     unsigned long sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAddress dstaddr, LISPMapEntry* mapentry, cPacket* packet);
+
+    unsigned int getItrRlocSize(TAfiAddrs& Itrs);
+    unsigned int getRecsSize(TRecs& Recs);
+    unsigned int getRecordSize(TRecord& Record);
+    unsigned int getRecordsSize(TRecords& Records);
+    unsigned int getLispMapEntrySize(TMapEntries& MapEntries);
+    int64 countPacketSize(LISPMessage* lispmsg);
 };
 
 #endif

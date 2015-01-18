@@ -22,8 +22,8 @@
 #include <LISPMsgEntry.h>
 
 LISPMsgEntry::LISPMsgEntry(
-        LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl) :
-        type(ntyp), nonce(nnonce), address(addr), processedAt(processed), flag(fl)
+        LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl, int64 siz) :
+        type(ntyp), nonce(nnonce), address(addr), processedAt(processed), flag(fl), msgsize(siz)
 {
 }
 
@@ -32,6 +32,7 @@ LISPMsgEntry::~LISPMsgEntry() {
    type = LISPMsgEntry::UNKNOWN;
    processedAt = SIMTIME_ZERO;
    flag = false;
+   msgsize = 0;
 }
 
 unsigned long LISPMsgEntry::getNonce() const {
@@ -53,9 +54,13 @@ void LISPMsgEntry::setProcessedAt(const simtime_t& processedAt) {
 std::string LISPMsgEntry::info() const {
     std::stringstream os;
     os << getTypeString() << " (" << getNonce() << ") ";
+
     if (!flag) os << " received from ";
     else os << " sent to ";
-    os << address << " at " << getProcessedAt();
+
+    os << address;
+    os << " of size " << msgsize << "B ";
+    os << " at " << getProcessedAt();
     return os.str();
 }
 

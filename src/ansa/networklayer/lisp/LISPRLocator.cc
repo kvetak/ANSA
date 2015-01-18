@@ -187,3 +187,7 @@ bool LISPRLocator::operator< (const LISPRLocator& other) const {
 
     return false;
 }
+
+LISPCommon::Afi LISPRLocator::getRlocAfi() const {
+    return rloc.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+}

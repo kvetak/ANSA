@@ -83,7 +83,7 @@ void LISPMapCache::updateCacheEntry(const TRecord& record) {
     updateMapEntry(record);
 
     //Change Timeout message appropriately
-    EV << "TTL> " << record.recordTTL << endl;
+    //EV << "TTL> " << record.recordTTL << endl;
     updateTimeout(record.EidPrefix, simTime() + record.recordTTL * 60);
 
     //MappingStorage.sort();

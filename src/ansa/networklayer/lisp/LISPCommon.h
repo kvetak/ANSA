@@ -50,6 +50,7 @@ extern const unsigned short DEFAULT_IPTTL_VAL;
 extern const unsigned short DEFAULT_ETRTIMEOUT_VAL;
 extern const bool PACKET_FORWARD;
 extern const bool PACKET_DROP;
+extern const unsigned short LISPHDR_SIZE;
 
 extern const char* SITE_TAG;
 extern const char* EID_TAG;
@@ -138,6 +139,9 @@ extern const char* SIG_LOG_RECV;
 extern const char* SIG_LOG_MSG;
 extern const char* SIG_PACKET_FORWARD;
 extern const char* SIG_PACKET_DROP;
+extern const char* SIG_LOG_SIZESEND;
+extern const char* SIG_LOG_SIZERECV;
+
 
 
 class LISPCommon {

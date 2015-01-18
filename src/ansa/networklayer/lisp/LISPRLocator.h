@@ -54,6 +54,7 @@ class LISPRLocator {
     void setMweight(unsigned char mweight);
     bool isLocal() const;
     void setLocal(bool local);
+    LISPCommon::Afi getRlocAfi() const;
 
     void updateRlocator(const LISPRLocator& rloc);
 

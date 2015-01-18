@@ -48,6 +48,7 @@ const unsigned  short   DEFAULT_IPTTL_VAL           = 32;
 const unsigned  short   DEFAULT_ETRTIMEOUT_VAL      = 180;
 const           bool    PACKET_FORWARD              = true;
 const           bool    PACKET_DROP                 = false;
+const unsigned  short   LISPHDR_SIZE                = 8;
 
 
 // --------------- TAGS/ATTRIBUTE ---------------
@@ -144,6 +145,10 @@ const           char*   SIG_LOG_RECV            = "sigLispRecv";
 const           char*   SIG_LOG_MSG             = "sigLispMsg";
 const           char*   SIG_PACKET_FORWARD      = "sigLispForward";
 const           char*   SIG_PACKET_DROP         = "sigLispDrop";
+const           char*   SIG_LOG_SIZESEND        = "sigLispSizeSend";
+const           char*   SIG_LOG_SIZERECV        = "sigLispSizeRecv";
+
+
 
 
 void LISPCommon::parseIpAddress(const char* str, std::string& address, std::string& length) {

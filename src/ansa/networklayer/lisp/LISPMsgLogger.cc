@@ -23,26 +23,30 @@
 
 Define_Module(LISPMsgLogger);
 
-LISPMsgLogger::LISPMsgLogger() {
-
+LISPMsgLogger::LISPMsgLogger() :
+        msgsent(0), msgrecv(0), sizesent(0), sizerecv(0)
+{
 }
 
 LISPMsgLogger::~LISPMsgLogger() {
+    msgsent = 0;
+    msgrecv = 0;
+    sizesent = 0;
+    sizerecv = 0;
+
     MsgLogger.clear();
 }
 
-void LISPMsgLogger::addMsg(LISPMsgEntry::EMsgType type, unsigned long nonce, IPvXAddress addr, bool flag) {
-    MsgLogger.push_back( LISPMsgEntry(type, nonce, addr, simTime(), flag) );
+void LISPMsgLogger::addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, IPvXAddress addr, bool flag) {
+    MsgLogger.push_back(
+            LISPMsgEntry(msgtype,
+                         lispmsg->getNonce(),
+                         addr,
+                         simTime(),
+                         flag,
+                         lispmsg->getByteLength()) );
 
-    if (flag) {
-        msgsent++;
-        emit(sigSend, true);
-    }
-    else {
-        msgrecv++;
-        emit(sigRecv, true);
-    }
-    emit(sigMsg, (int)type);
+    recordStatistics(lispmsg, (int)msgtype, flag);
 
     updateDisplayString();
 }
@@ -62,16 +66,22 @@ MessageLog& LISPMsgLogger::getMsgLogger() {
 void LISPMsgLogger::initialize(int stage) {
     if (stage < numInitStages() - 1)
         return;
-    msgsent = 0;
-    msgrecv = 0;
+
     updateDisplayString();
     initSignals();
+
+    WATCH(msgsent);
+    WATCH(msgrecv);
+    WATCH(sizesent);
+    WATCH(sizerecv);
     WATCH_LIST(MsgLogger);
 }
 
 void LISPMsgLogger::initSignals() {
     sigSend     = registerSignal(SIG_LOG_SEND);
     sigRecv     = registerSignal(SIG_LOG_RECV);
+    sigSizeSend = registerSignal(SIG_LOG_SIZESEND);
+    sigSizeRecv = registerSignal(SIG_LOG_SIZERECV);
     sigMsg      = registerSignal(SIG_LOG_MSG);
 }
 
@@ -88,3 +98,22 @@ void LISPMsgLogger::updateDisplayString() {
     this->getDisplayString().setTagArg("t", 0, description.str().c_str());
     this->getDisplayString().setTagArg("t", 1, "t");
 }
+
+void LISPMsgLogger::recordStatistics(LISPMessage* lispmsg, int msgtype, bool flag) {
+    if (flag) {
+        msgsent++;
+        sizesent += lispmsg->getByteLength();
+        emit(sigSend, true);
+        emit(sigSizeSend, (int)lispmsg->getByteLength());
+    }
+    else {
+        msgrecv++;
+        sizerecv += lispmsg->getByteLength();
+        emit(sigRecv, true);
+        emit(sigSizeRecv, (int)lispmsg->getByteLength());
+    }
+
+    emit(sigMsg, msgtype);
+}
+
+

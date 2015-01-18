@@ -67,6 +67,7 @@ class TRecord {
 
 typedef std::list<TRecord> TRecords;
 typedef TRecords::const_iterator TRecordCItem;
+typedef TRecords::iterator TRecordItem;
 typedef std::list<LISPEidPrefix> TRecs;
 typedef TRecs::iterator TRecsItem;
 typedef TRecs::const_iterator TRecsCItem;
