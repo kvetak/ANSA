@@ -1,0 +1,213 @@
+file 14919 1419762741                                           
+version 2
+run Ping_VirtualGW-0-20141228-11:31:07-4448
+attr configname Ping_VirtualGW
+attr datetime 20141228-11:31:07
+attr experiment Ping_VirtualGW
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network Network
+attr processid 4448
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 95  Network.GW1.vrrp.VR_100_10  sentAdvert:vector  ETV
+attr source  sentAdvert
+attr title  "Advertisement sent, vector"
+vector 99  Network.GW2.vrrp.VR_100_10  sentAdvert:vector  ETV
+attr source  sentAdvert
+attr title  "Advertisement sent, vector"
+vector 13  Network.GW1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 29  Network.GW2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 9  Network.GW1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 25  Network.GW2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 94  Network.GW1.vrrp.VR_100_10  sentARP:vector  ETV
+attr source  sentARP
+attr title  "ARP Gratuitous, vector"
+vector 98  Network.GW2.vrrp.VR_100_10  sentARP:vector  ETV
+attr source  sentARP
+attr title  "ARP Gratuitous, vector"
+vector 4  Network.GW1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 20  Network.GW2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 36  Network.SW.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 37  Network.SW.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 47  Network.SW.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 48  Network.SW.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 92  Network.SW.relayUnit  "buffer level"  ETV
+vector 51  Network.SW.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 62  Network.SW.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 40  Network.SW.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 57  Network.SW.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 81  Network.Host.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 82  Network.Host.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 90  Network.Host.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 35  Network.SW.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 46  Network.SW.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 5  Network.GW1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 6  Network.GW1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 21  Network.GW2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 22  Network.GW2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 14  Network.GW1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 30  Network.GW2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 96  Network.GW1.vrrp.VR_100_10  recvAdvert:vector  ETV
+attr source  recvAdvert
+attr title  "Received Advertisement, vector"
+vector 100  Network.GW2.vrrp.VR_100_10  recvAdvert:vector  ETV
+attr source  recvAdvert
+attr title  "Received Advertisement, vector"
+vector 71  Network.Host.pingApp[0]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 73  Network.Host.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 75  Network.Host.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 89  Network.Host.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 85  Network.Host.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 80  Network.Host.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 58  Network.SW.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 59  Network.SW.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 72  Network.Host.pingApp[0]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 68  Network.Host.pingApp[0]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+4	7356 48 23 45 3.609381719999 3.609388439998 2 64 64 128 8192
+5	7404 246 60 358 3.609388539998 10.609401119997 10 64 64 640 40960
+6	7650 246 60 358 3.609388539998 10.609401119997 10 64 64 640 40960
+9	7896 37 11 17 3.609375 3.6093751 2 64 64 128 8192
+13	7933 38 9 15 3.609375 3.6093751 2 20 28 48 1184
+14	7971 256 62 360 3.609388539998 10.609401119997 10 20 28 216 4768
+20	8227 341 24 415 3.609381719999 11.609395259997 13 64 94 892 62728
+21	8568 123 61 383 3.609388539998 11.00001642 5 64 94 380 29960
+22	8691 123 61 383 3.609388539998 11.00001642 5 64 94 380 29960
+25	8814 322 12 412 3.609375 11.609388539998 13 64 94 892 62728
+29	9136 322 10 411 3.609375 11.609388539998 13 20 76 388 16720
+30	9458 123 63 384 3.609388539998 11.00001642 5 20 76 228 13520
+35	9581 256 47 356 3.609388489998 10.609401069997 10 64 64 640 40960
+36	9837 50 25 49 3.609381769999 3.609388489998 2 64 64 128 8192
+37	9887 50 25 49 3.609381769999 3.609388489998 2 64 64 128 8192
+40	9937 283 33 419 3.609381769999 11.609395309997 11 64 64 704 45056
+46	10220 123 48 382 3.609388489998 11.00001637 5 64 94 380 29960
+47	10343 341 26 416 3.609381769999 11.609395309997 13 64 94 892 62728
+48	10684 341 26 416 3.609381769999 11.609395309997 13 64 94 892 62728
+51	11025 123 30 379 3.609381769999 11.00000821 5 64 94 380 29960
+57	11148 364 41 400 3.609387529999 11.000033749999 14 64 94 956 66824
+58	11512 73 271 376 10.00000581 11.00000821 3 64 94 252 21768
+59	11585 73 271 376 10.00000581 11.00000821 3 64 94 252 21768
+62	11658 391 31 420 3.609381769999 11.609395309997 15 64 94 1020 70920
+68	12049 78 339 405 10.000057999998 11.000033799999 2 3.3799999e-005 5.7999998e-005 9.1799997e-005 4.5064397004e-009
+71	12127 26 263 368 10 11 2 0 1 1 1
+72	12153 52 339 405 10.000057999998 11.000033799999 2 0 1 1 1
+73	12205 13 266 266 10 10 1 1 1 1 1
+75	12218 13 266 266 10 10 1 1 1 1 1
+80	12231 73 270 375 10.00000576 11.00000816 3 64 94 252 21768
+81	12304 364 42 401 3.609387579999 11.000033799999 14 64 94 956 66824
+82	12668 364 42 401 3.609387579999 11.000033799999 14 64 94 956 66824
+85	13032 55 268 373 10 11 3 64 94 252 21768
+89	13087 55 267 372 10 11 3 28 76 180 12336
+90	13142 364 43 402 3.609387579999 11.000033799999 14 20 76 416 17504
+92	13506 914 27 418 3.609381769999 11.609395309997 36 0 128 1528 125456
+94	14420 19 13 13 3.6093751 3.6093751 1 1 1 1 1
+95	14439 17 1 1 3.609375 3.609375 1 1 1 1 1
+96	14456 200 68 365 3.609388539998 10.609401119997 8 1 1 8 8
+98	14656 19 14 14 3.6093751 3.6093751 1 1 1 1 1
+99	14675 219 2 407 3.609375 11.609388539998 9 1 1 9 9
+100	14894 25 69 69 3.609388539998 3.609388539998 1 1 1 1 1

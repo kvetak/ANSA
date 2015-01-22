@@ -1,0 +1,2781 @@
+E # 0 t 0 m 1 ce -1 msg -1
+SB v 1029 rid General-0-20150107-13:23:18-4048 b 1000
+KF p -1 c "" s ""
+MC id 1 c cModule t inet.examples.ansa.vrrpv2.StaticRouting.Network n Network cm 1
+MS id 1 d bgb=461,415,white;bgl=2
+MC id 2 c cModule t inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter pid 1 n ISP cm 1
+MS id 2 d p=49,126;i=abstract/router;bgb=401,374
+GC m 2 g 1048576 n ethg$i i 0 o 0
+GC m 2 g 1572864 n ethg$o i 0 o 1
+GC m 2 g 1048577 n ethg$i i 1 o 0
+GC m 2 g 1572865 n ethg$o i 1 o 1
+MC id 3 c cModule t inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter pid 1 n GW1 cm 1
+MS id 3 d p=168,42;i=abstract/router;bgb=401,374
+GC m 3 g 1048576 n ethg$i i 0 o 0
+GC m 3 g 1572864 n ethg$o i 0 o 1
+GC m 3 g 1048577 n ethg$i i 1 o 0
+GC m 3 g 1572865 n ethg$o i 1 o 1
+MC id 4 c cModule t inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter pid 1 n GW2 cm 1
+MS id 4 d p=168,209;i=abstract/router;bgb=401,374
+GC m 4 g 1048576 n ethg$i i 0 o 0
+GC m 4 g 1572864 n ethg$o i 0 o 1
+GC m 4 g 1048577 n ethg$i i 1 o 0
+GC m 4 g 1572865 n ethg$o i 1 o 1
+MC id 5 c cModule t inet.nodes.ethernet.EtherSwitch pid 1 n SW cm 1
+MS id 5 d p=241,125;i=device/switch
+GC m 5 g 1048576 n ethg$i i 0 o 0
+GC m 5 g 1572864 n ethg$o i 0 o 1
+GC m 5 g 1048577 n ethg$i i 1 o 0
+GC m 5 g 1572865 n ethg$o i 1 o 1
+GC m 5 g 1048578 n ethg$i i 2 o 0
+GC m 5 g 1572866 n ethg$o i 2 o 1
+MC id 6 c cModule t inet.ansa.nodes.inet.ANSAStandardHost pid 1 n Host cm 1
+MS id 6 d p=383,126;i=device/pc2;bgb=,448
+GC m 6 g 3145728 n ethg$i i 0 o 0
+GC m 6 g 3670016 n ethg$o i 0 o 1
+MC id 7 c ScenarioManager t inet.world.scenario.ScenarioManager pid 1 n Manager
+MS id 7 d p=242,332;i=block/control_s
+MC id 8 c IPv4NetworkConfigurator t inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator pid 1 n configurator
+MS id 8 d p=375,332;i=block/cogwheel_s
+CC sm 2 sg 1572864 dm 3 dg 1048576
+CS sm 2 sg 1572864 d ""
+CC sm 3 sg 1572864 dm 2 dg 1048576
+CS sm 3 sg 1572864 d ""
+CC sm 2 sg 1572865 dm 4 dg 1048576
+CS sm 2 sg 1572865 d ""
+CC sm 4 sg 1572864 dm 2 dg 1048577
+CS sm 4 sg 1572864 d ""
+CC sm 3 sg 1572865 dm 5 dg 1048576
+CS sm 3 sg 1572865 d ""
+CC sm 5 sg 1572864 dm 3 dg 1048577
+CS sm 5 sg 1572864 d ""
+CC sm 4 sg 1572865 dm 5 dg 1048577
+CS sm 4 sg 1572865 d ""
+CC sm 5 sg 1572865 dm 4 dg 1048577
+CS sm 5 sg 1572865 d ""
+CC sm 6 sg 3670016 dm 5 dg 1048578
+CS sm 6 sg 3670016 d ""
+CC sm 5 sg 1572866 dm 6 dg 3145728
+CS sm 5 sg 1572866 d ""
+MC id 9 c VRRPv2 t inet.ansa.networklayer.vrrpv2.VRRPv2 pid 2 n vrrp
+GC m 9 g 4 n ipIn o 0
+GC m 9 g 7 n ipOut o 1
+MS id 9 d p=250,140;i=block/network2
+MC id 10 c cModule t inet.examples.ansa.vrrpv2.router.NetworkLayer pid 2 n networkLayer cm 1
+GC m 10 g 2 n tcpIn o 0
+GC m 10 g 4 n udpIn o 0
+GC m 10 g 6 n sctpIn o 0
+GC m 10 g 8 n rsvpIn o 0
+GC m 10 g 10 n ospfIn o 0
+GC m 10 g 14 n manetIn o 0
+GC m 10 g 16 n igmpIn o 0
+GC m 10 g 18 n vrrpIn o 0
+GC m 10 g 23 n tcpOut o 1
+GC m 10 g 25 n udpOut o 1
+GC m 10 g 27 n sctpOut o 1
+GC m 10 g 29 n rsvpOut o 1
+GC m 10 g 31 n ospfOut o 1
+GC m 10 g 35 n manetOut o 1
+GC m 10 g 37 n igmpOut o 1
+GC m 10 g 39 n vrrpOut o 1
+MS id 10 d q=queue;p=250,222;i=block/fork
+MC id 11 c DeviceConfigurator t inet.ansa.util.deviceConfigurator.DeviceConfigurator pid 2 n deviceConfigurator
+MS id 11 d p=80,40;i=block/cogwheel
+MC id 12 c NotificationBoard t inet.base.NotificationBoard pid 2 n notificationBoard
+MS id 12 d p=80,120;i=block/control
+MC id 13 c InterfaceStateManager t inet.ansa.util.InterfaceStateManager.InterfaceStateManager pid 2 n interfaceStateManager
+MS id 13 d p=80,200;i=block/plug
+MC id 14 c AnsaRoutingTable t inet.ansa.networklayer.ipv4.AnsaRoutingTable pid 2 n routingTable
+MS id 14 d p=196,40;i=block/table
+MC id 15 c InterfaceTable t inet.networklayer.common.InterfaceTable pid 2 n interfaceTable
+MS id 15 d p=300,40;i=block/table
+MC id 16 c cModule t inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF pid 2 n eth[0] cm 1
+GC m 16 g 0 n upperLayerIn o 0
+GC m 16 g 3 n upperLayerOut o 1
+GC m 16 g 4 n phys$i o 0
+GC m 16 g 5 n phys$o o 1
+MS id 16 d q=l2queue;p=250,302,row,110;i=block/ifcard;bgl=2
+MC id 17 c cModule t inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF pid 2 n eth[1] cm 1
+GC m 17 g 0 n upperLayerIn o 0
+GC m 17 g 3 n upperLayerOut o 1
+GC m 17 g 4 n phys$i o 0
+GC m 17 g 5 n phys$o o 1
+MS id 17 d q=l2queue;p=250,302,row,110;i=block/ifcard;bgl=2
+MC id 18 c cModule t inet.linklayer.loopback.LoopbackInterface pid 2 n lo[0] cm 1
+GC m 18 g 0 n upperLayerIn o 0
+GC m 18 g 3 n upperLayerOut o 1
+MS id 18 d p=128,302;i=block/ifcard;bgb=214,249;bgl=53
+CC sm 9 sg 7 dm 10 dg 18
+CC sm 10 sg 39 dm 9 dg 4
+CC sm 2 sg 1048576 dm 16 dg 4
+CC sm 16 sg 5 dm 2 dg 1572864
+GC m 10 g 1048576 n ifIn i 0 o 0
+CC sm 16 sg 3 dm 10 dg 1048576
+GC m 10 g 12058624 n ifOut i 0 o 1
+CC sm 10 sg 12058624 dm 16 dg 0
+CC sm 2 sg 1048577 dm 17 dg 4
+CC sm 17 sg 5 dm 2 dg 1572865
+GC m 10 g 1048577 n ifIn i 1 o 0
+CC sm 17 sg 3 dm 10 dg 1048577
+GC m 10 g 12058625 n ifOut i 1 o 1
+CC sm 10 sg 12058625 dm 17 dg 0
+GC m 10 g 1048578 n ifIn i 2 o 0
+CC sm 18 sg 3 dm 10 dg 1048578
+GC m 10 g 12058626 n ifOut i 2 o 1
+CC sm 10 sg 12058626 dm 18 dg 0
+MC id 19 c AnsaIPv4 t inet.ansa.networklayer.ipv4.AnsaIPv4 pid 10 n ip
+GC m 19 g 7 n queueOut o 1
+GC m 19 g 9 n lispOut o 1
+GC m 19 g 10 n lispIn o 0
+MS id 19 d q=queue;p=85,95;i=block/routing
+GC m 19 g 1048576 n transportIn i 0 o 0
+GC m 19 g 1048577 n transportIn i 1 o 0
+GC m 19 g 1048578 n transportIn i 2 o 0
+GC m 19 g 1048579 n transportIn i 3 o 0
+GC m 19 g 1048580 n transportIn i 4 o 0
+GC m 19 g 1048581 n transportIn i 5 o 0
+GC m 19 g 1048582 n transportIn i 6 o 0
+GC m 19 g 1048583 n transportIn i 7 o 0
+GC m 19 g 1048584 n transportIn i 8 o 0
+GC m 19 g 2621440 n transportOut i 0 o 1
+GC m 19 g 2621441 n transportOut i 1 o 1
+GC m 19 g 2621442 n transportOut i 2 o 1
+GC m 19 g 2621443 n transportOut i 3 o 1
+GC m 19 g 2621444 n transportOut i 4 o 1
+GC m 19 g 2621445 n transportOut i 5 o 1
+GC m 19 g 2621446 n transportOut i 6 o 1
+GC m 19 g 2621447 n transportOut i 7 o 1
+GC m 19 g 2621448 n transportOut i 8 o 1
+GC m 19 g 3145728 n queueIn i 0 o 0
+GC m 19 g 3145729 n queueIn i 1 o 0
+GC m 19 g 3145730 n queueIn i 2 o 0
+MC id 20 c AnsaARP t inet.ansa.networklayer.arp.AnsaARP pid 10 n arp
+GC m 20 g 0 n ipIn o 0
+MS id 20 d q=pendingQueue;p=202,142;i=block/layer
+GC m 20 g 2621440 n nicOut i 0 o 1
+GC m 20 g 2621441 n nicOut i 1 o 1
+GC m 20 g 2621442 n nicOut i 2 o 1
+MC id 21 c ICMP t inet.networklayer.ipv4.ICMP pid 10 n icmp
+GC m 21 g 0 n localIn o 0
+GC m 21 g 7 n sendOut o 1
+GC m 21 g 9 n errorOut o 1
+MS id 21 d p=160,63;i=block/control_s
+MC id 22 c IGMPv2 t inet.networklayer.ipv4.IGMPv2 pid 10 n igmp
+GC m 22 g 0 n ipIn o 0
+GC m 22 g 3 n ipOut o 1
+GC m 22 g 4 n routerIn o 0
+GC m 22 g 7 n routerOut o 1
+MS id 22 d p=39,33;i=block/cogwheel_s
+MC id 23 c ErrorHandling t inet.networklayer.ipv4.ErrorHandling pid 10 n errorHandling
+GC m 23 g 0 n in o 0
+MS id 23 d p=239,63;i=block/sink_s
+CC sm 19 sg 2621440 dm 10 dg 23
+CS sm 19 sg 2621440 d m=n
+CC sm 10 sg 2 dm 19 dg 1048576
+CS sm 10 sg 2 d m=n
+CC sm 19 sg 2621441 dm 10 dg 25
+CS sm 19 sg 2621441 d m=n
+CC sm 10 sg 4 dm 19 dg 1048577
+CS sm 10 sg 4 d m=n
+CC sm 19 sg 2621442 dm 21 dg 0
+CC sm 21 sg 7 dm 19 dg 1048578
+CC sm 19 sg 2621443 dm 22 dg 0
+CC sm 22 sg 3 dm 19 dg 1048579
+CC sm 19 sg 2621444 dm 10 dg 29
+CS sm 19 sg 2621444 d m=n
+CC sm 10 sg 8 dm 19 dg 1048580
+CS sm 10 sg 8 d m=n
+CC sm 19 sg 2621445 dm 10 dg 31
+CS sm 19 sg 2621445 d m=n
+CC sm 10 sg 10 dm 19 dg 1048581
+CS sm 10 sg 10 d m=n
+CC sm 19 sg 2621446 dm 10 dg 27
+CS sm 19 sg 2621446 d m=n
+CC sm 10 sg 6 dm 19 dg 1048582
+CS sm 10 sg 6 d m=n
+CC sm 19 sg 2621447 dm 10 dg 35
+CS sm 19 sg 2621447 d m=n
+CC sm 10 sg 14 dm 19 dg 1048583
+CS sm 10 sg 14 d m=n
+CC sm 19 sg 2621448 dm 10 dg 39
+CC sm 10 sg 18 dm 19 dg 1048584
+CC sm 21 sg 9 dm 23 dg 0
+CC sm 19 sg 7 dm 20 dg 0
+CC sm 22 sg 7 dm 10 dg 37
+CC sm 10 sg 16 dm 22 dg 4
+CC sm 10 sg 1048576 dm 19 dg 3145728
+CS sm 10 sg 1048576 d m=s
+CC sm 10 sg 1048577 dm 19 dg 3145729
+CS sm 10 sg 1048577 d m=s
+CC sm 10 sg 1048578 dm 19 dg 3145730
+CS sm 10 sg 1048578 d m=s
+CC sm 20 sg 2621440 dm 10 dg 12058624
+CS sm 20 sg 2621440 d m=s
+CC sm 20 sg 2621441 dm 10 dg 12058625
+CS sm 20 sg 2621441 d m=s
+CC sm 20 sg 2621442 dm 10 dg 12058626
+CS sm 20 sg 2621442 d m=s
+MC id 24 c AnsaEtherMACFullDuplex t inet.ansa.linklayer.ethernet.AnsaEtherMACFullDuplex pid 16 n mac
+GC m 24 g 0 n upperLayerIn o 0
+GC m 24 g 3 n upperLayerOut o 1
+GC m 24 g 4 n phys$i o 0
+GC m 24 g 5 n phys$o o 1
+MS id 24 d p=182,321;i=block/rxtx
+MC id 25 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 16 n encap
+GC m 25 g 0 n upperLayerIn o 0
+GC m 25 g 3 n upperLayerOut o 1
+GC m 25 g 4 n lowerLayerIn o 0
+GC m 25 g 7 n lowerLayerOut o 1
+MS id 25 d p=182,205;i=block/square
+CC sm 25 sg 7 dm 24 dg 0
+CC sm 24 sg 3 dm 25 dg 4
+CC sm 24 sg 5 dm 16 dg 5
+CS sm 24 sg 5 d m=s
+CC sm 16 sg 4 dm 24 dg 4
+CS sm 16 sg 4 d m=s
+CC sm 25 sg 3 dm 16 dg 3
+CS sm 25 sg 3 d m=n
+CC sm 16 sg 0 dm 25 dg 0
+CS sm 16 sg 0 d m=n
+MC id 26 c AnsaEtherMACFullDuplex t inet.ansa.linklayer.ethernet.AnsaEtherMACFullDuplex pid 17 n mac
+GC m 26 g 0 n upperLayerIn o 0
+GC m 26 g 3 n upperLayerOut o 1
+GC m 26 g 4 n phys$i o 0
+GC m 26 g 5 n phys$o o 1
+MS id 26 d p=182,321;i=block/rxtx
+MC id 27 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 17 n encap
+GC m 27 g 0 n upperLayerIn o 0
+GC m 27 g 3 n upperLayerOut o 1
+GC m 27 g 4 n lowerLayerIn o 0
+GC m 27 g 7 n lowerLayerOut o 1
+MS id 27 d p=182,205;i=block/square
+CC sm 27 sg 7 dm 26 dg 0
+CC sm 26 sg 3 dm 27 dg 4
+CC sm 26 sg 5 dm 17 dg 5
+CS sm 26 sg 5 d m=s
+CC sm 17 sg 4 dm 26 dg 4
+CS sm 17 sg 4 d m=s
+CC sm 27 sg 3 dm 17 dg 3
+CS sm 27 sg 3 d m=n
+CC sm 17 sg 0 dm 27 dg 0
+CS sm 17 sg 0 d m=n
+MC id 28 c Loopback t inet.linklayer.loopback.Loopback pid 18 n lo
+GC m 28 g 0 n netwIn o 0
+GC m 28 g 3 n netwOut o 1
+MS id 28 d p=98,207;i=block/rxtx
+CC sm 18 sg 0 dm 28 dg 0
+CS sm 18 sg 0 d m=n
+CC sm 28 sg 3 dm 18 dg 3
+CS sm 28 sg 3 d m=n
+MC id 29 c VRRPv2 t inet.ansa.networklayer.vrrpv2.VRRPv2 pid 3 n vrrp
+GC m 29 g 4 n ipIn o 0
+GC m 29 g 7 n ipOut o 1
+MS id 29 d p=250,140;i=block/network2
+MC id 30 c cModule t inet.examples.ansa.vrrpv2.router.NetworkLayer pid 3 n networkLayer cm 1
+GC m 30 g 2 n tcpIn o 0
+GC m 30 g 4 n udpIn o 0
+GC m 30 g 6 n sctpIn o 0
+GC m 30 g 8 n rsvpIn o 0
+GC m 30 g 10 n ospfIn o 0
+GC m 30 g 14 n manetIn o 0
+GC m 30 g 16 n igmpIn o 0
+GC m 30 g 18 n vrrpIn o 0
+GC m 30 g 23 n tcpOut o 1
+GC m 30 g 25 n udpOut o 1
+GC m 30 g 27 n sctpOut o 1
+GC m 30 g 29 n rsvpOut o 1
+GC m 30 g 31 n ospfOut o 1
+GC m 30 g 35 n manetOut o 1
+GC m 30 g 37 n igmpOut o 1
+GC m 30 g 39 n vrrpOut o 1
+MS id 30 d q=queue;p=250,222;i=block/fork
+MC id 31 c DeviceConfigurator t inet.ansa.util.deviceConfigurator.DeviceConfigurator pid 3 n deviceConfigurator
+MS id 31 d p=80,40;i=block/cogwheel
+MC id 32 c NotificationBoard t inet.base.NotificationBoard pid 3 n notificationBoard
+MS id 32 d p=80,120;i=block/control
+MC id 33 c InterfaceStateManager t inet.ansa.util.InterfaceStateManager.InterfaceStateManager pid 3 n interfaceStateManager
+MS id 33 d p=80,200;i=block/plug
+MC id 34 c AnsaRoutingTable t inet.ansa.networklayer.ipv4.AnsaRoutingTable pid 3 n routingTable
+MS id 34 d p=196,40;i=block/table
+MC id 35 c InterfaceTable t inet.networklayer.common.InterfaceTable pid 3 n interfaceTable
+MS id 35 d p=300,40;i=block/table
+MC id 36 c cModule t inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF pid 3 n eth[0] cm 1
+GC m 36 g 0 n upperLayerIn o 0
+GC m 36 g 3 n upperLayerOut o 1
+GC m 36 g 4 n phys$i o 0
+GC m 36 g 5 n phys$o o 1
+MS id 36 d q=l2queue;p=250,302,row,110;i=block/ifcard;bgl=2
+MC id 37 c cModule t inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF pid 3 n eth[1] cm 1
+GC m 37 g 0 n upperLayerIn o 0
+GC m 37 g 3 n upperLayerOut o 1
+GC m 37 g 4 n phys$i o 0
+GC m 37 g 5 n phys$o o 1
+MS id 37 d q=l2queue;p=250,302,row,110;i=block/ifcard;bgl=2
+MC id 38 c cModule t inet.linklayer.loopback.LoopbackInterface pid 3 n lo[0] cm 1
+GC m 38 g 0 n upperLayerIn o 0
+GC m 38 g 3 n upperLayerOut o 1
+MS id 38 d p=128,302;i=block/ifcard;bgb=214,249;bgl=53
+CC sm 29 sg 7 dm 30 dg 18
+CC sm 30 sg 39 dm 29 dg 4
+CC sm 3 sg 1048576 dm 36 dg 4
+CC sm 36 sg 5 dm 3 dg 1572864
+GC m 30 g 1048576 n ifIn i 0 o 0
+CC sm 36 sg 3 dm 30 dg 1048576
+GC m 30 g 12058624 n ifOut i 0 o 1
+CC sm 30 sg 12058624 dm 36 dg 0
+CC sm 3 sg 1048577 dm 37 dg 4
+CC sm 37 sg 5 dm 3 dg 1572865
+GC m 30 g 1048577 n ifIn i 1 o 0
+CC sm 37 sg 3 dm 30 dg 1048577
+GC m 30 g 12058625 n ifOut i 1 o 1
+CC sm 30 sg 12058625 dm 37 dg 0
+GC m 30 g 1048578 n ifIn i 2 o 0
+CC sm 38 sg 3 dm 30 dg 1048578
+GC m 30 g 12058626 n ifOut i 2 o 1
+CC sm 30 sg 12058626 dm 38 dg 0
+MC id 39 c AnsaIPv4 t inet.ansa.networklayer.ipv4.AnsaIPv4 pid 30 n ip
+GC m 39 g 7 n queueOut o 1
+GC m 39 g 9 n lispOut o 1
+GC m 39 g 10 n lispIn o 0
+MS id 39 d q=queue;p=85,95;i=block/routing
+GC m 39 g 1048576 n transportIn i 0 o 0
+GC m 39 g 1048577 n transportIn i 1 o 0
+GC m 39 g 1048578 n transportIn i 2 o 0
+GC m 39 g 1048579 n transportIn i 3 o 0
+GC m 39 g 1048580 n transportIn i 4 o 0
+GC m 39 g 1048581 n transportIn i 5 o 0
+GC m 39 g 1048582 n transportIn i 6 o 0
+GC m 39 g 1048583 n transportIn i 7 o 0
+GC m 39 g 1048584 n transportIn i 8 o 0
+GC m 39 g 2621440 n transportOut i 0 o 1
+GC m 39 g 2621441 n transportOut i 1 o 1
+GC m 39 g 2621442 n transportOut i 2 o 1
+GC m 39 g 2621443 n transportOut i 3 o 1
+GC m 39 g 2621444 n transportOut i 4 o 1
+GC m 39 g 2621445 n transportOut i 5 o 1
+GC m 39 g 2621446 n transportOut i 6 o 1
+GC m 39 g 2621447 n transportOut i 7 o 1
+GC m 39 g 2621448 n transportOut i 8 o 1
+GC m 39 g 3145728 n queueIn i 0 o 0
+GC m 39 g 3145729 n queueIn i 1 o 0
+GC m 39 g 3145730 n queueIn i 2 o 0
+MC id 40 c AnsaARP t inet.ansa.networklayer.arp.AnsaARP pid 30 n arp
+GC m 40 g 0 n ipIn o 0
+MS id 40 d q=pendingQueue;p=202,142;i=block/layer
+GC m 40 g 2621440 n nicOut i 0 o 1
+GC m 40 g 2621441 n nicOut i 1 o 1
+GC m 40 g 2621442 n nicOut i 2 o 1
+MC id 41 c ICMP t inet.networklayer.ipv4.ICMP pid 30 n icmp
+GC m 41 g 0 n localIn o 0
+GC m 41 g 7 n sendOut o 1
+GC m 41 g 9 n errorOut o 1
+MS id 41 d p=160,63;i=block/control_s
+MC id 42 c IGMPv2 t inet.networklayer.ipv4.IGMPv2 pid 30 n igmp
+GC m 42 g 0 n ipIn o 0
+GC m 42 g 3 n ipOut o 1
+GC m 42 g 4 n routerIn o 0
+GC m 42 g 7 n routerOut o 1
+MS id 42 d p=39,33;i=block/cogwheel_s
+MC id 43 c ErrorHandling t inet.networklayer.ipv4.ErrorHandling pid 30 n errorHandling
+GC m 43 g 0 n in o 0
+MS id 43 d p=239,63;i=block/sink_s
+CC sm 39 sg 2621440 dm 30 dg 23
+CS sm 39 sg 2621440 d m=n
+CC sm 30 sg 2 dm 39 dg 1048576
+CS sm 30 sg 2 d m=n
+CC sm 39 sg 2621441 dm 30 dg 25
+CS sm 39 sg 2621441 d m=n
+CC sm 30 sg 4 dm 39 dg 1048577
+CS sm 30 sg 4 d m=n
+CC sm 39 sg 2621442 dm 41 dg 0
+CC sm 41 sg 7 dm 39 dg 1048578
+CC sm 39 sg 2621443 dm 42 dg 0
+CC sm 42 sg 3 dm 39 dg 1048579
+CC sm 39 sg 2621444 dm 30 dg 29
+CS sm 39 sg 2621444 d m=n
+CC sm 30 sg 8 dm 39 dg 1048580
+CS sm 30 sg 8 d m=n
+CC sm 39 sg 2621445 dm 30 dg 31
+CS sm 39 sg 2621445 d m=n
+CC sm 30 sg 10 dm 39 dg 1048581
+CS sm 30 sg 10 d m=n
+CC sm 39 sg 2621446 dm 30 dg 27
+CS sm 39 sg 2621446 d m=n
+CC sm 30 sg 6 dm 39 dg 1048582
+CS sm 30 sg 6 d m=n
+CC sm 39 sg 2621447 dm 30 dg 35
+CS sm 39 sg 2621447 d m=n
+CC sm 30 sg 14 dm 39 dg 1048583
+CS sm 30 sg 14 d m=n
+CC sm 39 sg 2621448 dm 30 dg 39
+CC sm 30 sg 18 dm 39 dg 1048584
+CC sm 41 sg 9 dm 43 dg 0
+CC sm 39 sg 7 dm 40 dg 0
+CC sm 42 sg 7 dm 30 dg 37
+CC sm 30 sg 16 dm 42 dg 4
+CC sm 30 sg 1048576 dm 39 dg 3145728
+CS sm 30 sg 1048576 d m=s
+CC sm 30 sg 1048577 dm 39 dg 3145729
+CS sm 30 sg 1048577 d m=s
+CC sm 30 sg 1048578 dm 39 dg 3145730
+CS sm 30 sg 1048578 d m=s
+CC sm 40 sg 2621440 dm 30 dg 12058624
+CS sm 40 sg 2621440 d m=s
+CC sm 40 sg 2621441 dm 30 dg 12058625
+CS sm 40 sg 2621441 d m=s
+CC sm 40 sg 2621442 dm 30 dg 12058626
+CS sm 40 sg 2621442 d m=s
+MC id 44 c AnsaEtherMACFullDuplex t inet.ansa.linklayer.ethernet.AnsaEtherMACFullDuplex pid 36 n mac
+GC m 44 g 0 n upperLayerIn o 0
+GC m 44 g 3 n upperLayerOut o 1
+GC m 44 g 4 n phys$i o 0
+GC m 44 g 5 n phys$o o 1
+MS id 44 d p=182,321;i=block/rxtx
+MC id 45 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 36 n encap
+GC m 45 g 0 n upperLayerIn o 0
+GC m 45 g 3 n upperLayerOut o 1
+GC m 45 g 4 n lowerLayerIn o 0
+GC m 45 g 7 n lowerLayerOut o 1
+MS id 45 d p=182,205;i=block/square
+CC sm 45 sg 7 dm 44 dg 0
+CC sm 44 sg 3 dm 45 dg 4
+CC sm 44 sg 5 dm 36 dg 5
+CS sm 44 sg 5 d m=s
+CC sm 36 sg 4 dm 44 dg 4
+CS sm 36 sg 4 d m=s
+CC sm 45 sg 3 dm 36 dg 3
+CS sm 45 sg 3 d m=n
+CC sm 36 sg 0 dm 45 dg 0
+CS sm 36 sg 0 d m=n
+MC id 46 c AnsaEtherMACFullDuplex t inet.ansa.linklayer.ethernet.AnsaEtherMACFullDuplex pid 37 n mac
+GC m 46 g 0 n upperLayerIn o 0
+GC m 46 g 3 n upperLayerOut o 1
+GC m 46 g 4 n phys$i o 0
+GC m 46 g 5 n phys$o o 1
+MS id 46 d p=182,321;i=block/rxtx
+MC id 47 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 37 n encap
+GC m 47 g 0 n upperLayerIn o 0
+GC m 47 g 3 n upperLayerOut o 1
+GC m 47 g 4 n lowerLayerIn o 0
+GC m 47 g 7 n lowerLayerOut o 1
+MS id 47 d p=182,205;i=block/square
+CC sm 47 sg 7 dm 46 dg 0
+CC sm 46 sg 3 dm 47 dg 4
+CC sm 46 sg 5 dm 37 dg 5
+CS sm 46 sg 5 d m=s
+CC sm 37 sg 4 dm 46 dg 4
+CS sm 37 sg 4 d m=s
+CC sm 47 sg 3 dm 37 dg 3
+CS sm 47 sg 3 d m=n
+CC sm 37 sg 0 dm 47 dg 0
+CS sm 37 sg 0 d m=n
+MC id 48 c Loopback t inet.linklayer.loopback.Loopback pid 38 n lo
+GC m 48 g 0 n netwIn o 0
+GC m 48 g 3 n netwOut o 1
+MS id 48 d p=98,207;i=block/rxtx
+CC sm 38 sg 0 dm 48 dg 0
+CS sm 38 sg 0 d m=n
+CC sm 48 sg 3 dm 38 dg 3
+CS sm 48 sg 3 d m=n
+MC id 49 c VRRPv2 t inet.ansa.networklayer.vrrpv2.VRRPv2 pid 4 n vrrp
+GC m 49 g 4 n ipIn o 0
+GC m 49 g 7 n ipOut o 1
+MS id 49 d p=250,140;i=block/network2
+MC id 50 c cModule t inet.examples.ansa.vrrpv2.router.NetworkLayer pid 4 n networkLayer cm 1
+GC m 50 g 2 n tcpIn o 0
+GC m 50 g 4 n udpIn o 0
+GC m 50 g 6 n sctpIn o 0
+GC m 50 g 8 n rsvpIn o 0
+GC m 50 g 10 n ospfIn o 0
+GC m 50 g 14 n manetIn o 0
+GC m 50 g 16 n igmpIn o 0
+GC m 50 g 18 n vrrpIn o 0
+GC m 50 g 23 n tcpOut o 1
+GC m 50 g 25 n udpOut o 1
+GC m 50 g 27 n sctpOut o 1
+GC m 50 g 29 n rsvpOut o 1
+GC m 50 g 31 n ospfOut o 1
+GC m 50 g 35 n manetOut o 1
+GC m 50 g 37 n igmpOut o 1
+GC m 50 g 39 n vrrpOut o 1
+MS id 50 d q=queue;p=250,222;i=block/fork
+MC id 51 c DeviceConfigurator t inet.ansa.util.deviceConfigurator.DeviceConfigurator pid 4 n deviceConfigurator
+MS id 51 d p=80,40;i=block/cogwheel
+MC id 52 c NotificationBoard t inet.base.NotificationBoard pid 4 n notificationBoard
+MS id 52 d p=80,120;i=block/control
+MC id 53 c InterfaceStateManager t inet.ansa.util.InterfaceStateManager.InterfaceStateManager pid 4 n interfaceStateManager
+MS id 53 d p=80,200;i=block/plug
+MC id 54 c AnsaRoutingTable t inet.ansa.networklayer.ipv4.AnsaRoutingTable pid 4 n routingTable
+MS id 54 d p=196,40;i=block/table
+MC id 55 c InterfaceTable t inet.networklayer.common.InterfaceTable pid 4 n interfaceTable
+MS id 55 d p=300,40;i=block/table
+MC id 56 c cModule t inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF pid 4 n eth[0] cm 1
+GC m 56 g 0 n upperLayerIn o 0
+GC m 56 g 3 n upperLayerOut o 1
+GC m 56 g 4 n phys$i o 0
+GC m 56 g 5 n phys$o o 1
+MS id 56 d q=l2queue;p=250,302,row,110;i=block/ifcard;bgl=2
+MC id 57 c cModule t inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF pid 4 n eth[1] cm 1
+GC m 57 g 0 n upperLayerIn o 0
+GC m 57 g 3 n upperLayerOut o 1
+GC m 57 g 4 n phys$i o 0
+GC m 57 g 5 n phys$o o 1
+MS id 57 d q=l2queue;p=250,302,row,110;i=block/ifcard;bgl=2
+MC id 58 c cModule t inet.linklayer.loopback.LoopbackInterface pid 4 n lo[0] cm 1
+GC m 58 g 0 n upperLayerIn o 0
+GC m 58 g 3 n upperLayerOut o 1
+MS id 58 d p=128,302;i=block/ifcard;bgb=214,249;bgl=53
+CC sm 49 sg 7 dm 50 dg 18
+CC sm 50 sg 39 dm 49 dg 4
+CC sm 4 sg 1048576 dm 56 dg 4
+CC sm 56 sg 5 dm 4 dg 1572864
+GC m 50 g 1048576 n ifIn i 0 o 0
+CC sm 56 sg 3 dm 50 dg 1048576
+GC m 50 g 12058624 n ifOut i 0 o 1
+CC sm 50 sg 12058624 dm 56 dg 0
+CC sm 4 sg 1048577 dm 57 dg 4
+CC sm 57 sg 5 dm 4 dg 1572865
+GC m 50 g 1048577 n ifIn i 1 o 0
+CC sm 57 sg 3 dm 50 dg 1048577
+GC m 50 g 12058625 n ifOut i 1 o 1
+CC sm 50 sg 12058625 dm 57 dg 0
+GC m 50 g 1048578 n ifIn i 2 o 0
+CC sm 58 sg 3 dm 50 dg 1048578
+GC m 50 g 12058626 n ifOut i 2 o 1
+CC sm 50 sg 12058626 dm 58 dg 0
+MC id 59 c AnsaIPv4 t inet.ansa.networklayer.ipv4.AnsaIPv4 pid 50 n ip
+GC m 59 g 7 n queueOut o 1
+GC m 59 g 9 n lispOut o 1
+GC m 59 g 10 n lispIn o 0
+MS id 59 d q=queue;p=85,95;i=block/routing
+GC m 59 g 1048576 n transportIn i 0 o 0
+GC m 59 g 1048577 n transportIn i 1 o 0
+GC m 59 g 1048578 n transportIn i 2 o 0
+GC m 59 g 1048579 n transportIn i 3 o 0
+GC m 59 g 1048580 n transportIn i 4 o 0
+GC m 59 g 1048581 n transportIn i 5 o 0
+GC m 59 g 1048582 n transportIn i 6 o 0
+GC m 59 g 1048583 n transportIn i 7 o 0
+GC m 59 g 1048584 n transportIn i 8 o 0
+GC m 59 g 2621440 n transportOut i 0 o 1
+GC m 59 g 2621441 n transportOut i 1 o 1
+GC m 59 g 2621442 n transportOut i 2 o 1
+GC m 59 g 2621443 n transportOut i 3 o 1
+GC m 59 g 2621444 n transportOut i 4 o 1
+GC m 59 g 2621445 n transportOut i 5 o 1
+GC m 59 g 2621446 n transportOut i 6 o 1
+GC m 59 g 2621447 n transportOut i 7 o 1
+GC m 59 g 2621448 n transportOut i 8 o 1
+GC m 59 g 3145728 n queueIn i 0 o 0
+GC m 59 g 3145729 n queueIn i 1 o 0
+GC m 59 g 3145730 n queueIn i 2 o 0
+MC id 60 c AnsaARP t inet.ansa.networklayer.arp.AnsaARP pid 50 n arp
+GC m 60 g 0 n ipIn o 0
+MS id 60 d q=pendingQueue;p=202,142;i=block/layer
+GC m 60 g 2621440 n nicOut i 0 o 1
+GC m 60 g 2621441 n nicOut i 1 o 1
+GC m 60 g 2621442 n nicOut i 2 o 1
+MC id 61 c ICMP t inet.networklayer.ipv4.ICMP pid 50 n icmp
+GC m 61 g 0 n localIn o 0
+GC m 61 g 7 n sendOut o 1
+GC m 61 g 9 n errorOut o 1
+MS id 61 d p=160,63;i=block/control_s
+MC id 62 c IGMPv2 t inet.networklayer.ipv4.IGMPv2 pid 50 n igmp
+GC m 62 g 0 n ipIn o 0
+GC m 62 g 3 n ipOut o 1
+GC m 62 g 4 n routerIn o 0
+GC m 62 g 7 n routerOut o 1
+MS id 62 d p=39,33;i=block/cogwheel_s
+MC id 63 c ErrorHandling t inet.networklayer.ipv4.ErrorHandling pid 50 n errorHandling
+GC m 63 g 0 n in o 0
+MS id 63 d p=239,63;i=block/sink_s
+CC sm 59 sg 2621440 dm 50 dg 23
+CS sm 59 sg 2621440 d m=n
+CC sm 50 sg 2 dm 59 dg 1048576
+CS sm 50 sg 2 d m=n
+CC sm 59 sg 2621441 dm 50 dg 25
+CS sm 59 sg 2621441 d m=n
+CC sm 50 sg 4 dm 59 dg 1048577
+CS sm 50 sg 4 d m=n
+CC sm 59 sg 2621442 dm 61 dg 0
+CC sm 61 sg 7 dm 59 dg 1048578
+CC sm 59 sg 2621443 dm 62 dg 0
+CC sm 62 sg 3 dm 59 dg 1048579
+CC sm 59 sg 2621444 dm 50 dg 29
+CS sm 59 sg 2621444 d m=n
+CC sm 50 sg 8 dm 59 dg 1048580
+CS sm 50 sg 8 d m=n
+CC sm 59 sg 2621445 dm 50 dg 31
+CS sm 59 sg 2621445 d m=n
+CC sm 50 sg 10 dm 59 dg 1048581
+CS sm 50 sg 10 d m=n
+CC sm 59 sg 2621446 dm 50 dg 27
+CS sm 59 sg 2621446 d m=n
+CC sm 50 sg 6 dm 59 dg 1048582
+CS sm 50 sg 6 d m=n
+CC sm 59 sg 2621447 dm 50 dg 35
+CS sm 59 sg 2621447 d m=n
+CC sm 50 sg 14 dm 59 dg 1048583
+CS sm 50 sg 14 d m=n
+CC sm 59 sg 2621448 dm 50 dg 39
+CC sm 50 sg 18 dm 59 dg 1048584
+CC sm 61 sg 9 dm 63 dg 0
+CC sm 59 sg 7 dm 60 dg 0
+CC sm 62 sg 7 dm 50 dg 37
+CC sm 50 sg 16 dm 62 dg 4
+CC sm 50 sg 1048576 dm 59 dg 3145728
+CS sm 50 sg 1048576 d m=s
+CC sm 50 sg 1048577 dm 59 dg 3145729
+CS sm 50 sg 1048577 d m=s
+CC sm 50 sg 1048578 dm 59 dg 3145730
+CS sm 50 sg 1048578 d m=s
+CC sm 60 sg 2621440 dm 50 dg 12058624
+CS sm 60 sg 2621440 d m=s
+CC sm 60 sg 2621441 dm 50 dg 12058625
+CS sm 60 sg 2621441 d m=s
+CC sm 60 sg 2621442 dm 50 dg 12058626
+CS sm 60 sg 2621442 d m=s
+MC id 64 c AnsaEtherMACFullDuplex t inet.ansa.linklayer.ethernet.AnsaEtherMACFullDuplex pid 56 n mac
+GC m 64 g 0 n upperLayerIn o 0
+GC m 64 g 3 n upperLayerOut o 1
+GC m 64 g 4 n phys$i o 0
+GC m 64 g 5 n phys$o o 1
+MS id 64 d p=182,321;i=block/rxtx
+MC id 65 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 56 n encap
+GC m 65 g 0 n upperLayerIn o 0
+GC m 65 g 3 n upperLayerOut o 1
+GC m 65 g 4 n lowerLayerIn o 0
+GC m 65 g 7 n lowerLayerOut o 1
+MS id 65 d p=182,205;i=block/square
+CC sm 65 sg 7 dm 64 dg 0
+CC sm 64 sg 3 dm 65 dg 4
+CC sm 64 sg 5 dm 56 dg 5
+CS sm 64 sg 5 d m=s
+CC sm 56 sg 4 dm 64 dg 4
+CS sm 56 sg 4 d m=s
+CC sm 65 sg 3 dm 56 dg 3
+CS sm 65 sg 3 d m=n
+CC sm 56 sg 0 dm 65 dg 0
+CS sm 56 sg 0 d m=n
+MC id 66 c AnsaEtherMACFullDuplex t inet.ansa.linklayer.ethernet.AnsaEtherMACFullDuplex pid 57 n mac
+GC m 66 g 0 n upperLayerIn o 0
+GC m 66 g 3 n upperLayerOut o 1
+GC m 66 g 4 n phys$i o 0
+GC m 66 g 5 n phys$o o 1
+MS id 66 d p=182,321;i=block/rxtx
+MC id 67 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 57 n encap
+GC m 67 g 0 n upperLayerIn o 0
+GC m 67 g 3 n upperLayerOut o 1
+GC m 67 g 4 n lowerLayerIn o 0
+GC m 67 g 7 n lowerLayerOut o 1
+MS id 67 d p=182,205;i=block/square
+CC sm 67 sg 7 dm 66 dg 0
+CC sm 66 sg 3 dm 67 dg 4
+CC sm 66 sg 5 dm 57 dg 5
+CS sm 66 sg 5 d m=s
+CC sm 57 sg 4 dm 66 dg 4
+CS sm 57 sg 4 d m=s
+CC sm 67 sg 3 dm 57 dg 3
+CS sm 67 sg 3 d m=n
+CC sm 57 sg 0 dm 67 dg 0
+CS sm 57 sg 0 d m=n
+MC id 68 c Loopback t inet.linklayer.loopback.Loopback pid 58 n lo
+GC m 68 g 0 n netwIn o 0
+GC m 68 g 3 n netwOut o 1
+MS id 68 d p=98,207;i=block/rxtx
+CC sm 58 sg 0 dm 68 dg 0
+CS sm 58 sg 0 d m=n
+CC sm 68 sg 3 dm 58 dg 3
+CS sm 68 sg 3 d m=n
+MC id 69 c InterfaceTable t inet.networklayer.common.InterfaceTable pid 5 n interfaceTable
+MS id 69 d is=s;p=50,100;i=block/table
+MC id 70 c NotificationBoard t inet.base.NotificationBoard pid 5 n notificationBoard
+MS id 70 d is=s;p=50,150;i=block/control
+MC id 71 c MACRelayUnitNP t inet.linklayer.ethernet.switch.MACRelayUnitNP pid 5 n relayUnit
+MS id 71 d p=270,50;i=block/switch
+MC id 72 c cModule t inet.linklayer.ethernet.EthernetInterface pid 5 n eth[0] cm 1
+GC m 72 g 0 n upperLayerIn o 0
+GC m 72 g 3 n upperLayerOut o 1
+GC m 72 g 4 n phys$i o 0
+GC m 72 g 5 n phys$o o 1
+MS id 72 d q=txQueue;p=170,150,row;i=block/ifcard;bgl=2
+MC id 73 c cModule t inet.linklayer.ethernet.EthernetInterface pid 5 n eth[1] cm 1
+GC m 73 g 0 n upperLayerIn o 0
+GC m 73 g 3 n upperLayerOut o 1
+GC m 73 g 4 n phys$i o 0
+GC m 73 g 5 n phys$o o 1
+MS id 73 d q=txQueue;p=170,150,row;i=block/ifcard;bgl=2
+MC id 74 c cModule t inet.linklayer.ethernet.EthernetInterface pid 5 n eth[2] cm 1
+GC m 74 g 0 n upperLayerIn o 0
+GC m 74 g 3 n upperLayerOut o 1
+GC m 74 g 4 n phys$i o 0
+GC m 74 g 5 n phys$o o 1
+MS id 74 d q=txQueue;p=170,150,row;i=block/ifcard;bgl=2
+GC m 71 g 2621440 n ifOut i 0 o 1
+CC sm 71 sg 2621440 dm 72 dg 0
+GC m 71 g 1048576 n ifIn i 0 o 0
+CC sm 72 sg 3 dm 71 dg 1048576
+CC sm 72 sg 5 dm 5 dg 1572864
+CC sm 5 sg 1048576 dm 72 dg 4
+GC m 71 g 2621441 n ifOut i 1 o 1
+CC sm 71 sg 2621441 dm 73 dg 0
+GC m 71 g 1048577 n ifIn i 1 o 0
+CC sm 73 sg 3 dm 71 dg 1048577
+CC sm 73 sg 5 dm 5 dg 1572865
+CC sm 5 sg 1048577 dm 73 dg 4
+GC m 71 g 2621442 n ifOut i 2 o 1
+CC sm 71 sg 2621442 dm 74 dg 0
+GC m 71 g 1048578 n ifIn i 2 o 0
+CC sm 74 sg 3 dm 71 dg 1048578
+CC sm 74 sg 5 dm 5 dg 1572866
+CC sm 5 sg 1048578 dm 74 dg 4
+MC id 75 c EtherMAC t inet.linklayer.ethernet.EtherMAC pid 72 n mac
+GC m 75 g 0 n upperLayerIn o 0
+GC m 75 g 3 n upperLayerOut o 1
+GC m 75 g 4 n phys$i o 0
+GC m 75 g 5 n phys$o o 1
+MS id 75 d p=182,321;i=block/rxtx
+MC id 76 c cModule t inet.linklayer.ethernet.EtherEncapDummy pid 72 n encap cm 1
+GC m 76 g 0 n upperLayerIn o 0
+GC m 76 g 3 n upperLayerOut o 1
+GC m 76 g 4 n lowerLayerIn o 0
+GC m 76 g 7 n lowerLayerOut o 1
+MS id 76 d p=182,205;i=block/square
+CC sm 75 sg 3 dm 76 dg 4
+CC sm 75 sg 5 dm 72 dg 5
+CS sm 75 sg 5 d m=s
+CC sm 72 sg 4 dm 75 dg 4
+CS sm 72 sg 4 d m=s
+CC sm 76 sg 7 dm 75 dg 0
+CC sm 76 sg 3 dm 72 dg 3
+CS sm 76 sg 3 d m=n
+CC sm 72 sg 0 dm 76 dg 0
+CS sm 72 sg 0 d m=n
+CC sm 76 sg 0 dm 76 dg 7
+CC sm 76 sg 4 dm 76 dg 3
+MC id 77 c EtherMAC t inet.linklayer.ethernet.EtherMAC pid 73 n mac
+GC m 77 g 0 n upperLayerIn o 0
+GC m 77 g 3 n upperLayerOut o 1
+GC m 77 g 4 n phys$i o 0
+GC m 77 g 5 n phys$o o 1
+MS id 77 d p=182,321;i=block/rxtx
+MC id 78 c cModule t inet.linklayer.ethernet.EtherEncapDummy pid 73 n encap cm 1
+GC m 78 g 0 n upperLayerIn o 0
+GC m 78 g 3 n upperLayerOut o 1
+GC m 78 g 4 n lowerLayerIn o 0
+GC m 78 g 7 n lowerLayerOut o 1
+MS id 78 d p=182,205;i=block/square
+CC sm 77 sg 3 dm 78 dg 4
+CC sm 77 sg 5 dm 73 dg 5
+CS sm 77 sg 5 d m=s
+CC sm 73 sg 4 dm 77 dg 4
+CS sm 73 sg 4 d m=s
+CC sm 78 sg 7 dm 77 dg 0
+CC sm 78 sg 3 dm 73 dg 3
+CS sm 78 sg 3 d m=n
+CC sm 73 sg 0 dm 78 dg 0
+CS sm 73 sg 0 d m=n
+CC sm 78 sg 0 dm 78 dg 7
+CC sm 78 sg 4 dm 78 dg 3
+MC id 79 c EtherMAC t inet.linklayer.ethernet.EtherMAC pid 74 n mac
+GC m 79 g 0 n upperLayerIn o 0
+GC m 79 g 3 n upperLayerOut o 1
+GC m 79 g 4 n phys$i o 0
+GC m 79 g 5 n phys$o o 1
+MS id 79 d p=182,321;i=block/rxtx
+MC id 80 c cModule t inet.linklayer.ethernet.EtherEncapDummy pid 74 n encap cm 1
+GC m 80 g 0 n upperLayerIn o 0
+GC m 80 g 3 n upperLayerOut o 1
+GC m 80 g 4 n lowerLayerIn o 0
+GC m 80 g 7 n lowerLayerOut o 1
+MS id 80 d p=182,205;i=block/square
+CC sm 79 sg 3 dm 80 dg 4
+CC sm 79 sg 5 dm 74 dg 5
+CS sm 79 sg 5 d m=s
+CC sm 74 sg 4 dm 79 dg 4
+CS sm 74 sg 4 d m=s
+CC sm 80 sg 7 dm 79 dg 0
+CC sm 80 sg 3 dm 74 dg 3
+CS sm 80 sg 3 d m=n
+CC sm 74 sg 0 dm 80 dg 0
+CS sm 74 sg 0 d m=n
+CC sm 80 sg 0 dm 80 dg 7
+CC sm 80 sg 4 dm 80 dg 3
+MC id 81 c NotificationBoard t inet.base.NotificationBoard pid 6 n notificationBoard
+MS id 81 d is=s;p=53,155;i=block/control
+MC id 82 c cModule t inet.nodes.inet.NetworkLayer pid 6 n networkLayer cm 1
+GC m 82 g 2 n tcpIn o 0
+GC m 82 g 4 n udpIn o 0
+GC m 82 g 6 n sctpIn o 0
+GC m 82 g 8 n rsvpIn o 0
+GC m 82 g 10 n ospfIn o 0
+GC m 82 g 14 n manetIn o 0
+GC m 82 g 16 n igmpIn o 0
+GC m 82 g 21 n tcpOut o 1
+GC m 82 g 23 n udpOut o 1
+GC m 82 g 25 n sctpOut o 1
+GC m 82 g 27 n rsvpOut o 1
+GC m 82 g 29 n ospfOut o 1
+GC m 82 g 33 n manetOut o 1
+GC m 82 g 35 n igmpOut o 1
+GC m 82 g 36 n lispIn o 0
+GC m 82 g 39 n lispOut o 1
+MS id 82 d q=queue;p=329,287;i=block/fork
+MC id 83 c RoutingTable t inet.networklayer.ipv4.RoutingTable pid 6 n routingTable
+MS id 83 d is=s;p=53,225;i=block/table
+MC id 84 c InterfaceTable t inet.networklayer.common.InterfaceTable pid 6 n interfaceTable
+MS id 84 d is=s;p=53,287;i=block/table
+MC id 85 c cModule t inet.linklayer.loopback.LoopbackInterface pid 6 n lo0 cm 1
+GC m 85 g 0 n upperLayerIn o 0
+GC m 85 g 3 n upperLayerOut o 1
+MS id 85 d p=78,406;i=block/ifcard;bgb=214,249;bgl=53
+MC id 86 c cModule t inet.linklayer.ethernet.EthernetInterface pid 6 n eth[0] cm 1
+GC m 86 g 0 n upperLayerIn o 0
+GC m 86 g 3 n upperLayerOut o 1
+GC m 86 g 4 n phys$i o 0
+GC m 86 g 5 n phys$o o 1
+MS id 86 d q=txQueue;p=368,406,row,60;i=block/ifcard;bgl=2
+GC m 82 g 11010048 n ifOut i 0 o 1
+CC sm 82 sg 11010048 dm 85 dg 0
+GC m 82 g 1048576 n ifIn i 0 o 0
+CC sm 85 sg 3 dm 82 dg 1048576
+CC sm 6 sg 3145728 dm 86 dg 4
+CS sm 6 sg 3145728 d m=s
+CC sm 86 sg 5 dm 6 dg 3670016
+CS sm 86 sg 5 d m=s
+GC m 82 g 1048577 n ifIn i 1 o 0
+CC sm 86 sg 3 dm 82 dg 1048577
+GC m 82 g 11010049 n ifOut i 1 o 1
+CC sm 82 sg 11010049 dm 86 dg 0
+MC id 87 c PingApp t inet.applications.pingapp.PingApp pid 6 n pingApp[0]
+GC m 87 g 0 n pingIn o 0
+GC m 87 g 3 n pingOut o 1
+GC m 87 g 4 n pingv6In o 0
+GC m 87 g 7 n pingv6Out o 1
+MS id 87 d p=635,141,row,60;i=block/app
+MC id 88 c PingApp t inet.applications.pingapp.PingApp pid 6 n pingApp[1]
+GC m 88 g 0 n pingIn o 0
+GC m 88 g 3 n pingOut o 1
+GC m 88 g 4 n pingv6In o 0
+GC m 88 g 7 n pingv6Out o 1
+MS id 88 d p=635,141,row,60;i=block/app
+GC m 82 g 17301504 n pingOut i 0 o 1
+CC sm 82 sg 17301504 dm 87 dg 0
+GC m 82 g 7340032 n pingIn i 0 o 0
+CC sm 87 sg 3 dm 82 dg 7340032
+GC m 82 g 17301505 n pingOut i 1 o 1
+CC sm 82 sg 17301505 dm 88 dg 0
+GC m 82 g 7340033 n pingIn i 1 o 0
+CC sm 88 sg 3 dm 82 dg 7340033
+MC id 89 c DeviceConfigurator t inet.ansa.util.deviceConfigurator.DeviceConfigurator pid 6 n deviceConfigurator
+MS id 89 d p=61,54;i=block/cogwheel
+MC id 90 c AnsaIPTrafGen t inet.ansa.util.IPGen.AnsaIPTrafGen pid 6 n ipTrafGen
+GC m 90 g 0 n ipIn o 0
+GC m 90 g 2 n ipv6In o 0
+GC m 90 g 5 n ipOut o 1
+GC m 90 g 7 n ipv6Out o 1
+MS id 90 d p=580,287;i=block/circle
+CC sm 90 sg 5 dm 82 dg 8
+CC sm 82 sg 27 dm 90 dg 0
+MC id 91 c IPv4NodeConfigurator t inet.networklayer.autorouting.ipv4.IPv4NodeConfigurator pid 82 n configurator
+MS id 91 d p=39,158;i=block/cogwheel_s
+MC id 92 c IPv4 t inet.networklayer.ipv4.IPv4 pid 82 n ip
+GC m 92 g 7 n queueOut o 1
+MS id 92 d q=queue;p=85,95;i=block/routing
+GC m 92 g 1048576 n transportIn i 0 o 0
+GC m 92 g 1048577 n transportIn i 1 o 0
+GC m 92 g 1048578 n transportIn i 2 o 0
+GC m 92 g 1048579 n transportIn i 3 o 0
+GC m 92 g 1048580 n transportIn i 4 o 0
+GC m 92 g 1048581 n transportIn i 5 o 0
+GC m 92 g 1048582 n transportIn i 6 o 0
+GC m 92 g 1048583 n transportIn i 7 o 0
+GC m 92 g 2621440 n transportOut i 0 o 1
+GC m 92 g 2621441 n transportOut i 1 o 1
+GC m 92 g 2621442 n transportOut i 2 o 1
+GC m 92 g 2621443 n transportOut i 3 o 1
+GC m 92 g 2621444 n transportOut i 4 o 1
+GC m 92 g 2621445 n transportOut i 5 o 1
+GC m 92 g 2621446 n transportOut i 6 o 1
+GC m 92 g 2621447 n transportOut i 7 o 1
+GC m 92 g 3145728 n queueIn i 0 o 0
+GC m 92 g 3145729 n queueIn i 1 o 0
+MC id 93 c ARP t inet.networklayer.arp.ARP pid 82 n arp
+GC m 93 g 0 n ipIn o 0
+MS id 93 d q=pendingQueue;p=202,142;i=block/layer
+GC m 93 g 2621440 n nicOut i 0 o 1
+GC m 93 g 2621441 n nicOut i 1 o 1
+MC id 94 c ICMP t inet.networklayer.ipv4.ICMP pid 82 n icmp
+GC m 94 g 0 n localIn o 0
+GC m 94 g 7 n sendOut o 1
+GC m 94 g 9 n errorOut o 1
+MS id 94 d p=160,63;i=block/control_s
+MC id 95 c IGMPv2 t inet.networklayer.ipv4.IGMPv2 pid 82 n igmp
+GC m 95 g 0 n ipIn o 0
+GC m 95 g 3 n ipOut o 1
+GC m 95 g 4 n routerIn o 0
+GC m 95 g 7 n routerOut o 1
+MS id 95 d p=39,33;i=block/cogwheel_s
+MC id 96 c ErrorHandling t inet.networklayer.ipv4.ErrorHandling pid 82 n errorHandling
+GC m 96 g 0 n in o 0
+MS id 96 d p=239,63;i=block/sink_s
+CC sm 92 sg 2621440 dm 82 dg 21
+CS sm 92 sg 2621440 d m=n
+CC sm 82 sg 2 dm 92 dg 1048576
+CS sm 82 sg 2 d m=n
+CC sm 92 sg 2621441 dm 82 dg 23
+CS sm 92 sg 2621441 d m=n
+CC sm 82 sg 4 dm 92 dg 1048577
+CS sm 82 sg 4 d m=n
+CC sm 92 sg 2621442 dm 94 dg 0
+CC sm 94 sg 7 dm 92 dg 1048578
+CC sm 92 sg 2621443 dm 95 dg 0
+CC sm 95 sg 3 dm 92 dg 1048579
+CC sm 92 sg 2621444 dm 82 dg 27
+CS sm 92 sg 2621444 d m=n
+CC sm 82 sg 8 dm 92 dg 1048580
+CS sm 82 sg 8 d m=n
+CC sm 92 sg 2621445 dm 82 dg 29
+CS sm 92 sg 2621445 d m=n
+CC sm 82 sg 10 dm 92 dg 1048581
+CS sm 82 sg 10 d m=n
+CC sm 92 sg 2621446 dm 82 dg 25
+CS sm 92 sg 2621446 d m=n
+CC sm 82 sg 6 dm 92 dg 1048582
+CS sm 82 sg 6 d m=n
+CC sm 92 sg 2621447 dm 82 dg 33
+CS sm 92 sg 2621447 d m=n
+CC sm 82 sg 14 dm 92 dg 1048583
+CS sm 82 sg 14 d m=n
+GC m 94 g 3670016 n pingOut i 0 o 1
+CC sm 94 sg 3670016 dm 82 dg 17301504
+CS sm 94 sg 3670016 d m=n
+GC m 94 g 3670017 n pingOut i 1 o 1
+CC sm 94 sg 3670017 dm 82 dg 17301505
+CS sm 94 sg 3670017 d m=n
+GC m 94 g 2097152 n pingIn i 0 o 0
+CC sm 82 sg 7340032 dm 94 dg 2097152
+CS sm 82 sg 7340032 d m=n
+GC m 94 g 2097153 n pingIn i 1 o 0
+CC sm 82 sg 7340033 dm 94 dg 2097153
+CS sm 82 sg 7340033 d m=n
+CC sm 94 sg 9 dm 96 dg 0
+CC sm 92 sg 7 dm 93 dg 0
+CC sm 95 sg 7 dm 82 dg 35
+CC sm 82 sg 16 dm 95 dg 4
+CC sm 82 sg 1048576 dm 92 dg 3145728
+CS sm 82 sg 1048576 d m=s
+CC sm 82 sg 1048577 dm 92 dg 3145729
+CS sm 82 sg 1048577 d m=s
+CC sm 93 sg 2621440 dm 82 dg 11010048
+CS sm 93 sg 2621440 d m=s
+CC sm 93 sg 2621441 dm 82 dg 11010049
+CS sm 93 sg 2621441 d m=s
+MC id 97 c Loopback t inet.linklayer.loopback.Loopback pid 85 n lo
+GC m 97 g 0 n netwIn o 0
+GC m 97 g 3 n netwOut o 1
+MS id 97 d p=98,207;i=block/rxtx
+CC sm 85 sg 0 dm 97 dg 0
+CS sm 85 sg 0 d m=n
+CC sm 97 sg 3 dm 85 dg 3
+CS sm 97 sg 3 d m=n
+MC id 98 c EtherMACFullDuplex t inet.linklayer.ethernet.EtherMACFullDuplex pid 86 n mac
+GC m 98 g 0 n upperLayerIn o 0
+GC m 98 g 3 n upperLayerOut o 1
+GC m 98 g 4 n phys$i o 0
+GC m 98 g 5 n phys$o o 1
+MS id 98 d p=182,321;i=block/rxtx
+MC id 99 c EtherEncap t inet.linklayer.ethernet.EtherEncap pid 86 n encap
+GC m 99 g 0 n upperLayerIn o 0
+GC m 99 g 3 n upperLayerOut o 1
+GC m 99 g 4 n lowerLayerIn o 0
+GC m 99 g 7 n lowerLayerOut o 1
+MS id 99 d p=182,205;i=block/square
+CC sm 98 sg 3 dm 99 dg 4
+CC sm 98 sg 5 dm 86 dg 5
+CS sm 98 sg 5 d m=s
+CC sm 86 sg 4 dm 98 dg 4
+CS sm 86 sg 4 d m=s
+CC sm 99 sg 7 dm 98 dg 0
+CC sm 99 sg 3 dm 86 dg 3
+CS sm 99 sg 3 d m=n
+CC sm 86 sg 0 dm 99 dg 0
+CS sm 86 sg 0 d m=n
+MB sm 1 tm 2 m initialize(0)
+ME
+MB sm 1 tm 9 m initialize(0)
+ME
+MB sm 1 tm 10 m initialize(0)
+ME
+MB sm 1 tm 19 m initialize(0)
+CM id 0 tid 0 eid 0 etid 0 c cMessage n end-service pe -1
+ME
+MB sm 1 tm 20 m initialize(0)
+ME
+MB sm 1 tm 21 m initialize(0)
+ME
+MB sm 1 tm 22 m initialize(0)
+MB sm 22 tm 12 m subscribe(IF-DELETED)
+ME
+MB sm 22 tm 12 m subscribe(36)
+ME
+MB sm 22 tm 12 m subscribe(37)
+ME
+ME
+MB sm 1 tm 23 m initialize(0)
+ME
+MB sm 1 tm 11 m initialize(0)
+ME
+MB sm 1 tm 12 m initialize(0)
+ME
+MB sm 1 tm 13 m initialize(0)
+ME
+MB sm 1 tm 14 m initialize(0)
+MB sm 14 tm 12 m subscribe(IF-CREATED)
+ME
+MB sm 14 tm 12 m subscribe(IF-DELETED)
+ME
+MB sm 14 tm 12 m subscribe(IF-STATE)
+ME
+MB sm 14 tm 12 m subscribe(IF-CFG)
+ME
+MB sm 14 tm 12 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 15 m initialize(0)
+ME
+MB sm 1 tm 16 m initialize(0)
+ME
+MB sm 1 tm 24 m initialize(0)
+MB sm 24 tm 15 m ""
+ME
+MB sm 24 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 24 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 24 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 24 tm 12 m "fireChangeNotification(IF-CREATED, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 24 tm 12 m "fireChangeNotification(IF-STATE, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 24 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 1 tid 1 eid 1 etid 1 c cMessage n EndTransmission k 103 pe -1
+CM id 2 tid 2 eid 2 etid 2 c cMessage n EndIFG k 100 pe -1
+CM id 3 tid 3 eid 3 etid 3 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 25 m initialize(0)
+ME
+MB sm 1 tm 17 m initialize(0)
+ME
+MB sm 1 tm 26 m initialize(0)
+MB sm 26 tm 15 m ""
+ME
+MB sm 26 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 26 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 26 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 26 tm 12 m "fireChangeNotification(IF-CREATED, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 26 tm 12 m "fireChangeNotification(IF-STATE, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 26 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 4 tid 4 eid 4 etid 4 c cMessage n EndTransmission k 103 pe -1
+CM id 5 tid 5 eid 5 etid 5 c cMessage n EndIFG k 100 pe -1
+CM id 6 tid 6 eid 6 etid 6 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 27 m initialize(0)
+ME
+MB sm 1 tm 18 m initialize(0)
+ME
+MB sm 1 tm 28 m initialize(0)
+MB sm 28 tm 15 m ""
+ME
+MB sm 28 tm 12 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 28 tm 12 m "fireChangeNotification(IF-CREATED, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+ME
+MB sm 1 tm 3 m initialize(0)
+ME
+MB sm 1 tm 29 m initialize(0)
+ME
+MB sm 1 tm 30 m initialize(0)
+ME
+MB sm 1 tm 39 m initialize(0)
+CM id 7 tid 7 eid 7 etid 7 c cMessage n end-service pe -1
+ME
+MB sm 1 tm 40 m initialize(0)
+ME
+MB sm 1 tm 41 m initialize(0)
+ME
+MB sm 1 tm 42 m initialize(0)
+MB sm 42 tm 32 m subscribe(IF-DELETED)
+ME
+MB sm 42 tm 32 m subscribe(36)
+ME
+MB sm 42 tm 32 m subscribe(37)
+ME
+ME
+MB sm 1 tm 43 m initialize(0)
+ME
+MB sm 1 tm 31 m initialize(0)
+ME
+MB sm 1 tm 32 m initialize(0)
+ME
+MB sm 1 tm 33 m initialize(0)
+ME
+MB sm 1 tm 34 m initialize(0)
+MB sm 34 tm 32 m subscribe(IF-CREATED)
+ME
+MB sm 34 tm 32 m subscribe(IF-DELETED)
+ME
+MB sm 34 tm 32 m subscribe(IF-STATE)
+ME
+MB sm 34 tm 32 m subscribe(IF-CFG)
+ME
+MB sm 34 tm 32 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 35 m initialize(0)
+ME
+MB sm 1 tm 36 m initialize(0)
+ME
+MB sm 1 tm 44 m initialize(0)
+MB sm 44 tm 35 m ""
+ME
+MB sm 44 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 44 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 44 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 44 tm 32 m "fireChangeNotification(IF-CREATED, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 44 tm 32 m "fireChangeNotification(IF-STATE, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 44 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 8 tid 8 eid 8 etid 8 c cMessage n EndTransmission k 103 pe -1
+CM id 9 tid 9 eid 9 etid 9 c cMessage n EndIFG k 100 pe -1
+CM id 10 tid 10 eid 10 etid 10 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 45 m initialize(0)
+ME
+MB sm 1 tm 37 m initialize(0)
+ME
+MB sm 1 tm 46 m initialize(0)
+MB sm 46 tm 35 m ""
+ME
+MB sm 46 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 46 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 46 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 46 tm 32 m "fireChangeNotification(IF-CREATED, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 46 tm 32 m "fireChangeNotification(IF-STATE, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 46 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 11 tid 11 eid 11 etid 11 c cMessage n EndTransmission k 103 pe -1
+CM id 12 tid 12 eid 12 etid 12 c cMessage n EndIFG k 100 pe -1
+CM id 13 tid 13 eid 13 etid 13 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 47 m initialize(0)
+ME
+MB sm 1 tm 38 m initialize(0)
+ME
+MB sm 1 tm 48 m initialize(0)
+MB sm 48 tm 35 m ""
+ME
+MB sm 48 tm 32 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 48 tm 32 m "fireChangeNotification(IF-CREATED, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+ME
+MB sm 1 tm 4 m initialize(0)
+ME
+MB sm 1 tm 49 m initialize(0)
+ME
+MB sm 1 tm 50 m initialize(0)
+ME
+MB sm 1 tm 59 m initialize(0)
+CM id 14 tid 14 eid 14 etid 14 c cMessage n end-service pe -1
+ME
+MB sm 1 tm 60 m initialize(0)
+ME
+MB sm 1 tm 61 m initialize(0)
+ME
+MB sm 1 tm 62 m initialize(0)
+MB sm 62 tm 52 m subscribe(IF-DELETED)
+ME
+MB sm 62 tm 52 m subscribe(36)
+ME
+MB sm 62 tm 52 m subscribe(37)
+ME
+ME
+MB sm 1 tm 63 m initialize(0)
+ME
+MB sm 1 tm 51 m initialize(0)
+ME
+MB sm 1 tm 52 m initialize(0)
+ME
+MB sm 1 tm 53 m initialize(0)
+ME
+MB sm 1 tm 54 m initialize(0)
+MB sm 54 tm 52 m subscribe(IF-CREATED)
+ME
+MB sm 54 tm 52 m subscribe(IF-DELETED)
+ME
+MB sm 54 tm 52 m subscribe(IF-STATE)
+ME
+MB sm 54 tm 52 m subscribe(IF-CFG)
+ME
+MB sm 54 tm 52 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 55 m initialize(0)
+ME
+MB sm 1 tm 56 m initialize(0)
+ME
+MB sm 1 tm 64 m initialize(0)
+MB sm 64 tm 55 m ""
+ME
+MB sm 64 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 64 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 64 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 64 tm 52 m "fireChangeNotification(IF-CREATED, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 64 tm 52 m "fireChangeNotification(IF-STATE, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 64 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 15 tid 15 eid 15 etid 15 c cMessage n EndTransmission k 103 pe -1
+CM id 16 tid 16 eid 16 etid 16 c cMessage n EndIFG k 100 pe -1
+CM id 17 tid 17 eid 17 etid 17 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 65 m initialize(0)
+ME
+MB sm 1 tm 57 m initialize(0)
+ME
+MB sm 1 tm 66 m initialize(0)
+MB sm 66 tm 55 m ""
+ME
+MB sm 66 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 66 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 66 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 66 tm 52 m "fireChangeNotification(IF-CREATED, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 66 tm 52 m "fireChangeNotification(IF-STATE, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 66 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 18 tid 18 eid 18 etid 18 c cMessage n EndTransmission k 103 pe -1
+CM id 19 tid 19 eid 19 etid 19 c cMessage n EndIFG k 100 pe -1
+CM id 20 tid 20 eid 20 etid 20 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 67 m initialize(0)
+ME
+MB sm 1 tm 58 m initialize(0)
+ME
+MB sm 1 tm 68 m initialize(0)
+MB sm 68 tm 55 m ""
+ME
+MB sm 68 tm 52 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 68 tm 52 m "fireChangeNotification(IF-CREATED, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+ME
+MB sm 1 tm 5 m initialize(0)
+ME
+MB sm 1 tm 69 m initialize(0)
+ME
+MB sm 1 tm 70 m initialize(0)
+ME
+MB sm 1 tm 71 m initialize(0)
+CM id 21 tid 21 eid 21 etid 21 c cMessage n endProcessing-cpu0 pe -1
+- Parameters of (MACRelayUnitNP) Network.SW.relayUnit
+- number of processors: 1
+- processing time: 0
+- ports: 3
+- buffer size: 1048576
+- address table size: 100
+- aging time: 120
+- high watermark: 524288
+- pause time: 300
+- 
+ME
+MB sm 1 tm 72 m initialize(0)
+ME
+MB sm 1 tm 75 m initialize(0)
+MB sm 75 tm 69 m ""
+ME
+MB sm 75 tm 70 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-07 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 75 tm 70 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-07 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 75 tm 70 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-07 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 75 tm 70 m "fireChangeNotification(IF-CREATED, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-07 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 75 tm 70 m "fireChangeNotification(IF-STATE, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-07 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 75 tm 70 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-07 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 22 tid 22 eid 22 etid 22 c cMessage n EndTransmission k 103 pe -1
+CM id 23 tid 23 eid 23 etid 23 c cMessage n EndIFG k 100 pe -1
+CM id 24 tid 24 eid 24 etid 24 c cMessage n EndPause k 105 pe -1
+CM id 25 tid 25 eid 25 etid 25 c cMessage n EndReception k 101 pe -1
+CM id 26 tid 26 eid 26 etid 26 c cMessage n EndBackoff k 102 pe -1
+CM id 27 tid 27 eid 27 etid 27 c cMessage n EndJamming k 104 pe -1
+ME
+MB sm 1 tm 76 m initialize(0)
+ME
+MB sm 1 tm 73 m initialize(0)
+ME
+MB sm 1 tm 77 m initialize(0)
+MB sm 77 tm 69 m ""
+ME
+MB sm 77 tm 70 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-08 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 77 tm 70 m "fireChangeNotification(IF-CFG, eth1  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-08 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 77 tm 70 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-08 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 77 tm 70 m "fireChangeNotification(IF-CREATED, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-08 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 77 tm 70 m "fireChangeNotification(IF-STATE, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-08 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 77 tm 70 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-08 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 28 tid 28 eid 28 etid 28 c cMessage n EndTransmission k 103 pe -1
+CM id 29 tid 29 eid 29 etid 29 c cMessage n EndIFG k 100 pe -1
+CM id 30 tid 30 eid 30 etid 30 c cMessage n EndPause k 105 pe -1
+CM id 31 tid 31 eid 31 etid 31 c cMessage n EndReception k 101 pe -1
+CM id 32 tid 32 eid 32 etid 32 c cMessage n EndBackoff k 102 pe -1
+CM id 33 tid 33 eid 33 etid 33 c cMessage n EndJamming k 104 pe -1
+ME
+MB sm 1 tm 78 m initialize(0)
+ME
+MB sm 1 tm 74 m initialize(0)
+ME
+MB sm 1 tm 79 m initialize(0)
+MB sm 79 tm 69 m ""
+ME
+MB sm 79 tm 70 m "fireChangeNotification(IF-CFG, eth2  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-09 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 79 tm 70 m "fireChangeNotification(IF-CFG, eth2  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-09 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 79 tm 70 m "fireChangeNotification(IF-CFG, eth2  on:nwLayer.ifOut[2]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-09 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 79 tm 70 m "fireChangeNotification(IF-CREATED, eth2  on:nwLayer.ifOut[2]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-09 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 79 tm 70 m "fireChangeNotification(IF-STATE, eth2  on:nwLayer.ifOut[2]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-09 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 79 tm 70 m "fireChangeNotification(IF-CFG, eth2  on:nwLayer.ifOut[2]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-09 BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 34 tid 34 eid 34 etid 34 c cMessage n EndTransmission k 103 pe -1
+CM id 35 tid 35 eid 35 etid 35 c cMessage n EndIFG k 100 pe -1
+CM id 36 tid 36 eid 36 etid 36 c cMessage n EndPause k 105 pe -1
+CM id 37 tid 37 eid 37 etid 37 c cMessage n EndReception k 101 pe -1
+CM id 38 tid 38 eid 38 etid 38 c cMessage n EndBackoff k 102 pe -1
+CM id 39 tid 39 eid 39 etid 39 c cMessage n EndJamming k 104 pe -1
+ME
+MB sm 1 tm 80 m initialize(0)
+ME
+MB sm 1 tm 6 m initialize(0)
+ME
+MB sm 1 tm 81 m initialize(0)
+ME
+MB sm 1 tm 82 m initialize(0)
+ME
+MB sm 1 tm 91 m initialize(0)
+ME
+MB sm 1 tm 92 m initialize(0)
+CM id 40 tid 40 eid 40 etid 40 c cMessage n end-service pe -1
+ME
+MB sm 1 tm 93 m initialize(0)
+ME
+MB sm 1 tm 94 m initialize(0)
+ME
+MB sm 1 tm 95 m initialize(0)
+MB sm 95 tm 81 m subscribe(IF-DELETED)
+ME
+MB sm 95 tm 81 m subscribe(36)
+ME
+MB sm 95 tm 81 m subscribe(37)
+ME
+ME
+MB sm 1 tm 96 m initialize(0)
+ME
+MB sm 1 tm 83 m initialize(0)
+MB sm 83 tm 81 m subscribe(IF-CREATED)
+ME
+MB sm 83 tm 81 m subscribe(IF-DELETED)
+ME
+MB sm 83 tm 81 m subscribe(IF-STATE)
+ME
+MB sm 83 tm 81 m subscribe(IF-CFG)
+ME
+MB sm 83 tm 81 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 84 m initialize(0)
+ME
+MB sm 1 tm 85 m initialize(0)
+ME
+MB sm 1 tm 97 m initialize(0)
+MB sm 97 tm 84 m ""
+ME
+MB sm 97 tm 81 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 97 tm 81 m "fireChangeNotification(IF-CREATED, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+ME
+MB sm 1 tm 86 m initialize(0)
+ME
+MB sm 1 tm 98 m initialize(0)
+MB sm 98 tm 84 m ""
+ME
+MB sm 98 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 98 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:-  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 98 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 98 tm 81 m "fireChangeNotification(IF-CREATED, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 98 tm 81 m "fireChangeNotification(IF-STATE, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 98 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CM id 41 tid 41 eid 41 etid 41 c cMessage n EndTransmission k 103 pe -1
+CM id 42 tid 42 eid 42 etid 42 c cMessage n EndIFG k 100 pe -1
+CM id 43 tid 43 eid 43 etid 43 c cMessage n EndPause k 105 pe -1
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 99 m initialize(0)
+ME
+MB sm 1 tm 87 m initialize(0)
+CM id 44 tid 44 eid 44 etid 44 c cMessage n sendPing pe -1
+ME
+MB sm 1 tm 88 m initialize(0)
+CM id 45 tid 45 eid 45 etid 45 c cMessage n sendPing pe -1
+ME
+MB sm 1 tm 89 m initialize(0)
+ME
+MB sm 1 tm 90 m initialize(0)
+ME
+MB sm 1 tm 7 m initialize(0)
+CM id 46 tid 46 eid 46 etid 46 c cMessage n scenario-event pe -1
+BS id 46 tid 46 eid 46 etid 46 c cMessage n scenario-event pe 0
+ES t 20
+CM id 47 tid 47 eid 47 etid 47 c cMessage n scenario-event pe -1
+BS id 47 tid 47 eid 47 etid 47 c cMessage n scenario-event pe 0
+ES t 30
+MS id 7 d "t=total 2 changes\\, 2 left;p=242,332;i=block/control_s"
+ME
+MB sm 1 tm 8 m initialize(0)
+ME
+MB sm 1 tm 9 m initialize(1)
+ME
+MB sm 1 tm 19 m initialize(1)
+ME
+MB sm 1 tm 20 m initialize(1)
+ME
+MB sm 1 tm 22 m initialize(1)
+MB sm 22 tm 12 m subscribe(IF-CREATED)
+ME
+ME
+MB sm 1 tm 11 m initialize(1)
+ME
+MB sm 1 tm 14 m initialize(1)
+ME
+MB sm 1 tm 15 m initialize(1)
+MS id 15 d "t=3 interfaces;p=300,40;i=block/table"
+ME
+MB sm 1 tm 24 m initialize(1)
+MB sm 24 tm 12 m subscribe(IF-DELETED)
+ME
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 26 m initialize(1)
+MB sm 26 tm 12 m subscribe(IF-DELETED)
+ME
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 28 m initialize(1)
+MB sm 28 tm 12 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 29 m initialize(1)
+ME
+MB sm 1 tm 39 m initialize(1)
+ME
+MB sm 1 tm 40 m initialize(1)
+ME
+MB sm 1 tm 42 m initialize(1)
+MB sm 42 tm 32 m subscribe(IF-CREATED)
+ME
+ME
+MB sm 1 tm 31 m initialize(1)
+ME
+MB sm 1 tm 34 m initialize(1)
+ME
+MB sm 1 tm 35 m initialize(1)
+MS id 35 d "t=3 interfaces;p=300,40;i=block/table"
+ME
+MB sm 1 tm 44 m initialize(1)
+MB sm 44 tm 32 m subscribe(IF-DELETED)
+ME
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 46 m initialize(1)
+MB sm 46 tm 32 m subscribe(IF-DELETED)
+ME
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 48 m initialize(1)
+MB sm 48 tm 32 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 49 m initialize(1)
+ME
+MB sm 1 tm 59 m initialize(1)
+ME
+MB sm 1 tm 60 m initialize(1)
+ME
+MB sm 1 tm 62 m initialize(1)
+MB sm 62 tm 52 m subscribe(IF-CREATED)
+ME
+ME
+MB sm 1 tm 51 m initialize(1)
+ME
+MB sm 1 tm 54 m initialize(1)
+ME
+MB sm 1 tm 55 m initialize(1)
+MS id 55 d "t=3 interfaces;p=300,40;i=block/table"
+ME
+MB sm 1 tm 64 m initialize(1)
+MB sm 64 tm 52 m subscribe(IF-DELETED)
+ME
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 66 m initialize(1)
+MB sm 66 tm 52 m subscribe(IF-DELETED)
+ME
+- No more frames to send, transmitter set to idle
+ME
+MB sm 1 tm 68 m initialize(1)
+MB sm 68 tm 52 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 69 m initialize(1)
+MS id 69 d "t=3 interfaces;is=s;p=50,100;i=block/table"
+ME
+MB sm 1 tm 71 m initialize(1)
+ME
+MB sm 1 tm 75 m initialize(1)
+MB sm 75 tm 70 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 77 m initialize(1)
+MB sm 77 tm 70 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 79 m initialize(1)
+MB sm 79 tm 70 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 91 m initialize(1)
+MB sm 91 tm 81 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 91 tm 81 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:127.0.0.1/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 91 tm 81 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:127.0.0.1/8} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 91 tm 81 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:127.0.0.1/8} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 91 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32"
+MB sm 91 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 91 tm 98 m ""
+ME
+MB sm 91 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 91 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 91 tm 98 m ""
+ME
+MB sm 91 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 91 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 91 tm 98 m ""
+ME
+MB sm 91 tm 81 m "fireChangeNotification(36, )"
+MB sm 81 tm 95 m ""
+ME
+ME
+ME
+MB sm 1 tm 92 m initialize(1)
+ME
+MB sm 1 tm 93 m initialize(1)
+ME
+MB sm 1 tm 95 m initialize(1)
+MB sm 95 tm 81 m subscribe(IF-CREATED)
+ME
+ME
+MB sm 1 tm 83 m initialize(1)
+ME
+MB sm 1 tm 84 m initialize(1)
+MS id 84 d "t=2 interfaces;is=s;p=53,287;i=block/table"
+ME
+MB sm 1 tm 97 m initialize(1)
+MB sm 97 tm 81 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 98 m initialize(1)
+MB sm 98 tm 81 m subscribe(IF-DELETED)
+ME
+ME
+MB sm 1 tm 87 m initialize(1)
+ME
+MB sm 1 tm 88 m initialize(1)
+BS id 45 tid 45 eid 45 etid 45 c cMessage n sendPing pe 0
+ES t 10
+ME
+MB sm 1 tm 89 m initialize(1)
+ME
+MB sm 1 tm 90 m initialize(1)
+ME
+MB sm 1 tm 8 m initialize(1)
+ME
+MB sm 1 tm 9 m initialize(2)
+ME
+MB sm 1 tm 19 m initialize(2)
+ME
+MB sm 1 tm 20 m initialize(2)
+ME
+MB sm 1 tm 11 m initialize(2)
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(36, )"
+MB sm 12 tm 22 m ""
+ME
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(36, )"
+MB sm 12 tm 22 m ""
+ME
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(36, )"
+MB sm 12 tm 22 m ""
+ME
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(36, )"
+MB sm 12 tm 22 m ""
+ME
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 11 tm 15 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:1500 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[2]  MTU:1500 LOOPBACK  macAddr:n/a IPv4:{inet_addr:33.33.33.33/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[2]  MTU:1500 LOOPBACK  macAddr:n/a IPv4:{inet_addr:33.33.33.33/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 11 tm 14 m addRoute(...)
+MS id 14 d "t=1 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 14 tm 12 m "fireChangeNotification(IPv4-ROUTE-ADD, C 33.33.33.33/32 is directly connected, lo0)"
+ME
+ME
+MB sm 11 tm 15 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:10.0.0.1/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n10.0.0.1/32,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n10.0.0.1/32,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-01 IPv4:{inet_addr:10.0.0.1/30 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572864 d "t=eth0\n10.0.0.1/30,l"
+MB sm 11 tm 24 m ""
+ME
+CS sm 2 sg 1572864 d "t=eth0\n10.0.0.1/30,l"
+MB sm 11 tm 24 m ""
+ME
+MB sm 11 tm 14 m addRoute(...)
+MS id 14 d "t=2 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 14 tm 12 m "fireChangeNotification(IPv4-ROUTE-ADD, C 10.0.0.0/30 is directly connected, eth0)"
+ME
+ME
+MB sm 11 tm 15 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:10.0.0.5/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n10.0.0.5/32,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n10.0.0.5/32,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 12 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-02 IPv4:{inet_addr:10.0.0.5/30 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 2 sg 1572865 d "t=eth1\n10.0.0.5/30,l"
+MB sm 11 tm 26 m ""
+ME
+CS sm 2 sg 1572865 d "t=eth1\n10.0.0.5/30,l"
+MB sm 11 tm 26 m ""
+ME
+MB sm 11 tm 14 m addRoute(...)
+MS id 14 d "t=3 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 14 tm 12 m "fireChangeNotification(IPv4-ROUTE-ADD, C 10.0.0.4/30 is directly connected, eth1)"
+ME
+ME
+MB sm 11 tm 14 m addRoute(...)
+MS id 14 d "t=4 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 14 tm 12 m "fireChangeNotification(IPv4-ROUTE-ADD, S 192.168.10.0/24 [0/1] via 10.0.0.2, eth0)"
+ME
+ME
+MB sm 11 tm 14 m addRoute(...)
+MS id 14 d "t=5 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 14 tm 12 m "fireChangeNotification(IPv4-ROUTE-ADD, S 192.168.10.0/24 [0/1] via 10.0.0.6, eth1)"
+ME
+ME
+ME
+MB sm 1 tm 14 m initialize(2)
+ME
+MB sm 1 tm 28 m initialize(2)
+ME
+MB sm 1 tm 29 m initialize(2)
+ME
+MB sm 1 tm 39 m initialize(2)
+ME
+MB sm 1 tm 40 m initialize(2)
+ME
+MB sm 1 tm 31 m initialize(2)
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(36, )"
+MB sm 32 tm 42 m ""
+ME
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(36, )"
+MB sm 32 tm 42 m ""
+ME
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(36, )"
+MB sm 32 tm 42 m ""
+ME
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(36, )"
+MB sm 32 tm 42 m ""
+ME
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 31 tm 35 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:10.0.0.2/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n10.0.0.2/32,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n10.0.0.2/32,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-03 IPv4:{inet_addr:10.0.0.2/30 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572864 d "t=eth0\n10.0.0.2/30,l"
+MB sm 31 tm 44 m ""
+ME
+CS sm 3 sg 1572864 d "t=eth0\n10.0.0.2/30,l"
+MB sm 31 tm 44 m ""
+ME
+MB sm 31 tm 34 m addRoute(...)
+MS id 34 d "t=1 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 34 tm 32 m "fireChangeNotification(IPv4-ROUTE-ADD, C 10.0.0.0/30 is directly connected, eth0)"
+ME
+ME
+MB sm 31 tm 35 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:192.168.10.1/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n192.168.10.1/32,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n192.168.10.1/32,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:192.168.10.1/24 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n192.168.10.1/24,l"
+MB sm 31 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n192.168.10.1/24,l"
+MB sm 31 tm 46 m ""
+ME
+MB sm 31 tm 34 m addRoute(...)
+MS id 34 d "t=2 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 34 tm 32 m "fireChangeNotification(IPv4-ROUTE-ADD, C 192.168.10.0/24 is directly connected, eth1)"
+ME
+ME
+MB sm 31 tm 34 m addRoute(...)
+MS id 34 d "t=3 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 34 tm 32 m "fireChangeNotification(IPv4-ROUTE-ADD, S 33.33.33.33/32 [0/1] via 10.0.0.1, eth0)"
+ME
+ME
+ME
+MB sm 1 tm 34 m initialize(2)
+ME
+MB sm 1 tm 48 m initialize(2)
+ME
+MB sm 1 tm 49 m initialize(2)
+ME
+MB sm 1 tm 59 m initialize(2)
+ME
+MB sm 1 tm 60 m initialize(2)
+ME
+MB sm 1 tm 51 m initialize(2)
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(36, )"
+MB sm 52 tm 62 m ""
+ME
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(36, )"
+MB sm 52 tm 62 m ""
+ME
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(36, )"
+MB sm 52 tm 62 m ""
+ME
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(36, )"
+MB sm 52 tm 62 m ""
+ME
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[2]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 51 tm 55 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n<unspec>/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:10.0.0.6/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n10.0.0.6/32,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n10.0.0.6/32,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[0]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-05 IPv4:{inet_addr:10.0.0.6/30 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572864 d "t=eth0\n10.0.0.6/30,l"
+MB sm 51 tm 64 m ""
+ME
+CS sm 4 sg 1572864 d "t=eth0\n10.0.0.6/30,l"
+MB sm 51 tm 64 m ""
+ME
+MB sm 51 tm 54 m addRoute(...)
+MS id 54 d "t=1 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 54 tm 52 m "fireChangeNotification(IPv4-ROUTE-ADD, C 10.0.0.4/30 is directly connected, eth0)"
+ME
+ME
+MB sm 51 tm 55 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IF-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:<unspec>/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n<unspec>/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:192.168.10.2/32 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n192.168.10.2/32,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n192.168.10.2/32,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:192.168.10.2/24 mcastgrps:224.0.0.2} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n192.168.10.2/24,l"
+MB sm 51 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n192.168.10.2/24,l"
+MB sm 51 tm 66 m ""
+ME
+MB sm 51 tm 54 m addRoute(...)
+MS id 54 d "t=2 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 54 tm 52 m "fireChangeNotification(IPv4-ROUTE-ADD, C 192.168.10.0/24 is directly connected, eth1)"
+ME
+ME
+MB sm 51 tm 54 m addRoute(...)
+MS id 54 d "t=3 routes\n0 multicast routes;p=196,40;i=block/table"
+MB sm 54 tm 52 m "fireChangeNotification(IPv4-ROUTE-ADD, S 33.33.33.33/32 [0/1] via 10.0.0.5, eth0)"
+ME
+ME
+ME
+MB sm 1 tm 54 m initialize(2)
+ME
+MB sm 1 tm 68 m initialize(2)
+ME
+MB sm 1 tm 91 m initialize(2)
+MB sm 91 tm 35 m ""
+ME
+MB sm 91 tm 55 m ""
+ME
+MB sm 91 tm 35 m ""
+ME
+MB sm 91 tm 55 m ""
+ME
+MB sm 91 tm 84 m ""
+ME
+MB sm 91 tm 15 m ""
+ME
+MB sm 91 tm 35 m ""
+ME
+MB sm 91 tm 15 m ""
+ME
+MB sm 91 tm 55 m ""
+ME
+MB sm 91 tm 35 m ""
+ME
+MB sm 91 tm 15 m ""
+ME
+MB sm 91 tm 35 m ""
+ME
+MB sm 91 tm 69 m ""
+ME
+MB sm 91 tm 55 m ""
+ME
+MB sm 91 tm 15 m ""
+ME
+MB sm 91 tm 55 m ""
+ME
+MB sm 91 tm 69 m ""
+ME
+MB sm 91 tm 69 m ""
+ME
+MB sm 91 tm 35 m ""
+ME
+MB sm 91 tm 69 m ""
+ME
+MB sm 91 tm 55 m ""
+ME
+MB sm 91 tm 69 m ""
+ME
+MB sm 91 tm 84 m ""
+ME
+MB sm 91 tm 84 m ""
+ME
+MB sm 91 tm 69 m ""
+ME
+- Time spent in IPv4NetworkConfigurator::extractTopology(topology): 0s
+- Time spent in IPv4NetworkConfigurator::readInterfaceConfiguration(topology): 0s
+- Time spent in IPv4NetworkConfigurator::readMulticastGroupConfiguration(topology): 0s
+- Time spent in IPv4NetworkConfigurator::initialize: 0s
+ME
+MB sm 1 tm 93 m initialize(2)
+ME
+MB sm 1 tm 83 m initialize(2)
+ME
+MB sm 1 tm 97 m initialize(2)
+ME
+MB sm 1 tm 89 m initialize(2)
+MB sm 89 tm 81 m "fireChangeNotification(IF-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IPv4-CFG, lo0  on:nwLayer.ifOut[0]  MTU:4470 LOOPBACK  macAddr:n/a IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(36, )"
+MB sm 81 tm 95 m ""
+ME
+ME
+MB sm 89 tm 84 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:0 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:100000 DLY:0 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IF-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:<unspec>/32} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n<unspec>/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:192.168.10.10/32} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n192.168.10.10/32,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n192.168.10.10/32,l"
+MB sm 89 tm 98 m ""
+ME
+MB sm 89 tm 81 m "fireChangeNotification(IPv4-CFG, eth0  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-0A IPv4:{inet_addr:192.168.10.10/24} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 6 sg 3670016 d "t=eth0\n192.168.10.10/24,l"
+MB sm 89 tm 98 m ""
+ME
+CS sm 6 sg 3670016 d "t=eth0\n192.168.10.10/24,l"
+MB sm 89 tm 98 m ""
+ME
+ME
+MB sm 1 tm 90 m initialize(2)
+ME
+MB sm 1 tm 8 m initialize(2)
+ME
+MB sm 1 tm 9 m initialize(3)
+MS id 9 d t=;p=250,140;i=block/network2
+MB sm 9 tm 15 m ""
+ME
+- 0x98b7950
+MB sm 9 tm 15 m ""
+ME
+MB sm 9 tm 15 m ""
+ME
+- 0x9a06e10
+MB sm 9 tm 15 m ""
+ME
+MB sm 9 tm 15 m ""
+ME
+- 0x9a069b0
+MB sm 9 tm 15 m ""
+ME
+ME
+MB sm 1 tm 19 m initialize(3)
+ME
+MB sm 1 tm 20 m initialize(3)
+ME
+MB sm 1 tm 11 m initialize(3)
+- Multicast routing is not enable for this device (Router id=33.33.33.33)
+ME
+MB sm 1 tm 14 m initialize(3)
+ME
+MB sm 1 tm 28 m initialize(3)
+MS id 28 d "t=rcv:0 snt:0;p=98,207;i=block/rxtx"
+ME
+MB sm 1 tm 29 m initialize(3)
+MS id 29 d t=;p=250,140;i=block/network2
+MB sm 29 tm 35 m ""
+ME
+- 0x9a06a50
+MB sm 29 tm 35 m ""
+ME
+MB sm 29 tm 35 m ""
+ME
+- 0x9a06230
+MB sm 29 tm 35 m ""
+ME
+GC m 29 g 1048576 n vrIn i 0 o 0
+GC m 29 g 2621440 n vrOut i 0 o 1
+MC id 100 c VRRPv2VirtualRouter t inet.ansa.networklayer.vrrpv2.VRRPv2VirtualRouter pid 29 n VR_eth1_10
+GC m 100 g 0 n ipIn o 0
+GC m 100 g 3 n ipOut o 1
+MS id 100 d i=block/network2
+CC sm 29 sg 2621440 dm 100 dg 0
+CC sm 100 sg 3 dm 29 dg 1048576
+MS id 29 d "t=1 group;p=250,140;i=block/network2"
+ME
+MB sm 1 tm 100 m initialize(3)
+ME
+MB sm 1 tm 39 m initialize(3)
+ME
+MB sm 1 tm 40 m initialize(3)
+ME
+MB sm 1 tm 31 m initialize(3)
+- Multicast routing is not enable for this device (Router id=192.168.10.1)
+ME
+MB sm 1 tm 34 m initialize(3)
+ME
+MB sm 1 tm 48 m initialize(3)
+MS id 48 d "t=rcv:0 snt:0;p=98,207;i=block/rxtx"
+ME
+MB sm 1 tm 49 m initialize(3)
+MS id 49 d t=;p=250,140;i=block/network2
+MB sm 49 tm 55 m ""
+ME
+- 0x9a06690
+MB sm 49 tm 55 m ""
+ME
+MB sm 49 tm 55 m ""
+ME
+- 0x9a07270
+MB sm 49 tm 55 m ""
+ME
+GC m 49 g 1048576 n vrIn i 0 o 0
+GC m 49 g 2621440 n vrOut i 0 o 1
+MC id 101 c VRRPv2VirtualRouter t inet.ansa.networklayer.vrrpv2.VRRPv2VirtualRouter pid 49 n VR_eth1_10
+GC m 101 g 0 n ipIn o 0
+GC m 101 g 3 n ipOut o 1
+MS id 101 d i=block/network2
+CC sm 49 sg 2621440 dm 101 dg 0
+CC sm 101 sg 3 dm 49 dg 1048576
+MS id 49 d "t=1 group;p=250,140;i=block/network2"
+ME
+MB sm 1 tm 101 m initialize(3)
+ME
+MB sm 1 tm 59 m initialize(3)
+ME
+MB sm 1 tm 60 m initialize(3)
+ME
+MB sm 1 tm 51 m initialize(3)
+- Multicast routing is not enable for this device (Router id=192.168.10.2)
+ME
+MB sm 1 tm 54 m initialize(3)
+ME
+MB sm 1 tm 68 m initialize(3)
+MS id 68 d "t=rcv:0 snt:0;p=98,207;i=block/rxtx"
+ME
+MB sm 1 tm 91 m initialize(3)
+ME
+MB sm 1 tm 93 m initialize(3)
+ME
+MB sm 1 tm 83 m initialize(3)
+MB sm 83 tm 81 m "fireChangeNotification(IPv4-ROUTE-ADD, dest:192.168.10.0  gw:*  mask:255.255.255.0  metric:1 if:eth0(192.168.10.10)  DIRECT IFACENETMASK)"
+ME
+MS id 83 d "t=routerId: 192.168.10.10\n1+0 routes;is=s;p=53,225;i=block/table"
+ME
+MB sm 1 tm 97 m initialize(3)
+MS id 97 d "t=rcv:0 snt:0;p=98,207;i=block/rxtx"
+ME
+MB sm 1 tm 89 m initialize(3)
+- Multicast routing is not enable for this device (Host id=192.168.10.10)
+ME
+MB sm 1 tm 90 m initialize(3)
+ME
+MB sm 1 tm 8 m initialize(3)
+ME
+MB sm 1 tm 19 m initialize(4)
+ME
+MB sm 1 tm 20 m initialize(4)
+MB sm 20 tm 12 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 11 m initialize(4)
+ME
+MB sm 1 tm 100 m initialize(4)
+- GW1(vrrp-configuration)# IPAddress:192.168.10.254 IPSecondary:{} Priority:100 Preempt:Y TimerAdvertise:1 TimerLearn:-
+MB sm 100 tm 32 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-04 IPv4:{inet_addr:192.168.10.1/24 mcastgrps:224.0.0.2,224.0.0.18} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 3 sg 1572865 d "t=eth1\n192.168.10.1/24,l"
+MB sm 100 tm 46 m ""
+ME
+CS sm 3 sg 1572865 d "t=eth1\n192.168.10.1/24,l"
+MB sm 100 tm 46 m ""
+ME
+MB sm 100 tm 32 m "fireChangeNotification(36, )"
+MB sm 32 tm 42 m ""
+ME
+ME
+- GW1# %VRRP-6-STATECHANGE: eth1 Grp10 state Init -> Backup
+CM id 48 tid 48 eid 48 etid 48 c cMessage n MasterDownTimer k 1 pe -1
+BS id 48 tid 48 eid 48 etid 48 c cMessage n MasterDownTimer k 1 pe 0
+ES t 3.609375
+ME
+MB sm 1 tm 39 m initialize(4)
+ME
+MB sm 1 tm 40 m initialize(4)
+MB sm 40 tm 32 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 31 m initialize(4)
+ME
+MB sm 1 tm 101 m initialize(4)
+- GW2(vrrp-configuration)# IPAddress:192.168.10.254 IPSecondary:{} Priority:100 Preempt:Y TimerAdvertise:1 TimerLearn:-
+MB sm 101 tm 52 m "fireChangeNotification(IPv4-CFG, eth1  on:nwLayer.ifOut[1]  MTU:1500 BROADCAST MULTICAST  macAddr:0A-AA-00-00-00-06 IPv4:{inet_addr:192.168.10.2/24 mcastgrps:224.0.0.2,224.0.0.18} BW:100000 DLY:100 REL:255/255 RLOAD:1/255 TLOAD:1/255)"
+ME
+CS sm 4 sg 1572865 d "t=eth1\n192.168.10.2/24,l"
+MB sm 101 tm 66 m ""
+ME
+CS sm 4 sg 1572865 d "t=eth1\n192.168.10.2/24,l"
+MB sm 101 tm 66 m ""
+ME
+MB sm 101 tm 52 m "fireChangeNotification(36, )"
+MB sm 52 tm 62 m ""
+ME
+ME
+- GW2# %VRRP-6-STATECHANGE: eth1 Grp10 state Init -> Backup
+CM id 49 tid 49 eid 49 etid 49 c cMessage n MasterDownTimer k 1 pe -1
+BS id 49 tid 49 eid 49 etid 49 c cMessage n MasterDownTimer k 1 pe 0
+ES t 3.609375
+ME
+MB sm 1 tm 59 m initialize(4)
+ME
+MB sm 1 tm 60 m initialize(4)
+MB sm 60 tm 52 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 51 m initialize(4)
+ME
+MB sm 1 tm 93 m initialize(4)
+MB sm 93 tm 81 m subscribe(IPv4-CFG)
+ME
+ME
+MB sm 1 tm 89 m initialize(4)
+MB sm 89 tm 83 m findBestMatchingRoute(192.168.10.254)
+ME
+MB sm 89 tm 83 m addRoute(...)
+MS id 83 d "t=routerId: 192.168.10.10\n2+0 routes;is=s;p=53,225;i=block/table"
+MB sm 83 tm 81 m "fireChangeNotification(IPv4-ROUTE-ADD, dest:*  gw:192.168.10.254  mask:*  metric:0 if:eth0(192.168.10.10)  REMOTE MANUAL)"
+ME
+ME
+ME
+MB sm 1 tm 11 m initialize(5)
+ME
+MB sm 1 tm 31 m initialize(5)
+ME
+MB sm 1 tm 51 m initialize(5)
+ME
+MB sm 1 tm 89 m initialize(5)
+ME
+MB sm 1 tm 11 m initialize(6)
+ME
+MB sm 1 tm 31 m initialize(6)
+ME
+MB sm 1 tm 51 m initialize(6)
+ME
+MB sm 1 tm 89 m initialize(6)
+ME
+MB sm 1 tm 11 m initialize(7)
+ME
+MB sm 1 tm 31 m initialize(7)
+ME
+MB sm 1 tm 51 m initialize(7)
+ME
+MB sm 1 tm 89 m initialize(7)
+ME
+MB sm 1 tm 11 m initialize(8)
+ME
+MB sm 1 tm 31 m initialize(8)
+ME
+MB sm 1 tm 51 m initialize(8)
+ME
+MB sm 1 tm 89 m initialize(8)
+ME
+MB sm 1 tm 11 m initialize(9)
+ME
+MB sm 1 tm 31 m initialize(9)
+ME
+MB sm 1 tm 51 m initialize(9)
+ME
+MB sm 1 tm 89 m initialize(9)
+ME
+MB sm 1 tm 11 m initialize(10)
+ME
+MB sm 1 tm 31 m initialize(10)
+ME
+MB sm 1 tm 51 m initialize(10)
+ME
+MB sm 1 tm 89 m initialize(10)
+ME

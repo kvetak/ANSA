@@ -10,7 +10,7 @@ src/Makefile.vc
 /doc/neddoc/
 /examples/*/results/
 /examples/*/*/results/
-/examples/*/*/*/results/
+!/examples/ansa/lisp/lispHA/results/*
 /tests/*/work/
 *.pyc
 *.pcap

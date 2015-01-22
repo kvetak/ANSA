@@ -7,31 +7,14 @@
     <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncSmart-0.vec"/>
     <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/General-0.sca"/>
     <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/General-0.vec"/>
+    <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncNaive-2outages-0.sca"/>
+    <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncNaive-2outages-0.vec"/>
+    <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncSmart-2outages-0.sca"/>
+    <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncSmart-2outages-0.vec"/>
+    <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/General-2outages-0.sca"/>
+    <inputs name="/inet/examples/ansa/lisp/lispTestbed/results/General-2outages-0.vec"/>
   </inputs>
   <datasets>
-    <datasets name="xTR1 size">
-      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispTestbed/results/General-0.vec) AND attr:configname(General) AND attr:runnumber(0) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-sizesend:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncNaive-0.vec) AND attr:configname(CacheSyncNaive) AND attr:runnumber(0) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-sizesend:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncSmart-0.vec) AND attr:configname(CacheSyncSmart) AND attr:runnumber(0) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-sizesend:vector)" type="VECTOR"/>
-      <items xsi:type="scave:LineChart" name="xTR1 send size" lineNameFormat="">
-        <properties name="Plot.BackgroundColor" value="white"/>
-        <properties name="X.Axis.Title" value="time"/>
-        <properties name="Y.Axis.Title" value="total Bytes sent"/>
-        <properties name="Y.Axis.Max" value="5100.0"/>
-        <properties name="Symbols.Type//inet/examples/ansa/lisp/lispTestbed/results/General-0.vec General-0-20150121-13:53:13-3536 General" value="Cross"/>
-        <properties name="Symbols.Size" value="6"/>
-        <properties name="Line.Type" value="Linear"/>
-      </items>
-    </datasets>
-    <datasets name="packet-drop:vector">
-      <items xsi:type="scave:Add" filterPattern="attr:configname(General) AND module(LispTestbed.xTR1.LISP.lispCore) AND name(packet-drop:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="attr:configname(General) AND module(LispTestbed.xTR2.LISP.lispCore) AND name(packet-drop:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncNaive) AND module(LispTestbed.xTR1.LISP.lispCore) AND name(packet-drop:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncNaive) AND module(LispTestbed.xTR2.LISP.lispCore) AND name(packet-drop:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncSmart) AND module(LispTestbed.xTR1.LISP.lispCore) AND name(packet-drop:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncSmart) AND module(LispTestbed.xTR2.LISP.lispCore) AND name(packet-drop:vector)" type="VECTOR"/>
-      <items xsi:type="scave:LineChart" name="packet-drop:vector"/>
-    </datasets>
     <datasets name="xtr1 total size">
       <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispTestbed/results/General-0.vec) AND attr:configname(General) AND attr:runnumber(0) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
       <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncSmart-0.vec) AND attr:configname(CacheSyncSmart) AND attr:runnumber(0) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
@@ -47,14 +30,18 @@
         <properties name="Line.Type" value="Linear"/>
       </items>
     </datasets>
-    <datasets name="msg-sizesend:vector LispTestbed.xTR1.LISP.lispMsgLogger">
-      <items xsi:type="scave:Add" filterPattern="module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-sizesend:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-sizesend:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-sizesend:vector)" type="VECTOR"/>
-      <items xsi:type="scave:LineChart" name="msg-sizesend:vector LispTestbed.xTR1.LISP.lispMsgLogger"/>
+    <datasets name="msg-size:vector LispTestbed.xTR1.LISP.lispMsgLogger">
+      <items xsi:type="scave:Add" filterPattern="attr:configname(General-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncNaive-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncSmart-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="msg-size:vector LispTestbed.xTR1.LISP.lispMsgLogger" lineNameFormat="">
+        <properties name="X.Axis.Title" value="time"/>
+        <properties name="Y.Axis.Title" value="total bytes"/>
+        <properties name="Y.Axis.Max" value="8000.0"/>
+      </items>
     </datasets>
   </datasets>
   <chartSheets>
-    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.3 //@datasets/@datasets.2/@items.3"/>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.3"/>
   </chartSheets>
 </scave:Analysis>

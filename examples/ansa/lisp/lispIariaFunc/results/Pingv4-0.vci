@@ -1,0 +1,772 @@
+file 66886 1420654667                                           
+version 2
+run Pingv4-0-20150107-19:11:43-1464
+attr configname Pingv4
+attr datetime 20150107-19:11:43
+attr experiment Pingv4
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network LispIariaFunc
+attr processid 1464
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 0  LispIariaFunc.xTR_A1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 56  LispIariaFunc.xTR_B1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 275  LispIariaFunc.xTR_A2.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 309  LispIariaFunc.xTR_B2.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 5  LispIariaFunc.xTR_A1.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 7  LispIariaFunc.xTR_A1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 61  LispIariaFunc.xTR_B1.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 63  LispIariaFunc.xTR_B1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 280  LispIariaFunc.xTR_A2.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 282  LispIariaFunc.xTR_A2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 314  LispIariaFunc.xTR_B2.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 316  LispIariaFunc.xTR_B2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 19  LispIariaFunc.xTR_A1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 75  LispIariaFunc.xTR_B1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 294  LispIariaFunc.xTR_A2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 328  LispIariaFunc.xTR_B2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 15  LispIariaFunc.xTR_A1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 71  LispIariaFunc.xTR_B1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 290  LispIariaFunc.xTR_A2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 324  LispIariaFunc.xTR_B2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 10  LispIariaFunc.xTR_A1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 66  LispIariaFunc.xTR_B1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 285  LispIariaFunc.xTR_A2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 319  LispIariaFunc.xTR_B2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 228  LispIariaFunc.Core.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 229  LispIariaFunc.Core.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 252  LispIariaFunc.Core.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 253  LispIariaFunc.Core.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 240  LispIariaFunc.Core.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 241  LispIariaFunc.Core.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 264  LispIariaFunc.Core.eth[4].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 265  LispIariaFunc.Core.eth[4].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 237  LispIariaFunc.Core.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 261  LispIariaFunc.Core.eth[3].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 249  LispIariaFunc.Core.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 273  LispIariaFunc.Core.eth[4].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 236  LispIariaFunc.Core.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 260  LispIariaFunc.Core.eth[3].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 248  LispIariaFunc.Core.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 272  LispIariaFunc.Core.eth[4].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 232  LispIariaFunc.Core.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 256  LispIariaFunc.Core.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 244  LispIariaFunc.Core.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 268  LispIariaFunc.Core.eth[4].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 227  LispIariaFunc.Core.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 251  LispIariaFunc.Core.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 239  LispIariaFunc.Core.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 263  LispIariaFunc.Core.eth[4].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 11  LispIariaFunc.xTR_A1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 12  LispIariaFunc.xTR_A1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 67  LispIariaFunc.xTR_B1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 68  LispIariaFunc.xTR_B1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 286  LispIariaFunc.xTR_A2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 287  LispIariaFunc.xTR_A2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 320  LispIariaFunc.xTR_B2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 321  LispIariaFunc.xTR_B2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 20  LispIariaFunc.xTR_A1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 76  LispIariaFunc.xTR_B1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 295  LispIariaFunc.xTR_A2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 329  LispIariaFunc.xTR_B2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 276  LispIariaFunc.xTR_A2.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 277  LispIariaFunc.xTR_A2.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 310  LispIariaFunc.xTR_B2.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 311  LispIariaFunc.xTR_B2.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 1  LispIariaFunc.xTR_A1.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 2  LispIariaFunc.xTR_A1.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 57  LispIariaFunc.xTR_B1.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 58  LispIariaFunc.xTR_B1.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 284  LispIariaFunc.xTR_A2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 306  LispIariaFunc.xTR_A2.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 302  LispIariaFunc.xTR_A2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 297  LispIariaFunc.xTR_A2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 105  LispIariaFunc.S1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 106  LispIariaFunc.S1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 343  LispIariaFunc.S1.relayUnit  "buffer level"  ETV
+vector 98  LispIariaFunc.S1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 120  LispIariaFunc.S1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 93  LispIariaFunc.S1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 115  LispIariaFunc.S1.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 23  LispIariaFunc.xTR_A1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 24  LispIariaFunc.xTR_A1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 173  LispIariaFunc.HostA.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 174  LispIariaFunc.HostA.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 32  LispIariaFunc.xTR_A1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 182  LispIariaFunc.HostA.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 43  LispIariaFunc.MRMS.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 53  LispIariaFunc.MRMS.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 49  LispIariaFunc.MRMS.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 44  LispIariaFunc.MRMS.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 216  LispIariaFunc.Core.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 217  LispIariaFunc.Core.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 225  LispIariaFunc.Core.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 318  LispIariaFunc.xTR_B2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 340  LispIariaFunc.xTR_B2.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 336  LispIariaFunc.xTR_B2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 331  LispIariaFunc.xTR_B2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 141  LispIariaFunc.S2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 142  LispIariaFunc.S2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 344  LispIariaFunc.S2.relayUnit  "buffer level"  ETV
+vector 134  LispIariaFunc.S2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 156  LispIariaFunc.S2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 129  LispIariaFunc.S2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 151  LispIariaFunc.S2.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 79  LispIariaFunc.xTR_B1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 80  LispIariaFunc.xTR_B1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 195  LispIariaFunc.HostB.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 196  LispIariaFunc.HostB.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 88  LispIariaFunc.xTR_B1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 204  LispIariaFunc.HostB.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 9  LispIariaFunc.xTR_A1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 31  LispIariaFunc.xTR_A1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 27  LispIariaFunc.xTR_A1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 22  LispIariaFunc.xTR_A1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 94  LispIariaFunc.S1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 95  LispIariaFunc.S1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 109  LispIariaFunc.S1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 104  LispIariaFunc.S1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 298  LispIariaFunc.xTR_A2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 299  LispIariaFunc.xTR_A2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 307  LispIariaFunc.xTR_A2.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 65  LispIariaFunc.xTR_B1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 87  LispIariaFunc.xTR_B1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 83  LispIariaFunc.xTR_B1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 78  LispIariaFunc.xTR_B1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 130  LispIariaFunc.S2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 131  LispIariaFunc.S2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 145  LispIariaFunc.S2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 140  LispIariaFunc.S2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 332  LispIariaFunc.xTR_B2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 333  LispIariaFunc.xTR_B2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 341  LispIariaFunc.xTR_B2.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 171  LispIariaFunc.HostA.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 181  LispIariaFunc.HostA.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 177  LispIariaFunc.HostA.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 172  LispIariaFunc.HostA.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 116  LispIariaFunc.S1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 117  LispIariaFunc.S1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 193  LispIariaFunc.HostB.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 203  LispIariaFunc.HostB.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 199  LispIariaFunc.HostB.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 194  LispIariaFunc.HostB.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 152  LispIariaFunc.S2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 153  LispIariaFunc.S2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 211  LispIariaFunc.Core.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 213  LispIariaFunc.Core.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 224  LispIariaFunc.Core.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 220  LispIariaFunc.Core.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 215  LispIariaFunc.Core.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 45  LispIariaFunc.MRMS.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 46  LispIariaFunc.MRMS.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 54  LispIariaFunc.MRMS.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 35  LispIariaFunc.MRMS.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 36  LispIariaFunc.MRMS.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 165  LispIariaFunc.HostA.pingApp[0]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 167  LispIariaFunc.HostA.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 169  LispIariaFunc.HostA.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 34  LispIariaFunc.MRMS.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 189  LispIariaFunc.HostB.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 191  LispIariaFunc.HostB.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 166  LispIariaFunc.HostA.pingApp[0]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 162  LispIariaFunc.HostA.pingApp[0]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 163  LispIariaFunc.HostA.pingApp[0]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+0	29103 243 29 2404 0 76.00001642 13 8 84 360 23040
+1	29346 237 219 2359 0.00002324 74.00009106 10 8 84 156 7632
+2	29583 237 219 2359 0.00002324 74.00009106 10 1 10 55 385
+5	29820 10 45 45 0 0 1 1 1 1 1
+7	29830 10 45 45 0 0 1 1 1 1 1
+9	29840 48 573 573 0.131276162993 0.131276162993 2 1 1 2 2
+10	29888 433 65 2280 0.00000576 74.00002682 17 64 122 1214 92588
+11	30321 279 109 2355 0.00001162 74.00009106 11 64 122 762 55844
+12	30600 279 109 2355 0.00001162 74.00009106 11 64 122 762 55844
+15	30879 406 61 2409 0 76.00001642 18 64 122 1336 107472
+19	31285 406 57 2408 0 76.00001642 18 28 104 808 49824
+20	31691 279 113 2356 0.00001162 74.00009106 11 28 104 384 18656
+22	31970 154 584 2368 0.131281922993 74.00009922 6 64 94 414 29316
+23	32124 333 518 2399 0.081808508355 76.00001642 13 64 94 952 72208
+24	32457 333 518 2399 0.081808508355 76.00001642 13 64 94 952 72208
+27	32790 154 581 2365 0.131276162993 74.00009106 6 64 94 414 29316
+31	32944 154 579 2364 0.131276162993 74.00009106 6 28 76 264 12960
+32	33098 333 520 2400 0.081808508355 76.00001642 13 28 76 652 36688
+34	33431 46 1978 2226 70.00005288 72.00012986 2 8 8 16 128
+35	33477 152 1461 2224 60.00002324 72.00012986 6 8 36 104 2848
+36	33629 150 1461 2224 60.00002324 72.00012986 6 1 6 21 91
+43	33779 25 528 528 0.089260381576 0.089260381576 1 1 1 1 1
+44	33804 177 533 2233 0.089266141576 72.00013562 7 64 64 448 28672
+45	33981 180 1428 2220 60.00001162 72.00012986 7 64 74 468 31432
+46	34161 180 1428 2220 60.00001162 72.00012986 7 64 74 468 31432
+49	34341 177 532 2231 0.089260381576 72.00012986 7 64 64 448 28672
+53	34518 177 531 2230 0.089260381576 72.00012986 7 28 40 244 8752
+54	34695 180 1429 2221 60.00001162 72.00012986 7 28 56 252 10192
+56	34875 230 31 2337 0 74.00007016 12 8 84 200 8992
+57	35105 269 220 2295 0.00002324 74.00003732 11 8 84 164 7696
+58	35374 270 220 2295 0.00002324 74.00003732 11 1 11 66 506
+61	35644 11 47 47 0 0 1 1 1 1 1
+63	35655 11 47 47 0 0 1 1 1 1 1
+65	35666 50 609 609 0.267531900526 0.267531900526 2 1 1 2 2
+66	35716 432 66 2344 0.00000576 74.00008056 17 64 122 1156 81800
+67	36148 302 110 2291 0.00001162 74.00003732 12 64 122 826 59940
+68	36450 302 110 2291 0.00001162 74.00003732 12 64 122 826 59940
+71	36752 380 62 2342 0 74.00007016 17 64 122 1156 81800
+75	37132 380 58 2341 0 74.00007016 17 28 104 628 28976
+76	37512 302 114 2292 0.00001162 74.00003732 12 28 104 412 19440
+78	37814 155 620 2304 0.267537660526 74.00004548 6 64 94 414 29316
+79	37969 309 563 2332 0.115044076396 74.00007016 12 64 94 828 58632
+80	38278 309 563 2332 0.115044076396 74.00007016 12 64 94 828 58632
+83	38587 154 617 2301 0.267531900526 74.00003732 6 64 94 414 29316
+87	38741 154 615 2300 0.267531900526 74.00003732 6 28 76 264 12960
+88	38895 309 565 2333 0.115044076396 74.00007016 12 28 76 528 25920
+93	39204 333 516 2398 0.081808458355 76.00001637 13 64 94 952 72208
+94	39537 154 586 2369 0.131281972993 74.00009927 6 64 94 414 29316
+95	39691 154 586 2369 0.131281972993 74.00009927 6 64 94 414 29316
+98	39845 333 511 2395 0.081802698355 76.00000821 13 64 94 952 72208
+104	40178 247 596 1905 0.131287732993 70.00001157 9 64 64 576 36864
+105	40425 110 506 1170 0.081802698355 10.022926008132 4 64 64 256 16384
+106	40535 110 506 1170 0.081802698355 10.022926008132 4 64 64 256 16384
+109	40645 246 591 1901 0.131281972993 70.00000581 9 64 64 576 36864
+115	40891 271 517 2375 0.081808458355 74.00010743 10 64 94 670 45700
+116	41162 236 651 2392 0.434033595435 76.00000821 9 64 94 696 55824
+117	41398 236 651 2392 0.434033595435 76.00000821 9 64 94 696 55824
+120	41634 270 512 2372 0.081802698355 74.00009927 10 64 94 670 45700
+129	41904 322 561 2331 0.115044026396 74.00007011 12 64 94 828 58632
+130	42226 161 622 2305 0.267537710526 74.00004553 6 64 94 414 29316
+131	42387 161 622 2305 0.267537710526 74.00004553 6 64 94 414 29316
+134	42548 322 556 2328 0.115038266396 74.00006195 12 64 94 828 58632
+140	42870 272 632 2153 0.267543470526 72.00008855 10 64 64 640 40960
+141	43142 161 551 2125 0.115038266396 72.00006877 6 64 94 414 29316
+142	43303 161 551 2125 0.115038266396 72.00006877 6 64 94 414 29316
+145	43464 272 627 2149 0.267537710526 72.00008279 10 64 64 640 40960
+151	43736 322 562 2311 0.115044026396 74.00005369 12 64 94 828 58632
+152	44058 211 677 2325 0.978203468434 74.00006195 8 64 94 572 42248
+153	44269 211 677 2325 0.978203468434 74.00006195 8 64 94 572 42248
+156	44480 322 557 2308 0.115038266396 74.00004553 12 64 94 828 58632
+162	44802 33 2381 2381 74.00010748 74.00010748 1 0.00010748 0.00010748 0.00010748 1.15519504e-008
+163	44835 24 2381 2381 74.00010748 74.00010748 1 2 2 2 4
+165	44859 60 1888 2383 70 76 4 0 3 6 14
+166	44919 24 2381 2381 74.00010748 74.00010748 1 2 2 2 4
+167	44943 15 1891 1891 70 70 1 1 1 1 1
+169	44958 15 1891 1891 70 70 1 1 1 1 1
+171	44973 26 644 644 0.434027785435 0.434027785435 1 1 1 1 1
+172	44999 235 650 2391 0.434033545435 76.00000816 9 64 94 696 55824
+173	45234 271 519 2376 0.081808508355 74.00010748 10 64 94 670 45700
+174	45505 271 519 2376 0.081808508355 74.00010748 10 64 94 670 45700
+177	45776 200 648 2389 0.434027785435 76 9 64 94 696 55824
+181	45976 200 647 2388 0.434027785435 76 9 28 76 492 30288
+182	46176 271 521 2377 0.081808508355 74.00010748 10 28 76 424 19360
+189	46447 24 2138 2138 72.00007698 72.00007698 1 1 1 1 1
+191	46471 24 2138 2138 72.00007698 72.00007698 1 1 1 1 1
+193	46495 26 670 670 0.978197658434 0.978197658434 1 1 1 1 1
+194	46521 209 676 2324 0.978203418434 74.0000619 8 64 94 572 42248
+195	46730 322 564 2312 0.115044076396 74.00005374 12 64 94 828 58632
+196	47052 322 564 2312 0.115044076396 74.00005374 12 64 94 828 58632
+199	47374 211 674 2321 0.978197658434 74.00005374 8 64 94 572 42248
+203	47585 211 673 2320 0.978197658434 74.00005374 8 28 76 368 19520
+204	47796 322 566 2313 0.115044076396 74.00005374 12 28 76 528 25920
+211	48118 24 1416 1416 60.00000581 60.00000581 1 1 1 1 1
+213	48142 24 1416 1416 60.00000581 60.00000581 1 1 1 1 1
+215	48166 187 1427 2219 60.00001157 72.00012981 7 64 74 468 31432
+216	48353 184 534 2234 0.089266191576 72.00013567 7 64 64 448 28672
+217	48537 184 534 2234 0.089266191576 72.00013567 7 64 64 448 28672
+220	48721 175 1422 2217 60.00000581 72.00012325 7 64 74 468 31432
+224	48896 175 1421 2216 60.00000581 72.00012325 7 28 56 252 10192
+225	49071 184 535 2235 0.089266191576 72.00013567 7 28 40 244 8752
+227	49255 290 105 2354 0.00001157 74.00009101 11 64 122 762 55844
+228	49545 450 69 2281 0.00000581 74.00002687 17 64 122 1214 92588
+229	49995 450 69 2281 0.00000581 74.00002687 17 64 122 1214 92588
+232	50445 289 97 2352 0.00000581 74.00008061 11 64 122 762 55844
+236	50734 289 93 2351 0.00000581 74.00008061 11 28 104 384 18656
+237	51023 450 73 2282 0.00000581 74.00002687 17 28 104 704 39008
+239	51473 239 107 1848 0.00001157 61.000031729997 9 64 64 576 36864
+240	51712 374 71 1810 0.00000581 61.000025969997 14 64 64 896 57344
+241	52086 374 71 1810 0.00000581 61.000025969997 14 64 64 896 57344
+244	52460 238 99 1840 0.00000581 61.000025969997 9 64 64 576 36864
+248	52698 238 95 1836 0.00000581 61.000025969997 9 28 28 252 7056
+249	52936 374 75 1818 0.00000581 61.000025969997 14 28 40 440 14240
+251	53310 315 106 2290 0.00001157 74.00003727 12 64 122 826 59940
+252	53625 450 70 2345 0.00000581 74.00008061 17 64 122 1156 81800
+253	54075 450 70 2345 0.00000581 74.00008061 17 64 122 1156 81800
+256	54525 314 98 2288 0.00000581 74.00002687 12 64 122 826 59940
+260	54839 314 94 2287 0.00000581 74.00002687 12 28 104 412 19440
+261	55153 450 74 2346 0.00000581 74.00008061 17 28 104 628 28976
+263	55603 265 108 2066 0.00001157 72.00003727 10 64 122 698 51748
+264	55868 373 72 1811 0.00000581 61.000025969997 14 64 64 896 57344
+265	56241 373 72 1811 0.00000581 61.000025969997 14 64 64 896 57344
+268	56614 265 100 2064 0.00000581 72.00002687 10 64 122 698 51748
+272	56879 264 96 2063 0.00000581 72.00002687 10 28 104 356 17872
+273	57143 373 76 1819 0.00000581 61.000025969997 14 28 40 440 14240
+275	57516 169 33 1708 0 61.000018339999 9 8 8 72 576
+276	57685 208 217 1868 0.00002324 61.000031779997 8 8 8 64 512
+277	57893 208 217 1868 0.00002324 61.000031779997 8 1 8 36 204
+280	58101 12 49 49 0 0 1 1 1 1 1
+282	58113 12 49 49 0 0 1 1 1 1 1
+284	58125 52 493 493 0.081796888355 0.081796888355 2 1 1 2 2
+285	58177 374 67 1806 0.00000576 61.000025919997 14 64 64 896 57344
+286	58551 239 111 1852 0.00001162 61.000031779997 9 64 64 576 36864
+287	58790 239 111 1852 0.00001162 61.000031779997 9 64 64 576 36864
+290	59029 322 63 1728 0 61.000018339999 14 64 64 896 57344
+294	59351 322 59 1724 0 61.000018339999 14 28 40 440 14240
+295	59673 239 115 1856 0.00001162 61.000031779997 9 28 28 252 7056
+297	59912 110 504 1169 0.081802648355 10.022925958132 4 64 64 256 16384
+298	60022 247 598 1907 0.131287782993 70.00001162 9 64 64 576 36864
+299	60269 247 598 1907 0.131287782993 70.00001162 9 64 64 576 36864
+302	60516 110 501 1167 0.081796888355 10.022920198132 4 64 64 256 16384
+306	60626 110 499 1166 0.081796888355 10.022920198132 4 40 40 160 6400
+307	60736 247 600 1909 0.131287782993 70.00001162 9 28 40 348 13584
+309	60983 169 35 1709 0 61.000018339999 9 8 8 72 576
+310	61152 233 218 2071 0.00002324 72.00003732 9 8 84 148 7568
+311	61385 232 218 2071 0.00002324 72.00003732 9 1 9 45 285
+314	61617 36 51 2074 0 72.00003732 2 1 1 2 2
+316	61653 36 51 2074 0 72.00003732 2 1 1 2 2
+318	61689 52 538 538 0.115032456396 0.115032456396 2 1 1 2 2
+319	61741 373 68 1807 0.00000576 61.000025919997 14 64 64 896 57344
+320	62114 265 112 2067 0.00001162 72.00003732 10 64 122 698 51748
+321	62379 265 112 2067 0.00001162 72.00003732 10 64 122 698 51748
+324	62644 321 64 1729 0 61.000018339999 14 64 64 896 57344
+328	62965 321 60 1725 0 61.000018339999 14 28 40 440 14240
+329	63286 265 116 2068 0.00001162 72.00003732 10 28 104 356 17872
+331	63551 161 549 2124 0.115038216396 72.00006872 6 64 94 414 29316
+332	63712 271 634 2155 0.267543520526 72.0000886 10 64 64 640 40960
+333	63983 271 634 2155 0.267543520526 72.0000886 10 64 64 640 40960
+336	64254 161 546 2121 0.115032456396 72.00006056 6 64 94 414 29316
+340	64415 161 544 2120 0.115032456396 72.00006056 6 28 76 264 12960
+341	64576 271 636 2157 0.267543520526 72.0000886 10 28 40 376 14368
+343	64847 993 508 2394 0.081802698355 76.00000821 38 0 94 1366 101524
+344	65840 1046 553 2327 0.115038266396 74.00006195 40 0 94 1400 100880

@@ -1,0 +1,1172 @@
+file 1227760 1421947189                                         
+version 2
+run CacheSyncNaive-0-20150122-18:19:49-4892
+attr configname CacheSyncNaive
+attr datetime 20150122-18:19:49
+attr experiment CacheSyncNaive
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network LispTestbed
+attr processid 4892
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 9  LispTestbed.SW.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 11  LispTestbed.SW.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 12  LispTestbed.SW.ethg$o[2].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 14  LispTestbed.SW.ethg$o[3].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 13  LispTestbed.Host1.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 15  LispTestbed.Host2.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 2  LispTestbed.xTR1.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 8  LispTestbed.xTR1.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 16  LispTestbed.xTR1.ethg$o[2].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 4  LispTestbed.xTR2.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 10  LispTestbed.xTR2.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 17  LispTestbed.xTR2.ethg$o[2].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 1  LispTestbed.MRMS.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 0  LispTestbed.Core.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 3  LispTestbed.Core.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 5  LispTestbed.Core.ethg$o[2].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 6  LispTestbed.Core.ethg$o[3].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 7  LispTestbed.xTR_Responder.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 248  LispTestbed.xTR1.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title  "msg, vector"
+vector 249  LispTestbed.xTR1.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source  sum(sigLispSizeSend)
+attr title  "msg size send, vector"
+vector 300  LispTestbed.xTR2.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title  "msg, vector"
+vector 301  LispTestbed.xTR2.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source  sum(sigLispSizeSend)
+attr title  "msg size send, vector"
+vector 199  LispTestbed.xTR1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 251  LispTestbed.xTR2.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 204  LispTestbed.xTR1.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 206  LispTestbed.xTR1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 256  LispTestbed.xTR2.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 258  LispTestbed.xTR2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 218  LispTestbed.xTR1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 270  LispTestbed.xTR2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 214  LispTestbed.xTR1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 266  LispTestbed.xTR2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 209  LispTestbed.xTR1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 261  LispTestbed.xTR2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 353  LispTestbed.Core.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 354  LispTestbed.Core.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 365  LispTestbed.Core.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 366  LispTestbed.Core.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 362  LispTestbed.Core.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 374  LispTestbed.Core.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 361  LispTestbed.Core.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 373  LispTestbed.Core.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 357  LispTestbed.Core.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 369  LispTestbed.Core.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 352  LispTestbed.Core.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 364  LispTestbed.Core.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 210  LispTestbed.xTR1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 211  LispTestbed.xTR1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 262  LispTestbed.xTR2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 263  LispTestbed.xTR2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 219  LispTestbed.xTR1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 271  LispTestbed.xTR2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 252  LispTestbed.xTR2.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 253  LispTestbed.xTR2.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 200  LispTestbed.xTR1.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 201  LispTestbed.xTR1.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 302  LispTestbed.xTR2.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source  sum(sigLispSizeRecv)
+attr title  "msg size recieved, vector"
+vector 250  LispTestbed.xTR1.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source  sum(sigLispSizeRecv)
+attr title  "msg size recieved, vector"
+vector 208  LispTestbed.xTR1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 230  LispTestbed.xTR1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 242  LispTestbed.xTR1.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 226  LispTestbed.xTR1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 238  LispTestbed.xTR1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 221  LispTestbed.xTR1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 233  LispTestbed.xTR1.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 286  LispTestbed.xTR2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 287  LispTestbed.xTR2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 22  LispTestbed.SW.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 23  LispTestbed.SW.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 295  LispTestbed.xTR2.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 476  LispTestbed.SW.relayUnit  "buffer level"  ETV
+vector 37  LispTestbed.SW.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 48  LispTestbed.SW.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 59  LispTestbed.SW.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 32  LispTestbed.SW.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 43  LispTestbed.SW.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 54  LispTestbed.SW.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 274  LispTestbed.xTR2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 275  LispTestbed.xTR2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 121  LispTestbed.Host1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 122  LispTestbed.Host1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 188  LispTestbed.Host2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 189  LispTestbed.Host2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 283  LispTestbed.xTR2.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 130  LispTestbed.Host1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 197  LispTestbed.Host2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 312  LispTestbed.MRMS.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 322  LispTestbed.MRMS.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 318  LispTestbed.MRMS.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 313  LispTestbed.MRMS.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 341  LispTestbed.Core.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 342  LispTestbed.Core.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 350  LispTestbed.Core.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 260  LispTestbed.xTR2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 282  LispTestbed.xTR2.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 294  LispTestbed.xTR2.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 278  LispTestbed.xTR2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 290  LispTestbed.xTR2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 273  LispTestbed.xTR2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 285  LispTestbed.xTR2.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 234  LispTestbed.xTR1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 235  LispTestbed.xTR1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 33  LispTestbed.SW.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 34  LispTestbed.SW.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 243  LispTestbed.xTR1.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 26  LispTestbed.SW.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 21  LispTestbed.SW.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 222  LispTestbed.xTR1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 223  LispTestbed.xTR1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 231  LispTestbed.xTR1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 397  LispTestbed.xTR_Responder.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 407  LispTestbed.xTR_Responder.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 403  LispTestbed.xTR_Responder.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 398  LispTestbed.xTR_Responder.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 377  LispTestbed.Core.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 378  LispTestbed.Core.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 386  LispTestbed.Core.eth[3].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 186  LispTestbed.Host2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 196  LispTestbed.Host2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 192  LispTestbed.Host2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 187  LispTestbed.Host2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 55  LispTestbed.SW.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 56  LispTestbed.SW.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 119  LispTestbed.Host1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title  "DAD started, vector"
+vector 129  LispTestbed.Host1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 125  LispTestbed.Host1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 120  LispTestbed.Host1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 44  LispTestbed.SW.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 45  LispTestbed.SW.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 479  LispTestbed.xTR1.VRRP.VR_eth1_10  sentAdvert:vector  ETV
+attr source  sentAdvert
+attr title  "Advertisement sent, vector"
+vector 478  LispTestbed.xTR1.VRRP.VR_eth1_10  sentARP:vector  ETV
+attr source  sentARP
+attr title  "ARP Gratuitous, vector"
+vector 484  LispTestbed.xTR2.VRRP.VR_eth1_10  recvAdvert:vector  ETV
+attr source  recvAdvert
+attr title  "Received Advertisement, vector"
+vector 413  LispTestbed.xTR_Responder.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title  "msg, vector"
+vector 414  LispTestbed.xTR_Responder.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source  sum(sigLispSizeSend)
+attr title  "msg size send, vector"
+vector 388  LispTestbed.xTR_Responder.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 393  LispTestbed.xTR_Responder.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 395  LispTestbed.xTR_Responder.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 385  LispTestbed.Core.eth[3].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 381  LispTestbed.Core.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 376  LispTestbed.Core.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 399  LispTestbed.xTR_Responder.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 400  LispTestbed.xTR_Responder.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 408  LispTestbed.xTR_Responder.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 336  LispTestbed.Core.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 338  LispTestbed.Core.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 349  LispTestbed.Core.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  encapPk
+attr title  "packets encapsulated, vector(packetBytes)"
+vector 345  LispTestbed.Core.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkFromHL
+attr title  "packet bytes from higher layer, vector(packetBytes)"
+vector 340  LispTestbed.Core.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  txPk
+attr title  "packets transmitted, vector(packetBytes)"
+vector 314  LispTestbed.MRMS.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 315  LispTestbed.MRMS.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 323  LispTestbed.MRMS.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  decapPk
+attr title  "packets decapsulated, vector(packetBytes)"
+vector 304  LispTestbed.MRMS.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 305  LispTestbed.MRMS.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 328  LispTestbed.MRMS.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title  "msg, vector"
+vector 330  LispTestbed.MRMS.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source  sum(sigLispSizeRecv)
+attr title  "msg size recieved, vector"
+vector 98  LispTestbed.Host1.pingApp[6]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 115  LispTestbed.Host1.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 117  LispTestbed.Host1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 247  LispTestbed.xTR1.LISP.lispCore  packet-drop:vector  ETV
+attr source  count(sigLispDrop)
+attr title  "packet drop, vector"
+vector 329  LispTestbed.MRMS.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source  sum(sigLispSizeSend)
+attr title  "msg size send, vector"
+vector 303  LispTestbed.MRMS.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 245  LispTestbed.xTR1.LISP.lispMapCache  cache-size:vector  ETV
+attr source  sigLispSize
+attr title  "map-cache size, vector"
+vector 297  LispTestbed.xTR2.LISP.lispMapCache  cache-size:vector  ETV
+attr source  sigLispSize
+attr title  "map-cache size, vector"
+vector 103  LispTestbed.Host1.pingApp[7]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 93  LispTestbed.Host1.pingApp[5]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 88  LispTestbed.Host1.pingApp[4]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 113  LispTestbed.Host1.pingApp[9]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 83  LispTestbed.Host1.pingApp[3]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 108  LispTestbed.Host1.pingApp[8]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 68  LispTestbed.Host1.pingApp[0]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 246  LispTestbed.xTR1.LISP.lispCore  packet-frwd:vector  ETV
+attr source  count(sigLispForward)
+attr title  "packet forwarded, vector"
+vector 389  LispTestbed.xTR_Responder.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 390  LispTestbed.xTR_Responder.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 411  LispTestbed.xTR_Responder.LISP.lispCore  packet-frwd:vector  ETV
+attr source  count(sigLispForward)
+attr title  "packet forwarded, vector"
+vector 412  LispTestbed.xTR_Responder.LISP.lispCore  packet-drop:vector  ETV
+attr source  count(sigLispDrop)
+attr title  "packet drop, vector"
+vector 415  LispTestbed.xTR_Responder.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source  sum(sigLispSizeRecv)
+attr title  "msg size recieved, vector"
+vector 410  LispTestbed.xTR_Responder.LISP.lispMapCache  cache-size:vector  ETV
+attr source  sigLispSize
+attr title  "map-cache size, vector"
+vector 78  LispTestbed.Host1.pingApp[2]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 73  LispTestbed.Host1.pingApp[1]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 298  LispTestbed.xTR2.LISP.lispCore  packet-frwd:vector  ETV
+attr source  count(sigLispForward)
+attr title  "packet forwarded, vector"
+vector 74  LispTestbed.Host1.pingApp[1]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 70  LispTestbed.Host1.pingApp[1]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 99  LispTestbed.Host1.pingApp[6]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 95  LispTestbed.Host1.pingApp[6]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 96  LispTestbed.Host1.pingApp[6]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 104  LispTestbed.Host1.pingApp[7]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 100  LispTestbed.Host1.pingApp[7]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 101  LispTestbed.Host1.pingApp[7]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 94  LispTestbed.Host1.pingApp[5]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 90  LispTestbed.Host1.pingApp[5]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 91  LispTestbed.Host1.pingApp[5]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 89  LispTestbed.Host1.pingApp[4]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 85  LispTestbed.Host1.pingApp[4]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 86  LispTestbed.Host1.pingApp[4]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 114  LispTestbed.Host1.pingApp[9]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 110  LispTestbed.Host1.pingApp[9]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 111  LispTestbed.Host1.pingApp[9]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 84  LispTestbed.Host1.pingApp[3]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 80  LispTestbed.Host1.pingApp[3]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 81  LispTestbed.Host1.pingApp[3]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 109  LispTestbed.Host1.pingApp[8]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 105  LispTestbed.Host1.pingApp[8]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 106  LispTestbed.Host1.pingApp[8]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 69  LispTestbed.Host1.pingApp[0]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 65  LispTestbed.Host1.pingApp[0]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 66  LispTestbed.Host1.pingApp[0]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 79  LispTestbed.Host1.pingApp[2]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 75  LispTestbed.Host1.pingApp[2]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 76  LispTestbed.Host1.pingApp[2]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+8	34214 7201 0 10444 0 118.843720239906 277 0 1 138 138
+9	41415 3223 0 10377 0 118.843665749908 125 0 1 62 62
+2	44638 3231 0 10393 0 118.843677799907 125 0 1 62 62
+3	47869 1715 0 10429 0 118.843711069907 67 0 1 33 33
+vector 150  LispTestbed.Host2.pingApp[3]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 182  LispTestbed.Host2.networkLayer.arp  sentReq:vector  ETV
+attr title  "ARP request sent, vector"
+vector 184  LispTestbed.Host2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title  "ARP initiated resolutions, vector"
+vector 145  LispTestbed.Host2.pingApp[2]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 483  LispTestbed.xTR2.VRRP.VR_eth1_10  sentAdvert:vector  ETV
+attr source  sentAdvert
+attr title  "Advertisement sent, vector"
+vector 482  LispTestbed.xTR2.VRRP.VR_eth1_10  sentARP:vector  ETV
+attr source  sentARP
+attr title  "ARP Gratuitous, vector"
+vector 299  LispTestbed.xTR2.LISP.lispCore  packet-drop:vector  ETV
+attr source  count(sigLispDrop)
+attr title  "packet drop, vector"
+vector 135  LispTestbed.Host2.pingApp[0]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 136  LispTestbed.Host2.pingApp[0]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 132  LispTestbed.Host2.pingApp[0]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 175  LispTestbed.Host2.pingApp[8]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 207  LispTestbed.xTR1.networkLayer.arp  failedResolution:vector  ETV
+attr title  "ARP failed resolutions, vector"
+vector 339  LispTestbed.Core.networkLayer.arp  failedResolution:vector  ETV
+attr title  "ARP failed resolutions, vector"
+vector 180  LispTestbed.Host2.pingApp[9]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 160  LispTestbed.Host2.pingApp[5]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 170  LispTestbed.Host2.pingApp[7]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 171  LispTestbed.Host2.pingApp[7]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 167  LispTestbed.Host2.pingApp[7]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 155  LispTestbed.Host2.pingApp[4]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 140  LispTestbed.Host2.pingApp[1]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 151  LispTestbed.Host2.pingApp[3]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 147  LispTestbed.Host2.pingApp[3]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 148  LispTestbed.Host2.pingApp[3]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 165  LispTestbed.Host2.pingApp[6]  pingTxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping tx seq, vector"
+vector 166  LispTestbed.Host2.pingApp[6]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 162  LispTestbed.Host2.pingApp[6]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 146  LispTestbed.Host2.pingApp[2]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 142  LispTestbed.Host2.pingApp[2]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 143  LispTestbed.Host2.pingApp[2]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 176  LispTestbed.Host2.pingApp[8]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 172  LispTestbed.Host2.pingApp[8]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 173  LispTestbed.Host2.pingApp[8]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 161  LispTestbed.Host2.pingApp[5]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 157  LispTestbed.Host2.pingApp[5]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 158  LispTestbed.Host2.pingApp[5]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 71  LispTestbed.Host1.pingApp[1]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 133  LispTestbed.Host2.pingApp[0]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 168  LispTestbed.Host2.pingApp[7]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 156  LispTestbed.Host2.pingApp[4]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 152  LispTestbed.Host2.pingApp[4]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 153  LispTestbed.Host2.pingApp[4]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 163  LispTestbed.Host2.pingApp[6]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 181  LispTestbed.Host2.pingApp[9]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 177  LispTestbed.Host2.pingApp[9]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 178  LispTestbed.Host2.pingApp[9]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 141  LispTestbed.Host2.pingApp[1]  pingRxSeq:vector  ETV
+attr interpolationmode  none
+attr title  "ping rx seq, vector"
+vector 137  LispTestbed.Host2.pingApp[1]  rtt:vector  ETV
+attr interpolationmode  none
+attr title  "ping round-trip time, vector"
+attr unit  s
+vector 138  LispTestbed.Host2.pingApp[1]  numLost:vector  ETV
+attr interpolationmode  none
+attr title  "pings lost, vector"
+vector 485  LispTestbed.xTR1.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 486  LispTestbed.SW.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 487  LispTestbed.xTR1.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 488  LispTestbed.Core.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode  sample-hold
+attr source  channelBusy
+vector 480  LispTestbed.xTR1.VRRP.VR_eth1_10  recvAdvert:vector  ETV
+attr source  recvAdvert
+attr title  "Received Advertisement, vector"
+0	56591 1429 0 34626 0 240.00017189 55 0 1 27 27
+1	58020 1107 0 22428 0 180.00009754 43 0 1 21 21
+4	59127 14785 0 36573 0 248.000042659997 533 0 1 266 266
+5	73912 11841 0 48365 0 299.01016128726 429 0 1 214 214
+6	85753 21887 0 48433 0 299.427266497655 789 0 1 394 394
+7	107640 22183 0 48450 0 299.427277587655 803 0 1 401 401
+10	129823 18372 0 48380 0 299.010170457259 639 0 1 319 319
+11	148195 24704 0 48504 0 299.578137529999 873 0 1 436 436
+12	172899 27100 0 48505 0 299.578137529999 959 0 1 479 479
+13	199999 13688 0 48402 0 299.427235147656 481 0 1 240 240
+14	213687 24794 0 48506 0 299.578137529999 875 0 1 437 437
+15	238481 10732 0 48212 0 298.949752703519 373 0 1 186 186
+16	249213 1034 0 12273 0 128.3263091784 39 0 1 19 19
+17	250247 1042 0 12259 0 128.326280968401 39 0 1 19 19
+21	251289 5588 349 48411 0.183931568552 299.427243357656 191 64 94 17324 1588136
+22	256877 7948 275 48501 0.107859140616 299.578131769999 274 64 94 20146 1534684
+23	264825 7948 275 48501 0.107859140616 299.578131769999 274 64 94 20146 1534684
+26	272773 5588 345 48408 0.183925808552 299.427235197656 191 64 94 17324 1588136
+32	278361 12783 287 48508 0.107864900616 299.578137529999 436 64 94 34954 2899756
+33	291144 9500 337 48383 0.183925808552 299.010170507259 319 64 94 26206 2221444
+34	300644 9500 337 48383 0.183925808552 299.010170507259 319 64 94 26206 2221444
+37	310144 12783 283 48504 0.107859140616 299.578131769999 436 64 94 34954 2899756
+43	322927 14024 288 48509 0.107864900616 299.578137529999 479 64 94 35456 2720384
+44	336951 7079 417 48405 0.809097988707 299.427235197656 240 64 94 22320 2082720
+45	344030 7079 417 48405 0.809097988707 299.427235197656 240 64 94 22320 2082720
+48	351109 14024 284 48505 0.107859140616 299.578131769999 479 64 94 35456 2720384
+54	365133 12829 289 48510 0.107864900616 299.578137529999 437 64 94 31568 2358752
+55	377962 5547 384 48215 0.669975803736 298.949752753519 186 64 94 17214 1600836
+56	383509 5547 384 48215 0.669975803736 298.949752753519 186 64 94 17214 1600836
+59	389056 12829 285 48506 0.107859140616 299.578131769999 437 64 94 31568 2358752
+65	401885 582 6593 47882 89.118626374239 297.755471964774 14 7.9119998e-005 0.000103319997 0.001131879971 9.205468486584e-008
+66	402467 85 6593 30184 89.118626374239 218.671563731917 3 1 9 18 146
+68	402552 668 5019 47789 78.4426574409 297.755392844776 23 0 22 253 3795
+69	403220 411 6593 47882 89.118626374239 297.755471964774 14 1 22 191 3255
+70	403631 665 5363 48072 78.579559518491 298.165998094193 16 7.9119998e-005 0.000103319997 0.001290119967 1.0457463303288e-007
+71	404296 87 14293 30088 138.628771357654 218.423153959162 3 2 7 12 62
+73	404383 670 5218 47979 78.579456198494 298.165918974195 23 0 22 253 3795
+74	405053 466 5363 48072 78.579559518491 298.165998094193 16 0 22 190 3156
+75	405519 664 6725 48167 89.416486490471 298.292221999205 16 7.9119998e-005 7.9119998e-005 0.001265919968 1.0015958533632e-007
+76	406183 114 6725 33791 89.416486490471 237.793814289795 4 1 7 17 95
+78	406297 671 5118 48074 78.472517372574 298.292142879207 23 0 22 253 3795
+79	406968 465 6725 48167 89.416486490471 298.292221999205 16 1 22 192 3120
+80	407433 622 6197 48489 85.973166415421 299.427306107654 15 7.9119998e-005 7.9119998e-005 0.00118679997 9.38996112528e-008
+81	408055 142 6197 34260 85.973166415421 238.536930265316 5 1 8 19 103
+83	408197 671 4704 48396 76.235636963974 299.427226987656 23 0 22 253 3795
+84	408868 435 6197 48489 85.973166415421 299.427306107654 15 1 22 177 2895
+85	409303 580 5933 48394 84.156555386213 299.010178717259 14 7.9119998e-005 7.9119998e-005 0.001107679972 8.763963716928e-008
+86	409883 114 5933 32447 84.156555386213 230.440119699053 4 1 10 18 126
+88	409997 699 4426 48301 73.843817082233 299.010099597261 24 0 23 276 4324
+89	410696 406 5933 48394 84.156555386213 299.010178717259 14 1 23 182 3244
+90	411102 747 5801 47127 82.651440407568 293.423855290225 18 7.9119998e-005 7.9119998e-005 0.001424159964 1.1267953350336e-007
+91	411849 114 5801 31246 82.651440407568 224.301805627013 4 1 5 12 46
+93	411963 667 4287 47034 72.975346052553 293.423776170227 23 0 22 253 3795
+94	412630 523 5801 47127 82.651440407568 293.423855290225 18 1 22 209 3285
+95	413153 707 5500 47977 80.395946053276 298.151723260934 17 7.9119998e-005 0.000115899996 0.001381819964 1.1359239440912e-007
+96	413860 142 5500 33601 80.395946053276 237.163832114696 5 1 7 21 115
+98	414002 699 3939 47884 70.567129757255 298.151644140936 24 0 23 276 4324
+99	414701 498 5500 47977 80.395946053276 298.151723260934 17 1 23 220 3728
+100	415199 637 5669 47391 82.215493241279 295.443174788204 15 7.9119998e-005 7.9119998e-005 0.00118679997 9.38996112528e-008
+101	415836 118 5669 31962 82.215493241279 228.470838820974 4 1 9 23 171
+103	415954 724 4187 47298 72.726562945172 295.443095668206 24 0 23 276 4324
+104	416678 452 5669 47391 82.215493241279 295.443174788204 15 1 23 202 3560
+105	417130 723 6329 46388 86.94447273803 291.179362767786 17 7.9119998e-005 7.9119998e-005 0.001345039966 1.0641955941984e-007
+106	417853 116 6329 30696 86.94447273803 220.86373846507 4 1 5 13 51
+108	417969 662 4882 46295 77.917250334285 291.179283647788 22 0 21 231 3311
+109	418631 513 6329 46388 86.94447273803 291.179362767786 17 1 21 198 3000
+110	419144 769 6102 47296 85.845719298767 294.832231143897 18 7.9119998e-005 9.1699997e-005 0.001436739963 1.1482844886964e-007
+111	419913 118 6102 35430 85.845719298767 243.188062208808 4 1 5 11 39
+113	420031 694 4567 47203 75.288949215319 294.832152023899 23 0 22 253 3795
+114	420725 545 6102 47296 85.845719298767 294.832231143897 18 1 22 202 3106
+115	421270 28 3942 3942 70.567129757255 70.567129757255 1 1 1 1 1
+117	421298 28 3942 3942 70.567129757255 70.567129757255 1 1 1 1 1
+119	421326 26 410 410 0.809092178707 0.809092178707 1 1 1 1 1
+120	421352 7319 416 48404 0.809097938707 299.427235147656 240 64 94 22320 2082720
+121	428671 14503 291 48512 0.107864950616 299.578137579999 479 64 94 35456 2720384
+122	443174 14503 291 48512 0.107864950616 299.578137579999 479 64 94 35456 2720384
+125	457677 7319 414 48402 0.809092178707 299.427226987656 240 64 94 22320 2082720
+129	464996 7319 413 48401 0.809092178707 299.427226987656 240 28 76 17904 1349568
+130	472315 14503 294 48515 0.107864950616 299.578137579999 479 20 76 18876 1070768
+132	486818 515 11249 46710 123.927951251624 291.727206464803 12 7.9119998e-005 0.000103319997 0.000973639975 7.95347366988e-008
+133	487333 89 15105 30601 142.800417137751 220.809935699632 3 1 6 12 62
+135	487422 547 11111 46617 123.927847931627 291.727127344805 18 0 17 153 1785
+136	487969 367 11249 46710 123.927951251624 291.727206464803 12 0 17 125 1617
+137	488336 471 18083 46483 159.207875432864 291.38098950213 11 7.9119998e-005 7.9119998e-005 0.000870319978 6.885971491872e-008
+138	488807 120 18083 34165 159.207875432864 238.452480142884 4 3 6 18 86
+140	488927 517 12281 46390 128.360787688288 291.380910382132 17 0 16 136 1496
+141	489444 334 18083 46483 159.207875432864 291.38098950213 11 3 16 109 1291
+142	489778 473 12990 46578 130.467936745332 291.537979337331 11 7.9119998e-005 7.9119998e-005 0.000870319978 6.885971491872e-008
+143	490251 120 12990 35051 130.467936745332 241.046477218106 4 1 7 14 70
+145	490371 546 10600 46485 120.871292969677 291.537900217333 18 0 17 153 1785
+146	490917 336 12990 46578 130.467936745332 291.537979337331 11 1 17 106 1382
+147	491253 602 12606 46995 129.473211248358 292.504698864594 14 7.9119998e-005 7.9119998e-005 0.001107679972 8.763963716928e-008
+148	491855 90 12606 26750 129.473211248358 200.699463724107 3 1 4 7 21
+150	491945 545 10552 46902 120.202183991204 292.504619744596 18 0 17 153 1785
+151	492490 428 12606 46995 129.473211248358 292.504698864594 14 1 17 137 1691
+152	492918 429 16301 47750 149.130778875155 297.287562912741 10 7.9119998e-005 0.000103319997 0.000815399979 6.701478853176e-008
+153	493347 120 16301 33975 149.130778875155 238.104810157322 4 2 8 22 142
+155	493467 547 12181 47657 128.326198428403 297.287483792743 18 0 17 153 1785
+156	494014 306 16301 47750 149.130778875155 297.287562912741 10 2 17 115 1521
+157	494320 601 14198 46900 138.590942177409 292.328771002069 14 7.9119998e-005 7.9119998e-005 0.001107679972 8.763963716928e-008
+158	494921 89 14198 30988 138.590942177409 222.03916945769 3 1 3 6 14
+160	495010 515 11858 46807 127.78156756889 292.328691882071 17 0 16 136 1496
+161	495525 426 14198 46900 138.590942177409 292.328771002069 14 1 16 125 1423
+162	495951 472 12768 46805 129.786262548948 291.831331988743 11 7.9119998e-005 7.9119998e-005 0.000870319978 6.885971491872e-008
+163	496423 89 16655 34956 150.24601853867 240.968869661861 3 1 6 10 46
+165	496512 516 12675 46712 129.78618342895 291.831252868745 17 0 16 136 1496
+166	497028 335 12768 46805 129.786262548948 291.831331988743 11 0 16 97 1189
+167	497363 558 12054 48299 127.991664758372 298.949823663517 13 7.9119998e-005 7.9119998e-005 0.001028559974 8.137966308576e-008
+168	497921 90 15749 33696 146.380328468932 237.492656256488 3 1 5 8 30
+170	498011 545 11961 48206 127.991585638374 298.949744543519 18 0 17 153 1785
+171	498556 396 12054 48299 127.991664758372 298.949823663517 13 0 17 119 1503
+172	498952 515 13423 47486 134.688917782577 295.459337541314 12 7.9119998e-005 7.9119998e-005 0.000949439976 7.511968900224e-008
+173	499467 120 13423 35657 134.688917782577 244.297610578075 4 1 6 15 71
+175	499587 545 11385 47393 124.614793627988 295.459258421316 18 0 17 153 1785
+176	500132 366 13423 47486 134.688917782577 295.459337541314 12 1 17 120 1506
+177	500498 514 17954 47618 158.267182039982 295.973389082069 12 7.9119998e-005 0.000103319997 0.000973639975 7.95347366988e-008
+178	501012 120 17954 35936 158.267182039982 244.596938870844 4 3 6 18 86
+180	501132 545 11721 47525 126.788795336615 295.973309962071 18 0 17 153 1785
+181	501677 365 17954 47618 158.267182039982 295.973389082069 12 3 17 125 1559
+182	502042 60 10555 10606 120.202183991204 121.202183991204 2 1 1 2 2
+184	502102 30 10555 10555 120.202183991204 120.202183991204 1 1 1 1 1
+186	502132 26 377 377 0.669969993736 0.669969993736 1 1 1 1 1
+187	502158 5733 383 48214 0.669975753736 298.949752703519 186 64 94 17214 1600836
+188	507891 13266 292 48513 0.107864950616 299.578137579999 437 64 94 31568 2358752
+189	521157 13266 292 48513 0.107864950616 299.578137579999 437 64 94 31568 2358752
+192	534423 5733 381 48212 0.669969993736 298.949744543519 186 64 94 17214 1600836
+196	540156 5733 380 48211 0.669969993736 298.949744543519 186 28 76 13752 1032672
+197	545889 13266 295 48516 0.107864950616 299.578137579999 437 20 76 15780 838160
+199	559155 6089 21 48417 0 299.427243407656 208 47 294 19939 2089403
+200	565244 3674 118 48467 0.000031719998 299.427288727655 121 39 294 11519 1295667
+201	568918 3676 118 48467 0.000031719998 299.427288727655 121 1 121 7381 597861
+204	572594 253 29 33904 0 238.104768577324 13 1 1 13 13
+206	572847 151 29 33904 0 238.104768577324 7 1 1 7 7
+207	572998 51 11491 23902 125 188 3 1 1 3 3
+208	573049 78 253 253 0.107852370617 0.107852370617 3 1 1 3 3
+209	573127 5937 41 48425 0.000006719999 299.427255407655 190 64 140 24092 3089092
+210	579064 3400 61 48463 0.000012579999 299.427288727655 109 64 130 13326 1663288
+211	582464 3400 61 48463 0.000012579999 299.427288727655 109 64 130 13326 1663288
+214	585864 5837 37 48422 0 299.427243407656 190 64 140 24092 3089092
+218	591701 6012 35 48421 0 299.427243407656 200 28 122 20986 2300552
+219	597713 3394 63 48464 0.000012579999 299.427288727655 109 28 112 11328 1216204
+221	601107 8222 271 48500 0.107859090616 299.578131719999 274 64 94 20146 1534684
+222	609329 5779 352 48412 0.183931618552 299.427243407656 191 64 94 17324 1588136
+223	615108 5779 352 48412 0.183931618552 299.427243407656 191 64 94 17324 1588136
+226	620887 7261 264 48497 0.107852370617 299.578125 274 64 94 20146 1534684
+230	628148 7261 261 48496 0.107852370617 299.578125 274 20 76 10472 584032
+231	635409 5779 355 48413 0.183931618552 299.427243407656 191 20 76 13620 1006640
+233	641188 563 272 12274 0.107859090616 128.3263091784 19 64 332 3239 711219
+234	641751 567 336 12261 0.183925808552 128.326281018401 19 64 332 3239 711219
+235	642318 567 336 12261 0.183925808552 128.326281018401 19 64 332 3239 711219
+238	642885 570 265 12272 0.107852370617 128.326281018401 19 64 332 3239 711219
+242	643455 569 262 12271 0.107852370617 128.326281018401 19 28 314 2855 597375
+243	644024 566 339 12262 0.183925808552 128.326281018401 19 28 314 2855 597375
+245	644590 2355 4060 12266 70.567208337253 128.326281018401 77 2 15 871 10423
+246	646945 7750 5039 48468 78.4426738609 299.427288727655 249 1 249 31125 5177125
+247	654695 224 4011 5138 70.567170377254 78.472533792574 8 1 8 36 204
+248	654919 2298 1 48528 0 300 81 201 7748 -1.#IND -1.#IND
+249	657217 1225 1 48528 0 300 47 59 4505 96555 296880765
+250	658442 1046 120 36621 0.000031719998 248.000051479997 34 59 3243 44026 90799206
+251	659488 8171 23 36559 0 248.000032979998 273 47 294 25905 2636889
+252	667659 6896 117 48372 0.000031719998 299.01016133726 225 39 294 21193 2189809
+253	674555 7002 117 48372 0.000031719998 299.01016133726 225 1 225 25425 3822225
+256	681557 147 31 35865 0 244.596897290846 6 1 1 6 6
+258	681704 147 31 35865 0 244.596897290846 6 1 1 6 6
+260	681851 78 315 315 0.183919038553 0.183919038553 3 1 1 3 3
+261	681929 8442 42 36591 0.000006719999 248.000042659997 266 64 140 33808 4337814
+262	690371 6760 62 48368 0.000012579999 299.01016133726 214 64 130 27016 3446926
+263	697131 6760 62 48368 0.000012579999 299.01016133726 214 64 130 27016 3446926
+266	703891 8215 38 36569 0 248.000032979998 266 64 140 33808 4337814
+270	712106 8205 36 36567 0 248.000032979998 266 28 122 28942 3200850
+271	720311 6754 64 48369 0.000012579999 299.01016133726 214 28 112 23110 2539690
+273	727065 9819 333 48382 0.183925758552 299.010170457259 319 64 94 26206 2221444
+274	736884 13219 290 48511 0.107864950616 299.578137579999 436 64 94 34954 2899756
+275	750103 13219 290 48511 0.107864950616 299.578137579999 436 64 94 34954 2899756
+278	763322 9826 326 48378 0.183919038553 299.01016133726 319 64 94 26206 2221444
+282	773148 9826 323 48377 0.183919038553 299.01016133726 319 20 76 17308 1171888
+283	782974 13219 293 48514 0.107864950616 299.578137579999 436 20 76 22208 1456384
+285	796193 567 334 12260 0.183925758552 128.326280968401 19 64 332 3239 711219
+286	796760 563 274 12275 0.107859140616 128.3263092284 19 64 332 3239 711219
+287	797323 563 274 12275 0.107859140616 128.3263092284 19 64 332 3239 711219
+290	797886 567 327 12257 0.183919038553 128.326252808402 19 64 332 3239 711219
+294	798453 566 324 12256 0.183919038553 128.326252808402 19 28 314 2855 597375
+295	799019 562 277 12276 0.107859140616 128.3263092284 19 28 314 2855 597375
+297	799581 1191 4096 12250 70.56723032725 128.326252808402 42 2 15 295 2435
+298	800772 13324 5290 48373 78.579517938493 299.01016133726 422 1 422 89253 25139595
+299	814096 179 10791 12201 122.023485799997 128.326214848403 6 1 6 21 91
+300	814275 2173 7 36622 0 248.000051479997 76 201 7474 -1.#IND -1.#IND
+301	816448 1154 7 36557 0 248.000032979998 44 59 4293 91001 272434779
+302	817602 997 119 36622 0.000031719998 248.000051479997 32 59 3181 46393 100376501
+303	818599 447 4037 12227 70.567194637253 128.326239108402 15 39 51 597 23895
+304	819046 749 3303 34633 60.000036359999 240.00017194 25 87 1028 6197 4434343
+305	819795 726 3303 34633 60.000036359999 240.00017194 25 1 25 325 5525
+312	820521 26 305 305 0.131109585799 0.131109585799 1 1 1 1 1
+313	820547 612 310 22430 0.131115345799 180.00009754 21 64 89 1551 115503
+314	821159 820 3276 34629 60.000018659999 240.00017194 27 64 1066 7275 4949607
+315	821979 820 3276 34629 60.000018659999 240.00017194 27 64 1066 7275 4949607
+318	822799 612 309 22428 0.131109585799 180.00009178 21 64 89 1551 115503
+322	823411 612 308 22427 0.131109585799 180.00009178 21 28 71 1113 61743
+323	824023 820 3277 34630 60.000018659999 240.00017194 27 28 1048 6753 4693791
+328	824843 1271 3304 34634 60.000036359999 240.00017194 40 1267 5994 -1.#IND -1.#IND
+329	826114 930 4036 12226 70.567194637253 128.326239108402 30 59 1350 21123 19416423
+330	827044 305 3304 34634 60.000036359999 240.00017194 10 94 4644 22764 73394496
+336	827349 2752 3270 35378 60.000012849999 243.18802115881 92 1 1 92 92
+338	830101 1012 3270 35378 60.000012849999 243.18802115881 34 1 1 34 34
+339	831113 870 11492 33322 125.000022629998 234.919601278861 29 1 1 29 29
+340	831983 820 3275 34628 60.000018609999 240.00017189 27 64 1066 7275 4949607
+341	832803 612 311 22431 0.131115395799 180.00009759 21 64 89 1551 115503
+342	833415 612 311 22431 0.131115395799 180.00009759 21 64 89 1551 115503
+345	834027 820 3274 34626 60.000012849999 240.00008597 27 64 1066 7275 4949607
+349	834847 820 3273 34625 60.000012849999 240.00008597 27 28 1048 6753 4693791
+350	835667 612 312 22432 0.131115395799 180.00009759 21 28 71 1113 61743
+352	836279 3400 59 48462 0.000012529999 299.427288677655 109 64 130 13326 1663288
+353	839679 5937 43 48426 0.000006769999 299.427255457655 190 64 140 24092 3089092
+354	845616 5937 43 48426 0.000006769999 299.427255457655 190 64 140 24092 3089092
+357	851553 3400 57 48460 0.000006769999 299.427277637655 109 64 130 13326 1663288
+361	854953 6091 55 48459 0.000006769999 299.427277637655 196 28 112 13764 1284412
+362	861044 5932 45 48427 0.000006769999 299.427255457655 190 28 122 20612 2278612
+364	866976 6760 60 48367 0.000012529999 299.01016128726 214 64 130 27016 3446926
+365	873736 8442 44 36593 0.000006769999 248.000042709997 266 64 140 33808 4337814
+366	882178 8442 44 36593 0.000006769999 248.000042709997 266 64 140 33808 4337814
+369	890620 6760 58 48365 0.000006769999 299.01015024726 214 64 130 27016 3446926
+373	897380 6754 56 48364 0.000006769999 299.01015024726 214 28 112 23110 2539690
+374	904134 8432 46 36595 0.000006769999 248.000042709997 266 28 122 28942 3200850
+376	912566 12512 3250 48434 60.00001157 299.427266497655 394 64 130 51047 6624013
+377	925078 12707 373 48453 0.270710383462 299.427277637655 401 64 1066 55473 11176625
+378	937785 12707 373 48453 0.270710383462 299.427277637655 401 64 1066 55473 11176625
+381	950492 12512 3248 48433 60.00000581 299.427255457655 394 64 130 51047 6624013
+385	963004 12512 3247 48432 60.00000581 299.427255457655 394 28 112 43919 4911313
+386	975516 12707 374 48454 0.270710383462 299.427277637655 401 28 1048 48195 9304793
+388	988223 12115 3222 48445 60 299.427266547655 395 87 1028 40079 7535665
+389	1000338 12066 5062 48439 78.442697000899 299.427266547655 392 51 92 36023 3312025
+390	1012404 12350 5062 48439 78.442697000899 299.427266547655 392 1 392 77028 20155660
+393	1024754 15 3228 3228 60 60 1 1 1 1 1
+395	1024769 15 3228 3228 60 60 1 1 1 1 1
+397	1024784 26 367 367 0.270704573462 0.270704573462 1 1 1 1 1
+398	1024810 12707 372 48452 0.270710333462 299.427277587655 401 64 1066 55473 11176625
+399	1037517 12512 3251 48435 60.00001162 299.427266547655 394 64 130 51047 6624013
+400	1050029 12512 3251 48435 60.00001162 299.427266547655 394 64 130 51047 6624013
+403	1062541 12671 371 48450 0.270704573462 299.427266547655 401 64 1066 55473 11176625
+407	1075212 12671 370 48449 0.270704573462 299.427266547655 401 28 1048 48195 9304793
+408	1087883 12512 3252 48436 60.00001162 299.427266547655 394 28 112 43919 4911313
+410	1100395 28 5116 5116 78.442734000899 78.442734000899 1 2 2 2 4
+411	1100423 24718 5063 48444 78.442697000899 299.427266547655 781 1 781 305371 159098291
+412	1125141 28 5067 5067 78.442697000899 78.442697000899 1 1 1 1 1
+413	1125169 146 3219 34563 60 240 6 1110 4170 -1.#IND -1.#IND
+414	1125315 109 3219 34563 60 240 5 1020 4127 11408 33220036
+415	1125424 29 5116 5116 78.442734000899 78.442734000899 1 43 43 43 1849
+476	1125453 61167 278 48503 0.107859140616 299.578131769999 2038 0 94 85886 7439684
+478	1186620 46 666 34269 3.4140626 238.5781251 2 1 1 2 2
+479	1186666 4167 659 48491 3.4140625 299.578125 178 1 1 178 178
+480	1190833 120 33357 33826 235.023462659998 238.023462659998 4 1 1 4 4
+482	1190953 30 10721 10721 122.023450179999 122.023450179999 1 1 1 1 1
+483	1190983 3510 10714 33793 122.023450079999 238.023450079999 117 1 1 117 117
+484	1194493 5119 698 48524 3.414075079999 299.578137579999 178 1 1 178 178
+485	1199612 8169 33323 48498 235 299.578131719999 273 0 1 136 136
+486	1207781 7731 33323 48408 235 299.427243357656 259 0 1 129 129
+487	1215512 7679 33323 48424 235 299.427255407655 257 0 1 128 128
+488	1223191 4569 33323 48460 235 299.427288677655 153 0 1 76 76
