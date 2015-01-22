@@ -50,6 +50,8 @@ VRRPv2VirtualRouter::~VRRPv2VirtualRouter()
     cancelAndDelete(broadcastTimer);
     cancelAndDelete(preemtionTimer);
     cancelAndDelete(adverTimer);
+
+    cancelAndDelete(initCheckTimer);
 }
 
 void VRRPv2VirtualRouter::initialize(int stage)

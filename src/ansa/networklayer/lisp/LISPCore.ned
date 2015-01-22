@@ -41,8 +41,8 @@ simple LISPCore
         
         @signal[sigLispForward](type=bool);
         @signal[sigLispDrop](type=bool);        
-        @statistic[packet-frwd](title="packet forwarded"; source=count(sigLispForward); record=last);
-        @statistic[packet-drop](title="packet drop"; source=count(sigLispDrop); record=last);
+        @statistic[packet-frwd](title="packet forwarded"; source=count(sigLispForward); record=last,vector?);
+        @statistic[packet-drop](title="packet drop"; source=count(sigLispDrop); record=last,vector?);
         
                 
     gates:

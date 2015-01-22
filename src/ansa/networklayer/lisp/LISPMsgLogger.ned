@@ -26,6 +26,7 @@ simple LISPMsgLogger
         @signal[sigLispMsg](type=int);
         @statistic[msg-send](title="msg send"; source=count(sigLispSend); record=last);
         @statistic[msg-recv](title="msg recieved"; source=count(sigLispRecv); record=last);
+		@statistic[msg-size](title="msg"; source=sum(sigLispSizeSend)+sum(sigLispSizeRecv); record=vector);
         @statistic[msg-sizesend](title="msg size send"; source=sum(sigLispSizeSend); record=last, vector?);
         @statistic[msg-sizerecv](title="msg size recieved"; source=sum(sigLispSizeRecv); record=last, vector?);
         @statistic[msg-type](title="msg type"; source=sigLispMsg; record=histogram; enum="UNKNOWN=0,REQUEST=1,REPLY=2,NEGREPLY=3,REGISTER=4,NOTIFY=5,ENCREQ=6,PROBEREQUEST=7,PROBEREPLY=8,CACHESYNC=9,CACHESYNCACK=10,DATA=11");

@@ -63,6 +63,8 @@ class INET_API ScenarioManager : public cSimpleModule
     virtual void processDisconnectCommand(cXMLElement *node);
     virtual void processModuleSpecificCommand(cXMLElement *node);
 
+    simsignal_t sigIfaceDown;
+
   public:
     ScenarioManager() {}
 

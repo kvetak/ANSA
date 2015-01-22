@@ -46,6 +46,8 @@ void ScenarioManager::initialize()
     }
 
     updateDisplayString();
+
+    sigIfaceDown = registerSignal("SIG-IFACEDOWN");
 }
 
 void ScenarioManager::handleMessage(cMessage *msg)
@@ -320,6 +322,8 @@ void ScenarioManager::processDisconnectCommand(cXMLElement *node)
         if (g && g->getOwnerModule()->getParentModule() == parentMod)
             srcGate->disconnect();
     }
+
+    srcMod->emit(sigIfaceDown, true);
 }
 
 void ScenarioManager::updateDisplayString()

@@ -53,18 +53,20 @@ void LISPMapCache::initialize(int stage)
     if (stage < numInitStages() - 1)
         return;
 
+    restartMapCache();
+
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    parseConfig( par("configData").xmlValue() );
+    //parseConfig( par("configData").xmlValue() );
 
     //Create default record
-    LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
-    m1.setAction(LISPCommon::SEND_MAP_REQUEST);
-    this->addMapEntry(m1);
+    //LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
+    //m1.setAction(LISPCommon::SEND_MAP_REQUEST);
+    //this->addMapEntry(m1);
+
+    //updateDisplayString();
 
     //Init signals
     initSignals();
-
-    updateDisplayString();
 
     //Watchers
     WATCH_LIST(MappingStorage);
@@ -230,4 +232,18 @@ void LISPMapCache::updateDisplayString() {
     description << MappingStorage.size() - 1 << " entries";
     this->getDisplayString().setTagArg("t", 0, description.str().c_str());
     this->getDisplayString().setTagArg("t", 1, "t");
+}
+
+void LISPMapCache::restartMapCache() {
+    clearMappingStorage();
+
+    //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    parseConfig( par("configData").xmlValue() );
+
+    //Create default record
+    LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
+    m1.setAction(LISPCommon::SEND_MAP_REQUEST);
+    this->addMapEntry(m1);
+
+    updateDisplayString();
 }

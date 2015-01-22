@@ -44,6 +44,20 @@
 #include "LISPMsgLogger.h"
 #include "LISPProbeSet.h"
 
+class LISPMCListener : public cListener {
+   public:
+    LISPMCListener(LISPMapCache* mc) : MapCache(mc) {}
+     virtual ~LISPMCListener() {MapCache = NULL;}
+
+     virtual void receiveSignal(cComponent *src, simsignal_t id, bool b) {
+         EV << "Signal to MC initiated by " << src->getFullPath() << endl;
+         if (MapCache->getSyncType() == LISPMapCache::SYNC_NONE)
+             MapCache->restartMapCache();
+     }
+   protected:
+       LISPMapCache* MapCache;
+};
+
 class LISPCore : public cSimpleModule
 {
   public:
@@ -93,6 +107,8 @@ class LISPCore : public cSimpleModule
     unsigned int packetfrwd, packetdrop;
     virtual void updateDisplayString();
     void updateStats(bool flag);
+
+    LISPMCListener* MCRestartListener;
 
     virtual int numInitStages() const { return 5; }
     void initPointers();

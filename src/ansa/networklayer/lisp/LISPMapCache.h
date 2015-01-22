@@ -58,6 +58,8 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
 
     void updateDisplayString();
 
+    void restartMapCache();
+
   protected:
      CacheEntriesTimeouts CacheTimeouts;
 
@@ -71,14 +73,12 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
      simsignal_t sigSize;
      void initSignals();
 
-
      void parseConfig(cXMLElement* config);
      void parseSyncSetup(cXMLElement* config);
 
      virtual int numInitStages() const { return 4; }
      virtual void initialize(int stage);
      virtual void handleMessage(cMessage *msg);
-
 
 };
 

@@ -41,8 +41,6 @@ class LISPSiteDatabase : public cSimpleModule
     void updateEtrEntries(LISPSiteRecord* siteRec, const TRecord& mapEntry, std::string name);
     void updateTimeout(IPvXAddress addr, std::string name);
 
-
-
   protected:
     EtrTimeouts SiteTimeouts;
     SiteStorage SiteDatabase;

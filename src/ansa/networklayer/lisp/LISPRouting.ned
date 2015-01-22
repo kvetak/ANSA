@@ -23,7 +23,7 @@ package inet.ansa.networklayer.lisp;
 module LISPRouting
 {
     parameters:
-        @display("i=block/network2;bgb=395,222,white");
+        @display("i=block/network2;bgb=315,164,white");
         bool hasSiteDB = default(false);
         xml configData = default(xml("<LISP />"));
         string packetHandling = default("Vanilla"); //Either Vanilla or Symmetric
@@ -41,27 +41,27 @@ module LISPRouting
     submodules:
         lispMapCache: LISPMapCache {
             parameters:
-                @display("p=184,55");
+                @display("p=152,34");
                 configData = configData;
         }
         lispCore: LISPCore {
             parameters:
-                @display("p=188,156");
+                @display("p=152,110");
                 configData = configData;
         }
         lispMapDatabase: LISPMapDatabase {
             parameters:
-                @display("p=84,55");
+                @display("p=52,34");
                 configData = configData;
         }
         lispSiteDatabase: LISPSiteDatabase if hasSiteDB {
             parameters:
-                @display("p=291,55");
+                @display("p=259,34");
                 configData = configData;
         }
 
         lispMsgLogger: LISPMsgLogger {
-            @display("p=295,156");
+            @display("p=259,110");
         }
     connections allowunconnected:
 

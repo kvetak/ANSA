@@ -627,6 +627,13 @@ void LISPCore::handleDataEncaps(cMessage* msg) {
 
 void LISPCore::handleDataDecaps(cMessage* msg) {
     if (dynamic_cast<LISPHeader*>(msg)) {
+        /*
+        LISPHeader* lidata = check_and_cast<LISPHeader*>(msg);
+        UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lidata->getControlInfo());
+        IPvXAddress dst = udpi->getDestAddr();
+        MsgLog->addMsg(lidata, LISPMsgEntry::DATA, dst, false);
+        */
+
         cPacket* pip = ((cPacket*)msg)->decapsulate();
 
         //Ordinary encapsulated data message that should be forwarded by this ETR
@@ -1436,6 +1443,10 @@ void LISPCore::cacheMapping(const TRecord& record) {
 void LISPCore::initSignals() {
     sigFrwd     = registerSignal(SIG_PACKET_FORWARD);
     sigDrop     = registerSignal(SIG_PACKET_DROP);
+
+    MCRestartListener = new LISPMCListener(MapCache);
+    this->getParentModule()->getParentModule()->subscribe("SIG-IFACEDOWN", MCRestartListener);
+
 }
 
 void LISPCore::updateStats(bool flag) {
@@ -1476,9 +1487,9 @@ unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAdd
     //Retrieve the best RLOC
     IPvXAddress rlocaddr = mapentry->getBestUnicastLocator()->getRlocAddr();
     //EV << "Chosen RLOC addr is>" << rlocaddr << endl;
-    //Log and send
-    //Loggin, which also adds packetsize, needs to be done prior to encapsulation
-    MsgLog->addMsg(lidata, LISPMsgEntry::DATA, rlocaddr, true);
+
+    //Data packets are omitted from msg logging
+    //MsgLog->addMsg(lidata, LISPMsgEntry::DATA, rlocaddr, true);
 
     dataTraf.sendTo(lidata, rlocaddr, DATA_PORT_VAL);
 
@@ -1503,7 +1514,7 @@ int64 LISPCore::countPacketSize(LISPMessage* lispmsg) {
     }
     else if (dynamic_cast<LISPCacheSyncAck*>(lispmsg)
             || dynamic_cast<LISPCacheSync*>(lispmsg)) {
-        LISPCacheSync* lcs = check_and_cast<LISPCacheSync*>(lispmsg);
+        LISPCacheSyncAck* lcs = check_and_cast<LISPCacheSyncAck*>(lispmsg);
         return (20 + getLispMapEntrySize(lcs->getMapEntries()));
     }
     return 0;
@@ -1547,7 +1558,7 @@ unsigned int LISPCore::getLispMapEntrySize(TMapEntries& MapEntries) {
     for (TMECItem it = MapEntries.begin(); it != MapEntries.end(); ++it) {
         result += 3;
         result += it->MapEntry.getEidPrefix().getEidAfi() == LISPCommon::AFI_IPV6 ? 16 : 4;
-        for (LocatorCItem jt = it->MapEntry.getRlocs().begin(); jt != it->MapEntry.getRlocs().end(); ++it) {
+        for (LocatorCItem jt = it->MapEntry.getRlocs().begin(); jt != it->MapEntry.getRlocs().end(); ++jt) {
             result += 8 + (jt->getRlocAfi() == LISPCommon::AFI_IPV6 ? 16 : 4);
         }
     }
