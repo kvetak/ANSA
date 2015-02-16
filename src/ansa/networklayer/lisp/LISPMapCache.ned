@@ -25,7 +25,7 @@ simple LISPMapCache
         @display("i=block/table2");        
         xml 	configData 			 = default(xml("<MapCache></MapCache>"));        
         string 	cacheSynchronization = default("None"); //None OR Naive OR Smart
-        bool   	cacheSyncAck 		 = default(true);   
+        bool   	cacheSyncAck 		 = default(false);   
         string  ssAddressType 		 = default("nonLISP"); //Either nonLISP OR RLOC OR EID
         
         @signal[sigLispLookup](type=bool);
