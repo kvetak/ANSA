@@ -19,6 +19,7 @@
  */
 
 #include "LISPMapDatabase.h"
+//Forward declaration
 #include "IPv4InterfaceData.h"
 #include "IPv6InterfaceData.h"
 
@@ -30,6 +31,8 @@ void LISPMapDatabase::initialize(int stage)
         return;
 
     Ift = InterfaceTableAccess().get();
+
+    //Parse settings
     advertonlyowneids = par(ADVERTONLYOWNEID_PAR).boolValue();
 
     //EtrMappings
@@ -121,3 +124,4 @@ void LISPMapDatabase::updateDisplayString() {
     this->getDisplayString().setTagArg("t", 0, description.str().c_str());
     this->getDisplayString().setTagArg("t", 1, "t");
 }
+

@@ -272,3 +272,13 @@ std::ostream& operator <<(std::ostream& os, const MapStorage& mapstor) {
         os << it->info() << endl;
     return os;
 }
+
+MapStorage LISPMapStorageBase::findMapEntriesByLocator(
+        const IPvXAddress& rloc) {
+    MapStorage entrylist;
+    for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
+        if (it->isLocatorExisting(rloc))
+            entrylist.push_back(*it);
+    }
+    return entrylist;
+}

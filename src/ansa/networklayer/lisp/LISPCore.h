@@ -23,9 +23,6 @@
 
 #include <omnetpp.h>
 
-//#include "AnsaRoutingTable.h"
-//#include "AnsaRoutingTableAccess.h"
-
 #include "IPv6Datagram.h"
 #include "IPv4Datagram.h"
 #include "IPProtocolId_m.h"
@@ -44,21 +41,57 @@
 #include "LISPMsgLogger.h"
 #include "LISPProbeSet.h"
 
-class LISPMCListener : public cListener {
+
+class LISPCoreBase : public cSimpleModule
+{
+  public:
+    virtual int numInitStages() const { return 5; }
+    virtual void initialize(int stage) = 0;
+    virtual void handleMessage(cMessage *msg) = 0;
+
+    virtual void scheduleWholeCacheSync(IPvXAddress& ssmember) = 0;
+};
+
+class LISPDownLis : public cListener {
    public:
-    LISPMCListener(LISPMapCache* mc) : MapCache(mc) {}
-     virtual ~LISPMCListener() {MapCache = NULL;}
+    LISPDownLis(LISPMapCache* mc) : MapCache(mc) {}
+     virtual ~LISPDownLis() { MapCache = NULL; }
 
      virtual void receiveSignal(cComponent *src, simsignal_t id, bool b) {
-         EV << "Signal to MC initiated by " << src->getFullPath() << endl;
-         if (MapCache->getSyncType() == LISPMapCache::SYNC_NONE)
+         EV << "Signal IFACE DOWN/UP initiated by " << src->getFullPath() << endl;
+         //Going DOWN or UP
+         if (b)
              MapCache->restartMapCache();
+         else
+             MapCache->notifySyncset(src);
      }
    protected:
        LISPMapCache* MapCache;
 };
 
-class LISPCore : public cSimpleModule
+//FIXME: Vesely - Remove this Listener and use timer-based version instead
+class LISPUpLis : public cListener {
+   public:
+     LISPUpLis(LISPMapCache* mc, LISPCoreBase* core) : MapCache(mc), Core(core)  {}
+     virtual ~LISPUpLis() { Core = NULL; }
+
+     virtual void receiveSignal(cComponent *src, simsignal_t id, const char* c) {
+         EV << "Signal SS-PEER-UP initiated by " << src->getFullPath() << " with addr " << c << endl;
+         IPvXAddress addr = IPvXAddress(c);
+         //EV << "||||||||||||||||" << addr << endl;
+         if (MapCache->isInSyncSet(addr))
+             Core->scheduleWholeCacheSync(addr);
+         else
+             EV << "Does not have SS member in syncset" << endl;
+     }
+
+   protected:
+     LISPMapCache* MapCache;
+     LISPCoreBase* Core;
+};
+
+
+class LISPCore : public LISPCoreBase
 {
   public:
     LISPCore();
@@ -108,7 +141,8 @@ class LISPCore : public cSimpleModule
     virtual void updateDisplayString();
     void updateStats(bool flag);
 
-    LISPMCListener* MCRestartListener;
+    LISPDownLis* DownListener;
+    LISPUpLis* UpListener;
 
     virtual int numInitStages() const { return 5; }
     void initPointers();
@@ -161,6 +195,7 @@ class LISPCore : public cSimpleModule
     void scheduleRegistration();
     void scheduleRlocProbing();
     void scheduleCacheSync(const LISPEidPrefix& eidPref);
+    void scheduleWholeCacheSync(IPvXAddress& ssmember);
 
     void cacheMapping(const TRecord& record);
 

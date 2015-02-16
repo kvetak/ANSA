@@ -1,15 +1,15 @@
-file 1213523 1421947261                                         
+file 1213523 1423657058                                         
 version 2
-run General-2outages-0-20150122-18:21:01-8460
+run General-2outages-0-20150211-13:17:38-6896
 attr configname General-2outages
-attr datetime 20150122-18:21:01
+attr datetime 20150211-13:17:38
 attr experiment General-2outages
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvars2 $repetition=0
 attr measurement ""
 attr network LispTestbed
-attr processid 8460
+attr processid 6896
 attr repetition 0
 attr replication #0
 attr resultdir results

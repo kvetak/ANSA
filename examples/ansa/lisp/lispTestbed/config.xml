@@ -45,7 +45,7 @@
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
 	        		<SynchronizationSet key="SSKeyA">
-	        			<SetMember address="10.0.0.2"/>
+	        			<SetMember address="192.168.1.2"/>
 	        		</SynchronizationSet> 
         		</MapCache>
         		<EtrMapping>
@@ -107,7 +107,7 @@
         		<ItrMapResolver address="31.0.0.1" />        	
         		<MapCache>
 	        		<SynchronizationSet key="SSKeyA">
-	        			<SetMember address="10.0.0.1"/>
+	        			<SetMember address="192.168.1.1"/>
 	        		</SynchronizationSet>	        		
         		</MapCache>
         		<EtrMapping>

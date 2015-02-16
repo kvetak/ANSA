@@ -50,6 +50,8 @@ class LISPMapStorageBase
 
     LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
     LISPMapEntry* findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref);
+    MapStorage findMapEntriesByLocator(const IPvXAddress& rloc);
+
     LISPMapEntry* lookupMapEntry(IPvXAddress address);
 
   protected:

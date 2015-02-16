@@ -19,6 +19,9 @@
  */
 
 #include "LISPMapCache.h"
+//Forward declaration
+#include "IPv4InterfaceData.h"
+#include "IPv6InterfaceData.h"
 
 Define_Module(LISPMapCache);
 
@@ -42,6 +45,13 @@ void LISPMapCache::parseConfig(cXMLElement* config) {
     else
         syncType = SYNC_NONE;
 
+    if (!opp_strcmp(par(SSADDR_PAR), SSADDR_RLOC_PARVAL))
+        ssAddrType = SSADDR_RLOC;
+    else if (!opp_strcmp(par(SSADDR_PAR), SSADDR_EID_PARVAL))
+        ssAddrType = SSADDR_EID;
+    else
+        ssAddrType = SSADDR_NONLISP;
+
     if ( syncType != SYNC_NONE ) {
         parseSyncSetup(config);
         syncAck = this->par(SYNCACK_PAR).boolValue();
@@ -53,7 +63,10 @@ void LISPMapCache::initialize(int stage)
     if (stage < numInitStages() - 1)
         return;
 
+    initPointers();
+
     restartMapCache();
+
 
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     //parseConfig( par("configData").xmlValue() );
@@ -136,6 +149,8 @@ void LISPMapCache::updateTimeout(const LISPEidPrefix& eidPref, simtime_t time) {
 }
 
 void LISPMapCache::parseSyncSetup(cXMLElement* config) {
+
+
     if (!config)
         return;
 
@@ -165,7 +180,8 @@ void LISPMapCache::parseSyncSetup(cXMLElement* config) {
         std::string addr = m->getAttribute(ADDRESS_ATTR);
 
         //Create a new member record
-        SyncSet.push_back(LISPServerEntry(addr));
+        if (!isInSyncSet(IPvXAddress(addr.c_str())))
+            SyncSet.push_back(LISPServerEntry(addr));
     }
 
 }
@@ -178,6 +194,11 @@ LISPMapEntry* LISPMapCache::lookupMapEntry(IPvXAddress address) {
     else
         emit(sigLookup, true);
     return me;
+}
+
+void LISPMapCache::initPointers() {
+    Ift = InterfaceTableAccess().get();
+    MapDb = ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
 }
 
 void LISPMapCache::handleMessage(cMessage *msg)
@@ -223,6 +244,8 @@ void LISPMapCache::initSignals() {
     sigMiss     = registerSignal(SIG_CACHE_MISS);
     sigLookup   = registerSignal(SIG_CACHE_LOOKUP);
     sigSize     = registerSignal(SIG_CACHE_SIZE);
+
+    sigPeerUp = registerSignal("SIG-PEERUP");
 }
 
 void LISPMapCache::updateDisplayString() {
@@ -235,6 +258,7 @@ void LISPMapCache::updateDisplayString() {
 }
 
 void LISPMapCache::restartMapCache() {
+    Enter_Method("restartMapCache()");
     clearMappingStorage();
 
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
@@ -246,4 +270,109 @@ void LISPMapCache::restartMapCache() {
     this->addMapEntry(m1);
 
     updateDisplayString();
+}
+
+bool LISPMapCache::isInSyncSet(IPvXAddress ssmember) const {
+    for (ServerCItem it = SyncSet.begin(); it != SyncSet.end(); ++it) {
+        if (it->getAddress().equals(ssmember))
+            return true;
+    }
+    return false;
+}
+
+void LISPMapCache::notifySyncset(cComponent* src) {
+    Enter_Method("notifySyncSet()");
+
+    //Parse interface name
+    std::string iface = src->getFullPath().substr(src->getFullPath().find_last_of('.') + 1);
+    std::string name = iface.substr(0, iface.find_first_of('['));
+    std::string index = iface.substr(iface.find_first_of('[') + 1, iface.find_first_of(']') - iface.find_first_of('[') - 1);
+
+    std::ostringstream os;
+    os << name << index ;
+    //EV << "YYYYYY" << os.str() << endl;
+
+    IPv4InterfaceData* int4Data = Ift->getInterfaceByName(os.str().c_str())->ipv4Data();
+    IPv4Address adr4 =
+            (int4Data) ?
+                    int4Data->getIPAddress() :
+                    IPv4Address::UNSPECIFIED_ADDRESS;
+    IPv6InterfaceData* int6Data = Ift->getInterfaceByName(os.str().c_str())->ipv6Data();
+    IPv6Address adr6 =
+            (int6Data) ?
+                    int6Data->getPreferredAddress() :
+                    IPv6Address::UNSPECIFIED_ADDRESS;
+
+    //Emt nonLISP
+    if (ssAddrType == SSADDR_NONLISP) {
+        if (!adr4.isUnspecified()) {
+            //EV << "!!!!!!!!!!!!" << adr4 << endl;
+            emit(sigPeerUp, adr4.str().c_str());
+        }
+        if (!adr6.isUnspecified() && !adr6.isLinkLocal()) {
+            //EV << "!!!!!!!!!!!!" << adr6 << endl;
+            emit(sigPeerUp, adr6.str().c_str());
+        }
+    }
+    //Emit RLOCs or EIDs
+    else  {
+        //IPv4
+        if (!adr4.isUnspecified()) {
+            MapStorage entrylist = MapDb->findMapEntriesByLocator(adr4);
+            if (ssAddrType == SSADDR_RLOC) {
+                if (!entrylist.empty()) {
+                    //EV << "!!!!!!!!!!!!" << adr4 << endl;
+                    emit(sigPeerUp, adr4.str().c_str());
+                }
+            }
+            else if (ssAddrType == SSADDR_EID) {
+                for (MapStorageItem it = entrylist.begin(); it != entrylist.end(); ++it) {
+                    for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
+                        IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+                        IPv4Address nadr4 =
+                                (int4Data) ?
+                                        int4Data->getIPAddress() :
+                                        IPv4Address::UNSPECIFIED_ADDRESS;
+                        if (it->getEidPrefix().getEidAddr().equals(
+                                LISPCommon::getNetworkAddress(nadr4, it->getEidPrefix().getEidLength())
+                                )
+                           ) {
+                            //EV << "!!!!!!!!!!!!" << nadr4 << endl;
+                            emit(sigPeerUp, nadr4.str().c_str());
+                        }
+                    }
+                }
+            }
+        }
+
+        //IPv6
+        if (!adr6.isUnspecified() && !adr6.isLinkLocal()) {
+            MapStorage entrylist = MapDb->findMapEntriesByLocator(adr6);
+            if (ssAddrType == SSADDR_RLOC) {
+                if (!entrylist.empty()) {
+                    //EV << "!!!!!!!!!!!!" << adr6 << endl;
+                    emit(sigPeerUp, adr6.str().c_str());
+                }
+            }
+            else if (ssAddrType == SSADDR_EID) {
+                for (MapStorageItem it = entrylist.begin(); it != entrylist.end(); ++it) {
+                    for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
+                        IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+                        IPv6Address nadr6 =
+                                (int6Data) ?
+                                        int6Data->getPreferredAddress() :
+                                        IPv6Address::UNSPECIFIED_ADDRESS;
+                        if (it->getEidPrefix().getEidAddr().equals(
+                                LISPCommon::getNetworkAddress(nadr6, it->getEidPrefix().getEidLength())
+                                )
+                           ) {
+                            //EV << "!!!!!!!!!!!!" << nadr6 << endl;
+                            emit(sigPeerUp, nadr6.str().c_str());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

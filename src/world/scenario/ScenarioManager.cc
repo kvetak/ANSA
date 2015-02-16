@@ -273,6 +273,11 @@ void ScenarioManager::processConnectCommand(cXMLElement *node)
 
         createConnection(paramList, channelType, srcGate, destGate);
     }
+
+    //EV << "!!!!!!!!!!" << srcGate->getPathEndGate()->getFullPath() << endl;
+
+
+    srcGate->getPathEndGate()->getOwnerModule()->getParentModule()->emit(sigIfaceDown, false);
 }
 
 void ScenarioManager::processDisconnectCommand(cXMLElement *node)
@@ -323,7 +328,9 @@ void ScenarioManager::processDisconnectCommand(cXMLElement *node)
             srcGate->disconnect();
     }
 
-    srcMod->emit(sigIfaceDown, true);
+    //EV << "!!!!!!!!!!" << srcGate->getPathEndGate()->getFullPath() << endl;
+
+    srcGate->getPathEndGate()->getOwnerModule()->getParentModule()->emit(sigIfaceDown, true);
 }
 
 void ScenarioManager::updateDisplayString()

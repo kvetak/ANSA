@@ -125,6 +125,10 @@ extern const char* SYNCNAIVE_PARVAL;
 extern const char* SYNCSMART_PARVAL;
 extern const char* SYNCACK_PAR;
 extern const char* ADVERTONLYOWNEID_PAR;
+extern const char* SSADDR_PAR;
+extern const char* SSADDR_NONLISP_PARVAL;
+extern const char* SSADDR_RLOC_PARVAL;
+extern const char* SSADDR_EID_PARVAL;
 
 extern const char* MAPDB_MOD;
 extern const char* MAPCACHE_MOD;

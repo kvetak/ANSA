@@ -25,6 +25,9 @@
 #include "LISPMapStorageBase.h"
 #include "LISPTimers_m.h"
 #include "LISPServerEntry.h"
+#include "IInterfaceTable.h"
+#include "InterfaceTableAccess.h"
+#include "LISPMapDatabase.h"
 
 typedef std::list <LISPMapEntryTimer*> CacheEntriesTimeouts;
 typedef CacheEntriesTimeouts::const_iterator TimeoutCItem;
@@ -40,12 +43,20 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
         SYNC_SMART
     };
 
+    enum ESSAddrType
+    {
+        SSADDR_NONLISP,
+        SSADDR_RLOC,
+        SSADDR_EID
+    };
+
     LISPMapCache();
     virtual ~LISPMapCache();
 
     const std::string& getSyncKey() const;
     const ServerAddresses& getSyncSet() const;
     LISPMapCache::EMapSync getSyncType() const;
+    bool isInSyncSet(IPvXAddress ssmember) const;
     bool isSyncAck() const;
 
     LISPMapEntryTimer* findExpirationTimer(const LISPEidPrefix& eidPref);
@@ -56,29 +67,40 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
     void updateCacheEntry(const TRecord& record);
     void syncCacheEntry(LISPMapEntry& entry);
 
+    void notifySyncset(cComponent *src);
+
     void updateDisplayString();
 
     void restartMapCache();
 
   protected:
-     CacheEntriesTimeouts CacheTimeouts;
+    IInterfaceTable*    Ift;                ///< Provides access to the interface table.
+    LISPMapDatabase*     MapDb;
 
-     EMapSync syncType;
-     ServerAddresses SyncSet;
-     std::string syncKey;
-     bool syncAck;
+    CacheEntriesTimeouts CacheTimeouts;
 
-     simsignal_t sigMiss;
-     simsignal_t sigLookup;
-     simsignal_t sigSize;
-     void initSignals();
+    EMapSync syncType;
+    ESSAddrType ssAddrType;
 
-     void parseConfig(cXMLElement* config);
-     void parseSyncSetup(cXMLElement* config);
+    ServerAddresses SyncSet;
+    std::string syncKey;
+    bool syncAck;
 
-     virtual int numInitStages() const { return 4; }
-     virtual void initialize(int stage);
-     virtual void handleMessage(cMessage *msg);
+    simsignal_t sigMiss;
+    simsignal_t sigLookup;
+    simsignal_t sigSize;
+
+    simsignal_t sigPeerUp;
+
+    void initPointers();
+    void initSignals();
+
+    void parseConfig(cXMLElement* config);
+    void parseSyncSetup(cXMLElement* config);
+
+    virtual int numInitStages() const { return 4; }
+    virtual void initialize(int stage);
+    virtual void handleMessage(cMessage *msg);
 
 };
 

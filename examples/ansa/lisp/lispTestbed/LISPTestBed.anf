@@ -21,23 +21,28 @@
       <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispTestbed/results/CacheSyncNaive-0.vec) AND attr:configname(CacheSyncNaive) AND attr:runnumber(0) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
       <items xsi:type="scave:LineChart" name="xTR1 send size" lineNameFormat="">
         <properties name="Plot.BackgroundColor" value="white"/>
+        <properties name="Graph.Title.Font" value="Arial-regular-12"/>
         <properties name="X.Axis.Title" value="time"/>
-        <properties name="Y.Axis.Title" value="total Bytes"/>
-        <properties name="X.Label.RotateBy" value="45.0"/>
+        <properties name="Y.Axis.Title" value="total bytes"/>
+        <properties name="Axis.Title.Font" value="Arial-regular-12"/>
+        <properties name="Label.Font" value="Arial-regular-12"/>
         <properties name="Y.Axis.Max" value="8000.0"/>
-        <properties name="Symbols.Type//inet/examples/ansa/lisp/lispTestbed/results/General-0.vec General-0-20150121-16:30:25-7100 General" value="Cross"/>
-        <properties name="Symbols.Size" value="6"/>
+        <properties name="Symbols.Size" value="10"/>
         <properties name="Line.Type" value="Linear"/>
       </items>
     </datasets>
     <datasets name="msg-size:vector LispTestbed.xTR1.LISP.lispMsgLogger">
       <items xsi:type="scave:Add" filterPattern="attr:configname(General-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
-      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncNaive-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
       <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncSmart-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="attr:configname(CacheSyncNaive-2outages) AND module(LispTestbed.xTR1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
       <items xsi:type="scave:LineChart" name="msg-size:vector LispTestbed.xTR1.LISP.lispMsgLogger" lineNameFormat="">
+        <properties name="Graph.Title.Font" value="Arial-regular-12"/>
         <properties name="X.Axis.Title" value="time"/>
         <properties name="Y.Axis.Title" value="total bytes"/>
+        <properties name="Axis.Title.Font" value="Arial-regular-12"/>
+        <properties name="Label.Font" value="Arial-regular-12"/>
         <properties name="Y.Axis.Max" value="8000.0"/>
+        <properties name="Symbols.Size" value="10"/>
       </items>
     </datasets>
   </datasets>

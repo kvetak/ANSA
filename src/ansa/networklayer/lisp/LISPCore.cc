@@ -271,6 +271,20 @@ void LISPCore::scheduleCacheSync(const LISPEidPrefix& eidPref) {
     }
 }
 
+void LISPCore::scheduleWholeCacheSync(IPvXAddress& ssmember) {
+    Enter_Method("scheduleWholeCacheSync()");
+    //IF map-cache content changes AND cache synchronization is enabled THEN
+    if (MapCache->getSyncType() != LISPMapCache::SYNC_NONE) {
+        //EV << "Sync for " << it->getAddress() << endl;
+        LISPSyncTimer* synctim = new LISPSyncTimer(CACHESYNC_TIMER);
+        synctim->setSetMember(ssmember);
+        synctim->setEidPref(LISPEidPrefix());
+        synctim->setPreviousNonce(DEFAULT_NONCE_VAL);
+        synctim->setRetryCount(0);
+        scheduleAt(simTime(), synctim);
+    }
+}
+
 void LISPCore::initPointers() {
     // access to the routing and interface table
     //Rt = AnsaRoutingTableAccess().get();
@@ -1298,10 +1312,10 @@ void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
 
 unsigned long LISPCore::sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eidPref) {
     //EV << "sendCacheSync() - " << setmember << "   EID: " << eidPref << endl;
-    if (eidPref.getEidAddr().isUnspecified()) {
-        EV << "Cannot send CacheSync containing default MapCache record!" << endl;
-        return DEFAULT_NONCE_VAL;
-    }
+    //if (eidPref.getEidAddr().isUnspecified()) {
+    //    EV << "Cannot send CacheSync containing default MapCache record!" << endl;
+    //    return DEFAULT_NONCE_VAL;
+    //}
 
     LISPCacheSync* lcs = new LISPCacheSync(CACHESYNC_MSG);
 
@@ -1316,7 +1330,7 @@ unsigned long LISPCore::sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eid
 
     lcs->setAckBit(MapCache->isSyncAck() ? true : false);
 
-    if (MapCache->getSyncType() == LISPMapCache::SYNC_NAIVE) {
+    if (MapCache->getSyncType() == LISPMapCache::SYNC_NAIVE || eidPref.getEidAddr().isUnspecified()) {
         //TRecords
         for (MapStorageItem it = MapCache->getMappingStorage().begin();
                 it != MapCache->getMappingStorage().end(); ++it) {
@@ -1444,8 +1458,12 @@ void LISPCore::initSignals() {
     sigFrwd     = registerSignal(SIG_PACKET_FORWARD);
     sigDrop     = registerSignal(SIG_PACKET_DROP);
 
-    MCRestartListener = new LISPMCListener(MapCache);
-    this->getParentModule()->getParentModule()->subscribe("SIG-IFACEDOWN", MCRestartListener);
+    DownListener = new LISPDownLis(MapCache);
+    this->getParentModule()->getParentModule()->subscribe("SIG-IFACEDOWN", DownListener);
+
+    UpListener = new LISPUpLis(MapCache, this);
+    this->getParentModule()->getParentModule()->getParentModule()->subscribe("SIG-PEERUP", UpListener);
+
 
 }
 

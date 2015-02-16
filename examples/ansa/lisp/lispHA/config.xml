@@ -269,11 +269,11 @@
                
         	<LISP>        	
         		<MapServer ipv4="enabled" ipv6="enabled">
-        			<Site name="Site A" key="HesloA">
+        			<Site name="Site-A" key="HesloA">
 	        			<EID address="192.168.1.0/24" />
 						<EID address="2001:db8:a::/64" />
         			</Site>
-        			<Site name="Site B" key="HesloB">
+        			<Site name="Site-B" key="HesloB">
 	        		    <EID address="192.168.2.0/24" />	        		     		        		    
 						<EID address="2001:db8:b::/64" />
 	       			</Site>

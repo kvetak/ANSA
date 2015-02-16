@@ -1,15 +1,15 @@
-file 1229182 1421947291                                         
+file 1229182 1423657086                                         
 version 2
-run CacheSyncNaive-2outages-0-20150122-18:21:30-7676
+run CacheSyncNaive-2outages-0-20150211-13:18:06-1628
 attr configname CacheSyncNaive-2outages
-attr datetime 20150122-18:21:30
+attr datetime 20150211-13:18:06
 attr experiment CacheSyncNaive-2outages
 attr inifile omnetpp.ini
 attr iterationvars ""
 attr iterationvars2 $repetition=0
 attr measurement ""
 attr network LispTestbed
-attr processid 7676
+attr processid 1628
 attr repetition 0
 attr replication #0
 attr resultdir results

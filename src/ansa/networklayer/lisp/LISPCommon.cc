@@ -129,6 +129,10 @@ const           char*   SYNCNAIVE_PARVAL        = "Naive";
 const           char*   SYNCSMART_PARVAL        = "Smart";
 const           char*   SYNCACK_PAR             = "cacheSyncAck";
 const           char*   ADVERTONLYOWNEID_PAR    = "advertOnlyOwnEids";
+const           char*   SSADDR_PAR              = "ssAddressType";
+const           char*   SSADDR_NONLISP_PARVAL   = "nonLISP";
+const           char*   SSADDR_RLOC_PARVAL      = "RLOC";
+const           char*   SSADDR_EID_PARVAL       = "EID";
 
 // --------------- MODULES ---------------
 const           char*   MAPDB_MOD               = "lispMapDatabase";
