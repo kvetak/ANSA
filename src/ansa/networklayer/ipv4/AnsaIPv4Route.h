@@ -52,7 +52,8 @@ class ANSAIPv4Route : public IPv4Route
             pOSPFNSSAext1,   //OSPF NSSA external type 1 route - N1
             pOSPFNSSAext2,   //OSPF NSSA external type 2 route - N2
             pEIGRP,          //EIGRP          - D
-            pEIGRPext        //EIGRP external - EX
+            pEIGRPext,       //EIGRP external - EX
+            pBABEL           //BABEL
         };
 
         /** Cisco like administrative distances */
@@ -67,6 +68,7 @@ class ANSAIPv4Route : public IPv4Route
             dOSPF = 110,
             dISIS = 115,
             dRIP = 120,
+            dBABEL = 125,
             dEGP = 140,
             dODR = 160,
             dEIGRPExternal = 170,

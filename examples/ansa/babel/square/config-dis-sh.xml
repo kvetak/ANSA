@@ -1,0 +1,230 @@
+<Devices>
+	<!-- R1 -->
+	<Router id="2001:db8:a::1">
+        <Interfaces>
+            <Interface name="eth2">
+            	<IPAddress>10.0.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:a::1/64</IPv6Address>
+                <Babel>
+               		<AFDistribute>IPvX</AFDistribute>
+               		<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth0">
+            	<IPAddress>10.0.12.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+				<IPv6Address>2001:db8:12::1/64</IPv6Address>
+				<IPv6Address>fe80:12::1/10</IPv6Address>
+				<Babel>
+					<AFDistribute>IPvX</AFDistribute>
+					<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>10.0.14.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+				<IPv6Address>2001:db8:14::1/64</IPv6Address>
+				<IPv6Address>fe80:14::1/10</IPv6Address>
+				<Babel>
+					<AFDistribute>IPvX</AFDistribute>
+					<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	1111:1111:1111:1111
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+    </Router>
+    
+    <!-- R2 -->
+    <Router id="2001:db8:b::1">
+        <Interfaces>
+            <Interface name="eth2">
+            	<IPAddress>10.0.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+
+                <IPv6Address>2001:db8:b::1/64</IPv6Address>
+				<Babel>
+					<AFDistribute>IPvX</AFDistribute>
+					<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth0">
+            	<IPAddress>10.0.12.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:12::2/64</IPv6Address>
+                <IPv6Address>fe80:12::2/10</IPv6Address>
+                <Babel>
+                	<AFDistribute>IPvX</AFDistribute>
+                	<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>10.0.23.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:23::2/64</IPv6Address>
+                <IPv6Address>fe80:23::2/10</IPv6Address>
+                <Babel>
+                	<AFDistribute>IPvX</AFDistribute>
+                	<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	2222:2222:2222:2222
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+
+    </Router>
+	<!-- R3 -->
+	<Router id="2001:db8:c::1">
+        <Interfaces>
+            <Interface name="eth2">
+            	<IPAddress>10.0.3.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:c::1/64</IPv6Address>
+                <Babel>
+               		<AFDistribute>IPvX</AFDistribute>
+               		<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth0">
+            	<IPAddress>10.0.34.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+				<IPv6Address>2001:db8:34::3/64</IPv6Address>
+				<IPv6Address>fe80:34::3/10</IPv6Address>
+				<Babel>
+					<AFDistribute>IPvX</AFDistribute>
+					<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>10.0.23.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+				<IPv6Address>2001:db8:23::3/64</IPv6Address>
+				<IPv6Address>fe80:23::3/10</IPv6Address>
+				<Babel>
+					<AFDistribute>IPvX</AFDistribute>
+					<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	3333:3333:3333:3333
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+    </Router>
+    
+    <!-- R4 -->
+    <Router id="2001:db8:d::1">
+        <Interfaces>
+            <Interface name="eth2">
+            	<IPAddress>10.0.4.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+
+                <IPv6Address>2001:db8:d::1/64</IPv6Address>
+				<Babel>
+					<AFDistribute>IPvX</AFDistribute>
+					<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth0">
+            	<IPAddress>10.0.34.4</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:34::4/64</IPv6Address>
+                <IPv6Address>fe80:34::4/10</IPv6Address>
+                <Babel>
+                	<AFDistribute>IPvX</AFDistribute>
+                	<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>10.0.14.4</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:14::4/64</IPv6Address>
+                <IPv6Address>fe80:14::4/10</IPv6Address>
+                <Babel>
+                	<AFDistribute>IPvX</AFDistribute>
+                	<SplitHorizon>false</SplitHorizon>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	4444:4444:4444:4444
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+
+    </Router>
+    <Host id="2001:db8:a::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.1.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:a::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>10.0.1.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:a::1</DefaultRouter6>
+	</Host>
+	<Host id="2001:db8:b::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>10.0.2.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:b::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>10.0.2.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:b::1</DefaultRouter6>
+	</Host>
+    <Host id="2001:db8:c::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.3.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:c::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.3.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:c::1</DefaultRouter6>
+	</Host>
+	<Host id="2001:db8:d::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.4.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:d::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.4.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:d::1</DefaultRouter6>
+	</Host>
+</Devices>

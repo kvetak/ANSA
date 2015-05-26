@@ -104,6 +104,7 @@ const char *ANSAIPv6Route::getRouteSrcName() const
                 case pOSPFNSSAext2: return "ON2";
                 case pEIGRP: return "D";
                 case pEIGRPext: return "EX";
+                case pBABEL: return "BA";
                 default: return "?";
             }
 

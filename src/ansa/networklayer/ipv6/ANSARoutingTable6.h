@@ -55,7 +55,8 @@ class ANSAIPv6Route : public IPv6Route
         pOSPFNSSAext1,   //OSPF NSSA ext 1
         pOSPFNSSAext2,   //OSPF NSSA ext 2
         pEIGRP,          //EIGRP
-        pEIGRPext        //EIGRP external
+        pEIGRPext,       //EIGRP external
+        pBABEL           //BABEL
     };
 
     /** Cisco like administrative distances (includes IPv4 protocols)*/
@@ -70,6 +71,7 @@ class ANSAIPv6Route : public IPv6Route
         dOSPF = 110,
         dISIS = 115,
         dRIP = 120,
+        dBABEL = 125,
         dEGP = 140,
         dODR = 160,
         dEIGRPExternal = 170,

@@ -1,0 +1,228 @@
+<Devices>
+	<!-- R1 -->
+	<Router id="2001:db8:a::1">
+        <Interfaces>
+            <Interface name="eth0">
+            	<IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::1/64</IPv6Address>
+                
+                <Babel>
+                	<AFSend>passive</AFSend>
+                	<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>172.16.12.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:12::1/64</IPv6Address>
+                
+                <Babel>
+                	<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+
+            </Interface>
+            <Interface name="wlan0">
+            	<IPAddress>172.16.123.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:123::1/64</IPv6Address>
+				<IPv6Address>fe80:123::1/10</IPv6Address>
+				
+				<Babel>
+					<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+            <Babel>
+	            <RouterId>
+	            	1111:1111:1111:1111
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+    </Router>
+    
+    <!-- R2 -->
+    <Router id="2001:db8:b::1">
+        <Interfaces>
+            <Interface name="wlan0">
+            	<IPAddress>172.16.123.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+
+                <IPv6Address>2001:db8:123::2/64</IPv6Address>
+                <IPv6Address>fe80:123::2/10</IPv6Address>
+                
+                <Babel>
+					<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+            <Interface name="eth0">
+            	<IPAddress>192.168.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:b::1/64</IPv6Address>
+                
+                <Babel>
+                	<AFSend>passive</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>172.16.12.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:12::2/64</IPv6Address>
+                
+                <Babel>
+                	<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	2222:2222:2222:2222
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+        
+        <Routing6>
+        </Routing6>
+    </Router>
+
+    <!-- R3 -->
+    <Router id="2001:db8:c::1">
+        <Interfaces>
+            <Interface name="wlan0">
+            	<IPAddress>172.16.123.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+
+                <IPv6Address>2001:db8:123::3/64</IPv6Address>
+                <IPv6Address>fe80:123::3/10</IPv6Address>
+                
+                <Babel>
+					<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+            <Interface name="eth0">
+            	<IPAddress>192.168.3.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:c::1/64</IPv6Address>
+                
+                <Babel>
+                	<AFSend>passive</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>172.16.34.3</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:34::3/64</IPv6Address>
+                
+                <Babel>
+					<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	3333:3333:3333:3333
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+    </Router>
+    
+        <!-- R4 -->
+    <Router id="2001:db8:d::1">
+        <Interfaces>
+            <Interface name="eth0">
+            	<IPAddress>192.168.4.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:d::1/64</IPv6Address>
+                
+                <Babel>
+                	<AFSend>passive</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+            <Interface name="eth1">
+            	<IPAddress>172.16.34.4</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                
+                <IPv6Address>2001:db8:34::4/64</IPv6Address>
+                
+                <Babel>
+					<AFSend>IPv4</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
+                </Babel>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<Babel>
+        		<RouterId>
+	            	4444:4444:4444:4444
+	        	</RouterId>
+        	</Babel>
+        </Routing>
+    </Router>
+    
+    <Host id="2001:db8:a::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:a::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.1.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:a::1</DefaultRouter6>
+	</Host>
+	<Host id="2001:db8:b::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.2.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:b::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.2.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:b::1</DefaultRouter6>
+	</Host>
+	    <Host id="2001:db8:c::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.3.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:c::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.3.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:c::1</DefaultRouter6>
+	</Host>
+	<Host id="2001:db8:d::2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.4.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+				<IPv6Address>2001:db8:d::2/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.4.1</DefaultRouter>
+		<DefaultRouter6>2001:db8:d::1</DefaultRouter6>
+	</Host>
+</Devices>

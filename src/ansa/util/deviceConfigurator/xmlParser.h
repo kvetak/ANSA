@@ -77,6 +77,9 @@ class xmlParser {
 
       // configuration for LISP
       static cXMLElement* GetLISPMapServers(cXMLElement *ms, cXMLElement *device);
+
+      // configuration for Babel
+      static cXMLElement *GetBabelProcess(cXMLElement *device);
 };
 
 #endif /* XMLPARSER_H_ */

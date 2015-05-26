@@ -614,3 +614,26 @@ cXMLElement* xmlParser::GetLISPMapServers(cXMLElement *ms, cXMLElement *device)
     }
     return ms;
 }
+
+//
+// - Babel configuration
+//
+
+cXMLElement *xmlParser::GetBabelProcess(cXMLElement *device)
+{
+
+    if (device == NULL)
+    {
+        return NULL;
+    }
+
+    cXMLElement *routing = device->getFirstChildWithTag("Routing");
+    if (routing == NULL)
+    {
+        return NULL;
+    }
+
+    return routing->getFirstChildWithTag("Babel");
+}
+
+// - End of Babel configuration

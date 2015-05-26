@@ -88,6 +88,7 @@ const char *ANSAIPv4Route::getRouteSrcName() const
                 case pOSPFNSSAext2: return "N2";
                 case pEIGRP: return "D";
                 case pEIGRPext: return "EX";
+                case pBABEL: return "BA";
                 default: return "?";
             }
     }

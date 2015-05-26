@@ -69,6 +69,13 @@
 /* END IS-IS */
 /* END TRILL */
 
+/* Babel */
+#include "BabelMain.h"
+#include "BabelInterfaceTable.h"
+#include "IBabelCostComputation.h"
+/* End Babel */
+
+
 
 
 class DeviceConfigurator : public cSimpleModule {
@@ -250,6 +257,14 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule);
 
+
+      /////////////////////////////
+      // configuration for Babel //
+      /////////////////////////////
+      void loadBabelConfig(BabelMain *bMain);
+      void loadBabelProcessConfig(cXMLElement *device, BabelMain *bMain);
+      void loadBabelInterfacesConfig(cXMLElement *device, BabelMain *bMain);
+      void loadBabelInterface(cXMLElement *ifaceElem, BabelMain *bMain, BabelInterface *bIface);
 };
 
 #endif
