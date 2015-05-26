@@ -22,7 +22,7 @@
 #include "BabelMain.h"
 #include "InterfaceTableAccess.h"
 #include "deviceConfigurator.h"
-#include "Ipv6InterfaceData.h"
+#include "IPv6InterfaceData.h"
 #include "UDPControlInfo_m.h"
 #include <cmath>
 
