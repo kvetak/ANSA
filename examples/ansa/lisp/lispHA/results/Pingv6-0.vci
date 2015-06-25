@@ -1,4 +1,4 @@
-file 191922 1423603591                                          
+file 191922 1423607191                                          
 version 2
 run Pingv6-0-20150210-22:10:07-6748
 attr configname Pingv6
@@ -15,1006 +15,1005 @@ attr replication #0
 attr resultdir results
 attr runnumber 0
 attr seedset 0
-
 vector 47  LispHA.xTR_A1.LISP.lispMsgLogger  msg-size:vector  ETV
-attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
-attr title  "msg, vector"
-vector 119  LispHA.xTR_B1.LISP.lispMsgLogger  msg-size:vector  ETV
-attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
-attr title  "msg, vector"
-vector 418  LispHA.xTR_A2.LISP.lispMsgLogger  msg-size:vector  ETV
-attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
-attr title  "msg, vector"
-vector 466  LispHA.xTR_B2.LISP.lispMsgLogger  msg-size:vector  ETV
-attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
-attr title  "msg, vector"
-vector 0  LispHA.xTR_A1.UDP  sentPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  sentPk
-attr title  "packets sent, vector(packetBytes)"
-vector 72  LispHA.xTR_B1.UDP  sentPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  sentPk
-attr title  "packets sent, vector(packetBytes)"
-vector 371  LispHA.xTR_A2.UDP  sentPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  sentPk
-attr title  "packets sent, vector(packetBytes)"
-vector 419  LispHA.xTR_B2.UDP  sentPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  sentPk
-attr title  "packets sent, vector(packetBytes)"
-vector 5  LispHA.xTR_A1.networkLayer.arp  sentReq:vector  ETV
-attr title  "ARP request sent, vector"
-vector 7  LispHA.xTR_A1.networkLayer.arp  initiatedResolution:vector  ETV
-attr title  "ARP initiated resolutions, vector"
-vector 77  LispHA.xTR_B1.networkLayer.arp  sentReq:vector  ETV
-attr title  "ARP request sent, vector"
-vector 79  LispHA.xTR_B1.networkLayer.arp  initiatedResolution:vector  ETV
-attr title  "ARP initiated resolutions, vector"
-vector 376  LispHA.xTR_A2.networkLayer.arp  sentReq:vector  ETV
-attr title  "ARP request sent, vector"
-vector 378  LispHA.xTR_A2.networkLayer.arp  initiatedResolution:vector  ETV
-attr title  "ARP initiated resolutions, vector"
-vector 424  LispHA.xTR_B2.networkLayer.arp  sentReq:vector  ETV
-attr title  "ARP request sent, vector"
-vector 426  LispHA.xTR_B2.networkLayer.arp  initiatedResolution:vector  ETV
-attr title  "ARP initiated resolutions, vector"
-vector 19  LispHA.xTR_A1.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 91  LispHA.xTR_B1.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 390  LispHA.xTR_A2.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 438  LispHA.xTR_B2.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 15  LispHA.xTR_A1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 87  LispHA.xTR_B1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 386  LispHA.xTR_A2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 434  LispHA.xTR_B2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 10  LispHA.xTR_A1.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 82  LispHA.xTR_B1.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 381  LispHA.xTR_A2.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 429  LispHA.xTR_B2.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 324  LispHA.Core.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 325  LispHA.Core.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 348  LispHA.Core.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 349  LispHA.Core.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 336  LispHA.Core.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 337  LispHA.Core.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 360  LispHA.Core.eth[4].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 361  LispHA.Core.eth[4].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 333  LispHA.Core.eth[1].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 357  LispHA.Core.eth[3].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 345  LispHA.Core.eth[2].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 369  LispHA.Core.eth[4].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 332  LispHA.Core.eth[1].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 356  LispHA.Core.eth[3].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 344  LispHA.Core.eth[2].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 368  LispHA.Core.eth[4].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 328  LispHA.Core.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 352  LispHA.Core.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 340  LispHA.Core.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 364  LispHA.Core.eth[4].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 323  LispHA.Core.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 347  LispHA.Core.eth[3].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 335  LispHA.Core.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 359  LispHA.Core.eth[4].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 11  LispHA.xTR_A1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 12  LispHA.xTR_A1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 83  LispHA.xTR_B1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 84  LispHA.xTR_B1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 382  LispHA.xTR_A2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 383  LispHA.xTR_A2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 430  LispHA.xTR_B2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 431  LispHA.xTR_B2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 20  LispHA.xTR_A1.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 92  LispHA.xTR_B1.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 391  LispHA.xTR_A2.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 439  LispHA.xTR_B2.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 307  LispHA.Core.networkLayer.arp  sentReq:vector  ETV
-attr title  "ARP request sent, vector"
-vector 309  LispHA.Core.networkLayer.arp  initiatedResolution:vector  ETV
-attr title  "ARP initiated resolutions, vector"
-vector 320  LispHA.Core.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 316  LispHA.Core.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 311  LispHA.Core.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 59  LispHA.MRMS.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 60  LispHA.MRMS.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 68  LispHA.MRMS.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 67  LispHA.MRMS.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 63  LispHA.MRMS.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 372  LispHA.xTR_A2.UDP  rcvdPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rcvdPk
-attr title  "packets received, vector(packetBytes)"
-vector 373  LispHA.xTR_A2.UDP  passedUpPk:vector(count)  ETV
-attr interpolationmode  none
-attr title  "packets passed up, vector(count)"
-vector 1  LispHA.xTR_A1.UDP  rcvdPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rcvdPk
-attr title  "packets received, vector(packetBytes)"
-vector 2  LispHA.xTR_A1.UDP  passedUpPk:vector(count)  ETV
-attr interpolationmode  none
-attr title  "packets passed up, vector(count)"
-vector 73  LispHA.xTR_B1.UDP  rcvdPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rcvdPk
-attr title  "packets received, vector(packetBytes)"
-vector 74  LispHA.xTR_B1.UDP  passedUpPk:vector(count)  ETV
-attr interpolationmode  none
-attr title  "packets passed up, vector(count)"
-vector 58  LispHA.MRMS.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 312  LispHA.Core.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 313  LispHA.Core.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 321  LispHA.Core.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 420  LispHA.xTR_B2.UDP  rcvdPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rcvdPk
-attr title  "packets received, vector(packetBytes)"
-vector 421  LispHA.xTR_B2.UDP  passedUpPk:vector(count)  ETV
-attr interpolationmode  none
-attr title  "packets passed up, vector(count)"
-vector 49  LispHA.MRMS.UDP  rcvdPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rcvdPk
-attr title  "packets received, vector(packetBytes)"
-vector 50  LispHA.MRMS.UDP  passedUpPk:vector(count)  ETV
-attr interpolationmode  none
-attr title  "packets passed up, vector(count)"
-vector 71  LispHA.MRMS.LISP.lispMsgLogger  msg-size:vector  ETV
-attr source  sum(sigLispSizeSend)+sum(sigLispSizeRecv)
-attr title  "msg, vector"
-vector 48  LispHA.MRMS.UDP  sentPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  sentPk
-attr title  "packets sent, vector(packetBytes)"
-vector 428  LispHA.xTR_B2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 450  LispHA.xTR_B2.eth[1].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 462  LispHA.xTR_B2.eth[2].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 446  LispHA.xTR_B2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 458  LispHA.xTR_B2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 441  LispHA.xTR_B2.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 453  LispHA.xTR_B2.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 107  LispHA.xTR_B1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 108  LispHA.xTR_B1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 182  LispHA.S2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 183  LispHA.S2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 116  LispHA.xTR_B1.eth[2].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 468  LispHA.S2.relayUnit  "buffer level"  ETV
-vector 175  LispHA.S2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 197  LispHA.S2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 208  LispHA.S2.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 170  LispHA.S2.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 192  LispHA.S2.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 203  LispHA.S2.eth[3].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 95  LispHA.xTR_B1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 96  LispHA.xTR_B1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 269  LispHA.Hv4_B.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 270  LispHA.Hv4_B.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 291  LispHA.Hv6_B.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 292  LispHA.Hv6_B.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 104  LispHA.xTR_B1.eth[1].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 278  LispHA.Hv4_B.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 300  LispHA.Hv6_B.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 81  LispHA.xTR_B1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 103  LispHA.xTR_B1.eth[1].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 115  LispHA.xTR_B1.eth[2].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 99  LispHA.xTR_B1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 111  LispHA.xTR_B1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 94  LispHA.xTR_B1.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 106  LispHA.xTR_B1.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 454  LispHA.xTR_B2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 455  LispHA.xTR_B2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 171  LispHA.S2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 172  LispHA.S2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 463  LispHA.xTR_B2.eth[2].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 186  LispHA.S2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 181  LispHA.S2.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 442  LispHA.xTR_B2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 443  LispHA.xTR_B2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 451  LispHA.xTR_B2.eth[1].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 9  LispHA.xTR_A1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 31  LispHA.xTR_A1.eth[1].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 43  LispHA.xTR_A1.eth[2].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 27  LispHA.xTR_A1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 39  LispHA.xTR_A1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 22  LispHA.xTR_A1.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 34  LispHA.xTR_A1.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 406  LispHA.xTR_A2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 407  LispHA.xTR_A2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 124  LispHA.S1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 125  LispHA.S1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 415  LispHA.xTR_A2.eth[2].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 467  LispHA.S1.relayUnit  "buffer level"  ETV
-vector 139  LispHA.S1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 150  LispHA.S1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 161  LispHA.S1.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 134  LispHA.S1.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 145  LispHA.S1.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 156  LispHA.S1.eth[3].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 394  LispHA.xTR_A2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 395  LispHA.xTR_A2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 225  LispHA.Hv4_A.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 226  LispHA.Hv4_A.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 247  LispHA.Hv6_A.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 248  LispHA.Hv6_A.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 403  LispHA.xTR_A2.eth[1].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 234  LispHA.Hv4_A.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 256  LispHA.Hv6_A.eth[0].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 57  LispHA.MRMS.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 380  LispHA.xTR_A2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 402  LispHA.xTR_A2.eth[1].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 414  LispHA.xTR_A2.eth[2].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 398  LispHA.xTR_A2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 410  LispHA.xTR_A2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 393  LispHA.xTR_A2.eth[1].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 405  LispHA.xTR_A2.eth[2].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 35  LispHA.xTR_A1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 36  LispHA.xTR_A1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 135  LispHA.S1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 136  LispHA.S1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 44  LispHA.xTR_A1.eth[2].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 128  LispHA.S1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 123  LispHA.S1.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 23  LispHA.xTR_A1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 24  LispHA.xTR_A1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 32  LispHA.xTR_A1.eth[1].encap  decapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  decapPk
-attr title  "packets decapsulated, vector(packetBytes)"
-vector 267  LispHA.Hv4_B.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 277  LispHA.Hv4_B.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 273  LispHA.Hv4_B.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 268  LispHA.Hv4_B.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 193  LispHA.S2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 194  LispHA.S2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 223  LispHA.Hv4_A.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 233  LispHA.Hv4_A.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 229  LispHA.Hv4_A.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 224  LispHA.Hv4_A.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 146  LispHA.S1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 147  LispHA.S1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 245  LispHA.Hv6_A.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 255  LispHA.Hv6_A.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 251  LispHA.Hv6_A.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 246  LispHA.Hv6_A.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 157  LispHA.S1.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 158  LispHA.S1.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 289  LispHA.Hv6_B.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
-attr title  "DAD started, vector"
-vector 299  LispHA.Hv6_B.eth[0].encap  encapPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  encapPk
-attr title  "packets encapsulated, vector(packetBytes)"
-vector 295  LispHA.Hv6_B.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkFromHL
-attr title  "packet bytes from higher layer, vector(packetBytes)"
-vector 290  LispHA.Hv6_B.eth[0].mac  txPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  txPk
-attr title  "packets transmitted, vector(packetBytes)"
-vector 204  LispHA.S2.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  rxPkOk
-attr title  "packets received OK, vector(packetBytes)"
-vector 205  LispHA.S2.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
-attr interpolationmode  none
-attr source  packetSentToUpper
-attr title  "packets passed to higher layer, vector(packetBytes)"
-vector 239  LispHA.Hv6_A.pingApp[0]  pingTxSeq:vector  ETV
-attr interpolationmode  none
-attr title  "ping tx seq, vector"
-vector 46  LispHA.xTR_A1.LISP.lispMapCache  cache-size:vector  ETV
-attr source  sigLispSize
-attr title  "map-cache size, vector"
-vector 118  LispHA.xTR_B1.LISP.lispMapCache  cache-size:vector  ETV
-attr source  sigLispSize
-attr title  "map-cache size, vector"
-vector 240  LispHA.Hv6_A.pingApp[0]  pingRxSeq:vector  ETV
-attr interpolationmode  none
-attr title  "ping rx seq, vector"
-vector 236  LispHA.Hv6_A.pingApp[0]  rtt:vector  ETV
-attr interpolationmode  none
-attr title  "ping round-trip time, vector"
-attr unit  s
-vector 237  LispHA.Hv6_A.pingApp[0]  numLost:vector  ETV
-attr interpolationmode  none
-attr title  "pings lost, vector"
-vector 53  LispHA.MRMS.networkLayer.arp  sentReq:vector  ETV
-attr title  "ARP request sent, vector"
-vector 55  LispHA.MRMS.networkLayer.arp  initiatedResolution:vector  ETV
-attr title  "ARP initiated resolutions, vector"
-0	37153 926 30 8772 0 148.00001962 41 51 143 4075 425421
-1	38079 680 229 8525 0.0000298 145.00010962 27 51 112 2447 237605
-2	38759 657 229 8525 0.0000298 145.00010962 27 1 27 378 6930
-5	39416 33 48 6681 0 121.00001962 2 1 1 2 2
-7	39449 33 48 6681 0 121.00001962 2 1 1 2 2
-9	39482 72 666 666 0.237517510028 0.237517510028 3 1 1 3 3
-10	39554 1224 69 8779 0.00000576 148.00003226 47 64 181 6017 818901
-11	40778 764 113 8521 0.00001162 145.00010962 29 64 150 3601 470757
-12	41542 764 113 8521 0.00001162 145.00010962 29 64 150 3601 470757
-15	42306 1139 65 8777 0 148.00001962 47 64 181 6017 818901
-19	43445 1133 61 8776 0 148.00001962 47 28 163 5111 612789
-20	44578 757 117 8522 0.00001162 145.00010962 29 28 132 3043 347853
-22	45335 842 681 8968 0.237523270028 149.000054159998 32 64 114 2748 255672
-23	46177 1536 766 8953 0.250835250648 149.000048399998 58 64 114 5062 477868
-24	47713 1536 766 8953 0.250835250648 149.000048399998 58 64 114 5062 477868
-27	49249 846 677 8964 0.237517510028 149.000048399998 32 64 114 2748 255672
-31	50095 832 674 8963 0.237517510028 149.000048399998 32 40 96 2064 157824
-32	50927 1509 769 8955 0.250835250648 149.000048399998 58 40 96 3832 298432
-34	52436 107 682 1701 0.237523270028 10.036842243701 4 64 64 256 16384
-35	52543 108 747 1756 0.250829440648 10.155306069053 4 64 64 256 16384
-36	52651 108 747 1756 0.250829440648 10.155306069053 4 64 64 256 16384
-39	52759 107 678 1700 0.237517510028 10.036836483701 4 64 64 256 16384
-43	52866 107 675 1699 0.237517510028 10.036836483701 4 40 40 160 6400
-44	52973 108 750 1757 0.250829440648 10.155306069053 4 40 40 160 6400
-46	53081 27 3030 3030 70.000115479999 70.000115479999 1 2 2 2 4
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg, vector"
 47	53108 689 1 7232 0 122.000062039997 28 201 1766 -1.#IND -1.#IND
-48	53797 265 399 8166 0.00004702 140.00002378 10 63 102 970 95482
-49	54062 436 397 8164 0.00004702 140.00002378 16 102 143 1714 186554
-50	54498 411 397 8164 0.00004702 140.00002378 16 1 16 136 1496
-53	54909 28 6433 6433 120.000062179997 120.000062179997 1 1 1 1 1
-55	54937 28 6433 6433 120.000062179997 120.000062179997 1 1 1 1 1
-57	54965 25 719 719 0.243650617939 0.243650617939 1 1 1 1 1
-58	54990 426 296 8173 0.00003508 140.00003562 16 64 140 1734 208218
-59	55416 487 205 8160 0.00002932 140.00002378 18 64 181 2450 348114
-60	55903 487 205 8160 0.00002932 140.00002378 18 64 181 2450 348114
-63	56390 426 212 8171 0.00002932 140.00002378 16 64 140 1734 208218
-67	56816 425 211 8170 0.00002932 140.00002378 16 28 122 1386 146250
-68	57241 487 206 8161 0.00002932 140.00002378 18 28 163 2090 263082
-71	57728 723 398 8165 0.00004702 140.00002378 26 188 2372 -1.#IND -1.#IND
-72	58451 1065 32 8834 0 148.00008424 47 51 143 4638 479270
-73	59516 848 230 8794 0.0000298 148.000045 33 51 112 3018 291486
-74	60364 820 230 8794 0.0000298 148.000045 33 1 33 561 12529
-77	61184 11 50 50 0 0 1 1 1 1 1
-79	61195 11 50 50 0 0 1 1 1 1 1
-81	61206 75 614 614 0.158668476459 0.158668476459 3 1 1 3 3
-82	61281 1386 70 8841 0.00000576 148.00009688 53 64 181 6808 924202
-83	62667 910 114 8790 0.00001162 148.000045 35 64 150 4400 576698
-84	63577 910 114 8790 0.00001162 148.000045 35 64 150 4400 576698
-87	64487 1253 66 8839 0 148.00008424 53 64 181 6808 924202
-91	65740 1246 62 8838 0 148.00008424 53 28 163 5794 691558
-92	66986 903 118 8791 0.00001162 148.000045 35 28 132 3734 426974
-94	67889 752 629 8802 0.158674236459 148.00005476 29 64 114 2406 216684
-95	68641 1503 599 8829 0.021322437613 148.00008424 57 64 114 4948 464872
-96	70144 1503 599 8829 0.021322437613 148.00008424 57 64 114 4948 464872
-99	71647 734 625 8799 0.158668476459 148.000045 29 64 114 2406 216684
-103	72381 752 622 8798 0.158668476459 148.000045 29 40 96 1776 130176
-104	73133 1534 602 8830 0.021322437613 148.00008424 57 40 96 3736 289216
-106	74667 112 630 1801 0.158674236459 10.176135345666 4 64 64 256 16384
-107	74779 111 580 1734 0.021316627613 10.135153143773 4 64 64 256 16384
-108	74890 111 580 1734 0.021316627613 10.135153143773 4 64 64 256 16384
-111	75001 112 626 1800 0.158668476459 10.176129585666 4 64 64 256 16384
-115	75113 112 623 1799 0.158668476459 10.176129585666 4 40 40 160 6400
-116	75225 111 583 1735 0.021316627613 10.135153143773 4 40 40 160 6400
-118	75336 28 3399 3399 73.000181319999 73.000181319999 1 2 2 2 4
+vector 119  LispHA.xTR_B1.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg, vector"
 119	75364 1124 11 8189 0 140.00004756 44 295 3220 -1.#IND -1.#IND
-123	76488 1594 763 8949 0.250835200648 149.000048349998 58 64 114 5062 477868
-124	78082 878 685 8969 0.237523320028 149.000054209998 32 64 114 2748 255672
-125	78960 878 685 8969 0.237523320028 149.000054209998 32 64 114 2748 255672
-128	79838 1574 756 8931 0.250829440648 149.000041629999 58 64 114 5062 477868
-134	81412 896 700 8975 0.237529080028 149.000059969998 32 64 64 2048 131072
-135	82308 850 748 8886 0.250829440648 149.000030009999 31 64 114 2534 224876
-136	83158 850 748 8886 0.250829440648 149.000030009999 31 64 114 2534 224876
-139	84008 880 693 8972 0.237523320028 149.000054209998 32 64 64 2048 131072
-145	84888 990 701 8939 0.237529080028 149.000047389999 36 64 64 2304 147456
-146	85878 112 821 1815 0.687992112841 10.304945821071 4 64 64 256 16384
-147	85990 112 821 1815 0.687992112841 10.304945821071 4 64 64 256 16384
-150	86102 990 694 8933 0.237523320028 149.000041629999 36 64 64 2304 147456
-156	87092 1652 702 8950 0.237529080028 149.000048349998 60 64 114 5090 468260
-157	88744 1040 854 8925 0.740832548253 149.000041629999 39 64 114 3846 400044
-158	89784 1040 854 8925 0.740832548253 149.000041629999 39 64 114 3846 400044
-161	90824 1640 695 8929 0.237523320028 149.000041629999 60 64 114 5090 468260
-170	92464 1560 596 8828 0.021322387613 148.00008419 57 64 114 4948 464872
-171	94024 787 633 8803 0.158674286459 148.00005481 29 64 114 2406 216684
-172	94811 787 633 8803 0.158674286459 148.00005481 29 64 114 2406 216684
-175	95598 1544 589 8825 0.021316627613 148.00007443 57 64 114 4948 464872
-181	97142 896 648 8727 0.158680046459 147.000089629998 32 64 64 2048 131072
-182	98038 955 581 8739 0.021316627613 147.000095489998 35 64 114 2990 276860
-183	98993 955 581 8739 0.021316627613 147.000095489998 35 64 114 2990 276860
-186	99948 876 641 8695 0.158674286459 147.00008205 32 64 64 2048 131072
-192	100824 982 597 8708 0.021322387613 147.00008781 36 64 64 2304 147456
-193	101806 112 788 1918 0.635676685897 10.541837481258 4 64 64 256 16384
-194	101918 112 788 1918 0.635676685897 10.541837481258 4 64 64 256 16384
-197	102030 982 590 8696 0.021316627613 147.00008205 36 64 64 2304 147456
-203	103012 1682 598 8809 0.021322387613 148.00006457 61 64 114 5204 481256
-204	104694 1018 887 8822 0.955363789936 148.00007443 38 64 114 3732 387048
-205	105712 1018 887 8822 0.955363789936 148.00007443 38 64 114 3732 387048
-208	106730 1658 591 8806 0.021316627613 148.00005481 61 64 114 5204 481256
-223	108388 26 814 814 0.687986302841 0.687986302841 1 1 1 1 1
-224	108414 112 820 1814 0.687992062841 10.304945771071 4 64 64 256 16384
-225	108526 990 704 8941 0.237529130028 149.000047439999 36 64 64 2304 147456
-226	109516 990 704 8941 0.237529130028 149.000047439999 36 64 64 2304 147456
-229	110506 112 818 1812 0.687986302841 10.304940011071 4 64 64 256 16384
-233	110618 112 817 1811 0.687986302841 10.304940011071 4 40 40 160 6400
-234	110730 990 707 8943 0.237529130028 149.000047439999 36 40 40 1440 57600
-236	111720 842 3527 8877 76.00012924 148.00012924 25 0.00012924 0.00014086 0.00324262 4.20713002e-007
-237	112562 24 3527 3527 76.00012924 76.00012924 1 2 2 2 4
-239	112586 439 2699 8752 70 148 27 0 26 351 6201
-240	113025 634 3527 8877 76.00012924 148.00012924 25 2 26 350 6200
-245	113659 26 847 847 0.740826738253 0.740826738253 1 1 1 1 1
-246	113685 1032 853 8923 0.740832498253 149.000041579999 39 64 114 3846 400044
-247	114717 1651 705 8954 0.237529130028 149.000048399998 60 64 114 5090 468260
-248	116368 1651 705 8954 0.237529130028 149.000048399998 60 64 114 5090 468260
-251	118019 779 851 8916 0.740826738253 149.000035819999 39 64 114 3846 400044
-255	118798 752 850 8915 0.740826738253 149.000035819999 39 40 96 3072 268032
-256	119550 1626 708 8956 0.237529130028 149.000048399998 60 40 96 3800 286400
-267	121176 26 781 781 0.635670875897 0.635670875897 1 1 1 1 1
-268	121202 112 787 1917 0.635676635897 10.541837431258 4 64 64 256 16384
-269	121314 982 600 8710 0.021322437613 147.00008786 36 64 64 2304 147456
-270	122296 982 600 8710 0.021322437613 147.00008786 36 64 64 2304 147456
-273	123278 112 785 1915 0.635670875897 10.541831671258 4 64 64 256 16384
-277	123390 112 784 1914 0.635670875897 10.541831671258 4 40 40 160 6400
-278	123502 982 603 8712 0.021322437613 147.00008786 36 40 40 1440 57600
-289	124484 26 880 880 0.955357979936 0.955357979936 1 1 1 1 1
-290	124510 1016 886 8821 0.955363739936 148.00007438 38 64 114 3732 387048
-291	125526 1682 601 8810 0.021322437613 148.00006462 61 64 114 5204 481256
-292	127208 1682 601 8810 0.021322437613 148.00006462 61 64 114 5204 481256
-295	128890 1018 884 8818 0.955357979936 148.00006462 38 64 114 3732 387048
-299	129908 992 883 8817 0.955357979936 148.00006462 38 40 96 2976 258816
-300	130900 1656 604 8811 0.021322437613 148.00006462 61 40 96 3896 295616
-307	132556 51 199 6523 0.00002351 120.000085689997 2 1 1 2 2
-309	132607 51 199 6523 0.00002351 120.000085689997 2 1 1 2 2
-311	132658 505 204 8159 0.00002927 140.00002373 18 64 181 2450 348114
-312	133163 442 297 8174 0.00003513 140.00003567 16 64 140 1734 208218
-313	133605 442 297 8174 0.00003513 140.00003567 16 64 140 1734 208218
-316	134047 481 202 8157 0.00002351 140.00001189 18 64 181 2450 348114
-320	134528 481 201 8156 0.00002351 140.00001189 18 28 163 2090 263082
-321	135009 441 298 8175 0.00003513 140.00003567 16 28 122 1386 146250
-323	135450 795 109 8520 0.00001157 145.00010957 29 64 150 3601 470757
-324	136245 1271 73 8780 0.00000581 148.00003231 47 64 181 6017 818901
-325	137516 1271 73 8780 0.00000581 148.00003231 47 64 181 6017 818901
-328	138787 795 101 8518 0.00000581 145.00009693 29 64 150 3601 470757
-332	139582 787 97 8517 0.00000581 145.00009693 29 28 132 3043 347853
-333	140369 1265 77 8781 0.00000581 148.00003231 47 28 163 5111 612789
-335	141634 682 111 8851 0.00001157 148.00010957 25 64 150 3050 393056
-336	142316 553 75 7152 0.00000581 122.000051029997 20 64 140 1936 201140
-337	142869 553 75 7152 0.00000581 122.000051029997 20 64 140 1936 201140
-340	143422 678 103 8849 0.00000581 148.00009693 25 64 150 3050 393056
-344	144100 671 99 8848 0.00000581 148.00009693 25 28 132 2564 288692
-345	144771 547 79 7154 0.00000581 122.000051029997 20 28 122 1516 133196
-347	145318 967 110 8789 0.00001157 148.00004495 35 64 150 4400 576698
-348	146285 1440 74 8842 0.00000581 148.00009693 53 64 181 6808 924202
-349	147725 1440 74 8842 0.00000581 148.00009693 53 64 181 6808 924202
-352	149165 963 102 8787 0.00000581 148.00003231 35 64 150 4400 576698
-356	150128 955 98 8786 0.00000581 148.00003231 35 28 132 3734 426974
-357	151083 1433 78 8843 0.00000581 148.00009693 53 28 163 5794 691558
-359	152516 795 112 8228 0.00001157 142.00004495 29 64 150 3650 483056
-360	153311 553 76 7153 0.00000581 122.000051029997 20 64 140 1936 201140
-361	153864 553 76 7153 0.00000581 122.000051029997 20 64 140 1936 201140
-364	154417 791 104 8226 0.00000581 142.00003231 29 64 150 3650 483056
-368	155208 785 100 8225 0.00000581 142.00003231 29 28 132 3092 358388
-369	155993 547 80 7155 0.00000581 122.000051029997 20 28 122 1516 133196
-371	156540 290 35 7052 0 122.000033539998 14 51 102 1020 78828
-372	156830 623 228 8856 0.0000298 148.00010962 23 51 112 2048 196004
-373	157453 603 228 8856 0.0000298 148.00010962 23 1 23 276 4324
-376	158056 28 53 6834 0 122 2 1 1 2 2
-378	158084 28 53 6834 0 122 2 1 1 2 2
-380	158112 78 729 729 0.250823630648 0.250823630648 3 1 1 3 3
-381	158190 553 71 7150 0.00000576 122.000050979997 20 64 140 1936 201140
-382	158743 681 115 8852 0.00001162 148.00010962 25 64 150 3050 393056
-383	159424 681 115 8852 0.00001162 148.00010962 25 64 150 3050 393056
-386	160105 478 67 7062 0 122.000033539998 20 64 140 1936 201140
-390	160583 472 63 7060 0 122.000033539998 20 28 122 1516 133196
-391	161055 675 119 8853 0.00001162 148.00010962 25 28 132 2564 288692
-393	161730 844 744 8885 0.250829390648 149.000029959999 31 64 114 2534 224876
-394	162574 896 703 8976 0.237529130028 149.000060019998 32 64 64 2048 131072
-395	163470 896 703 8976 0.237529130028 149.000060019998 32 64 64 2048 131072
-398	164366 850 740 8883 0.250823630648 149.000024199999 31 64 114 2534 224876
-402	165216 839 737 8882 0.250823630648 149.000024199999 31 40 96 1856 133376
-403	166055 896 706 8977 0.237529130028 149.000060019998 32 40 40 1280 51200
-405	166951 112 745 1755 0.250829390648 10.155306019053 4 64 64 256 16384
-406	167063 111 684 1702 0.237523320028 10.036842293701 4 64 64 256 16384
-407	167174 111 684 1702 0.237523320028 10.036842293701 4 64 64 256 16384
-410	167285 112 741 1754 0.250823630648 10.155300259053 4 64 64 256 16384
-414	167397 112 738 1753 0.250823630648 10.155300259053 4 40 40 160 6400
-415	167509 111 687 1703 0.237523320028 10.036842293701 4 40 40 160 6400
+vector 418  LispHA.xTR_A2.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg, vector"
 418	167620 663 18 7218 0 122.000061179999 26 201 1628 -1.#IND -1.#IND
-419	168283 295 37 7053 0 122.000033539998 14 51 102 1020 78828
-420	168578 707 331 8233 0.000042599999 142.000045 27 51 112 2496 246180
-421	169285 683 331 8233 0.000042599999 142.000045 27 1 27 378 6930
-424	169968 28 55 6836 0 122 2 1 1 2 2
-426	169996 28 55 6836 0 122 2 1 1 2 2
-428	170024 78 562 562 0.021310817613 0.021310817613 3 1 1 3 3
-429	170102 553 72 7151 0.00000576 122.000050979997 20 64 140 1936 201140
-430	170655 765 116 8229 0.00001162 142.000045 29 64 150 3650 483056
-431	171420 765 116 8229 0.00001162 142.000045 29 64 150 3650 483056
-434	172185 483 68 7063 0 122.000033539998 20 64 140 1936 201140
-438	172668 477 64 7061 0 122.000033539998 20 28 122 1516 133196
-439	173145 759 120 8230 0.00001162 142.000045 29 28 132 3092 358388
-441	173904 949 577 8738 0.021316577613 147.000095439998 35 64 114 2990 276860
-442	174853 896 651 8728 0.158680096459 147.000089679998 32 64 64 2048 131072
-443	175749 896 651 8728 0.158680096459 147.000089679998 32 64 64 2048 131072
-446	176645 921 573 8734 0.021310817613 147.000089679998 35 64 114 2990 276860
-450	177566 906 570 8733 0.021310817613 147.000089679998 35 40 96 2240 170240
-451	178472 896 654 8729 0.158680096459 147.000089679998 32 40 40 1280 51200
-453	179368 111 578 1733 0.021316577613 10.135153093773 4 64 64 256 16384
-454	179479 112 632 1802 0.158674286459 10.176135395666 4 64 64 256 16384
-455	179591 112 632 1802 0.158674286459 10.176135395666 4 64 64 256 16384
-458	179703 111 574 1732 0.021310817613 10.135147333773 4 64 64 256 16384
-462	179814 111 571 1731 0.021310817613 10.135147333773 4 40 40 160 6400
-463	179925 112 635 1803 0.158674286459 10.176135395666 4 40 40 160 6400
+vector 466  LispHA.xTR_B2.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg, vector"
 466	180037 673 24 7219 0 122.000061179999 26 201 1628 -1.#IND -1.#IND
-467	180710 5614 688 8971 0.237523320028 149.000054209998 212 0 128 10152 995280
+vector 0  LispHA.xTR_A1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+0	37153 926 30 8772 0 148.00001962 41 51 143 4075 425421
+vector 72  LispHA.xTR_B1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+72	58451 1065 32 8834 0 148.00008424 47 51 143 4638 479270
+vector 371  LispHA.xTR_A2.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+371	156540 290 35 7052 0 122.000033539998 14 51 102 1020 78828
+vector 419  LispHA.xTR_B2.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+419	168283 295 37 7053 0 122.000033539998 14 51 102 1020 78828
+vector 5  LispHA.xTR_A1.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+5	39416 33 48 6681 0 121.00001962 2 1 1 2 2
+vector 7  LispHA.xTR_A1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+7	39449 33 48 6681 0 121.00001962 2 1 1 2 2
+vector 77  LispHA.xTR_B1.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+77	61184 11 50 50 0 0 1 1 1 1 1
+vector 79  LispHA.xTR_B1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+79	61195 11 50 50 0 0 1 1 1 1 1
+vector 376  LispHA.xTR_A2.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+376	158056 28 53 6834 0 122 2 1 1 2 2
+vector 378  LispHA.xTR_A2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+378	158084 28 53 6834 0 122 2 1 1 2 2
+vector 424  LispHA.xTR_B2.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+424	169968 28 55 6836 0 122 2 1 1 2 2
+vector 426  LispHA.xTR_B2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+426	169996 28 55 6836 0 122 2 1 1 2 2
+vector 19  LispHA.xTR_A1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+19	43445 1133 61 8776 0 148.00001962 47 28 163 5111 612789
+vector 91  LispHA.xTR_B1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+91	65740 1246 62 8838 0 148.00008424 53 28 163 5794 691558
+vector 390  LispHA.xTR_A2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+390	160583 472 63 7060 0 122.000033539998 20 28 122 1516 133196
+vector 438  LispHA.xTR_B2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+438	172668 477 64 7061 0 122.000033539998 20 28 122 1516 133196
+vector 15  LispHA.xTR_A1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+15	42306 1139 65 8777 0 148.00001962 47 64 181 6017 818901
+vector 87  LispHA.xTR_B1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+87	64487 1253 66 8839 0 148.00008424 53 64 181 6808 924202
+vector 386  LispHA.xTR_A2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+386	160105 478 67 7062 0 122.000033539998 20 64 140 1936 201140
+vector 434  LispHA.xTR_B2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+434	172185 483 68 7063 0 122.000033539998 20 64 140 1936 201140
+vector 10  LispHA.xTR_A1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+10	39554 1224 69 8779 0.00000576 148.00003226 47 64 181 6017 818901
+vector 82  LispHA.xTR_B1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+82	61281 1386 70 8841 0.00000576 148.00009688 53 64 181 6808 924202
+vector 381  LispHA.xTR_A2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+381	158190 553 71 7150 0.00000576 122.000050979997 20 64 140 1936 201140
+vector 429  LispHA.xTR_B2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+429	170102 553 72 7151 0.00000576 122.000050979997 20 64 140 1936 201140
+vector 324  LispHA.Core.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+324	136245 1271 73 8780 0.00000581 148.00003231 47 64 181 6017 818901
+vector 325  LispHA.Core.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+325	137516 1271 73 8780 0.00000581 148.00003231 47 64 181 6017 818901
+vector 348  LispHA.Core.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+348	146285 1440 74 8842 0.00000581 148.00009693 53 64 181 6808 924202
+vector 349  LispHA.Core.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+349	147725 1440 74 8842 0.00000581 148.00009693 53 64 181 6808 924202
+vector 336  LispHA.Core.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+336	142316 553 75 7152 0.00000581 122.000051029997 20 64 140 1936 201140
+vector 337  LispHA.Core.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+337	142869 553 75 7152 0.00000581 122.000051029997 20 64 140 1936 201140
+vector 360  LispHA.Core.eth[4].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+360	153311 553 76 7153 0.00000581 122.000051029997 20 64 140 1936 201140
+vector 361  LispHA.Core.eth[4].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+361	153864 553 76 7153 0.00000581 122.000051029997 20 64 140 1936 201140
+vector 333  LispHA.Core.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+333	140369 1265 77 8781 0.00000581 148.00003231 47 28 163 5111 612789
+vector 357  LispHA.Core.eth[3].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+357	151083 1433 78 8843 0.00000581 148.00009693 53 28 163 5794 691558
+vector 345  LispHA.Core.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+345	144771 547 79 7154 0.00000581 122.000051029997 20 28 122 1516 133196
+vector 369  LispHA.Core.eth[4].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+369	155993 547 80 7155 0.00000581 122.000051029997 20 28 122 1516 133196
+vector 332  LispHA.Core.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+332	139582 787 97 8517 0.00000581 145.00009693 29 28 132 3043 347853
+vector 356  LispHA.Core.eth[3].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+356	150128 955 98 8786 0.00000581 148.00003231 35 28 132 3734 426974
+vector 344  LispHA.Core.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+344	144100 671 99 8848 0.00000581 148.00009693 25 28 132 2564 288692
+vector 368  LispHA.Core.eth[4].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+368	155208 785 100 8225 0.00000581 142.00003231 29 28 132 3092 358388
+vector 328  LispHA.Core.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+328	138787 795 101 8518 0.00000581 145.00009693 29 64 150 3601 470757
+vector 352  LispHA.Core.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+352	149165 963 102 8787 0.00000581 148.00003231 35 64 150 4400 576698
+vector 340  LispHA.Core.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+340	143422 678 103 8849 0.00000581 148.00009693 25 64 150 3050 393056
+vector 364  LispHA.Core.eth[4].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+364	154417 791 104 8226 0.00000581 142.00003231 29 64 150 3650 483056
+vector 323  LispHA.Core.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+323	135450 795 109 8520 0.00001157 145.00010957 29 64 150 3601 470757
+vector 347  LispHA.Core.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+347	145318 967 110 8789 0.00001157 148.00004495 35 64 150 4400 576698
+vector 335  LispHA.Core.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+335	141634 682 111 8851 0.00001157 148.00010957 25 64 150 3050 393056
+vector 359  LispHA.Core.eth[4].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+359	152516 795 112 8228 0.00001157 142.00004495 29 64 150 3650 483056
+vector 11  LispHA.xTR_A1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+11	40778 764 113 8521 0.00001162 145.00010962 29 64 150 3601 470757
+vector 12  LispHA.xTR_A1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+12	41542 764 113 8521 0.00001162 145.00010962 29 64 150 3601 470757
+vector 83  LispHA.xTR_B1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+83	62667 910 114 8790 0.00001162 148.000045 35 64 150 4400 576698
+vector 84  LispHA.xTR_B1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+84	63577 910 114 8790 0.00001162 148.000045 35 64 150 4400 576698
+vector 382  LispHA.xTR_A2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+382	158743 681 115 8852 0.00001162 148.00010962 25 64 150 3050 393056
+vector 383  LispHA.xTR_A2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+383	159424 681 115 8852 0.00001162 148.00010962 25 64 150 3050 393056
+vector 430  LispHA.xTR_B2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+430	170655 765 116 8229 0.00001162 142.000045 29 64 150 3650 483056
+vector 431  LispHA.xTR_B2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+431	171420 765 116 8229 0.00001162 142.000045 29 64 150 3650 483056
+vector 20  LispHA.xTR_A1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+20	44578 757 117 8522 0.00001162 145.00010962 29 28 132 3043 347853
+vector 92  LispHA.xTR_B1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+92	66986 903 118 8791 0.00001162 148.000045 35 28 132 3734 426974
+vector 391  LispHA.xTR_A2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+391	161055 675 119 8853 0.00001162 148.00010962 25 28 132 2564 288692
+vector 439  LispHA.xTR_B2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+439	173145 759 120 8230 0.00001162 142.000045 29 28 132 3092 358388
+vector 307  LispHA.Core.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+307	132556 51 199 6523 0.00002351 120.000085689997 2 1 1 2 2
+vector 309  LispHA.Core.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+309	132607 51 199 6523 0.00002351 120.000085689997 2 1 1 2 2
+vector 320  LispHA.Core.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+320	134528 481 201 8156 0.00002351 140.00001189 18 28 163 2090 263082
+vector 316  LispHA.Core.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+316	134047 481 202 8157 0.00002351 140.00001189 18 64 181 2450 348114
+vector 311  LispHA.Core.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+311	132658 505 204 8159 0.00002927 140.00002373 18 64 181 2450 348114
+vector 59  LispHA.MRMS.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+59	55416 487 205 8160 0.00002932 140.00002378 18 64 181 2450 348114
+vector 60  LispHA.MRMS.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+60	55903 487 205 8160 0.00002932 140.00002378 18 64 181 2450 348114
+vector 68  LispHA.MRMS.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+68	57241 487 206 8161 0.00002932 140.00002378 18 28 163 2090 263082
+vector 67  LispHA.MRMS.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+67	56816 425 211 8170 0.00002932 140.00002378 16 28 122 1386 146250
+vector 63  LispHA.MRMS.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+63	56390 426 212 8171 0.00002932 140.00002378 16 64 140 1734 208218
+vector 372  LispHA.xTR_A2.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+372	156830 623 228 8856 0.0000298 148.00010962 23 51 112 2048 196004
+vector 373  LispHA.xTR_A2.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+373	157453 603 228 8856 0.0000298 148.00010962 23 1 23 276 4324
+vector 1  LispHA.xTR_A1.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+1	38079 680 229 8525 0.0000298 145.00010962 27 51 112 2447 237605
+vector 2  LispHA.xTR_A1.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+2	38759 657 229 8525 0.0000298 145.00010962 27 1 27 378 6930
+vector 73  LispHA.xTR_B1.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+73	59516 848 230 8794 0.0000298 148.000045 33 51 112 3018 291486
+vector 74  LispHA.xTR_B1.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+74	60364 820 230 8794 0.0000298 148.000045 33 1 33 561 12529
+vector 58  LispHA.MRMS.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+58	54990 426 296 8173 0.00003508 140.00003562 16 64 140 1734 208218
+vector 312  LispHA.Core.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+312	133163 442 297 8174 0.00003513 140.00003567 16 64 140 1734 208218
+vector 313  LispHA.Core.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+313	133605 442 297 8174 0.00003513 140.00003567 16 64 140 1734 208218
+vector 321  LispHA.Core.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+321	135009 441 298 8175 0.00003513 140.00003567 16 28 122 1386 146250
+vector 420  LispHA.xTR_B2.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+420	168578 707 331 8233 0.000042599999 142.000045 27 51 112 2496 246180
+vector 421  LispHA.xTR_B2.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+421	169285 683 331 8233 0.000042599999 142.000045 27 1 27 378 6930
+vector 49  LispHA.MRMS.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+49	54062 436 397 8164 0.00004702 140.00002378 16 102 143 1714 186554
+vector 50  LispHA.MRMS.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+50	54498 411 397 8164 0.00004702 140.00002378 16 1 16 136 1496
+vector 71  LispHA.MRMS.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg, vector"
+71	57728 723 398 8165 0.00004702 140.00002378 26 188 2372 -1.#IND -1.#IND
+vector 48  LispHA.MRMS.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+48	53797 265 399 8166 0.00004702 140.00002378 10 63 102 970 95482
+vector 428  LispHA.xTR_B2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+428	170024 78 562 562 0.021310817613 0.021310817613 3 1 1 3 3
+vector 450  LispHA.xTR_B2.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+450	177566 906 570 8733 0.021310817613 147.000089679998 35 40 96 2240 170240
+vector 462  LispHA.xTR_B2.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+462	179814 111 571 1731 0.021310817613 10.135147333773 4 40 40 160 6400
+vector 446  LispHA.xTR_B2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+446	176645 921 573 8734 0.021310817613 147.000089679998 35 64 114 2990 276860
+vector 458  LispHA.xTR_B2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+458	179703 111 574 1732 0.021310817613 10.135147333773 4 64 64 256 16384
+vector 441  LispHA.xTR_B2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+441	173904 949 577 8738 0.021316577613 147.000095439998 35 64 114 2990 276860
+vector 453  LispHA.xTR_B2.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+453	179368 111 578 1733 0.021316577613 10.135153093773 4 64 64 256 16384
+vector 107  LispHA.xTR_B1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+107	74779 111 580 1734 0.021316627613 10.135153143773 4 64 64 256 16384
+vector 108  LispHA.xTR_B1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+108	74890 111 580 1734 0.021316627613 10.135153143773 4 64 64 256 16384
+vector 182  LispHA.S2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+182	98038 955 581 8739 0.021316627613 147.000095489998 35 64 114 2990 276860
+vector 183  LispHA.S2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+183	98993 955 581 8739 0.021316627613 147.000095489998 35 64 114 2990 276860
+vector 116  LispHA.xTR_B1.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+116	75225 111 583 1735 0.021316627613 10.135153143773 4 40 40 160 6400
+vector 468  LispHA.S2.relayUnit  "buffer level"  ETV
 468	186324 5598 584 8824 0.021316627613 148.00007443 212 0 128 10152 995280
+vector 175  LispHA.S2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+175	95598 1544 589 8825 0.021316627613 148.00007443 57 64 114 4948 464872
+vector 197  LispHA.S2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+197	102030 982 590 8696 0.021316627613 147.00008205 36 64 64 2304 147456
+vector 208  LispHA.S2.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+208	106730 1658 591 8806 0.021316627613 148.00005481 61 64 114 5204 481256
+vector 170  LispHA.S2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+170	92464 1560 596 8828 0.021322387613 148.00008419 57 64 114 4948 464872
+vector 192  LispHA.S2.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+192	100824 982 597 8708 0.021322387613 147.00008781 36 64 64 2304 147456
+vector 203  LispHA.S2.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+203	103012 1682 598 8809 0.021322387613 148.00006457 61 64 114 5204 481256
+vector 95  LispHA.xTR_B1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+95	68641 1503 599 8829 0.021322437613 148.00008424 57 64 114 4948 464872
+vector 96  LispHA.xTR_B1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+96	70144 1503 599 8829 0.021322437613 148.00008424 57 64 114 4948 464872
+vector 269  LispHA.Hv4_B.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+269	121314 982 600 8710 0.021322437613 147.00008786 36 64 64 2304 147456
+vector 270  LispHA.Hv4_B.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+270	122296 982 600 8710 0.021322437613 147.00008786 36 64 64 2304 147456
+vector 291  LispHA.Hv6_B.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+291	125526 1682 601 8810 0.021322437613 148.00006462 61 64 114 5204 481256
+vector 292  LispHA.Hv6_B.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+292	127208 1682 601 8810 0.021322437613 148.00006462 61 64 114 5204 481256
+vector 104  LispHA.xTR_B1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+104	73133 1534 602 8830 0.021322437613 148.00008424 57 40 96 3736 289216
+vector 278  LispHA.Hv4_B.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+278	123502 982 603 8712 0.021322437613 147.00008786 36 40 40 1440 57600
+vector 300  LispHA.Hv6_B.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+300	130900 1656 604 8811 0.021322437613 148.00006462 61 40 96 3896 295616
+vector 81  LispHA.xTR_B1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+81	61206 75 614 614 0.158668476459 0.158668476459 3 1 1 3 3
+vector 103  LispHA.xTR_B1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+103	72381 752 622 8798 0.158668476459 148.000045 29 40 96 1776 130176
+vector 115  LispHA.xTR_B1.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+115	75113 112 623 1799 0.158668476459 10.176129585666 4 40 40 160 6400
+vector 99  LispHA.xTR_B1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+99	71647 734 625 8799 0.158668476459 148.000045 29 64 114 2406 216684
+vector 111  LispHA.xTR_B1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+111	75001 112 626 1800 0.158668476459 10.176129585666 4 64 64 256 16384
+vector 94  LispHA.xTR_B1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+94	67889 752 629 8802 0.158674236459 148.00005476 29 64 114 2406 216684
+vector 106  LispHA.xTR_B1.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+106	74667 112 630 1801 0.158674236459 10.176135345666 4 64 64 256 16384
+vector 454  LispHA.xTR_B2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+454	179479 112 632 1802 0.158674286459 10.176135395666 4 64 64 256 16384
+vector 455  LispHA.xTR_B2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+455	179591 112 632 1802 0.158674286459 10.176135395666 4 64 64 256 16384
+vector 171  LispHA.S2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+171	94024 787 633 8803 0.158674286459 148.00005481 29 64 114 2406 216684
+vector 172  LispHA.S2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+172	94811 787 633 8803 0.158674286459 148.00005481 29 64 114 2406 216684
+vector 463  LispHA.xTR_B2.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+463	179925 112 635 1803 0.158674286459 10.176135395666 4 40 40 160 6400
+vector 186  LispHA.S2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+186	99948 876 641 8695 0.158674286459 147.00008205 32 64 64 2048 131072
+vector 181  LispHA.S2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+181	97142 896 648 8727 0.158680046459 147.000089629998 32 64 64 2048 131072
+vector 442  LispHA.xTR_B2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+442	174853 896 651 8728 0.158680096459 147.000089679998 32 64 64 2048 131072
+vector 443  LispHA.xTR_B2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+443	175749 896 651 8728 0.158680096459 147.000089679998 32 64 64 2048 131072
+vector 451  LispHA.xTR_B2.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+451	178472 896 654 8729 0.158680096459 147.000089679998 32 40 40 1280 51200
+vector 9  LispHA.xTR_A1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+9	39482 72 666 666 0.237517510028 0.237517510028 3 1 1 3 3
+vector 31  LispHA.xTR_A1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+31	50095 832 674 8963 0.237517510028 149.000048399998 32 40 96 2064 157824
+vector 43  LispHA.xTR_A1.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+43	52866 107 675 1699 0.237517510028 10.036836483701 4 40 40 160 6400
+vector 27  LispHA.xTR_A1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+27	49249 846 677 8964 0.237517510028 149.000048399998 32 64 114 2748 255672
+vector 39  LispHA.xTR_A1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+39	52759 107 678 1700 0.237517510028 10.036836483701 4 64 64 256 16384
+vector 22  LispHA.xTR_A1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+22	45335 842 681 8968 0.237523270028 149.000054159998 32 64 114 2748 255672
+vector 34  LispHA.xTR_A1.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+34	52436 107 682 1701 0.237523270028 10.036842243701 4 64 64 256 16384
+vector 406  LispHA.xTR_A2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+406	167063 111 684 1702 0.237523320028 10.036842293701 4 64 64 256 16384
+vector 407  LispHA.xTR_A2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+407	167174 111 684 1702 0.237523320028 10.036842293701 4 64 64 256 16384
+vector 124  LispHA.S1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+124	78082 878 685 8969 0.237523320028 149.000054209998 32 64 114 2748 255672
+vector 125  LispHA.S1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+125	78960 878 685 8969 0.237523320028 149.000054209998 32 64 114 2748 255672
+vector 415  LispHA.xTR_A2.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+415	167509 111 687 1703 0.237523320028 10.036842293701 4 40 40 160 6400
+vector 467  LispHA.S1.relayUnit  "buffer level"  ETV
+467	180710 5614 688 8971 0.237523320028 149.000054209998 212 0 128 10152 995280
+vector 139  LispHA.S1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+139	84008 880 693 8972 0.237523320028 149.000054209998 32 64 64 2048 131072
+vector 150  LispHA.S1.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+150	86102 990 694 8933 0.237523320028 149.000041629999 36 64 64 2304 147456
+vector 161  LispHA.S1.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+161	90824 1640 695 8929 0.237523320028 149.000041629999 60 64 114 5090 468260
+vector 134  LispHA.S1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+134	81412 896 700 8975 0.237529080028 149.000059969998 32 64 64 2048 131072
+vector 145  LispHA.S1.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+145	84888 990 701 8939 0.237529080028 149.000047389999 36 64 64 2304 147456
+vector 156  LispHA.S1.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+156	87092 1652 702 8950 0.237529080028 149.000048349998 60 64 114 5090 468260
+vector 394  LispHA.xTR_A2.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+394	162574 896 703 8976 0.237529130028 149.000060019998 32 64 64 2048 131072
+vector 395  LispHA.xTR_A2.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+395	163470 896 703 8976 0.237529130028 149.000060019998 32 64 64 2048 131072
+vector 225  LispHA.Hv4_A.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+225	108526 990 704 8941 0.237529130028 149.000047439999 36 64 64 2304 147456
+vector 226  LispHA.Hv4_A.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+226	109516 990 704 8941 0.237529130028 149.000047439999 36 64 64 2304 147456
+vector 247  LispHA.Hv6_A.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+247	114717 1651 705 8954 0.237529130028 149.000048399998 60 64 114 5090 468260
+vector 248  LispHA.Hv6_A.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+248	116368 1651 705 8954 0.237529130028 149.000048399998 60 64 114 5090 468260
+vector 403  LispHA.xTR_A2.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+403	166055 896 706 8977 0.237529130028 149.000060019998 32 40 40 1280 51200
+vector 234  LispHA.Hv4_A.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+234	110730 990 707 8943 0.237529130028 149.000047439999 36 40 40 1440 57600
+vector 256  LispHA.Hv6_A.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+256	119550 1626 708 8956 0.237529130028 149.000048399998 60 40 96 3800 286400
+vector 57  LispHA.MRMS.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+57	54965 25 719 719 0.243650617939 0.243650617939 1 1 1 1 1
+vector 380  LispHA.xTR_A2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+380	158112 78 729 729 0.250823630648 0.250823630648 3 1 1 3 3
+vector 402  LispHA.xTR_A2.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+402	165216 839 737 8882 0.250823630648 149.000024199999 31 40 96 1856 133376
+vector 414  LispHA.xTR_A2.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+414	167397 112 738 1753 0.250823630648 10.155300259053 4 40 40 160 6400
+vector 398  LispHA.xTR_A2.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+398	164366 850 740 8883 0.250823630648 149.000024199999 31 64 114 2534 224876
+vector 410  LispHA.xTR_A2.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+410	167285 112 741 1754 0.250823630648 10.155300259053 4 64 64 256 16384
+vector 393  LispHA.xTR_A2.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+393	161730 844 744 8885 0.250829390648 149.000029959999 31 64 114 2534 224876
+vector 405  LispHA.xTR_A2.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+405	166951 112 745 1755 0.250829390648 10.155306019053 4 64 64 256 16384
+vector 35  LispHA.xTR_A1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+35	52543 108 747 1756 0.250829440648 10.155306069053 4 64 64 256 16384
+vector 36  LispHA.xTR_A1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+36	52651 108 747 1756 0.250829440648 10.155306069053 4 64 64 256 16384
+vector 135  LispHA.S1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+135	82308 850 748 8886 0.250829440648 149.000030009999 31 64 114 2534 224876
+vector 136  LispHA.S1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+136	83158 850 748 8886 0.250829440648 149.000030009999 31 64 114 2534 224876
+vector 44  LispHA.xTR_A1.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+44	52973 108 750 1757 0.250829440648 10.155306069053 4 40 40 160 6400
+vector 128  LispHA.S1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+128	79838 1574 756 8931 0.250829440648 149.000041629999 58 64 114 5062 477868
+vector 123  LispHA.S1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+123	76488 1594 763 8949 0.250835200648 149.000048349998 58 64 114 5062 477868
+vector 23  LispHA.xTR_A1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+23	46177 1536 766 8953 0.250835250648 149.000048399998 58 64 114 5062 477868
+vector 24  LispHA.xTR_A1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+24	47713 1536 766 8953 0.250835250648 149.000048399998 58 64 114 5062 477868
+vector 32  LispHA.xTR_A1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+32	50927 1509 769 8955 0.250835250648 149.000048399998 58 40 96 3832 298432
+vector 267  LispHA.Hv4_B.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+267	121176 26 781 781 0.635670875897 0.635670875897 1 1 1 1 1
+vector 277  LispHA.Hv4_B.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+277	123390 112 784 1914 0.635670875897 10.541831671258 4 40 40 160 6400
+vector 273  LispHA.Hv4_B.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+273	123278 112 785 1915 0.635670875897 10.541831671258 4 64 64 256 16384
+vector 268  LispHA.Hv4_B.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+268	121202 112 787 1917 0.635676635897 10.541837431258 4 64 64 256 16384
+vector 193  LispHA.S2.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+193	101806 112 788 1918 0.635676685897 10.541837481258 4 64 64 256 16384
+vector 194  LispHA.S2.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+194	101918 112 788 1918 0.635676685897 10.541837481258 4 64 64 256 16384
+vector 223  LispHA.Hv4_A.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+223	108388 26 814 814 0.687986302841 0.687986302841 1 1 1 1 1
+vector 233  LispHA.Hv4_A.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+233	110618 112 817 1811 0.687986302841 10.304940011071 4 40 40 160 6400
+vector 229  LispHA.Hv4_A.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+229	110506 112 818 1812 0.687986302841 10.304940011071 4 64 64 256 16384
+vector 224  LispHA.Hv4_A.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+224	108414 112 820 1814 0.687992062841 10.304945771071 4 64 64 256 16384
+vector 146  LispHA.S1.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+146	85878 112 821 1815 0.687992112841 10.304945821071 4 64 64 256 16384
+vector 147  LispHA.S1.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+147	85990 112 821 1815 0.687992112841 10.304945821071 4 64 64 256 16384
+vector 245  LispHA.Hv6_A.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+245	113659 26 847 847 0.740826738253 0.740826738253 1 1 1 1 1
+vector 255  LispHA.Hv6_A.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+255	118798 752 850 8915 0.740826738253 149.000035819999 39 40 96 3072 268032
+vector 251  LispHA.Hv6_A.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+251	118019 779 851 8916 0.740826738253 149.000035819999 39 64 114 3846 400044
+vector 246  LispHA.Hv6_A.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+246	113685 1032 853 8923 0.740832498253 149.000041579999 39 64 114 3846 400044
+vector 157  LispHA.S1.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+157	88744 1040 854 8925 0.740832548253 149.000041629999 39 64 114 3846 400044
+vector 158  LispHA.S1.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+158	89784 1040 854 8925 0.740832548253 149.000041629999 39 64 114 3846 400044
+vector 289  LispHA.Hv6_B.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+289	124484 26 880 880 0.955357979936 0.955357979936 1 1 1 1 1
+vector 299  LispHA.Hv6_B.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+299	129908 992 883 8817 0.955357979936 148.00006462 38 40 96 2976 258816
+vector 295  LispHA.Hv6_B.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+295	128890 1018 884 8818 0.955357979936 148.00006462 38 64 114 3732 387048
+vector 290  LispHA.Hv6_B.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+290	124510 1016 886 8821 0.955363739936 148.00007438 38 64 114 3732 387048
+vector 204  LispHA.S2.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+204	104694 1018 887 8822 0.955363789936 148.00007443 38 64 114 3732 387048
+vector 205  LispHA.S2.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+205	105712 1018 887 8822 0.955363789936 148.00007443 38 64 114 3732 387048
+vector 239  LispHA.Hv6_A.pingApp[0]  pingTxSeq:vector  ETV
+attr interpolationmode none
+attr title "ping tx seq, vector"
+239	112586 439 2699 8752 70 148 27 0 26 351 6201
+vector 46  LispHA.xTR_A1.LISP.lispMapCache  cache-size:vector  ETV
+attr source sigLispSize
+attr title "map-cache size, vector"
+46	53081 27 3030 3030 70.000115479999 70.000115479999 1 2 2 2 4
+vector 118  LispHA.xTR_B1.LISP.lispMapCache  cache-size:vector  ETV
+attr source sigLispSize
+attr title "map-cache size, vector"
+118	75336 28 3399 3399 73.000181319999 73.000181319999 1 2 2 2 4
+vector 240  LispHA.Hv6_A.pingApp[0]  pingRxSeq:vector  ETV
+attr interpolationmode none
+attr title "ping rx seq, vector"
+240	113025 634 3527 8877 76.00012924 148.00012924 25 2 26 350 6200
+vector 236  LispHA.Hv6_A.pingApp[0]  rtt:vector  ETV
+attr interpolationmode none
+attr title "ping round-trip time, vector"
+attr unit s
+236	111720 842 3527 8877 76.00012924 148.00012924 25 0.00012924 0.00014086 0.00324262 4.20713002e-007
+vector 237  LispHA.Hv6_A.pingApp[0]  numLost:vector  ETV
+attr interpolationmode none
+attr title "pings lost, vector"
+237	112562 24 3527 3527 76.00012924 76.00012924 1 2 2 2 4
+vector 53  LispHA.MRMS.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+53	54909 28 6433 6433 120.000062179997 120.000062179997 1 1 1 1 1
+vector 55  LispHA.MRMS.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+55	54937 28 6433 6433 120.000062179997 120.000062179997 1 1 1 1 1

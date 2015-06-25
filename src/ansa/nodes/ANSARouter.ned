@@ -21,6 +21,7 @@ package inet.ansa.nodes;
 import inet.ansa.acl.acl;
 import inet.ansa.applications.rip.RIPRouting;
 import inet.ansa.applications.ripng.RIPngRouting;
+import inet.ansa.networklayer.eigrp.eigrpProcess;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.isis.ISIS;
@@ -188,7 +189,7 @@ module ANSARouter
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
-                @display("p=342,353");
+                @display("p=430,434");
             gates:
                 lowerLayerIn[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
                 lowerLayerOut[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
@@ -198,6 +199,12 @@ module ANSARouter
         }
         pim: pim {
             @display("p=161,211");
+        }
+        eigrp: eigrpProcess {
+            @display("p=342,357;i=block/network2");
+        }
+        vrrp: pim {
+            @display("p=106,326");
         }
     //Connections between submodules    
     connections allowunconnected:
@@ -254,7 +261,7 @@ module ANSARouter
         udp.appIn++ <-- lisp.udpContrOut;
         udp.appOut++ --> lisp.udpDataIn;
         udp.appIn++ <-- lisp.udpDataOut;
-        
+
         networkLayer.ospfOut --> ospf.ipIn;
         ospf.ipOut --> networkLayer.ospfIn;
         pim.networkLayerOut --> networkLayer.pimIn;
@@ -264,4 +271,8 @@ module ANSARouter
         networkLayer.lispIn <-- lisp.ipv4Out;
         networkLayer6.lispOut --> lisp.ipv6In;
         networkLayer6.lispIn <-- lisp.ipv6Out;
+        networkLayer.eigrpOut --> eigrp.splitterIn;
+        eigrp.splitterOut --> networkLayer.eigrpIn;
+        vrrp.networkLayerOut --> networkLayer.igmpIn;
+        networkLayer.igmpOut --> vrrp.networkLayerIn;
 }

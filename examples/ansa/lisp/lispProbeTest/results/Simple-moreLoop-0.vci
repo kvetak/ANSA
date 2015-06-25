@@ -1,0 +1,478 @@
+file 56117 1424268753                                           
+version 2
+run Simple-moreLoop-0-20150218-14:12:33-7308
+attr configname Simple-moreLoop
+attr datetime 20150218-14:12:33
+attr experiment Simple-moreLoop
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network LispProbeTest
+attr processid 7308
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+vector 9  LispProbeTest.Host1.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+9	25103 203 0 601 0 10.629369473133 9 0 1 4 4
+vector 2  LispProbeTest.xTR1.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+2	20283 460 0 1490 0 240.00000992 23 0 1 11 11
+vector 8  LispProbeTest.xTR1.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+8	24900 203 0 570 0 10.423022868276 9 0 1 4 4
+vector 1  LispProbeTest.MRMS.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+1	19950 333 0 1586 0 240.000379779998 15 0 1 7 7
+vector 0  LispProbeTest.Core.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+0	18067 1883 0 1626 0 240.000638709995 77 0 1 38 38
+vector 3  LispProbeTest.Core.ethg$o[1].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+3	20743 93 0 1230 0 180.00001157 5 0 1 2 2
+vector 4  LispProbeTest.Core.ethg$o[2].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+4	20836 595 0 1754 0 244.00004537 27 0 1 13 13
+vector 6  LispProbeTest.Core.ethg$o[3].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+6	22868 595 0 1753 0 244.00004537 27 0 1 13 13
+vector 7  LispProbeTest.xTR_Responder1.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+7	23463 1437 0 1734 0 244.00003756 65 0 1 32 32
+vector 5  LispProbeTest.xTR_Responder2.ethg$o[0].channel  busy:vector  ETV
+attr interpolationmode sample-hold
+attr source channelBusy
+5	21431 1437 0 1733 0 244.00003756 65 0 1 32 32
+vector 69  LispProbeTest.xTR1.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg size, vector"
+69	27634 118 1 1775 0 300 6 -1.#IND -1.#IND -1.#IND -1.#IND
+vector 70  LispProbeTest.xTR1.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source sum(sigLispSizeSend)
+attr title "msg size send, vector"
+70	27752 93 1 1775 0 300 6 70 420 1470 445900
+vector 182  LispProbeTest.xTR_Responder1.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg size, vector"
+182	49615 604 10 1769 0 244.00004542 25 3098 15920 -1.#IND -1.#IND
+vector 183  LispProbeTest.xTR_Responder1.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source sum(sigLispSizeSend)
+attr title "msg size send, vector"
+183	50219 320 10 1722 0 244.0000298 15 2980 15410 137965 1553944025
+vector 330  LispProbeTest.xTR_Responder2.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg size, vector"
+330	54930 604 16 1770 0 244.00004542 25 3098 15920 -1.#IND -1.#IND
+vector 331  LispProbeTest.xTR_Responder2.LISP.lispMsgLogger  msg-sizesend:vector  ETV
+attr source sum(sigLispSizeSend)
+attr title "msg size send, vector"
+331	55534 320 16 1721 0 244.0000298 15 2980 15410 137965 1553944025
+vector 32  LispProbeTest.xTR1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+32	25961 73 22 1463 0 240 5 78 78 390 30420
+vector 157  LispProbeTest.xTR_Responder1.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+157	45487 294 23 1724 0 244.0000298 15 51 2988 15530 44676170
+vector 305  LispProbeTest.xTR_Responder2.UDP  sentPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source sentPk
+attr title "packets sent, vector(packetBytes)"
+305	50802 294 25 1723 0 244.0000298 15 51 2988 15530 44676170
+vector 37  LispProbeTest.xTR1.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+37	26034 26 32 1194 0 180 2 1 1 2 2
+vector 39  LispProbeTest.xTR1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+39	26060 26 32 1194 0 180 2 1 1 2 2
+vector 162  LispProbeTest.xTR_Responder1.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+162	46280 44 33 1641 0 244 3 1 1 3 3
+vector 164  LispProbeTest.xTR_Responder1.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+164	46324 44 33 1641 0 244 3 1 1 3 3
+vector 310  LispProbeTest.xTR_Responder2.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+310	51595 44 37 1642 0 244 3 1 1 3 3
+vector 312  LispProbeTest.xTR_Responder2.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+312	51639 44 37 1642 0 244 3 1 1 3 3
+vector 51  LispProbeTest.xTR1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+51	26733 225 44 1483 0 240 11 28 98 706 55988
+vector 176  LispProbeTest.xTR_Responder1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+176	48614 673 45 1732 0 244.0000298 32 28 1500 16274 22583322
+vector 324  LispProbeTest.xTR_Responder2.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+324	53929 673 46 1731 0 244.0000298 32 28 1500 16274 22583322
+vector 47  LispProbeTest.xTR1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+47	26503 230 47 1490 0 240 11 64 116 964 91856
+vector 172  LispProbeTest.xTR_Responder1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+172	47936 678 48 1734 0 244.0000298 32 64 1518 16928 23188422
+vector 320  LispProbeTest.xTR_Responder2.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+320	53251 678 49 1733 0 244.0000298 32 64 1518 16928 23188422
+vector 42  LispProbeTest.xTR1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+42	26136 275 50 1497 0.00000576 240.00000992 11 64 116 964 91856
+vector 167  LispProbeTest.xTR_Responder1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+167	46394 876 51 1738 0.00000576 244.00003756 32 64 1518 16928 23188422
+vector 315  LispProbeTest.xTR_Responder2.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+315	51709 876 52 1737 0.00000576 244.00003756 32 64 1518 16928 23188422
+vector 122  LispProbeTest.Core.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+122	37274 286 53 1498 0.00000581 240.00000997 11 64 116 964 91856
+vector 123  LispProbeTest.Core.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+123	37560 286 53 1498 0.00000581 240.00000997 11 64 116 964 91856
+vector 146  LispProbeTest.Core.eth[3].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+146	42192 877 54 1740 0.00000581 244.00003761 32 64 1518 16928 23188422
+vector 147  LispProbeTest.Core.eth[3].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+147	43069 877 54 1740 0.00000581 244.00003761 32 64 1518 16928 23188422
+vector 134  LispProbeTest.Core.eth[2].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+134	38560 877 55 1739 0.00000581 244.00003761 32 64 1518 16928 23188422
+vector 135  LispProbeTest.Core.eth[2].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+135	39437 877 55 1739 0.00000581 244.00003761 32 64 1518 16928 23188422
+vector 131  LispProbeTest.Core.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+131	37942 281 56 1499 0.00000581 240.00000997 11 28 98 706 55988
+vector 155  LispProbeTest.Core.eth[3].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+155	44615 872 57 1742 0.00000581 244.00003761 32 28 1500 16274 22583322
+vector 143  LispProbeTest.Core.eth[2].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+143	40983 872 58 1741 0.00000581 244.00003761 32 28 1500 16274 22583322
+vector 130  LispProbeTest.Core.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+130	37894 48 71 1229 0.00000581 180.00000581 2 28 28 56 1568
+vector 154  LispProbeTest.Core.eth[3].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+154	44283 332 72 1751 0.00000581 244.00003761 13 28 87 874 65402
+vector 142  LispProbeTest.Core.eth[2].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+142	40651 332 73 1752 0.00000581 244.00003761 13 28 87 874 65402
+vector 126  LispProbeTest.Core.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+126	37846 48 74 1230 0.00000581 180.00000581 2 64 64 128 8192
+vector 150  LispProbeTest.Core.eth[3].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+150	43946 337 75 1753 0.00000581 244.00003761 13 64 105 1162 107018
+vector 138  LispProbeTest.Core.eth[2].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+138	40314 337 76 1754 0.00000581 244.00003761 13 64 105 1162 107018
+vector 121  LispProbeTest.Core.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+121	37226 48 80 1232 0.00001157 180.00001157 2 64 64 128 8192
+vector 145  LispProbeTest.Core.eth[3].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+145	41855 337 81 1757 0.00001157 244.00004537 13 64 105 1162 107018
+vector 133  LispProbeTest.Core.eth[2].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+133	38223 337 82 1758 0.00001157 244.00004537 13 64 105 1162 107018
+vector 43  LispProbeTest.xTR1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+43	26411 46 83 1233 0.00001162 180.00001162 2 64 64 128 8192
+vector 44  LispProbeTest.xTR1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+44	26457 46 83 1233 0.00001162 180.00001162 2 64 64 128 8192
+vector 168  LispProbeTest.xTR_Responder1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+168	47270 333 84 1759 0.00001162 244.00004542 13 64 105 1162 107018
+vector 169  LispProbeTest.xTR_Responder1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+169	47603 333 84 1759 0.00001162 244.00004542 13 64 105 1162 107018
+vector 316  LispProbeTest.xTR_Responder2.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+316	52585 333 85 1760 0.00001162 244.00004542 13 64 105 1162 107018
+vector 317  LispProbeTest.xTR_Responder2.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+317	52918 333 85 1760 0.00001162 244.00004542 13 64 105 1162 107018
+vector 52  LispProbeTest.xTR1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+52	26958 46 86 1234 0.00001162 180.00001162 2 28 28 56 1568
+vector 177  LispProbeTest.xTR_Responder1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+177	49287 328 87 1761 0.00001162 244.00004542 13 28 87 874 65402
+vector 325  LispProbeTest.xTR_Responder2.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+325	54602 328 88 1762 0.00001162 244.00004542 13 28 87 874 65402
+vector 105  LispProbeTest.Core.networkLayer.arp  sentReq:vector  ETV
+attr title "ARP request sent, vector"
+105	33287 75 133 1551 0.00002159 240.000245169999 3 1 1 3 3
+vector 107  LispProbeTest.Core.networkLayer.arp  initiatedResolution:vector  ETV
+attr title "ARP initiated resolutions, vector"
+107	33362 75 133 1551 0.00002159 240.000245169999 3 1 1 3 3
+vector 118  LispProbeTest.Core.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+118	35975 1067 135 1601 0.00002159 240.000379829998 38 28 1500 31054 45073412
+vector 114  LispProbeTest.Core.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+114	34902 1073 136 1605 0.00002159 240.000379829998 38 64 1518 31792 46209608
+vector 109  LispProbeTest.Core.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+109	33437 1097 138 1627 0.00002735 240.000638709995 38 64 1518 31792 46209608
+vector 83  LispProbeTest.MRMS.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+83	28855 1058 139 1628 0.0000274 240.000638759995 38 64 1518 31792 46209608
+vector 84  LispProbeTest.MRMS.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+84	29913 1058 139 1628 0.0000274 240.000638759995 38 64 1518 31792 46209608
+vector 92  LispProbeTest.MRMS.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+92	31323 1053 140 1629 0.0000274 240.000638759995 38 28 1500 31054 45073412
+vector 91  LispProbeTest.MRMS.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+91	31147 176 145 1585 0.0000274 240.000374019998 7 28 40 244 8752
+vector 87  LispProbeTest.MRMS.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+87	30971 176 146 1586 0.0000274 240.000374019998 7 64 64 448 28672
+vector 82  LispProbeTest.MRMS.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+82	28679 176 148 1588 0.00003316 240.000379779998 7 64 64 448 28672
+vector 110  LispProbeTest.Core.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+110	34534 184 149 1589 0.00003321 240.000379829998 7 64 64 448 28672
+vector 111  LispProbeTest.Core.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+111	34718 184 149 1589 0.00003321 240.000379829998 7 64 64 448 28672
+vector 119  LispProbeTest.Core.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+119	37042 184 150 1590 0.00003321 240.000379829998 7 28 40 244 8752
+vector 73  LispProbeTest.MRMS.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+73	27845 419 163 1632 0.00004318 240.000638759995 15 78 2988 30270 89311860
+vector 74  LispProbeTest.MRMS.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+74	28264 390 163 1632 0.00004318 240.000638759995 15 1 15 120 1240
+vector 97  LispProbeTest.MRMS.LISP.lispMsgLogger  msg-size:vector  ETV
+attr source sum(sigLispSizeSend)+sum(sigLispSizeRecv)
+attr title "msg size, vector"
+97	32376 474 164 1633 0.00004318 240.000638759995 15 -1.#IND -1.#IND -1.#IND -1.#IND
+vector 99  LispProbeTest.MRMS.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source sum(sigLispSizeRecv)
+attr title "msg size recieved, vector"
+99	32850 437 164 1633 0.00004318 240.000638759995 15 70 30150 226650 4604312500
+vector 306  LispProbeTest.xTR_Responder2.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+306	51096 254 262 1768 0.000282759997 244.00004542 10 51 67 590 35450
+vector 307  LispProbeTest.xTR_Responder2.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+307	51350 245 262 1768 0.000282759997 244.00004542 10 1 10 55 385
+vector 158  LispProbeTest.xTR_Responder1.UDP  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rcvdPk
+attr title "packets received, vector(packetBytes)"
+158	45781 254 263 1767 0.000282759997 244.00004542 10 51 67 590 35450
+vector 159  LispProbeTest.xTR_Responder1.UDP  passedUpPk:vector(count)  ETV
+attr interpolationmode none
+attr title "packets passed up, vector(count)"
+159	46035 245 263 1767 0.000282759997 244.00004542 10 1 10 55 385
+vector 332  LispProbeTest.xTR_Responder2.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source sum(sigLispSizeRecv)
+attr title "msg size recieved, vector"
+332	55854 263 264 1770 0.000282759997 244.00004542 10 59 510 2845 1022105
+vector 184  LispProbeTest.xTR_Responder1.LISP.lispMsgLogger  msg-sizerecv:vector  ETV
+attr source sum(sigLispSizeRecv)
+attr title "msg size recieved, vector"
+184	50539 263 265 1769 0.000282759997 244.00004542 10 59 510 2845 1022105
+vector 314  LispProbeTest.xTR_Responder2.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+314	51683 26 350 350 0.051272875838 0.051272875838 1 1 1 1 1
+vector 81  LispProbeTest.MRMS.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+81	28654 25 360 360 0.195942009659 0.195942009659 1 1 1 1 1
+vector 41  LispProbeTest.xTR1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+41	26086 50 370 370 0.200030013383 0.200030013383 2 1 1 2 2
+vector 63  LispProbeTest.xTR1.eth[1].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+63	27424 105 376 569 0.200030013383 10.423017108276 4 40 40 160 6400
+vector 59  LispProbeTest.xTR1.eth[1].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+59	27319 105 378 570 0.200030013383 10.423017108276 4 64 64 256 16384
+vector 54  LispProbeTest.xTR1.eth[1].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+54	27004 105 380 571 0.200035773383 10.423022868276 4 64 64 256 16384
+vector 21  LispProbeTest.Host1.eth[0].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+21	25436 105 382 572 0.200035823383 10.423022918276 4 64 64 256 16384
+vector 22  LispProbeTest.Host1.eth[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+22	25541 105 382 572 0.200035823383 10.423022918276 4 64 64 256 16384
+vector 30  LispProbeTest.Host1.eth[0].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+30	25856 105 384 573 0.200035823383 10.423022918276 4 40 40 160 6400
+vector 166  LispProbeTest.xTR_Responder1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+166	46368 26 390 390 0.201191362109 0.201191362109 1 1 1 1 1
+vector 19  LispProbeTest.Host1.networkLayer6.neighbourDiscovery  startDAD:vector  ETV
+attr title "DAD started, vector"
+19	25306 25 400 400 0.981885441159 0.981885441159 1 1 1 1 1
+vector 29  LispProbeTest.Host1.eth[0].encap  encapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source encapPk
+attr title "packets encapsulated, vector(packetBytes)"
+29	25751 105 403 600 0.981885441159 10.629363713133 4 40 40 160 6400
+vector 25  LispProbeTest.Host1.eth[0].mac  rxPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkFromHL
+attr title "packet bytes from higher layer, vector(packetBytes)"
+25	25646 105 404 601 0.981885441159 10.629363713133 4 64 64 256 16384
+vector 20  LispProbeTest.Host1.eth[0].mac  txPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source txPk
+attr title "packets transmitted, vector(packetBytes)"
+20	25331 105 405 602 0.981891201159 10.629369473133 4 64 64 256 16384
+vector 55  LispProbeTest.xTR1.eth[1].mac  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source rxPkOk
+attr title "packets received OK, vector(packetBytes)"
+55	27109 105 406 603 0.981891251159 10.629369523133 4 64 64 256 16384
+vector 56  LispProbeTest.xTR1.eth[1].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source packetSentToUpper
+attr title "packets passed to higher layer, vector(packetBytes)"
+56	27214 105 406 603 0.981891251159 10.629369523133 4 64 64 256 16384
+vector 64  LispProbeTest.xTR1.eth[1].encap  decapPk:vector(packetBytes)  ETV
+attr interpolationmode none
+attr source decapPk
+attr title "packets decapsulated, vector(packetBytes)"
+64	27529 105 407 604 0.981891251159 10.629369523133 4 40 40 160 6400

@@ -215,7 +215,7 @@ void LISPCore::scheduleRlocProbing() {
             jt->setState(LISPRLocator::DOWN);
 
             //Probe is configured for each RLOC and each of its EID...
-            if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_CISCO_PARVAL) ) {
+            if ( rlocProbingAlgo == PROBE_CISCO ) {
                 LISPProbeEntry probe = LISPProbeEntry(jt->getRlocAddr());
                 probe.addEid(it->getEidPrefix(), &(*jt) );
                 ProbingSet.addProbeEntry(probe);
@@ -245,7 +245,7 @@ void LISPCore::scheduleRlocProbing() {
         rlocprobe->setPreviousNonce(DEFAULT_NONCE_VAL);
         rlocprobe->setRetryCount(0);
         //Shift IPv6 probes +30 seconds from IPv4 ones
-        if (ciscoStartupDelays && it->getRlocAddr().isIPv6()) {
+        if (ciscoStartupDelays && it->getEids().back().first.getEidAddr().isIPv6()) {
             scheduleAt(simTime() + DEFAULT_PROBETIMER_VAL/2, rlocprobe);
         }
         //IPv4 or otherwise IPv4/IPv6 probes start at the same time
@@ -347,6 +347,16 @@ void LISPCore::initialize(int stage)
     }
     else
         mapCacheTtl = (unsigned short) ( par(MAPCACHETTL_PAR).longValue() );
+
+    //Set RLOC Probing algorithm
+    if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_CISCO_PARVAL) )
+        rlocProbingAlgo = PROBE_CISCO;
+    else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDRR_PARVAL) )
+        rlocProbingAlgo = PROBE_SIMPLE;
+    else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
+            rlocProbingAlgo = PROBE_SOPHIS;
+    else
+        rlocProbingAlgo = PROBE_CISCO;
 
     //Init pointers to other subcomponents
     initPointers();
@@ -463,10 +473,10 @@ void LISPCore::expireRlocProbeTimer(LISPRlocProbeTimer* probetim) {
             throw cException("Could not find record!");
         probe->setLastTimeProbed(simTime());
 
-        if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDRR_PARVAL) ) {
+        if ( rlocProbingAlgo == PROBE_SIMPLE ) {
             //Round-robin through EIDs using this locator
             LISPEidPrefix eidPref = ProbingSet.findFirstProbeEntryByRloc(probetim->getRlocAddr())->getNextEid();
-            EV << "Before " << probetim->getEidPref() << " / after " << eidPref << endl;
+            EV << "EID round-robin before " << probetim->getEidPref() << " -> after " << eidPref << endl;
             probetim->setEidPref(eidPref);
         }
 
@@ -1186,9 +1196,17 @@ unsigned long LISPCore::sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid) {
             if (it->isLocal())
                 lmreq->getItrRlocs().push_back(TAfiAddr(it->getRlocAddr()));
 
-        //Multiple Recs in Map-Request, TODO: Vesely - Currently it is not supported yet
-        lmreq->setRecordCount(1);
-        lmreq->getRecs().push_back(eid);
+        //In case of Cisco and Simple merged RLOC probing...
+        if (rlocProbingAlgo != PROBE_SOPHIS)
+            lmreq->getRecs().push_back(eid);
+        //...otherwise Sophisticated merged RLOC probing
+        else {
+            LISPProbeEntry* probe = ProbingSet.findFirstProbeEntryByRloc(dstLoc);
+            for (EidCItem it = probe->getEids().begin(); it != probe->getEids().end(); ++it) {
+                lmreq->getRecs().push_back(it->first);
+            }
+        }
+        lmreq->setRecordCount(lmreq->getRecs().size());
 
         //Map-Reply Record
         lmreq->setMapDataBit(true);
@@ -1300,7 +1318,7 @@ void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
                         ProbingSet.findProbeEntryByRlocAndEid(src, it->EidPrefix);
         if (!probe)
             EV << "RLOC " << src << " does not exist in ProbeSet" << endl;
-        else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
+        else if ( rlocProbingAlgo != PROBE_SIMPLE )
             probe->setRlocStatusForEid(it->EidPrefix, LISPRLocator::UP);
         else
             probe->setRlocStatusForAllEids(LISPRLocator::UP);

@@ -94,6 +94,13 @@ class LISPUpLis : public cListener {
 class LISPCore : public LISPCoreBase
 {
   public:
+    enum EProbeAlgo
+    {
+        PROBE_CISCO,
+        PROBE_SIMPLE,
+        PROBE_SOPHIS
+    };
+
     LISPCore();
     virtual ~LISPCore();
 
@@ -132,6 +139,8 @@ class LISPCore : public LISPCoreBase
     unsigned short mapCacheTtl;
     bool echoNonceAlgo;
     bool ciscoStartupDelays;
+
+    EProbeAlgo rlocProbingAlgo;
 
     bool isMapResolver() {return mapServerV4 || mapServerV6;}
     bool isMapServer()   {return mapResolverV4 || mapResolverV6;}

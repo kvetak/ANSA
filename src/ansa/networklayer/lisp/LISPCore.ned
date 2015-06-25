@@ -32,12 +32,12 @@ simple LISPCore
 		bool mapResolverV4 = default(false);			//Node acts as Map Resolver for IPv4 EIDs, overriden by XML config
         bool mapResolverV6 = default(false);    		//Node acts as Map Resolver for IPv6 EIDs, overriden by XML config
         
-        string rlocProbingAlgo = default("Cisco"); 		// Cisco OR EidRoundRobin OR EidGrouped
+        string rlocProbingAlgo = default("Cisco"); 		// Cisco OR Simple OR Sophisticated
         bool acceptMapRequestMapping = default(false);	//Whether MapReplyRecord from Map-Request should be cached
         int mapCacheTtl = default(1440); 				//CacheTTL in minutes for send Map-Replies
         
         bool echoNonceAlgo = default(false);			//Whether EchoNonceAlgorithm is on or off
-        bool ciscoStartupDelays = default(true);		//Shift rloc probing of IPv4 and IPv6
+        bool ciscoStartupDelays = default(false);		//Shift rloc probing of IPv4 and IPv6
         
         @signal[sigLispForward](type=bool);
         @signal[sigLispDrop](type=bool);        
