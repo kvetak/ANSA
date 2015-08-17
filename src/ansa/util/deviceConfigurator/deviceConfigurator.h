@@ -69,11 +69,14 @@
 /* END IS-IS */
 /* END TRILL */
 
+
 /* Babel */
 #include "BabelMain.h"
 #include "BabelInterfaceTable.h"
 #include "IBabelCostComputation.h"
 /* End Babel */
+
+
 
 
 
@@ -251,11 +254,13 @@ class DeviceConfigurator : public cSimpleModule {
        */
       void loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule);
 
+
       /**
        * Loads configuration for EIGRP IPv6
        * @param eigrpModule [in]
        */
       void loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule);
+
 
 
       /////////////////////////////

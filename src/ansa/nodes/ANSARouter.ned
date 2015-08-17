@@ -21,6 +21,7 @@ package inet.ansa.nodes;
 import inet.ansa.acl.acl;
 import inet.ansa.applications.rip.RIPRouting;
 import inet.ansa.applications.ripng.RIPngRouting;
+import inet.ansa.networklayer.eigrp.eigrpProcess;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.isis.ISIS;
@@ -43,11 +44,12 @@ import inet.base.NotificationBoard;
 import inet.nodes.inet.NetworkLayer;
 import inet.nodes.ipv6.NetworkLayer6;
 import inet.ansa.nodes.inet.ansaNetworkLayer;
+import inet.ansa.networklayer.lisp.LISPRouting;
 
 module ANSARouter
 {
     parameters:
-        @display("i=abstract/router;bgb=436,637,white");
+        @display("i=abstract/router;bgb=647,573,white");
         @node;
         @labels(node,ethernet-node,wireless-node);
 
@@ -80,22 +82,22 @@ module ANSARouter
 
         notificationBoard: NotificationBoard {
             parameters:
-                @display("p=101,46;is=n");
+                @display("p=56,43;is=n");
         }
         udp: <udpType> like IUDP if hasUdp {
             parameters:
-                @display("p=218,302");
+                @display("p=342,211");
         }
         rip: RIPRouting {
             parameters:
-                @display("p=140,211");
+                @display("p=264,127");
                 configFile = configFile;
                 deviceId = deviceId;
                 deviceType = "Router";
         }
         ripng: RIPngRouting {
             parameters:
-                @display("p=295,211");
+                @display("p=419,127");
                 configFile = configFile;
                 deviceId = deviceId;
                 deviceType = "Router";
@@ -104,14 +106,14 @@ module ANSARouter
         // network layers        
         networkLayer: ansaNetworkLayer {
             parameters:
-                @display("p=76,393;q=queue");
+                @display("p=195,326;q=queue");
             gates:
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
         }
         networkLayer6: NetworkLayer6 {
             parameters:
-                @display("p=359,393");
+                @display("p=483,326");
             gates:
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
@@ -120,30 +122,30 @@ module ANSARouter
         //routing tables
         routingTable: AnsaRoutingTable {
             parameters:
-                @display("p=101,129");
+                @display("p=497,43");
                 routingTable = routingTable;
         }
         routingTable6: ANSARoutingTable6 {
             parameters:
-                @display("p=326,129");
+                @display("p=597,43");
                 isRouter = IPForward;
                 routingTable = routingTable;
         }
 
         pcapRecorder[numPcapRecorders]: PcapRecorder {
             parameters:
-                @display("p=374,302,r,10;i=abstract/cache;is=n");
+                @display("p=530,184,r,10;i=abstract/cache;is=n");
         }
 
 
         interfaceStateManager: InterfaceStateManager {
             parameters:
-                @display("p=326,46");
+                @display("p=283,43");
         }
 
         deviceConfigurator: DeviceConfigurator {
             parameters:
-                @display("p=217,46");
+                @display("p=166,43");
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
@@ -151,7 +153,7 @@ module ANSARouter
 
         ipSplitter: IpSplitter {
             parameters:
-                @display("p=218,489");
+                @display("p=342,434");
             gates:
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
@@ -166,38 +168,48 @@ module ANSARouter
         // linklayer
         interfaceTable: InterfaceTable {
             parameters:
-                @display("p=217,129;is=n");
+                @display("p=391,43;is=n");
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
-                @display("p=218,574,row,60;q=txQueue");
+                @display("p=342,519,row,60;q=txQueue");
         }
         ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
             parameters:
-                @display("p=335,574,row,60;q=txQueue");
+                @display("p=459,519,row,60;q=txQueue");
         }
         wlan[numRadios]: <default("Ieee80211Nic")> like IWirelessNic {
             parameters:
-                @display("p=110,574,row,60;q=queue");
+                @display("p=234,519,row,60;q=queue");
         }
         ospf: OSPFRouting {
-            @display("p=83,302");
+
+            @display("p=240,211");
+
         }
         isis: ISIS {
             parameters:
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
-                @display("p=184,393");
+                @display("p=430,434");
             gates:
                 lowerLayerIn[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
                 lowerLayerOut[sizeof(pppg)+sizeof(ethg)+sizeof(radioIn)];
         }
+
+        lisp: LISPRouting {
+            @display("p=342,287");
+        }
         pim: pim {
-            @display("p=28,302");
+            @display("p=161,211");
         }
         eigrp: eigrpProcess {
-            @display("p=140,302;i=block/network2");
+            @display("p=342,357;i=block/network2");
+        }
+        vrrp: pim {
+            @display("p=106,326");
+
         }
     //Connections between submodules    
     connections allowunconnected:
@@ -250,10 +262,25 @@ module ANSARouter
         udp.appOut++ --> ripng.udpIn;
         ripng.udpOut --> udp.appIn++;
 
+
+        udp.appOut++ --> lisp.udpContrIn;
+        udp.appIn++ <-- lisp.udpContrOut;
+        udp.appOut++ --> lisp.udpDataIn;
+        udp.appIn++ <-- lisp.udpDataOut;
+
+
         networkLayer.ospfOut --> ospf.ipIn;
         ospf.ipOut --> networkLayer.ospfIn;
         pim.networkLayerOut --> networkLayer.pimIn;
         networkLayer.pimOut --> pim.networkLayerIn;
-        eigrp.splitterOut --> networkLayer.eigrpIn;
+
+        networkLayer.lispOut --> lisp.ipv4In;
+        networkLayer.lispIn <-- lisp.ipv4Out;
+        networkLayer6.lispOut --> lisp.ipv6In;
+        networkLayer6.lispIn <-- lisp.ipv6Out;
         networkLayer.eigrpOut --> eigrp.splitterIn;
+        eigrp.splitterOut --> networkLayer.eigrpIn;
+        vrrp.networkLayerOut --> networkLayer.igmpIn;
+        networkLayer.igmpOut --> vrrp.networkLayerIn;
+
 }

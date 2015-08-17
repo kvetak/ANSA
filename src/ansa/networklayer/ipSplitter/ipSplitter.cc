@@ -38,6 +38,7 @@ void IpSplitter::handleMessage(cMessage *msg){
 
     // packet coming from network layer modules within the router
     if(gateName == "isisIn"){
+
         Ieee802Ctrl *ctrl = new Ieee802Ctrl();
         ctrl->setDsap(SAP_CLNS);
         ctrl->setSsap(SAP_CLNS);
@@ -47,26 +48,19 @@ void IpSplitter::handleMessage(cMessage *msg){
         ISISMessage *isisMsg = (ISISMessage *) msg;
         switch(isisMsg->getType()){
             case LAN_L1_HELLO:
-
             case L1_CSNP:
-
             case L1_PSNP:
-
             case L1_LSP:
-
                 ma.setAddress(ISIS_ALL_L1_IS);
                 break;
 
             case LAN_L2_HELLO:
-
             case L2_CSNP:
-
             case L2_PSNP:
-
             case L2_LSP:
-
                 ma.setAddress(ISIS_ALL_L2_IS);
                 break;
+
             case PTP_HELLO:
                 if(((ISISPTPHelloPacket *)isisMsg)->getCircuitType() == L1_TYPE){
                     ma.setAddress(ISIS_ALL_L1_IS);
@@ -74,15 +68,10 @@ void IpSplitter::handleMessage(cMessage *msg){
                     ma.setAddress(ISIS_ALL_L2_IS);
                 }
                 break;
-
-
-
         }
 
         ctrl->setDest(ma);
-
         isisMsg->setControlInfo(ctrl);
-
         this->send(msg, "ifOut", gateIndex);
 
     }else if (gateName == "ipv4In" || gateName == "ipv6In")
@@ -96,7 +85,6 @@ void IpSplitter::handleMessage(cMessage *msg){
     }
     else
     {
-
         // IPv6 datagram, send it to networkLayer6 via ipv6Out
         if (dynamic_cast<IPv6Datagram *>(msg))
         {

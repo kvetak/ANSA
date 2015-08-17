@@ -199,6 +199,34 @@ bool xmlParser::Str2Int(int *retValue, const char *str){
    return true;
 }
 
+bool xmlParser::Str2Bool(const char *str)
+{
+    if (  (strcmp(str, "yes") == 0)
+       || (strcmp(str, "enabled") == 0)
+       || (strcmp(str, "enable") == 0)
+       || (strcmp(str, "on") == 0)
+       || (strcmp(str, "true") == 0))
+        return true;
+
+    if (  (strcmp(str, "no") == 0)
+       || (strcmp(str, "disabled") == 0)
+       || (strcmp(str, "disable") == 0)
+       || (strcmp(str, "off") == 0)
+       || (strcmp(str, "false") == 0))
+        return false;
+
+    int value;
+    if (Str2Int(&value, str)){
+       if (value == 0)
+          return false;
+       else
+           return true;
+    }
+
+    return false;
+
+}
+
 bool xmlParser::Str2Bool(bool *ret, const char *str){
 
    if (  (strcmp(str, "yes") == 0)
@@ -564,6 +592,7 @@ cXMLElement *xmlParser::GetEigrpIPv4Network(cXMLElement *network, cXMLElement *p
     return network;
 }
 
+
 //EIGRP for IPv6
 
 cXMLElement *xmlParser::GetEigrpProcess6(cXMLElement *process, cXMLElement *device)
@@ -595,25 +624,6 @@ cXMLElement *xmlParser::GetEigrpProcess6(cXMLElement *process, cXMLElement *devi
     return process;
 }
 
-cXMLElement* xmlParser::GetLISPMapServers(cXMLElement *ms, cXMLElement *device)
-{
-    if (device != NULL){
-       cXMLElement *routing = device->getFirstChildWithTag("Routing");
-       if (routing == NULL)
-          return NULL;
-       cXMLElement *lisp = routing->getFirstChildWithTag("LISP");
-       if (lisp == NULL)
-          return NULL;
-       ms = device->getFirstChildWithTag("MapServerAddress");
-    }
-    else if (ms != NULL){
-       ms = ms->getNextSiblingWithTag("MapServerAddress");
-    }
-    else{
-       ms = NULL;
-    }
-    return ms;
-}
 
 //
 // - Babel configuration

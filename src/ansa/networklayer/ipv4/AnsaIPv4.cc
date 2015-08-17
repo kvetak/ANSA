@@ -24,7 +24,7 @@
 
 #include <omnetpp.h>
 #include "AnsaIPv4.h"
-
+#include "LISPCore.h"
 #include "AnsaIPv4RoutingDecision_m.h"
 
 Define_Module(AnsaIPv4);
@@ -42,6 +42,8 @@ void AnsaIPv4::initialize(int stage)
     if (stage == 0)
     {
         QueueBase::initialize();
+
+        lispmod = ModuleAccess<LISPCore>("lispCore").getIfExists();
 
         ift = InterfaceTableAccess().get();
         rt = AnsaRoutingTableAccess().get();
@@ -100,7 +102,6 @@ void AnsaIPv4::initialize(int stage)
         isUp = isNodeUp();
     }
 }
-
 
 void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *fromIE)
 {
@@ -375,7 +376,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     // refresh output in MRT
     rt->generateShowIPMroute();
     // only copies sent, delete original datagram
-    //delete datagram;
+    delete datagram;
 }
 
 void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
@@ -567,9 +568,16 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
     }
 }
 
-
 void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, IPv4Address destNextHopAddr)
 {
+    if ( lispmod
+         && lispmod->isOneOfMyEids( datagram->getSrcAddress() )
+         && !lispmod->isOneOfMyEids( datagram->getDestAddress() )
+       ) {
+        EV << "Passing datagram for LISP encapsulation process!" << endl;
+        send(datagram, "lispOut");
+        return;
+    }
     IPv4Address destAddr = datagram->getDestAddress();
 
     EV << "Routing datagram `" << datagram->getName() << "' with dest=" << destAddr << ": ";
@@ -604,6 +612,7 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
 
     if (!destIE) // no route found
     {
+
 #ifdef WITH_MANET
             if (manetRouting)
                sendNoRouteMessageToManet(datagram);
@@ -792,7 +801,6 @@ void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4A
     delete datagram;
 }
 
-
 IPv4Datagram *AnsaIPv4::encapsulate(cPacket *transportPacket, IPv4ControlInfo *controlInfo)
 {
     IPv4Datagram *datagram = createIPv4Datagram(transportPacket->getName());
@@ -896,4 +904,5 @@ void AnsaIPv4::sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, 
     datagram->setControlInfo(routingDecision);
     send(datagram, queueOutGate);
 }
+
 

@@ -1188,16 +1188,16 @@ void Radio::getSensitivityList(cXMLElement* xmlConfig)
 
         }
         parameters = data->getElementsByTagName("Default");
-        for(cXMLElementList::const_iterator it = parameters.begin();
-            it != parameters.end(); it++)
+        for(cXMLElementList::const_iterator itk = parameters.begin();
+            itk != parameters.end(); itk++)
         {
-            const char* sensitivityStr = (*it)->getAttribute("Sensitivity");
+            const char* sensitivityStr = (*itk)->getAttribute("Sensitivity");
             double sens = atof(sensitivityStr);
             sensitivityList[0.0] = FWMath::dBm2mW(sens);
         }
 
-        SensitivityList::iterator it = sensitivityList.find(0.0);
-        if (it == sensitivityList.end())
+        SensitivityList::iterator itj = sensitivityList.find(0.0);
+        if (itj == sensitivityList.end())
         {
             sensitivityList[0] = FWMath::dBm2mW(par("sensitivity").doubleValue());
         }

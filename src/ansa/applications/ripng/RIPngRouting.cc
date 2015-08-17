@@ -581,6 +581,10 @@ void RIPngRouting::initialize(int stage)
     if (stage != 3)
         return;
 
+    //RIPng is disabled
+    if (!par("enabled").boolValue())
+        return;
+
     // access to the interface table
     ift = InterfaceTableAccess().get();
 

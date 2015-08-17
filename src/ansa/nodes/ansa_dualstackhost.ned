@@ -26,8 +26,8 @@ import inet.applications.IUDPApp;
 import inet.transport.ISCTP;
 import inet.transport.ITCP;
 import inet.transport.IUDP;
-import inet.networklayer.ipv4.RoutingTable;
-import inet.networklayer.ipv6.RoutingTable6;
+import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
+import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.nodes.inet.NetworkLayer;
 import inet.nodes.ipv6.NetworkLayer6;
 import inet.networklayer.common.InterfaceTable;
@@ -146,12 +146,12 @@ module ANSA_DualStackHost
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
         }
 
-        routingTable: RoutingTable {
+        routingTable: AnsaRoutingTable {
             parameters:
                 @display("p=518,44;is=n");
                 IPForward = IPForward;
                 forwardMulticast = forwardMulticast;
-                routingFile = routingFile;
+                //routingFile = routingFile;
         }
 
         networkLayer6: NetworkLayer6 {
@@ -162,7 +162,7 @@ module ANSA_DualStackHost
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
         }
 
-        routingTable6: RoutingTable6 {
+        routingTable6: ANSARoutingTable6 {
             parameters:
                 @display("p=627,44");
                 isRouter = IPForward;

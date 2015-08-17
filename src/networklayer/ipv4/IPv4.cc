@@ -33,7 +33,6 @@
 #include "NodeStatus.h"
 #include "NotificationBoard.h"
 
-
 Define_Module(IPv4);
 
 

@@ -42,6 +42,8 @@
 #include "ModuleAccess.h"
 #include "NodeStatus.h"
 
+#include "LISPCore.h"
+
 #define FRAGMENT_TIMEOUT 60   // 60 sec, from IPv6 RFC
 
 
@@ -53,6 +55,7 @@ void IPv6::initialize(int stage)
     {
         QueueBase::initialize();
 
+        lispmod = ModuleAccess<LISPCore>("lispCore").getIfExists();
         ift = InterfaceTableAccess().get();
         rt = RoutingTable6Access().get();
         nd = IPv6NeighbourDiscoveryAccess().get();
@@ -273,6 +276,14 @@ void IPv6::routePacket(IPv6Datagram *datagram, InterfaceEntry *destIE, bool from
         // out datagram)
         // TBD: in IPv4, arrange TTL check like this
         datagram->setHopLimit(datagram->getHopLimit()-1);
+    }
+
+    if ( lispmod
+            && lispmod->isOneOfMyEids( datagram->getSrcAddress() )
+            && !lispmod->isOneOfMyEids( datagram->getDestAddress() )
+       ) {
+        send(datagram, "lispOut");
+        return;
     }
 
     // routing
@@ -589,6 +600,7 @@ void IPv6::localDeliver(IPv6Datagram *datagram)
 void IPv6::handleReceivedICMP(ICMPv6Message *msg)
 {
     int type = msg->getType();
+
     if (type < 128)
     {
         // ICMP errors are delivered to the appropriate higher layer protocols

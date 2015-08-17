@@ -11,11 +11,15 @@ src/Makefile.vc
 /examples/*/results/
 /examples/*/*/results/
 /examples/*/*/*/results/
+/examples/*/*/*/*/results/
+!/examples/ansa/lisp/lispHA/results/*
 /tests/*/work/
 *.pyc
 *.pcap
 *.sca
 *.vec
+*.vci
+*.elog
 # ignore binary files
 out/
 *.so
@@ -39,8 +43,12 @@ gcc-debug
 
 # ignore backup and temp files
 *.bak
+.tmp*
+.sta*
 backups
 *~
 xxx
 /3rdparty
 /tmp/
+src/sta12088
+/.computed

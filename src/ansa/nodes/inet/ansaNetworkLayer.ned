@@ -30,7 +30,7 @@ import inet.networklayer.arp.ARP;
 import inet.ansa.networklayer.ipv4.AnsaIPv4;
 import inet.nodes.inet.NetworkLayer;
 import inet.ansa.networklayer.pim.tables.PimInterfaceTable;
-
+import inet.ansa.networklayer.arp.AnsaARP;
 
 //
 // Network layer of an IPv4 node.
@@ -66,18 +66,22 @@ module ansaNetworkLayer
         output igmpOut;
         output pimOut;
         output eigrpOut;
+        input lispIn;
+        output lispOut;
+        input vrrpIn;
+        output vrrpOut;
 
     submodules:
         ip: AnsaIPv4 {
             parameters:
-                protocolMapping = "6:0,17:1,1:2,2:3,46:4,89:5,132:6,48:7,138:7,103:8,88:9"; // see: http://www.iana.org/assignments/protocol-numbers
+                protocolMapping = "6:0,17:1,1:2,2:3,46:4,89:5,132:6,48:7,138:7,103:8,88:9,112:10"; // see: http://www.iana.org/assignments/protocol-numbers
                 @display("p=85,95;q=queue");
             gates:
-                transportIn[10];
-                transportOut[10];
+                transportIn[11];
+                transportOut[11];
                 queueIn[sizeof(ifIn)];
-        }   
-        arp: ARP {
+        }
+        arp: AnsaARP {
             parameters:
                 proxyARP = proxyARP;
                 @display("p=202,142;q=pendingQueue");
@@ -122,12 +126,15 @@ module ansaNetworkLayer
 
         ip.transportOut[7] --> { @display("m=n"); } --> manetOut;
         ip.transportIn[7] <-- { @display("m=n"); } <-- manetIn;
-        
+
         ip.transportOut[8] --> pimOut;
         ip.transportIn[8] <-- pimIn;
-        
+
         ip.transportOut[9] --> eigrpOut;
         ip.transportIn[9] <-- eigrpIn;
+        
+        ip.transportOut[10] --> vrrpOut;
+        ip.transportIn[10] <-- vrrpIn; 
 
         for i=0..sizeof(pingOut)-1 {
             icmp.pingOut++ --> { @display("m=n"); } --> pingOut[i];
@@ -149,4 +156,7 @@ module ansaNetworkLayer
         for i=0..sizeof(ifOut)-1 {
             arp.nicOut[i] --> { @display("m=s"); } --> ifOut[i];
         }
+        
+        ip.lispOut --> lispOut;
+        lispIn --> ip.lispIn;
 }

@@ -55,7 +55,9 @@ module NetworkLayer
         output ospfOut @labels(IPv4ControlInfo/up);
         output pingOut[];
         output manetOut;
-        output igmpOut;
+        output igmpOut;        
+        input  lispIn;
+        output lispOut;
 
     submodules:
         configurator: IPv4NodeConfigurator {

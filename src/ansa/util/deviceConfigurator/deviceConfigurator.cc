@@ -190,8 +190,12 @@ void DeviceConfigurator::initialize(int stage){
         cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
         if (gateway == NULL && strcmp(deviceType, "Host") == 0)
             ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-        else
+        else if (gateway != NULL ) {
             loadDefaultRouter(gateway);
+            gateway = gateway->getNextSiblingWithTag("DefaultRouter");
+            if (gateway)
+                loadDefaultRouter(gateway);
+        }
 
 
     }
@@ -215,7 +219,11 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       const char *ifaceName = iface->getAttribute("name");
       InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
       if (ie == NULL){
-         throw cRuntimeError("No interface called %s on this device", ifaceName);
+         //throw cRuntimeError("No interface called %s on this device", ifaceName);
+         EV << "No interface called %s on this device" << ifaceName << endl;
+         // get next interface
+         iface = xmlParser::GetInterface(iface, NULL);
+         continue;
       }
 
       // for each IPv6 address
@@ -436,8 +444,13 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
         // get interface name and find matching interface in interface table
         const char *ifaceName = iface->getAttribute("name");
         InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
-        if (ie == NULL)
-           throw cRuntimeError("No interface called %s on this device", ifaceName);
+
+        if (ie == NULL) {
+           //throw cRuntimeError("No interface called %s on this device", ifaceName);
+            EV << "No interface " << ifaceName << "called on this device" << endl;
+            iface = xmlParser::GetInterface(iface, NULL);
+            continue;
+        }
 
         std::string ifaceType = std::string(ifaceName).substr(0,3);
 
@@ -501,8 +514,9 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
             route->setMetric(ie->ipv4Data()->getMetric());
             route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
             route->setInterface(ie);
-
-            ANSArt->addRoute(route);
+            if (!(ie->ipv4Data()->getIPAddress().isUnspecified()
+                    && ie->ipv4Data()->getNetmask() == IPv4Address::ALLONES_ADDRESS ) )
+                ANSArt->addRoute(route);
         }
 
         iface = xmlParser::GetInterface(iface, NULL);
@@ -1931,7 +1945,6 @@ int DeviceConfigurator::getISISL1LSPInitWait(cXMLElement *isisRouting)
 }
 
 
-
 int DeviceConfigurator::getISISL2LSPInitWait(cXMLElement *isisRouting)
 {
     //get L2LspInitWait
@@ -2116,15 +2129,24 @@ void DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
 
     while (interface != NULL)
     {
-        int interfaceId = ift->getInterfaceByName(interface->getAttribute("name"))->getInterfaceId();
+
+        EV << ift->getInterfaceByName(interface->getAttribute("name")) << endl;
+        InterfaceEntry* ie = ift->getInterfaceByName(interface->getAttribute("name"));
+        if (!ie) {
+            EV << "Interface " << interface->getAttribute("name") << " does not exist!" << endl;
+            continue;
+        }
+        int interfaceId = ie->getInterfaceId();
 
         cXMLElement *group;
         group = xmlParser::GetVRRPGroup(NULL, interface);
         while (group != NULL)
         {
             int groupId = -1;
-            if (xmlParser::HasVRPPGroup(group, &groupId))
-                VRRPModule->addVirtualRouter(interfaceId, groupId);
+            if (xmlParser::HasVRPPGroup(group, &groupId)) {
+                const char* ifnam = ift->getInterfaceById(interfaceId)->getName();
+                VRRPModule->addVirtualRouter(interfaceId, groupId, ifnam);
+            }
 
             group = xmlParser::GetVRRPGroup(group, NULL);
         }
@@ -2154,6 +2176,7 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
     //string groupId = ss.str();
 
     //const char* aaa = VRRPModule->getInterface()->getFullName();
+    //const char* bbb = groupId.str().c_str();
 
     cXMLElement *group = xmlParser::GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.str().c_str());
     if (group == NULL) {
@@ -2790,12 +2813,6 @@ void DeviceConfigurator::loadBabelConfig(BabelMain *bMain)
 {
     ASSERT(bMain != NULL);
 
-    // get access to device node from XML
-    const char *deviceType = par("deviceType");
-    const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
-    cXMLElement *device = xmlParser::GetDevice(deviceType, deviceId, configFile);
-
     if (device == NULL)
     {
        EV << "No configuration found for this device (" << deviceType <<
@@ -2830,6 +2847,7 @@ void DeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelMain *
     if(routerIdElem == NULL)
     {// not found -> generate
         bMain->generateRouterId();
+
     }
     else
     {// found -> try parse
@@ -2838,6 +2856,7 @@ void DeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelMain *
         //trim string
         ridstr.erase(ridstr.find_last_not_of(" \t\n\r\f\v") + 1);
         ridstr.erase(0, ridstr.find_first_not_of(" \t\n\r\f\v"));
+
 
         //count colons
         if(std::count(ridstr.begin(), ridstr.end(), ':') == 3)
@@ -3159,3 +3178,5 @@ void DeviceConfigurator::loadBabelInterface(cXMLElement *ifaceElem, BabelMain *b
     }
 }
 // - End of Babel configuration
+
+

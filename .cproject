@@ -138,6 +138,22 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.1590007136.1094360975" name="/" resourcePath="src/transport/tcp_common">
+						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.1313619298" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1470084128" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.966631206"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.669555214" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.2043257036">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1807543249" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.49576508" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.1946472760">
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.448477538" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.365975159" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.1402469929"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.146056853" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.148623617"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.base.723779710" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.1457288082">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.565925343" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry excluding="applications/voipstream|transport/tcp_common|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/transport/tcp_common"/>

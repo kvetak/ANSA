@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
 package inet.examples.ansa.vrrpv2.router;
 
@@ -23,7 +23,7 @@ import inet.linklayer.loopback.LoopbackInterface;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF;
-
+import inet.linklayer.IWiredNic;
 
 module VRRPv2SimpleRouter
 {
@@ -37,6 +37,8 @@ module VRRPv2SimpleRouter
 
         xml routingTable = default(xml("<routingTable/>"));
         bool IPForward = default(true);
+
+        int numOfLoopbacks = default(1);
 
     gates:
         inout ethg[] @labels(EtherFrame-conn);
@@ -92,8 +94,8 @@ module VRRPv2SimpleRouter
                 @display("p=250,302,row,110;q=l2queue");
         }
 
-        lo0: LoopbackInterface {
-            @display("p=352,302");
+        lo[numOfLoopbacks]: LoopbackInterface {
+            @display("p=128,302");
         }
     connections allowunconnected:
         vrrp.ipOut --> networkLayer.vrrpIn;
@@ -104,9 +106,8 @@ module VRRPv2SimpleRouter
             eth[i].upperLayerOut --> networkLayer.ifIn++;
             eth[i].upperLayerIn <-- networkLayer.ifOut++;
         }
-
-        lo0.upperLayerOut --> networkLayer.ifIn++;
-        lo0.upperLayerIn <-- networkLayer.ifOut++;
-
-
+        for i=0..numOfLoopbacks-1 {
+            lo[i].upperLayerOut --> networkLayer.ifIn++;
+            lo[i].upperLayerIn <-- networkLayer.ifOut++;
+        }
 }

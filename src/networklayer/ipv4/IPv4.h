@@ -79,6 +79,7 @@ class INET_API IPv4 : public QueueBase, public ILifecycle
 
 
   protected:
+
     // utility: look up interface from getArrivalGate()
     virtual InterfaceEntry *getSourceInterfaceFrom(cPacket *msg);
 
