@@ -17,7 +17,8 @@ package inet.examples.ansa.rBridge.switchTest3;
 
 import inet.ansa.RBridge;
 import inet.ansa.nodes.inet.AnsaHost;
-//import inet.nodes.ethernet.Eth100M;
+import inet.nodes.ethernet.EtherSwitch;
+import inet.nodes.ethernet.Eth100M;
 import ned.DatarateChannel;
 import inet.ansa.ANSASwitch;
 import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
@@ -28,7 +29,7 @@ import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 network switchtest3
 {
     @display("bgb=509,354");
-     types:
+    types:
         channel C extends DatarateChannel
         {
             delay = 0.1us;
@@ -45,34 +46,32 @@ network switchtest3
                 optimizeRoutes = false;
                 @display("p=42,305");
         }
-        switch1: ANSASwitch {
-            switchID = "switch1";
-            configFile = "config.xml";
+        switch1: EtherSwitch {
             @display("p=113,90");
             gates:
                 ethg[3];
         }
-        switch2: ANSASwitch {
+        switch2: EtherSwitch {
             @display("p=269,90");
             gates:
                 ethg[3];
         }
-        switch3: ANSASwitch {
+        switch3: EtherSwitch {
             @display("p=428,90");
             gates:
                 ethg[2];
         }
-        switch4: ANSASwitch {
+        switch4: EtherSwitch {
             @display("p=269,223");
             gates:
                 ethg[3];
         }
-        switch5: ANSASwitch {
+        switch5: EtherSwitch {
             @display("p=428,223");
             gates:
                 ethg[3];
         }
-        switch6: ANSASwitch {
+        switch6: EtherSwitch {
             @display("p=113,223");
             gates:
                 ethg[2];
@@ -88,20 +87,13 @@ network switchtest3
                 ethg[1];
         }
     connections:
-        switch1.ethg[0] <--> switch2.ethg[0];
-        switch1.ethg[1] <--> switch6.ethg[1];
-        switch2.ethg[1] <--> switch4.ethg[0];
-        switch4.ethg[1] <--> switch6.ethg[0];
-        switch4.ethg[2] <--> switch5.ethg[0];
-        switch2.ethg[2] <--> switch3.ethg[0];
-        switch5.ethg[1] <--> switch3.ethg[1];
-        ansaHost1.ethg[0] <--> switch1.ethg[2];
-        ansaHost2.ethg[0] <--> switch5.ethg[2];
-//        switch3.ethg[0] <--> n/a: DatarateChannel <--> switch5.ethg[0];
-//        switch5.ethg[0] <--> n/a: DatarateChannel <--> switch4.ethg[0];
-//        switch4.ethg[0] <--> n/a: DatarateChannel <--> switch2.ethg[0];
-//        switch1.ethg[0] <--> n/a: DatarateChannel <--> switch2.ethg[0];
-//        switch6.ethg[0] <--> n/a: DatarateChannel <--> switch4.ethg[0];
-//        switch6.ethg[0] <--> n/a: DatarateChannel <--> switch1.ethg[0];
-//        switch5.ethg[0] <--> n/a: DatarateChannel <--> ansaHost2.ethg[0];
+        switch1.ethg[0] <--> Eth100M <--> switch2.ethg[0];
+        switch1.ethg[1] <--> Eth100M <--> switch6.ethg[1];
+        switch2.ethg[1] <--> Eth100M <--> switch4.ethg[0];
+        switch4.ethg[1] <--> Eth100M <--> switch6.ethg[0];
+        switch4.ethg[2] <--> Eth100M <--> switch5.ethg[0];
+        switch2.ethg[2] <--> Eth100M <--> switch3.ethg[0];
+        switch5.ethg[1] <--> Eth100M <--> switch3.ethg[1];
+        ansaHost1.ethg[0] <--> Eth100M <--> switch1.ethg[2];
+        ansaHost2.ethg[0] <--> Eth100M <--> switch5.ethg[2];
 }
