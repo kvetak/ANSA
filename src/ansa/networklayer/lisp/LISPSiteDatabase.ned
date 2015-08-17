@@ -13,27 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSAETHERMACBASEVF_H_
-#define ANSAETHERMACBASEVF_H_
+package inet.ansa.networklayer.lisp;
 
-#include "EtherMACBase.h"
-
-// Forward declarations:
-class EtherFrame;
-class EtherTraffic;
-class InterfaceEntry;
-class AnsaInterfaceEntry;
-
-class AnsaEtherMACBaseVF: public EtherMACBase {
-public:
-    AnsaEtherMACBaseVF() {};
-    virtual ~AnsaEtherMACBaseVF() {};
-
-    protected:
-        virtual void initialize(int stage);
-        virtual void registerInterface();
-        virtual bool dropFrameNotForUs(EtherFrame *frame);
-
-};
-
-#endif /* ANSAETHERMACBASEVF_H_ */
+//
+// TODO auto-generated module
+//
+simple LISPSiteDatabase
+{
+    parameters:
+    	@display("i=block/buffer2");
+    	xml configData = default(xml("<MapServer />"));
+}

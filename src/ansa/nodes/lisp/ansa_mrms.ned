@@ -1,4 +1,6 @@
 //
+// Copyright (C) 2013 Brno University of Technology
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -13,27 +15,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSAETHERMACBASEVF_H_
-#define ANSAETHERMACBASEVF_H_
+package inet.ansa.nodes.lisp;
 
-#include "EtherMACBase.h"
-
-// Forward declarations:
-class EtherFrame;
-class EtherTraffic;
-class InterfaceEntry;
-class AnsaInterfaceEntry;
-
-class AnsaEtherMACBaseVF: public EtherMACBase {
-public:
-    AnsaEtherMACBaseVF() {};
-    virtual ~AnsaEtherMACBaseVF() {};
-
-    protected:
-        virtual void initialize(int stage);
-        virtual void registerInterface();
-        virtual bool dropFrameNotForUs(EtherFrame *frame);
-
-};
-
-#endif /* ANSAETHERMACBASEVF_H_ */
+module ANSA_MRMS extends ANSA_xTR
+{
+    parameters:
+        LISP.hasSiteDB = true;
+        @display("i=abstract/table;i2=-");
+}

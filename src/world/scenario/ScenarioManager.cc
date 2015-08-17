@@ -46,6 +46,8 @@ void ScenarioManager::initialize()
     }
 
     updateDisplayString();
+
+    sigIfaceDown = registerSignal("SIG-IFACEDOWN");
 }
 
 void ScenarioManager::handleMessage(cMessage *msg)
@@ -271,6 +273,11 @@ void ScenarioManager::processConnectCommand(cXMLElement *node)
 
         createConnection(paramList, channelType, srcGate, destGate);
     }
+
+    //EV << "!!!!!!!!!!" << srcGate->getPathEndGate()->getFullPath() << endl;
+
+
+    srcGate->getPathEndGate()->getOwnerModule()->getParentModule()->emit(sigIfaceDown, false);
 }
 
 void ScenarioManager::processDisconnectCommand(cXMLElement *node)
@@ -320,6 +327,10 @@ void ScenarioManager::processDisconnectCommand(cXMLElement *node)
         if (g && g->getOwnerModule()->getParentModule() == parentMod)
             srcGate->disconnect();
     }
+
+    //EV << "!!!!!!!!!!" << srcGate->getPathEndGate()->getFullPath() << endl;
+
+    srcGate->getPathEndGate()->getOwnerModule()->getParentModule()->emit(sigIfaceDown, true);
 }
 
 void ScenarioManager::updateDisplayString()

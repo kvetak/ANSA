@@ -35,6 +35,7 @@ out/
 netanim-trace.txt
 *.out
 gcc-debug
+*.pcapng
 
 # ignore backup and temp files
 *.bak
