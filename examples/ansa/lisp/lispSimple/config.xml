@@ -37,8 +37,6 @@
         		<EtrMapping>
         			<EID address="192.168.1.0/24">
         		     	<RLOC address="10.0.0.2" priority="1" weight="100" />
-        		     	<RLOC address="10.0.0.3" priority="50" weight="50" local="enabled" />
-        		     	<RLOC address="10.0.0.4" priority="50" weight="50" />
         		    </EID>
         			<EID address="2001:db8:a::/64">
         		     	<RLOC address="10.0.0.2" priority="1" weight ="100" />
@@ -117,7 +115,7 @@
 						<EID address="2001:db8:b::/64" />
 	       			</Site>
         		</MapServer>
-        		<MapResolver ipv4="enabled" ipv6="disabled" />
+        		<MapResolver ipv4="enabled" ipv6="enabled" />
         		<MapCache />
         	</LISP>
         </Routing>

@@ -17,6 +17,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
+/**
+ * @deprecated
+ */
 #ifndef __INET_ETHER_MAC_BASE_H
 #define __INET_ETHER_MAC_BASE_H
 

@@ -5,6 +5,7 @@ package inet.examples.ansa.switchtest;
 
 import inet.ansa.ANSASwitch;
 import inet.nodes.inet.StandardHost;
+import inet.nodes.ethernet.*;
 //import inet.world.ChannelInstaller;
 //import inet.world.ScenarioManager;
 import ned.DatarateChannel;
@@ -16,7 +17,8 @@ network basic_switching
     types:
         channel C extends DatarateChannel
         {
-            delay = 0.1us;
+            parameters:
+                double txrate = 100000000;
         }
     submodules:
 
@@ -55,10 +57,10 @@ network basic_switching
         }
     connections:
 
-        Host1.ethg[0] <--> Switch1.ethg[0];
-        Host2.ethg[0] <--> Switch1.ethg[1];
-        Host3.ethg[0] <--> Switch1.ethg[2];
-        Host4.ethg[0] <--> Switch1.ethg[3];
+        Host1.ethg[0] <--> C <--> Switch1.ethg[0];
+        Host2.ethg[0] <--> C <--> Switch1.ethg[1];
+        Host3.ethg[0] <--> C <--> Switch1.ethg[2];
+        Host4.ethg[0] <--> C <--> Switch1.ethg[3];
 }
 
 

@@ -18,7 +18,7 @@ package inet.examples.ansa.lisp.lispSimple;
 import inet.ansa.ANSASwitch;
 import inet.ansa.applications.rip.RIPRouter;
 import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.ansa.nodes.lisp.ANSA_xTR;
+import inet.ansa.nodes.lisp.*;
 import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.ansa.nodes.ipv6.ANSAStandardHost6;
 import inet.nodes.ethernet.EtherSwitch;
@@ -44,7 +44,7 @@ network lispSimple
         xTR_A: ANSA_xTR {
             @display("p=206,145");
         }
-        MRMS: ANSA_xTR {
+        MRMS: ANSA_MRMS {
             @display("p=337,34");
         }
         xTR_B: ANSA_xTR {

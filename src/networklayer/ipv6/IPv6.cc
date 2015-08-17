@@ -601,7 +601,7 @@ void IPv6::handleReceivedICMP(ICMPv6Message *msg)
 {
     int type = msg->getType();
 
-    if (type < 128)
+    if (type < 128 && type != 58)
     {
         // ICMP errors are delivered to the appropriate higher layer protocols
         EV << "ICMPv6 packet: passing it to higher layer\n";
