@@ -51,6 +51,8 @@ ISIS::ISIS()
     this->L2SSNPTPQueue = new std::vector<std::vector<FlagRecord *> *>;
 
     this->attIS = new ISISNeighbours_t;
+
+    att = false;
 }
 
 /*
@@ -2121,7 +2123,7 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg)
                 }
 
             }
-            delete tmpRecord;
+            delete[] tmpRecord;
 
         }
         else
@@ -3306,9 +3308,9 @@ unsigned char* ISIS::getLanID(ISISLANHelloPacket *msg)
 
     unsigned char *lanID = new unsigned char(ISIS_SYSTEM_ID + 1);
 
-    for (int i = 0; i < ISIS_SYSTEM_ID + 1; i++)
+    for (int i = 0; i < ISIS_SYSTEM_ID + 1; ++i)
     {
-        lanID[i] = msg->getLanID(i);
+        lanID[i] = msg->getLanID(i); //XXX Invalid write? How?
     }
 
     return lanID;
@@ -3720,7 +3722,7 @@ void ISIS::printSysId(unsigned char *sysId)
 bool ISIS::compareArrays(unsigned char * first, unsigned char * second, unsigned int size)
 {
     bool result = true;
-    for (unsigned int i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; ++i)
     {
         if (first[i] != second[i])
             result = false;
@@ -3962,12 +3964,12 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
 
 
         }
-        delete disLspID;
+        delete[] disLspID;
     }
 
     //clean
     delete msgLanID;
-    delete lastDIS;
+    delete[] lastDIS;
 }
 
 
@@ -4103,7 +4105,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
         this->purgeLSP(lsp, circuitType);
         /* lsp is already deleted in purgeLSP */
         //delete lsp;
-        delete lspID;
+        delete[] lspID;
         return;
 
     }
@@ -4166,7 +4168,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
             /* 7.3.15.1 e) 1) i. */
             this->installLSP(lsp, circuitType);
             this->schedulePeriodicSend(circuitType);
-            delete lspID;
+            delete[]   lspID;
             return;
 
         }
@@ -4177,7 +4179,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
                 /* 7.3.15.1 e) 1) i. */
                 this->replaceLSP(lsp, lspRec, circuitType);
                 this->schedulePeriodicSend(circuitType);
-                delete lspID;
+                delete[] lspID;
                 return;
 
             }
@@ -4324,7 +4326,7 @@ void ISIS::sendCsnp(ISISTimer *timer)
                 //copy LSP ID to TLV
                 unsigned char *lspId = this->getLspID((*it)->LSP);
                 this->copyArrayContent(lspId, myTLV.value, ISIS_SYSTEM_ID + 2, 0, (i * 16) + 2);
-                delete lspId;
+                delete[] lspId;
                 //convert unsigned long seq number to unsigned char array[4] and insert into TLV
                 for (unsigned int j = 0; j < 4; j++)
                 {
@@ -4340,7 +4342,7 @@ void ISIS::sendCsnp(ISISTimer *timer)
             this->addTLV(packet, &myTLV);
             packet->setLength(packet->getLength() + myTLV.length + 2);
 
-            delete myTLV.value;
+            delete[] myTLV.value;
 
         }
         if (it != lspDb->end()) //if there is still another lsp in DB
@@ -4513,7 +4515,7 @@ void ISIS::sendPsnp(ISISTimer *timer)
             //copy LSP ID to TLV
             unsigned char *lspId = this->getLspID((*it)->lspRec->LSP);
             this->copyArrayContent(lspId, myTLV.value, ISIS_SYSTEM_ID + 2, 0, (i * 16) + 2);
-            delete lspId;
+            delete[] lspId;
             //convert unsigned long seq number to unsigned char array[4] and insert into TLV
             for (unsigned int j = 0; j < 4; j++)
             {
@@ -4532,7 +4534,7 @@ void ISIS::sendPsnp(ISISTimer *timer)
         //int tlvSize = packet->getTLVArraySize();
         this->addTLV(packet, &myTLV);
         packet->setLength(packet->getLength() + myTLV.length + 2);
-        delete myTLV.value;
+        delete[] myTLV.value;
 
     }
 
@@ -4682,7 +4684,7 @@ void ISIS::handlePsnp(ISISPSNPPacket *psnp)
 
                 }
             }
-            delete tmpLspID;
+            delete[] tmpLspID;
         }
 
     }
@@ -4873,7 +4875,7 @@ std::vector<unsigned char *>* ISIS::getLspRange(unsigned char *startLspID, unsig
         {
             lspRange->push_back(lspID);
         }
-        delete lspID;
+        delete[] lspID;
     }
 
     return lspRange;
@@ -5315,7 +5317,7 @@ std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
                 availableSpace = availableSpace - (2 + tmpTlv->length);// "2" means Type and Length fields
 
                 //clean up
-                delete tmpTlv->value;
+                delete[] tmpTlv->value;
                 delete tmpTlv;
                 tlvTable->erase(tlvTable->begin());
 
@@ -5443,7 +5445,7 @@ std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
                         availableSpace = availableSpace - (2 + tmpTlv->length);
 
                         //clean up
-                        delete tmpTlv->value;
+                        delete[] tmpTlv->value;
                         delete tmpTlv;
                         tlvTable->erase(tlvTable->begin());
 
@@ -5457,7 +5459,7 @@ std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
         }
     }
 
-    delete myLSPID;
+    delete[] myLSPID;
     return tmpLSPDb;
 }
 
@@ -5644,7 +5646,7 @@ void ISIS::generateLSP(short circuitType)
             }
             //tmpLSPRecord = this->getLSPFromDbByID(this->getLspID(tmpLSPDb->at(0)), circuitType);
 
-            delete lspId;
+            delete[] lspId;
         }
 
     }
@@ -5781,7 +5783,7 @@ void ISIS::purgeLSP(ISISLSPPacket *lsp, short circuitType)
                 //replaceLSP
                 this->replaceLSP(lsp, lspRec, circuitType);
                 //lsp is installed in DB => don't delete it, so early return
-                delete lspId;
+                delete[] lspId;
                 return;
             }
             /* 7.3.16.4. b) 2)*/
@@ -5828,7 +5830,7 @@ void ISIS::purgeLSP(ISISLSPPacket *lsp, short circuitType)
         }
     }
     delete lsp;
-    delete lspId;
+    delete[] lspId;
 }
 
 /*
@@ -6546,10 +6548,10 @@ LSPRecord* ISIS::getLSPFromDbByID(unsigned char *LSPID, short circuitType)
         lspId = this->getLspID((*it)->LSP);
         if (this->compareArrays(lspId, LSPID, ISIS_SYSTEM_ID + 2))
         {
-            delete lspId;
+            delete[] lspId;
             return (*it);
         }
-        delete lspId;
+        delete[] lspId;
     }
 
     return NULL;
@@ -7719,13 +7721,13 @@ bool ISIS::isAdjUp(ISISMessage *msg, short circuitType)
             if (tmpMac.compareTo((*it).mac) == 0 && gateIndex == (*it).gateIndex && (*it).state >= ISIS_ADJ_2WAY)
             {
 
-                delete systemID;
+                delete[] systemID;
                 return true;
 
             }
         }
     }
-    delete systemID;
+    delete[] systemID;
 
     return false;
 }
@@ -8559,7 +8561,7 @@ void ISIS::setClosestAtt(void)
                     }
                 }
 
-                delete lspID;
+                delete[] lspID;
             }
         }
     }

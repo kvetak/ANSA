@@ -53,7 +53,7 @@ private:
 
 public:
     CLNSRoute(unsigned char *destPrefix, int length, ISISNeighbours_t nextHop, uint32_t metric){
-        this->destPrefix = new unsigned char [ISIS_SYSTEM_ID];
+        this->destPrefix = new unsigned char [ISIS_SYSTEM_ID + 1];
         memcpy(this->destPrefix, destPrefix, ISIS_SYSTEM_ID + 1);
 
         this->length = length;
