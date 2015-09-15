@@ -1292,7 +1292,7 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
      * Appropriate level should be based on circuitType from timer and not from
      * interface's circuitType.
      */
-    unsigned int tlvSize;
+//    unsigned int tlvSize;
     unsigned char * disID;
     ISISinterface *iface = &(this->ISISIft.at(interfaceIndex));
 
@@ -1345,7 +1345,7 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
 //    hello->setControlInfo(ctrl);
 
     //set TLVs
-    TLV_t myTLV;
+//    TLV_t myTLV;
     //helloL1->setTLVArraySize(0);
 
     //set area address
@@ -1401,7 +1401,7 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
 void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 {
 
-    unsigned int tlvSize;
+//    unsigned int tlvSize;
     ISISinterface *iface = &(this->ISISIft.at(interfaceIndex));
     //don't send hello packets from passive interfaces
     if (iface->passive || !iface->ISISenabled)
@@ -1458,7 +1458,7 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 
     //TLV[]
     //set TLVs
-    TLV_t myTLV;
+//    TLV_t myTLV;
 
     //set area address
     this->addTLV(ptpHello, AREA_ADDRESS, circuitType);
@@ -1529,7 +1529,7 @@ void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
     this->addTLV(tlvTable, TLV_TRILL_NEIGHBOR, circuitType, ie);
 
     TLV_t *tmpTlv;
-    unsigned tlvSize;
+//    unsigned tlvSize;
     unsigned int availableSpace = ISIS_TRILL_MAX_HELLO_SIZE;
 
     for (unsigned int fragment = 0; !tlvTable->empty(); fragment++)
@@ -1679,7 +1679,7 @@ void ISIS::sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex, short c
 void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 {
 
-    unsigned int tlvSize;
+//    unsigned int tlvSize;
     ISISinterface *iface = &(this->ISISIft.at(interfaceIndex));
     //don't send hello packets from passive interfaces
     if (iface->passive || !iface->ISISenabled)
@@ -1729,7 +1729,7 @@ void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuit
 
     //TLV[]
     //set TLVs
-    TLV_t myTLV;
+//    TLV_t myTLV;
 
     this->addTLV(ptpHello, AREA_ADDRESS, circuitType);
 
@@ -2413,18 +2413,18 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
     }
 
     int tmpDesigVlanId, tmpOuterVlanId, tmpPortId;
-    int senderNickname;
-    bool af, ac, vm, by, tr;
+//    int senderNickname;
+//    bool af, ac, vm, by, tr;
     //parsing TLV_MT_PORT_CAP
-    tmpPortId = subTLV[2] + subTLV[3] * 0xFF;
-    senderNickname = subTLV[4] + subTLV[5] * 0xFF;
+//    tmpPortId = subTLV[2] + subTLV[3] * 0xFF;
+//    senderNickname = subTLV[4] + subTLV[5] * 0xFF;
     tmpDesigVlanId = subTLV[6] + (subTLV[7] & 0x0F) * 0xFF;
-    af = (subTLV[7] >> 7) & 0x01;
-    ac = (subTLV[7] >> 6) & 0x01;
-    vm = (subTLV[7] >> 5) & 0x01;
-    by = (subTLV[7] >> 4) & 0x01;
-    tmpOuterVlanId = subTLV[8] + (subTLV[8] & 0x0F) * 0xFF;
-    tr = (subTLV[9] >> 7) & 0x01;
+//    af = (subTLV[7] >> 7) & 0x01;
+//    ac = (subTLV[7] >> 6) & 0x01;
+//    vm = (subTLV[7] >> 5) & 0x01;
+//    by = (subTLV[7] >> 4) & 0x01;
+//    tmpOuterVlanId = subTLV[8] + (subTLV[8] & 0x0F) * 0xFF;
+//    tr = (subTLV[9] >> 7) & 0x01;
 
 
 
@@ -2491,9 +2491,9 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
         for (int offset = 0; (tmpTLV = this->getTLVByType(msg, TLV_TRILL_NEIGHBOR, offset)) != NULL; offset++)
         {
             unsigned char *tmpRecord = new unsigned char[MAC_ADDRESS_SIZE];
-            bool s, l;
-            s = tmpTLV->value[0] >> 7 & 0x01;
-            l = tmpTLV->value[0] >> 6 & 0x01;
+//            bool s, l;
+//            s = tmpTLV->value[0] >> 7 & 0x01;
+//            l = tmpTLV->value[0] >> 6 & 0x01;
 
             for (unsigned int r = 0; r < ((tmpTLV->length - 1) / 9); r++)
             {
@@ -3306,7 +3306,7 @@ void ISIS::setLspID(ISISLSPPacket *msg, unsigned char * lspId)
 unsigned char* ISIS::getLanID(ISISLANHelloPacket *msg)
 {
 
-    unsigned char *lanID = new unsigned char(ISIS_SYSTEM_ID + 1);
+    unsigned char *lanID = new unsigned char[ISIS_SYSTEM_ID + 1];
 
     for (int i = 0; i < ISIS_SYSTEM_ID + 1; ++i)
     {
@@ -3520,7 +3520,7 @@ void ISIS::printLSPDB()
         //print NSEL
     EV<< setfill('0') << setw(2) << dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
     << lspDb->size() << endl;
-    unsigned char *lspId;
+//    unsigned char *lspId;
     std::vector<LSPRecord *>::iterator it = lspDb->begin();
     for (; it != lspDb->end(); ++it)
     {
@@ -3896,7 +3896,7 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
     if (this->compareArrays(msgLanID, disID, ISIS_SYSTEM_ID + 1))
     {
         //LAN DIS in received message is the same as the one that THIS IS have
-        delete msgLanID;
+        delete[] msgLanID;
         return;
     }
 
@@ -3968,7 +3968,7 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
     }
 
     //clean
-    delete msgLanID;
+    delete[] msgLanID;
     delete[] lastDIS;
 }
 
@@ -4229,8 +4229,8 @@ void ISIS::sendCsnp(ISISTimer *timer)
         return;
     }
 
-    ISISinterface *iface = &(this->ISISIft.at(timer->getInterfaceIndex()));
-    unsigned char * disID;
+//    ISISinterface *iface = &(this->ISISIft.at(timer->getInterfaceIndex()));
+//    unsigned char * disID;
     short circuitType = timer->getIsType();
 
     std::vector<LSPRecord *> *lspDb = this->getLSPDb(circuitType);
@@ -4242,17 +4242,17 @@ void ISIS::sendCsnp(ISISTimer *timer)
         if (circuitType == L1_TYPE)
         {
             packet->setType(L1_CSNP);
-            disID = iface->L1DIS;
+//            disID = iface->L1DIS;
         }
         else if (circuitType == L2_TYPE)
         {
             packet->setType(L2_CSNP);
-            disID = iface->L2DIS;
+//            disID = iface->L2DIS;
         }
         else
         {
             packet->setType(L1_CSNP);
-            disID = iface->L1DIS;
+//            disID = iface->L1DIS;
             EV<< "deviceId " << deviceId << ": ISIS: WARNING: Setting unknown CSNP packet type " << endl;
         }
         packet->setLength(0); //TODO set to length of header
@@ -4413,7 +4413,7 @@ void ISIS::sendPsnp(ISISTimer *timer)
     int gateIndex;
     int interfaceIndex;
     short circuitType;
-    unsigned char * disID;
+//    unsigned char * disID;
     ISISinterface * iface;
     FlagRecQ_t *SSNQueue;
 
@@ -4444,17 +4444,17 @@ void ISIS::sendPsnp(ISISTimer *timer)
     if (circuitType == L1_TYPE)
     {
         packet->setType(L1_PSNP);
-        disID = iface->L1DIS;
+//        disID = iface->L1DIS;
     }
     else if (circuitType == L2_TYPE)
     {
         packet->setType(L2_PSNP);
-        disID = iface->L2DIS;
+//        disID = iface->L2DIS;
     }
     else
     {
         packet->setType(L1_PSNP);
-        disID = iface->L1DIS;
+//        disID = iface->L1DIS;
         EV<< "deviceId " << deviceId << ": ISIS: WARNING: Setting unknown PSNP packet type " << endl;
     }
     packet->setLength(0); //TODO set to length of header
@@ -5243,7 +5243,7 @@ std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
      */
 
     TLV_t * tmpTlv;
-    unsigned int tlvSize; //tmp variable
+//    unsigned int tlvSize; //tmp variable
     unsigned int availableSpace = ISIS_LSP_MAX_SIZE; //available space in LSP
 
     //deleted at the end of generateLSP
@@ -5353,17 +5353,17 @@ std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
             tlvTable->clear();
             //tmpLSPDb->clear(); //Why? Why? Why, you fucked-up crazy-ass weirdo beaver?!?
             availableSpace = ISIS_LSP_MAX_SIZE;
-            unsigned char nsel;
+//            unsigned char nsel;
 
             if (circuitType == L1_TYPE)
             {
                 myLSPID[ISIS_SYSTEM_ID] = (*it).L1DIS[ISIS_SYSTEM_ID];
-                nsel = (*it).L1DIS[ISIS_SYSTEM_ID];
+//                nsel = (*it).L1DIS[ISIS_SYSTEM_ID];
             }
             else if (circuitType == L2_TYPE)
             {
                 myLSPID[ISIS_SYSTEM_ID] = (*it).L2DIS[ISIS_SYSTEM_ID];
-                nsel = (*it).L2DIS[ISIS_SYSTEM_ID];
+//                nsel = (*it).L2DIS[ISIS_SYSTEM_ID];
             }
             else
             {
@@ -5586,7 +5586,7 @@ void ISIS::generateLSP(short circuitType)
         //something in between
         /*
          * 1. get System-ID + NSEL from LSP-ID
-         * 2. after processing check if the next generated (if any exist) has the same LAN-ID
+         * 2. after processing, check if the next generated (if any exist) has the same LAN-ID
          *      if not -> purge all remaining LSP fragments from database with same LAN-ID
          *      if they have same LAN-ID OR there is not another LSP fragment, continue in processing
          */
@@ -8934,7 +8934,7 @@ bool ISIS::extractISO(ISISCons_t *initial, short circuitType)
  */
 void ISIS::twoWayCheck(ISISCons_t *cons)
 {
-    ISISCons_t *tmpCons;
+//    ISISCons_t *tmpCons;
     for (ISISCons_t::iterator it = cons->begin(); it != cons->end();)
     {
         //if there is not reverse connection
@@ -9224,7 +9224,7 @@ int ISIS::getISISIftSize(void)
 void ISIS::generateNetAddr()
 {
     ift = InterfaceTableAccess().get();
-    unsigned char *a = new unsigned char[6];
+//    unsigned char *a = new unsigned char[6];
     char *tmp = new char[25];
     MACAddress address;
 

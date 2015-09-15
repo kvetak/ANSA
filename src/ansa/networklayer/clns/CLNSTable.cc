@@ -72,10 +72,10 @@ void CLNSRoute::setNextHop(ISISNeighbours_t nextHop)
 std::string CLNSRoute::info() const{
     std::stringstream out;
     ISISNeighbours_t neig = getNextHop();
-    InterfaceEntry *entry;
+//    InterfaceEntry *entry;
 
-    int interfaceID = -1;
-    entry = (*neig.begin())->entry;
+//    int interfaceID = -1;
+//    entry = (*neig.begin())->entry;
     //print system id
 
     for (unsigned int i = 0; i < 7; i++)
