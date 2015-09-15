@@ -22,7 +22,7 @@
 #ifndef RIPNGINTERFACE_H_
 #define RIPNGINTERFACE_H_
 
-#include "UDPSocket.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
 
 class RIPngProcess;
 
@@ -100,7 +100,7 @@ class Interface
 
 struct Socket
 {
-    UDPSocket socket;
+    inet::UDPSocket socket;
     int port;
     std::vector<Interface *> RIPngInterfaces;  ///< Interfaces using that socket
 
@@ -122,7 +122,7 @@ struct Socket
 
 struct GlobalSocket
 {
-    UDPSocket socket;                          ///< Socket for "send" messages with global unicast address as a source
+    inet::UDPSocket socket;                          ///< Socket for "send" messages with global unicast address as a source
     std::vector<RIPngProcess *> processes;     ///< RIPng processes using that socket
 
     int removeProcess(RIPngProcess *process)

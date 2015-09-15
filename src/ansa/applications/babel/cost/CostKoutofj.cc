@@ -19,7 +19,7 @@
 * @detail Computes link cost using k-out-of-j method
 */
 
-#include "CostKoutofj.h"
+#include "ansa/applications/babel/cost/CostKoutofj.h"
 
 Define_Module(CostKoutofj);
 

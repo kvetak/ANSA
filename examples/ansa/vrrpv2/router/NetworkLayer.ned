@@ -117,7 +117,7 @@ module NetworkLayer
 
         icmp.errorOut --> errorHandling.in;
 
-        ip.queueOut --> arp.ipIn;
+        ip.queueOut++ --> arp.ipIn;
 
         igmp.routerOut --> igmpOut;
         igmp.routerIn <-- igmpIn;

@@ -24,12 +24,12 @@
 #define EIGRPPRINT_H_
 
 #include <iostream>
-#include "EigrpDualStack.h"
-#include "EigrpNetworkTable.h"
-#include "EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/EigrpDualStack.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNetworkTable.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
 
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv4Address>& network);
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv6Address>& network);
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<inet::IPv4Address>& network);
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<inet::IPv6Address>& network);
 std::ostream& operator<<(std::ostream& os, const EigrpKValues& kval);
 std::ostream& operator<<(std::ostream& os, const EigrpStub& stub);
 

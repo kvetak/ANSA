@@ -18,7 +18,7 @@
 #ifndef __INET_FSMA_H
 #define __INET_FSMA_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 /*
     This is an alternative FSM implementation.

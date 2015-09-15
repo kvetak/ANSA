@@ -24,8 +24,8 @@
 #ifndef EIGRPDUALSTACK_H_
 #define EIGRPDUALSTACK_H_
 
-#include "IPv4Address.h"
-#include "IPv6Address.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"
 //#include "ANSAIPv6Address.h"
 
 //#define DISABLE_EIGRP_IPV6
@@ -37,7 +37,7 @@
  * @param   netmask IPv4 netmask
  * @return  Length of netmask
  */
-int getNetmaskLength(const IPv4Address &netmask);
+int getNetmaskLength(const inet::IPv4Address &netmask);
 
 /**
  * Computes length of IPv6 netmask represented as address
@@ -45,7 +45,7 @@ int getNetmaskLength(const IPv4Address &netmask);
  * @param   netmask IPv6 netmask
  * @return  Length of netmask
  */
-int getNetmaskLength(const IPv6Address &netmask);
+int getNetmaskLength(const inet::IPv6Address &netmask);
 
 /**
  * Compare two IPv4 addresses masked by netmask
@@ -55,7 +55,7 @@ int getNetmaskLength(const IPv6Address &netmask);
  * @param   netmask network mask used for masking
  * @return  True if masked addresses are equal, otherwise false
  */
-bool maskedAddrAreEqual(const IPv4Address& addr1, const IPv4Address& addr2, const IPv4Address& netmask);
+bool maskedAddrAreEqual(const inet::IPv4Address& addr1, const inet::IPv4Address& addr2, const inet::IPv4Address& netmask);
 
 /**
  * Compare two IPv6 addresses masked by netmask
@@ -65,7 +65,7 @@ bool maskedAddrAreEqual(const IPv4Address& addr1, const IPv4Address& addr2, cons
  * @param   netmask network mask used for masking
  * @return  True if masked addresses are equal, otherwise false
  */
-bool maskedAddrAreEqual(const IPv6Address& addr1, const IPv6Address& addr2, const IPv6Address& netmask);
+bool maskedAddrAreEqual(const inet::IPv6Address& addr1, const inet::IPv6Address& addr2, const inet::IPv6Address& netmask);
 
 /**
  * Get prefix from IPv6 address and network mask (represented as address)
@@ -74,7 +74,7 @@ bool maskedAddrAreEqual(const IPv6Address& addr1, const IPv6Address& addr2, cons
  * @param   netmask network mask
  * @return  IPv6 network prefix
  */
-IPv6Address getPrefix(const IPv6Address& addr, const IPv6Address& netmask);
+inet::IPv6Address getPrefix(const inet::IPv6Address& addr, const inet::IPv6Address& netmask);
 
 /**
  * Make network mask represented as IPv6 address from netmask length
@@ -82,8 +82,8 @@ IPv6Address getPrefix(const IPv6Address& addr, const IPv6Address& netmask);
  * @param   mask length
  * @return  network mask represented as IPv6 address
  *
- * @note    Instead of this function, you can simply use: IPv6Address(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).getPrefix(prefixLength)
+ * @note    Instead of this function, you can simply use: inet::IPv6Address(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).getPrefix(prefixLength)
  */
-IPv6Address makeNetmask(int length);
+inet::IPv6Address makeNetmask(int length);
 
 #endif /* EIGRPDUALSTACK_H_ */

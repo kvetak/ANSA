@@ -46,34 +46,34 @@
 
 #include <omnetpp.h>
 
-#include "RoutingTable6Access.h"
-#include "InterfaceTableAccess.h"
-#include "AnsaRoutingTableAccess.h"
-#include "PimInterfaceTable.h"
-#include "IPv4InterfaceData.h"
+#include "networklayer/ipv6/RoutingTable6Access.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTableAccess.h"
+#include "ansa/networklayer/pim/tables/PimInterfaceTable.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
 
-#include "AnsaRoutingTable.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
 
-#include "RIPngRouting.h"
-#include "RIPRouting.h"
-#include "pimSM.h"
-#include "VRRPv2.h"
-#include "VRRPv2VirtualRouter.h"
-#include "IEigrpModule.h"
-#include "EigrpNetworkTable.h"
+#include "ansa/applications/ripng/RIPngRouting.h"
+#include "ansa/applications/rip/RIPRouting.h"
+#include "ansa/networklayer/pim/modes/pimSM.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2VirtualRouter.h"
+#include "ansa/networklayer/eigrp/pdms/IEigrpModule.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNetworkTable.h"
 
 /* TRILL */
-#include "TRILLAccess.h"
+#include "ansa/linklayer/rbridge/TRILLAccess.h"
 /* IS-IS */
-#include "ISISAccess.h"
+#include "ansa/networklayer/isis/ISISAccess.h"
 /* END IS-IS */
 /* END TRILL */
 
 
 /* Babel */
-#include "BabelMain.h"
-#include "BabelInterfaceTable.h"
-#include "IBabelCostComputation.h"
+#include "ansa/applications/babel/BabelMain.h"
+#include "ansa/applications/babel/BabelInterfaceTable.h"
+#include "ansa/applications/babel/cost/IBabelCostComputation.h"
 /* End Babel */
 
 
@@ -90,9 +90,9 @@ class DeviceConfigurator : public cSimpleModule {
       cXMLElement *device;
 
    protected:
-      IInterfaceTable *ift;
-      RoutingTable6 *rt6;
-      IRoutingTable *rt;
+      inet::IInterfaceTable *ift;
+      inet::IPv6RoutingTable *rt6;
+      inet::IRoutingTable *rt;
       PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
       virtual int numInitStages() const {return 11;}
@@ -107,7 +107,7 @@ class DeviceConfigurator : public cSimpleModule {
       void loadStaticRouting(cXMLElement* route);
 
       /**< Sets default bandwidth and delay */
-      void setInterfaceParamters(InterfaceEntry *interface);
+      void setInterfaceParamters(inet::InterfaceEntry *interface);
       /**< Returns default delay of interface by link type */
       double getDefaultDelay(const char *linkType);
 
@@ -122,9 +122,9 @@ class DeviceConfigurator : public cSimpleModule {
       //    ISIS related     //
       /////////////////////////
       void loadISISCoreDefaultConfig(ISIS *isisModule);
-      void loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *entry);
+      void loadISISInterfaceDefaultConfig(ISIS *isisModule, inet::InterfaceEntry *entry);
       void loadISISInterfacesConfig(ISIS *isisModule);
-      void loadISISInterfaceConfig(ISIS *isisModule, InterfaceEntry *entry, cXMLElement *intElement);
+      void loadISISInterfaceConfig(ISIS *isisModule, inet::InterfaceEntry *entry, cXMLElement *intElement);
       const char *getISISNETAddress(cXMLElement *isisRouting);
       short int getISISISType(cXMLElement *isisRouting);
       int getISISL1HelloInterval(cXMLElement *isisRouting);
@@ -157,27 +157,27 @@ class DeviceConfigurator : public cSimpleModule {
       // configuration for EIGRP //
       /////////////////////////////
       /**< Gets interfaces that correspond to the IP address and mask */
-      EigrpNetwork<IPv4Address> *isEigrpInterface(std::vector<EigrpNetwork<IPv4Address> *>& networks, InterfaceEntry *interface);
+      EigrpNetwork<inet::IPv4Address> *isEigrpInterface(std::vector<EigrpNetwork<inet::IPv4Address> *>& networks, inet::InterfaceEntry *interface);
       /**< Converts wildcard to netmask and check validity */
-      bool wildcardToMask(const char *wildcard, IPv4Address& result);
+      bool wildcardToMask(const char *wildcard, inet::IPv4Address& result);
       /**< Loads configuration of EIGRP process */
-      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<inet::IPv4Address> *eigrpModule);
       /**< Loads configuration of interfaces for EIGRP */
-      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule);
-      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName);
+      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<inet::IPv4Address> *eigrpModule);
+      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<inet::IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName);
       /**< Loads networks added to EIGRP */
-      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<inet::IPv4Address> *eigrpModule);
       /**< Loads K-value and converts it to number */
       int loadEigrpKValue(cXMLElement *node, const char *attrName, const char *attrValue);
       /**< Loads stub configuration */
       bool loadEigrpStubConf(cXMLElement *node, const char *attrName);
 
       /**< Loads configuration of EIGRP IPv6 process */
-      void loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule);
+      void loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<inet::IPv6Address> *eigrpModule);
       /**< Loads configuration of interfaces for EIGRP IPv6 */
-      void loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule);
+      void loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<inet::IPv6Address> *eigrpModule);
       /**< Loads interfaces for EIGRP IPv6 */
-      void loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName);
+      void loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<inet::IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName);
 
 
    public:
@@ -215,7 +215,7 @@ class DeviceConfigurator : public cSimpleModule {
        * @param RIPModule [in]
        * @param interface [in] interface, from which should be added networks
        */
-      void loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface);
+      void loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, inet::InterfaceEntry *interface);
 
       /////////////////////////
       //    ISIS related     //
@@ -252,14 +252,14 @@ class DeviceConfigurator : public cSimpleModule {
        * Loads configuration for EIGRP
        * @param eigrpModule [in]
        */
-      void loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpIPv4Config(IEigrpModule<inet::IPv4Address> *eigrpModule);
 
 
       /**
        * Loads configuration for EIGRP IPv6
        * @param eigrpModule [in]
        */
-      void loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule);
+      void loadEigrpIPv6Config(IEigrpModule<inet::IPv6Address> *eigrpModule);
 
 
 

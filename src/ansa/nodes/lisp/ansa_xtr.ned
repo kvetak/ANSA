@@ -24,17 +24,18 @@ import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.lisp.LISPRouting;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.linklayer.loopback.LoopbackInterface;
-import inet.transport.IUDP;
-import inet.util.PcapRecorder;
-import inet.networklayer.ipv4.RoutingTable;
+import inet.transportlayer.contract.IUDP;
+import inet.transportlayer.udp.UDP;
+import inet.common.packet.PcapRecorder;
+import inet.networklayer.ipv4.IPv4RoutingTable;
 import inet.networklayer.common.InterfaceTable;
-import inet.mobility.IMobility;
-import inet.linklayer.IWirelessNic;
-import inet.linklayer.IWiredNic;
-import inet.linklayer.IExternalNic;
+import inet.mobility.contract.IMobility;
+import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.IExternalNic;
 import inet.base.NotificationBoard;
-import inet.nodes.inet.NetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 import inet.ansa.nodes.ANSA_RouterRIPDual;
 
 module ANSA_xTR extends ANSA_RouterRIPDual

@@ -18,7 +18,7 @@
 #ifndef __INET_UNIMPLEMENTEDMODULE_H_
 #define __INET_UNIMPLEMENTEDMODULE_H_
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 /**
  * A module class whose handleMessage() throws a "not implemented" exception.

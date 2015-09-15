@@ -11,7 +11,7 @@
 #include <omnetpp.h>
 #include <string>
 #include <vector>
-#include "stp.h"
+#include "ansa/linklayer/switch/stp/stp.h"
 
 class stpXMLparser {
 public:

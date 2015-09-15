@@ -26,11 +26,13 @@
 #ifndef ISISINTERFACEDATA_H_
 #define ISISINTERFACEDATA_H_
 
-#include "InterfaceEntry.h"
-#include "ISISMessage_m.h"
-#include "ISIStypes.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "ansa/networklayer/isis/ISISMessage_m.h"
+#include "ansa/networklayer/isis/ISIStypes.h"
 
-class ISISInterfaceData : public InterfaceProtocolData
+namespace inet{
+
+class ISISInterfaceData : public inet::InterfaceProtocolData
 {
 
 
@@ -117,5 +119,5 @@ class ISISInterfaceData : public InterfaceProtocolData
         unsigned int getPriority() const;
         void setPriority(unsigned int priority);
 };
-
+}//namespace inet
 #endif /* ISISINTERFACEDATA_H_ */

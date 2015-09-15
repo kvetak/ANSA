@@ -16,6 +16,7 @@
 #define __INET_BYTEARRAYMESSAGE_H
 
 #include "ByteArrayMessage_m.h"
+#include "common/ByteArray.h"
 
 /**
  * Message that carries raw bytes. Used with emulation-related features.

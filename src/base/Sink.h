@@ -18,7 +18,7 @@
 #ifndef __INET_INET_SINK_H
 #define __INET_INET_SINK_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 /**
  * A module that just deletes every packet it receives, and collects

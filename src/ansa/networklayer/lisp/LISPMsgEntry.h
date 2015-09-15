@@ -23,7 +23,7 @@
 #define LISPMSGENTRY_H_
 
 #include <omnetpp.h>
-#include "LISPCommon.h"
+#include "ansa/networklayer/lisp/LISPCommon.h"
 
 class LISPMsgEntry {
   public:
@@ -42,7 +42,7 @@ class LISPMsgEntry {
         DATA
     };
 
-    LISPMsgEntry(LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl, int64 siz);
+    LISPMsgEntry(LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, inet::L3Address addr, simtime_t processed, bool fl, int64 siz);
     virtual ~LISPMsgEntry();
 
     bool operator== (const LISPMsgEntry& other) const;
@@ -56,15 +56,15 @@ class LISPMsgEntry {
     LISPMsgEntry::EMsgType getType() const;
     void setType(EMsgType type);
     std::string getTypeString() const;
-    const IPvXAddress& getAddress() const;
-    void setAddress(const IPvXAddress& destination);
+    const inet::L3Address& getAddress() const;
+    void setAddress(const inet::L3Address& destination);
     bool isFlag() const;
     void setFlag(bool flag);
 
   private:
     EMsgType type;
     unsigned long nonce;
-    IPvXAddress address;
+    inet::L3Address address;
     simtime_t processedAt;
     bool flag; //received = 0, sent = 1;
     int64 msgsize;

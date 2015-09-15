@@ -16,38 +16,38 @@
 #ifndef ANSAARP_H_
 #define ANSAARP_H_
 
-#include "ARP.h"
-#include "INETDefs.h"
+#include "networklayer/arp/ipv4/ARP.h"
+#include "common/INETDefs.h"
 
 // Forward declarations:
-class ARPPacket;
+//class ARPPacket;
 class IInterfaceTable;
 class InterfaceEntry;
 class AnsaInterfaceEntry;
-class IRoutingTable;
+//class IRoutingTable;
 
-class INET_API AnsaARP : public ARP
+class INET_API AnsaARP : public inet::ARP
 {
     public:
         AnsaARP() {};
         virtual ~AnsaARP() {};
 
     protected:
-        virtual bool idDuplicateMACAddresss(InterfaceEntry *ie, ARPPacket *arp);
+        virtual bool idDuplicateMACAddresss(inet::InterfaceEntry *ie, inet::ARPPacket *arp);
         virtual void handleMessage(cMessage *msg);
-        virtual void sendPacketToNIC(cMessage *msg, InterfaceEntry* ie, int vforwarder, const MACAddress& macAddr, int etherType);
-        virtual void sendPacketToNIC(cMessage *msg, InterfaceEntry* ie, const MACAddress& dstAddr, const MACAddress& srcAddr, int etherType);
+        virtual void sendPacketToNIC(cMessage *msg, inet::InterfaceEntry* ie, int vforwarder, const inet::MACAddress& macAddr, int etherType);
+        virtual void sendPacketToNIC(cMessage *msg, inet::InterfaceEntry* ie, const inet::MACAddress& dstAddr, const inet::MACAddress& srcAddr, int etherType);
         virtual void processOutboundPacket(cMessage *msg);
-        virtual void processARPPacket(ARPPacket *arp);
+        virtual void processARPPacket(inet::ARPPacket *arp);
 
     public:
-        void sendARPGratuitous(InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddress, int opCode);
+        void sendARPGratuitous(inet::InterfaceEntry *ie, inet::MACAddress srcAddr, inet::IPv4Address ipAddress, int opCode);
 };
 
-class INET_API AnsaArpAccess : public ModuleAccess<AnsaARP>
+class INET_API AnsaArpAccess : public inet::ModuleAccess<AnsaARP>
 {
   public:
-    AnsaArpAccess() : ModuleAccess<AnsaARP>("arp") {}
+    AnsaArpAccess() : inet::ModuleAccess<AnsaARP>("arp") {}
 };
 
 #endif /* ANSAARP_H_ */

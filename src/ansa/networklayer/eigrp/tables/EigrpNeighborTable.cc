@@ -14,10 +14,10 @@
 // 
 
 //IPv6 ready
-#include "EigrpNeighborTable.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNeighborTable.h"
 
 
-Define_Module(EigrpIpv4NeighborTable);      //TODO - PROB-01 - How to register template class? Define_Module(EigrpNeighborTable<IPv4Address>)
+Define_Module(EigrpIpv4NeighborTable);      //TODO - PROB-01 - How to register template class? Define_Module(EigrpNeighborTable<inet::IPv4Address>)
 
 #ifndef DISABLE_EIGRP_IPV6
 Define_Module(EigrpIpv6NeighborTable);
@@ -191,8 +191,8 @@ int EigrpNeighborTable<IPAddress>::setAckOnIface(int ifaceId, uint32_t ackNum)
     return neighCnt;
 }
 
-template class EigrpNeighborTable<IPv4Address>;
+template class EigrpNeighborTable<inet::IPv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpNeighborTable<IPv6Address>;
+template class EigrpNeighborTable<inet::IPv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */

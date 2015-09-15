@@ -25,12 +25,13 @@
 #define PIMINTERFACES_H_
 
 #include <omnetpp.h>
-#include "IInterfaceTable.h"
-#include "INETDefs.h"
-#include "InterfaceEntry.h"
-#include "NotificationBoard.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "common/INETDefs.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "base/NotificationBoard.h"
+#include "common/ModuleAccess.h"
 
-#include "IPv4Address.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
 
 /**
  * PIM modes configured on the interface.
@@ -50,9 +51,9 @@ class INET_API PimInterface: public cPolymorphic
 {
 	protected:
 		int 					intID;          			/**< Identification of interface. */
-		InterfaceEntry *		intPtr;						/**< Pointer to interface table entry. */
+		inet::InterfaceEntry *		intPtr;						/**< Pointer to interface table entry. */
 		PIMmode					mode;						/**< Type of mode. */
-		std::vector<IPv4Address> 	intMulticastAddresses;		/**< Multicast addresses assigned to interface. */
+		std::vector<inet::IPv4Address> 	intMulticastAddresses;		/**< Multicast addresses assigned to interface. */
 		bool					SR;							/**< Indicator of State Refresh Originator. */
 
 	public:
@@ -62,23 +63,23 @@ class INET_API PimInterface: public cPolymorphic
 
 	    // set methods
 	    void setInterfaceID(int iftID)  {this->intID = iftID;}							/**< Set identifier of interface. */
-	    void setInterfacePtr(InterfaceEntry *intPtr)  {this->intPtr = intPtr;}			/**< Set pointer to interface. */
+	    void setInterfacePtr(inet::InterfaceEntry *intPtr)  {this->intPtr = intPtr;}			/**< Set pointer to interface. */
 	    void setMode(PIMmode mode) {this->mode = mode;}									/**< Set PIM mode configured on the interface. */
 	    void setSR(bool SR)  {this->SR = SR;}											/**< Set State Refresh indicator. If it is true, router will send SR msgs. */
 
 	    //get methods
 	    int getInterfaceID() const {return intID;}													/**< Get identifier of interface. */
-		InterfaceEntry *getInterfacePtr() const {return intPtr;}									/**< Get pointer to interface. */
+		inet::InterfaceEntry *getInterfacePtr() const {return intPtr;}									/**< Get pointer to interface. */
 		PIMmode getMode() const {return mode;}														/**< Get PIM mode configured on the interface. */
-		std::vector<IPv4Address> getIntMulticastAddresses() const {return intMulticastAddresses;}		/**< Get list of multicast addresses assigned to the interface. */
+		std::vector<inet::IPv4Address> getIntMulticastAddresses() const {return intMulticastAddresses;}		/**< Get list of multicast addresses assigned to the interface. */
 		bool getSR() const {return SR;}																/**< Get State Refresh indicator. If it is true, router will send SR msgs. */
 
 	    // methods for work with vector "intMulticastAddresses"
-	    void setIntMulticastAddresses(std::vector<IPv4Address> intMulticastAddresses)  {this->intMulticastAddresses = intMulticastAddresses;} 	/**< Set multicast addresses to the interface. */
-	    void addIntMulticastAddress(IPv4Address addr)  {this->intMulticastAddresses.push_back(addr);}												/**< Add multicast address to the interface. */
-	    void removeIntMulticastAddress(IPv4Address addr);
-	    bool isLocalIntMulticastAddress (IPv4Address addr);
-	    std::vector<IPv4Address> deleteLocalIPs(std::vector<IPv4Address> multicastAddr);
+	    void setIntMulticastAddresses(std::vector<inet::IPv4Address> intMulticastAddresses)  {this->intMulticastAddresses = intMulticastAddresses;} 	/**< Set multicast addresses to the interface. */
+	    void addIntMulticastAddress(inet::IPv4Address addr)  {this->intMulticastAddresses.push_back(addr);}												/**< Add multicast address to the interface. */
+	    void removeIntMulticastAddress(inet::IPv4Address addr);
+	    bool isLocalIntMulticastAddress (inet::IPv4Address addr);
+	    std::vector<inet::IPv4Address> deleteLocalIPs(std::vector<inet::IPv4Address> multicastAddr);
 };
 
 
@@ -110,19 +111,19 @@ class INET_API PimInterfaceTable: public cSimpleModule
 /**
  * @brief Class gives access to the PimInterfaceTable.
  */
-class INET_API PimInterfaceTableAccess : public ModuleAccess<PimInterfaceTable>
+class INET_API PimInterfaceTableAccess : public inet::ModuleAccess<PimInterfaceTable>
 {
 	private:
 		PimInterfaceTable *p;
 
 	public:
-	PimInterfaceTableAccess() : ModuleAccess<PimInterfaceTable>("PimInterfaceTable") {p=NULL;}
+	PimInterfaceTableAccess() : inet::ModuleAccess<PimInterfaceTable>("PimInterfaceTable") {p=NULL;}
 
 	virtual PimInterfaceTable *getMyIfExists()
 	{
 		if (!p)
 		{
-			cModule *m = findModuleWherever("PimInterfaceTable", simulation.getContextModule());
+			cModule *m = inet::findModuleSomewhereUp("PimInterfaceTable", simulation.getContextModule());
 			p = dynamic_cast<PimInterfaceTable*>(m);
 		}
 		return p;
@@ -138,7 +139,7 @@ class INET_API PimInterfaceTableAccess : public ModuleAccess<PimInterfaceTable>
 class addRemoveAddr : public cPolymorphic
 {
 	protected:
-		std::vector<IPv4Address> addr;						/**< Vector of added or removed addresses. */
+		std::vector<inet::IPv4Address> addr;						/**< Vector of added or removed addresses. */
 		PimInterface *pimInt;								/**< Pointer to interface. */
 
 	public:
@@ -152,9 +153,9 @@ class addRemoveAddr : public cPolymorphic
 			return out.str();
 		}
 
-		void setAddr(std::vector<IPv4Address> addr)  {this->addr = addr;} /**< Set addresses to the object. */
+		void setAddr(std::vector<inet::IPv4Address> addr)  {this->addr = addr;} /**< Set addresses to the object. */
 		void setInt(PimInterface *pimInt)  {this->pimInt = pimInt;}		/**< Set pointer to interface to the object. */
-		std::vector<IPv4Address> getAddr () {return this->addr;}			/**< Get addresses from the object. */
+		std::vector<inet::IPv4Address> getAddr () {return this->addr;}			/**< Get addresses from the object. */
 		int getAddrSize () {return this->addr.size();}					/**< Returns size of addresses vector. */
 		PimInterface *getInt () {return this->pimInt;}					/**< Get pointer to interface from the object. */
 };

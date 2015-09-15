@@ -17,10 +17,10 @@ package inet.examples.ansa.isarip;
 
 import inet.ansa.applications.rip.RIPRouter;
 import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.examples.bgpv4.BGPUpdate.BGPRouter;
-import inet.nodes.ethernet.Eth100M;
-import inet.nodes.ethernet.EtherLink;
-import inet.nodes.ethernet.EtherSwitch;
+import inet.node.bgp.BGPRouter;
+import inet.node.ethernet.Eth100M;
+import inet.node.ethernet.EtherLink;
+import inet.node.ethernet.EtherSwitch;
 
 
 //

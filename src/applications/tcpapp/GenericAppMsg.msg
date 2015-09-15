@@ -17,10 +17,10 @@
 
 
 cplusplus {{
-#include "INETDefs.h"
+#include "inet/common/INETDefs.h"
 }}
 
-
+namespace inet;
 
 //
 // Message class for generic request-reply style applications.

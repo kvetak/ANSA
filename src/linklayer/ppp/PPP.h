@@ -18,43 +18,42 @@
 #ifndef __INET_PPP_H
 #define __INET_PPP_H
 
+#include "common/INETDefs.h"
 
-#include "INETDefs.h"
+#include "linklayer/ppp/PPPFrame_m.h"
+#include "linklayer/common/TxNotifDetails.h"
+#include "common/lifecycle/ILifecycle.h"
+#include "common/lifecycle/NodeStatus.h"
+#include "linklayer/base/MACBase.h"
 
-#include "PPPFrame_m.h"
-#include "TxNotifDetails.h"
-#include "INotifiable.h"
-#include "ILifecycle.h"
-#include "NodeStatus.h"
-#include "MACBase.h"
+namespace inet {
 
 class InterfaceEntry;
 class IPassiveQueue;
-class NotificationBoard;
 
 /**
  * PPP implementation.
  */
-class INET_API PPP : public MACBase, public cListener
+class INET_API PPP : public MACBase
 {
   protected:
-    long txQueueLimit;
-    cGate *physOutGate;
-    cChannel *datarateChannel; // NULL if we're not connected
+    long txQueueLimit = -1;
+    cGate *physOutGate = nullptr;
+    cChannel *datarateChannel = nullptr;    // nullptr if we're not connected
 
     cQueue txQueue;
-    cMessage *endTransmissionEvent;
-    IPassiveQueue *queueModule;
+    cMessage *endTransmissionEvent = nullptr;
+    IPassiveQueue *queueModule = nullptr;
 
     TxNotifDetails notifDetails;
 
     std::string oldConnColor;
 
     // statistics
-    long numSent;
-    long numRcvdOK;
-    long numBitErr;
-    long numDroppedIfaceDown;
+    long numSent = 0;
+    long numRcvdOK = 0;
+    long numBitErr = 0;
+    long numDroppedIfaceDown = 0;
 
     static simsignal_t txStateSignal;
     static simsignal_t rxPkOkSignal;
@@ -75,22 +74,24 @@ class INET_API PPP : public MACBase, public cListener
     virtual void refreshOutGateConnection(bool connected);
 
     // cListener function
-    virtual void receiveSignal(cComponent *src, simsignal_t id, cObject *obj);
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj) override;
 
     // MACBase functions
-    virtual InterfaceEntry *createInterfaceEntry();
-    virtual bool isUpperMsg(cMessage *msg) {return msg->arrivedOn("netwIn");}
-    virtual void flushQueue();
-    virtual void clearQueue();
+    virtual InterfaceEntry *createInterfaceEntry() override;
+    virtual bool isUpperMsg(cMessage *msg) override { return msg->arrivedOn("netwIn"); }
+    virtual void flushQueue() override;
+    virtual void clearQueue() override;
 
   public:
-    PPP();
     virtual ~PPP();
 
   protected:
-    virtual int numInitStages() const {return 4;}
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_PPP_H
+

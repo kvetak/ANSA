@@ -16,7 +16,7 @@
 package inet.examples.ansa.rBridge.simpletest;
 
 import inet.ansa.RBridge;
-import inet.nodes.ethernet.Eth100M;
+import inet.node.ethernet.Eth100M;
 
 
 //

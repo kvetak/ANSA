@@ -19,7 +19,7 @@
 * @detail Represents data structure for saving messages waiting for Acknowledgment
 */
 
-#include <BabelToAck.h>
+#include "ansa/applications/babel/BabelToAck.h"
 
 using namespace Babel;
 
@@ -69,9 +69,9 @@ std::ostream& operator<<(std::ostream& os, const BabelToAck& toack)
 }
 
 
-void BabelToAck::addDstNode(IPvXAddress dn)
+void BabelToAck::addDstNode(inet::L3Address dn)
 {
-    std::vector<IPvXAddress>::iterator it;
+    std::vector<inet::L3Address>::iterator it;
 
     for (it = dstNodes.begin(); it != dstNodes.end(); ++it)
     {// through all nodes search for same destination address
@@ -85,9 +85,9 @@ void BabelToAck::addDstNode(IPvXAddress dn)
     dstNodes.push_back(dn);
 }
 
-void BabelToAck::removeDstNode(IPvXAddress dn)
+void BabelToAck::removeDstNode(inet::L3Address dn)
 {
-    std::vector<IPvXAddress>::iterator it;
+    std::vector<inet::L3Address>::iterator it;
 
     for (it = dstNodes.begin(); it != dstNodes.end();)
     {// find node

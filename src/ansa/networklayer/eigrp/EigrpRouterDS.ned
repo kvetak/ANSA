@@ -24,7 +24,7 @@ import inet.ansa.nodes.inet.ansaNetworkLayer;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.base.NotificationBoard;
-import inet.linklayer.IWiredNic;
+import inet.linklayer.contract.IWiredNic;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.nodes.ipv6.AnsaNetworkLayer6;

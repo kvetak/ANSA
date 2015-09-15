@@ -25,18 +25,18 @@
 
 #include <omnetpp.h>
 
-#include "BabelDef.h"
-#include "BabelNeighbourTable.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "ansa/applications/babel/BabelNeighbourTable.h"
 
 
 class BabelRoute : public cObject
 {
 protected:
-    Babel::netPrefix<IPvXAddress> prefix;
+    Babel::netPrefix<inet::L3Address> prefix;
     Babel::rid originator;
     BabelNeighbour *neighbour;
     Babel::routeDistance rdistance;
-    IPvXAddress nexthop;
+    inet::L3Address nexthop;
     bool selected;
     uint16_t updateInterval;
     Babel::BabelTimer *expiryTimer;
@@ -51,8 +51,8 @@ public:
         befExpiryTimer(NULL),
         rtentry(NULL)
         {}
-    BabelRoute(const Babel::netPrefix<IPvXAddress>& pre, BabelNeighbour *neigh,
-            const Babel::rid& orig, const Babel::routeDistance& dist, const IPvXAddress& nh,
+    BabelRoute(const Babel::netPrefix<inet::L3Address>& pre, BabelNeighbour *neigh,
+            const Babel::rid& orig, const Babel::routeDistance& dist, const inet::L3Address& nh,
             uint16_t ui, Babel::BabelTimer *et, Babel::BabelTimer *bet):
         prefix(pre),
         originator(orig),
@@ -80,8 +80,8 @@ public:
     virtual std::string detailedInfo() const {return str();}
     friend std::ostream& operator<<(std::ostream& os, const BabelRoute& br);
 
-    const Babel::netPrefix<IPvXAddress>& getPrefix() const {return prefix;}
-    void setPrefix(Babel::netPrefix<IPvXAddress>& p) {prefix = p;}
+    const Babel::netPrefix<inet::L3Address>& getPrefix() const {return prefix;}
+    void setPrefix(Babel::netPrefix<inet::L3Address>& p) {prefix = p;}
 
     const Babel::rid& getOriginator() const {return originator;}
     void setOriginator(const Babel::rid& o) {originator = o;}
@@ -93,8 +93,8 @@ public:
     const Babel::routeDistance& getRDistance() const {return rdistance;}
     void setRDistance(const Babel::routeDistance& rd) {rdistance = rd;}
 
-    const IPvXAddress& getNextHop() const {return nexthop;}
-    void setNextHop(const IPvXAddress& nh) {nexthop = nh;}
+    const inet::L3Address& getNextHop() const {return nexthop;}
+    void setNextHop(const inet::L3Address& nh) {nexthop = nh;}
 
     bool getSelected() const {return selected;}
     void setSelected(bool s) {selected = s;}
@@ -131,11 +131,11 @@ public:
     virtual ~BabelTopologyTable();
     std::vector<BabelRoute *>& getRoutes() {return routes;}
 
-    BabelRoute *findRoute(const Babel::netPrefix<IPvXAddress>& p, BabelNeighbour *n, const Babel::rid& orig);
-    BabelRoute *findRoute(const Babel::netPrefix<IPvXAddress>& p, BabelNeighbour *n);
-    BabelRoute *findSelectedRoute(const Babel::netPrefix<IPvXAddress>& p);
-    bool containShorterCovRoute(const Babel::netPrefix<IPvXAddress>& p);
-    BabelRoute *findRouteNotNH(const Babel::netPrefix<IPvXAddress>& p, const IPvXAddress& nh);
+    BabelRoute *findRoute(const Babel::netPrefix<inet::L3Address>& p, BabelNeighbour *n, const Babel::rid& orig);
+    BabelRoute *findRoute(const Babel::netPrefix<inet::L3Address>& p, BabelNeighbour *n);
+    BabelRoute *findSelectedRoute(const Babel::netPrefix<inet::L3Address>& p);
+    bool containShorterCovRoute(const Babel::netPrefix<inet::L3Address>& p);
+    BabelRoute *findRouteNotNH(const Babel::netPrefix<inet::L3Address>& p, const inet::L3Address& nh);
     BabelRoute *addRoute(BabelRoute *route);
     bool retractRoutesOnIface(BabelInterface *iface);
     bool removeRoute(BabelRoute *route);

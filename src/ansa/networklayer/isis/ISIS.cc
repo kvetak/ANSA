@@ -25,13 +25,14 @@
  *       TODO B3 Add SimTime isisStarted; and compute initial wait period (for LSP generating and SPF calculation} from such variable
  */
 
-#include "ISIS.h"
-#include "TRILL.h"
+#include "ansa/networklayer/isis/ISIS.h"
+#include "ansa/linklayer/rbridge/TRILL.h"
 
-#include "deviceConfigurator.h"
-#include "TRILLInterfaceData.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
+#include "ansa/linklayer/rbridge/TRILLInterfaceData.h"
 
 Define_Module(ISIS);
+
 
 ISIS::ISIS()
 {
@@ -242,7 +243,7 @@ void ISIS::receiveChangeNotification(int category, const cObject *details)
         return;
     }
     Enter_Method_Silent();
-    if(category == NF_ISIS_ADJ_CHANGED){
+    if(category == inet::NF_ISIS_ADJ_CHANGED){
         /*TODO B3 Make new timer Type and schedule it when you receive ADJ_CHANGED for short period of time (TBD)
          * and increment some internal counter. When the counter hit certain threshold, stop pushing the timer and wait for
          * timeout.
@@ -274,7 +275,7 @@ void ISIS::receiveChangeNotification(int category, const cObject *details)
  * parsing of XML config file and configuration of whole module including network interfaces.
  * NED address is validated and after it's loaded. Initial timers for hello and LSP packets
  * are also set.
- * @see insertIft(InterfaceEntry *entry, cXMLElement *intElement)
+ * @see insertIft(inet::InterfaceEntry *entry, cXMLElement *intElement)
  * @see parseNetAddr()
  * @param stage defines stage(step) of global initialization
  */
@@ -284,8 +285,8 @@ void ISIS::initialize(int stage)
     //interface init at stage 2
     if(stage == 0){
          nb = NotificationBoardAccess().get();
-//         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-         nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
+//         nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+         nb->subscribe(this, inet::NF_ISIS_ADJ_CHANGED);
     }
 
     if (stage == 1)
@@ -310,7 +311,7 @@ void ISIS::initialize(int stage)
 
     if (stage == 3)
     {
-        DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        DeviceConfigurator *devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
         devConf->loadISISConfig(this, this->mode);
 
 
@@ -381,7 +382,7 @@ void ISIS::initialize(int stage)
  * @param entry Pointer to interface record in interfaceTable
  * @param intElement XML element of current interface in XML config file
  */
-void ISIS::insertIft(InterfaceEntry *entry, cXMLElement *intElement)
+void ISIS::insertIft(inet::InterfaceEntry *entry, cXMLElement *intElement)
 {
 
     if (intElement == NULL)
@@ -1301,7 +1302,7 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
      */
     ISISLANHelloPacket *hello = new ISISLANHelloPacket("Hello");
     //set appropriate destination MAC addresses
-//    MACAddress ma;
+//    inet::MACAddress ma;
 
     if (circuitType == L1_TYPE)
     {
@@ -1330,11 +1331,11 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
     }
 
 
-//    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//    inet::Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 
     // set DSAP & NSAP fields
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
+//    ctrl->setDsap(inet::SAP_CLNS);
+//    ctrl->setSsap(inet::SAP_CLNS);
 //
 //    ctrl->setDest(ma);
 
@@ -1409,14 +1410,14 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 
 
     //TODO change to appropriate layer-2 protocol
-//    Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
+//    inet::Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
 
     // set DSAP & NSAP fields
-//    ctrlPtp->setDsap(SAP_CLNS);
-//    ctrlPtp->setSsap(SAP_CLNS);
+//    ctrlPtp->setDsap(inet::SAP_CLNS);
+//    ctrlPtp->setSsap(inet::SAP_CLNS);
 
     //set appropriate destination MAC addresses
-//    MACAddress ma;
+//    inet::MACAddress ma;
 //
 //    if (iface->circuitType == L1_TYPE)
 //    {
@@ -1482,8 +1483,8 @@ void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
 {
 
     const unsigned char *disId;
-    InterfaceEntry *ie = ift->getInterfaceById(interfaceId);
-    ISISInterfaceData *d = ie->isisData();
+    inet::InterfaceEntry *ie = ift->getInterfaceById(interfaceId);
+    inet::ISISInterfaceData *d = ie->isisData();
     ISISinterface *iface = this->getIfaceByGateIndex(ie->getNetworkLayerGateIndex());
 
     if (d->isHelloValid())
@@ -1588,12 +1589,12 @@ void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
 
     d->setHelloValid(true);
 
-//    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//    inet::Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 //    // set DSAP & NSAP fields (not sure about this)
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
+//    ctrl->setDsap(inet::SAP_CLNS);
+//    ctrl->setSsap(inet::SAP_CLNS);
 //
-//    ctrl->setDest(MACAddress(ALL_IS_IS_RBRIDGES));
+//    ctrl->setDest(inet::MACAddress(ALL_IS_IS_RBRIDGES));
 //    hello.setControlInfo(ctrl);
 
 }
@@ -1641,21 +1642,21 @@ void ISIS::sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex, short c
         return;
     }
 
-    InterfaceEntry *ie = this->ISISIft.at(interfaceIndex).entry;
+    inet::InterfaceEntry *ie = this->ISISIft.at(interfaceIndex).entry;
     this->genTRILLHello(ie->getInterfaceId(), (ISISCircuitType) circuitType);
-    ISISInterfaceData *d = ie->isisData();
+    inet::ISISInterfaceData *d = ie->isisData();
     std::vector<ISISMessage *> hellos = d->getHellos();
     for (std::vector<ISISMessage *>::iterator it = hellos.begin(); it != hellos.end(); ++it)
     {
 
         TRILLHelloPacket *trillHello = ((TRILLHelloPacket *) (*it))->dup();
-//        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//        inet::Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 //        // set DSAP & NSAP fields
-//        ctrl->setDsap(SAP_CLNS);
-//        ctrl->setSsap(SAP_CLNS);
+//        ctrl->setDsap(inet::SAP_CLNS);
+//        ctrl->setSsap(inet::SAP_CLNS);
 
         //set appropriate destination MAC addresses
-//        MACAddress ma;
+//        inet::MACAddress ma;
 //        ma.setAddress(ALL_IS_IS_RBRIDGES);
 //        ctrl->setDest(ma);
 
@@ -1686,14 +1687,14 @@ void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuit
     }
 
     //TODO change to appropriate layer-2 protocol
-    Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
+    inet::Ieee802Ctrl *ctrlPtp = new inet::Ieee802Ctrl();
 
     // set DSAP & NSAP fields
-    ctrlPtp->setDsap(SAP_CLNS);
-    ctrlPtp->setSsap(SAP_CLNS);
+    ctrlPtp->setDsap(inet::SAP_CLNS);
+    ctrlPtp->setSsap(inet::SAP_CLNS);
 
     //set appropriate destination MAC addresses
-    MACAddress ma;
+    inet::MACAddress ma;
     /*
      * I assume that since there is only one level, destination is All ISIS Systems.
      */
@@ -2100,7 +2101,7 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg)
                 //check if my system id is contained in neighbour's adjL1Table
                 this->copyArrayContent(tmpTLV->value, tmpRecord, 6, r * 6, 0);
 
-                MACAddress tmpMAC = tmpIntf->entry->getMacAddress();
+                inet::MACAddress tmpMAC = tmpIntf->entry->getMacAddress();
                 unsigned char *tmpMACAddress = new unsigned char[6];
                 tmpMAC.getAddressBytes(tmpMACAddress);
 
@@ -2115,7 +2116,7 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg)
                     {
                         //this->sendMyL1LSPs();
                         //TODO generate event adjacencyStateChanged
-                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        nb->fireChangeNotification(inet::NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                     }
                     break;
                 }
@@ -2176,7 +2177,7 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg)
         }
 
         //get source MAC address of received frame
-        Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
+        inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(msg->getControlInfo());
         neighbour.mac = ctrl->getSrc();
 
         //set gate index, which is neighbour connected to
@@ -2246,7 +2247,7 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
                 //check if my system id is contained in neighbour's adjL1Table
                 this->copyArrayContent(tmpTLV->value, tmpRecord, ISIS_SYSTEM_ID, r * ISIS_SYSTEM_ID, 0);
 
-                MACAddress tmpMAC = iface->entry->getMacAddress();
+                inet::MACAddress tmpMAC = iface->entry->getMacAddress();
                 unsigned char *tmpMACAddress = new unsigned char[6];
                 tmpMAC.getAddressBytes(tmpMACAddress);
 
@@ -2261,7 +2262,7 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
                     {
                         //this->sendMyL1LSPs();
                         //TODO B1 generate event adjacencyStateChanged (i suppose it's done)
-                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        nb->fireChangeNotification(inet::NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                         //TODO support multiple area addresses
                         if (!compareArrays((unsigned char *) this->areaId, tmpAdj->areaID, ISIS_AREA_ID)
                                 && this->isType == L1L2_TYPE)
@@ -2331,7 +2332,7 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
             }
 
             //get source MAC address of received frame
-            Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
+            inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(msg->getControlInfo());
             neighbour.mac = ctrl->getSrc();
 
             //set gate index, which is neighbour connected to
@@ -2432,12 +2433,12 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
 
     int gateIndex = inMsg->getArrivalGate()->getIndex();
     ISISinterface *tmpIntf = this->getIfaceByGateIndex(gateIndex);
-    MACAddress tmpMAC = tmpIntf->entry->getMacAddress();
+    inet::MACAddress tmpMAC = tmpIntf->entry->getMacAddress();
     unsigned char *tmpMACChars = new unsigned char[MAC_ADDRESS_SIZE];
     tmpMAC.getAddressBytes(tmpMACChars);
     //if sender is DIS
     if(memcmp(this->getSysID(msg), tmpIntf->L1DIS, ISIS_SYSTEM_ID) == 0){
-        TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
+        inet::TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
         trillD->setDesigVlan(tmpDesigVlanId);
         if ((subTLV = this->getSubTLVByType(tmpTLV, TLV_MT_PORT_CAP_APP_FWD)) != NULL)
         {
@@ -2534,11 +2535,11 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
                     if (changed != tmpAdj->state)
                     {
                         //TODO generate event adjacencyStateChanged
-                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        nb->fireChangeNotification(inet::NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                         int gateIndex = msg->getArrivalGate()->getIndex();
                 //        int gateIndex = timer->getInterfaceIndex();
-                        InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
-                        ISISInterfaceData *isisData = entry->isisData();
+                        inet::InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
+                        inet::ISISInterfaceData *isisData = entry->isisData();
                         isisData->setHelloValid(false);
 
                     }
@@ -2592,7 +2593,7 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
         }
 
         //get source MAC address of received frame
-        Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
+        inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(msg->getControlInfo());
         neighbour.mac = ctrl->getSrc();
 
         //set gate index, which is neighbour connected to
@@ -2612,11 +2613,11 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
         adjL1Table.push_back(neighbour);
         std::sort(this->adjL1Table.begin(), this->adjL1Table.end());
 
-//        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+//        nb->fireChangeNotification(inet::NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
         int gateIndex = msg->getArrivalGate()->getIndex();
 //        int gateIndex = timer->getInterfaceIndex();
-        InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
-        ISISInterfaceData *isisData = entry->isisData();
+        inet::InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
+        inet::ISISInterfaceData *isisData = entry->isisData();
         isisData->setHelloValid(false);
 
     }
@@ -2713,7 +2714,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
 //                            }
                             //TODO B2
                             //schedule adjacencyStateChange(up);
-                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                            nb->fireChangeNotification(inet::NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
 
                         }
                         else
@@ -2765,7 +2766,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
             }
 
             //get source MAC address of received frame
-            Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
+            inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(msg->getControlInfo());
             neighbour.mac = ctrl->getSrc();
 
             //set gate index, which is neighbour connected to
@@ -2832,7 +2833,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
 //                            }
                             //TODO B2
                             //schedule adjacencyStateChange(up);
-                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL2LspTimer);
+                            nb->fireChangeNotification(inet::NF_ISIS_ADJ_CHANGED, this->genL2LspTimer);
                             //TODO support multiple area addresses
                             if (!compareArrays((unsigned char *) this->areaId, tmpAdj->areaID, ISIS_AREA_ID)
                                     && this->isType == L1L2_TYPE)
@@ -2891,7 +2892,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
             }
 
             //get source MAC address of received frame
-            Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
+            inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(msg->getControlInfo());
             neighbour.mac = ctrl->getSrc();
 
             //set gate index, which is neighbour connected to
@@ -3021,8 +3022,8 @@ ISISadj* ISIS::getAdj(ISISMessage *inMsg, short circuitType)
     int gateIndex = inMsg->getArrivalGate()->getIndex();
     //            ISISinterface * tmpIntf = this->getIfaceByGateIndex(gateIndex);
     //TODO for truly point-to-point link there would not be MAC address
-    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(inMsg->getControlInfo());
-    MACAddress tmpMac = ctrl->getSrc();
+    inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(inMsg->getControlInfo());
+    inet::MACAddress tmpMac = ctrl->getSrc();
 
     for (std::vector<ISISadj>::iterator it = adjTable->begin(); it != adjTable->end(); ++it)
     {
@@ -3126,7 +3127,7 @@ ISISadj *ISIS::getAdjBySystemID(unsigned char *systemID, short circuitType, int 
     return NULL;
 }
 
-ISISadj *ISIS::getAdjByMAC(const MACAddress &address, short circuitType, int gateIndex){
+ISISadj *ISIS::getAdjByMAC(const inet::MACAddress &address, short circuitType, int gateIndex){
 
     std::vector<ISISadj> *adjTab = this->getAdjTab(circuitType);
 
@@ -3468,13 +3469,13 @@ void ISIS::setMode(ISIS_MODE mode)
 
 void ISIS::subscribeNb(void)
 {
-    nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-    nb->subscribe(this, NF_CLNS_ROUTE_DELETED);
-    nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
+    nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+    nb->subscribe(this, inet::NF_CLNS_ROUTE_DELETED);
+    nb->subscribe(this, inet::NF_ISIS_ADJ_CHANGED);
 
 }
 
-void ISIS::setIft(IInterfaceTable *ift)
+void ISIS::setIft(inet::IInterfaceTable *ift)
 {
     this->ift = ift;
 }
@@ -3901,7 +3902,7 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
     unsigned char* lastDIS = new unsigned char[ISIS_SYSTEM_ID + 1];
     this->copyArrayContent(disID, lastDIS, ISIS_SYSTEM_ID + 1, 0, 0);
 
-    MACAddress localDIS, receivedDIS;
+    inet::MACAddress localDIS, receivedDIS;
     ISISadj *tmpAdj;
 
     //first old/local DIS
@@ -3922,7 +3923,7 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
             EV<< "deviceId: " << deviceId
             << " ISIS: Warning: Didn't find adjacency for local MAC comparison in electL1DesignatedIS "
             << endl;
-            localDIS = MACAddress("000000000000");
+            localDIS = inet::MACAddress("000000000000");
         }
     }
 
@@ -3936,7 +3937,7 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
         EV<< "deviceId: " << deviceId
         << " ISIS: Warning: Didn't find adjacency for received MAC comparison in electL1DesignatedIS "
         << endl;
-        receivedDIS = MACAddress("000000000000");
+        receivedDIS = inet::MACAddress("000000000000");
     }
 
         //if announced DIS priority is higher then actual one or if they are equal and src MAC is higher than mine, then it's time to update DIS
@@ -4256,15 +4257,15 @@ void ISIS::sendCsnp(ISISTimer *timer)
         packet->setLength(0); //TODO set to length of header
 
 //        //add Ethernet control info
-//        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//        inet::Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 //
 //        // set DSAP & NSAP fields
-//        ctrl->setDsap(SAP_CLNS);
-//        ctrl->setSsap(SAP_CLNS);
+//        ctrl->setDsap(inet::SAP_CLNS);
+//        ctrl->setSsap(inet::SAP_CLNS);
 //
 //        //set destination broadcast address
 //        //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-//        MACAddress ma;
+//        inet::MACAddress ma;
 //        ma.setAddress("ff:ff:ff:ff:ff:ff");
 //        ctrl->setDest(ma);
 //        packet->setControlInfo(ctrl);
@@ -4384,7 +4385,7 @@ void ISIS::sendCsnp(ISISTimer *timer)
          if(isUp((*intIt).gateIndex, circuitType) && (*intIt).network && this->compareArrays((unsigned char *)this->sysId, (*intIt).L1DIS, ISIS_SYSTEM_ID))//TODO L1DIS is not based on circuitType
          {
          ISISCSNPPacket *packetDup = packet->dup();
-         Ieee802Ctrl *ctrlDup = ctrl->dup();
+         inet::Ieee802Ctrl *ctrlDup = ctrl->dup();
          packetDup->setControlInfo(ctrlDup);
          //set source LAN ID
          packetDup->setSourceID(ISIS_SYSTEM_ID, (*intIt).gateIndex);
@@ -4458,15 +4459,15 @@ void ISIS::sendPsnp(ISISTimer *timer)
     packet->setLength(0); //TODO set to length of header
 
 //    //add Ethernet control info
-//    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
+//    inet::Ieee802Ctrl *ctrl = new Ieee802Ctrl();
 //
 //    // set DSAP & NSAP fields
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
+//    ctrl->setDsap(inet::SAP_CLNS);
+//    ctrl->setSsap(inet::SAP_CLNS);
 //
 //    //set destination broadcast address
 //    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-//    MACAddress ma;
+//    inet::MACAddress ma;
 //    ma.setAddress("ff:ff:ff:ff:ff:ff");
 //    ctrl->setDest(ma);
 //
@@ -5151,15 +5152,15 @@ void ISIS::sendLSP(LSPRecord *lspRec, int gateIndex)
 
     ISISLSPPacket *tmpLSP = lspRec->LSP->dup();
 //    //TODO add proper control Info for point-to-point
-//    Ieee802Ctrl *tmpCtrl = new Ieee802Ctrl();
+//    inet::Ieee802Ctrl *tmpCtrl = new Ieee802Ctrl();
 //
 //    // set DSAP & NSAP fields
-//    tmpCtrl->setDsap(SAP_CLNS);
-//    tmpCtrl->setSsap(SAP_CLNS);
+//    tmpCtrl->setDsap(inet::SAP_CLNS);
+//    tmpCtrl->setSsap(inet::SAP_CLNS);
 //
 //    //set destination broadcast address
 //    //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
-//    MACAddress ma;
+//    inet::MACAddress ma;
 //    ma.setAddress("ff:ff:ff:ff:ff:ff");
 //    tmpCtrl->setDest(ma);
 //
@@ -7110,12 +7111,12 @@ void ISIS::addTLV(ISISMessage* inMsg, TLV_t *tlv)
 }
 
 std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int gateIndex, enum TLVtypes subTLVType,
-        InterfaceEntry *ie)
+        inet::InterfaceEntry *ie)
 {
     TLV_t * myTLV;
     std::vector<TLV_t *> myTLVVector;
     AdjTab_t * adjTab;
-    TRILLInterfaceData *d;
+    inet::TRILLInterfaceData *d;
     int count = 0;
     if (tlvType == AREA_ADDRESS)
     {
@@ -7425,7 +7426,7 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
     }
     else
     {
-        EV<< "ISIS: ERROR: This TLV type is not (yet) implemented in genTLV(enum TLVtypes tlvType, short circuitType, int gateIndex, enum TLVtypes subTLVType, InterfaceEntry *ie)" << endl;
+        EV<< "ISIS: ERROR: This TLV type is not (yet) implemented in genTLV(enum TLVtypes tlvType, short circuitType, int gateIndex, enum TLVtypes subTLVType, inet::InterfaceEntry *ie)" << endl;
 
     }
     return myTLVVector;
@@ -7437,7 +7438,7 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
  * @param tlvType TLV type to be generated
  * @param circuitType is level.
  */
-void ISIS::addTLV(std::vector<TLV_t *> *tlvTable, enum TLVtypes tlvType, short circuitType, InterfaceEntry *ie)
+void ISIS::addTLV(std::vector<TLV_t *> *tlvTable, enum TLVtypes tlvType, short circuitType, inet::InterfaceEntry *ie)
 {
     std::vector<TLV_t *> myTLVVector;
     TLV_t * myTLV;
@@ -7702,8 +7703,8 @@ bool ISIS::isAdjUp(ISISMessage *msg, short circuitType)
     int gateIndex = msg->getArrivalGate()->getIndex();
 
     //TODO for truly point-to-point link there would not be MAC address
-    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
-    MACAddress tmpMac = ctrl->getSrc();
+    inet::Ieee802Ctrl *ctrl = check_and_cast<inet::Ieee802Ctrl *>(msg->getControlInfo());
+    inet::MACAddress tmpMac = ctrl->getSrc();
     unsigned char * systemID;
 
     systemID = this->getSysID(msg);
@@ -8335,7 +8336,7 @@ void ISIS::fullSPF(ISISTimer *timer)
                 //for every neighbour (nextHop)
                 for (ISISNeighbours_t::iterator nIt = (*it)->from.begin(); nIt != (*it)->from.end(); ++nIt)
                 {
-                    //getAdjacency by systemID and circuitType, then find iface by gateIndex and finaly get the InterfaceEntry
+                    //getAdjacency by systemID and circuitType, then find iface by gateIndex and finaly get the inet::InterfaceEntry
                     //if it's a pseudonode then find interface based on matching DIS
                     if ((*nIt)->id[ISIS_SYSTEM_ID] != 0)
                     {
@@ -8398,7 +8399,7 @@ void ISIS::fullSPF(ISISTimer *timer)
         //for every neighbour (nextHop)
         for (ISISNeighbours_t::iterator nIt = (*it)->from.begin(); nIt != (*it)->from.end(); ++nIt)
         {
-            //getAdjacency by systemID and circuitType, then find iface by gateIndex and finaly get the InterfaceEntry
+            //getAdjacency by systemID and circuitType, then find iface by gateIndex and finaly get the inet::InterfaceEntry
             //if it's a pseudonode then find interface based on matching DIS
             if ((*nIt)->id[ISIS_SYSTEM_ID] != 0)
             {
@@ -9224,7 +9225,7 @@ void ISIS::generateNetAddr()
     ift = InterfaceTableAccess().get();
     unsigned char *a = new unsigned char[6];
     char *tmp = new char[25];
-    MACAddress address;
+    inet::MACAddress address;
 
     for (int i = 0; i < ift->getNumInterfaces(); i++)
     {
@@ -9268,4 +9269,3 @@ void ISIS::generateNetAddr()
     }
 
 }
-

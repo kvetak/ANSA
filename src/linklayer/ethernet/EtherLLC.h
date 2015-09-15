@@ -13,20 +13,21 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #ifndef __INET_ETHERLLC_H
 #define __INET_ETHERLLC_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ILifecycle.h"
-#include "LifecycleOperation.h"
-#include "NodeStatus.h"
+#include "common/lifecycle/ILifecycle.h"
+#include "common/lifecycle/LifecycleOperation.h"
+#include "common/lifecycle/NodeStatus.h"
+
+namespace inet {
 
 // Forward declarations:
 class EtherFrameWithLLC;
-
 
 /**
  * Implements the LLC sub-layer of the Datalink Layer in Ethernet networks
@@ -35,17 +36,17 @@ class INET_API EtherLLC : public cSimpleModule, public ILifecycle
 {
   protected:
     int seqNum;
-    typedef std::map<int,int> DsapToPortMap;  // DSAP registration table
-    DsapToPortMap dsapToPort;  // DSAP registration table
+    typedef std::map<int, int> DsapToPortMap;    // DSAP registration table
+    DsapToPortMap dsapToPort;    // DSAP registration table
 
     // lifecycle
     bool isUp;
 
     // statistics
-    long dsapsRegistered;       // number DSAPs (higher layers) registered
-    long totalFromHigherLayer;  // total number of packets received from higher layer
-    long totalFromMAC;          // total number of frames received from MAC
-    long totalPassedUp;         // total number of packets passed up to higher layer
+    long dsapsRegistered;    // number DSAPs (higher layers) registered
+    long totalFromHigherLayer;    // total number of packets received from higher layer
+    long totalFromMAC;    // total number of frames received from MAC
+    long totalPassedUp;    // total number of packets passed up to higher layer
     long droppedUnknownDSAP;    // frames dropped because no such DSAP was registered here
     static simsignal_t dsapSignal;
     static simsignal_t encapPkSignal;
@@ -55,9 +56,9 @@ class INET_API EtherLLC : public cSimpleModule, public ILifecycle
     static simsignal_t pauseSentSignal;
 
   protected:
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 2; }
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void handleMessage(cMessage *msg) override;
 
     virtual void processPacketFromHigherLayer(cPacket *msg);
     virtual void processFrameFromMAC(EtherFrameWithLLC *msg);
@@ -73,7 +74,10 @@ class INET_API EtherLLC : public cSimpleModule, public ILifecycle
     virtual void updateDisplayString();
 
   public:
-    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_ETHERLLC_H
+

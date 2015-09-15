@@ -13,12 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "AnsaEtherMACFullDuplex.h"
+#include "ansa/linklayer/ethernet/AnsaEtherMACFullDuplex.h"
 
-#include "EtherFrame_m.h"
-#include "IPassiveQueue.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "common/queue/IPassiveQueue.h"
+#include "base/NotificationBoard.h"
+#include "common/NotifierConsts.h"
 
 // TODO: refactor using a statemachine that is present in a single function
 // TODO: this helps understanding what interactions are there and how they affect the state
@@ -62,9 +62,9 @@ void AnsaEtherMACFullDuplex::handleMessage(cMessage *msg)
     if (msg->isSelfMessage())
         handleSelfMessage(msg);
     else if (msg->getArrivalGate() == upperLayerInGate)
-        processFrameFromUpperLayer(check_and_cast<EtherFrame *>(msg));
+        processFrameFromUpperLayer(check_and_cast<inet::EtherFrame *>(msg));
     else if (msg->getArrivalGate() == physInGate)
-        processMsgFromNetwork(check_and_cast<EtherTraffic *>(msg));
+        processMsgFromNetwork(check_and_cast<inet::EtherTraffic *>(msg));
     else
         throw cRuntimeError("Message received from unknown gate!");
 
@@ -90,7 +90,7 @@ void AnsaEtherMACFullDuplex::startFrameTransmission()
 {
     EV << "Transmitting a copy of frame " << curTxFrame << endl;
 
-    EtherFrame *frame = curTxFrame->dup();  // note: we need to duplicate the frame because we emit a signal with it in endTxPeriod()
+    inet::EtherFrame *frame = curTxFrame->dup();  // note: we need to duplicate the frame because we emit a signal with it in endTxPeriod()
 
     if (frame->getSrc().isUnspecified())
         frame->setSrc(address);
@@ -109,7 +109,7 @@ void AnsaEtherMACFullDuplex::startFrameTransmission()
     transmitState = TRANSMITTING_STATE;
 }
 
-void AnsaEtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
+void AnsaEtherMACFullDuplex::processFrameFromUpperLayer(inet::EtherFrame *frame)
 {
     if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
         throw cRuntimeError("Ethernet frame too short, must be at least 64 bytes (padding should be done at encapsulation)");
@@ -147,7 +147,7 @@ void AnsaEtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
     if (frame->getSrc().isUnspecified())
         frame->setSrc(address);
 
-    bool isPauseFrame = (dynamic_cast<EtherPauseFrame*>(frame) != NULL);
+    bool isPauseFrame = (dynamic_cast<inet::EtherPauseFrame*>(frame) != NULL);
 
     if (!isPauseFrame)
     {
@@ -171,22 +171,22 @@ void AnsaEtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
         EV << "Frame " << frame << " arrived from higher layers, enqueueing\n";
         txQueue.innerQueue->insertFrame(frame);
 
-        if (!curTxFrame && !txQueue.innerQueue->empty())
-            curTxFrame = (EtherFrame*)txQueue.innerQueue->pop();
+        if (!curTxFrame && !txQueue.innerQueue->isEmpty())
+            curTxFrame = (inet::EtherFrame*)txQueue.innerQueue->pop();
     }
 
     if (transmitState == TX_IDLE_STATE)
         scheduleEndIFGPeriod();
 }
 
-void AnsaEtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
+void AnsaEtherMACFullDuplex::processMsgFromNetwork(inet::EtherTraffic *msg)
 {
     EV << "Received frame from network: " << msg << endl;
 
     if (!connected || disabled)
     {
         EV << (!connected ? "Interface is not connected" : "MAC is disabled") << " -- dropping msg " << msg << endl;
-        if (dynamic_cast<EtherFrame *>(msg))    // do not count JAM and IFG packets
+        if (dynamic_cast<inet::EtherFrame *>(msg))    // do not count JAM and IFG packets
         {
             emit(dropPkIfaceDownSignal, msg);
             numDroppedIfaceDown++;
@@ -196,12 +196,12 @@ void AnsaEtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
         return;
     }
 
-    EtherFrame *frame = dynamic_cast<EtherFrame *>(msg);
+    inet::EtherFrame *frame = dynamic_cast<inet::EtherFrame *>(msg);
     if (!frame)
     {
-        if (dynamic_cast<EtherIFG *>(msg))
+        if (dynamic_cast<inet::EtherIFG *>(msg))
             throw cRuntimeError("There is no burst mode in full-duplex operation: EtherIFG is unexpected");
-        check_and_cast<EtherFrame *>(msg);
+        check_and_cast<inet::EtherFrame *>(msg);
     }
 
     totalSuccessfulRxTime += frame->getDuration();
@@ -217,9 +217,9 @@ void AnsaEtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
 
     if (!dropFrameNotForUs(frame))
     {
-        if (dynamic_cast<EtherPauseFrame*>(frame) != NULL)
+        if (dynamic_cast<inet::EtherPauseFrame*>(frame) != NULL)
         {
-            int pauseUnits = ((EtherPauseFrame*)frame)->getPauseTime();
+            int pauseUnits = ((inet::EtherPauseFrame*)frame)->getPauseTime();
             delete frame;
             numPauseFramesRcvd++;
             emit(rxPausePkUnitsSignal, pauseUnits);
@@ -227,7 +227,7 @@ void AnsaEtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
         }
         else
         {
-            processReceivedDataFrame((EtherFrame *)frame);
+            processReceivedDataFrame((inet::EtherFrame *)frame);
         }
     }
 }
@@ -257,10 +257,10 @@ void AnsaEtherMACFullDuplex::handleEndTxPeriod()
 
     emit(packetSentToLowerSignal, curTxFrame);  //consider: emit with start time of frame
 
-    if (dynamic_cast<EtherPauseFrame*>(curTxFrame) != NULL)
+    if (dynamic_cast<inet::EtherPauseFrame*>(curTxFrame) != NULL)
     {
         numPauseFramesSent++;
-        emit(txPausePkUnitsSignal, ((EtherPauseFrame*)curTxFrame)->getPauseTime());
+        emit(txPausePkUnitsSignal, ((inet::EtherPauseFrame*)curTxFrame)->getPauseTime());
     }
     else
     {
@@ -309,7 +309,7 @@ void AnsaEtherMACFullDuplex::handleEndPausePeriod()
     beginSendFrames();
 }
 
-void AnsaEtherMACFullDuplex::processReceivedDataFrame(EtherFrame *frame)
+void AnsaEtherMACFullDuplex::processReceivedDataFrame(inet::EtherFrame *frame)
 {
     emit(packetReceivedFromLowerSignal, frame);
 
@@ -358,7 +358,7 @@ void AnsaEtherMACFullDuplex::scheduleEndIFGPeriod()
 {
     ASSERT(curTxFrame);
 
-    EtherIFG gap;
+    inet::EtherIFG gap;
     transmitState = WAIT_IFG_STATE;
     scheduleAt(simTime() + transmissionChannel->calculateDuration(&gap), endIFGMsg);
 }

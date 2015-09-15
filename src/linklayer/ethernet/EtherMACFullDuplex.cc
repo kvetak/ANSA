@@ -16,13 +16,17 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "EtherMACFullDuplex.h"
+#include "linklayer/ethernet/EtherMACFullDuplex.h"
 
-#include "EtherFrame_m.h"
-#include "IPassiveQueue.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
-#include "InterfaceEntry.h"
+#include "common/queue/IPassiveQueue.h"
+#include "common/NotifierConsts.h"
+#include "common/RawPacket.h"
+#include "common/serializer/SerializerBase.h"
+#include "common/serializer/headerserializers/ethernet/EthernetSerializer.h"
+#include "linklayer/ethernet/EtherFrame.h"
+#include "networklayer/common/InterfaceEntry.h"
+
+namespace inet {
 
 // TODO: refactor using a statemachine that is present in a single function
 // TODO: this helps understanding what interactions are there and how they affect the state
@@ -37,12 +41,12 @@ void EtherMACFullDuplex::initialize(int stage)
 {
     EtherMACBase::initialize(stage);
 
-    if (stage == 0)
-    {
+    if (stage == INITSTAGE_LOCAL) {
         if (!par("duplexMode").boolValue())
             throw cRuntimeError("Half duplex operation is not supported by EtherMACFullDuplex, use the EtherMAC module for that! (Please enable csmacdSupport on EthernetInterface)");
-
-        beginSendFrames();
+    }
+    else if (stage == INITSTAGE_LINK_LAYER) {
+        beginSendFrames();    //FIXME choose an another stage for it
     }
 }
 
@@ -64,8 +68,7 @@ void EtherMACFullDuplex::initializeFlags()
 
 void EtherMACFullDuplex::handleMessage(cMessage *msg)
 {
-    if (!isOperational)
-    {
+    if (!isOperational) {
         handleMessageWhenDown(msg);
         return;
     }
@@ -78,17 +81,17 @@ void EtherMACFullDuplex::handleMessage(cMessage *msg)
     else if (msg->getArrivalGate() == upperLayerInGate)
         processFrameFromUpperLayer(check_and_cast<EtherFrame *>(msg));
     else if (msg->getArrivalGate() == physInGate)
-        processMsgFromNetwork(check_and_cast<EtherTraffic *>(msg));
+        processMsgFromNetwork(PK(msg));
     else
         throw cRuntimeError("Message received from unknown gate!");
 
-    if (ev.isGUI())
+    if (hasGUI())
         updateDisplayString();
 }
 
 void EtherMACFullDuplex::handleSelfMessage(cMessage *msg)
 {
-    EV << "Self-message " << msg << " received\n";
+    EV_TRACE << "Self-message " << msg << " received\n";
 
     if (msg == endTxMsg)
         handleEndTxPeriod();
@@ -103,9 +106,9 @@ void EtherMACFullDuplex::handleSelfMessage(cMessage *msg)
 void EtherMACFullDuplex::startFrameTransmission()
 {
     ASSERT(curTxFrame);
-    EV << "Transmitting a copy of frame " << curTxFrame << endl;
+    EV_DETAIL << "Transmitting a copy of frame " << curTxFrame << endl;
 
-    EtherFrame *frame = curTxFrame->dup();  // note: we need to duplicate the frame because we emit a signal with it in endTxPeriod()
+    EtherFrame *frame = curTxFrame->dup();    // note: we need to duplicate the frame because we emit a signal with it in endTxPeriod()
 
     if (frame->getSrc().isUnspecified())
         frame->setSrc(address);
@@ -114,10 +117,10 @@ void EtherMACFullDuplex::startFrameTransmission()
         frame->setByteLength(curEtherDescr->frameMinBytes);
 
     // add preamble and SFD (Starting Frame Delimiter), then send out
-    frame->addByteLength(PREAMBLE_BYTES+SFD_BYTES);
+    frame->addByteLength(PREAMBLE_BYTES + SFD_BYTES);
 
     // send
-    EV << "Starting transmission of " << frame << endl;
+    EV_INFO << "Transmission of " << frame << " started.\n";
     send(frame, physOutGate);
 
     scheduleAt(transmissionChannel->getTransmissionFinishTime(), endTxMsg);
@@ -127,29 +130,26 @@ void EtherMACFullDuplex::startFrameTransmission()
 void EtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
 {
     if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
-        frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);  // "padding"
+        frame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
 
     frame->setFrameByteLength(frame->getByteLength());
 
-    EV << "Received frame from upper layer: " << frame << endl;
+    EV_INFO << "Received " << frame << " from upper layer." << endl;
 
     emit(packetReceivedFromUpperSignal, frame);
 
-    if (frame->getDest().equals(address))
-    {
-        error("logic error: frame %s from higher layer has local MAC address as dest (%s)",
+    if (frame->getDest().equals(address)) {
+        throw cRuntimeError("logic error: frame %s from higher layer has local MAC address as dest (%s)",
                 frame->getFullName(), frame->getDest().str().c_str());
     }
 
-    if (frame->getByteLength() > MAX_ETHERNET_FRAME_BYTES)
-    {
-        error("packet from higher layer (%d bytes) exceeds maximum Ethernet frame size (%d)",
+    if (frame->getByteLength() > MAX_ETHERNET_FRAME_BYTES) {
+        throw cRuntimeError("packet from higher layer (%d bytes) exceeds maximum Ethernet frame size (%d)",
                 (int)(frame->getByteLength()), MAX_ETHERNET_FRAME_BYTES);
     }
 
-    if (!connected || disabled)
-    {
-        EV << (!connected ? "Interface is not connected" : "MAC is disabled") << " -- dropping packet " << frame << endl;
+    if (!connected || disabled) {
+        EV_WARN << (!connected ? "Interface is not connected" : "MAC is disabled") << " -- dropping packet " << frame << endl;
         emit(dropPkFromHLIfaceDownSignal, frame);
         numDroppedPkFromHLIfaceDown++;
         delete frame;
@@ -162,47 +162,55 @@ void EtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
     if (frame->getSrc().isUnspecified())
         frame->setSrc(address);
 
-    bool isPauseFrame = (dynamic_cast<EtherPauseFrame*>(frame) != NULL);
+    bool isPauseFrame = (dynamic_cast<EtherPauseFrame *>(frame) != nullptr);
 
-    if (!isPauseFrame)
-    {
+    if (!isPauseFrame) {
         numFramesFromHL++;
         emit(rxPkFromHLSignal, frame);
     }
 
-    if (txQueue.extQueue)
-    {
-        ASSERT(curTxFrame == NULL);
+    if (txQueue.extQueue) {
+        ASSERT(curTxFrame == nullptr);
         curTxFrame = frame;
     }
-    else
-    {
+    else {
         if (txQueue.innerQueue->isFull())
-            error("txQueue length exceeds %d -- this is probably due to "
-                  "a bogus app model generating excessive traffic "
-                  "(or if this is normal, increase txQueueLimit!)",
-                  txQueue.innerQueue->getQueueLimit());
+            throw cRuntimeError("txQueue length exceeds %d -- this is probably due to "
+                                "a bogus app model generating excessive traffic "
+                                "(or if this is normal, increase txQueueLimit!)",
+                    txQueue.innerQueue->getQueueLimit());
         // store frame and possibly begin transmitting
-        EV << "Frame " << frame << " arrived from higher layers, enqueueing\n";
+        EV_DETAIL << "Frame " << frame << " arrived from higher layers, enqueueing\n";
         txQueue.innerQueue->insertFrame(frame);
 
-        if (!curTxFrame && !txQueue.innerQueue->empty())
-            curTxFrame = (EtherFrame*)txQueue.innerQueue->pop();
+        if (!curTxFrame && !txQueue.innerQueue->isEmpty())
+            curTxFrame = (EtherFrame *)txQueue.innerQueue->pop();
     }
 
     if (transmitState == TX_IDLE_STATE)
         startFrameTransmission();
 }
 
-void EtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
+void EtherMACFullDuplex::processMsgFromNetwork(cPacket *pk)
 {
-    EV << "Received frame from network: " << msg << endl;
+    if (dynamic_cast<RawPacket *>(pk)) {
+        using namespace serializer;
+        RawPacket *rp = static_cast<RawPacket *>(pk);
+        Buffer b(rp->getByteArray().getDataPtr(), rp->getByteArray().getDataArraySize());
+        Context c;
+        cPacket *deserializedPk = SerializerBase::lookupAndDeserialize(b, c, LINKTYPE, LINKTYPE_ETHERNET);
+        if (deserializedPk) {
+            delete rp;
+            pk = deserializedPk;
+        }
+    }
+    EtherTraffic *msg = check_and_cast<EtherTraffic *>(pk);
 
-    if (!connected || disabled)
-    {
-        EV << (!connected ? "Interface is not connected" : "MAC is disabled") << " -- dropping msg " << msg << endl;
-        if (dynamic_cast<EtherFrame *>(msg))    // do not count JAM and IFG packets
-        {
+    EV_INFO << "Reception of " << msg << " started." << endl;
+
+    if (!connected || disabled) {
+        EV_WARN << (!connected ? "Interface is not connected" : "MAC is disabled") << " -- dropping msg " << msg << endl;
+        if (dynamic_cast<EtherFrame *>(msg)) {    // do not count JAM and IFG packets
             emit(dropPkIfaceDownSignal, msg);
             numDroppedIfaceDown++;
         }
@@ -212,8 +220,7 @@ void EtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
     }
 
     EtherFrame *frame = dynamic_cast<EtherFrame *>(msg);
-    if (!frame)
-    {
+    if (!frame) {
         if (dynamic_cast<EtherIFG *>(msg))
             throw cRuntimeError("There is no burst mode in full-duplex operation: EtherIFG is unexpected");
         check_and_cast<EtherFrame *>(msg);
@@ -222,26 +229,23 @@ void EtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
     totalSuccessfulRxTime += frame->getDuration();
 
     // bit errors
-    if (frame->hasBitError())
-    {
+    if (frame->hasBitError()) {
         numDroppedBitError++;
         emit(dropPkBitErrorSignal, frame);
         delete frame;
         return;
     }
 
-    if (!dropFrameNotForUs(frame))
-    {
-        if (dynamic_cast<EtherPauseFrame*>(frame) != NULL)
-        {
-            int pauseUnits = ((EtherPauseFrame*)frame)->getPauseTime();
+    if (!dropFrameNotForUs(frame)) {
+        if (dynamic_cast<EtherPauseFrame *>(frame) != nullptr) {
+            int pauseUnits = ((EtherPauseFrame *)frame)->getPauseTime();
             delete frame;
             numPauseFramesRcvd++;
             emit(rxPausePkUnitsSignal, pauseUnits);
             processPauseCommand(pauseUnits);
         }
-        else
-        {
+        else {
+            EV_INFO << "Reception of " << frame << " successfully completed." << endl;
             processReceivedDataFrame((EtherFrame *)frame);
         }
     }
@@ -250,10 +254,10 @@ void EtherMACFullDuplex::processMsgFromNetwork(EtherTraffic *msg)
 void EtherMACFullDuplex::handleEndIFGPeriod()
 {
     if (transmitState != WAIT_IFG_STATE)
-        error("Not in WAIT_IFG_STATE at the end of IFG period");
+        throw cRuntimeError("Not in WAIT_IFG_STATE at the end of IFG period");
 
     // End of IFG period, okay to transmit
-    EV << "IFG elapsed" << endl;
+    EV_DETAIL << "IFG elapsed" << endl;
 
     beginSendFrames();
 }
@@ -262,43 +266,39 @@ void EtherMACFullDuplex::handleEndTxPeriod()
 {
     // we only get here if transmission has finished successfully
     if (transmitState != TRANSMITTING_STATE)
-        error("End of transmission, and incorrect state detected");
+        throw cRuntimeError("End of transmission, and incorrect state detected");
 
-    if (NULL == curTxFrame)
-        error("Frame under transmission cannot be found");
+    if (nullptr == curTxFrame)
+        throw cRuntimeError("Frame under transmission cannot be found");
 
-    emit(packetSentToLowerSignal, curTxFrame);  //consider: emit with start time of frame
+    emit(packetSentToLowerSignal, curTxFrame);    //consider: emit with start time of frame
 
-    if (dynamic_cast<EtherPauseFrame*>(curTxFrame) != NULL)
-    {
+    if (dynamic_cast<EtherPauseFrame *>(curTxFrame) != nullptr) {
         numPauseFramesSent++;
-        emit(txPausePkUnitsSignal, ((EtherPauseFrame*)curTxFrame)->getPauseTime());
+        emit(txPausePkUnitsSignal, ((EtherPauseFrame *)curTxFrame)->getPauseTime());
     }
-    else
-    {
+    else {
         unsigned long curBytes = curTxFrame->getFrameByteLength();
         numFramesSent++;
         numBytesSent += curBytes;
         emit(txPkSignal, curTxFrame);
     }
 
-    EV << "Transmission of " << curTxFrame << " successfully completed\n";
+    EV_INFO << "Transmission of " << curTxFrame << " successfully completed.\n";
     delete curTxFrame;
-    curTxFrame = NULL;
+    curTxFrame = nullptr;
     lastTxFinishTime = simTime();
     getNextFrameFromQueue();
 
-    if (pauseUnitsRequested > 0)
-    {
+    if (pauseUnitsRequested > 0) {
         // if we received a PAUSE frame recently, go into PAUSE state
-        EV << "Going to PAUSE mode for " << pauseUnitsRequested << " time units\n";
+        EV_DETAIL << "Going to PAUSE mode for " << pauseUnitsRequested << " time units\n";
 
         scheduleEndPausePeriod(pauseUnitsRequested);
         pauseUnitsRequested = 0;
     }
-    else
-    {
-        EV << "Start IFG period\n";
+    else {
+        EV_DETAIL << "Start IFG period\n";
         scheduleEndIFGPeriod();
     }
 }
@@ -316,9 +316,9 @@ void EtherMACFullDuplex::finish()
 void EtherMACFullDuplex::handleEndPausePeriod()
 {
     if (transmitState != PAUSE_STATE)
-        error("End of PAUSE event occurred when not in PAUSE_STATE!");
+        throw cRuntimeError("End of PAUSE event occurred when not in PAUSE_STATE!");
 
-    EV << "Pause finished, resuming transmissions\n";
+    EV_DETAIL << "Pause finished, resuming transmissions\n";
     beginSendFrames();
 }
 
@@ -338,31 +338,29 @@ void EtherMACFullDuplex::processReceivedDataFrame(EtherFrame *frame)
     numFramesPassedToHL++;
     emit(packetSentToUpperSignal, frame);
     // pass up to upper layer
+    EV_INFO << "Sending " << frame << " to upper layer.\n";
     send(frame, "upperLayerOut");
 }
 
 void EtherMACFullDuplex::processPauseCommand(int pauseUnits)
 {
-    if (transmitState == TX_IDLE_STATE)
-    {
-        EV << "PAUSE frame received, pausing for " << pauseUnitsRequested << " time units\n";
+    if (transmitState == TX_IDLE_STATE) {
+        EV_DETAIL << "PAUSE frame received, pausing for " << pauseUnitsRequested << " time units\n";
         if (pauseUnits > 0)
             scheduleEndPausePeriod(pauseUnits);
     }
-    else if (transmitState == PAUSE_STATE)
-    {
-        EV << "PAUSE frame received, pausing for " << pauseUnitsRequested
-           << " more time units from now\n";
+    else if (transmitState == PAUSE_STATE) {
+        EV_DETAIL << "PAUSE frame received, pausing for " << pauseUnitsRequested
+                  << " more time units from now\n";
         cancelEvent(endPauseMsg);
 
         if (pauseUnits > 0)
             scheduleEndPausePeriod(pauseUnits);
     }
-    else
-    {
+    else {
         // transmitter busy -- wait until it finishes with current frame (endTx)
         // and then it'll go to PAUSE state
-        EV << "PAUSE frame received, storing pause request\n";
+        EV_DETAIL << "PAUSE frame received, storing pause request\n";
         pauseUnitsRequested = pauseUnits;
     }
 }
@@ -384,21 +382,21 @@ void EtherMACFullDuplex::scheduleEndPausePeriod(int pauseUnits)
 
 void EtherMACFullDuplex::beginSendFrames()
 {
-    if (curTxFrame)
-    {
+    if (curTxFrame) {
         // Other frames are queued, transmit next frame
-        EV << "Transmit next frame in output queue\n";
+        EV_DETAIL << "Transmit next frame in output queue\n";
         startFrameTransmission();
     }
-    else
-    {
+    else {
         // No more frames set transmitter to idle
         transmitState = TX_IDLE_STATE;
-        if (!txQueue.extQueue){
+        if (!txQueue.extQueue) {
             // Output only for internal queue (we cannot be shure that there
             //are no other frames in external queue)
-            EV << "No more frames to send, transmitter set to idle\n";
+            EV_DETAIL << "No more frames to send, transmitter set to idle\n";
         }
     }
 }
+
+} // namespace inet
 

@@ -15,8 +15,8 @@
 
 #include <algorithm>
 
-#include "EigrpDisabledInterfaces.h"
-#include "EigrpInterfaceTable.h"
+#include "ansa/networklayer/eigrp/tables/EigrpDisabledInterfaces.h"
+#include "ansa/networklayer/eigrp/tables/EigrpInterfaceTable.h"
 
 EigrpDisabledInterfaces::EigrpDisabledInterfaces()
 {

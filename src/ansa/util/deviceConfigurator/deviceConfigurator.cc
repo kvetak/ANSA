@@ -40,12 +40,12 @@
  * @todo Z9
  */
 
-#include "deviceConfigurator.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
 
-#include "IPv6Address.h"
-#include "IPv6InterfaceData.h"
-#include "IPv4Address.h"
-#include "xmlParser.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"
+#include "networklayer/ipv6/IPv6InterfaceData.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "ansa/util/deviceConfigurator/xmlParser.h"
 
 Define_Module(DeviceConfigurator);
 
@@ -217,7 +217,7 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
       // get interface name and find matching interface in interface table
       const char *ifaceName = iface->getAttribute("name");
-      InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
+      inet::InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
       if (ie == NULL){
          //throw cRuntimeError("No interface called %s on this device", ifaceName);
          EV << "No interface called %s on this device" << ifaceName << endl;
@@ -232,7 +232,7 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
          // get address string
          string addrFull = addr->getNodeValue();
-         IPv6Address ipv6;
+         inet::IPv6Address ipv6;
          int prefixLen;
 
          // check if it's a valid IPv6 address string with prefix and get prefix
@@ -240,16 +240,16 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
             throw cRuntimeError("Unable to set IPv6 address %s on interface %s", addrFull.c_str(), ifaceName);
          }
 
-         ipv6 = IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+         ipv6 = inet::IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
 
          // IPv6NeighbourDiscovery doesn't implement DAD for non-link-local addresses
          // -> we have to set the address as non-tentative
          ie->ipv6Data()->assignAddress(ipv6, false, 0, 0);
 
          //If rt6 is ANSARoutingTable6, than overridden addStaticRoute is called and ANSAIPv6Route is added
-         //else inet IPv6Route is added
+         //else inet inet::IPv6Route is added
          // adding directly connected route to the routing table
-         rt6->addStaticRoute(ipv6.getPrefix(prefixLen), prefixLen, ie->getInterfaceId(), IPv6Address::UNSPECIFIED_ADDRESS, 0);
+         rt6->addStaticRoute(ipv6.getPrefix(prefixLen), prefixLen, ie->getInterfaceId(), inet::IPv6Address::UNSPECIFIED_ADDRESS, 0);
 
          // get next IPv6 address
          addr = xmlParser::GetIPv6Address(addr, NULL);
@@ -297,14 +297,14 @@ void DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
          // get address string
          string addrFull = prefix->getNodeValue();
-         IPv6InterfaceData::AdvPrefix advPrefix;
+         inet::IPv6InterfaceData::AdvPrefix advPrefix;
          int prefixLen;
 
          // check if it's a valid IPv6 address string with prefix and get prefix
          if (!advPrefix.prefix.tryParseAddrWithPrefix(addrFull.c_str(), prefixLen)){
             throw cRuntimeError("Unable to parse IPv6 prefix %s on interface %s", addrFull.c_str(), ifaceName);
          }
-         advPrefix.prefix =  IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+         advPrefix.prefix =  inet::IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
          advPrefix.prefixLength = prefixLen;
 
          const char *validLifeTime = prefix->getAttribute("valid");
@@ -357,7 +357,7 @@ void DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       }
 
       string addrFull = network->getNodeValue();
-      IPv6Address addrNetwork;
+      inet::IPv6Address addrNetwork;
       int prefixLen;
 
       // check if it's a valid IPv6 address string with prefix and get prefix
@@ -365,7 +365,7 @@ void DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
          throw cRuntimeError("Unable to set IPv6 network address %s for static route", addrFull.c_str());
       }
 
-      addrNetwork = IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+      addrNetwork = inet::IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
 
 
       // get IPv6 next hop address string without prefix
@@ -374,7 +374,7 @@ void DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
          throw cRuntimeError("IPv6 next hop address for static route not set");
       }
 
-      IPv6Address addrNextHop = IPv6Address(nextHop->getNodeValue());
+      inet::IPv6Address addrNextHop = inet::IPv6Address(nextHop->getNodeValue());
 
 
       // optinal argument - administrative distance is set to 1 if not set
@@ -395,12 +395,12 @@ void DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // -> nextHop needs to be known network and we have to set output interface manually
 
       // browse connected routes and find one that matches next hop address
-      const IPv6Route *record = rt6->doLongestPrefixMatch(addrNextHop);
+      const inet::IPv6Route *record = rt6->doLongestPrefixMatch(addrNextHop);
       if (record == NULL){
          ev << "No directly connected route for IPv6 next hop address " << addrNextHop << " found" << endl;
       }else{
          // add static route
-         rt6->addStaticRoute(addrNetwork, prefixLen, record->getInterfaceId(), addrNextHop, adminDistance);
+         rt6->addStaticRoute(addrNetwork, prefixLen, record->getInterface()->getInterfaceId(), addrNextHop, adminDistance);
       }
 
 
@@ -416,17 +416,17 @@ void DeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
       return;
 
    // get default-router address string (without prefix)
-   IPv6Address nextHop;
-   nextHop = IPv6Address(gateway->getNodeValue());
+   inet::IPv6Address nextHop;
+   nextHop = inet::IPv6Address(gateway->getNodeValue());
 
    // browse routing table to find the best route to default-router
-   const IPv6Route *route = rt6->doLongestPrefixMatch(nextHop);
+   const inet::IPv6Route *route = rt6->doLongestPrefixMatch(nextHop);
    if (route == NULL){
       return;
    }
 
    // add default static route
-   rt6->addStaticRoute(IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterfaceId(), nextHop, 1);
+   rt6->addStaticRoute(inet::IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterface()->getInterfaceId(), nextHop, 1);
 }
 
 
@@ -443,7 +443,7 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
     {
         // get interface name and find matching interface in interface table
         const char *ifaceName = iface->getAttribute("name");
-        InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
+        inet::InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
 
         if (ie == NULL) {
            //throw cRuntimeError("No interface called %s on this device", ifaceName);
@@ -463,8 +463,8 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
         //register multicast groups
         if (strcmp("Router", deviceType) == 0)
         {//TODO: ???
-            //ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.1"));
-            //ie->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.2"));
+            //ie->ipv4Data()->addMulticastListener(inet::IPv4Address("224.0.0.1"));
+            //ie->ipv4Data()->addMulticastListener(inet::IPv4Address("224.0.0.2"));
         }
 
         ie->ipv4Data()->setMetric(1);
@@ -479,10 +479,10 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
             std::string nodeName = (*ifElemIt)->getTagName();
 
             if (nodeName=="IPAddress")
-                ie->ipv4Data()->setIPAddress(IPv4Address((*ifElemIt)->getNodeValue()));
+                ie->ipv4Data()->setIPAddress(inet::IPv4Address((*ifElemIt)->getNodeValue()));
 
             if (nodeName=="Mask")
-                ie->ipv4Data()->setNetmask(IPv4Address((*ifElemIt)->getNodeValue()));
+                ie->ipv4Data()->setNetmask(inet::IPv4Address((*ifElemIt)->getNodeValue()));
 
             if (nodeName=="MTU")
                 ie->setMtu(atoi((*ifElemIt)->getNodeValue()));
@@ -507,15 +507,15 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
         if (ANSArt != NULL)
         {
             ANSAIPv4Route *route = new ANSAIPv4Route();
-            route->setSource(IPv4Route::IFACENETMASK);
+            route->setSourceType(inet::IPv4Route::IFACENETMASK);
             route->setDestination(ie->ipv4Data()->getIPAddress().doAnd(ie->ipv4Data()->getNetmask()));
             route->setNetmask(ie->ipv4Data()->getNetmask());
-            route->setGateway(IPv4Address());
+            route->setGateway(inet::IPv4Address());
             route->setMetric(ie->ipv4Data()->getMetric());
             route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
             route->setInterface(ie);
             if (!(ie->ipv4Data()->getIPAddress().isUnspecified()
-                    && ie->ipv4Data()->getNetmask() == IPv4Address::ALLONES_ADDRESS ) )
+                    && ie->ipv4Data()->getNetmask() == inet::IPv4Address::ALLONES_ADDRESS ) )
                 ANSArt->addRoute(route);
         }
 
@@ -523,10 +523,10 @@ void DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
     }
 }
 
-void DeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
+void DeviceConfigurator::setInterfaceParamters(inet::InterfaceEntry *interface)
 {
     int gateId = interface->getNodeOutputGateId();
-    cModule *host = findContainingNode(interface->getInterfaceModule());
+    cModule *host = inet::findContainingNode(interface->getInterfaceModule());
     cGate *outGw;
     cChannel *link;
 
@@ -578,16 +578,16 @@ void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
             if (nodeName=="NetworkAddress")
             {
-                ANSAStaticRoute->setDestination(IPv4Address((*routeElemIt)->getNodeValue()));
+                ANSAStaticRoute->setDestination(inet::IPv4Address((*routeElemIt)->getNodeValue()));
             }
             else if (nodeName=="NetworkMask")
             {
-                ANSAStaticRoute->setNetmask(IPv4Address((*routeElemIt)->getNodeValue()));
+                ANSAStaticRoute->setNetmask(inet::IPv4Address((*routeElemIt)->getNodeValue()));
             }
             else if (nodeName=="NextHopAddress")
             {
-                ANSAStaticRoute->setGateway(IPv4Address((*routeElemIt)->getNodeValue()));
-                InterfaceEntry *intf=NULL;
+                ANSAStaticRoute->setGateway(inet::IPv4Address((*routeElemIt)->getNodeValue()));
+                inet::InterfaceEntry *intf=NULL;
                 for (int i=0; i<ift->getNumInterfaces(); i++)
                 {
                     intf = ift->getInterface(i);
@@ -605,12 +605,12 @@ void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
             }
             else if (nodeName=="ExitInterface")
             {
-                InterfaceEntry *ie=ift->getInterfaceByName((*routeElemIt)->getNodeValue());
+                inet::InterfaceEntry *ie=ift->getInterfaceByName((*routeElemIt)->getNodeValue());
                 if (!ie)
                     throw cRuntimeError("Interface %s does not exists.", (*routeElemIt)->getNodeValue());
 
                 ANSAStaticRoute->setInterface(ie);
-                ANSAStaticRoute->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);
+                ANSAStaticRoute->setGateway(inet::IPv4Address::UNSPECIFIED_ADDRESS);
                 ANSAStaticRoute->setMetric(0);
             }
             else if (nodeName=="StaticRouteMetric")
@@ -619,17 +619,17 @@ void DeviceConfigurator::loadStaticRouting(cXMLElement* route)
             }
         }
 
-        ANSAStaticRoute->setSource(IPv4Route::MANUAL);
+        ANSAStaticRoute->setSourceType(inet::IPv4Route::MANUAL);
         ANSAStaticRoute->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
 
-        //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add IPv4Route
+        //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add inet::IPv4Route
         if (ANSArt != NULL)
         {
             rt->addRoute(ANSAStaticRoute);
         }
         else
         {
-            IPv4Route *staticRoute = new IPv4Route();
+            inet::IPv4Route *staticRoute = new inet::IPv4Route();
             staticRoute->setSource(ANSAStaticRoute->getSource());
             staticRoute->setDestination(ANSAStaticRoute->getDestination());
             staticRoute->setNetmask(ANSAStaticRoute->getNetmask());
@@ -651,23 +651,23 @@ void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
       return;
 
     // get default-router address string (without prefix)
-    IPv4Address nextHop;
-    nextHop = IPv4Address(gateway->getNodeValue());
+    inet::IPv4Address nextHop;
+    nextHop = inet::IPv4Address(gateway->getNodeValue());
 
     // browse routing table to find the best route to default-router
-    const IPv4Route *route = rt->findBestMatchingRoute(nextHop);
+    const inet::IPv4Route *route = rt->findBestMatchingRoute(nextHop);
     if (route == NULL)
       return;
 
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
-    //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add IPv4Route
+    //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add inet::IPv4Route
     if (ANSArt != NULL)
     {
         ANSAIPv4Route *defaultRoute = new ANSAIPv4Route();
-        defaultRoute->setSource(IPv4Route::MANUAL);
-        defaultRoute->setDestination(IPv4Address());
-        defaultRoute->setNetmask(IPv4Address());
+        defaultRoute->setSourceType(inet::IPv4Route::MANUAL);
+        defaultRoute->setDestination(inet::IPv4Address());
+        defaultRoute->setNetmask(inet::IPv4Address());
         defaultRoute->setGateway(nextHop);
         defaultRoute->setInterface(route->getInterface());
         defaultRoute->setMetric(0);
@@ -677,10 +677,10 @@ void DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
     }
     else
     {
-        IPv4Route *defaultRoute = new IPv4Route();
-        defaultRoute->setSource(IPv4Route::MANUAL);
-        defaultRoute->setDestination(IPv4Address());
-        defaultRoute->setNetmask(IPv4Address());
+        inet::IPv4Route *defaultRoute = new inet::IPv4Route();
+        defaultRoute->setSourceType(inet::IPv4Route::MANUAL);
+        defaultRoute->setDestination(inet::IPv4Address());
+        defaultRoute->setNetmask(inet::IPv4Address());
         defaultRoute->setGateway(nextHop);
         defaultRoute->setInterface(route->getInterface());
         defaultRoute->setMetric(0);
@@ -741,7 +741,7 @@ void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule)
                       RIPngParamString = xmlParser::GetNodeParamConfig(RIPngProcessElement, "Address", "");
                       if (strcmp(RIPngParamString, "") != 0)
                       {
-                          IPv6Address RIPngAddress = IPv6Address(RIPngParamString);
+                          inet::IPv6Address RIPngAddress = inet::IPv6Address(RIPngParamString);
                           RIPngModule->setPortAndAddress(RIPngProcess, port, RIPngAddress);
                       }
                   }
@@ -878,7 +878,7 @@ void DeviceConfigurator::loadRIPngConfig(RIPngRouting *RIPngModule)
 void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *process, cXMLElement *interface)
 {
     const char *interfaceName = interface->getAttribute("name");
-    InterfaceEntry *interfaceEntry = ift->getInterfaceByName(interfaceName);
+    inet::InterfaceEntry *interfaceEntry = ift->getInterfaceByName(interfaceName);
     int interfaceId = interfaceEntry->getInterfaceId();
 
     RIPng::RoutingTableEntry *route;
@@ -886,7 +886,7 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *proces
     // process next interface
     cXMLElement *eIpv6address;
     std::string sIpv6address;
-    IPv6Address ipv6address;
+    inet::IPv6Address ipv6address;
     int prefixLen;
         // get first ipv6 address
         eIpv6address = xmlParser::GetIPv6Address(NULL, interface);
@@ -906,7 +906,7 @@ void DeviceConfigurator::loadPrefixesFromInterfaceToRIPngRT(RIPngProcess *proces
                 route = new RIPng::RoutingTableEntry(ipv6address.getPrefix(prefixLen), prefixLen);
                 route->setProcess(process);
                 route->setInterfaceId(interfaceId);
-                route->setNextHop(IPv6Address::UNSPECIFIED_ADDRESS);  // means directly connected network
+                route->setNextHop(inet::IPv6Address::UNSPECIFIED_ADDRESS);  // means directly connected network
                 route->setMetric(process->getConnNetworkMetric());
                 process->addRoutingTableEntry(route, false);
 
@@ -940,7 +940,7 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     RIP::Interface *RIPInterface;
 
     int numInterfaces = ift->getNumInterfaces();
-    InterfaceEntry *interface;
+    inet::InterfaceEntry *interface;
     int interfaceId;
     const char *interfaceName;
 
@@ -953,12 +953,12 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
         if (networkString == NULL)
             continue;
 
-        IPv4Address network = IPv4Address(networkString);
+        inet::IPv4Address network = inet::IPv4Address(networkString);
 
         for (int i = 0; i < numInterfaces; ++i)
         {
             interface = ift->getInterface(i);
-            IPv4Address interfaceAddress = interface->ipv4Data()->getIPAddress();
+            inet::IPv4Address interfaceAddress = interface->ipv4Data()->getIPAddress();
             if (interfaceAddress.isUnspecified())
                 continue;
 
@@ -1023,13 +1023,13 @@ void DeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     }
 }
 
-void DeviceConfigurator::loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, InterfaceEntry *interface)
+void DeviceConfigurator::loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModule, inet::InterfaceEntry *interface)
 {
     // make directly connected route
     RIP::RoutingTableEntry *route = new RIP::RoutingTableEntry(interface->ipv4Data()->getIPAddress().doAnd(interface->ipv4Data()->getNetmask()),
                                                                interface->ipv4Data()->getNetmask());
     route->setInterface(interface);
-    route->setGateway(IPv4Address::UNSPECIFIED_ADDRESS);  // means directly connected network
+    route->setGateway(inet::IPv4Address::UNSPECIFIED_ADDRESS);  // means directly connected network
     route->setMetric(RIPModule->getConnNetworkMetric());
     RIPModule->addRoutingTableEntry(route, false);
 
@@ -1086,7 +1086,7 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 
         // create new PIM interface
         PimInterface newentry;
-        InterfaceEntry *interface = ift->getInterfaceByName(iface->getAttribute("name"));
+        inet::InterfaceEntry *interface = ift->getInterfaceByName(iface->getAttribute("name"));
         newentry.setInterfaceID(interface->getInterfaceId());
         newentry.setInterfacePtr(interface);
 
@@ -1119,17 +1119,20 @@ void DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         }
 
         // register pim multicast address 224.0.0.13 (all PIM routers) on Pim interface
-        std::vector<IPv4Address> intMulticastAddresses;
+        std::vector<inet::IPv4Address> intMulticastAddresses;
 
         //FIXME only for PIM-DM testing purposes
         cXMLElement* IPaddress = iface->getElementByPath("IPAddress");                  //Register 226.1.1.1 to R2 router
         std::string intfToRegister = IPaddress->getNodeValue();
 
         if (intfToRegister == "192.168.12.2" || intfToRegister == "192.168.22.2")
-                interface->ipv4Data()->addMulticastListener(IPv4Address("226.1.1.1"));
+                interface->ipv4Data()->addMulticastListener(inet::IPv4Address("226.1.1.1"));
 
-        interface->ipv4Data()->addMulticastListener(IPv4Address("224.0.0.13"));
-        intMulticastAddresses = interface->ipv4Data()->getReportedMulticastGroups();
+        interface->ipv4Data()->addMulticastListener(inet::IPv4Address("224.0.0.13"));
+        for(int i=0; i<interface->ipv4Data()->getNumOfReportedMulticastGroups(); i++)
+        {
+            intMulticastAddresses.push_back(interface->ipv4Data()->getReportedMulticastGroup(i));
+        }
 
         for(unsigned int i = 0; i < (intMulticastAddresses.size()); i++)
             EV << intMulticastAddresses[i] << ", ";
@@ -1320,10 +1323,10 @@ void DeviceConfigurator::loadISISInterfacesConfig(ISIS *isisModule){
         }
     }
     // add all interfaces to ISISIft vector containing additional information
-//    InterfaceEntry *entryIFT = new InterfaceEntry(this); //TODO added "this" -> experimental
+//    inet::InterfaceEntry *entryIFT = new inet::InterfaceEntry(this); //TODO added "this" -> experimental
     for (int i = 0; i < ift->getNumInterfaces(); i++)
     {
-        InterfaceEntry *ie = ift->getInterface(i);
+        inet::InterfaceEntry *ie = ift->getInterface(i);
         if (interfaces == NULL)
         {
             this->loadISISInterfaceDefaultConfig(isisModule, ie);
@@ -1411,9 +1414,9 @@ void DeviceConfigurator::loadISISCoreDefaultConfig(ISIS *isisModule){
 }
 
 
-void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *ie){
+void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, inet::InterfaceEntry *ie){
 
-    ISISInterfaceData *d = new ISISInterfaceData();
+    inet::ISISInterfaceData *d = new inet::ISISInterfaceData();
         ISISinterface newIftEntry;
         newIftEntry.intID = ie->getInterfaceId();
         d->setIfaceId(ie->getInterfaceId());
@@ -1523,7 +1526,7 @@ void DeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, Interf
 }
 
 
-void DeviceConfigurator::loadISISInterfaceConfig(ISIS *isisModule, InterfaceEntry *entry, cXMLElement *intElement){
+void DeviceConfigurator::loadISISInterfaceConfig(ISIS *isisModule, inet::InterfaceEntry *entry, cXMLElement *intElement){
 
 
     if(intElement == NULL){
@@ -2056,14 +2059,14 @@ void DeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 
 
 
-        //std::vector<IPv4Address> mcastGroupsList;
-        InterfaceEntry *ie = ift->getInterfaceByName(iface->getAttribute("name"));
+        //std::vector<inet::IPv4Address> mcastGroupsList;
+        inet::InterfaceEntry *ie = ift->getInterfaceByName(iface->getAttribute("name"));
         bool empty = true;
         for (cXMLElement *mcastNode=MCastGroupsNode->getFirstChild(); mcastNode; mcastNode = mcastNode->getNextSibling())
         {
             const char *mcastAddress = mcastNode->getNodeValue();
-            //mcastGroupsList.push_back((IPv4Address)mcastAddress);
-            ie->ipv4Data()->joinMulticastGroup((IPv4Address)mcastAddress);
+            //mcastGroupsList.push_back((inet::IPv4Address)mcastAddress);
+            ie->ipv4Data()->joinMulticastGroup((inet::IPv4Address)mcastAddress);
             empty = false;
         }
         if(empty)
@@ -2086,14 +2089,14 @@ void DeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 
 
 
-        //std::vector<IPv4Address> mcastGroupsList;
-        InterfaceEntry *ie = ift->getInterfaceByName(iface->getAttribute("name"));
+        //std::vector<inet::IPv4Address> mcastGroupsList;
+        inet::InterfaceEntry *ie = ift->getInterfaceByName(iface->getAttribute("name"));
         bool empty = true;
         for (cXMLElement *mcastNode6=MCastGroupsNode6->getFirstChild(); mcastNode6; mcastNode6 = mcastNode6->getNextSibling())
         {
             const char *mcastAddress6 = mcastNode6->getNodeValue();
-            //mcastGroupsList.push_back((IPv4Address)mcastAddress);
-            ie->ipv6Data()->joinMulticastGroup(IPv6Address(mcastAddress6));      //todo
+            //mcastGroupsList.push_back((inet::IPv4Address)mcastAddress);
+            ie->ipv6Data()->joinMulticastGroup(inet::IPv6Address(mcastAddress6));      //todo
             empty = false;
         }
         if(empty)
@@ -2131,7 +2134,7 @@ void DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
     {
 
         EV << ift->getInterfaceByName(interface->getAttribute("name")) << endl;
-        InterfaceEntry* ie = ift->getInterfaceByName(interface->getAttribute("name"));
+        inet::InterfaceEntry* ie = ift->getInterfaceByName(interface->getAttribute("name"));
         if (!ie) {
             EV << "Interface " << interface->getAttribute("name") << " does not exist!" << endl;
             continue;
@@ -2250,7 +2253,7 @@ void DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter* VRRP
 //- configuration for EIGRP
 //
 //
-bool DeviceConfigurator::wildcardToMask(const char *wildcard, IPv4Address& result)
+bool DeviceConfigurator::wildcardToMask(const char *wildcard, inet::IPv4Address& result)
 {
     result.set(wildcard);
     uint32 wcNum = result.getInt();
@@ -2265,14 +2268,14 @@ bool DeviceConfigurator::wildcardToMask(const char *wildcard, IPv4Address& resul
     return true;
 }
 
-EigrpNetwork<IPv4Address> *DeviceConfigurator::isEigrpInterface(std::vector<EigrpNetwork<IPv4Address> *>& networks, InterfaceEntry *interface)
+EigrpNetwork<inet::IPv4Address> *DeviceConfigurator::isEigrpInterface(std::vector<EigrpNetwork<inet::IPv4Address> *>& networks, inet::InterfaceEntry *interface)
 {
-    IPv4Address prefix, mask;
-    IPv4Address ifAddress = interface->ipv4Data()->getIPAddress();
-    IPv4Address ifmask = interface->ipv4Data()->getNetmask();
+    inet::IPv4Address prefix, mask;
+    inet::IPv4Address ifAddress = interface->ipv4Data()->getIPAddress();
+    inet::IPv4Address ifmask = interface->ipv4Data()->getNetmask();
     vector<int> resultIfs;
     int maskLength, ifMaskLength;
-    std::vector<EigrpNetwork<IPv4Address> *>::iterator it;
+    std::vector<EigrpNetwork<inet::IPv4Address> *>::iterator it;
 
     if (ifAddress.isUnspecified())
                 return NULL;
@@ -2299,13 +2302,13 @@ EigrpNetwork<IPv4Address> *DeviceConfigurator::isEigrpInterface(std::vector<Eigr
     return NULL;
 }
 
-void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<IPv4Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<inet::IPv4Address> *eigrpModule)
 {
     const char *addressStr, *wildcardStr;
-    IPv4Address address, mask;
-    std::vector<EigrpNetwork<IPv4Address> *> networks;
-    EigrpNetwork<IPv4Address> *net;
-    InterfaceEntry *iface;
+    inet::IPv4Address address, mask;
+    std::vector<EigrpNetwork<inet::IPv4Address> *> networks;
+    EigrpNetwork<inet::IPv4Address> *net;
+    inet::InterfaceEntry *iface;
 
     cXMLElement *netoworkParentElem = processElem->getFirstChildWithTag("Networks");
     if (netoworkParentElem == NULL)
@@ -2327,14 +2330,14 @@ void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpM
         address.set(addressStr);
         if (wildcardStr == NULL)
         {// wildcard is optional
-            mask = IPv4Address::UNSPECIFIED_ADDRESS;
+            mask = inet::IPv4Address::UNSPECIFIED_ADDRESS;
             // classful network
             address = address.getNetwork();
         }
         else
         {
             // Accepts incorrectly specified wildcard as normal mask (Cisco)
-            mask = IPv4Address(wildcardStr);
+            mask = inet::IPv4Address(wildcardStr);
             if (mask.isUnspecified() || !mask.isValidNetmask()) {
                 if (!wildcardToMask(wildcardStr, mask))
                     throw cRuntimeError("Invalid wildcard in EIGRP network configuration");
@@ -2357,7 +2360,7 @@ void DeviceConfigurator::loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpM
     }
 }
 
-void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule<inet::IPv4Address> *eigrpModule)
 {
     ASSERT(eigrpModule != NULL);
 
@@ -2379,7 +2382,7 @@ void DeviceConfigurator::loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpMod
     loadEigrpInterfacesConfig(device, eigrpModule);
 }
 
-void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<inet::IPv4Address> *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *processElem = NULL;
@@ -2444,7 +2447,7 @@ void DeviceConfigurator::loadEigrpProcessesConfig(cXMLElement *device, IEigrpMod
             {
                 // Get interface ID
                 const char *ifaceName = (*procElem)->getNodeValue();
-                InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+                inet::InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
                 if (iface == NULL){
                     throw cRuntimeError("No interface called %s on this device", ifaceName);
                 }
@@ -2496,7 +2499,7 @@ bool DeviceConfigurator::loadEigrpStubConf(cXMLElement *node, const char *attrNa
     return result;
 }
 
-void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<inet::IPv4Address> *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *eigrpIfaceElem = NULL;
@@ -2512,7 +2515,7 @@ void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpMo
     {
         // Get interface ID
         const char *ifaceName = ifaceElem->getAttribute("name");
-        InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+        inet::InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
         if (iface == NULL){
             throw cRuntimeError("No interface called %s on this device", ifaceName);
         }
@@ -2538,7 +2541,7 @@ void DeviceConfigurator::loadEigrpInterfacesConfig(cXMLElement *device, IEigrpMo
     }
 }
 
-void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName)
+void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<inet::IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName)
 {
     int tempNumber;
     bool tempBool, success;
@@ -2574,7 +2577,7 @@ void DeviceConfigurator::loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModul
 
 //EIGRP - IPv6
 
-void DeviceConfigurator::loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpIPv6Config(IEigrpModule<inet::IPv6Address> *eigrpModule)
 {//TODO
     ASSERT(eigrpModule != NULL);
 
@@ -2596,7 +2599,7 @@ void DeviceConfigurator::loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpMod
     loadEigrpInterfaces6Config(device, eigrpModule);
 }
 
-void DeviceConfigurator::loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<inet::IPv6Address> *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *processElem = NULL;
@@ -2626,7 +2629,7 @@ void DeviceConfigurator::loadEigrpProcesses6Config(cXMLElement *device, IEigrpMo
     // routerID for process
     if ((rIdStr = processElem->getAttribute("routerId")) == NULL)
         throw cRuntimeError("No EIGRP routerID specified"); // routerID must be specified
-    eigrpModule->setRouterId(IPv4Address(rIdStr));
+    eigrpModule->setRouterId(inet::IPv4Address(rIdStr));
 
     procDetails = processElem->getChildren();
     for (cXMLElementList::iterator procElem = procDetails.begin(); procElem != procDetails.end(); procElem++)
@@ -2662,7 +2665,7 @@ void DeviceConfigurator::loadEigrpProcesses6Config(cXMLElement *device, IEigrpMo
         {
             // Get interface ID
             const char *ifaceName = (*procElem)->getNodeValue();
-            InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+            inet::InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
             if (iface == NULL){
                 throw cRuntimeError("No interface called %s on this device", ifaceName);
             }
@@ -2687,7 +2690,7 @@ void DeviceConfigurator::loadEigrpProcesses6Config(cXMLElement *device, IEigrpMo
     return;
 }
 
-void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule)
+void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<inet::IPv6Address> *eigrpModule)
 {
     // XML nodes for EIGRP
     cXMLElement *eigrpIfaceElem = NULL;
@@ -2704,7 +2707,7 @@ void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpM
     {
         // Get interface ID
         const char *ifaceName = ifaceElem->getAttribute("name");
-        InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+        inet::InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
         if (iface == NULL){
             throw cRuntimeError("No interface called %s on this device", ifaceName);
         }
@@ -2716,7 +2719,7 @@ void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpM
 
             // get address string
             string addrFull = ipv6AddrElem->getNodeValue();
-            IPv6Address ipv6;
+            inet::IPv6Address ipv6;
             int prefixLen;
 
             // check if it's a valid IPv6 address string with prefix and get prefix
@@ -2724,11 +2727,11 @@ void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpM
             throw cRuntimeError("Unable to set IPv6 address %s on interface %s", addrFull.c_str(), ifaceName);
             }
 
-            ipv6 = IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+            ipv6 = inet::IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
 
             //EV << "IPv6 address: " << ipv6 << "/" << prefixLen << " on iface " << ifaceName << endl;
 
-            if(ipv6.getScope() != IPv6Address::LINK)
+            if(ipv6.getScope() != inet::IPv6Address::LINK)
             {// is not link-local -> add
                 if(!eigrpModule->addNetPrefix(ipv6.getPrefix(prefixLen), prefixLen, iface->getInterfaceId())) //only saves information about prefix - does not enable in EIGRP
                 {// failure - same prefix on different interfaces
@@ -2770,7 +2773,7 @@ void DeviceConfigurator::loadEigrpInterfaces6Config(cXMLElement *device, IEigrpM
     }
 }
 
-void DeviceConfigurator::loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName)
+void DeviceConfigurator::loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<inet::IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName)
 {
     int tempNumber;
     bool tempBool, success;
@@ -2915,7 +2918,7 @@ void DeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, BabelMai
     {
         // Get interface ID
         const char *ifaceName = ifaceElem->getAttribute("name");
-        InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
+        inet::InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
         if (iface == NULL){
             throw cRuntimeError("No interface called %s on this device", ifaceName);
         }
@@ -2933,7 +2936,7 @@ void DeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, BabelMai
             cXMLElement *ipv4MaskElem = ifaceElem->getFirstChildWithTag("Mask");
             if(ipv4AddrElem != NULL && ipv4MaskElem != NULL)
             {
-                bIface->addDirectlyConn(Babel::netPrefix<IPvXAddress>(IPv4Address(ipv4AddrElem->getNodeValue()), IPv4Address(ipv4MaskElem->getNodeValue()).getNetmaskLength()));
+                bIface->addDirectlyConn(Babel::netPrefix<inet::L3Address>(inet::IPv4Address(ipv4AddrElem->getNodeValue()), inet::IPv4Address(ipv4MaskElem->getNodeValue()).getNetmaskLength()));
             }
 
 
@@ -2943,7 +2946,7 @@ void DeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, BabelMai
             {
                 // get address string
                 string addrFull = ipv6AddrElem->getNodeValue();
-                IPv6Address ipv6;
+                inet::IPv6Address ipv6;
                 int prefixLen;
 
                 // check if it's a valid IPv6 address string with prefix and get prefix
@@ -2952,13 +2955,13 @@ void DeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, BabelMai
                     throw cRuntimeError("Unable to set IPv6 address %s on interface %s", addrFull.c_str(), ifaceName);
                 }
 
-                ipv6 = IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+                ipv6 = inet::IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
 
                 //EV << "IPv6 address: " << ipv6 << "/" << prefixLen << " on iface " << ifaceName << endl;
 
-                if(ipv6.getScope() != IPv6Address::LINK)
+                if(ipv6.getScope() != inet::IPv6Address::LINK)
                 {// is not link-local -> add
-                    bIface->addDirectlyConn(Babel::netPrefix<IPvXAddress>(ipv6, prefixLen));
+                    bIface->addDirectlyConn(Babel::netPrefix<inet::L3Address>(ipv6, prefixLen));
                 }
                 // get next IPv6 address
                 ipv6AddrElem = xmlParser::GetIPv6Address(ipv6AddrElem, NULL);

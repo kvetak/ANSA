@@ -17,15 +17,17 @@
 
 #include <vector>
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "IntServ.h"
+#include "networklayer/rsvp_te/IntServ.h"
 
-EroVector routeToEro(IPAddressVector rro);
-std::string vectorToString(IPAddressVector vec);
-std::string vectorToString(IPAddressVector vec, const char *delim);
-std::string vectorToString(EroVector vec);
-std::string vectorToString(EroVector vec, const char *delim);
+namespace inet {
+
+EroVector routeToEro(const IPAddressVector& rro);
+std::string vectorToString(const IPAddressVector& vec);
+std::string vectorToString(const IPAddressVector& vec, const char *delim);
+std::string vectorToString(const EroVector& vec);
+std::string vectorToString(const EroVector& vec, const char *delim);
 
 /**
  * TODO documentation
@@ -40,7 +42,7 @@ bool find(std::vector<int>& vec, int value);
 /**
  * TODO documentation
  */
-bool find(const IPAddressVector& vec, IPv4Address addr); // use TEMPLATE
+bool find(const IPAddressVector& vec, IPv4Address addr);    // use TEMPLATE
 
 /**
  * TODO documentation
@@ -59,5 +61,7 @@ cModule *getPayloadOwner(cPacket *msg);
 
 //void prepend(EroVector& dest, const EroVector& src, bool reverse);
 
+} // namespace inet
 
-#endif
+#endif // ifndef __INET_UTILS_H
+

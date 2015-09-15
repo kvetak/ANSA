@@ -15,41 +15,39 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "applications/udpapp/UDPEchoApp.h"
 
-#include "UDPEchoApp.h"
-#include "UDPControlInfo_m.h"
+#include "common/ModuleAccess.h"
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
 
+namespace inet {
 
 Define_Module(UDPEchoApp);
 
-simsignal_t UDPEchoApp::pkSignal = SIMSIGNAL_NULL;
+simsignal_t UDPEchoApp::pkSignal = registerSignal("pk");
 
 void UDPEchoApp::initialize(int stage)
 {
-    AppBase::initialize(stage);
-    if (stage == 0)
-    {
+    ApplicationBase::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         // init statistics
-        pkSignal = registerSignal("pk");
         numEchoed = 0;
         WATCH(numEchoed);
     }
-    else if (stage == 3)
-    {
-        if (ev.isGUI())
+    else if (stage == INITSTAGE_LAST) {
+        if (hasGUI())
             updateDisplay();
     }
 }
 
 void UDPEchoApp::handleMessageWhenUp(cMessage *msg)
 {
-    if (msg->getKind() == UDP_I_ERROR)
-    {
+    if (msg->getKind() == UDP_I_ERROR) {
         // ICMP error report -- discard it
         delete msg;
     }
-    else if (msg->getKind() == UDP_I_DATA)
-    {
+    else if (msg->getKind() == UDP_I_DATA) {
         cPacket *pk = PK(msg);
         // statistics
         numEchoed++;
@@ -57,18 +55,17 @@ void UDPEchoApp::handleMessageWhenUp(cMessage *msg)
 
         // determine its source address/port
         UDPDataIndication *ctrl = check_and_cast<UDPDataIndication *>(pk->removeControlInfo());
-        IPvXAddress srcAddress = ctrl->getSrcAddr();
+        L3Address srcAddress = ctrl->getSrcAddr();
         int srcPort = ctrl->getSrcPort();
         delete ctrl;
 
         // send back
         socket.sendTo(pk, srcAddress, srcPort);
 
-        if (ev.isGUI())
+        if (hasGUI())
             updateDisplay();
     }
-    else
-    {
+    else {
         throw cRuntimeError("Message received with unexpected message kind = %d", msg->getKind());
     }
 }
@@ -82,26 +79,28 @@ void UDPEchoApp::updateDisplay()
 
 void UDPEchoApp::finish()
 {
-    AppBase::finish();
+    ApplicationBase::finish();
 }
 
-bool UDPEchoApp::startApp(IDoneCallback *doneCallback)
+bool UDPEchoApp::handleNodeStart(IDoneCallback *doneCallback)
 {
     socket.setOutputGate(gate("udpOut"));
     int localPort = par("localPort");
     socket.bind(localPort);
-    socket.joinLocalMulticastGroups();
+    MulticastGroupList mgl = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this)->collectMulticastGroups();
+    socket.joinLocalMulticastGroups(mgl);
     return true;
 }
 
-bool UDPEchoApp::stopApp(IDoneCallback *doneCallback)
+bool UDPEchoApp::handleNodeShutdown(IDoneCallback *doneCallback)
 {
     //TODO if(socket.isOpened()) socket.close();
     return true;
 }
 
-bool UDPEchoApp::crashApp(IDoneCallback *doneCallback)
+void UDPEchoApp::handleNodeCrash()
 {
-    return true;
 }
+
+} // namespace inet
 

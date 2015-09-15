@@ -22,10 +22,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <omnetpp.h>
-#include "INETDefs.h"
-#include "Ethernet.h"
-#include "EtherFrame_m.h"
-#include "AnsaEtherMACBase.h"
+#include "common/INETDefs.h"
+#include "linklayer/ethernet/Ethernet.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "ansa/linklayer/ethernet/AnsaEtherMACBase.h"
 
 // Length of autoconfig period: should be larger than delays
 #define AUTOCONFIG_PERIOD  0.001  /* well more than 4096 bit times at 10Mb */
@@ -58,7 +58,7 @@ class INET_API AnsaEtherMAC : public AnsaEtherMACBase
     int  numConcurrentTransmissions; // number of colliding frames -- we must receive this many jams
 
     // other variables
-    EtherFrame *frameBeingReceived;
+    inet::EtherFrame *frameBeingReceived;
     cMessage *endRxMsg, *endBackoffMsg, *endJammingMsg;
 
     // statistics
@@ -71,7 +71,7 @@ class INET_API AnsaEtherMAC : public AnsaEtherMACBase
     cOutVector numBackoffsVector;
 
     // event handlers
-    virtual void processFrameFromUpperLayer(EtherFrame *msg);
+    virtual void processFrameFromUpperLayer(inet::EtherFrame *msg);
     virtual void processMsgFromNetwork(cPacket *msg);
     virtual void handleEndIFGPeriod();
     virtual void handleEndTxPeriod();

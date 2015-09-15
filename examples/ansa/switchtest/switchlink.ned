@@ -4,9 +4,9 @@ package inet.examples.ansa.switchtest;
 
 
 import inet.ansa.ANSASwitch;
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 //import inet.world.ChannelInstaller;
-import inet.world.scenario.ScenarioManager;
+import inet.common.scenario.ScenarioManager;
 import ned.DatarateChannel;
 
 network switchtest2

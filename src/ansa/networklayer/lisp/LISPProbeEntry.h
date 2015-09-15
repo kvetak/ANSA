@@ -22,9 +22,9 @@
 #ifndef LISPPROBEENTRY_H_
 #define LISPPROBEENTRY_H_
 
-#include "LISPRLocator.h"
-#include "LISPEidPrefix.h"
-#include "LISPTStructs.h"
+#include "ansa/networklayer/lisp/LISPRLocator.h"
+#include "ansa/networklayer/lisp/LISPEidPrefix.h"
+#include "ansa/networklayer/lisp/LISPTStructs.h"
 
 typedef std::pair<LISPEidPrefix, LISPRLocator*> EidStat;
 typedef std::list<EidStat> EidsStats;
@@ -33,12 +33,12 @@ typedef EidsStats::iterator EidItem;
 
 class LISPProbeEntry {
   public:
-    LISPProbeEntry(IPvXAddress nrloc);
+    LISPProbeEntry(inet::L3Address nrloc);
     virtual ~LISPProbeEntry();
 
     bool operator== (const LISPProbeEntry& other) const;
 
-    const IPvXAddress& getRlocAddr() const;
+    const inet::L3Address& getRlocAddr() const;
     const simtime_t& getLastTimeProbed() const;
     void setLastTimeProbed(const simtime_t lastTimeProbed);
     const EidsStats& getEids() const;
@@ -53,7 +53,7 @@ class LISPProbeEntry {
     void setRlocStatusForAllEids(LISPRLocator::LocatorState stat);
 
   private:
-    IPvXAddress rlocAddr;
+    inet::L3Address rlocAddr;
     EidsStats eids;
     simtime_t lastTimeProbed;
     bool curInit;

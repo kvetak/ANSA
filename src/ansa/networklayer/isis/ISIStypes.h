@@ -26,10 +26,10 @@
 #ifndef ISISTYPES_H_
 #define ISISTYPES_H_
 
-#include "MACAddress.h"
-#include "InterfaceEntry.h"
-#include "ISISTimer_m.h"
-#include "ISISMessage_m.h"
+#include "linklayer/common/MACAddress.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "ansa/networklayer/isis/ISISTimer_m.h"
+#include "ansa/networklayer/isis/ISISMessage_m.h"
 //#include "ISIS.h"
 
 
@@ -53,7 +53,7 @@
 #define ISIS_SPF_FULL_INTERVAL 50 //TODO A! change back to 50
 #define ISIS_TRILL_MAX_HELLO_SIZE 1470
 //class InterfaceEntr;
-//class MACAddress;
+//class inet::MACAddress;
 
 /**
  * Structure for storing info about all active interfaces.
@@ -84,7 +84,7 @@ struct ISISinterface
     int L1PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
     int L2PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
 
-    InterfaceEntry *entry;    /*!< other interface info*/
+    inet::InterfaceEntry *entry;    /*!< other interface info*/
 };
 typedef std::vector<ISISinterface> ISISInterTab_t;
 
@@ -105,7 +105,7 @@ struct ISISadj
 {
     unsigned char sysID[6];             /*!<system ID of neighbour*/
     unsigned char areaID[3];            /*!<neighbour areaID*/
-    MACAddress mac;                     /*!<mac address of neighbour*/
+    inet::MACAddress mac;                     /*!<mac address of neighbour*/
     ISISAdjState state;                         /*!<adjacency state has to be 2-way; 0 = only 1 way, 1 = 2-way (hello received from adj router)*/
     ISISTimer *timer;                   /*!<timer set to hold time and reseted every time hello from neighbour is received. For L2_MODE works as designated VLAN holding timer*/
     ISISTimer *nonDesTimer;              /*!< nonDesignated VLAN holding timer */
@@ -277,13 +277,13 @@ struct ISISNeighbour
         unsigned char *id;
         //uint32_t metric;
         bool type; //should represent whether it's a leaf node; true = leaf
-        InterfaceEntry *entry;
+        inet::InterfaceEntry *entry;
 
         ISISNeighbour(){
 
         }
 
-        ISISNeighbour(unsigned char * id, bool type, InterfaceEntry *entry){
+        ISISNeighbour(unsigned char * id, bool type, inet::InterfaceEntry *entry){
             this->id = new unsigned char [ISIS_SYSTEM_ID + 2];
             memcpy(this->id, id, ISIS_SYSTEM_ID + 2);
             this->type = false;
@@ -357,7 +357,7 @@ struct ISISCon
         unsigned char *to;
         uint32_t metric;
         bool type;
-        InterfaceEntry *entry;
+        inet::InterfaceEntry *entry;
 };
 typedef std::vector<ISISCon*> ISISCons_t;
 

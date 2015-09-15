@@ -24,9 +24,9 @@
 
 #include <omnetpp.h>
 
-#include "BabelDef.h"
-#include "BabelNeighbourTable.h"
-#include "BabelFtlv.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "ansa/applications/babel/BabelNeighbourTable.h"
+#include "ansa/applications/babel/BabelFtlv.h"
 
 class BabelPenSR : public cObject
 {
@@ -35,7 +35,7 @@ protected:
     BabelNeighbour *receivedFrom;
     int resendNum;
     BabelInterface *outIface;
-    IPvXAddress forwardTo;
+    inet::L3Address forwardTo;
     Babel::BabelTimer *resendTimer;
 public:
     BabelPenSR():
@@ -48,7 +48,7 @@ public:
     BabelPenSR(const BabelSeqnoReqFtlv& req,
                 BabelNeighbour *recfrom,
                 int resend,
-                BabelInterface *oi, const IPvXAddress& fwddst, Babel::BabelTimer *rt):
+                BabelInterface *oi, const inet::L3Address& fwddst, Babel::BabelTimer *rt):
         request(req),
         receivedFrom(recfrom),
         resendNum(resend),
@@ -81,8 +81,8 @@ public:
     BabelInterface* getOutIface() const {return outIface;}
     void setOutIface(BabelInterface* oi) {outIface = oi;}
 
-    const IPvXAddress& getForwardTo() const {return forwardTo;}
-    void setForwardTo(const IPvXAddress& ft) {forwardTo = ft;}
+    const inet::L3Address& getForwardTo() const {return forwardTo;}
+    void setForwardTo(const inet::L3Address& ft) {forwardTo = ft;}
 
     Babel::BabelTimer* getResendTimer() const {return resendTimer;}
     void setResendTimer(Babel::BabelTimer* rt) {resendTimer = rt;}
@@ -105,11 +105,11 @@ public:
 
     std::vector<BabelPenSR *>& getRequests() {return requests;}
 
-    BabelPenSR *findPenSR(const Babel::netPrefix<IPvXAddress>& p);
-    BabelPenSR *findPenSR(const Babel::netPrefix<IPvXAddress>& p, BabelInterface *iface);
+    BabelPenSR *findPenSR(const Babel::netPrefix<inet::L3Address>& p);
+    BabelPenSR *findPenSR(const Babel::netPrefix<inet::L3Address>& p, BabelInterface *iface);
     BabelPenSR *addPenSR(BabelPenSR *request);
     void removePenSR(BabelPenSR *request);
-    void removePenSR(const Babel::netPrefix<IPvXAddress>& p);
+    void removePenSR(const Babel::netPrefix<inet::L3Address>& p);
     void removePenSRsByNeigh(BabelNeighbour *neigh);
     void removePenSRs();
 };

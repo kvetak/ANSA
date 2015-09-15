@@ -8,30 +8,30 @@
 #ifndef __STPMACCOMPARE_H__
 #define __STPMACCOMPARE_H__
 
-#include "MACAddress.h"
+#include "linklayer/common/MACAddress.h"
 
-bool operator<(const MACAddress& a, const MACAddress& b) {
+bool operator<(const inet::MACAddress& a, const inet::MACAddress& b) {
 	if (a.compareTo(b) == -1) {
 		return true;
 	}
 	return false;
 }
 
-bool operator>(const MACAddress& a, const MACAddress& b) {
+bool operator>(const inet::MACAddress& a, const inet::MACAddress& b) {
 	if (a.compareTo(b) == 1) {
 		return true;
 	}
 	return false;
 }
 
-bool operator<=(const MACAddress& a, const MACAddress& b) {
+bool operator<=(const inet::MACAddress& a, const inet::MACAddress& b) {
 	if (a.compareTo(b) != 1) {
 		return true;
 	}
 	return false;
 }
 
-bool operator>=(const MACAddress& a, const MACAddress& b) {
+bool operator>=(const inet::MACAddress& a, const inet::MACAddress& b) {
 	if (a.compareTo(b) != -1) {
 		return true;
 	}

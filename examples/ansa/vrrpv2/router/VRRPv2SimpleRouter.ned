@@ -23,7 +23,7 @@ import inet.linklayer.loopback.LoopbackInterface;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.linklayer.ethernet.AnsaEthernetInterfaceWithVF;
-import inet.linklayer.IWiredNic;
+import inet.linklayer.contract.IWiredNic;
 
 module VRRPv2SimpleRouter
 {

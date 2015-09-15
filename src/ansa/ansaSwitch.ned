@@ -3,7 +3,7 @@
 package inet.ansa;
 
 import inet.ansa.linklayer.switch.stp.Stp;
-//import inet.nodes.inet.BurstHost;
+//import inet.node.inet.BurstHost;
 import inet.base.NotificationBoard;
 import inet.ansa.linklayer.ethernet.AnsaEtherMAC;
 import inet.ansa.linklayer.switch.ANSASwitchCore;
@@ -12,15 +12,15 @@ import inet.ansa.linklayer.switch.MACTable;
 import inet.ansa.linklayer.switch.sink;
 import inet.ansa.linklayer.switch.VLANTable;
 
-
-import inet.transport.rtp.RTPAVProfilePayload10Receiver;
+import inet.transportlayer.rtp.RTPPayloadReceiver;
+//import inet.transportlayer.rtp.profiles.avprofile.RTPAVProfilePayload10Receiver;
 import inet.ansa.linklayer.switch.PortTable;
 import inet.ansa.acl.acl;
-import inet.nodes.inet.NetworkLayer;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
 //import inet.ansa.TrafficGenerator.TrafGen;
 //import inet.ansa.rip.RIPRouting;
-import inet.transport.udp.UDP;
-import inet.networklayer.ospfv2.OSPFRouting;
+import inet.transportlayer.udp.UDP;
+import inet.routing.ospfv2.OSPFRouting;
 //import inet.ansa.InterfaceStateManager.InterfaceStateManager;
 import inet.networklayer.common.InterfaceTable;
 //import inet.ansa.routingTable.AnsaInterfaceTable;

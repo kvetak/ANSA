@@ -26,9 +26,11 @@
 #ifndef TRILLINTERFACEDATA_H_
 #define TRILLINTERFACEDATA_H_
 
-#include "InterfaceEntry.h"
+#include "networklayer/common/InterfaceEntry.h"
 
-class TRILLInterfaceData : public InterfaceProtocolData
+namespace inet{
+
+class TRILLInterfaceData : public inet::InterfaceProtocolData
 {
     public:
         //        typedef enum{
@@ -95,5 +97,5 @@ class TRILLInterfaceData : public InterfaceProtocolData
 
 
 };
-
+}//namespace TRILL
 #endif /* TRILLINTERFACEDATA_H_ */

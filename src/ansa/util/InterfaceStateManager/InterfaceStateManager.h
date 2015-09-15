@@ -21,8 +21,8 @@
 
 #include <omnetpp.h>
 
-#include "IInterfaceTable.h"
-#include "IScriptable.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "common/scenario/IScriptable.h"
 
 /**
  *  This module allows managing changes of interface states in AnsaRouter.
@@ -35,25 +35,25 @@
  *
  */
  
-class INET_API InterfaceStateManager : public cSimpleModule, public IScriptable
+class INET_API InterfaceStateManager : public cSimpleModule, public inet::IScriptable
 {
   private:
   
-  IInterfaceTable*     ift;        ///< Provides access to the interface table.
+  inet::IInterfaceTable*     ift;        ///< Provides access to the interface table.
 
   protected:
   
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 
-    // IScriptable implementation
+    // inet::IScriptable implementation
     virtual void processCommand(const cXMLElement& node);
     
     void processInterfaceConfigCommand(const cXMLElement& node);
 
   public:
   
-    void changeInterfaceState(InterfaceEntry *targetInt, bool toDown);
+    void changeInterfaceState(inet::InterfaceEntry *targetInt, bool toDown);
 };
 
 #endif

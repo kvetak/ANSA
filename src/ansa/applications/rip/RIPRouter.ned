@@ -24,14 +24,14 @@ import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.applications.rip.RIPRouting;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.nodes.inet.NetworkLayer;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.base.NotificationBoard;
 import inet.ansa.transport.udp.ANSAUDP;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
-import inet.linklayer.IWiredNic;
+import inet.linklayer.contract.IWiredNic;
 
 module RIPRouter
 {
@@ -82,7 +82,7 @@ module RIPRouter
         }
 
         // network layer
-        networkLayer: NetworkLayer {
+        networkLayer: IPv4NetworkLayer {
             parameters:
                 @display("p=204,221;q=queue");            
             gates:
@@ -129,8 +129,8 @@ module RIPRouter
         RIP.udpOut --> udp.appIn[0];
         RIP.udpIn <-- udp.appOut[0];
 
-        udp.ipOut --> networkLayer.udpIn;
-        udp.ipIn <-- networkLayer.udpOut;
+        udp.ipOut --> networkLayer.transportIn++;
+        udp.ipIn <-- networkLayer.transportOut++;
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;

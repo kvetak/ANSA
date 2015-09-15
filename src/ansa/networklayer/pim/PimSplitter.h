@@ -25,26 +25,25 @@
 #ifndef PIMSPLITTER_H_
 #define PIMSPLITTER_H_
 
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "IRoutingTable.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "networklayer/contract/IRoutingTable.h"
 
 
 #include <omnetpp.h>
-#include "PIMPacket_m.h"
-#include "PIMTimer_m.h"
-#include "IPv4ControlInfo.h"
-#include "IPv4InterfaceData.h"
-#include "InterfaceTableAccess.h"
-#include "AnsaRoutingTableAccess.h"
-#include "InterfaceTable.h"
-#include "AnsaRoutingTable.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
-#include "InterfaceStateManager.h"
-#include "IPvXAddress.h"
-#include "PimNeighborTable.h"
-#include "PimInterfaceTable.h"
+#include "ansa/networklayer/pim/PIMPacket_m.h"
+#include "ansa/networklayer/pim/PIMTimer_m.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTableAccess.h"
+#include "networklayer/common/InterfaceTable.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
+#include "base/NotificationBoard.h"
+#include "common/NotifierConsts.h"
+#include "ansa/util/InterfaceStateManager/InterfaceStateManager.h"
+#include "ansa/networklayer/pim/tables/PimNeighborTable.h"
+#include "ansa/networklayer/pim/tables/PimInterfaceTable.h"
 
 
 #define HT 30.0										/**< Hello Timer = 30s. */
@@ -60,7 +59,7 @@ class PimSplitter : public cSimpleModule, protected INotifiable
 {
 	private:
 		AnsaRoutingTable           	*rt;           	/**< Pointer to routing table. */
-	    IInterfaceTable         	*ift;          	/**< Pointer to interface table. */
+	    inet::IInterfaceTable         	*ift;          	/**< Pointer to interface table. */
 	    NotificationBoard 			*nb; 		   	/**< Pointer to notification table. */
 
 	    PimInterfaceTable			*pimIft;		/**< Pointer to table of PIM interfaces. */
@@ -78,8 +77,8 @@ class PimSplitter : public cSimpleModule, protected INotifiable
 
 	   // process notification
 	   void receiveChangeNotification(int category, const cPolymorphic *details);
-	   virtual void newMulticast(IPv4Address destAddr, IPv4Address srcAddr);
-	   void igmpChange(InterfaceEntry *interface);
+	   virtual void newMulticast(inet::IPv4Address destAddr, inet::IPv4Address srcAddr);
+	   void igmpChange(inet::InterfaceEntry *interface);
 
 	protected:
 		virtual int numInitStages() const  {return 5;}

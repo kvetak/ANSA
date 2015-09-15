@@ -22,7 +22,7 @@
  * @detail Derived class to allow re-implement data fields handling.
  * @todo Z9
  */
-#include "TRILLFrame.h"
+#include "ansa/linklayer/rbridge/TRILLFrame.h"
 #include <iostream>
 #include <sstream>
 //#include "TRILLFrame_m.h"

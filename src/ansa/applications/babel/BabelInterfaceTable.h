@@ -24,10 +24,11 @@
 
 #include <omnetpp.h>
 
-#include "BabelDef.h"
-#include "UDPSocket.h"
-#include "InterfaceEntry.h"
-#include "IBabelCostComputation.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "cost/IBabelCostComputation.h"
+
 
 
 /**
@@ -36,7 +37,7 @@
 class BabelInterface : public cObject
 {
   protected:
-    InterfaceEntry *interface;  ///< Physical network interface
+    inet::InterfaceEntry *interface;  ///< Physical network interface
     int afsend;                 ///< Address family used by interface for sending messages
     int afdist;                 ///< Address family of distributed prefixes
     bool splitHorizon;          ///< Enable/disable split-horizon feature
@@ -46,11 +47,11 @@ class BabelInterface : public cObject
     uint16_t updateInterval;    ///< Update interval (centiseconds)
     Babel::BabelTimer* helloTimer;     ///< Hello timer
     Babel::BabelTimer* updateTimer;    ///< Update timer
-    UDPSocket* socket4;         ///< UDP socket for unicast IPv4
-    UDPSocket* socket6;         ///< UDP socket for unicast IPv6
+    inet::UDPSocket* socket4;         ///< UDP socket for unicast IPv4
+    inet::UDPSocket* socket6;         ///< UDP socket for unicast IPv6
     bool enabled;               ///< Interface status
     uint16_t nominalrxcost;
-    std::vector<Babel::netPrefix<IPvXAddress> > directlyconn;
+    std::vector<Babel::netPrefix<inet::L3Address> > directlyconn;
     IBabelCostComputation *ccm;
 
 
@@ -76,7 +77,7 @@ class BabelInterface : public cObject
         ccm(NULL)
         {}
 
-    BabelInterface(InterfaceEntry *iface) :
+    BabelInterface(inet::InterfaceEntry *iface) :
         interface(iface),
         afsend(Babel::AF::IPv6),
         afdist(Babel::AF::IPv6),
@@ -111,8 +112,8 @@ class BabelInterface : public cObject
 
     const char *getIfaceName() const {return (interface) ? interface->getName() : "-";}
 
-    InterfaceEntry *getInterface() {return interface;}
-    void setInterface(InterfaceEntry *i) {interface = i;}
+    inet::InterfaceEntry *getInterface() {return interface;}
+    void setInterface(inet::InterfaceEntry *i) {interface = i;}
 
     int getAfSend() {return afsend;}
     void setAfSend(int afs) {afsend = afs;}
@@ -145,17 +146,17 @@ class BabelInterface : public cObject
     Babel::BabelTimer* getUTimer() {return updateTimer;}
     void setUTimer(Babel::BabelTimer* t) {updateTimer = t;}
 
-    UDPSocket* getSocket4() {return socket4;}
-    void setSocket4(UDPSocket* s) {socket4 = s;}
+    inet::UDPSocket* getSocket4() {return socket4;}
+    void setSocket4(inet::UDPSocket* s) {socket4 = s;}
 
-    UDPSocket* getSocket6() {return socket6;}
-    void setSocket6(UDPSocket* s) {socket6 = s;}
+    inet::UDPSocket* getSocket6() {return socket6;}
+    void setSocket6(inet::UDPSocket* s) {socket6 = s;}
 
     bool getEnabled() {return enabled;}
     void setEnabled(bool e) {enabled = e;}
 
-    void addDirectlyConn(const Babel::netPrefix<IPvXAddress>& pre);
-    const std::vector<Babel::netPrefix<IPvXAddress> >& getDirectlyConn() const {return directlyconn;}
+    void addDirectlyConn(const Babel::netPrefix<inet::L3Address>& pre);
+    const std::vector<Babel::netPrefix<inet::L3Address> >& getDirectlyConn() const {return directlyconn;}
 
     IBabelCostComputation* getCostComputationModule() {return ccm;}
     void setCostComputationModule(IBabelCostComputation* cm) {ccm = cm;}

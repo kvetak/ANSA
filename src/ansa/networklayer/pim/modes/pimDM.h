@@ -24,17 +24,17 @@
 #define HLIDAC_PIMDM
 
 #include <omnetpp.h>
-#include "PIMPacket_m.h"
-#include "PIMTimer_m.h"
-#include "InterfaceTableAccess.h"
-#include "AnsaRoutingTableAccess.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
-#include "PimNeighborTable.h"
-#include "PimInterfaceTable.h"
-#include "IPv4ControlInfo.h"
-#include "IPv4InterfaceData.h"
-#include "AnsaIPv4Route.h"
+#include "ansa/networklayer/pim/PIMPacket_m.h"
+#include "ansa/networklayer/pim/PIMTimer_m.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTableAccess.h"
+#include "base/NotificationBoard.h"
+#include "common/NotifierConsts.h"
+#include "ansa/networklayer/pim/tables/PimNeighborTable.h"
+#include "ansa/networklayer/pim/tables/PimInterfaceTable.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4Route.h"
 
 
 
@@ -50,7 +50,7 @@ class pimDM : public cSimpleModule, protected INotifiable
 {
 	private:
 		AnsaRoutingTable           	*rt;           	/**< Pointer to routing table. */
-	    IInterfaceTable         	*ift;          	/**< Pointer to interface table. */
+	    inet::IInterfaceTable         	*ift;          	/**< Pointer to interface table. */
 	    NotificationBoard 			*nb; 		   	/**< Pointer to notification table. */
 	    PimInterfaceTable			*pimIft;		/**< Pointer to table of PIM interfaces. */
 	    PimNeighborTable			*pimNbt;		/**< Pointer to table of PIM neighbors. */
@@ -60,8 +60,8 @@ class pimDM : public cSimpleModule, protected INotifiable
 	    void newMulticast(AnsaIPv4MulticastRoute *newRoute);
 	    void newMulticastAddr(addRemoveAddr *members);
 	    void oldMulticastAddr(addRemoveAddr *members);
-	    void dataOnPruned(IPv4Address destAddr, IPv4Address srcAddr);
-	    void dataOnNonRpf(IPv4Address group, IPv4Address source, int intId);
+	    void dataOnPruned(inet::IPv4Address destAddr, inet::IPv4Address srcAddr);
+	    void dataOnNonRpf(inet::IPv4Address group, inet::IPv4Address source, int intId);
 	    void dataOnRpf(AnsaIPv4MulticastRoute *route);
 	    void rpfIntChange(AnsaIPv4MulticastRoute *route);
 
@@ -73,24 +73,24 @@ class pimDM : public cSimpleModule, protected INotifiable
 	    void processStateRefreshTimer(PIMsrt * timer);
 
 	    // create timers
-	    PIMpt* createPruneTimer(IPv4Address source, IPv4Address group, int intId, int holdTime);
-	    PIMgrt* createGraftRetryTimer(IPv4Address source, IPv4Address group);
-	    PIMsat* createSourceActiveTimer(IPv4Address source, IPv4Address group);
-	    PIMsrt* createStateRefreshTimer(IPv4Address source, IPv4Address group);
+	    PIMpt* createPruneTimer(inet::IPv4Address source, inet::IPv4Address group, int intId, int holdTime);
+	    PIMgrt* createGraftRetryTimer(inet::IPv4Address source, inet::IPv4Address group);
+	    PIMsat* createSourceActiveTimer(inet::IPv4Address source, inet::IPv4Address group);
+	    PIMsrt* createStateRefreshTimer(inet::IPv4Address source, inet::IPv4Address group);
 
 	    // process PIM packets
 	    void processPIMPkt(PIMPacket *pkt);
 	    void processJoinPruneGraftPacket(PIMJoinPrune *pkt, PIMPacketType type);
 	    void processPrunePacket(AnsaIPv4MulticastRoute *route, int intId, int holdTime);
-	    void processGraftPacket(IPv4Address source, IPv4Address group, IPv4Address sender, int intId);
+	    void processGraftPacket(inet::IPv4Address source, inet::IPv4Address group, inet::IPv4Address sender, int intId);
 	    void processGraftAckPacket(AnsaIPv4MulticastRoute *route);
 	    void processStateRefreshPacket(PIMStateRefresh *pkt);
 
 	    //create PIM packets
-	    void sendPimJoinPrune(IPv4Address nextHop, IPv4Address src, IPv4Address grp, int intId);
-	    void sendPimGraft(IPv4Address nextHop, IPv4Address src, IPv4Address grp, int intId);
+	    void sendPimJoinPrune(inet::IPv4Address nextHop, inet::IPv4Address src, inet::IPv4Address grp, int intId);
+	    void sendPimGraft(inet::IPv4Address nextHop, inet::IPv4Address src, inet::IPv4Address grp, int intId);
 	    void sendPimGraftAck(PIMGraftAck *msg);
-	    void sendPimStateRefresh(IPv4Address originator, IPv4Address src, IPv4Address grp, int intId, bool P);
+	    void sendPimStateRefresh(inet::IPv4Address originator, inet::IPv4Address src, inet::IPv4Address grp, int intId, bool P);
 
 	    void setUpInterface();
 

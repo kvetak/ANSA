@@ -15,15 +15,20 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef IEEE80211_MGMT_STA_H
-#define IEEE80211_MGMT_STA_H
+#ifndef __INET_IEEE80211MGMTSTA_H
+#define __INET_IEEE80211MGMTSTA_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "Ieee80211MgmtBase.h"
-#include "NotificationBoard.h"
-#include "Ieee80211Primitives_m.h"
+#include "linklayer/ieee80211/mgmt/Ieee80211MgmtBase.h"
+#include "linklayer/ieee80211/mgmt/Ieee80211Primitives_m.h"
+#include "networklayer/contract/IInterfaceTable.h"
 
+namespace inet {
+
+class InterfaceEntry;
+
+namespace ieee80211 {
 
 /**
  * Used in 802.11 infrastructure mode: handles management frames for
@@ -31,7 +36,7 @@
  *
  * @author Andras Varga
  */
-class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
+class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase, protected cListener
 {
   public:
     //
@@ -39,15 +44,15 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
     //
     struct ScanningInfo
     {
-        MACAddress bssid; // specific BSSID to scan for, or the broadcast address
-        std::string ssid; // SSID to scan for (empty=any)
-        bool activeScan;  // whether to perform active or passive scanning
-        simtime_t probeDelay; // delay (in s) to be used prior to transmitting a Probe frame during active scanning
-        std::vector<int> channelList; // list of channels to scan
-        int currentChannelIndex; // index into channelList[]
-        bool busyChannelDetected; // during minChannelTime, we have to listen for busy channel
-        simtime_t minChannelTime; // minimum time to spend on each channel when scanning
-        simtime_t maxChannelTime; // maximum time to spend on each channel when scanning
+        MACAddress bssid;    // specific BSSID to scan for, or the broadcast address
+        std::string ssid;    // SSID to scan for (empty=any)
+        bool activeScan;    // whether to perform active or passive scanning
+        simtime_t probeDelay;    // delay (in s) to be used prior to transmitting a Probe frame during active scanning
+        std::vector<int> channelList;    // list of channels to scan
+        int currentChannelIndex;    // index into channelList[]
+        bool busyChannelDetected;    // during minChannelTime, we have to listen for busy channel
+        simtime_t minChannelTime;    // minimum time to spend on each channel when scanning
+        simtime_t maxChannelTime;    // maximum time to spend on each channel when scanning
     };
 
     //
@@ -56,19 +61,23 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
     struct APInfo
     {
         int channel;
-        MACAddress address; // alias bssid
+        MACAddress address;    // alias bssid
         std::string ssid;
         Ieee80211SupportedRatesElement supportedRates;
         simtime_t beaconInterval;
         double rxPower;
 
         bool isAuthenticated;
-        int authSeqExpected;  // valid while authenticating; values: 1,3,5...
-        cMessage *authTimeoutMsg; // if non-NULL: authentication is in progress
+        int authSeqExpected;    // valid while authenticating; values: 1,3,5...
+        cMessage *authTimeoutMsg;    // if non-nullptr: authentication is in progress
 
-        APInfo() {
-            channel = -1; beaconInterval = rxPower = 0; authSeqExpected = -1;
-            isAuthenticated = false; authTimeoutMsg = NULL;
+        APInfo()
+        {
+            channel = -1;
+            beaconInterval = rxPower = 0;
+            authSeqExpected = -1;
+            isAuthenticated = false;
+            authTimeoutMsg = nullptr;
         }
     };
 
@@ -80,13 +89,15 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
         int receiveSequence;
         cMessage *beaconTimeoutMsg;
 
-        AssociatedAPInfo() : APInfo() {receiveSequence = 0; beaconTimeoutMsg = NULL;}
+        AssociatedAPInfo() : APInfo() { receiveSequence = 0; beaconTimeoutMsg = nullptr; }
     };
 
   protected:
-    NotificationBoard *nb;
+    cModule *host;
+    IInterfaceTable *interfaceTable;
+    InterfaceEntry *myIface;
 
-    // number of channels in ChannelControl -- used if we're told to scan "all" channels
+    // number of channels in RadioMedium -- used if we're told to scan "all" channels
     int numChannels;
 
     // scanning status
@@ -100,21 +111,24 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
 
     // associated Access Point
     bool isAssociated;
-    cMessage *assocTimeoutMsg; // if non-NULL: association is in progress
+    cMessage *assocTimeoutMsg;    // if non-nullptr: association is in progress
     AssociatedAPInfo assocAP;
 
+  public:
+    Ieee80211MgmtSTA() : host(nullptr), interfaceTable(nullptr), myIface(nullptr), numChannels(-1), isScanning(false), isAssociated(false), assocTimeoutMsg(nullptr) {}
+
   protected:
-    virtual int numInitStages() const {return 2;}
-    virtual void initialize(int);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
 
     /** Implements abstract Ieee80211MgmtBase method */
-    virtual void handleTimer(cMessage *msg);
+    virtual void handleTimer(cMessage *msg) override;
 
     /** Implements abstract Ieee80211MgmtBase method */
-    virtual void handleUpperMessage(cPacket *msg);
+    virtual void handleUpperMessage(cPacket *msg) override;
 
     /** Implements abstract Ieee80211MgmtBase method */
-    virtual void handleCommand(int msgkind, cObject *ctrl);
+    virtual void handleCommand(int msgkind, cObject *ctrl) override;
 
     /** Utility function for handleUpperMessage() */
     virtual Ieee80211DataFrame *encapsulate(cPacket *msg);
@@ -128,7 +142,7 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
     /** Utility function: sends association request */
     virtual void startAssociation(APInfo *ap, simtime_t timeout);
 
-    /** Utility function: looks up AP in our AP list. Returns NULL if not found. */
+    /** Utility function: looks up AP in our AP list. Returns nullptr if not found. */
     virtual APInfo *lookupAP(const MACAddress& address);
 
     /** Utility function: clear the AP list, and cancel any pending authentications. */
@@ -167,25 +181,26 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
     /** Utility function: sends a management frame */
     virtual void sendManagementFrame(Ieee80211ManagementFrame *frame, const MACAddress& address);
 
-    /** Called by the NotificationBoard whenever a change occurs we're interested in */
-    virtual void receiveChangeNotification(int category, const cObject *details);
+    /** Called by the signal handler whenever a change occurs we're interested in */
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, long value) override;
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj) override;
 
     /** Utility function: converts Ieee80211StatusCode (->frame) to Ieee80211PrimResultCode (->primitive) */
     virtual int statusCodeToPrimResultCode(int statusCode);
 
     /** @name Processing of different frame types */
     //@{
-    virtual void handleDataFrame(Ieee80211DataFrame *frame);
-    virtual void handleAuthenticationFrame(Ieee80211AuthenticationFrame *frame);
-    virtual void handleDeauthenticationFrame(Ieee80211DeauthenticationFrame *frame);
-    virtual void handleAssociationRequestFrame(Ieee80211AssociationRequestFrame *frame);
-    virtual void handleAssociationResponseFrame(Ieee80211AssociationResponseFrame *frame);
-    virtual void handleReassociationRequestFrame(Ieee80211ReassociationRequestFrame *frame);
-    virtual void handleReassociationResponseFrame(Ieee80211ReassociationResponseFrame *frame);
-    virtual void handleDisassociationFrame(Ieee80211DisassociationFrame *frame);
-    virtual void handleBeaconFrame(Ieee80211BeaconFrame *frame);
-    virtual void handleProbeRequestFrame(Ieee80211ProbeRequestFrame *frame);
-    virtual void handleProbeResponseFrame(Ieee80211ProbeResponseFrame *frame);
+    virtual void handleDataFrame(Ieee80211DataFrame *frame) override;
+    virtual void handleAuthenticationFrame(Ieee80211AuthenticationFrame *frame) override;
+    virtual void handleDeauthenticationFrame(Ieee80211DeauthenticationFrame *frame) override;
+    virtual void handleAssociationRequestFrame(Ieee80211AssociationRequestFrame *frame) override;
+    virtual void handleAssociationResponseFrame(Ieee80211AssociationResponseFrame *frame) override;
+    virtual void handleReassociationRequestFrame(Ieee80211ReassociationRequestFrame *frame) override;
+    virtual void handleReassociationResponseFrame(Ieee80211ReassociationResponseFrame *frame) override;
+    virtual void handleDisassociationFrame(Ieee80211DisassociationFrame *frame) override;
+    virtual void handleBeaconFrame(Ieee80211BeaconFrame *frame) override;
+    virtual void handleProbeRequestFrame(Ieee80211ProbeRequestFrame *frame) override;
+    virtual void handleProbeResponseFrame(Ieee80211ProbeResponseFrame *frame) override;
     //@}
 
     /** @name Processing of different agent commands */
@@ -199,6 +214,9 @@ class INET_API Ieee80211MgmtSTA : public Ieee80211MgmtBase
     //@}
 };
 
-#endif
+} // namespace ieee80211
 
+} // namespace inet
+
+#endif // ifndef __INET_IEEE80211MGMTSTA_H
 

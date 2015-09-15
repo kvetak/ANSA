@@ -22,18 +22,18 @@
 
 #include <algorithm>
 
-#include "opp_utils.h"
+#include "common/INETUtils.h"
 
-#include "ANSARoutingTable6.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6.h"
 
-#include "IPv6InterfaceData.h"
-#include "InterfaceTableAccess.h"
+#include "networklayer/ipv6/IPv6InterfaceData.h"
+#include "networklayer/common/InterfaceTableAccess.h"
 
-#include "IPv6TunnelingAccess.h"
+#include "networklayer/ipv6tunneling/IPv6TunnelingAccess.h"
 
-Define_Module(ANSARoutingTable6);
+//Define_Module(ANSARoutingTable6);
 
-ANSAIPv6Route::ANSAIPv6Route(IPv6Address destPrefix, int length, RouteSrc src)
+ANSAIPv6Route::ANSAIPv6Route(inet::IPv6Address destPrefix, int length, RouteSrc src)
     : IPv6Route(destPrefix, length, src)
 {
     _adminDist = dUnknown;
@@ -56,7 +56,7 @@ std::string ANSAIPv6Route::info() const
     out << "/" << getPrefixLength();
     out << " [" << getAdminDist() << "/" << getMetric() << "]";
     out << " via ";
-    if (getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+    if (getNextHop() == inet::IPv6Address::UNSPECIFIED_ADDRESS)
         out << "::";
     else
         out << getNextHop();
@@ -83,7 +83,7 @@ const char *ANSAIPv6Route::getRouteSrcName() const
             return "C";
 
         case STATIC:
-            if (getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS)
+            if (getNextHop() == inet::IPv6Address::UNSPECIFIED_ADDRESS)
                 return "C";
             return "S";
 
@@ -116,7 +116,7 @@ const char *ANSAIPv6Route::getRouteSrcName() const
 const char *ANSAIPv6Route::getInterfaceName() const
 {
     ASSERT(ift);
-    InterfaceEntry *interface = ift->getInterfaceById(_interfaceID);
+    inet::InterfaceEntry *interface = ift->getInterfaceById(_interfaceID);
     return interface ? interface->getName() : "";
 }
 
@@ -140,11 +140,11 @@ ANSARoutingTable6::~ANSARoutingTable6()
 {
 }
 
-IPv6Route *ANSARoutingTable6::findRoute(const IPv6Address& prefix, int prefixLength)
+inet::IPv6Route *ANSARoutingTable6::findRoute(const inet::IPv6Address& prefix, int prefixLength)
 {
     //TODO: assume only ANSAIPv6Route in the routing table?
 
-    IPv6Route *route = NULL;
+    inet::IPv6Route *route = NULL;
     for (RouteList::iterator it=routeList.begin(); it!=routeList.end(); it++)
     {
         if ((*it)->getDestPrefix()==prefix && (*it)->getPrefixLength()==prefixLength)
@@ -157,11 +157,11 @@ IPv6Route *ANSARoutingTable6::findRoute(const IPv6Address& prefix, int prefixLen
     return route;
 }
 
-IPv6Route *ANSARoutingTable6::findRoute(const IPv6Address& prefix, int prefixLength, const IPv6Address& nexthop)
+inet::IPv6Route *ANSARoutingTable6::findRoute(const inet::IPv6Address& prefix, int prefixLength, const inet::IPv6Address& nexthop)
 {
     //TODO: assume only ANSAIPv6Route in the routing table?
 
-    IPv6Route *route = NULL;
+    inet::IPv6Route *route = NULL;
     for (RouteList::iterator it=routeList.begin(); it!=routeList.end(); it++)
     {
         if ((*it)->getDestPrefix()==prefix && (*it)->getPrefixLength()==prefixLength && (*it)->getNextHop()==nexthop)
@@ -174,11 +174,11 @@ IPv6Route *ANSARoutingTable6::findRoute(const IPv6Address& prefix, int prefixLen
     return route;
 }
 
-bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
+bool ANSARoutingTable6::prepareForAddRoute(inet::IPv6Route *route)
 {
     //TODO: assume only ANSAIPv6Route in the routing table?
 
-    IPv6Route *routeInTable = findRoute(route->getDestPrefix(), route->getPrefixLength());
+    inet::IPv6Route *routeInTable = findRoute(route->getDestPrefix(), route->getPrefixLength());
 
     if (routeInTable)
     {
@@ -219,14 +219,14 @@ bool ANSARoutingTable6::prepareForAddRoute(IPv6Route *route)
     return true;
 }
 
-void ANSARoutingTable6::addOrUpdateOnLinkPrefix(const IPv6Address& destPrefix, int prefixLength,
+void ANSARoutingTable6::addOrUpdateOnLinkPrefix(const inet::IPv6Address& destPrefix, int prefixLength,
         int interfaceId, simtime_t expiryTime)
 {
     // see if prefix exists in table
     ANSAIPv6Route *route = NULL;
     for (RouteList::iterator it=routeList.begin(); it!=routeList.end(); it++)
     {
-        if ((*it)->getSrc()==IPv6Route::FROM_RA && (*it)->getDestPrefix()==destPrefix && (*it)->getPrefixLength()==prefixLength)
+        if ((*it)->getSrc()==inet::IPv6Route::FROM_RA && (*it)->getDestPrefix()==destPrefix && (*it)->getPrefixLength()==prefixLength)
         {
             route = dynamic_cast<ANSAIPv6Route *>(*it);
             break;
@@ -236,7 +236,7 @@ void ANSARoutingTable6::addOrUpdateOnLinkPrefix(const IPv6Address& destPrefix, i
     if (route==NULL)
     {
         // create new route object
-        ANSAIPv6Route *route = new ANSAIPv6Route(destPrefix, prefixLength, IPv6Route::FROM_RA);
+        ANSAIPv6Route *route = new ANSAIPv6Route(destPrefix, prefixLength, inet::IPv6Route::FROM_RA);
         route->setInterfaceId(interfaceId);
         route->setExpiryTime(expiryTime);
         route->setMetric(0);
@@ -248,16 +248,16 @@ void ANSARoutingTable6::addOrUpdateOnLinkPrefix(const IPv6Address& destPrefix, i
     else
     {
         // update existing one; notification-wise, we pretend the route got removed then re-added
-        nb->fireChangeNotification(NF_IPv6_ROUTE_DELETED, route);
+        nb->fireChangeNotification(inet::NF_IPv6_ROUTE_DELETED, route);
         route->setInterfaceId(interfaceId);
         route->setExpiryTime(expiryTime);
-        nb->fireChangeNotification(NF_IPv6_ROUTE_ADDED, route);
+        nb->fireChangeNotification(inet::NF_IPv6_ROUTE_ADDED, route);
     }
 
     updateDisplayString();
 }
 
-void ANSARoutingTable6::addOrUpdateOwnAdvPrefix(const IPv6Address& destPrefix, int prefixLength,
+void ANSARoutingTable6::addOrUpdateOwnAdvPrefix(const inet::IPv6Address& destPrefix, int prefixLength,
         int interfaceId, simtime_t expiryTime)
 {
     // FIXME this is very similar to the one above -- refactor!!
@@ -266,7 +266,7 @@ void ANSARoutingTable6::addOrUpdateOwnAdvPrefix(const IPv6Address& destPrefix, i
     ANSAIPv6Route *route = NULL;
     for (RouteList::iterator it=routeList.begin(); it!=routeList.end(); it++)
     {
-        if ((*it)->getSrc()==IPv6Route::OWN_ADV_PREFIX && (*it)->getDestPrefix()==destPrefix && (*it)->getPrefixLength()==prefixLength)
+        if ((*it)->getSrc()==inet::IPv6Route::OWN_ADV_PREFIX && (*it)->getDestPrefix()==destPrefix && (*it)->getPrefixLength()==prefixLength)
         {
             route = dynamic_cast<ANSAIPv6Route *>(*it);
             break;
@@ -276,7 +276,7 @@ void ANSARoutingTable6::addOrUpdateOwnAdvPrefix(const IPv6Address& destPrefix, i
     if (route==NULL)
     {
         // create new route object
-        ANSAIPv6Route *route = new ANSAIPv6Route(destPrefix, prefixLength, IPv6Route::OWN_ADV_PREFIX);
+        ANSAIPv6Route *route = new ANSAIPv6Route(destPrefix, prefixLength, inet::IPv6Route::OWN_ADV_PREFIX);
         route->setInterfaceId(interfaceId);
         route->setExpiryTime(expiryTime);
         route->setMetric(0);
@@ -288,21 +288,21 @@ void ANSARoutingTable6::addOrUpdateOwnAdvPrefix(const IPv6Address& destPrefix, i
     else
     {
         // update existing one; notification-wise, we pretend the route got removed then re-added
-        nb->fireChangeNotification(NF_IPv6_ROUTE_DELETED, route);
+        nb->fireChangeNotification(inet::NF_IPv6_ROUTE_DELETED, route);
         route->setInterfaceId(interfaceId);
         route->setExpiryTime(expiryTime);
-        nb->fireChangeNotification(NF_IPv6_ROUTE_ADDED, route);
+        nb->fireChangeNotification(inet::NF_IPv6_ROUTE_ADDED, route);
     }
 
     updateDisplayString();
 }
 
-void ANSARoutingTable6::addStaticRoute(const IPv6Address& destPrefix, int prefixLength,
-                    unsigned int interfaceId, const IPv6Address& nextHop,
+void ANSARoutingTable6::addStaticRoute(const inet::IPv6Address& destPrefix, int prefixLength,
+                    unsigned int interfaceId, const inet::IPv6Address& nextHop,
                     int metric)
 {
     // create route object
-    ANSAIPv6Route *route = new ANSAIPv6Route(destPrefix, prefixLength, IPv6Route::STATIC);
+    ANSAIPv6Route *route = new ANSAIPv6Route(destPrefix, prefixLength, inet::IPv6Route::STATIC);
     route->setInterfaceId(interfaceId);
     route->setNextHop(nextHop);
     if (metric==0)
@@ -314,11 +314,11 @@ void ANSARoutingTable6::addStaticRoute(const IPv6Address& destPrefix, int prefix
     addRoute(route);
 }
 
-void ANSARoutingTable6::addDefaultRoute(const IPv6Address& nextHop, unsigned int ifID,
+void ANSARoutingTable6::addDefaultRoute(const inet::IPv6Address& nextHop, unsigned int ifID,
         simtime_t routerLifetime)
 {
     // create route object
-    ANSAIPv6Route *route = new ANSAIPv6Route(IPv6Address(), 0, IPv6Route::FROM_RA);
+    ANSAIPv6Route *route = new ANSAIPv6Route(inet::IPv6Address(), 0, inet::IPv6Route::FROM_RA);
     route->setInterfaceId(ifID);
     route->setNextHop(nextHop);
     route->setMetric(10); //FIXME:should be filled from interface metric
@@ -334,7 +334,7 @@ void ANSARoutingTable6::addDefaultRoute(const IPv6Address& nextHop, unsigned int
 
 void ANSARoutingTable6::addRoutingProtocolRoute(ANSAIPv6Route *route)
 {
-    ASSERT(route->getSrc()==IPv6Route::ROUTING_PROT);
+    ASSERT(route->getSourceType()==inet::IPv6Route::ROUTING_PROT);
     addRoute(route);
 }
 
@@ -345,38 +345,39 @@ void ANSARoutingTable6::addRoute(ANSAIPv6Route *route)
     purgeDestCache();
 
     route->setRoutingTable(this);
-    routeList.push_back(route);
+    this->internalAddRoute(route);
+    //routeList.push_back(route);
 
     // we keep entries sorted by prefix length in routeList, so that we can
     // stop at the first match when doing the longest prefix matching
-    std::sort(routeList.begin(), routeList.end(), routeLessThan);
+    //std::sort(routeList.sbegin(), routeList.end(), routeLessThan);
 
     updateDisplayString();
 
-    nb->fireChangeNotification(NF_IPv6_ROUTE_ADDED, route);
+    nb->fireChangeNotification(inet::NF_IPv6_ROUTE_ADDED, route);
 }
 
-void ANSARoutingTable6::removeRoute(IPv6Route *route)
-{
-    RouteList::iterator it = std::find(routeList.begin(), routeList.end(), route);
-    ASSERT(it!=routeList.end());
+//void ANSARoutingTable6::removeRoute(inet::IPv6Route *route)
+//{
+//    RouteList::iterator it = std::find(routeList.begin(), routeList.end(), route);
+//    ASSERT(it!=routeList.end());
+//
+//    nb->fireChangeNotification(inet::NF_IPv6_ROUTE_DELETED, route); // rather: going to be deleted
+//
+//    routeList.erase(it);
+//
+//    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
+//     the Destination Cache in such a way that all entries using the next-hop from
+//     the deleted route perform next-hop determination again rather than continue
+//     sending traffic using that deleted route next-hop.*/
+//    purgeDestCache();
+//
+//    delete route;
+//
+//    updateDisplayString();
+//}
 
-    nb->fireChangeNotification(NF_IPv6_ROUTE_DELETED, route); // rather: going to be deleted
-
-    routeList.erase(it);
-
-    /*XXX: this deletes some cache entries we want to keep, but the node MUST update
-     the Destination Cache in such a way that all entries using the next-hop from
-     the deleted route perform next-hop determination again rather than continue
-     sending traffic using that deleted route next-hop.*/
-    purgeDestCache();
-
-    delete route;
-
-    updateDisplayString();
-}
-
-void ANSARoutingTable6::removeRouteSilent(IPv6Route *route)
+void ANSARoutingTable6::removeRouteSilent(inet::IPv6Route *route)
 {
     RouteList::iterator it = std::find(routeList.begin(), routeList.end(), route);
     ASSERT(it!=routeList.end());
@@ -400,7 +401,7 @@ void ANSARoutingTable6::routeChanged(ANSAIPv6Route *entry, int fieldCode)
 
     routeChangedSilent(entry, fieldCode);
 
-    nb->fireChangeNotification(NF_IPv6_ROUTE_CHANGED, entry); // TODO include fieldCode in the notification
+    nb->fireChangeNotification(inet::NF_IPv6_ROUTE_CHANGED, entry); // TODO include fieldCode in the notification
 }
 
 void ANSARoutingTable6::routeChangedSilent(ANSAIPv6Route *entry, int fieldCode)
@@ -426,37 +427,37 @@ void ANSARoutingTable6::receiveChangeNotification(int category, const cObject *d
         return;  // ignore notifications during initialize
 
     Enter_Method_Silent();
-    printNotificationBanner(category, details);
+    inet::printNotificationBanner(category, details);
 
-    if (category==NF_INTERFACE_CREATED)
+    if (category==inet::NF_INTERFACE_CREATED)
     {
         //TODO something like this:
-        //InterfaceEntry *ie = check_and_cast<InterfaceEntry*>(details);
+        //InterfaceEntry *ie = check_and_cast<inet::InterfaceEntry*>(details);
         //configureInterfaceForIPv6(ie);
     }
-    else if (category==NF_INTERFACE_DELETED)
+    else if (category==inet::NF_INTERFACE_DELETED)
     {
         //TODO remove all routes that point to that interface (?)
-        InterfaceEntry *interfaceEntry = check_and_cast<InterfaceEntry*>(details);
+        inet::InterfaceEntry *interfaceEntry = check_and_cast<inet::InterfaceEntry*>(details);
         int interfaceEntryId = interfaceEntry->getInterfaceId();
         purgeDestCacheForInterfaceID(interfaceEntryId);
     }
-    else if (category==NF_INTERFACE_STATE_CHANGED)
+    else if (category==inet::NF_INTERFACE_STATE_CHANGED)
     {
-        InterfaceEntry *interfaceEntry = check_and_cast<InterfaceEntry*>(details);
+        inet::InterfaceEntry *interfaceEntry = check_and_cast<inet::InterfaceEntry*>(details);
         int interfaceEntryId = interfaceEntry->getInterfaceId();
 
         // an interface went down
-        if (interfaceEntry->isDown())
+        if (interfaceEntry->getState()==inet::InterfaceEntry::DOWN)
         {
             purgeDestCacheForInterfaceID(interfaceEntryId);
         }
     }
-    else if (category==NF_INTERFACE_CONFIG_CHANGED)
+    else if (category==inet::NF_INTERFACE_CONFIG_CHANGED)
     {
         //TODO invalidate routing cache (?)
     }
-    else if (category==NF_INTERFACE_IPv6CONFIG_CHANGED)
+    else if (category==inet::NF_INTERFACE_IPv6CONFIG_CHANGED)
     {
         //TODO
     }

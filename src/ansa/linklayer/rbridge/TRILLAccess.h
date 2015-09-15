@@ -26,14 +26,14 @@
 #ifndef TRILLACCESS_H_
 #define TRILLACCESS_H_
 
-#include "ModuleAccess.h"
-#include "TRILL.h"
+#include "common/ModuleAccess.h"
+#include "ansa/linklayer/rbridge/TRILL.h"
 
-class TRILLAccess : public ModuleAccess<TRILL>
+class TRILLAccess : public inet::ModuleAccess<TRILL>
 {
     public :
         TRILLAccess() :
-            ModuleAccess<TRILL>("trill"){}
+            inet::ModuleAccess<TRILL>("trill"){}
 };
 
 

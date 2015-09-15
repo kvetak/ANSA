@@ -24,15 +24,15 @@
 
 #include <omnetpp.h>
 
-#include "BabelDef.h"
-#include "BabelInterfaceTable.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "ansa/applications/babel/BabelInterfaceTable.h"
 
 
 class BabelNeighbour : public cObject
 {
   protected:
     BabelInterface *interface;
-    IPvXAddress address;
+    inet::L3Address address;
     uint16_t history;
     uint16_t cost;
     uint16_t txcost;
@@ -44,7 +44,7 @@ class BabelNeighbour : public cObject
 
 
   public:
-    BabelNeighbour(BabelInterface *iface, const IPvXAddress& addr,
+    BabelNeighbour(BabelInterface *iface, const inet::L3Address& addr,
             Babel::BabelTimer *nht, Babel::BabelTimer *nit):
         interface(iface),
         address(addr),
@@ -84,8 +84,8 @@ class BabelNeighbour : public cObject
     BabelInterface *getInterface() const {return interface;}
     void setInterface(BabelInterface * iface) {interface = iface;}
 
-    const IPvXAddress& getAddress() const {return address;}
-    void setAddress(const IPvXAddress& addr) {address = addr;}
+    const inet::L3Address& getAddress() const {return address;}
+    void setAddress(const inet::L3Address& addr) {address = addr;}
 
     uint16_t getHistory() const {return history;}
     void setHistory(uint16_t h) {history = h;}
@@ -135,7 +135,7 @@ class BabelNeighbourTable
     std::vector<BabelNeighbour *>& getNeighbours() {return neighbours;}
     int getNumOfNeighOnIface(BabelInterface *iface);
 
-    BabelNeighbour *findNeighbour(BabelInterface *iface, const IPvXAddress& addr);
+    BabelNeighbour *findNeighbour(BabelInterface *iface, const inet::L3Address& addr);
     BabelNeighbour *addNeighbour(BabelNeighbour *neigh);
     void removeNeighbour(BabelNeighbour *neigh);
     void removeNeighboursOnIface(BabelInterface *iface);

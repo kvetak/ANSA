@@ -15,17 +15,19 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef IEEE80211_AGENT_STA_H
-#define IEEE80211_AGENT_STA_H
+#ifndef __INET_IEEE80211AGENTSTA_H
+#define __INET_IEEE80211AGENTSTA_H
 
 #include <vector>
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "Ieee80211Primitives_m.h"
-#include "NotificationBoard.h"
-#include "InterfaceTable.h"
+#include "linklayer/ieee80211/mgmt/Ieee80211Primitives_m.h"
+#include "networklayer/common/InterfaceTable.h"
 
+namespace inet {
+
+namespace ieee80211 {
 
 /**
  * Used in 802.11 infrastructure mode: in a station (STA), this module
@@ -36,13 +38,12 @@
  *
  * @author Andras Varga
  */
-class INET_API Ieee80211AgentSTA : public cSimpleModule, public INotifiable
+class INET_API Ieee80211AgentSTA : public cSimpleModule, public cListener
 {
   protected:
-    InterfaceEntry *myIface;
-    NotificationBoard *nb;
+    InterfaceEntry *myIface = nullptr;
     MACAddress prevAP;
-    bool activeScan;
+    bool activeScan = false;
     std::vector<int> channelsToScan;
     simtime_t probeDelay;
     simtime_t minChannelTime;
@@ -57,12 +58,15 @@ class INET_API Ieee80211AgentSTA : public cSimpleModule, public INotifiable
     static simsignal_t acceptConfirmSignal;
     static simsignal_t dropConfirmSignal;
 
+  public:
+    Ieee80211AgentSTA() {}
+
   protected:
-    virtual int numInitStages() const {return 2;}
-    virtual void initialize(int);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int) override;
 
     /** Overridden cSimpleModule method */
-    virtual void handleMessage(cMessage *msg);
+    virtual void handleMessage(cMessage *msg) override;
 
     /** Handle timers */
     virtual void handleTimer(cMessage *msg);
@@ -70,8 +74,8 @@ class INET_API Ieee80211AgentSTA : public cSimpleModule, public INotifiable
     /** Handle responses from mgmgt */
     virtual void handleResponse(cMessage *msg);
 
-    /** Redefined from INotifiable; called by NotificationBoard */
-    virtual void receiveChangeNotification(int category, const cObject *details);
+    /** Redefined from cListener; called by signal handler */
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj) override;
 
     // utility method: attaches object to a message as controlInfo, and sends it to mgmt
     virtual void sendRequest(Ieee80211PrimRequest *req);
@@ -101,6 +105,9 @@ class INET_API Ieee80211AgentSTA : public cSimpleModule, public INotifiable
     virtual void dumpAPList(Ieee80211Prim_ScanConfirm *resp);
 };
 
-#endif
+} // namespace ieee80211
 
+} // namespace inet
+
+#endif // ifndef __INET_IEEE80211AGENTSTA_H
 

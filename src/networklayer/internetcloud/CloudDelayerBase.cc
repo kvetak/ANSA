@@ -17,51 +17,52 @@
 // @author Zoltan Bojthe
 //
 
+#include "networklayer/internetcloud/CloudDelayerBase.h"
 
-#include "CloudDelayerBase.h"
+#include "networklayer/ipv4/IPv4.h"
 
-#include "IPv4ControlInfo.h"
-#include "IPv6ControlInfo.h"
+namespace inet {
 
 Define_Module(CloudDelayerBase);
 
-#define SRCPAR "incomingInterfaceID"
+#define SRCPAR    "incomingInterfaceID"
+
+CloudDelayerBase::CloudDelayerBase()
+{
+    ipv4Layer = nullptr;
+}
+
+CloudDelayerBase::~CloudDelayerBase()
+{
+    //TODO unregister hook if ipv4Layer exists
+    ipv4Layer = check_and_cast_nullable<IPv4 *>(getModuleByPath("^.ip"));
+    if (ipv4Layer)
+        ipv4Layer->unregisterHook(0, this);
+}
+
+void CloudDelayerBase::initialize(int stage)
+{
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_NETWORK_LAYER) {
+        ipv4Layer = check_and_cast<IPv4 *>(getModuleByPath("^.ip"));
+        ipv4Layer->registerHook(0, this);
+    }
+}
+
+void CloudDelayerBase::finish()
+{
+    if (ipv4Layer)
+        ipv4Layer->unregisterHook(0, this);
+    ipv4Layer = nullptr;
+}
 
 void CloudDelayerBase::handleMessage(cMessage *msg)
 {
-    int srcID = -1, destID = -1;
-
-    if (msg->hasPar(SRCPAR))
-    {
-        cMsgPar& p = msg->par(SRCPAR);
-        srcID = p.longValue();
-        delete msg->getParList().remove(&p);
-    }
-
-    cObject *ci = msg->getControlInfo();
-    if (dynamic_cast<IPv4ControlInfo*>(ci))
-        destID = (dynamic_cast<IPv4ControlInfo*>(ci))->getInterfaceId();
-    if (dynamic_cast<IPv4RoutingDecision*>(ci))
-        destID = (dynamic_cast<IPv4RoutingDecision*>(ci))->getInterfaceId();
-    else if (dynamic_cast<IPv6ControlInfo*>(ci))
-        destID = (dynamic_cast<IPv6ControlInfo*>(ci))->getInterfaceId();
-    else
-        throw cRuntimeError("Cannot determine destination interface id from packet");
-
-    simtime_t propDelay;
-    bool isDrop;
-    calculateDropAndDelay(msg, srcID, destID, isDrop, propDelay);
-    if (isDrop)
-    {
-        //TODO emit?
-        EV << "Message " << msg->info() << " dropped in cloud.\n";
+    if (msg->isSelfMessage()) {
+        INetworkDatagram *context = (INetworkDatagram *)msg->getContextPointer();
         delete msg;
-    }
-    else
-    {
-        //TODO emit?
-        EV << "Message " << msg->info() << " delayed with " << propDelay*1000.0 << "ms in cloud.\n";
-        sendDelayed(msg, propDelay, "ipOut");
+        ipv4Layer->reinjectQueuedDatagram(context);
     }
 }
 
@@ -70,4 +71,54 @@ void CloudDelayerBase::calculateDropAndDelay(const cMessage *msg, int srcID, int
     outDrop = false;
     outDelay = SIMTIME_ZERO;
 }
+
+INetfilter::IHook::Result CloudDelayerBase::datagramPreRoutingHook(INetworkDatagram *datagram, const InterfaceEntry *inputInterfaceEntry, const InterfaceEntry *& outputInterfaceEntry, L3Address& nextHopAddress)
+{
+    return INetfilter::IHook::ACCEPT;
+}
+
+INetfilter::IHook::Result CloudDelayerBase::datagramForwardHook(INetworkDatagram *datagram, const InterfaceEntry *inputInterfaceEntry, const InterfaceEntry *& outputInterfaceEntry, L3Address& nextHopAddress)
+{
+    Enter_Method_Silent();
+
+    int srcID = inputInterfaceEntry ? inputInterfaceEntry->getInterfaceId() : -1;
+    int destID = outputInterfaceEntry->getInterfaceId();
+
+    cMessage *msg = check_and_cast<cMessage *>(datagram);
+    simtime_t propDelay;
+    bool isDrop;
+    calculateDropAndDelay(msg, srcID, destID, isDrop, propDelay);
+    if (isDrop) {
+        //TODO emit?
+        EV_INFO << "Message " << msg->info() << " dropped in cloud.\n";
+        return INetfilter::IHook::DROP;
+    }
+
+    if (propDelay > SIMTIME_ZERO) {
+        //TODO emit?
+        EV_INFO << "Message " << msg->info() << " delayed with " << propDelay * 1000.0 << "ms in cloud.\n";
+        cMessage *selfmsg = new cMessage("Delay");
+        selfmsg->setContextPointer(datagram);
+        scheduleAt(simTime() + propDelay, selfmsg);
+        return INetfilter::IHook::QUEUE;
+    }
+    return INetfilter::IHook::ACCEPT;
+}
+
+INetfilter::IHook::Result CloudDelayerBase::datagramPostRoutingHook(INetworkDatagram *datagram, const InterfaceEntry *inputInterfaceEntry, const InterfaceEntry *& outputInterfaceEntry, L3Address& nextHopAddress)
+{
+    return INetfilter::IHook::ACCEPT;
+}
+
+INetfilter::IHook::Result CloudDelayerBase::datagramLocalInHook(INetworkDatagram *datagram, const InterfaceEntry *inputInterfaceEntry)
+{
+    return INetfilter::IHook::ACCEPT;
+}
+
+INetfilter::IHook::Result CloudDelayerBase::datagramLocalOutHook(INetworkDatagram *datagram, const InterfaceEntry *& outputInterfaceEntry, L3Address& nextHopAddress)
+{
+    return INetfilter::IHook::ACCEPT;
+}
+
+} // namespace inet
 

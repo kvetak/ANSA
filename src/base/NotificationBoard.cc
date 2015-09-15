@@ -60,7 +60,7 @@ void NotificationBoard::handleMessage(cMessage *msg)
 
 void NotificationBoard::subscribe(INotifiable *client, int category)
 {
-    Enter_Method("subscribe(%s)", notificationCategoryName(category));
+    Enter_Method("subscribe(%s)", inet::notificationCategoryName(category));
 
     // find or create entry for this category
     NotifiableVector& clients = clientMap[category];
@@ -69,12 +69,12 @@ void NotificationBoard::subscribe(INotifiable *client, int category)
     if (std::find(clients.begin(), clients.end(), client) == clients.end())
         clients.push_back(client);
 
-    fireChangeNotification(NF_SUBSCRIBERLIST_CHANGED, NULL);
+    fireChangeNotification(inet::NF_SUBSCRIBERLIST_CHANGED, NULL);
 }
 
 void NotificationBoard::unsubscribe(INotifiable *client, int category)
 {
-    Enter_Method("unsubscribe(%s)", notificationCategoryName(category));
+    Enter_Method("unsubscribe(%s)", inet::notificationCategoryName(category));
 
     // find (or create) entry for this category
     NotifiableVector& clients = clientMap[category];
@@ -84,7 +84,7 @@ void NotificationBoard::unsubscribe(INotifiable *client, int category)
     if (it!=clients.end())
         clients.erase(it);
 
-    fireChangeNotification(NF_SUBSCRIBERLIST_CHANGED, NULL);
+    fireChangeNotification(inet::NF_SUBSCRIBERLIST_CHANGED, NULL);
 }
 
 bool NotificationBoard::hasSubscribers(int category)
@@ -95,7 +95,7 @@ bool NotificationBoard::hasSubscribers(int category)
 
 void NotificationBoard::fireChangeNotification(int category, const cObject *details)
 {
-    Enter_Method("fireChangeNotification(%s, %s)", notificationCategoryName(category),
+    Enter_Method("fireChangeNotification(%s, %s)", inet::notificationCategoryName(category),
                  details?details->info().c_str() : "n/a");
 
     ClientMap::iterator it = clientMap.find(category);

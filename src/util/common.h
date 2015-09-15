@@ -18,7 +18,7 @@
 #ifndef __INET_INETCOMMON_H
 #define __INET_INETCOMMON_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 #include <string>
 

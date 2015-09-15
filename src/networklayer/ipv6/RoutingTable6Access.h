@@ -19,19 +19,19 @@
 #ifndef __INET_ROUTING_TABLE6_ACCESS_H
 #define __INET_ROUTING_TABLE6_ACCESS_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ModuleAccess.h"
-#include "RoutingTable6.h"
+#include "common/ModuleAccess.h"
+#include "networklayer/ipv6/IPv6RoutingTable.h"
 
 
 /**
  * Gives access to RoutingTable6
  */
-class INET_API RoutingTable6Access : public ModuleAccess<RoutingTable6>
+class INET_API RoutingTable6Access : public inet::ModuleAccess<inet::IPv6RoutingTable>
 {
     public:
-        RoutingTable6Access() : ModuleAccess<RoutingTable6>("routingTable6") {}
+        RoutingTable6Access() : inet::ModuleAccess<inet::IPv6RoutingTable>("routingTable6") {}
 };
 
 #endif

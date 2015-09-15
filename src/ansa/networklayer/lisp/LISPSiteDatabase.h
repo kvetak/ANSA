@@ -17,7 +17,7 @@
 #define __ANSA_LISPSITEDATABASE_H_
 
 #include <omnetpp.h>
-#include "LISPSite.h"
+#include "ansa/networklayer/lisp/LISPSite.h"
 
 typedef std::list<LISPSite> SiteStorage;
 typedef SiteStorage::iterator SiteStorageItem;
@@ -33,13 +33,13 @@ class LISPSiteDatabase : public cSimpleModule
     void addSite(LISPSite& si);
     LISPSite* findSiteInfoByKey(std::string& siteKey);
     LISPSite* findSiteInfoBySiteName(std::string& siteName);
-    LISPSite* findSiteByAggregate(const IPvXAddress& addr);
+    LISPSite* findSiteByAggregate(const inet::L3Address& addr);
 
-    LISPEtrTimer* findExpirationTimer(IPvXAddress addr, std::string name);
+    LISPEtrTimer* findExpirationTimer(inet::L3Address addr, std::string name);
 
-    LISPSiteRecord* updateSiteEtr(LISPSite* si, IPvXAddress src, bool proxy);
+    LISPSiteRecord* updateSiteEtr(LISPSite* si, inet::L3Address src, bool proxy);
     void updateEtrEntries(LISPSiteRecord* siteRec, const TRecord& mapEntry, std::string name);
-    void updateTimeout(IPvXAddress addr, std::string name);
+    void updateTimeout(inet::L3Address addr, std::string name);
 
   protected:
     EtrTimeouts SiteTimeouts;

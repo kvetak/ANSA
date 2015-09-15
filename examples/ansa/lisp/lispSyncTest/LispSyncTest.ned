@@ -18,10 +18,10 @@ package inet.examples.ansa.lisp.lispSyncTest;
 import inet.ansa.applications.rip.RIPRouter;
 import inet.ansa.nodes.ANSA_DualStackHost;
 import inet.ansa.nodes.lisp.*;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.ethernet.Eth100M;
-import inet.world.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.ethernet.Eth100M;
+import inet.common.scenario.ScenarioManager;
 
 
 network LispSyncTest

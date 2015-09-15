@@ -19,7 +19,7 @@
  */
 
 
-#include <LISPMsgLogger.h>
+#include "ansa/networklayer/lisp/LISPMsgLogger.h"
 
 Define_Module(LISPMsgLogger);
 
@@ -37,7 +37,7 @@ LISPMsgLogger::~LISPMsgLogger() {
     MsgLogger.clear();
 }
 
-void LISPMsgLogger::addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, IPvXAddress addr, bool flag) {
+void LISPMsgLogger::addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, inet::L3Address addr, bool flag) {
     MsgLogger.push_back(
             LISPMsgEntry(msgtype,
                          lispmsg->getNonce(),

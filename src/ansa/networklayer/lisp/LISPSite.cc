@@ -19,7 +19,7 @@
  */
 
 
-#include "LISPSite.h"
+#include "ansa/networklayer/lisp/LISPSite.h"
 
 LISPSite::LISPSite() {
     name = "";
@@ -87,7 +87,7 @@ void LISPSite::addRecord(LISPSiteRecord& srec) {
     ETRs.push_back(srec);
 }
 
-LISPSiteRecord* LISPSite::findRecordByAddress(IPvXAddress& address) {
+LISPSiteRecord* LISPSite::findRecordByAddress(inet::L3Address& address) {
     for (EtrItem it = ETRs.begin(); it != ETRs.end(); ++it) {
         if (it->getServerEntry().getAddress() == address)
             return &(*it);
@@ -105,7 +105,7 @@ void LISPSite::removeRecord(LISPSiteRecord& srec) {
     ETRs.remove(srec);
 }
 
-Etrs LISPSite::findAllRecordsByEid(const IPvXAddress& address) {
+Etrs LISPSite::findAllRecordsByEid(const inet::L3Address& address) {
     Etrs result;
     for (EtrItem it = ETRs.begin(); it != ETRs.end(); ++it) {
         if ( it->lookupMapEntry(address) )
@@ -115,10 +115,10 @@ Etrs LISPSite::findAllRecordsByEid(const IPvXAddress& address) {
     return result;
 }
 
-bool LISPSite::isEidMaintained(const IPvXAddress& address) {
+bool LISPSite::isEidMaintained(const inet::L3Address& address) {
     for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
         //IF non-comparable AFIs THEN skip
-        if (address.isIPv6() xor it->getEidPrefix().getEidAddr().isIPv6())
+        if ((address.getType()==inet::L3Address::IPv6) xor (it->getEidPrefix().getEidAddr().getType()==inet::L3Address::IPv6))
             continue;
         //Count number of common bits and if greater than Maintained EID length then return true
         int commonbits = LISPCommon::doPrefixMatch(it->getEidPrefix().getEidAddr(), address);

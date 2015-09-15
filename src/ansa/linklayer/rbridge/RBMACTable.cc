@@ -23,7 +23,7 @@
 
  */
 
-#include "RBMACTable.h"
+#include "ansa/linklayer/rbridge/RBMACTable.h"
 
 
 Define_Module(RBMACTable);
@@ -59,7 +59,7 @@ const RBMACTable::AddressTable * RBMACTable::getTable() {
 /*
  * This method is used to learn the triplet from native frame
  */
-void RBMACTable::updateNative(MACAddress& addr, int vlanId, int port){
+void RBMACTable::updateNative(inet::MACAddress& addr, int vlanId, int port){
 
     Enter_Method_Silent();
 
@@ -111,7 +111,7 @@ void RBMACTable::updateNative(MACAddress& addr, int vlanId, int port){
 /*
  * This method is used to learn triplet of innerFrame within TRILL-encapsulated frame
  */
-void RBMACTable::updateTRILLData(MACAddress &addr, int vlanId, int ingressNickname){
+void RBMACTable::updateTRILLData(inet::MACAddress &addr, int vlanId, int ingressNickname){
     Enter_Method_Silent();
 
     flushAged();
@@ -153,7 +153,7 @@ void RBMACTable::updateTRILLData(MACAddress &addr, int vlanId, int ingressNickna
 
     }
 }
-void RBMACTable::update(MACAddress& addr, int port) {
+void RBMACTable::update(inet::MACAddress& addr, int port) {
     Enter_Method_Silent();
 
     flushAged();
@@ -199,7 +199,7 @@ void RBMACTable::update(MACAddress& addr, int port) {
   return;
 }
 
-RBMACTable::tSpec RBMACTable::getSpec(MACAddress& addr) {
+RBMACTable::tSpec RBMACTable::getSpec(inet::MACAddress& addr) {
     Enter_Method_Silent();
 
     AddressTable::iterator iter = table.find(addr);
@@ -221,7 +221,7 @@ RBMACTable::tSpec RBMACTable::getSpec(MACAddress& addr) {
 }
 
 /** Returns list of egress ports for specified address @param addr */
-RBMACTable::tPortList& RBMACTable::getPorts(MACAddress& addr) {
+RBMACTable::tPortList& RBMACTable::getPorts(inet::MACAddress& addr) {
 
     Enter_Method_Silent();
 
@@ -378,7 +378,7 @@ void RBMACTable::removeOldest() {
 }
 
 
-void RBMACTable::add(MACAddress addr, int port, tType type, tSpec spec) {
+void RBMACTable::add(inet::MACAddress addr, int port, tType type, tSpec spec) {
   AddressTable::iterator iter;
 
   iter = this->table.find(addr);
@@ -424,7 +424,7 @@ void RBMACTable::add(MACAddress addr, int port, tType type, tSpec spec) {
   return;
 }
 
-void RBMACTable::remove(MACAddress addr) {
+void RBMACTable::remove(inet::MACAddress addr) {
     AddressTable::iterator iter;
 
     iter = this->table.find(addr);
@@ -436,7 +436,7 @@ void RBMACTable::remove(MACAddress addr) {
     return;
 }
 
-void RBMACTable::removePort(MACAddress addr, int port) {
+void RBMACTable::removePort(inet::MACAddress addr, int port) {
     AddressTable::iterator iter;
 
     iter = this->table.find(addr);
@@ -455,7 +455,7 @@ void RBMACTable::removePort(MACAddress addr, int port) {
     return;
 }
 
-void RBMACTable::addStatic(MACAddress addr, tPortList ports) {
+void RBMACTable::addStatic(inet::MACAddress addr, tPortList ports) {
     AddressTable::iterator iter;
 
     iter = this->table.find(addr);
@@ -525,18 +525,18 @@ void RBMACTable::initialize() {
     tmp1.push_back(4);
     tmp1.push_back(5);
 
-    addStatic(MACAddress("01:00:00:00:00:01"), tmp0);
-    addStatic(MACAddress("01:00:00:00:00:02"), tmp1);
-    removePort(MACAddress("01:00:00:00:00:01"), 2);
-    remove(MACAddress("01:00:00:00:00:02"));
-    add(MACAddress("01:00:00:00:00:03"), 16, GROUP, NONE);
+    addStatic(inet::MACAddress("01:00:00:00:00:01"), tmp0);
+    addStatic(inet::MACAddress("01:00:00:00:00:02"), tmp1);
+    removePort(inet::MACAddress("01:00:00:00:00:01"), 2);
+    remove(inet::MACAddress("01:00:00:00:00:02"));
+    add(inet::MACAddress("01:00:00:00:00:03"), 16, GROUP, NONE);
 */
     /* END TEST */
 
 
     /* IEEE802.1D Table 7-10 Reserved addresses */
       // Bridge Group Address -> go to STP
-    add(MACAddress("01-80-C2-00-00-00"), 0, STATIC, STP);
+    add(inet::MACAddress("01-80-C2-00-00-00"), 0, STATIC, STP);
     /* end of table */
 
 

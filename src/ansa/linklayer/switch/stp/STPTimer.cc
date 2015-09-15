@@ -5,7 +5,7 @@
  *      Author: aranel
  */
 
-#include "STPTimer.h"
+#include "ansa/linklayer/switch/stp/STPTimer.h"
 
 STPTimer::STPTimer() {
 

@@ -16,16 +16,16 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
-#ifndef __INET_IPTRAFSINK_H
-#define __INET_IPTRAFSINK_H
+#ifndef __INET_IPVXTRAFSINK_H
+#define __INET_IPVXTRAFSINK_H
 
 #include <vector>
 
-#include "INETDefs.h"
-#include "IPvXAddress.h"
-#include "ILifecycle.h"
+#include "common/INETDefs.h"
+#include "networklayer/common/L3Address.h"
+#include "common/lifecycle/ILifecycle.h"
 
+namespace inet {
 
 /**
  * Consumes and prints packets received from the IP module. See NED for more info.
@@ -37,17 +37,17 @@ class INET_API IPvXTrafSink : public cSimpleModule, public ILifecycle
     bool isOperational;
     static simsignal_t rcvdPkSignal;
 
+  protected:
     virtual void printPacket(cPacket *msg);
     virtual void processPacket(cPacket *msg);
 
-  public:
-    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);
-
-  protected:
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 2; }
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void handleMessage(cMessage *msg) override;
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_IPVXTRAFSINK_H
 

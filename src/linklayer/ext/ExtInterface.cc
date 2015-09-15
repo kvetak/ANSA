@@ -24,16 +24,19 @@
 #include <string.h>
 
 #include <platdep/sockets.h>
-#include "INETDefs.h"
 
-#include "ExtInterface.h"
+#include "common/INETDefs.h"
 
-#include "InterfaceEntry.h"
-#include "InterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "IPv4Serializer.h"
-#include "opp_utils.h"
+#include "linklayer/ext/ExtInterface.h"
 
+#include "networklayer/common/InterfaceEntry.h"
+#include "networklayer/common/InterfaceTable.h"
+#include "common/serializer/ipv4/IPv4Serializer.h"
+#include "common/INETUtils.h"
+#include "networklayer/common/IPProtocolId_m.h"
+#include "networklayer/ipv4/IPv4Datagram.h"
+
+namespace inet {
 
 Define_Module(ExtInterface);
 
@@ -42,20 +45,17 @@ void ExtInterface::initialize(int stage)
     MACBase::initialize(stage);
 
     // subscribe at scheduler for external messages
-    if (stage == 0)
-    {
-        if (dynamic_cast<cSocketRTScheduler *>(simulation.getScheduler()) != NULL)
-        {
-            rtScheduler = check_and_cast<cSocketRTScheduler *>(simulation.getScheduler());
-            //device = ev.config()->getAsString("Capture", "device", "lo0");
+    if (stage == INITSTAGE_LOCAL) {
+        if (dynamic_cast<cSocketRTScheduler *>(getSimulation()->getScheduler()) != nullptr) {
+            rtScheduler = check_and_cast<cSocketRTScheduler *>(getSimulation()->getScheduler());
+            //device = getEnvir()->config()->getAsString("Capture", "device", "lo0");
             device = par("device");
-            //const char *filter = ev.config()->getAsString("Capture", "filter-string", "ip");
+            //const char *filter = getEnvir()->config()->getAsString("Capture", "filter-string", "ip");
             const char *filter = par("filterString");
             rtScheduler->setInterfaceModule(this, device, filter);
             connected = true;
         }
-        else
-        {
+        else {
             // this simulation run works without external interface..
             connected = false;
         }
@@ -63,20 +63,19 @@ void ExtInterface::initialize(int stage)
         WATCH(numSent);
         WATCH(numRcvd);
         WATCH(numDropped);
-
+    }
+    else if (stage == INITSTAGE_LINK_LAYER) {
         registerInterface();
-
+    }
+    else if (stage == INITSTAGE_LAST) {
         // if not connected, make it gray
-        if (ev.isGUI() && !connected)
-        {
+        if (hasGUI() && !connected) {
             getDisplayString().setTagArg("i", 1, "#707070");
             getDisplayString().setTagArg("i", 2, "100");
         }
-    }
-    else if (stage == 3)
-    {
+
         // update display string when addresses have been autoconfigured etc.
-        if (ev.isGUI())
+        if (hasGUI())
             updateDisplayString();
     }
 }
@@ -84,9 +83,6 @@ void ExtInterface::initialize(int stage)
 InterfaceEntry *ExtInterface::createInterfaceEntry()
 {
     InterfaceEntry *e = new InterfaceEntry(this);
-
-    // interface name: our module name without special characters ([])
-    e->setName(OPP_Global::stripnonalnum(getFullName()).c_str());
 
     e->setMtu(par("mtu"));
     e->setMulticast(true);
@@ -97,24 +93,25 @@ InterfaceEntry *ExtInterface::createInterfaceEntry()
 
 void ExtInterface::handleMessage(cMessage *msg)
 {
-    if (!isOperational)
-    {
+    using namespace serializer;
+
+    if (!isOperational) {
         handleMessageWhenDown(msg);
         return;
     }
 
-    if (dynamic_cast<ExtFrame *>(msg) != NULL)
-    {
+    if (dynamic_cast<ExtFrame *>(msg) != nullptr) {
         // incoming real packet from wire (captured by pcap)
         uint32 packetLength;
         ExtFrame *rawPacket = check_and_cast<ExtFrame *>(msg);
 
         packetLength = rawPacket->getDataArraySize();
-        for (uint32 i=0; i < packetLength; i++)
+        for (uint32 i = 0; i < packetLength; i++)
             buffer[i] = rawPacket->getData(i);
 
-        IPv4Datagram *ipPacket = new IPv4Datagram("ip-from-wire");
-        IPv4Serializer().parse(buffer, packetLength, (IPv4Datagram *)ipPacket);
+        Buffer b(const_cast<unsigned char *>(buffer), packetLength);
+        Context c;
+        IPv4Datagram *ipPacket = check_and_cast<IPv4Datagram *>(IPv4Serializer().deserializePacket(b, c));
         EV << "Delivering an IPv4 packet from "
            << ipPacket->getSrcAddress()
            << " to "
@@ -125,32 +122,29 @@ void ExtInterface::handleMessage(cMessage *msg)
         send(ipPacket, "upperLayerOut");
         numRcvd++;
     }
-    else
-    {
+    else {
         memset(buffer, 0, sizeof(buffer));
         IPv4Datagram *ipPacket = check_and_cast<IPv4Datagram *>(msg);
 
-        if ((ipPacket->getTransportProtocol() != IP_PROT_ICMP) &&
-            (ipPacket->getTransportProtocol() != IP_PROT_SCTP) &&
-            (ipPacket->getTransportProtocol() != IP_PROT_TCP) &&
-            (ipPacket->getTransportProtocol() != IP_PROT_UDP))
-        {
-            EV << "Cannot send packet. Protocol " << ipPacket->getTransportProtocol() << " is not supported.\n";
-            numDropped++;
-            delete (msg);
-            return;
-        }
-
-        if (connected)
-        {
+        if (connected) {
             struct sockaddr_in addr;
             addr.sin_family = AF_INET;
-#if !defined(linux) && !defined(_WIN32)
+#if !defined(linux) && !defined(__linux) && !defined(_WIN32)
             addr.sin_len = sizeof(struct sockaddr_in);
-#endif
+#endif // if !defined(linux) && !defined(__linux) && !defined(_WIN32)
             addr.sin_port = 0;
             addr.sin_addr.s_addr = htonl(ipPacket->getDestAddress().getInt());
-            int32 packetLength = IPv4Serializer().serialize(ipPacket, buffer, sizeof(buffer));
+            Buffer b(const_cast<unsigned char *>(buffer), sizeof(buffer));
+            Context c;
+            c.throwOnSerializerNotFound = false;
+            IPv4Serializer().serializePacket(ipPacket, b, c);
+            if (b.hasError() || c.errorOccured) {
+                EV_ERROR << "Cannot serialize and send packet << '" << ipPacket->getName() << "' with protocol " << ipPacket->getTransportProtocol() << ".\n";
+                numDropped++;
+                delete (msg);
+                return;
+            }
+            int32 packetLength = b.getPos();
             EV << "Delivering an IPv4 packet from "
                << ipPacket->getSrcAddress()
                << " to "
@@ -158,17 +152,16 @@ void ExtInterface::handleMessage(cMessage *msg)
                << " and length of "
                << ipPacket->getByteLength()
                << " bytes to link layer.\n";
-            rtScheduler->sendBytes(buffer, packetLength, (struct sockaddr *) &addr, sizeof(struct sockaddr_in));
+            rtScheduler->sendBytes(buffer, packetLength, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
             numSent++;
         }
-        else
-        {
+        else {
             EV << "Interface is not connected, dropping packet " << msg << endl;
             numDropped++;
         }
     }
     delete (msg);
-    if (ev.isGUI())
+    if (hasGUI())
         updateDisplayString();
 }
 
@@ -188,14 +181,13 @@ void ExtInterface::displayIdle()
 
 void ExtInterface::updateDisplayString()
 {
-    if (!ev.isGUI())
+    if (!hasGUI())
         return;
 
     const char *str;
     char buf[80];
 
-    if (connected)
-    {
+    if (connected) {
         sprintf(buf, "pcap device: %s\nrcv:%d snt:%d", device, numRcvd, numSent);
         str = buf;
     }
@@ -206,8 +198,8 @@ void ExtInterface::updateDisplayString()
 
 void ExtInterface::finish()
 {
-    std::cout << getFullPath() << ": " << numSent << " packets sent, " <<
-            numRcvd << " packets received, " << numDropped <<" packets dropped.\n";
+    std::cout << getFullPath() << ": " << numSent << " packets sent, "
+              << numRcvd << " packets received, " << numDropped << " packets dropped.\n";
 }
 
 void ExtInterface::flushQueue()
@@ -219,4 +211,6 @@ void ExtInterface::clearQueue()
 {
     // does not have a queue, do nothing
 }
+
+} // namespace inet
 

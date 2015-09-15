@@ -24,12 +24,13 @@
 #define __INET_ETHER_MAC_BASE_H
 
 #include <omnetpp.h>
-#include "INETDefs.h"
-#include "Ethernet.h"
-#include "EtherFrame_m.h"
-#include "InterfaceEntry.h"
-#include "TxNotifDetails.h"
-#include "NotificationBoard.h"
+#include "common/INETDefs.h"
+#include "linklayer/ethernet/Ethernet.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "linklayer/common/TxNotifDetails.h"
+#include "common/queue/IPassiveQueue.h"
+#include "base/NotificationBoard.h"
 
 
 //FIXME change into inner enums!!!
@@ -56,7 +57,7 @@
 #define RECEIVING_STATE    2
 #define RX_COLLISION_STATE 3
 
-class IPassiveQueue;
+//class IPassiveQueue;
 
 /**
  * Base class for ethernet MAC implementations.
@@ -67,7 +68,7 @@ class INET_API AnsaEtherMACBase : public cSimpleModule, public INotifiable
     bool connected;                 // true if connected to a network, set automatically by exploring the network configuration
     bool disabled;                  // true if the MAC is disabled, defined by the user
     bool promiscuous;               // if true, passes up all received frames
-    MACAddress address;             // own MAC address
+    inet::MACAddress address;             // own MAC address
     int txQueueLimit;               // max queue length
 
     // MAC operation modes and parameters
@@ -89,14 +90,14 @@ class INET_API AnsaEtherMACBase : public cSimpleModule, public INotifiable
     int pauseUnitsRequested;        // requested pause duration, or zero -- examined at endTx
 
     cQueue txQueue;                 // output queue
-    IPassiveQueue *queueModule;     // optional module to receive messages from
+    inet::IPassiveQueue *queueModule;     // optional module to receive messages from
 
     cGate *physOutGate;             // pointer to the "phys$o" gate
 
     // notification stuff
-    InterfaceEntry *interfaceEntry;  // points into IInterfaceTable
+    inet::InterfaceEntry *interfaceEntry;  // points into inet::IInterfaceTable
     NotificationBoard *nb;
-    TxNotifDetails notifDetails;
+    inet::TxNotifDetails notifDetails;
     bool hasSubscribers; // only notify if somebody is listening
 
     // self messages
@@ -132,12 +133,12 @@ class INET_API AnsaEtherMACBase : public cSimpleModule, public INotifiable
     virtual ~AnsaEtherMACBase();
 
     virtual long getQueueLength() {return txQueue.length();}
-    virtual MACAddress getMACAddress() {return address;}
+    virtual inet::MACAddress getMACAddress() {return address;}
     
     virtual void setDisabled(bool b)  { disabled = b; }
     virtual bool isDisabled(void) { return disabled; }
     
-    virtual InterfaceEntry * getInterfaceEntry(void) { return interfaceEntry; }
+    virtual inet::InterfaceEntry * getInterfaceEntry(void) { return interfaceEntry; }
     
 
   protected:
@@ -152,7 +153,7 @@ class INET_API AnsaEtherMACBase : public cSimpleModule, public INotifiable
     virtual void registerInterface(double txrate);
 
     // helpers
-    virtual bool checkDestinationAddress(EtherFrame *frame);
+    virtual bool checkDestinationAddress(inet::EtherFrame *frame);
     virtual void calculateParameters();
     virtual void printParameters();
 
@@ -160,7 +161,7 @@ class INET_API AnsaEtherMACBase : public cSimpleModule, public INotifiable
     virtual void finish();
 
     // event handlers
-    virtual void processFrameFromUpperLayer(EtherFrame *msg);
+    virtual void processFrameFromUpperLayer(inet::EtherFrame *msg);
     virtual void processMsgFromNetwork(cPacket *msg);
     virtual void processMessageWhenNotConnected(cMessage *msg);
     virtual void processMessageWhenDisabled(cMessage *msg);
@@ -175,8 +176,8 @@ class INET_API AnsaEtherMACBase : public cSimpleModule, public INotifiable
     virtual bool checkAndScheduleEndPausePeriod();
     virtual void fireChangeNotification(int type, cPacket *msg);
     virtual void beginSendFrames();
-    virtual void frameReceptionComplete(EtherFrame *frame);
-    virtual void processReceivedDataFrame(EtherFrame *frame);
+    virtual void frameReceptionComplete(inet::EtherFrame *frame);
+    virtual void processReceivedDataFrame(inet::EtherFrame *frame);
     virtual void processPauseCommand(int pauseUnits);
 
     // display

@@ -25,7 +25,7 @@
 //
 
 #include <math.h>
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 /* Windows math.h doesn't define the the following variables: */
 #ifndef M_E

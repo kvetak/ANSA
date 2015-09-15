@@ -20,12 +20,12 @@
 #include <vector>
 
 #include <omnetpp.h>
-//#include "MACAddress.h"
-#include "stpi.h"
-#include "MACAddress.h"
-#include "macTable.h"
-#include "STPBPDU_m.h"
-#include "STPTCN_m.h"
+#include "linklayer/common/MACAddress.h"
+#include "ansa/linklayer/switch/stp/stpi.h"
+#include "linklayer/common/MACAddress.h"
+#include "ansa/linklayer/switch/macTable.h"
+#include "ansa/linklayer/switch/stp/STPBPDU_m.h"
+#include "ansa/linklayer/switch/stp/STPTCN_m.h"
 
 class Stp : public cSimpleModule
 {
@@ -65,7 +65,7 @@ class Stp : public cSimpleModule
     void setLinkCost(unsigned int, unsigned int, unsigned int);
 
 	unsigned int portCount;
-	MACAddress bridgeAddress;
+	inet::MACAddress bridgeAddress;
 
 
     std::vector<unsigned int> instReg; // search vector of existing instances

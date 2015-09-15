@@ -18,7 +18,7 @@ package inet.examples.ansa.switchtest;
 import inet.ansa.util.linkBreaker.LinkBreaker;
 //import inet.ansa.ANSARouter;
 import inet.ansa.ANSASwitch;
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 
 
 network stp_vlan

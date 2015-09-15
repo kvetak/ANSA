@@ -19,7 +19,7 @@
 
 package inet.linklayer.ethernet;
 
-import inet.linklayer.IEtherMAC;
+import inet.linklayer.contract.IEtherMAC;
 
 
 //
@@ -43,7 +43,7 @@ import inet.linklayer.IEtherMAC;
 // Expected environment:
 // - phys$i and phys$o should be connected to the "network"
 // - upperLayerIn and upperLayerOut are usually connected to ~EtherLLC (in hosts)
-//   or ~MACRelayUnitPP (in a switch)
+//   or ~MACRelayUnit (in a switch)
 //
 // <b>Operation</b>
 //
@@ -110,6 +110,7 @@ import inet.linklayer.IEtherMAC;
 simple EtherMAC like IEtherMAC
 {
     parameters:
+        string interfaceTableModule;   // The path to the InterfaceTable module
         bool promiscuous = default(false);  // if true, all packets are received, otherwise only the
                                             // ones with matching destination MAC address
         string address = default("auto");   // MAC address as hex string (12 hex digits), or
@@ -120,6 +121,7 @@ simple EtherMAC like IEtherMAC
         string queueModule = default("");   // name of optional external queue module
         bool frameBursting = default(true); // enable/disable frame bursting mode in Gigabit Ethernet
         int mtu @unit("B") = default(1500B);
+        bool connectionColoring = default(true); // colors the connection when transmitting
         @display("i=block/rxtx");
 
         @signal[txPk](type=EtherFrame);
@@ -131,8 +133,8 @@ simple EtherMAC like IEtherMAC
         @signal[dropPkBitError](type=EtherFrame);
         @signal[dropPkFromHLIfaceDown](type=EtherFrame);
         @signal[dropPkIfaceDown](type=EtherTraffic);        // emitted at begin of receiving
-        @signal[packetSentToLower](type=EtherFrame);
-        @signal[packetReceivedFromLower](type=EtherFrame);
+        @signal[packetSentToLower](type=EtherTraffic);
+        @signal[packetReceivedFromLower](type=EtherTraffic);
         @signal[packetSentToUpper](type=EtherFrame);
         @signal[packetReceivedFromUpper](type=EtherFrame);
         @signal[collision](type=long);
@@ -151,8 +153,8 @@ simple EtherMAC like IEtherMAC
         @statistic[backoff](title="backoff"; record=count,vector; interpolationmode=none);
 
     gates:
-        input upperLayerIn @labels(EtherFrame);    // to ~EtherLLC or ~EtherEncap or ~MACRelayUnitPP
-        output upperLayerOut @labels(EtherFrame);  // to ~EtherLLC or ~EtherEncap or ~MACRelayUnitPP
+        input upperLayerIn @labels(EtherFrame);    // to ~EtherLLC or ~EtherEncap or ~IMACRelayUnit
+        output upperLayerOut @labels(EtherFrame);  // to ~EtherLLC or ~EtherEncap or ~IMACRelayUnit
         inout phys @labels(EtherFrame); // to physical layer or the network
 }
 

@@ -16,10 +16,10 @@
 #ifndef EIGRPMETRICHELPER_H_
 #define EIGRPMETRICHELPER_H_
 
-#include "InterfaceEntry.h"
+#include "networklayer/common/InterfaceEntry.h"
 
-#include "EigrpInterfaceTable.h"
-#include "EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/tables/EigrpInterfaceTable.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
 
 bool operator==(const EigrpKValues& k1, const EigrpKValues& k2);
 

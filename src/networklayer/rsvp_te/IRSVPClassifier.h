@@ -12,13 +12,15 @@
 // See the GNU Lesser General Public License for more details.
 //
 
-#ifndef __INET_RSVPCLASSIFIER_H
-#define __INET_RSVPCLASSIFIER_H
+#ifndef __INET_IRSVPCLASSIFIER_H
+#define __INET_IRSVPCLASSIFIER_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "IntServ.h"
-#include "IClassifier.h"
+#include "networklayer/rsvp_te/IntServ.h"
+#include "networklayer/mpls/IClassifier.h"
+
+namespace inet {
 
 /**
  * TODO
@@ -31,4 +33,7 @@ class INET_API IRSVPClassifier : public IClassifier
     virtual void bind(const SessionObj_t& session, const SenderTemplateObj_t& sender, int inLabel) = 0;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_IRSVPCLASSIFIER_H
+

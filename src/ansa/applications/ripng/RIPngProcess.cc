@@ -19,13 +19,13 @@
 * @detail RIPng process (Cisco-like), implements RIPng protocol
 */
 
-#include "RIPngProcess.h"
+#include "ansa/applications/ripng/RIPngProcess.h"
 
-#include "IPv6InterfaceData.h"
-#include "IPv6ControlInfo.h"
+#include "networklayer/ipv6/IPv6InterfaceData.h"
+#include "networklayer/contract/ipv6/IPv6ControlInfo.h"
 
-#include "RIPngRouting.h"
-#include "deviceConfigurator.h"
+#include "ansa/applications/ripng/RIPngRouting.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
 
 std::ostream& operator<<(std::ostream& os, const RIPng::RoutingTableEntry& e)
 {
@@ -239,7 +239,7 @@ bool RIPngProcess::setRegularUpdateTimeout(simtime_t regularUpdateTimeout)
 //-- RIPNG ROUTING TABLE METHODS
 //
 //
-RIPng::RoutingTableEntry* RIPngProcess::getRoutingTableEntry(const IPv6Address &prefix, int prefixLength)
+RIPng::RoutingTableEntry* RIPngProcess::getRoutingTableEntry(const inet::IPv6Address &prefix, int prefixLength)
 {
     RIPng::RoutingTableEntry *route = NULL;
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
@@ -273,7 +273,7 @@ void RIPngProcess::addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool cr
 
     ++numRoutes;
 }
-void RIPngProcess::removeRoutingTableEntry(IPv6Address &prefix, int prefixLength)
+void RIPngProcess::removeRoutingTableEntry(inet::IPv6Address &prefix, int prefixLength)
 {
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
     {
@@ -328,10 +328,10 @@ void RIPngProcess::removeAllRoutingTableEntries()
     routingTable.clear();
 }
 
-void RIPngProcess::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTableEntry, RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &sourceAddr)
+void RIPngProcess::updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTableEntry, RIPngRTE &rte, int srcRIPngIntInd, inet::IPv6Address &sourceAddr)
 {
     RIPng::Interface *interface = getEnabledInterface(srcRIPngIntInd);
-    const IPv6Address &nextHop = routingTableEntry->getNextHop();
+    const inet::IPv6Address &nextHop = routingTableEntry->getNextHop();
     int newMetric = rte.getMetric();
     newMetric += interface->getMetricOffset();
     int oldMetric = routingTableEntry->getMetric();
@@ -422,7 +422,7 @@ int RIPngProcess::getEnabledInterfaceIndexById(int id)
 
 int RIPngProcess::getEnabledInterfaceIndexByName(const char *name)
 {
-    InterfaceEntry *interface = ift->getInterfaceByName(name);
+    inet::InterfaceEntry *interface = ift->getInterfaceByName(name);
     if (interface == NULL)
         return -1;
 
@@ -488,7 +488,7 @@ RIPngMessage *RIPngProcess::createMessage()
     return msg;
 }
 
-RIPng::Interface *RIPngProcess::enableRIPngOnInterface(InterfaceEntry *interface)
+RIPng::Interface *RIPngProcess::enableRIPngOnInterface(inet::InterfaceEntry *interface)
 {
     ASSERT(interface != NULL);
 
@@ -727,7 +727,7 @@ RIPngMessage *RIPngProcess::makeUpdateMessageForInterface(RIPng::Interface *inte
     return msg;
 }
 
-void RIPngProcess::sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress)
+void RIPngProcess::sendMessage(RIPngMessage *msg, inet::IPv6Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress)
 {
     ASSERT(enabledInterfaceIndex < getEnabledInterfacesCount());
     int outInterface = getEnabledInterface(enabledInterfaceIndex)->getId();
@@ -740,7 +740,7 @@ void RIPngProcess::sendAllRoutesRequest()
     RIPng::Interface *interface;
 
     RIPngRTE rte = RIPngRTE();
-    rte.setIPv6Prefix(IPv6Address()); // IPv6 Address ::0
+    rte.setIPv6Prefix(inet::IPv6Address()); // IPv6 Address ::0
     rte.setMetric(16);
     rte.setPrefixLen(0);
     rte.setRouteTag(0);
@@ -787,7 +787,7 @@ void RIPngProcess::getRTEs(std::vector<RIPngRTE> &rtes, RIPng::Interface *interf
     {//add default route to the update
         RIPngRTE defaultRouteRte;
         defaultRouteRte.setPrefixLen(0);
-        defaultRouteRte.setIPv6Prefix(IPv6Address::UNSPECIFIED_ADDRESS);
+        defaultRouteRte.setIPv6Prefix(inet::IPv6Address::UNSPECIFIED_ADDRESS);
         defaultRouteRte.setMetric(interface->getDefaultRouteMetric());
         defaultRouteRte.setRouteTag(0);
 
@@ -809,7 +809,7 @@ void RIPngProcess::getRTEs(std::vector<RIPngRTE> &rtes, RIPng::Interface *interf
         {
             setInfMetric = false;
             routingTableEntry = (*it);
-            if (splitHorizon && (routingTableEntry->getInterfaceId() == interfaceId))
+            if (splitHorizon && (routingTableEntry->getInterface()->getInterfaceId() == interfaceId))
             {
                 if (poisonReverse)
                 // split horizon with poison reverse
@@ -849,9 +849,9 @@ RIPngRTE RIPngProcess::makeRTEFromRoutingTableEntry(RIPng::RoutingTableEntry *ro
 //
 void RIPngProcess::handleRIPngMessage(RIPngMessage *msg)
 {
-    UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
-    IPv6Address sourceAddr = controlInfo->getSrcAddr().get6();
-    IPv6Address destAddr = controlInfo->getDestAddr().get6();
+    inet::UDPDataIndication *controlInfo = check_and_cast<inet::UDPDataIndication *>(msg->getControlInfo());
+    inet::IPv6Address sourceAddr = controlInfo->getSrcAddr().toIPv6();
+    inet::IPv6Address destAddr = controlInfo->getDestAddr().toIPv6();
     int sourcePort = controlInfo->getSrcPort();
     int sourceInterfaceId = controlInfo->getInterfaceId();
 
@@ -861,7 +861,7 @@ void RIPngProcess::handleRIPngMessage(RIPngMessage *msg)
         return;
     }
 
-    EV << "RIPng: Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
+    EV << "RIPng: Received packet: " << inet::UDPSocket::getReceivedPacketInfo(msg) << endl;
     int command = msg->getCommand();
     int version = msg->getVersion();
     if (version != 1)
@@ -882,7 +882,7 @@ void RIPngProcess::handleRIPngMessage(RIPngMessage *msg)
 //-- RESPONSE PROCESSING
 //
 //
-void RIPngProcess::handleResponse(RIPngMessage *response, int srcRIPngIntInd, IPv6Address &srcAddr)
+void RIPngProcess::handleResponse(RIPngMessage *response, int srcRIPngIntInd, inet::IPv6Address &srcAddr)
 {
     if (!checkMessageValidity(response))
         return;
@@ -892,14 +892,14 @@ void RIPngProcess::handleResponse(RIPngMessage *response, int srcRIPngIntInd, IP
 
 bool RIPngProcess::checkMessageValidity(RIPngMessage *response)
 {
-    UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(response->getControlInfo());
+    inet::UDPDataIndication *controlInfo = check_and_cast<inet::UDPDataIndication *>(response->getControlInfo());
 
     // is from RIPng port
     if (controlInfo->getSrcPort() != RIPngPort)
         return false;
 
     // source addr. is link-local
-    IPv6Address sourceAddr = controlInfo->getSrcAddr().get6();
+    inet::IPv6Address sourceAddr = controlInfo->getSrcAddr().toIPv6();
     if (!sourceAddr.isLinkLocal())
         return false;
 
@@ -914,7 +914,7 @@ bool RIPngProcess::checkMessageValidity(RIPngMessage *response)
     return true;
 }
 
-void RIPngProcess::processRTEs(RIPngMessage *response, int srcRIPngIntInd, IPv6Address &sourceAddr)
+void RIPngProcess::processRTEs(RIPngMessage *response, int srcRIPngIntInd, inet::IPv6Address &sourceAddr)
 {
     unsigned int rtesSize = response->getRtesArraySize();
     RIPngRTE rte;
@@ -939,7 +939,7 @@ void RIPngProcess::processRTEs(RIPngMessage *response, int srcRIPngIntInd, IPv6A
     bBlockTriggeredUpdateMessage = false;
 }
 
-void RIPngProcess::processRTE(RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &sourceAddr)
+void RIPngProcess::processRTE(RIPngRTE &rte, int srcRIPngIntInd, inet::IPv6Address &sourceAddr)
 {
     if (rte.getMetric() == 0xFF)
     {//TODO: next hop unsupported
@@ -949,7 +949,7 @@ void RIPngProcess::processRTE(RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &so
     if (!checkAndLogRTE(rte, sourceAddr))
         return;
 
-    IPv6Address prefix = rte.getIPv6Prefix();
+    inet::IPv6Address prefix = rte.getIPv6Prefix();
     int prefixLen = rte.getPrefixLen();
 
     // Check if a route with the prefix exists
@@ -982,7 +982,7 @@ void RIPngProcess::processRTE(RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &so
     }
 }
 
-bool RIPngProcess::checkAndLogRTE(RIPngRTE &rte, IPv6Address &sourceAddr)
+bool RIPngProcess::checkAndLogRTE(RIPngRTE &rte, inet::IPv6Address &sourceAddr)
 {
     // default route
     if (rte.getIPv6Prefix().isUnspecified() && rte.getPrefixLen() == 0)
@@ -1017,7 +1017,7 @@ bool RIPngProcess::checkAndLogRTE(RIPngRTE &rte, IPv6Address &sourceAddr)
 //-- REQUEST PROCESSING
 //
 //
-void RIPngProcess::handleRequest(RIPngMessage *request, int srcPort, IPv6Address &srcAddr, IPv6Address &destAddr, unsigned long ripngIntInd)
+void RIPngProcess::handleRequest(RIPngMessage *request, int srcPort, inet::IPv6Address &srcAddr, inet::IPv6Address &destAddr, unsigned long ripngIntInd)
 {
     ASSERT(ripngIntInd < getEnabledInterfacesCount());
     RIPng::Interface *ripngInt = getEnabledInterface(ripngIntInd);
@@ -1157,13 +1157,13 @@ void RIPngProcess::deleteRoute(RIPngTimer *timer)
 //
 void RIPngProcess::handleNotification(int category, const cObject *details)
 {
-   if (category == NF_INTERFACE_STATE_CHANGED)
+   if (category == inet::NF_INTERFACE_STATE_CHANGED)
    {
-       InterfaceEntry *interfaceEntry = check_and_cast<InterfaceEntry*>(details);
+       inet::InterfaceEntry *interfaceEntry = check_and_cast<inet::InterfaceEntry*>(details);
        int interfaceEntryId = interfaceEntry->getInterfaceId();
 
        // an interface went down
-       if (interfaceEntry->isDown())
+       if (interfaceEntry->getState()==inet::InterfaceEntry::DOWN)
        {
            // delete interface from ripng interfaces
            int size = getEnabledInterfacesCount();
@@ -1189,7 +1189,7 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
                RoutingTableIt it;
                for (it = routingTable.begin(); it != routingTable.end(); ++it)
                {
-                   if ((*it)->getInterfaceId() == interfaceEntryId)
+                   if ((*it)->getInterface()->getInterfaceId() == interfaceEntryId)
                    {
                        if ((*it)->getNextHop().isUnspecified())
                        {// directly connected
@@ -1218,7 +1218,7 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
                bBlockTriggeredUpdateMessage = false;
            }
        }
-       else if (!interfaceEntry->isDown())
+       else if (!(interfaceEntry->getState()==inet::InterfaceEntry::DOWN))
        {
            bool alreadyEnabled = false;
            int size = getEnabledInterfacesCount();
@@ -1256,7 +1256,7 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
                RoutingTableIt it;
                for (it = routingTable.begin(); it != routingTable.end(); ++it)
                {
-                   if ((*it)->getInterfaceId() == interfaceEntryId)
+                   if ((*it)->getInterface()->getInterfaceId() == interfaceEntryId)
                    {
                        if ((*it)->getNextHop().isUnspecified())
                        {// "renew" directly connected
@@ -1281,10 +1281,10 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
    }
 
 
-   if (category == NF_IPv6_ROUTE_DELETED)
+   if (category == inet::NF_IPv6_ROUTE_DELETED)
    {
        // if route from other routing protocol was deleted, check "RIPng routing table"
-       IPv6Route *route = check_and_cast<IPv6Route *>(details);
+       inet::IPv6Route *route = check_and_cast<inet::IPv6Route *>(details);
 
        RIPng::RoutingTableEntry *routingTableEntryInRIPngRT;
        RIPng::RoutingTableEntry *RIPngRoute = dynamic_cast<RIPng::RoutingTableEntry *>(route);
@@ -1310,9 +1310,9 @@ void RIPngProcess::handleNotification(int category, const cObject *details)
        }
    }
 
-   if (category == NF_IPv6_ROUTE_CHANGED)
+   if (category == inet::NF_IPv6_ROUTE_CHANGED)
    {
-       IPv6Route *changedRoute = check_and_cast<IPv6Route *>(details);
+       inet::IPv6Route *changedRoute = check_and_cast<inet::IPv6Route *>(details);
        ANSAIPv6Route *changedRouteANSA = dynamic_cast<ANSAIPv6Route *>(changedRoute);
        RIPng::RoutingTableEntry *changedRouteRIPng = dynamic_cast<RIPng::RoutingTableEntry *>(changedRoute);
 

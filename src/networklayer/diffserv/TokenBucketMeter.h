@@ -16,11 +16,13 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef __INET_TOKENBUCKETMETER_H
 #define __INET_TOKENBUCKETMETER_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
+#include "common/INETMath.h"
+
+namespace inet {
 
 /**
  * Simple token bucket meter.
@@ -28,28 +30,30 @@
 class INET_API TokenBucketMeter : public cSimpleModule
 {
   protected:
-    double CIR; // Commited Information Rate (bits/sec)
-    long CBS;    // Committed Burst Size (in bits)
-    bool colorAwareMode;
+    double CIR = NaN;    // Commited Information Rate (bits/sec)
+    long CBS = 0;    // Committed Burst Size (in bits)
+    bool colorAwareMode = false;
 
-    long Tc; // token bucket for committed burst
+    long Tc = 0;    // token bucket for committed burst
     simtime_t lastUpdateTime;
 
-    int numRcvd;
-    int numRed;
+    int numRcvd = 0;
+    int numRed = 0;
 
   public:
     TokenBucketMeter() {}
 
   protected:
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
-    virtual int numInitStages() const { return 3; }
+    virtual void initialize(int stage) override;
 
-    virtual void initialize(int stage);
-
-    virtual void handleMessage(cMessage *msg);
+    virtual void handleMessage(cMessage *msg) override;
 
     virtual int meterPacket(cPacket *packet);
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_TOKENBUCKETMETER_H
+

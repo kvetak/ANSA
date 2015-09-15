@@ -21,17 +21,17 @@
 #define __INET_ACLCONTAINERACCESS_H
 
 #include <omnetpp.h>
-#include "ModuleAccess.h"
-#include "AclContainer.h"
+#include "common/ModuleAccess.h"
+#include "ansa/acl/AclContainer.h"
 
 
 /**
  * Gives access to AclContainer.
  */
-class INET_API AclContainerAccess : public ModuleAccess<AclContainer>
+class INET_API AclContainerAccess : public inet::ModuleAccess<AclContainer>
 {
     public:
-        AclContainerAccess() : ModuleAccess<AclContainer>("aclContainer") {}
+        AclContainerAccess() : inet::ModuleAccess<AclContainer>("aclContainer") {}
 };
 
 #endif

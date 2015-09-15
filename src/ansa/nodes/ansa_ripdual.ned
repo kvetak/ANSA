@@ -25,16 +25,16 @@ import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.transport.IUDP;
-import inet.util.PcapRecorder;
+import inet.transportlayer.contract.IUDP;
+import inet.common.packet.PcapRecorder;
 import inet.networklayer.common.InterfaceTable;
-import inet.mobility.IMobility;
-import inet.linklayer.IWirelessNic;
-import inet.linklayer.IWiredNic;
-import inet.linklayer.IExternalNic;
+import inet.mobility.contract.IMobility;
+import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.IExternalNic;
 import inet.base.NotificationBoard;
 import inet.ansa.nodes.inet.ansaNetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 
 
 module ANSA_RouterRIPDual
@@ -104,7 +104,7 @@ module ANSA_RouterRIPDual
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)+numOfLoopbacks];
         }
-        networkLayer6: NetworkLayer6 {
+        networkLayer6: IPv6NetworkLayer {
             parameters:
                 @display("p=546,311");
             gates:
@@ -209,8 +209,8 @@ module ANSA_RouterRIPDual
         networkLayer.udpOut --> UDP.ipIn;
         UDP.ipOut --> networkLayer.udpIn;
 
-        UDP.ipv6Out --> networkLayer6.udpIn;
-        networkLayer6.udpOut --> UDP.ipv6In;
+        UDP.ipv6Out --> networkLayer6.transportIn++;
+        networkLayer6.transportOut++ --> UDP.ipv6In;
 
         RIP.udpOut --> UDP.appIn++;
         UDP.appOut++ --> RIP.udpIn;

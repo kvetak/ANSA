@@ -16,11 +16,11 @@
 package inet.examples.ansa.vrrpv2.Advanced;
 
 import inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter;
-import inet.nodes.ethernet.Eth100M;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
+import inet.node.ethernet.Eth100M;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
 import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network Network
 {

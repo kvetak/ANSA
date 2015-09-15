@@ -19,7 +19,7 @@
 
 package inet.linklayer.ethernet;
 
-import inet.linklayer.IEtherMAC;
+import inet.linklayer.contract.IEtherMAC;
 
 
 //
@@ -119,6 +119,7 @@ import inet.linklayer.IEtherMAC;
 simple EtherMACFullDuplex like IEtherMAC
 {
     parameters:
+        string interfaceTableModule;        // The path to the InterfaceTable module
         bool promiscuous = default(false);  // if true, all packets are received, otherwise only the
                                             // ones with matching destination MAC address
         string address = default("auto");   // MAC address as hex string (12 hex digits), or
@@ -130,6 +131,7 @@ simple EtherMACFullDuplex like IEtherMAC
                                             // (only used if queueModule==""); additional frames cause a runtime error
         string queueModule = default("");   // name of optional external queue module
         int mtu @unit("B") = default(1500B);
+        bool connectionColoring = default(true); // colors the connection when transmitting
         @display("i=block/rxtx");
 
         @signal[txPk](type=EtherFrame);
@@ -157,8 +159,8 @@ simple EtherMACFullDuplex like IEtherMAC
         @statistic[droppedPkNotForUs](title="packets dropped/not for us"; source=dropPkNotForUs; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
 
     gates:
-        input upperLayerIn @labels(EtherFrame);    // to ~EtherLLC or ~EtherEncap or ~MACRelayUnitPP
-        output upperLayerOut @labels(EtherFrame);  // to ~EtherLLC or ~EtherEncap or ~MACRelayUnitPP
+        input upperLayerIn @labels(EtherFrame);    // to ~EtherLLC or ~EtherEncap or ~IMACRelayUnit
+        output upperLayerOut @labels(EtherFrame);  // to ~EtherLLC or ~EtherEncap or ~IMACRelayUnit
         inout phys @labels(EtherFrame);            // to physical layer or the network
 }
 

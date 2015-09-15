@@ -36,10 +36,10 @@
 // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 cplusplus {{
-#include "IPv4Address.h"
+#include "inet/networklayer/contract/ipv4/IPv4Address.h"
 }}
 
-class noncobject IPv4Address;
+class noncobject inet::IPv4Address;
 
 enum VRRP_TYPE
 {
@@ -57,5 +57,5 @@ packet VRRPv2Advertisement
 	unsigned char authType;
 	uint16_t	  checksum;
 	unsigned char adverInt;
-	IPv4Address addresses[];
+	inet::IPv4Address addresses[];
 }

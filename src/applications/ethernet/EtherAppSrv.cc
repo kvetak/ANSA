@@ -13,41 +13,42 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #include <stdio.h>
 #include <string.h>
 
-#include "EtherAppSrv.h"
+#include "applications/ethernet/EtherAppSrv.h"
 
-#include "EtherApp_m.h"
-#include "Ieee802Ctrl_m.h"
-#include "ModuleAccess.h"
-#include "NodeOperations.h"
-#include "NodeStatus.h"
+#include "applications/ethernet/EtherApp_m.h"
+#include "linklayer/common/Ieee802Ctrl.h"
+#include "common/ModuleAccess.h"
+#include "common/lifecycle/NodeOperations.h"
+#include "common/lifecycle/NodeStatus.h"
+
+namespace inet {
 
 Define_Module(EtherAppSrv);
 
-simsignal_t EtherAppSrv::sentPkSignal = SIMSIGNAL_NULL;
-simsignal_t EtherAppSrv::rcvdPkSignal = SIMSIGNAL_NULL;
+simsignal_t EtherAppSrv::sentPkSignal = registerSignal("sentPk");
+simsignal_t EtherAppSrv::rcvdPkSignal = registerSignal("rcvdPk");
 
 void EtherAppSrv::initialize(int stage)
 {
-    if (stage == 0)
-    {
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         localSAP = par("localSAP");
 
         // statistics
         packetsSent = packetsReceived = 0;
-        sentPkSignal = registerSignal("sentPk");
-        rcvdPkSignal = registerSignal("rcvdPk");
 
         WATCH(packetsSent);
         WATCH(packetsReceived);
     }
-    else if (stage == 1)
-    {
+    else if (stage == INITSTAGE_APPLICATION_LAYER) {
         nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
+
         if (isNodeUp())
             startApp();
     }
@@ -60,6 +61,7 @@ bool EtherAppSrv::isNodeUp()
 
 void EtherAppSrv::startApp()
 {
+    EV_INFO << "Starting application\n";
     bool registerSAP = par("registerSAP");
     if (registerSAP)
         registerDSAP(localSAP);
@@ -67,6 +69,7 @@ void EtherAppSrv::startApp()
 
 void EtherAppSrv::stopApp()
 {
+    EV_INFO << "Stop the application\n";
 }
 
 void EtherAppSrv::handleMessage(cMessage *msg)
@@ -74,7 +77,7 @@ void EtherAppSrv::handleMessage(cMessage *msg)
     if (!isNodeUp())
         throw cRuntimeError("Application is not running");
 
-    EV << "Received packet `" << msg->getName() << "'\n";
+    EV_INFO << "Received packet `" << msg->getName() << "'\n";
     EtherAppReq *req = check_and_cast<EtherAppReq *>(msg);
     packetsReceived++;
     emit(rcvdPkSignal, req);
@@ -84,33 +87,26 @@ void EtherAppSrv::handleMessage(cMessage *msg)
     int srcSap = ctrl->getSsap();
     long requestId = req->getRequestId();
     long replyBytes = req->getResponseBytes();
-    char msgname[30];
-    strcpy(msgname, msg->getName());
-
-    delete msg;
     delete ctrl;
 
     // send back packets asked by EtherAppCli side
-    int k = 0;
-    strcat(msgname, "-resp-");
-    char *s = msgname + strlen(msgname);
-
-    while (replyBytes > 0)
-    {
+    for (int k = 0; replyBytes > 0; k++) {
         int l = replyBytes > MAX_REPLY_CHUNK_SIZE ? MAX_REPLY_CHUNK_SIZE : replyBytes;
         replyBytes -= l;
 
-        sprintf(s, "%d", k);
+        std::ostringstream s;
+        s << msg->getName() << "-resp-" << k;
 
-        EV << "Generating packet `" << msgname << "'\n";
-
-        EtherAppResp *datapacket = new EtherAppResp(msgname, IEEE802CTRL_DATA);
+        EtherAppResp *datapacket = new EtherAppResp(s.str().c_str(), IEEE802CTRL_DATA);
         datapacket->setRequestId(requestId);
         datapacket->setByteLength(l);
-        sendPacket(datapacket, srcAddr, srcSap);
 
-        k++;
+        EV_INFO << "Send response `" << datapacket->getName() << "' to " << srcAddr << " ssap=" << localSAP << " dsap=" << srcSap << " length=" << l << "B requestId=" << requestId << "\n";
+
+        sendPacket(datapacket, srcAddr, srcSap);
     }
+
+    delete msg;
 }
 
 void EtherAppSrv::sendPacket(cPacket *datapacket, const MACAddress& destAddr, int destSap)
@@ -127,7 +123,7 @@ void EtherAppSrv::sendPacket(cPacket *datapacket, const MACAddress& destAddr, in
 
 void EtherAppSrv::registerDSAP(int dsap)
 {
-    EV << getFullPath() << " registering DSAP " << dsap << "\n";
+    EV_DEBUG << getFullPath() << " registering DSAP " << dsap << "\n";
 
     Ieee802Ctrl *etherctrl = new Ieee802Ctrl();
     etherctrl->setDsap(dsap);
@@ -141,23 +137,25 @@ bool EtherAppSrv::handleOperationStage(LifecycleOperation *operation, int stage,
 {
     Enter_Method_Silent();
     if (dynamic_cast<NodeStartOperation *>(operation)) {
-        if (stage == NodeStartOperation::STAGE_APPLICATION_LAYER)
+        if ((NodeStartOperation::Stage)stage == NodeStartOperation::STAGE_APPLICATION_LAYER)
             startApp();
     }
     else if (dynamic_cast<NodeShutdownOperation *>(operation)) {
-        if (stage == NodeShutdownOperation::STAGE_APPLICATION_LAYER)
+        if ((NodeShutdownOperation::Stage)stage == NodeShutdownOperation::STAGE_APPLICATION_LAYER)
             stopApp();
     }
     else if (dynamic_cast<NodeCrashOperation *>(operation)) {
-        if (stage == NodeCrashOperation::STAGE_CRASH)
+        if ((NodeCrashOperation::Stage)stage == NodeCrashOperation::STAGE_CRASH)
             stopApp();
     }
-    else throw cRuntimeError("Unsupported lifecycle operation '%s'", operation->getClassName());
+    else
+        throw cRuntimeError("Unsupported lifecycle operation '%s'", operation->getClassName());
     return true;
 }
-
 
 void EtherAppSrv::finish()
 {
 }
+
+} // namespace inet
 

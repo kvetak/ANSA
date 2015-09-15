@@ -19,7 +19,7 @@
  */
 
 
-#include "LISPMapStorageBase.h"
+#include "ansa/networklayer/lisp/LISPMapStorageBase.h"
 
 LISPMapStorageBase::LISPMapStorageBase() {}
 
@@ -49,7 +49,7 @@ LISPMapEntry* LISPMapStorageBase::findMapEntryByEidPrefix(const LISPEidPrefix& e
     return NULL;
 }
 
-LISPMapEntry* LISPMapStorageBase::lookupMapEntry(IPvXAddress address) {
+LISPMapEntry* LISPMapStorageBase::lookupMapEntry(inet::L3Address address) {
     LISPMapEntry* tmpit;
     int tmplen = 0;
 
@@ -164,7 +164,7 @@ MapStorage& LISPMapStorageBase::getMappingStorage() {
     return MappingStorage;
 }
 
-LISPMapEntry* LISPMapStorageBase::findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref) {
+LISPMapEntry* LISPMapStorageBase::findMapEntryFromByLocator(const inet::L3Address& rloc, const LISPEidPrefix& eidPref) {
     MapStorageItem startme;
     if (eidPref == LISPEidPrefix() || eidPref == MappingStorage.back().getEidPrefix() )
         startme = MappingStorage.begin();
@@ -274,7 +274,7 @@ std::ostream& operator <<(std::ostream& os, const MapStorage& mapstor) {
 }
 
 MapStorage LISPMapStorageBase::findMapEntriesByLocator(
-        const IPvXAddress& rloc) {
+        const inet::L3Address& rloc) {
     MapStorage entrylist;
     for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
         if (it->isLocatorExisting(rloc))

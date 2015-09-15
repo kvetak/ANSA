@@ -1,9 +1,9 @@
 
-#include "ansaSwitchCore.h"
+#include "ansa/linklayer/switch/ansaSwitchCore.h"
 
 Define_Module(ANSASwitchCore);
 
-MACAddress ANSASwitchCore::getBridgeAddress() {
+inet::MACAddress ANSASwitchCore::getBridgeAddress() {
 	Enter_Method_Silent();
 	return bridgeAddress;
 }
@@ -29,8 +29,8 @@ void ANSASwitchCore::initialize(int stage) {
 		cModule * tmp_stp = getParentModule()->getSubmodule("stp");
 		spanningTree = check_and_cast<Stp *>(tmp_stp);
 
-		bridgeGroupAddress = MACAddress("01-80-C2-00-00-00");
-		bridgeAddress = MACAddress::generateAutoAddress();
+		bridgeGroupAddress = inet::MACAddress("01-80-C2-00-00-00");
+		bridgeAddress = inet::MACAddress::generateAutoAddress();
 
 		WATCH(bridgeAddress);
 	}
@@ -80,8 +80,8 @@ bool ANSASwitchCore::reception(ANSASwitchCore::tFrameDescriptor& frame, cMessage
 		if (ingress(frame, taggedFrame, rPort) == false) {
 			return false;
 		}
-	} else if (dynamic_cast<EthernetIIFrame *>(tmp)) {
-		EthernetIIFrame * untaggedFrame = (EthernetIIFrame *) tmp;
+	} else if (dynamic_cast<inet::EthernetIIFrame *>(tmp)) {
+		inet::EthernetIIFrame * untaggedFrame = (inet::EthernetIIFrame *) tmp;
 		ingress(frame, untaggedFrame, rPort); // discarding forbidden PortVID is in relay
 	}
 
@@ -139,7 +139,7 @@ void ANSASwitchCore::relay(ANSASwitchCore::tFrameDescriptor& frame) {
 	}
 }
 
-bool ANSASwitchCore::ingress(ANSASwitchCore::tFrameDescriptor& tmp, EthernetIIFrame *frame, int rPort) {
+bool ANSASwitchCore::ingress(ANSASwitchCore::tFrameDescriptor& tmp, inet::EthernetIIFrame *frame, int rPort) {
 	// Info from recepted frame
 	tmp.payload = frame->decapsulate();
 	tmp.name.insert(0, frame->getName());
@@ -194,7 +194,7 @@ void ANSASwitchCore::egress(ANSASwitchCore::tFrameDescriptor& frame) {
 
 void ANSASwitchCore::dispatch(ANSASwitchCore::tFrameDescriptor& frame) {
 
-	EthernetIIFrame * untaggedFrame = new EthernetIIFrame(frame.name.c_str());
+    inet::EthernetIIFrame * untaggedFrame = new inet::EthernetIIFrame(frame.name.c_str());
 	AnsaEtherFrame * taggedFrame = new AnsaEtherFrame(frame.name.c_str());
 
 	taggedFrame->setKind(frame.payload->getKind());
@@ -248,7 +248,7 @@ void ANSASwitchCore::learn(ANSASwitchCore::tFrameDescriptor& frame) {
 
 
 
-void ANSASwitchCore::handleIncomingFrame(EthernetIIFrame *frame) {
+void ANSASwitchCore::handleIncomingFrame(inet::EthernetIIFrame *frame) {
 	// If buffer not full, insert payload frame into buffer and process the frame in parallel.
 	cMessage *msg = this->currentMsg;
 	ASSERT(msg->getContextPointer()==NULL);
@@ -258,7 +258,7 @@ void ANSASwitchCore::handleIncomingFrame(EthernetIIFrame *frame) {
 }
 
 void ANSASwitchCore::processFrame(cMessage *msg) {
-	EthernetIIFrame *frame = (EthernetIIFrame *) msg->getContextPointer();
+	inet::EthernetIIFrame *frame = (inet::EthernetIIFrame *) msg->getContextPointer();
 	ASSERT(frame);
 	msg->setContextPointer(NULL);
 	int inputport = frame->getArrivalGate()->getIndex();
@@ -267,7 +267,7 @@ void ANSASwitchCore::processFrame(cMessage *msg) {
 	return;
 }
 
-void ANSASwitchCore::handleAndDispatchFrame(EthernetIIFrame *frame, int inputport) {
+void ANSASwitchCore::handleAndDispatchFrame(inet::EthernetIIFrame *frame, int inputport) {
 	this->addrTable->update(frame->getSrc(), inputport);
 
 	/*
@@ -303,10 +303,10 @@ void ANSASwitchCore::handleAndDispatchFrame(EthernetIIFrame *frame, int inputpor
 	return;
 }
 
-void ANSASwitchCore::broadcastFrame(EthernetIIFrame *frame, int inputport) {
+void ANSASwitchCore::broadcastFrame(inet::EthernetIIFrame *frame, int inputport) {
 	for (int i = 0; i < this->portCount; ++i) {
 		if (i != inputport) {
-			send((EthernetIIFrame*) frame->dup(), "ifOut", i);
+			send((inet::EthernetIIFrame*) frame->dup(), "ifOut", i);
 		}
 	}
 	delete frame;
@@ -330,7 +330,7 @@ void ANSASwitchCore::dispatchBPDU(cMessage *msg, int port) {
 		return;
 	}
 
-	EthernetIIFrame * untaggedFrame = new EthernetIIFrame(msg->getName());
+	inet::EthernetIIFrame * untaggedFrame = new inet::EthernetIIFrame(msg->getName());
 
 	untaggedFrame->setKind(msg->getKind());
 	untaggedFrame->setSrc(bridgeAddress);
@@ -344,7 +344,7 @@ void ANSASwitchCore::dispatchBPDU(cMessage *msg, int port) {
 	}
 
 
-	send((EthernetIIFrame*) untaggedFrame, "ifOut", port);
+	send((inet::EthernetIIFrame*) untaggedFrame, "ifOut", port);
 }
 
 void ANSASwitchCore::deliverBPDU(ANSASwitchCore::tFrameDescriptor& frame) {
@@ -359,7 +359,7 @@ void ANSASwitchCore::finish() {
 /*
  void ansaSwitchCore::tagMsg(int _vlan) {
 
- EthernetIIFrame * tmp = check_and_cast<EthernetIIFrame *> (this->currentMsg);
+ inet::EthernetIIFrame * tmp = check_and_cast<inet::EthernetIIFrame *> (this->currentMsg);
 
  cPacket * payload = tmp->decapsulate();
  AnsaEtherFrame * frame = new AnsaEtherFrame(payload->getName());
@@ -378,9 +378,9 @@ void ANSASwitchCore::finish() {
  }
  */
 
-AnsaEtherFrame * ANSASwitchCore::tagMsg(EthernetIIFrame * _frame, int _vlan) {
+AnsaEtherFrame * ANSASwitchCore::tagMsg(inet::EthernetIIFrame * _frame, int _vlan) {
 
-	EthernetIIFrame * tmp = _frame;
+	inet::EthernetIIFrame * tmp = _frame;
 
 	cPacket * payload = tmp->decapsulate();
 	AnsaEtherFrame * frame = new AnsaEtherFrame(payload->getName());
@@ -399,12 +399,12 @@ AnsaEtherFrame * ANSASwitchCore::tagMsg(EthernetIIFrame * _frame, int _vlan) {
 	return frame;
 }
 
-EthernetIIFrame * ANSASwitchCore::untagMsg(AnsaEtherFrame * _frame) {
+inet::EthernetIIFrame * ANSASwitchCore::untagMsg(AnsaEtherFrame * _frame) {
 
 	AnsaEtherFrame * tmp = _frame;
 
 	cPacket * payload = tmp->decapsulate();
-	EthernetIIFrame * frame = new EthernetIIFrame(payload->getName());
+	inet::EthernetIIFrame * frame = new inet::EthernetIIFrame(payload->getName());
 
 	frame->setSrc(tmp->getSrc()); // if blank, will be filled in by MAC
 	frame->setDest(tmp->getDest());
@@ -424,7 +424,7 @@ EthernetIIFrame * ANSASwitchCore::untagMsg(AnsaEtherFrame * _frame) {
  AnsaEtherFrame * tmp = check_and_cast<AnsaEtherFrame *> (this->currentMsg);
 
  cPacket * payload = tmp->decapsulate();
- EthernetIIFrame * frame = new EthernetIIFrame(payload->getName());
+ inet::EthernetIIFrame * frame = new EthernetIIFrame(payload->getName());
 
  frame->setSrc(tmp->getSrc());  // if blank, will be filled in by MAC
  frame->setDest(tmp->getDest());

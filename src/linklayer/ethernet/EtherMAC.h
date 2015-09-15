@@ -13,15 +13,16 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #ifndef __INET_ETHERMAC_H
 #define __INET_ETHERMAC_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "EtherMACBase.h"
+#include "linklayer/ethernet/EtherMACBase.h"
 
+namespace inet {
 
 class EtherJam;
 class EtherPauseFrame;
@@ -37,45 +38,48 @@ class IPassiveQueue;
 class INET_API EtherMAC : public EtherMACBase
 {
   public:
-    EtherMAC();
+    EtherMAC() {}
     virtual ~EtherMAC();
 
   protected:
-    virtual void initialize(int stage);
-    virtual void initializeFlags();
-    virtual void initializeStatistics();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void initializeFlags() override;
+    virtual void initializeStatistics() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
 
   protected:
     // states
-    int numConcurrentTransmissions;    // number of colliding frames -- we must receive this many jams (caches endRxTimeList.size())
-    int  backoffs;                     // value of backoff for exponential back-off algorithm
-    long currentSendPkTreeID;
+    int numConcurrentTransmissions = 0;    // number of colliding frames -- we must receive this many jams (caches endRxTimeList.size())
+    int backoffs = 0;    // value of backoff for exponential back-off algorithm
+    long currentSendPkTreeID = -1;
 
     // other variables
-    EtherTraffic *frameBeingReceived;
-    cMessage *endRxMsg, *endBackoffMsg, *endJammingMsg;
+    cPacket *frameBeingReceived = nullptr;
+    cMessage *endRxMsg = nullptr;
+    cMessage *endBackoffMsg = nullptr;
+    cMessage *endJammingMsg = nullptr;
 
     // list of receptions during reconnect state; an additional special entry (with packetTreeId=-1)
     // stores the end time of the reconnect state
     struct PkIdRxTime
     {
-        long packetTreeId;             // >=0: tree ID of packet being received; -1: this is a special entry that stores the end time of the reconnect state
-        simtime_t endTime;             // end of reception
-        PkIdRxTime(long id, simtime_t time) {packetTreeId=id; endTime = time;}
+        long packetTreeId;    // >=0: tree ID of packet being received; -1: this is a special entry that stores the end time of the reconnect state
+        simtime_t endTime;    // end of reception
+        PkIdRxTime(long id, simtime_t time) { packetTreeId = id; endTime = time; }
     };
     typedef std::list<PkIdRxTime> EndRxTimeList;
-    EndRxTimeList endRxTimeList;       // list of incoming packets, ordered by endTime
+    EndRxTimeList endRxTimeList;    // list of incoming packets, ordered by endTime
 
     // statistics
-    simtime_t totalCollisionTime;      // total duration of collisions on channel
-    simtime_t totalSuccessfulRxTxTime; // total duration of successful transmissions on channel
-    simtime_t channelBusySince;        // needed for computing totalCollisionTime/totalSuccessfulRxTxTime
-    unsigned long numCollisions;       // collisions (NOT number of collided frames!) sensed
-    unsigned long numBackoffs;         // number of retransmissions
-    unsigned int  framesSentInBurst;   // Number of frames send out in current frame burst
-    long bytesSentInBurst;             // Number of bytes transmitted in current frame burst
+    simtime_t totalCollisionTime;    // total duration of collisions on channel
+    simtime_t totalSuccessfulRxTxTime;    // total duration of successful transmissions on channel
+    simtime_t channelBusySince;    // needed for computing totalCollisionTime/totalSuccessfulRxTxTime
+    unsigned long numCollisions = 0;    // collisions (NOT number of collided frames!) sensed
+    unsigned long numBackoffs = 0;    // number of retransmissions
+    unsigned int framesSentInBurst = 0;    // Number of frames send out in current frame burst
+    long bytesSentInBurst = 0;    // Number of bytes transmitted in current frame burst
 
     static simsignal_t collisionSignal;
     static simsignal_t backoffSignal;
@@ -92,13 +96,13 @@ class INET_API EtherMAC : public EtherMACBase
     virtual void handleRetransmission();
 
     // helpers
-    virtual void readChannelParameters(bool errorWhenAsymmetric);
+    virtual void readChannelParameters(bool errorWhenAsymmetric) override;
     virtual void processFrameFromUpperLayer(EtherFrame *msg);
-    virtual void processMsgFromNetwork(EtherTraffic *msg);
+    virtual void processMsgFromNetwork(cPacket *msg);
     virtual void scheduleEndIFGPeriod();
     virtual void fillIFGIfInBurst();
     virtual void scheduleEndTxPeriod(EtherFrame *);
-    virtual void scheduleEndRxPeriod(EtherTraffic *);
+    virtual void scheduleEndRxPeriod(cPacket *);
     virtual void scheduleEndPausePeriod(int pauseUnits);
     virtual void beginSendFrames();
     virtual void sendJamSignal();
@@ -107,7 +111,7 @@ class INET_API EtherMAC : public EtherMACBase
     virtual void processReceivedDataFrame(EtherFrame *frame);
     virtual void processReceivedJam(EtherJam *jam);
     virtual void processReceivedPauseFrame(EtherPauseFrame *frame);
-    virtual void processConnectDisconnect();
+    virtual void processConnectDisconnect() override;
     virtual void addReception(simtime_t endRxTime);
     virtual void addReceptionInReconnectState(long id, simtime_t endRxTime);
     virtual void processDetectedCollision();
@@ -115,5 +119,7 @@ class INET_API EtherMAC : public EtherMACBase
     virtual void printState();
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_ETHERMAC_H
 

@@ -19,7 +19,7 @@
 * @detail Represents data structure of interfaces included to Babel routing
 */
 
-#include "BabelInterfaceTable.h"
+#include "ansa/applications/babel/BabelInterfaceTable.h"
 
 
 using namespace Babel;
@@ -68,9 +68,9 @@ std::string BabelInterface::str() const
     return string.str();
 }
 
-void BabelInterface::addDirectlyConn(const netPrefix<IPvXAddress>& pre)
+void BabelInterface::addDirectlyConn(const netPrefix<inet::L3Address>& pre)
 {
-    std::vector<netPrefix<IPvXAddress> >::iterator it;
+    std::vector<netPrefix<inet::L3Address> >::iterator it;
 
     for (it = directlyconn.begin(); it != directlyconn.end(); ++it)
     {// through all prefixes search for same

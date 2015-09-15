@@ -5,14 +5,14 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.omnetpp.cdt.gnu.config.debug.1590007136" moduleId="org.eclipse.cdt.core.settings" name="gcc-debug">
 				<externalSettings/>
 				<extensions>
+					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -39,13 +39,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.529631020" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -61,13 +75,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.541669033" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -99,13 +127,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.164668854" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -121,13 +163,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1205441703" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -138,25 +194,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.1590007136.1094360975" name="/" resourcePath="src/transport/tcp_common">
-						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.1313619298" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1470084128" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.966631206"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.669555214" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.2043257036">
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1807543249" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.49576508" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.1946472760">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.448477538" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.365975159" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.1402469929"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.146056853" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.148623617"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.base.723779710" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.1457288082">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.565925343" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
-						<entry excluding="applications/voipstream|transport/tcp_common|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/transport/tcp_common"/>
+						<entry excluding="linklayer/ext|transportlayer/tcp_nsc|transportlayer/tcp_lwip|applications/voipstream|transport/tcp_common|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -166,14 +205,14 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.omnetpp.cdt.gnu.config.release.960890479" moduleId="org.eclipse.cdt.core.settings" name="gcc-release">
 				<externalSettings/>
 				<extensions>
+					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -195,13 +234,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1288707802" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -217,13 +270,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1382867862" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -255,13 +322,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.803078146" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -277,13 +358,27 @@
 									<listOptionValue builtIn="false" value="WITH_DHCP"/>
 									<listOptionValue builtIn="false" value="WITH_ETHERNET"/>
 									<listOptionValue builtIn="false" value="WITH_PPP"/>
-									<listOptionValue builtIn="false" value="WITH_EXT_IF"/>
 									<listOptionValue builtIn="false" value="WITH_MPLS"/>
 									<listOptionValue builtIn="false" value="WITH_OSPFv2"/>
 									<listOptionValue builtIn="false" value="WITH_BGPv4"/>
 									<listOptionValue builtIn="false" value="WITH_TRACI"/>
 									<listOptionValue builtIn="false" value="WITH_MANET"/>
 									<listOptionValue builtIn="false" value="WITH_xMIPv6"/>
+									<listOptionValue builtIn="false" value="WITH_GENERIC"/>
+									<listOptionValue builtIn="false" value="WITH_FLOOD"/>
+									<listOptionValue builtIn="false" value="WITH_PIM"/>
+									<listOptionValue builtIn="false" value="WITH_AODV"/>
+									<listOptionValue builtIn="false" value="WITH_RIP"/>
+									<listOptionValue builtIn="false" value="WITH_POWER"/>
+									<listOptionValue builtIn="false" value="WITH_RADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE80211"/>
+									<listOptionValue builtIn="false" value="WITH_IEEE802154"/>
+									<listOptionValue builtIn="false" value="WITH_APSKRADIO"/>
+									<listOptionValue builtIn="false" value="WITH_IDEALWIRELESS"/>
+									<listOptionValue builtIn="false" value="WITH_TUN"/>
+									<listOptionValue builtIn="false" value="WITH_BMAC"/>
+									<listOptionValue builtIn="false" value="WITH_LMAC"/>
+									<listOptionValue builtIn="false" value="WITH_CSMA"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1633345790" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -295,7 +390,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="applications/voipstream|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="linklayer/ext|transportlayer/tcp_nsc|transportlayer/tcp_lwip|applications/voipstream|transport/tcp_nsc|transport/tcp_lwip" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

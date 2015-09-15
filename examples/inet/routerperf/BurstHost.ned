@@ -19,7 +19,7 @@
 package inet.examples.inet.routerperf;
 
 import inet.applications.generic.IIPvXTrafficGenerator;
-import inet.nodes.inet.NodeBase;
+import inet.node.inet.NodeBase;
 
 
 //
@@ -29,7 +29,7 @@ import inet.nodes.inet.NodeBase;
 module BurstHost extends NodeBase
 {
     parameters:
-        @node();
+        @networkNode();
         @display("i=device/pc3");
         string trafGenType;
     submodules:
@@ -39,7 +39,7 @@ module BurstHost extends NodeBase
         }
     connections allowunconnected:
         // transport connections
-        networkLayer.udpOut --> trafGen.ipIn;
-        networkLayer.udpIn <-- trafGen.ipOut;
+        networkLayer.transportOut++ --> trafGen.ipIn;
+        networkLayer.transportIn++ <-- trafGen.ipOut;
 }
 

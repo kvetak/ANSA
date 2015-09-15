@@ -21,7 +21,7 @@
  *  PIM protocol. Information are obtained from configuration file.
  */
 
-#include "PimInterfaceTable.h"
+#include "ansa/networklayer/pim/tables/PimInterfaceTable.h"
 
 Define_Module(PimInterfaceTable);
 
@@ -29,7 +29,7 @@ Define_Module(PimInterfaceTable);
 std::ostream& operator<<(std::ostream& os, const PimInterface& e)
 {
 	int i;
-	std::vector<IPv4Address> intMulticastAddresses = e.getIntMulticastAddresses();
+	std::vector<inet::IPv4Address> intMulticastAddresses = e.getIntMulticastAddresses();
 
     os << "ID = " << e.getInterfaceID() << "; mode = ";
     if (e.getMode() == Dense)
@@ -75,7 +75,7 @@ std::string PimInterface::info() const
  *
  * @param addr IP address which should be deleted.
  */
-void PimInterface::removeIntMulticastAddress(IPv4Address addr)
+void PimInterface::removeIntMulticastAddress(inet::IPv4Address addr)
 {
 	for(unsigned int i = 0; i < intMulticastAddresses.size(); i++)
 	{
@@ -97,9 +97,9 @@ void PimInterface::removeIntMulticastAddress(IPv4Address addr)
  * @return List of multicast address without link local IPs.
  * @see isLinkLocalMulticast()
  */
-std::vector<IPv4Address> PimInterface::deleteLocalIPs(std::vector<IPv4Address> multicastAddr)
+std::vector<inet::IPv4Address> PimInterface::deleteLocalIPs(std::vector<inet::IPv4Address> multicastAddr)
 {
-	std::vector<IPv4Address> newMulticastAddresses;
+	std::vector<inet::IPv4Address> newMulticastAddresses;
 	for(unsigned int i = 0; i < multicastAddr.size(); i++)
 	{
 		if (!multicastAddr[i].isLinkLocalMulticast())
@@ -116,7 +116,7 @@ std::vector<IPv4Address> PimInterface::deleteLocalIPs(std::vector<IPv4Address> m
  * @param addr Multicast IP address which we are looking for.
  * @return True if method finds the IP address on the list, return false otherwise.
  */
-bool PimInterface::isLocalIntMulticastAddress (IPv4Address addr)
+bool PimInterface::isLocalIntMulticastAddress (inet::IPv4Address addr)
 {
 	for(unsigned int i = 0; i < intMulticastAddresses.size(); i++)
 	{

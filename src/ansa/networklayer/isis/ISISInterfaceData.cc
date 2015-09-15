@@ -23,7 +23,9 @@
  * @todo Z9
  */
 
-#include "ISISInterfaceData.h"
+#include "ansa/networklayer/isis/ISISInterfaceData.h"
+
+namespace inet{
 
 ISISInterfaceData::ISISInterfaceData()
 {
@@ -326,3 +328,4 @@ ISISInterfaceData::~ISISInterfaceData()
     // TODO Auto-generated destructor stub
 }
 
+}//namespace inet

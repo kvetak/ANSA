@@ -5,7 +5,7 @@
  *      Author: aranel
  */
 
-#include "vlanTableXMLparser.h"
+#include "ansa/linklayer/switch/vlanTableXMLparser.h"
 
 VLANTableXMLparser::VLANTableXMLparser(VLANTable * _table) {
 	table = _table;

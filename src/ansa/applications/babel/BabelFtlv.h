@@ -24,7 +24,8 @@
 
 #include <ostream>
 #include "stdint.h"
-#include "BabelDef.h"
+
+#include "ansa/applications/babel/BabelDef.h"
 //#include "BabelTopologyTable.h"
 
 class BabelFtlv {
@@ -230,7 +231,7 @@ class BabelIhuFtlv : public BabelFtlv {
     uint8_t reserved;
     uint16_t rxcost;
     uint16_t interval;
-    IPvXAddress address;
+    inet::L3Address address;
 
     void copy(const BabelIhuFtlv& other);
 
@@ -242,7 +243,7 @@ class BabelIhuFtlv : public BabelFtlv {
                     interval(0)
                     {};
 
-    BabelIhuFtlv(uint8_t addressencoding, uint16_t rx, uint16_t i, const IPvXAddress& a, int sn=1) :
+    BabelIhuFtlv(uint8_t addressencoding, uint16_t rx, uint16_t i, const inet::L3Address& a, int sn=1) :
                     BabelFtlv(Babel::tlvT::IHU, sn),
                     ae(addressencoding),
                     reserved(0),
@@ -251,7 +252,7 @@ class BabelIhuFtlv : public BabelFtlv {
                     address(a)
                     {};
 
-    BabelIhuFtlv(uint16_t rx, uint16_t i, const IPvXAddress& a, int sn=1) :
+    BabelIhuFtlv(uint16_t rx, uint16_t i, const inet::L3Address& a, int sn=1) :
                     BabelFtlv(Babel::tlvT::IHU, sn),
                     reserved(0),
                     rxcost(rx),
@@ -283,8 +284,8 @@ class BabelIhuFtlv : public BabelFtlv {
     uint16_t getInterval() const {return interval;}
     void setInterval(uint16_t i) {interval = i;}
 
-    const IPvXAddress& getAddress() const {return address;}
-    void setAddress(const IPvXAddress& a) {address = a;}
+    const inet::L3Address& getAddress() const {return address;}
+    void setAddress(const inet::L3Address& a) {address = a;}
 };
 
 class BabelRouterIdFtlv : public BabelFtlv {
@@ -326,7 +327,7 @@ class BabelNextHopFtlv : public BabelFtlv {
   protected:
     uint8_t ae;
     uint8_t reserved;
-    IPvXAddress nextHop;
+    inet::L3Address nextHop;
 
     void copy(const BabelNextHopFtlv& other);
 
@@ -336,14 +337,14 @@ class BabelNextHopFtlv : public BabelFtlv {
                     reserved(0)
                     {};
 
-    BabelNextHopFtlv(uint8_t addressencoding, const IPvXAddress& nh, int sn=1) :
+    BabelNextHopFtlv(uint8_t addressencoding, const inet::L3Address& nh, int sn=1) :
                     BabelFtlv(Babel::tlvT::NEXTHOP, sn),
                     ae(addressencoding),
                     reserved(0),
                     nextHop(nh)
                     {};
 
-    BabelNextHopFtlv(const IPvXAddress& nh, int sn=1) :
+    BabelNextHopFtlv(const inet::L3Address& nh, int sn=1) :
                     BabelFtlv(Babel::tlvT::NEXTHOP, sn),
                     reserved(0),
                     nextHop(nh)
@@ -367,8 +368,8 @@ class BabelNextHopFtlv : public BabelFtlv {
     uint8_t getReserved() const {return reserved;}
     void setReserved(uint8_t r) {reserved = r;}
 
-    const IPvXAddress& getNextHop() const {return nextHop;}
-    void setNextHop(const IPvXAddress& nh) {nextHop = nh;}
+    const inet::L3Address& getNextHop() const {return nextHop;}
+    void setNextHop(const inet::L3Address& nh) {nextHop = nh;}
 };
 
 
@@ -377,10 +378,10 @@ class BabelUpdateFtlv : public BabelFtlv {
     uint8_t ae;
     uint8_t flags;
     uint16_t interval;
-    Babel::netPrefix<IPvXAddress> prefix;
+    Babel::netPrefix<inet::L3Address> prefix;
     Babel::routeDistance dist;
     Babel::rid routerId;
-    IPvXAddress nextHop;
+    inet::L3Address nextHop;
 
     void copy(const BabelUpdateFtlv& other);
 
@@ -391,8 +392,8 @@ class BabelUpdateFtlv : public BabelFtlv {
                     interval(0)
                     {};
 
-    BabelUpdateFtlv(uint8_t addressencoding, uint16_t i, const Babel::netPrefix<IPvXAddress>& p,
-            const Babel::routeDistance& d, const Babel::rid& r, const IPvXAddress& nh, int sn=1) :
+    BabelUpdateFtlv(uint8_t addressencoding, uint16_t i, const Babel::netPrefix<inet::L3Address>& p,
+            const Babel::routeDistance& d, const Babel::rid& r, const inet::L3Address& nh, int sn=1) :
                     BabelFtlv(Babel::tlvT::UPDATE, sn),
                     ae(addressencoding),
                     flags(0),
@@ -403,8 +404,8 @@ class BabelUpdateFtlv : public BabelFtlv {
                     nextHop(nh)
                     {};
 
-    BabelUpdateFtlv(uint16_t i, const Babel::netPrefix<IPvXAddress>& p,
-            const Babel::routeDistance& d, const Babel::rid& r, const IPvXAddress& nh, int sn=1) :
+    BabelUpdateFtlv(uint16_t i, const Babel::netPrefix<inet::L3Address>& p,
+            const Babel::routeDistance& d, const Babel::rid& r, const inet::L3Address& nh, int sn=1) :
                     BabelFtlv(Babel::tlvT::UPDATE, sn),
                     flags(0),
                     interval(i),
@@ -432,9 +433,9 @@ class BabelUpdateFtlv : public BabelFtlv {
     virtual ~BabelUpdateFtlv();
 
     virtual int rawTlvLength() const;
-    virtual int rawTlvLength(const Babel::netPrefix<IPvXAddress>& prevprefix) const;
+    virtual int rawTlvLength(const Babel::netPrefix<inet::L3Address>& prevprefix) const;
     virtual int copyRawTlv(char *dst) const;
-    virtual int copyRawTlv(char *dst, Babel::netPrefix<IPvXAddress> *prevprefix) const;
+    virtual int copyRawTlv(char *dst, Babel::netPrefix<inet::L3Address> *prevprefix) const;
     virtual std::string str() const;
 
     uint8_t getAe() const {return ae;}
@@ -446,8 +447,8 @@ class BabelUpdateFtlv : public BabelFtlv {
     uint16_t getInterval() const {return interval;}
     void setInterval(uint16_t i) {interval = i;}
 
-    const Babel::netPrefix<IPvXAddress>& getPrefix() const {return prefix;}
-    void setPrefix(const Babel::netPrefix<IPvXAddress>& p) {prefix = p; ae = Babel::getAeOfPrefix(p.getAddr());}
+    const Babel::netPrefix<inet::L3Address>& getPrefix() const {return prefix;}
+    void setPrefix(const Babel::netPrefix<inet::L3Address>& p) {prefix = p; ae = Babel::getAeOfPrefix(p.getAddr());}
 
     Babel::routeDistance getDistance() const {return dist;}
     void setDistance(Babel::routeDistance d) {dist = d;}
@@ -455,15 +456,15 @@ class BabelUpdateFtlv : public BabelFtlv {
     const Babel::rid& getRouterId() const {return routerId;}
     void setRouterId(const Babel::rid& r) {routerId = r;}
 
-    const IPvXAddress& getNextHop() const {return nextHop;}
-    void setNextHop(const IPvXAddress& nh) {nextHop = nh;}
+    const inet::L3Address& getNextHop() const {return nextHop;}
+    void setNextHop(const inet::L3Address& nh) {nextHop = nh;}
 
 };
 
 class BabelRouteReqFtlv : public BabelFtlv {
   protected:
     uint8_t ae;
-    Babel::netPrefix<IPvXAddress> prefix;
+    Babel::netPrefix<inet::L3Address> prefix;
 
     void copy(const BabelRouteReqFtlv& other);
 
@@ -472,13 +473,13 @@ class BabelRouteReqFtlv : public BabelFtlv {
                     ae(Babel::AE::WILDCARD)
                     {};
 
-    BabelRouteReqFtlv(uint8_t addressencoding, const Babel::netPrefix<IPvXAddress>& p, int sn=1) :
+    BabelRouteReqFtlv(uint8_t addressencoding, const Babel::netPrefix<inet::L3Address>& p, int sn=1) :
                     BabelFtlv(Babel::tlvT::ROUTEREQ, sn),
                     ae(addressencoding),
                     prefix(p)
                     {};
 
-    BabelRouteReqFtlv(const Babel::netPrefix<IPvXAddress>& p, int sn=1) :
+    BabelRouteReqFtlv(const Babel::netPrefix<inet::L3Address>& p, int sn=1) :
                     BabelFtlv(Babel::tlvT::ROUTEREQ, sn),
                     prefix(p)
                     {
@@ -498,8 +499,8 @@ class BabelRouteReqFtlv : public BabelFtlv {
     uint8_t getAe() const {return ae;}
     void setAe(uint8_t addressencoding) {ae = addressencoding;}
 
-    const Babel::netPrefix<IPvXAddress>& getPrefix() const {return prefix;}
-    void setPrefix(const Babel::netPrefix<IPvXAddress>& p) {prefix = p;}
+    const Babel::netPrefix<inet::L3Address>& getPrefix() const {return prefix;}
+    void setPrefix(const Babel::netPrefix<inet::L3Address>& p) {prefix = p;}
 };
 
 class BabelSeqnoReqFtlv : public BabelFtlv {
@@ -509,7 +510,7 @@ class BabelSeqnoReqFtlv : public BabelFtlv {
     uint8_t hopcount;
     uint8_t reserved;
     Babel::rid routerid;
-    Babel::netPrefix<IPvXAddress> prefix;
+    Babel::netPrefix<inet::L3Address> prefix;
 
     void copy(const BabelSeqnoReqFtlv& other);
 
@@ -523,7 +524,7 @@ class BabelSeqnoReqFtlv : public BabelFtlv {
 
     BabelSeqnoReqFtlv(uint8_t addressencoding, uint16_t seqn,
             uint8_t hc, const Babel::rid& r,
-            const Babel::netPrefix<IPvXAddress>& p, int sn=1) :
+            const Babel::netPrefix<inet::L3Address>& p, int sn=1) :
                     BabelFtlv(Babel::tlvT::SEQNOREQ, sn),
                     ae(addressencoding),
                     seqno(seqn),
@@ -534,7 +535,7 @@ class BabelSeqnoReqFtlv : public BabelFtlv {
                     {};
 
     BabelSeqnoReqFtlv(uint16_t seqn, uint8_t hc, const Babel::rid& r,
-            const Babel::netPrefix<IPvXAddress>& p, int sn=1) :
+            const Babel::netPrefix<inet::L3Address>& p, int sn=1) :
                     BabelFtlv(Babel::tlvT::SEQNOREQ, sn),
                     seqno(seqn),
                     hopcount(hc),
@@ -567,8 +568,8 @@ class BabelSeqnoReqFtlv : public BabelFtlv {
     const Babel::rid& getRouterId() const {return routerid;}
     void setRouterId(const Babel::rid& r) {routerid = r;}
 
-    const Babel::netPrefix<IPvXAddress>& getPrefix() const {return prefix;}
-    void setPrefix(const Babel::netPrefix<IPvXAddress>& p) {prefix = p;}
+    const Babel::netPrefix<inet::L3Address>& getPrefix() const {return prefix;}
+    void setPrefix(const Babel::netPrefix<inet::L3Address>& p) {prefix = p;}
 };
 
 #endif /* BABELFTLV_H_ */

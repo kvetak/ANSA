@@ -16,100 +16,107 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __CSOCKETRTSCHEDULER_H__
-#define __CSOCKETRTSCHEDULER_H__
+#ifndef __INET_CSOCKETRTSCHEDULER_H
+#define __INET_CSOCKETRTSCHEDULER_H
 
 #define WANT_WINSOCK2
 
 #include <platdep/sockets.h>
+#include "common/INETDefs.h"
+
+#if OMNETPP_VERSION < 0x500
 #include <platdep/timeutil.h>
-#include "INETDefs.h"
+#else // OMNETPP_VERSION < 0x500
+#include <omnetpp/platdep/timeutil.h>
+#endif // OMNETPP_VERSION < 0x500
 
 // prevent pcap.h to redefine int8_t,... types on Windows
-#include "bsdint.h"
+#include "common/serializer/headers/bsdint.h"
 #define HAVE_U_INT8_T
 #define HAVE_U_INT16_T
 #define HAVE_U_INT32_T
 #define HAVE_U_INT64_T
-#ifdef HAVE_PCAP
+
 #include <pcap.h>
-#endif
-#include "ExtFrame_m.h"
+#include "linklayer/ext/ExtFrame_m.h"
+
+namespace inet {
 
 class cSocketRTScheduler : public cScheduler
 {
-    protected:
-        int fd;
+  protected:
+    int fd;
 
-        virtual bool receiveWithTimeout();
-        virtual int receiveUntil(const timeval& targetTime);
-    public:
-        /**
-         * Constructor.
-         */
-        cSocketRTScheduler();
+    virtual bool receiveWithTimeout(long usec);
+    virtual int receiveUntil(const timeval& targetTime);
 
-        /**
-         * Destructor.
-         */
-        virtual ~cSocketRTScheduler();
-#ifdef HAVE_PCAP
-        static std::vector<cModule *> modules;
-        static std::vector<pcap_t *> pds;
-        static std::vector<int> datalinks;
-        static std::vector<int> headerLengths;
-#endif
-        static timeval baseTime;
+  public:
+    /**
+     * Constructor.
+     */
+    cSocketRTScheduler();
 
-        /**
-         * Called at the beginning of a simulation run.
-         */
-        virtual void startRun();
+    /**
+     * Destructor.
+     */
+    virtual ~cSocketRTScheduler();
+    static std::vector<cModule *> modules;
+    static std::vector<pcap_t *> pds;
+    static std::vector<int> datalinks;
+    static std::vector<int> headerLengths;
+    static timeval baseTime;
 
-        /**
-         * Called at the end of a simulation run.
-         */
-        virtual void endRun();
+    /**
+     * Called at the beginning of a simulation run.
+     */
+    virtual void startRun() override;
 
-        /**
-         * Recalculates "base time" from current wall clock time.
-         */
-        virtual void executionResumed();
+    /**
+     * Called at the end of a simulation run.
+     */
+    virtual void endRun() override;
 
-        /**
-         * To be called from the module which wishes to receive data from the
-         * socket. The method must be called from the module's initialize()
-         * function.
-         */
-        void setInterfaceModule(cModule *mod, const char *dev, const char *filter);
+    /**
+     * Recalculates "base time" from current wall clock time.
+     */
+    virtual void executionResumed() override;
+
+    /**
+     * To be called from the module which wishes to receive data from the
+     * socket. The method must be called from the module's initialize()
+     * function.
+     */
+    void setInterfaceModule(cModule *mod, const char *dev, const char *filter);
 
 #if OMNETPP_VERSION >= 0x0500
-        /**
-         * Returns the first event in the Future Event Set.
-         */
-        virtual cEvent *guessNextEvent();
+    /**
+     * Returns the first event in the Future Event Set.
+     */
+    virtual cEvent *guessNextEvent();
 
-        /**
-         * Scheduler function -- it comes from the cScheduler interface.
-         */
-        virtual cEvent *takeNextEvent();
+    /**
+     * Scheduler function -- it comes from the cScheduler interface.
+     */
+    virtual cEvent *takeNextEvent();
 
-        /**
-         * Scheduler function -- it comes from the cScheduler interface.
-         */
-        virtual void putBackEvent(cEvent *event);
-#else
-        /**
-         * Scheduler function -- it comes from cScheduler interface.
-         */
-        virtual cMessage *getNextEvent();
-#endif
+    /**
+     * Scheduler function -- it comes from the cScheduler interface.
+     */
+    virtual void putBackEvent(cEvent *event);
+#else // if OMNETPP_VERSION >= 0x0500
+      /**
+       * Scheduler function -- it comes from cScheduler interface.
+       */
+    virtual cMessage *getNextEvent() override;
+#endif // if OMNETPP_VERSION >= 0x0500
 
-        /**
-         * Send on the currently open connection
-         */
-        void sendBytes(unsigned char *buf, size_t numBytes, struct sockaddr *from, socklen_t addrlen);
+    /**
+     * Send on the currently open connection
+     */
+    void sendBytes(unsigned char *buf, size_t numBytes, struct sockaddr *from, socklen_t addrlen);
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_CSOCKETRTSCHEDULER_H
 

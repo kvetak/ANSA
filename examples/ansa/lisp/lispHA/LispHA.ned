@@ -21,10 +21,10 @@ import inet.ansa.nodes.ANSA_DualStackHost;
 import inet.ansa.nodes.lisp.*;
 import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network LispHA
 {

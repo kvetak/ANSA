@@ -18,7 +18,7 @@
 // @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/ 
 
 cplusplus {{
-    #include "INETDefs.h"    
+    #include "inet/common/INETDefs.h" 
     #include "LISPTStructs.h"                       		            
 }}
 

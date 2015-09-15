@@ -16,7 +16,7 @@
 //
 
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 class INET_API Join : public cSimpleModule
 {

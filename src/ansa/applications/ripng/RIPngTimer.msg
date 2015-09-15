@@ -19,10 +19,10 @@
 // @detail RIPng timer
 
 cplusplus {{
-#include "IPv6Address.h"
+#include "inet/networklayer/contract/ipv6/IPv6Address.h"
 }}
 
-class noncobject IPv6Address;
+class noncobject inet::IPv6Address;
 
 enum RIPngTimerType
 {

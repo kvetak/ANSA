@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "EigrpInterfaceTable.h"
+#include "ansa/networklayer/eigrp/tables/EigrpInterfaceTable.h"
 
 #include <algorithm>
 
@@ -46,7 +46,7 @@ EigrpInterface::~EigrpInterface()
     delete hellot;
 }
 
-EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enabled) :
+EigrpInterface::EigrpInterface(inet::InterfaceEntry *iface, int networkId, bool enabled) :
        interfaceId(iface->getInterfaceId()), networkId(networkId), enabled(enabled)
 {
     hellot = NULL;
@@ -76,7 +76,7 @@ EigrpInterface::EigrpInterface(InterfaceEntry *iface, int networkId, bool enable
     }
 }
 
-bool EigrpInterface::isMulticastAllowedOnIface(InterfaceEntry *iface)
+bool EigrpInterface::isMulticastAllowedOnIface(inet::InterfaceEntry *iface)
 {
     if (iface->isMulticast())
         if (getNumOfNeighbors() > 1)

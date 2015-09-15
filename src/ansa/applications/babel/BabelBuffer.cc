@@ -18,7 +18,7 @@
 * @brief Babel Buffer
 * @detail Represents buffer used for sending messages
 */
-#include <BabelBuffer.h>
+#include "ansa/applications/babel/BabelBuffer.h"
 
 using namespace Babel;
 
@@ -115,7 +115,7 @@ std::ostream& operator<<(std::ostream& os, const BabelBuffer& buff)
  * @param   nh  Next hop address
  * @param   origin  RouterId of originator
  */
-std::vector<BabelFtlv *>::iterator BabelBuffer::getSimilarUpdateTlv(IPvXAddress nh, Babel::rid origin)
+std::vector<BabelFtlv *>::iterator BabelBuffer::getSimilarUpdateTlv(inet::L3Address nh, Babel::rid origin)
 {
     std::vector<BabelFtlv *>::iterator sametype = tlvs.end();
     std::vector<BabelFtlv *>::iterator samenh = tlvs.end();

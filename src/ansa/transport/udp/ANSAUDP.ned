@@ -24,7 +24,7 @@
 
 package inet.ansa.transport.udp;
 
-import inet.transport.udp.UDP;
+import inet.transportlayer.udp.UDP;
 
 //
 // See ANSAUDP.h for more information

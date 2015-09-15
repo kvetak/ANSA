@@ -19,7 +19,7 @@
 * @detail Includes classes represent Full TLVs for internal representation
 */
 
-#include "BabelFtlv.h"
+#include "ansa/applications/babel/BabelFtlv.h"
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(__CYGWIN__) || defined(_WIN64)
 #include "winsock2.h"  // htonl, ntohl, ...
@@ -771,7 +771,7 @@ int BabelUpdateFtlv::rawTlvLength() const
  *
  * @return  Length of raw TLV in bytes
  */
-int BabelUpdateFtlv::rawTlvLength(const netPrefix<IPvXAddress>& prevprefix) const
+int BabelUpdateFtlv::rawTlvLength(const netPrefix<inet::L3Address>& prevprefix) const
 {
     int prefixlen = 0;
 
@@ -819,7 +819,7 @@ int BabelUpdateFtlv::copyRawTlv(char *dst) const
  *
  * @return  Number of copied bytes
  */
-int BabelUpdateFtlv::copyRawTlv(char *dst, netPrefix<IPvXAddress> *prevprefix) const
+int BabelUpdateFtlv::copyRawTlv(char *dst, netPrefix<inet::L3Address> *prevprefix) const
 {
     int offset = 0;
     int toomit = ((prevprefix == NULL || ae == AE::WILDCARD) ? 0 : prefix.bytesToOmit(*prevprefix));

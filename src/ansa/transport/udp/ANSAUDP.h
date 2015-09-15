@@ -24,7 +24,7 @@
 #ifndef __INET_ANSA_ANSAUDP_H
 #define __INET_ANSA_ANSAUDP_H
 
-#include "UDP.h"
+#include "transportlayer/udp/UDP.h"
 
 /**
  * Created for the RIPng class - the bind() method had to be reimplemented using method
@@ -32,15 +32,15 @@
  * TODO: watch this class and changes in INET! - especially UDP class
  * @see UDP
  */
-class ANSAUDP : public UDP
+class ANSAUDP : public inet::UDP
 {
     public:
         ANSAUDP();
         virtual ~ANSAUDP();
 
     protected:
-        virtual void bind(int sockId, int gateIndex, const IPvXAddress& localAddr, int localPort);
-        virtual SockDesc *ANSAfindSocketByLocalAddress(const IPvXAddress& localAddr, ushort localPort);
+        virtual void bind(int sockId, int gateIndex, const inet::L3Address& localAddr, int localPort);
+        virtual SockDesc *ANSAfindSocketByLocalAddress(const inet::L3Address& localAddr, ushort localPort);
 };
 
 #endif /* __INET_ANSA_ANSAUDP_H */

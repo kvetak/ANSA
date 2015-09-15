@@ -19,7 +19,7 @@
 * @detail Represents data structure for saving all known routes
 */
 
-#include <BabelTopologyTable.h>
+#include "ansa/applications/babel/BabelTopologyTable.h"
 
 using namespace Babel;
 
@@ -189,7 +189,7 @@ void BabelTopologyTable::removeRoutes()
     routes.clear();
 }
 
-BabelRoute *BabelTopologyTable::findRoute(const Babel::netPrefix<IPvXAddress>& p, BabelNeighbour *n, const Babel::rid& orig)
+BabelRoute *BabelTopologyTable::findRoute(const Babel::netPrefix<inet::L3Address>& p, BabelNeighbour *n, const Babel::rid& orig)
 {
     std::vector<BabelRoute *>::iterator it;
 
@@ -203,7 +203,7 @@ BabelRoute *BabelTopologyTable::findRoute(const Babel::netPrefix<IPvXAddress>& p
 
     return NULL;
 }
-BabelRoute *BabelTopologyTable::findRoute(const Babel::netPrefix<IPvXAddress>& p, BabelNeighbour *n)
+BabelRoute *BabelTopologyTable::findRoute(const Babel::netPrefix<inet::L3Address>& p, BabelNeighbour *n)
 {
     std::vector<BabelRoute *>::iterator it;
 
@@ -218,7 +218,7 @@ BabelRoute *BabelTopologyTable::findRoute(const Babel::netPrefix<IPvXAddress>& p
     return NULL;
 }
 
-BabelRoute *BabelTopologyTable::findSelectedRoute(const Babel::netPrefix<IPvXAddress>& p)
+BabelRoute *BabelTopologyTable::findSelectedRoute(const Babel::netPrefix<inet::L3Address>& p)
 {
     std::vector<BabelRoute *>::iterator it;
 
@@ -233,25 +233,25 @@ BabelRoute *BabelTopologyTable::findSelectedRoute(const Babel::netPrefix<IPvXAdd
     return NULL;
 }
 
-bool BabelTopologyTable::containShorterCovRoute(const Babel::netPrefix<IPvXAddress>& p)
+bool BabelTopologyTable::containShorterCovRoute(const Babel::netPrefix<inet::L3Address>& p)
 {
     std::vector<BabelRoute *>::iterator it;
 
     for (it = routes.begin(); it != routes.end(); ++it)
     {// through all routes search for shorter prefix that covering prefix p
-        if(((*it)->getPrefix().getAddr().isIPv6() == p.getAddr().isIPv6()) &&
+        if((((*it)->getPrefix().getAddr().getType() == inet::L3Address::IPv6) == (p.getAddr().getType() == inet::L3Address::IPv6)) &&
                 (*it)->getPrefix().getLen() < p.getLen())
         {// same AF and shorter
-            if((*it)->getPrefix().getAddr().isIPv6())
+            if((*it)->getPrefix().getAddr().getType() == inet::L3Address::IPv6)
             {// IPv6
-                if((*it)->getPrefix().getAddr().get6() == p.getAddr().get6().getPrefix((*it)->getPrefix().getLen()))
+                if((*it)->getPrefix().getAddr().toIPv6() == p.getAddr().toIPv6().getPrefix((*it)->getPrefix().getLen()))
                 {
                     return true;
                 }
             }
             else
             {// IPv4
-                if((*it)->getPrefix().getAddr().get4() == p.getAddr().get4().doAnd(IPv4Address::makeNetmask((*it)->getPrefix().getLen())))
+                if((*it)->getPrefix().getAddr().toIPv4() == p.getAddr().toIPv4().doAnd(inet::IPv4Address::makeNetmask((*it)->getPrefix().getLen())))
                 {
                     return true;
                 }
@@ -262,7 +262,7 @@ bool BabelTopologyTable::containShorterCovRoute(const Babel::netPrefix<IPvXAddre
     return false;
 }
 
-BabelRoute *BabelTopologyTable::findRouteNotNH(const Babel::netPrefix<IPvXAddress>& p, const IPvXAddress& nh)
+BabelRoute *BabelTopologyTable::findRouteNotNH(const Babel::netPrefix<inet::L3Address>& p, const inet::L3Address& nh)
 {
     std::vector<BabelRoute *>::iterator it;
 

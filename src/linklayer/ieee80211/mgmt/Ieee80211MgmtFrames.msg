@@ -19,16 +19,20 @@
 // Required for MACAddress declarations
 //
 cplusplus {{
-#include "MACAddress.h"
-#include "Ieee80211Frame_m.h"
-#define PREQElemLen 11
-#define PERRElemLen 13
+#include "inet/linklayer/common/MACAddress.h"
+#include "inet/linklayer/ieee80211/mac/Ieee80211Frame_m.h"
 }}
 
 class noncobject MACAddress;
 
-packet Ieee80211ManagementFrame;
+namespace inet::ieee80211;
 
+cplusplus {{
+#define PREQElemLen 11
+#define PERRElemLen 13
+}}
+
+packet Ieee80211ManagementFrame;
 
 //
 // Capability Information field format. This field is not used
@@ -154,7 +158,7 @@ class Ieee80211AuthenticationFrameBody extends Ieee80211FrameBody
 {
     bodyLength = 6; // add 2+len bytes for challenge text if present
     unsigned short sequenceNumber;
-    int statusCode enum(Ieee80211StatusCode);
+    int statusCode @enum(Ieee80211StatusCode);
     bool isLast; // not part of the standard; see above
 }
 
@@ -164,7 +168,7 @@ class Ieee80211AuthenticationFrameBody extends Ieee80211FrameBody
 class Ieee80211DeauthenticationFrameBody extends Ieee80211FrameBody
 {
     bodyLength = 2;
-    int reasonCode enum(Ieee80211ReasonCode);
+    int reasonCode @enum(Ieee80211ReasonCode);
 }
 
 //
@@ -173,7 +177,7 @@ class Ieee80211DeauthenticationFrameBody extends Ieee80211FrameBody
 class Ieee80211DisassociationFrameBody extends Ieee80211FrameBody
 {
     bodyLength = 2;
-    int reasonCode enum(Ieee80211ReasonCode);
+    int reasonCode @enum(Ieee80211ReasonCode);
 }
 
 //
@@ -181,7 +185,7 @@ class Ieee80211DisassociationFrameBody extends Ieee80211FrameBody
 //
 class Ieee80211ProbeRequestFrameBody extends Ieee80211FrameBody
 {
-    bodyLength = 12; // assuming a 8-character SSID
+    bodyLength = 12; // assuming a 8-character SSID     //FIXME bodyLength = 2 + length(SSID) + 2 + supportedRates.numRates
     string SSID;
     Ieee80211SupportedRatesElement supportedRates;
 }
@@ -191,7 +195,7 @@ class Ieee80211ProbeRequestFrameBody extends Ieee80211FrameBody
 //
 class Ieee80211AssociationRequestFrameBody extends Ieee80211FrameBody
 {
-    bodyLength = 16; // assuming a 8-character SSID
+    bodyLength = 16; // assuming a 8-character SSID     //FIXME bodyLength = 2 + length(SSID) + 2 + supportedRates.numRates
     string SSID;
     Ieee80211SupportedRatesElement supportedRates;
 }
@@ -201,7 +205,7 @@ class Ieee80211AssociationRequestFrameBody extends Ieee80211FrameBody
 //
 class Ieee80211ReassociationRequestFrameBody extends Ieee80211AssociationRequestFrameBody
 {
-    bodyLength = 26; // assuming a 8-character SSID and 4 supported datarates
+    bodyLength = 26; // assuming a 8-character SSID and 4 supported datarates     //FIXME bodyLength = 2 + length(SSID) + 2 + supportedRates.numRates + 2 + 6
     MACAddress currentAP;
 }
 
@@ -210,8 +214,8 @@ class Ieee80211ReassociationRequestFrameBody extends Ieee80211AssociationRequest
 //
 class Ieee80211AssociationResponseFrameBody extends Ieee80211FrameBody
 {
-    bodyLength = 26; // assuming a 8-character SSID and 4 supported datarates
-    int statusCode enum(Ieee80211StatusCode);
+    bodyLength = 26; // assuming a 8-character SSID and 4 supported datarates       //FIXME not a static value
+    int statusCode @enum(Ieee80211StatusCode);
     short aid;
     Ieee80211SupportedRatesElement supportedRates;
 }
@@ -228,12 +232,12 @@ class Ieee80211ReassociationResponseFrameBody extends Ieee80211AssociationRespon
 //
 class Ieee80211BeaconFrameBody extends Ieee80211FrameBody
 {
-    bodyLength = 50; // assuming a 8-character SSID, 4 supported datarate plus TIM
+    bodyLength = 50; // assuming a 8-character SSID, 4 supported datarate plus TIM     //FIXME bodyLength = 8 + 2 + 2 + (2 + length(SSID)) + (2 + supportedRates.numRates) + ???
     string SSID;
     Ieee80211SupportedRatesElement supportedRates;
     simtime_t beaconInterval;
     int channelNumber;
-    Ieee80211HandoverParameters handoverParameters;
+    Ieee80211HandoverParameters handoverParameters;     //TODO is it a vendor-specific parameter in serializer?
 }
 
 //
@@ -249,7 +253,8 @@ class Ieee80211ActionFrameBody extends Ieee80211FrameBody
 
 class Ieee80211ActionHWMPFrameBody extends Ieee80211ActionFrameBody
 {
-     int id enum(Ieee80211HWMPCode);
+     //FIXME bodyLength?
+     int id @enum(Ieee80211HWMPCode);
      //unsigned char length;
      unsigned char flags = 0;
      unsigned char hopsCount = 0;
@@ -278,7 +283,7 @@ struct PERRElem
 
 class Ieee80211ActionRANNFrameBody extends Ieee80211ActionHWMPFrameBody
 {
-     bodyLength = 23;
+     bodyLength = 23;   //FIXME bodyLength
      id = IE11S_RANN;
      MACAddress root;
      unsigned int seqNumber;
@@ -288,7 +293,7 @@ class Ieee80211ActionRANNFrameBody extends Ieee80211ActionHWMPFrameBody
 
 class  Ieee80211ActionPREQFrameBody extends Ieee80211ActionHWMPFrameBody
 {
-     bodyLength = 26;
+     bodyLength = 26;   //FIXME variable bodyLength
      id = IE11S_PREQ;
      unsigned int pathDiscoveryId;
      MACAddress originator;
@@ -302,7 +307,7 @@ class  Ieee80211ActionPREQFrameBody extends Ieee80211ActionHWMPFrameBody
 
 class  Ieee80211ActionPREPFrameBody extends Ieee80211ActionHWMPFrameBody
 {
-     bodyLength = 37;
+     bodyLength = 37;   //FIXME bodyLength
      id = IE11S_PREP;
      MACAddress target;
      unsigned int targetSeqNumber;
@@ -315,7 +320,7 @@ class  Ieee80211ActionPREPFrameBody extends Ieee80211ActionHWMPFrameBody
 
 class  Ieee80211ActionPERRFrameBody extends Ieee80211ActionHWMPFrameBody
 {
-     bodyLength = 2;
+     bodyLength = 2;   //FIXME variable bodyLength
      id = IE11S_PERR;
      unsigned char numDestination;
      PERRElem perrElem[];
@@ -338,7 +343,7 @@ class  Ieee80211ActionGANNFrameBody extends Ieee80211ActionHWMPFrameBody
 packet Ieee80211AuthenticationFrame extends Ieee80211ManagementFrame
 {
     type = ST_AUTHENTICATION;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211AuthenticationFrameBody body;
 }
 
@@ -348,7 +353,7 @@ packet Ieee80211AuthenticationFrame extends Ieee80211ManagementFrame
 packet Ieee80211DeauthenticationFrame extends Ieee80211ManagementFrame
 {
     type = ST_DEAUTHENTICATION;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211DeauthenticationFrameBody body;
 }
 
@@ -358,7 +363,7 @@ packet Ieee80211DeauthenticationFrame extends Ieee80211ManagementFrame
 packet Ieee80211DisassociationFrame extends Ieee80211ManagementFrame
 {
     type = ST_DISASSOCIATION;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211DisassociationFrameBody body;
 }
 
@@ -368,7 +373,7 @@ packet Ieee80211DisassociationFrame extends Ieee80211ManagementFrame
 packet Ieee80211ProbeRequestFrame extends Ieee80211ManagementFrame
 {
     type = ST_PROBEREQUEST;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211ProbeRequestFrameBody body;
 }
 
@@ -378,7 +383,7 @@ packet Ieee80211ProbeRequestFrame extends Ieee80211ManagementFrame
 packet Ieee80211AssociationRequestFrame extends Ieee80211ManagementFrame
 {
     type = ST_ASSOCIATIONREQUEST;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211AssociationRequestFrameBody body;
 }
 
@@ -388,7 +393,7 @@ packet Ieee80211AssociationRequestFrame extends Ieee80211ManagementFrame
 packet Ieee80211ReassociationRequestFrame extends Ieee80211ManagementFrame
 {
     type = ST_REASSOCIATIONREQUEST;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211ReassociationRequestFrameBody body;
 }
 
@@ -398,7 +403,7 @@ packet Ieee80211ReassociationRequestFrame extends Ieee80211ManagementFrame
 packet Ieee80211AssociationResponseFrame extends Ieee80211ManagementFrame
 {
     type = ST_ASSOCIATIONRESPONSE;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211AssociationResponseFrameBody body;
 }
 
@@ -408,7 +413,7 @@ packet Ieee80211AssociationResponseFrame extends Ieee80211ManagementFrame
 packet Ieee80211ReassociationResponseFrame extends Ieee80211ManagementFrame
 {
     type = ST_REASSOCIATIONRESPONSE;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211ReassociationResponseFrameBody body;
 }
 
@@ -418,7 +423,7 @@ packet Ieee80211ReassociationResponseFrame extends Ieee80211ManagementFrame
 packet Ieee80211BeaconFrame extends Ieee80211ManagementFrame
 {
     type = ST_BEACON;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211BeaconFrameBody body;
 }
 
@@ -428,7 +433,7 @@ packet Ieee80211BeaconFrame extends Ieee80211ManagementFrame
 packet Ieee80211ProbeResponseFrame extends Ieee80211ManagementFrame
 {
     type = ST_PROBERESPONSE;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211ProbeResponseFrameBody body;
 }
 
@@ -438,6 +443,7 @@ packet Ieee80211ProbeResponseFrame extends Ieee80211ManagementFrame
 packet Ieee80211ActionFrame extends Ieee80211ManagementFrame
 {
     type = ST_ACTION;
-    byteLength = 28+getBody().getBodyLength();
+    byteLength = 28+getBody().getBodyLength();   //FIXME variable bodyLength
     Ieee80211ActionFrameBody body;
 }
+

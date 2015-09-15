@@ -16,7 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "xmlParser.h"
+#include "ansa/util/deviceConfigurator/xmlParser.h"
 #include <errno.h>
 
 cXMLElement * xmlParser::GetDevice(const char *deviceType, const char *deviceId, const char *configFile){

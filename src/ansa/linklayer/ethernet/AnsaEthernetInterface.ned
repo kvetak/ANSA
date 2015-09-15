@@ -21,8 +21,8 @@
 package inet.ansa.linklayer.ethernet;
 
 //import inet.linklayer.INetworkInterface;
-import inet.linklayer.IWiredNic;
-import inet.linklayer.IOutputQueue;
+import inet.linklayer.contract.IWiredNic;
+import inet.common.queue.IOutputQueue;
 import inet.linklayer.ethernet.EtherEncap;
 
 

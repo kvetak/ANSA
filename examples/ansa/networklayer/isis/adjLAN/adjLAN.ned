@@ -15,17 +15,17 @@
 
 package inet.examples.ansa.networklayer.isis.adjLAN;
 
-import inet.nodes.ethernet.Eth100M;
+import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;
-import inet.nodes.ethernet.EtherSwitch;
+import inet.node.ethernet.EtherSwitch;
 import inet.ansa.networklayer.isis.AnsaISISRouter;
 //import inet.ansa.ANSARouter;
-//import inet.networklayer.autorouting.FlatNetworkConfigurator;
-import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
-//import inet.networklayer.autorouting.FlatNetworkConfigurator6;
-import inet.networklayer.autorouting.ipv6.FlatNetworkConfigurator6;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.mpls.LDP_LSR;
+//import inet.networklayer.configurator.FlatNetworkConfigurator;
+import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
+//import inet.networklayer.configurator.FlatNetworkConfigurator6;
+import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.mpls.LDP_LSR;
 import ned.DatarateChannel;
 
 

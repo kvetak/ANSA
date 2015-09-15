@@ -13,20 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-class noncobject IPv4Address;
-class noncobject MACAddress;
-class noncobject IPv4RoutingDecision;
+class inet::IPv4Address extends void;
+class inet::MACAddress extends void;
+class inet::IPv4RoutingDecision extends void;
 
 cplusplus {{
-#include "IPv4Address.h"
-#include "IPProtocolId_m.h"
-#include "MACAddress.h"
-#include "IPv4ControlInfo_m.h"
+#include "inet/networklayer/contract/ipv4/IPv4Address.h"
+#include "inet/networklayer/common/IPProtocolId_m.h"
+#include "inet/linklayer/common/MACAddress.h"
+#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 }}
 //
 // TODO generated message class
 //
-class AnsaIPv4RoutingDecision extends IPv4RoutingDecision 
+class AnsaIPv4RoutingDecision extends inet::IPv4RoutingDecision 
 {
 	int vforwarderId = -1;
 }

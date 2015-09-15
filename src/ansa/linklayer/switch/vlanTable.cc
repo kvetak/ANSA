@@ -1,7 +1,7 @@
 
-#include "vlanTable.h"
+#include "ansa/linklayer/switch/vlanTable.h"
 
-#include "vlanTableXMLparser.h"
+#include "ansa/linklayer/switch/vlanTableXMLparser.h"
 
 
 

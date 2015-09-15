@@ -46,19 +46,23 @@ package inet.linklayer.ppp;
 simple PPP
 {
     parameters:
+        string interfaceTableModule;   // The path to the InterfaceTable module
         int txQueueLimit = default(1000);  // only used if queueModule==""; zero means infinite
-        string queueModule = default("");  // name of external (QoS,RED,etc) queue module
+        string queueModule = default("");  // path of external (QoS,RED,etc) queue module
         int mtu @unit("B") = default(4470B);
         @display("i=block/rxtx");
 
         @signal[txState](type=long);    // 1:transmit, 0:idle
         @signal[rxPkOk](type=PPPFrame);
-        @signal[dropPkIfaceDown](type=PPPFrame);  //TODO currently both upper and lower; todo separate them 
-        @signal[dropPkBitError](type=PPPFrame);
+        @signal[dropPkIfaceDown](type=cPacket);  //TODO currently both upper and lower; todo separate them
+        @signal[dropPkBitError](type=cPacket);
         @signal[packetSentToLower](type=PPPFrame);
-        @signal[packetReceivedFromLower](type=PPPFrame);
+        @signal[packetReceivedFromLower](type=cPacket);
         @signal[packetSentToUpper](type=cPacket);
         @signal[packetReceivedFromUpper](type=cPacket);
+        @signal[NF_PP_TX_BEGIN](type=TxNotifDetails);
+        @signal[NF_PP_TX_END](type=TxNotifDetails);
+        @signal[NF_PP_RX_END](type=TxNotifDetails);
         @statistic[txState](title="tx state"; record=timeavg,vector; interpolationmode=sample-hold);
         @statistic[txPk](title="packets transmitted"; source=packetSentToLower; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[rxPkOk](title="packets received OK"; source=rxPkOk; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);

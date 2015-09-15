@@ -8,9 +8,9 @@
 #ifndef IEIGRPPDM_H_
 #define IEIGRPPDM_H_
 
-#include "IPv4Address.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
 
-#include "EigrpRoute.h"
+#include "ansa/networklayer/eigrp/tables/EigrpRoute.h"
 
 /**
  * Interface for DUAL automaton.

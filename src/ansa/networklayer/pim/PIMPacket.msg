@@ -19,11 +19,11 @@
 // @brief File implements structures for PIM packets
 
 cplusplus {{
-#include "IPv4Address.h"
+#include "inet/networklayer/contract/ipv4/IPv4Address.h"
 }}
 
 //struct IPAddress;
-class noncobject IPv4Address;
+class noncobject inet::IPv4Address;
 
 enum PIMPacketType 
 {
@@ -48,7 +48,7 @@ struct HelloEntry
 
 struct EncodedAddress
 {
-	IPv4Address IPaddress;
+	inet::IPv4Address IPaddress;
 	bool 		S;				
 	bool		W;				//WC bit
 	bool		R;				//RPT bit
@@ -58,7 +58,7 @@ struct EncodedAddress
 // in structure it is not possible to use dynamic arrays, iit is needed to use class
 class MulticastGroup
 {
-	IPv4Address 	groupAddress;
+	inet::IPv4Address 	groupAddress;
 	EncodedAddress 	joinedSourceAddress[]; 
 	EncodedAddress 	prunedSourceAddress[]; 
 }
@@ -66,8 +66,8 @@ class MulticastGroup
 // abstract structure for multicast data
 packet MultData
 {
-	IPv4Address multOrigin;
-	IPv4Address multGroup;
+	inet::IPv4Address multOrigin;
+	inet::IPv4Address multGroup;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ packet PIMHello extends PIMPacket
 packet PIMJoinPrune extends PIMPacket
 {
 	short 			type enum(PIMPacketType) = JoinPrune;
-	IPv4Address		upstreamNeighborAddress;	
+	inet::IPv4Address		upstreamNeighborAddress;	
 	int				holdTime;
 	//int				numGroups;
 	MulticastGroup	multicastGroups[];   
@@ -102,8 +102,8 @@ packet PIMJoinPrune extends PIMPacket
 packet PIMAssert extends PIMPacket
 {
 	short 			type enum(PIMPacketType) = Assert;
-	IPv4Address		groupAddress;
-	IPv4Address		sourceAddress;	
+	inet::IPv4Address		groupAddress;
+	inet::IPv4Address		sourceAddress;	
 	bool			R;
 	int				metric;   
 	int				metricPreference;   
@@ -129,9 +129,9 @@ packet PIMGraftAck extends PIMGraft
 packet PIMStateRefresh extends PIMPacket
 {
 	short 			type enum(PIMPacketType) = StateRefresh;	
-	IPv4Address		groupAddress;
-	IPv4Address		sourceAddress;	
-	IPv4Address		originatorAddress;	
+	inet::IPv4Address		groupAddress;
+	inet::IPv4Address		sourceAddress;	
+	inet::IPv4Address		originatorAddress;	
 	int				metric;   
 	int				metricPreference;  
 	short			maskLen;
@@ -154,6 +154,6 @@ packet PIMRegister extends PIMPacket
 packet PIMRegisterStop extends PIMPacket
 {
 	short 			type enum(PIMPacketType) = RegisterStop;	
-	IPv4Address		groupAddress;
-	IPv4Address		sourceAddress;
+	inet::IPv4Address		groupAddress;
+	inet::IPv4Address		sourceAddress;
 }

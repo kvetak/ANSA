@@ -19,9 +19,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <omnetpp.h>
-#include "AnsaEtherMAC.h"
-#include "Ieee802Ctrl_m.h"
-#include "IPassiveQueue.h"
+#include "ansa/linklayer/ethernet/AnsaEtherMAC.h"
+#include "linklayer/common/Ieee802Ctrl_m.h"
+#include "common/queue/IPassiveQueue.h"
 
 
 
@@ -139,7 +139,7 @@ void AnsaEtherMAC::handleAutoconfigMessage(cMessage *msg)
         {
             // from upper layer
             EV << "Received frame from upper layer during autoconfig period: " << msg << endl;
-            processFrameFromUpperLayer(check_and_cast<EtherFrame *>(msg));
+            processFrameFromUpperLayer(check_and_cast<inet::EtherFrame *>(msg));
         }
         else
         {
@@ -226,7 +226,7 @@ void AnsaEtherMAC::handleMessage (cMessage *msg)
     {
         // either frame from upper layer, or frame/jam signal from the network
         if (msg->getArrivalGate() == gate("upperLayerIn"))
-            processFrameFromUpperLayer(check_and_cast<EtherFrame *>(msg));
+            processFrameFromUpperLayer(check_and_cast<inet::EtherFrame *>(msg));
         else
             processMsgFromNetwork(PK(msg));
     }
@@ -271,7 +271,7 @@ void AnsaEtherMAC::handleMessage (cMessage *msg)
 }
 
 
-void AnsaEtherMAC::processFrameFromUpperLayer(EtherFrame *frame)
+void AnsaEtherMAC::processFrameFromUpperLayer(inet::EtherFrame *frame)
 {
     AnsaEtherMACBase::processFrameFromUpperLayer(frame);
 
@@ -292,7 +292,7 @@ void AnsaEtherMAC::processMsgFromNetwork(cPacket *msg)
     if (!duplexMode && transmitState==TRANSMITTING_STATE)
     {
         // since we're halfduplex, receiveState must be RX_IDLE_STATE (asserted at top of handleMessage)
-        if (dynamic_cast<EtherJam*>(msg) != NULL)
+        if (dynamic_cast<inet::EtherJam*>(msg) != NULL)
             error("Stray jam signal arrived while transmitting (usual cause is cable length exceeding allowed maximum)");
 
         EV << "Transmission interrupted by incoming frame, handling collision\n";
@@ -313,18 +313,18 @@ void AnsaEtherMAC::processMsgFromNetwork(cPacket *msg)
     }
     else if (receiveState==RX_IDLE_STATE)
     {
-        if (dynamic_cast<EtherJam*>(msg) != NULL)
+        if (dynamic_cast<inet::EtherJam*>(msg) != NULL)
             error("Stray jam signal arrived (usual cause is cable length exceeding allowed maximum)");
 
         EV << "Start reception of frame\n";
         numConcurrentTransmissions++;
         if (frameBeingReceived)
             error("frameBeingReceived!=0 in RX_IDLE_STATE");
-        frameBeingReceived = (EtherFrame *)msg;
+        frameBeingReceived = (inet::EtherFrame *)msg;
         scheduleEndRxPeriod(msg);
         channelBusySince = simTime();
     }
-    else if (receiveState==RECEIVING_STATE && dynamic_cast<EtherJam*>(msg)==NULL && endRxMsg->getArrivalTime()-simTime()<bitTime)
+    else if (receiveState==RECEIVING_STATE && dynamic_cast<inet::EtherJam*>(msg)==NULL && endRxMsg->getArrivalTime()-simTime()<bitTime)
     {
         // With the above condition we filter out "false" collisions that may occur with
         // back-to-back frames. That is: when "beginning of frame" message (this one) occurs
@@ -335,18 +335,18 @@ void AnsaEtherMAC::processMsgFromNetwork(cPacket *msg)
 
         // complete reception of previous frame
         cancelEvent(endRxMsg);
-        EtherFrame *frame = frameBeingReceived;
+        inet::EtherFrame *frame = frameBeingReceived;
         frameBeingReceived = NULL;
         frameReceptionComplete(frame);
 
         // start receiving next frame
-        frameBeingReceived = (EtherFrame *)msg;
+        frameBeingReceived = (inet::EtherFrame *)msg;
         scheduleEndRxPeriod(msg);
     }
     else // (receiveState==RECEIVING_STATE || receiveState==RX_COLLISION_STATE)
     {
         // handle overlapping receptions
-        if (dynamic_cast<EtherJam*>(msg) != NULL)
+        if (dynamic_cast<inet::EtherJam*>(msg) != NULL)
         {
             if (numConcurrentTransmissions<=0)
                 error("numConcurrentTransmissions=%d on jam arrival (stray jam?)",numConcurrentTransmissions);
@@ -512,7 +512,7 @@ void AnsaEtherMAC::handleEndRxPeriod()
     simtime_t dt = simTime()-channelBusySince;
     if (receiveState==RECEIVING_STATE) // i.e. not RX_COLLISION_STATE
     {
-        EtherFrame *frame = frameBeingReceived;
+        inet::EtherFrame *frame = frameBeingReceived;
         frameBeingReceived = NULL;
         frameReceptionComplete(frame);
         totalSuccessfulRxTxTime += dt;
@@ -561,7 +561,7 @@ void AnsaEtherMAC::handleEndJammingPeriod()
 
 void AnsaEtherMAC::sendJamSignal()
 {
-    cPacket *jam = new EtherJam("JAM_SIGNAL");
+    cPacket *jam = new inet::EtherJam("JAM_SIGNAL");
     jam->setByteLength(JAM_SIGNAL_BYTES);
     if (ev.isGUI())  updateConnectionColor(JAMMING_STATE);
     send(jam, physOutGate);

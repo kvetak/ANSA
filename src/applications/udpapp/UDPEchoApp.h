@@ -15,37 +15,39 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef __INET_UDPECHOAPP_H
 #define __INET_UDPECHOAPP_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "AppBase.h"
-#include "UDPSocket.h"
+#include "applications/base/ApplicationBase.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+
+namespace inet {
 
 /**
  * UDP application. See NED for more info.
  */
-class UDPEchoApp : public AppBase
+class UDPEchoApp : public ApplicationBase
 {
   protected:
     UDPSocket socket;
-    int numEchoed;  // just for WATCH
+    int numEchoed;    // just for WATCH
     static simsignal_t pkSignal;
 
   protected:
-    virtual int numInitStages() const {return 4;}
-    virtual void initialize(int stage);
-    virtual void handleMessageWhenUp(cMessage *msg);
-    virtual void finish();
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessageWhenUp(cMessage *msg) override;
+    virtual void finish() override;
     virtual void updateDisplay();
 
-    //AppBase:
-    bool startApp(IDoneCallback *doneCallback);
-    bool stopApp(IDoneCallback *doneCallback);
-    bool crashApp(IDoneCallback *doneCallback);
+    virtual bool handleNodeStart(IDoneCallback *doneCallback) override;
+    virtual bool handleNodeShutdown(IDoneCallback *doneCallback) override;
+    virtual void handleNodeCrash() override;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_UDPECHOAPP_H
 

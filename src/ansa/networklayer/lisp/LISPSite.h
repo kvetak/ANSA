@@ -23,9 +23,9 @@
 #define LISPSITE_H_
 
 #include <omnetpp.h>
-#include "LISPCommon.h"
-#include "LISPSiteRecord.h"
-#include "LISPTimers_m.h"
+#include "ansa/networklayer/lisp/LISPCommon.h"
+#include "ansa/networklayer/lisp/LISPSiteRecord.h"
+#include "ansa/networklayer/lisp/LISPTimers_m.h"
 
 class LISPSite : public LISPMapStorageBase
 {
@@ -48,9 +48,9 @@ class LISPSite : public LISPMapStorageBase
 
     void addRecord(LISPSiteRecord& srec);
     void removeRecord(LISPSiteRecord& srec);
-    LISPSiteRecord* findRecordByAddress(IPvXAddress& address);
-    Etrs findAllRecordsByEid(const IPvXAddress& address);
-    bool isEidMaintained(const IPvXAddress& address);
+    LISPSiteRecord* findRecordByAddress(inet::L3Address& address);
+    Etrs findAllRecordsByEid(const inet::L3Address& address);
+    bool isEidMaintained(const inet::L3Address& address);
 
   protected:
 

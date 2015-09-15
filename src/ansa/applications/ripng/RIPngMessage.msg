@@ -20,10 +20,10 @@
 
 
 cplusplus {{
-#include "IPv6Address.h"
+#include "inet/networklayer/contract/ipv6/IPv6Address.h"
 }}
 
-class noncobject IPv6Address;
+class noncobject inet::IPv6Address;
 
 //
 //  RIPng command
@@ -39,7 +39,7 @@ enum RIPngCommand
 //
 class RIPngRTE
 {
-    IPv6Address IPv6Prefix;   //128 bytes
+    inet::IPv6Address IPv6Prefix;   //128 bytes
     uint16_t    routeTag;     //2 bytes
     char        prefixLen;    //1 byte
     char        metric;       //1 byte

@@ -13,10 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 cplusplus {{
-#include "MACAddress.h"
+#include "inet/linklayer/common/MACAddress.h"
 }}
 
-class noncobject MACAddress;
+class noncobject inet::MACAddress;
 
 
 packet STPBPDU
@@ -30,12 +30,12 @@ packet STPBPDU
 	
 	unsigned int vlan;
 
-	MACAddress bridgeID;
+	inet::MACAddress bridgeID;
 	unsigned int bridgePriority;
 	
 	unsigned long rootPathCost;
 	
-	MACAddress rootID;
+	inet::MACAddress rootID;
 	unsigned int rootPriority;
 
 	unsigned int portID;

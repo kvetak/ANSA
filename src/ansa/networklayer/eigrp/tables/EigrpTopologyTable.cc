@@ -14,13 +14,13 @@
 // 
 
 //Ipv6 ready - mozny problem s originator (address vs. routerID)!!!
-#include "IPv4Address.h"
-#include "IPv6Address.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"
 #include <algorithm>
 
-#include "EigrpTopologyTable.h"
-#include "EigrpMessage_m.h"
-#include "EigrpMetricHelper.h"
+#include "ansa/networklayer/eigrp/tables/EigrpTopologyTable.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/pdms/EigrpMetricHelper.h"
 
 #define EIGRP_TT_DEBUG
 
@@ -199,7 +199,7 @@ EigrpRouteSource<IPAddress> *EigrpTopologyTable<IPAddress>::getBestSuccessor(Eig
     return tempSrc;
 }
 
-/*EigrpRouteSource<IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(const IPv4Address& address, const IPv4Address& mask)
+/*EigrpRouteSource<inet::IPv4Address> *EigrpIpv4TopologyTable::getFirstSuccessor(const inet::IPv4Address& address, const inet::IPv4Address& mask)
 {
     RouteInfoVector::iterator it;
 
@@ -309,10 +309,10 @@ void EigrpTopologyTable<IPAddress>::addRoute(EigrpRouteSource<IPAddress> *source
 }
 
 /*
-void EigrpIpv4TopologyTable::moveSuccessorAhead(EigrpRouteSource<IPv4Address> *source)
+void EigrpIpv4TopologyTable::moveSuccessorAhead(EigrpRouteSource<inet::IPv4Address> *source)
 {
     RouteVector::iterator it, backit;
-    EigrpRouteSource<IPv4Address> *tempSource = NULL;
+    EigrpRouteSource<inet::IPv4Address> *tempSource = NULL;
 
     if ((it = std::find(routeVec.begin(), routeVec.end(), source)) == routeVec.end())
     {
@@ -344,10 +344,10 @@ void EigrpIpv4TopologyTable::moveSuccessorAhead(EigrpRouteSource<IPv4Address> *s
 }*/
 
 /*
-void EigrpIpv4TopologyTable::moveRouteBack(EigrpRouteSource<IPv4Address> *source)
+void EigrpIpv4TopologyTable::moveRouteBack(EigrpRouteSource<inet::IPv4Address> *source)
 {
     RouteVector::iterator it, nextit;
-    EigrpRouteSource<IPv4Address> *tempSource = NULL;
+    EigrpRouteSource<inet::IPv4Address> *tempSource = NULL;
 
     // Get iterator of source
     if ((it = std::find(routeVec.begin(), routeVec.end(), source)) == routeVec.end())
@@ -468,7 +468,7 @@ EigrpRouteSource<IPAddress> *EigrpTopologyTable<IPAddress>::findRouteByNextHop(i
 }
 
 template<typename IPAddress>
-EigrpRouteSource<IPAddress> * EigrpTopologyTable<IPAddress>::findOrCreateRoute(IPAddress& routeAddr, IPAddress& routeMask, IPv4Address& routerId,
+EigrpRouteSource<IPAddress> * EigrpTopologyTable<IPAddress>::findOrCreateRoute(IPAddress& routeAddr, IPAddress& routeMask, inet::IPv4Address& routerId,
         EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew)
 {
     EigrpRoute<IPAddress> *route = NULL;
@@ -538,9 +538,9 @@ EigrpRoute<IPAddress> *EigrpTopologyTable<IPAddress>::findRouteInfoById(int rout
 
 }
 
-template class EigrpTopologyTable<IPv4Address>;
+template class EigrpTopologyTable<inet::IPv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpTopologyTable<IPv6Address>;
+template class EigrpTopologyTable<inet::IPv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */
 

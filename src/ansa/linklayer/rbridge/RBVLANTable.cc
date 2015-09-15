@@ -23,8 +23,8 @@
  * @todo It would be desirable to change __port (gateIndex) to interfaceId
  */
 
-#include "RBVLANTable.h"
-#include "vlanTableXMLparser.h"
+#include "ansa/linklayer/rbridge/RBVLANTable.h"
+#include "ansa/linklayer/switch/vlanTableXMLparser.h"
 Define_Module(RBVLANTable);
 RBVLANTable::RBVLANTable()
 {

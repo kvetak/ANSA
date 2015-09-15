@@ -22,7 +22,7 @@
  * @detail Holds CLNS routes.
  * @todo TODO A2 Add hopCount for TRILL.
  */
-#include "CLNSTable.h"
+#include "ansa/networklayer/clns/CLNSTable.h"
 
 
 Define_Module(CLNSTable);
@@ -72,7 +72,7 @@ void CLNSRoute::setNextHop(ISISNeighbours_t nextHop)
 std::string CLNSRoute::info() const{
     std::stringstream out;
     ISISNeighbours_t neig = getNextHop();
-    InterfaceEntry *entry;
+    inet::InterfaceEntry *entry;
 
     int interfaceID = -1;
     entry = (*neig.begin())->entry;
@@ -149,11 +149,11 @@ void CLNSTable::initialize(int stage){
         ift = InterfaceTableAccess().get();
         nb = NotificationBoardAccess().get();
 
-        nb->subscribe(this, NF_INTERFACE_CREATED);
-        nb->subscribe(this, NF_INTERFACE_DELETED);
-        nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-        nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
-        nb->subscribe(this, NF_INTERFACE_IPv6CONFIG_CHANGED);
+        nb->subscribe(this, inet::NF_INTERFACE_CREATED);
+        nb->subscribe(this, inet::NF_INTERFACE_DELETED);
+        nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+        nb->subscribe(this, inet::NF_INTERFACE_CONFIG_CHANGED);
+        nb->subscribe(this, inet::NF_INTERFACE_IPv6CONFIG_CHANGED);
 
         WATCH_VECTOR(table);
         WATCH_PTRVECTOR(routeVector);
@@ -189,22 +189,22 @@ void CLNSTable::receiveChangeNotification(int category, const cObject *details)
 //    Enter_Method_Silent();
 //    printNotificationBanner(category, details);
 
-//    if (category==NF_INTERFACE_CREATED)
+//    if (category==inet::NF_INTERFACE_CREATED)
 //    {
 //        // add netmask route for the new interface
 //        updateNetmaskRoutes();
 //    }
-//    else if (category==NF_INTERFACE_DELETED)
+//    else if (category==inet::NF_INTERFACE_DELETED)
 //    {
 //        // remove all routes that point to that interface
-//        InterfaceEntry *entry = check_and_cast<InterfaceEntry*>(details);
+//        inet::InterfaceEntry *entry = check_and_cast<inet::InterfaceEntry*>(details);
 //        deleteInterfaceRoutes(entry);
 //    }
-//    else if (category==NF_INTERFACE_STATE_CHANGED)
+//    else if (category==inet::NF_INTERFACE_STATE_CHANGED)
 //    {
 //        invalidateCache();
 //    }
-//    else if (category==NF_INTERFACE_CONFIG_CHANGED)
+//    else if (category==inet::NF_INTERFACE_CONFIG_CHANGED)
 //    {
 //        invalidateCache();
 //    }

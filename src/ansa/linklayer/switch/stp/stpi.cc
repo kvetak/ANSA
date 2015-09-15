@@ -5,10 +5,10 @@
  *      Author: aranel
  */
 
-#include "stpi.h"
-#include "STPMACCompare.h"
+#include "ansa/linklayer/switch/stp/stpi.h"
+#include "ansa/linklayer/switch/stp/STPMACCompare.h"
 
-stpi::stpi(unsigned int _vlan, unsigned int _portCount, MACAddress _bridgeAddress, MACTable * _addrTable) {
+stpi::stpi(unsigned int _vlan, unsigned int _portCount, inet::MACAddress _bridgeAddress, MACTable * _addrTable) {
 
 	portCount = _portCount;
 	bridgeAddress = _bridgeAddress; // apply the bridge address
@@ -71,9 +71,9 @@ void stpi::initPortTable() {
 	port.flags = flag;
 	port.rootPathCost = INT16_MAX;
 	port.rootPriority = 65536;
-	port.rootID = MACAddress("FF-FF-FF-FF-FF-FF");
+	port.rootID = inet::MACAddress("FF-FF-FF-FF-FF-FF");
 	port.bridgePriority = 65536;
-	port.bridgeID = MACAddress("FF-FF-FF-FF-FF-FF");
+	port.bridgeID = inet::MACAddress("FF-FF-FF-FF-FF-FF");
 	port.portPriority = 256;
 	port.portID = 256;
 	port.age = 0;
@@ -433,7 +433,7 @@ void stpi::tryRoot() {
 
 }
 
-int stpi::superiorID(unsigned int APR, MACAddress AID, unsigned int BPR, MACAddress BID) {
+int stpi::superiorID(unsigned int APR, inet::MACAddress AID, unsigned int BPR, inet::MACAddress BID) {
 	if (APR < BPR) {
 		return 1; // A is superior
 	} else if (APR > BPR) {

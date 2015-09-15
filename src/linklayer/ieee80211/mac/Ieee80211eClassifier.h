@@ -15,11 +15,14 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef __INET_IEEE80211ECLASSIFIER_H
 #define __INET_IEEE80211ECLASSIFIER_H
 
-#include "IQoSClassifier.h"
+#include "linklayer/ieee80211/mac/IQoSClassifier.h"
+
+namespace inet {
+
+namespace ieee80211 {
 
 /**
  * An example packet classifier based on the UDP/TCP port number.
@@ -36,9 +39,10 @@ class INET_API Ieee80211eClassifier : public IQoSClassifier
   private:
     int defaultAC;
     int defaultManagement;
+
   public:
     Ieee80211eClassifier();
-    virtual int getNumQueues();
+    virtual int getNumQueues() override;
     virtual void setDefaultClass(int i) { defaultAC = i; }
     virtual int getDefaultClass() { return defaultAC; }
     virtual void setDefaultManagementClass(int i) { defaultManagement = i; }
@@ -49,8 +53,12 @@ class INET_API Ieee80211eClassifier : public IQoSClassifier
      * for the given packet, a value between 0 and getNumQueues()-1
      * (inclusive).
      */
-    virtual int classifyPacket(cMessage *msg);
+    virtual int classifyPacket(cMessage *msg) override;
 };
 
-#endif
+} // namespace ieee80211
+
+} // namespace inet
+
+#endif // ifndef __INET_IEEE80211ECLASSIFIER_H
 

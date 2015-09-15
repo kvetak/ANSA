@@ -19,7 +19,7 @@
  */
 
 
-#include <LISPProbeSet.h>
+#include "ansa/networklayer/lisp/LISPProbeSet.h"
 
 LISPProbeSet::LISPProbeSet() {
 }
@@ -36,11 +36,11 @@ std::string LISPProbeSet::info() const {
     return os.str();
 }
 
-bool LISPProbeSet::hasProbeEntry(IPvXAddress& rloc, LISPEidPrefix& eidPref) {
+bool LISPProbeSet::hasProbeEntry(inet::L3Address& rloc, LISPEidPrefix& eidPref) {
     return findProbeEntryByRlocAndEid(rloc, eidPref);
 }
 
-LISPProbeEntry* LISPProbeSet::findProbeEntryByRlocAndEid(IPvXAddress& rloc, const LISPEidPrefix& eidPref) {
+LISPProbeEntry* LISPProbeSet::findProbeEntryByRlocAndEid(inet::L3Address& rloc, const LISPEidPrefix& eidPref) {
     //EV << "Vstup " << Probes.size() << endl;
     for (ProbeItem it = Probes.begin(); it != Probes.end(); ++it) {
         //EV << it->getRlocAddr() << " -- " << it->hasEid(eidPref) << endl;
@@ -50,7 +50,7 @@ LISPProbeEntry* LISPProbeSet::findProbeEntryByRlocAndEid(IPvXAddress& rloc, cons
     return NULL;
 }
 
-LISPProbeEntry* LISPProbeSet::findFirstProbeEntryByRloc(const IPvXAddress& rloc) {
+LISPProbeEntry* LISPProbeSet::findFirstProbeEntryByRloc(const inet::L3Address& rloc) {
     for (ProbeItem it = Probes.begin(); it != Probes.end(); ++it) {
         if (it->getRlocAddr() == rloc)
             return &(*it);
@@ -63,7 +63,7 @@ void LISPProbeSet::addProbeEntry(LISPProbeEntry& probe) {
     Probes.push_back(probe);
 }
 
-void LISPProbeSet::removeProbeEntry(IPvXAddress& rloc, LISPEidPrefix& eidPref) {
+void LISPProbeSet::removeProbeEntry(inet::L3Address& rloc, LISPEidPrefix& eidPref) {
     Probes.remove( *(findProbeEntryByRlocAndEid(rloc, eidPref)) );
 }
 

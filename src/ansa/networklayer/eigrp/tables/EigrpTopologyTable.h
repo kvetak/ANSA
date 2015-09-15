@@ -20,12 +20,12 @@
 
 #include <omnetpp.h>
 
-#include "ModuleAccess.h"
+#include "common/ModuleAccess.h"
 
 
-#include "EigrpRoute.h"
-#include "EigrpInterfaceTable.h"
-#include "EigrpDualStack.h"
+#include "ansa/networklayer/eigrp/tables/EigrpRoute.h"
+#include "ansa/networklayer/eigrp/tables/EigrpInterfaceTable.h"
+#include "ansa/networklayer/eigrp/EigrpDualStack.h"
 
 /**
  * Class represents EIGRP Topology Table.
@@ -40,7 +40,7 @@ class EigrpTopologyTable : public cSimpleModule
     RouteVector routeVec;       /**< Table with routes. */
     RouteInfoVector routeInfoVec;/**< Table with info about routes. */
 
-    IPv4Address routerID;       /**< Router ID of this router, number represented as IPv4 address. INDEPENDENT on routed protocol (Ipv4/IPv6)! */
+    inet::IPv4Address routerID;       /**< Router ID of this router, number represented as IPv4 address. INDEPENDENT on routed protocol (Ipv4/IPv6)! */
 
     int routeIdCounter;         /**< Counter for route ID */
     int sourceIdCounter;         /**< Counter for source ID */
@@ -68,7 +68,7 @@ class EigrpTopologyTable : public cSimpleModule
      * Finds and returns source with given address or create one.
      * @param sourceNew return parameter, it is true if source was created. Else false.
      */
-    EigrpRouteSource<IPAddress> * findOrCreateRoute(IPAddress& routeAddr, IPAddress& routeMask, IPv4Address& routerId, EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew);
+    EigrpRouteSource<IPAddress> * findOrCreateRoute(IPAddress& routeAddr, IPAddress& routeMask, inet::IPv4Address& routerId, EigrpInterface *eigrpIface, int nextHopId, bool *sourceNew);
     /**
      * Deletes unreachable routes from the topology table.
      */
@@ -95,34 +95,34 @@ class EigrpTopologyTable : public cSimpleModule
     EigrpRoute<IPAddress> *findRouteInfo(const IPAddress& routeAddr, const IPAddress& routeMask);
     EigrpRoute<IPAddress> *findRouteInfoById(int routeId);
 
-    IPv4Address& getRouterId() { return routerID; }
-    void setRouterId(IPv4Address& routerID) { this->routerID = routerID; }
+    inet::IPv4Address& getRouterId() { return routerID; }
+    void setRouterId(inet::IPv4Address& routerID) { this->routerID = routerID; }
 };
 
-class EigrpIpv4TopologyTable : public EigrpTopologyTable<IPv4Address>
+class EigrpIpv4TopologyTable : public EigrpTopologyTable<inet::IPv4Address>
 {
 //container class for IPv4TT, must exist because of Define_Module()
 public:
     virtual ~EigrpIpv4TopologyTable() {};
 };
 
-class EigrpIpv6TopologyTable : public EigrpTopologyTable<IPv6Address>
+class EigrpIpv6TopologyTable : public EigrpTopologyTable<inet::IPv6Address>
 {
 //container class for IPv6TT, must exist because of Define_Module()
 public:
     virtual ~EigrpIpv6TopologyTable() {};
 };
 
-class INET_API Eigrpv4TopolTableAccess : public ModuleAccess<EigrpIpv4TopologyTable>
+class INET_API Eigrpv4TopolTableAccess : public inet::ModuleAccess<EigrpIpv4TopologyTable>
 {
     public:
-    Eigrpv4TopolTableAccess() : ModuleAccess<EigrpIpv4TopologyTable>("eigrpIpv4TopologyTable") {}
+    Eigrpv4TopolTableAccess() : inet::ModuleAccess<EigrpIpv4TopologyTable>("eigrpIpv4TopologyTable") {}
 };
 
-class INET_API Eigrpv6TopolTableAccess : public ModuleAccess<EigrpIpv6TopologyTable>
+class INET_API Eigrpv6TopolTableAccess : public inet::ModuleAccess<EigrpIpv6TopologyTable>
 {
     public:
-    Eigrpv6TopolTableAccess() : ModuleAccess<EigrpIpv6TopologyTable>("eigrpIpv6TopologyTable") {}
+    Eigrpv6TopolTableAccess() : inet::ModuleAccess<EigrpIpv6TopologyTable>("eigrpIpv6TopologyTable") {}
 };
 
 #endif

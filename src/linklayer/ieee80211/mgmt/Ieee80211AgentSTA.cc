@@ -15,25 +15,29 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "linklayer/ieee80211/mgmt/Ieee80211AgentSTA.h"
+#include "linklayer/ieee80211/mgmt/Ieee80211Primitives_m.h"
+#include "common/ModuleAccess.h"
+#include "common/NotifierConsts.h"
+#include "common/INETUtils.h"
 
-#include "Ieee80211AgentSTA.h"
-#include "Ieee80211Primitives_m.h"
-#include "NotifierConsts.h"
-#include "InterfaceTableAccess.h"
+namespace inet {
 
+namespace ieee80211 {
 
 Define_Module(Ieee80211AgentSTA);
 
-#define MK_STARTUP  1
+#define MK_STARTUP    1
 
-simsignal_t Ieee80211AgentSTA::sentRequestSignal = SIMSIGNAL_NULL;
-simsignal_t Ieee80211AgentSTA::acceptConfirmSignal = SIMSIGNAL_NULL;
-simsignal_t Ieee80211AgentSTA::dropConfirmSignal = SIMSIGNAL_NULL;
+simsignal_t Ieee80211AgentSTA::sentRequestSignal = registerSignal("sentRequest");
+simsignal_t Ieee80211AgentSTA::acceptConfirmSignal = registerSignal("acceptConfirm");
+simsignal_t Ieee80211AgentSTA::dropConfirmSignal = registerSignal("dropConfirm");
 
 void Ieee80211AgentSTA::initialize(int stage)
 {
-    if (stage==0)
-    {
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         // read parameters
         activeScan = par("activeScan");
         probeDelay = par("probeDelay");
@@ -43,32 +47,28 @@ void Ieee80211AgentSTA::initialize(int stage)
         associationTimeout = par("associationTimeout");
         cStringTokenizer tokenizer(par("channelsToScan"));
         const char *token;
-        while ((token = tokenizer.nextToken())!=NULL)
+        while ((token = tokenizer.nextToken()) != nullptr)
             channelsToScan.push_back(atoi(token));
 
-        nb = NotificationBoardAccess().get();
-        nb->subscribe(this, NF_L2_BEACON_LOST);
-
-        InterfaceTable *ift = (InterfaceTable*)InterfaceTableAccess().getIfExists();
-        myIface = NULL;
-        if (!ift)
-        {
-            myIface = ift->getInterfaceByName(getParentModule()->getFullName());
-        }
+        cModule *host = getContainingNode(this);
+        host->subscribe(NF_L2_BEACON_LOST, this);
 
         // JcM add: get the default ssid, if there is one.
         default_ssid = par("default_ssid").stringValue();
 
-        //Statistics:
-        sentRequestSignal = registerSignal("sentRequest");
-        acceptConfirmSignal = registerSignal("acceptConfirm");
-        dropConfirmSignal = registerSignal("dropConfirm");
-
         // start up: send scan request
-        if (par("startingTime").doubleValue()>0)
-            scheduleAt(simTime()+par("startingTime").doubleValue(), new cMessage("startUp", MK_STARTUP));
-        else
-            scheduleAt(simTime()+uniform(0, maxChannelTime), new cMessage("startUp", MK_STARTUP));
+        simtime_t startingTime = par("startingTime").doubleValue();
+        if (startingTime < SIMTIME_ZERO)
+            startingTime = uniform(SIMTIME_ZERO, maxChannelTime);
+        scheduleAt(simTime() + startingTime, new cMessage("startUp", MK_STARTUP));
+
+        myIface = nullptr;
+    }
+    else if (stage == INITSTAGE_LINK_LAYER_2) {
+        IInterfaceTable *ift = findModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+        if (ift) {
+            myIface = ift->getInterfaceByName(utils::stripnonalnum(findModuleUnderContainingNode(this)->getFullName()).c_str());
+        }
     }
 }
 
@@ -82,15 +82,13 @@ void Ieee80211AgentSTA::handleMessage(cMessage *msg)
 
 void Ieee80211AgentSTA::handleTimer(cMessage *msg)
 {
-    if (msg->getKind()==MK_STARTUP)
-    {
+    if (msg->getKind() == MK_STARTUP) {
         EV << "Starting up\n";
         sendScanRequest();
         delete msg;
     }
-    else
-    {
-        error("internal error: unrecognized timer '%s'", msg->getName());
+    else {
+        throw cRuntimeError("internal error: unrecognized timer '%s'", msg->getName());
     }
 }
 
@@ -110,25 +108,24 @@ void Ieee80211AgentSTA::handleResponse(cMessage *msg)
     else if (dynamic_cast<Ieee80211Prim_ReassociateConfirm *>(ctrl))
         processReassociateConfirm((Ieee80211Prim_ReassociateConfirm *)ctrl);
     else if (ctrl)
-        error("handleResponse(): unrecognized control info class `%s'", ctrl->getClassName());
+        throw cRuntimeError("handleResponse(): unrecognized control info class `%s'", ctrl->getClassName());
     else
-        error("handleResponse(): control info is NULL");
+        throw cRuntimeError("handleResponse(): control info is nullptr");
     delete ctrl;
 }
 
-void Ieee80211AgentSTA::receiveChangeNotification(int category, const cObject *details)
+void Ieee80211AgentSTA::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj)
 {
     Enter_Method_Silent();
-    printNotificationBanner(category, details);
+    printNotificationBanner(signalID, obj);
 
-    if (category == NF_L2_BEACON_LOST)
-    {
+    if (signalID == NF_L2_BEACON_LOST) {
         //XXX should check details if it's about this NIC
         EV << "beacon lost, starting scanning again\n";
-        getParentModule()->getParentModule()->bubble("Beacon lost!");
+        getContainingNode(this)->bubble("Beacon lost!");
         //sendDisassociateRequest();
         sendScanRequest();
-        nb->fireChangeNotification(NF_L2_DISASSOCIATED, myIface);
+        emit(NF_L2_DISASSOCIATED, myIface);
     }
 }
 
@@ -138,7 +135,6 @@ void Ieee80211AgentSTA::sendRequest(Ieee80211PrimRequest *req)
     msg->setControlInfo(req);
     send(msg, "mgmtOut");
 }
-
 
 void Ieee80211AgentSTA::sendScanRequest()
 {
@@ -150,7 +146,7 @@ void Ieee80211AgentSTA::sendScanRequest()
     req->setMinChannelTime(minChannelTime);
     req->setMaxChannelTime(maxChannelTime);
     req->setChannelListArraySize(channelsToScan.size());
-    for (int i=0; i<(int)channelsToScan.size(); i++)
+    for (int i = 0; i < (int)channelsToScan.size(); i++)
         req->setChannelList(i, channelsToScan[i]);
     //XXX BSSID, SSID are left at default ("any")
 
@@ -212,21 +208,17 @@ void Ieee80211AgentSTA::processScanConfirm(Ieee80211Prim_ScanConfirm *resp)
 {
     // choose best AP
 
-    int bssIndex;
-    if (this->default_ssid=="")
-    {
-            // no default ssid, so pick the best one
-            bssIndex = chooseBSS(resp);
+    int bssIndex = -1;
+    if (this->default_ssid == "") {
+        // no default ssid, so pick the best one
+        bssIndex = chooseBSS(resp);
     }
-    else
-    {
+    else {
         // search if the default_ssid is in the list, otherwise
         // keep searching.
-        for (int i=0; i<(int)resp->getBssListArraySize(); i++)
-        {
+        for (int i = 0; i < (int)resp->getBssListArraySize(); i++) {
             std::string resp_ssid = resp->getBssList(i).getSSID();
-            if (resp_ssid == this->default_ssid)
-            {
+            if (resp_ssid == this->default_ssid) {
                 EV << "found default SSID " << resp_ssid << endl;
                 bssIndex = i;
                 break;
@@ -234,8 +226,7 @@ void Ieee80211AgentSTA::processScanConfirm(Ieee80211Prim_ScanConfirm *resp)
         }
     }
 
-    if (bssIndex==-1)
-    {
+    if (bssIndex == -1) {
         EV << "No (suitable) AP found, continue scanning\n";
         emit(dropConfirmSignal, PR_SCAN_CONFIRM);
         sendScanRequest();
@@ -253,8 +244,7 @@ void Ieee80211AgentSTA::processScanConfirm(Ieee80211Prim_ScanConfirm *resp)
 void Ieee80211AgentSTA::dumpAPList(Ieee80211Prim_ScanConfirm *resp)
 {
     EV << "Received AP list:\n";
-    for (int i=0; i<(int)resp->getBssListArraySize(); i++)
-    {
+    for (int i = 0; i < (int)resp->getBssListArraySize(); i++) {
         Ieee80211Prim_BSSDescription& bssDesc = resp->getBssList(i);
         EV << "    " << i << ". "
            << " address=" << bssDesc.getBSSID()
@@ -269,22 +259,22 @@ void Ieee80211AgentSTA::dumpAPList(Ieee80211Prim_ScanConfirm *resp)
 
 int Ieee80211AgentSTA::chooseBSS(Ieee80211Prim_ScanConfirm *resp)
 {
-    if (resp->getBssListArraySize()==0)
+    if (resp->getBssListArraySize() == 0)
         return -1;
 
     // here, just choose the one with the greatest receive power
     // TODO and which supports a good data rate we support
     int bestIndex = 0;
-    for (int i=0; i<(int)resp->getBssListArraySize(); i++)
+    for (int i = 0; i < (int)resp->getBssListArraySize(); i++)
         if (resp->getBssList(i).getRxPower() > resp->getBssList(bestIndex).getRxPower())
             bestIndex = i;
+
     return bestIndex;
 }
 
 void Ieee80211AgentSTA::processAuthenticateConfirm(Ieee80211Prim_AuthenticateConfirm *resp)
 {
-    if (resp->getResultCode()!=PRC_SUCCESS)
-    {
+    if (resp->getResultCode() != PRC_SUCCESS) {
         EV << "Authentication error\n";
         emit(dropConfirmSignal, PR_AUTHENTICATE_CONFIRM);
 
@@ -292,8 +282,7 @@ void Ieee80211AgentSTA::processAuthenticateConfirm(Ieee80211Prim_AuthenticateCon
         EV << "Going back to scanning\n";
         sendScanRequest();
     }
-    else
-    {
+    else {
         EV << "Authentication successful, let's try to associate\n";
         emit(acceptConfirmSignal, PR_AUTHENTICATE_CONFIRM);
         sendAssociateRequest(resp->getAddress());
@@ -302,8 +291,7 @@ void Ieee80211AgentSTA::processAuthenticateConfirm(Ieee80211Prim_AuthenticateCon
 
 void Ieee80211AgentSTA::processAssociateConfirm(Ieee80211Prim_AssociateConfirm *resp)
 {
-    if (resp->getResultCode()!=PRC_SUCCESS)
-    {
+    if (resp->getResultCode() != PRC_SUCCESS) {
         EV << "Association error\n";
         emit(dropConfirmSignal, PR_ASSOCIATE_CONFIRM);
 
@@ -311,38 +299,38 @@ void Ieee80211AgentSTA::processAssociateConfirm(Ieee80211Prim_AssociateConfirm *
         EV << "Going back to scanning\n";
         sendScanRequest();
     }
-    else
-    {
+    else {
         EV << "Association successful\n";
         emit(acceptConfirmSignal, PR_ASSOCIATE_CONFIRM);
         // we are happy!
-        getParentModule()->getParentModule()->bubble("Associated with AP");
-        if(prevAP.isUnspecified() || prevAP != resp->getAddress())
-        {
-            nb->fireChangeNotification(NF_L2_ASSOCIATED_NEWAP, myIface); //XXX detail: InterfaceEntry?
+        getContainingNode(this)->bubble("Associated with AP");
+        if (prevAP.isUnspecified() || prevAP != resp->getAddress()) {
+            emit(NF_L2_ASSOCIATED_NEWAP, myIface);    //XXX detail: InterfaceEntry?
             prevAP = resp->getAddress();
         }
         else
-            nb->fireChangeNotification(NF_L2_ASSOCIATED_OLDAP, myIface);
+            emit(NF_L2_ASSOCIATED_OLDAP, myIface);
     }
 }
 
 void Ieee80211AgentSTA::processReassociateConfirm(Ieee80211Prim_ReassociateConfirm *resp)
 {
     // treat the same way as AssociateConfirm
-    if (resp->getResultCode()!=PRC_SUCCESS)
-    {
+    if (resp->getResultCode() != PRC_SUCCESS) {
         EV << "Reassociation error\n";
         emit(dropConfirmSignal, PR_REASSOCIATE_CONFIRM);
         EV << "Going back to scanning\n";
         sendScanRequest();
     }
-    else
-    {
+    else {
         EV << "Reassociation successful\n";
-        nb->fireChangeNotification(NF_L2_ASSOCIATED_OLDAP, myIface); //XXX detail: InterfaceEntry?
+        emit(NF_L2_ASSOCIATED_OLDAP, myIface);    //XXX detail: InterfaceEntry?
         emit(acceptConfirmSignal, PR_REASSOCIATE_CONFIRM);
         // we are happy!
     }
 }
+
+} // namespace ieee80211
+
+} // namespace inet
 

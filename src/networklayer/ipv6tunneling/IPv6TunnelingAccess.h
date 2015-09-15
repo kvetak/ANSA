@@ -20,19 +20,19 @@
 #ifndef __IPv6_TUNNELING_ACCESS_H__
 #define __IPv6_TUNNELING_ACCESS_H__
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "IPv6Tunneling.h"
-#include "ModuleAccess.h"
+#include "networklayer/ipv6tunneling/IPv6Tunneling.h"
+#include "common/ModuleAccess.h"
 
 
 /**
  * Gives access to IPv6Tunneling
  */
-class INET_API IPv6TunnelingAccess : public ModuleAccess<IPv6Tunneling>
+class INET_API IPv6TunnelingAccess : public inet::ModuleAccess<inet::IPv6Tunneling>
 {
     public:
-        IPv6TunnelingAccess() : ModuleAccess<IPv6Tunneling>("iptunneling") {}
+        IPv6TunnelingAccess() : inet::ModuleAccess<inet::IPv6Tunneling>("iptunneling") {}
 };
 
 #endif

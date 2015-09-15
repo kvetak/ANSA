@@ -16,20 +16,20 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 //  Cleanup and rewrite: Andras Varga, 2004
 
 #ifndef __INET_ERRORHANDLING_H
 #define __INET_ERRORHANDLING_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
+namespace inet {
 
 /**
  * Error Handling: print out received error
  */
 // FIXME is such thing needed at all???
-class INET_API ErrorHandling: public cSimpleModule
+class INET_API ErrorHandling : public cSimpleModule
 {
   protected:
     long numReceived;
@@ -37,9 +37,11 @@ class INET_API ErrorHandling: public cSimpleModule
     long numTimeExceeded;
 
   protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_ERRORHANDLING_H
 

@@ -16,7 +16,7 @@
 #ifndef EIGRPMSGREQ_H_
 #define EIGRPMSGREQ_H_
 
-#include "EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
 
 class EigrpMsgReq : public EigrpMsgReq_Base
 {

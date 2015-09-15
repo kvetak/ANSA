@@ -20,12 +20,12 @@
 
 #include <omnetpp.h>
 
-#include "IPv4Address.h"
-#include "IPv6Address.h"    //IPv6 - ADDED for IPv6 support ... or Should I use IPvX ???
-#include "ModuleAccess.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"    //IPv6 - ADDED for IPv6 support ... or Should I use IPvX ???
+#include "common/ModuleAccess.h"
 
-#include "EigrpNeighbor.h"
-#include "EigrpDualStack.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNeighbor.h"
+#include "ansa/networklayer/eigrp/EigrpDualStack.h"
 
 /**
  * Class represents EIGRP Neighbor Table.
@@ -77,9 +77,9 @@ class EigrpNeighborTable : public cSimpleModule
 };
 
 //TODO - mozna predelat kontejnery do samostatnych souboru
-//typedef EigrpNeighborTable<IPv4Address> EigrpIpv4NeighborTable;       //IPv6 - ADDED for backward compatibility with old IPv4-only version
+//typedef EigrpNeighborTable<inet::IPv4Address> EigrpIpv4NeighborTable;       //IPv6 - ADDED for backward compatibility with old IPv4-only version
 
-class EigrpIpv4NeighborTable : public EigrpNeighborTable<IPv4Address>
+class EigrpIpv4NeighborTable : public EigrpNeighborTable<inet::IPv4Address>
 {
 //container class for IPv4NT, must exist because of Define_Module()
 public:
@@ -87,16 +87,16 @@ public:
 };
 
 
-class INET_API Eigrpv4NeighTableAccess : public ModuleAccess<EigrpIpv4NeighborTable>
+class INET_API Eigrpv4NeighTableAccess : public inet::ModuleAccess<EigrpIpv4NeighborTable>
 {
     public:
-    Eigrpv4NeighTableAccess() : ModuleAccess<EigrpIpv4NeighborTable>("eigrpIpv4NeighborTable") {}
+    Eigrpv4NeighTableAccess() : inet::ModuleAccess<EigrpIpv4NeighborTable>("eigrpIpv4NeighborTable") {}
 };
 
 
 
 #ifndef DISABLE_EIGRP_IPV6
-class EigrpIpv6NeighborTable : public EigrpNeighborTable<IPv6Address>
+class EigrpIpv6NeighborTable : public EigrpNeighborTable<inet::IPv6Address>
 {
 //container class for IPv6NT, must exist because of Define_Module()
 public:
@@ -104,10 +104,10 @@ public:
 };
 
 
-class INET_API Eigrpv6NeighTableAccess : public ModuleAccess<EigrpIpv6NeighborTable>
+class INET_API Eigrpv6NeighTableAccess : public inet::ModuleAccess<EigrpIpv6NeighborTable>
 {
     public:
-    Eigrpv6NeighTableAccess() : ModuleAccess<EigrpIpv6NeighborTable>("eigrpIpv6NeighborTable") {}
+    Eigrpv6NeighTableAccess() : inet::ModuleAccess<EigrpIpv6NeighborTable>("eigrpIpv6NeighborTable") {}
 };
 #endif /* DISABLE_EIGRP_IPV6 */
 

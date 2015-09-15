@@ -20,10 +20,10 @@
 
 package inet.ansa.linklayer.ethernet;
 
-import inet.base.IHook;
-import inet.linklayer.IEtherMAC;
-import inet.linklayer.IWiredNic;
-import inet.linklayer.ITrafficConditioner;
+import inet.common.IHook;
+import inet.linklayer.contract.IEtherMAC;
+import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.ITrafficConditioner;
 import inet.linklayer.ethernet.EtherQoSQueue;
 import inet.linklayer.ethernet.EtherEncap;
 

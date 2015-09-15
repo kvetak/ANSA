@@ -12,39 +12,38 @@
 // See the GNU Lesser General Public License for more details.
 //
 
-#include "Utils.h"
-#include "IntServ.h"
+#include "networklayer/rsvp_te/Utils.h"
+#include "networklayer/rsvp_te/IntServ.h"
 
+namespace inet {
 
-std::string vectorToString(IPAddressVector vec)
+std::string vectorToString(const IPAddressVector& vec)
 {
     return vectorToString(vec, ", ");
 }
 
-std::string vectorToString(IPAddressVector vec, const char *delim)
-{
-  std::ostringstream stream;
-  for (unsigned int i = 0; i < vec.size(); i++)
-  {
-      stream << vec[i];
-      if (i < vec.size() - 1)
-        stream << delim;
-  }
-  stream << std::flush;
-  std::string str(stream.str());
-  return str;
-}
-
-std::string vectorToString(EroVector vec)
-{
-    return vectorToString(vec, ", ");
-}
-
-std::string vectorToString(EroVector vec, const char *delim)
+std::string vectorToString(const IPAddressVector& vec, const char *delim)
 {
     std::ostringstream stream;
-    for (unsigned int i = 0; i < vec.size(); i++)
-    {
+    for (unsigned int i = 0; i < vec.size(); i++) {
+        stream << vec[i];
+        if (i < vec.size() - 1)
+            stream << delim;
+    }
+    stream << std::flush;
+    std::string str(stream.str());
+    return str;
+}
+
+std::string vectorToString(const EroVector& vec)
+{
+    return vectorToString(vec, ", ");
+}
+
+std::string vectorToString(const EroVector& vec, const char *delim)
+{
+    std::ostringstream stream;
+    for (unsigned int i = 0; i < vec.size(); i++) {
         stream << vec[i].node;
 
         if (i < vec.size() - 1)
@@ -55,32 +54,29 @@ std::string vectorToString(EroVector vec, const char *delim)
     return str;
 }
 
-EroVector routeToEro(IPAddressVector rro)
+EroVector routeToEro(const IPAddressVector& rro)
 {
     EroVector ero;
 
-    for (unsigned int i = 0; i < rro.size(); i++)
-    {
+    for (auto & elem : rro) {
         EroObj_t hop;
         hop.L = false;
-        hop.node = rro[i];
+        hop.node = elem;
         ero.push_back(hop);
     }
 
     return ero;
 }
 
-
 void removeDuplicates(std::vector<int>& vec)
 {
-    for (unsigned int i = 0; i < vec.size(); i++)
-    {
+    for (unsigned int i = 0; i < vec.size(); i++) {
         unsigned int j;
         for (j = 0; j < i; j++)
             if (vec[j] == vec[i])
                 break;
-        if (j < i)
-        {
+
+        if (j < i) {
             vec.erase(vec.begin() + i);
             --i;
         }
@@ -92,30 +88,33 @@ int find(const EroVector& ERO, IPv4Address node)
     for (unsigned int i = 0; i < ERO.size(); i++)
         if (ERO[i].node == node)
             return i;
+
     ASSERT(false);
-    return -1; // to prevent warning
+    return -1;    // to prevent warning
 }
 
 bool find(std::vector<int>& vec, int value)
 {
-    for (unsigned int i = 0; i < vec.size(); i++)
-        if (vec[i] == value)
+    for (auto & elem : vec)
+        if (elem == value)
             return true;
+
     return false;
 }
 
 bool find(const IPAddressVector& vec, IPv4Address addr)
 {
-    for (unsigned int i = 0; i < vec.size(); i++)
-        if (vec[i] == addr)
+    for (auto & elem : vec)
+        if (elem == addr)
             return true;
+
     return false;
 }
 
 void append(std::vector<int>& dest, const std::vector<int>& src)
 {
-    for (unsigned int i = 0; i < src.size(); i++)
-        dest.push_back(src[i]);
+    for (auto & elem : src)
+        dest.push_back(elem);
 }
 
 cModule *getPayloadOwner(cPacket *msg)
@@ -124,14 +123,14 @@ cModule *getPayloadOwner(cPacket *msg)
         msg = msg->getEncapsulatedPacket();
 
     if (msg->hasPar("owner"))
-        return simulation.getModule(msg->par("owner"));
+        return getSimulation()->getModule(msg->par("owner"));
     else
-        return NULL;
+        return nullptr;
 }
 
 /*
-void prepend(EroVector& dest, const EroVector& src, bool reverse)
-{
+   void prepend(EroVector& dest, const EroVector& src, bool reverse)
+   {
     ASSERT(dest.size() > 0);
     ASSERT(src.size() > 0);
 
@@ -145,8 +144,8 @@ void prepend(EroVector& dest, const EroVector& src, bool reverse)
 
         dest.insert(dest.begin(), src[n]);
     }
-}
-*/
+   }
+ */
 
-
+} // namespace inet
 

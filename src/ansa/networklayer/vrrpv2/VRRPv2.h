@@ -22,7 +22,7 @@
 #define __ANSA_VRRPV2_H_
 
 #include <omnetpp.h>
-#include "VRRPv2VirtualRouter.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2VirtualRouter.h"
 
 /**
  * The VRRPv2 class represents a communication gateway with VRRPv2modules modules.

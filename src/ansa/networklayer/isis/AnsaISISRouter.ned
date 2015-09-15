@@ -23,18 +23,19 @@ import inet.ansa.networklayer.clns.CLNSTable;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 //import inet.ansa.ethernet.AnsaEthernetInterface;
 import inet.linklayer.ethernet.EthernetInterface;
-import inet.linklayer.IWiredNic;
+import inet.linklayer.contract.IWiredNic;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 //import inet.ansa.IPGen.AnsaIPTrafGen;
 //import inet.ansa.ipv6.AnsaRoutingTable6;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 
+import inet.linklayer.loopback.LoopbackInterface;
 //import inet.ansa.ppp.PPPInterface;
 import inet.linklayer.ppp.PPPInterface;
 //import inet.ansa.routingTable.AnsaInterfaceTable;
 import inet.networklayer.common.InterfaceTable;
 //import inet.ansa.routingTable.AnsaRoutingTable; //it has configFile parameter
-import inet.networklayer.ipv4.RoutingTable;
+import inet.networklayer.ipv4.IPv4RoutingTable;
 
 //import inet.ansa.AnsaNetworkLayer;
 
@@ -43,9 +44,9 @@ import inet.networklayer.ipv4.RoutingTable;
 
 import inet.applications.pingapp.PingApp;
 import inet.base.NotificationBoard;
-import inet.networklayer.ipv6.RoutingTable6;
-import inet.nodes.inet.NetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv6.IPv6RoutingTable;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 
 module AnsaISISRouter
 {
@@ -98,10 +99,10 @@ module AnsaISISRouter
         //                configFile = configFile;
         //                @display("p=323,42");
         //        }
-        routingTable: RoutingTable {
+        routingTable: IPv4RoutingTable {
             parameters:
                 @display("p=154,115");
-                IPForward = true;
+                forwarding = true;
                 routerId = deviceId;
 
         }
@@ -110,7 +111,7 @@ module AnsaISISRouter
         //                isRouter = true;
         //                @display("p=395,42");
         //        }
-        routingTable6: RoutingTable6 {
+        routingTable6: IPv6RoutingTable {
             parameters:
                 @display("p=257,115");
                 isRouter = IPForward;
@@ -148,6 +149,9 @@ module AnsaISISRouter
                 lowerLayerIn[sizeof(pppg)+sizeof(ethg)];
                 lowerLayerOut[sizeof(pppg)+sizeof(ethg)];
         }
+        lo0: LoopbackInterface {
+            @display("p=51,286");
+        }
     connections allowunconnected:
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
@@ -173,6 +177,8 @@ module AnsaISISRouter
             ipSplitter.isisOut[i] --> isis.lowerLayerIn[i];
             ipSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
         }
+        lo0.upperLayerOut --> ipSplitter.ipv4In[0];
+        ipSplitter.ipv4Out[0] --> lo0.upperLayerIn;
 }
 
 

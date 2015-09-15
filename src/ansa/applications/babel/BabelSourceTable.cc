@@ -19,7 +19,7 @@
 * @detail Represents data structure for saving feasible distances
 */
 
-#include <BabelSourceTable.h>
+#include "ansa/applications/babel/BabelSourceTable.h"
 
 using namespace Babel;
 
@@ -76,7 +76,7 @@ BabelSourceTable::~BabelSourceTable()
     removeSources();
 }
 
-BabelSource *BabelSourceTable::findSource(const netPrefix<IPvXAddress>& p, const rid& orig)
+BabelSource *BabelSourceTable::findSource(const netPrefix<inet::L3Address>& p, const rid& orig)
 {
     std::vector<BabelSource *>::iterator it;
 

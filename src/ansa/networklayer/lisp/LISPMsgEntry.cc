@@ -19,10 +19,10 @@
  */
 
 
-#include <LISPMsgEntry.h>
+#include "ansa/networklayer/lisp/LISPMsgEntry.h"
 
 LISPMsgEntry::LISPMsgEntry(
-        LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, IPvXAddress addr, simtime_t processed, bool fl, int64 siz) :
+        LISPMsgEntry::EMsgType ntyp, unsigned long nnonce, inet::L3Address addr, simtime_t processed, bool fl, int64 siz) :
         type(ntyp), nonce(nnonce), address(addr), processedAt(processed), flag(fl), msgsize(siz)
 {
 }
@@ -104,11 +104,11 @@ std::string LISPMsgEntry::getTypeString() const {
     }
 }
 
-const IPvXAddress& LISPMsgEntry::getAddress() const {
+const inet::L3Address& LISPMsgEntry::getAddress() const {
     return address;
 }
 
-void LISPMsgEntry::setAddress(const IPvXAddress& destination) {
+void LISPMsgEntry::setAddress(const inet::L3Address& destination) {
     this->address = destination;
 }
 

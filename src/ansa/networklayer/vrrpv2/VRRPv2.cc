@@ -19,11 +19,11 @@
 * @detail
 */
 
-#include "VRRPv2.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2.h"
 
-#include "VirtualForwarder.h"
-#include "deviceConfigurator.h"
-#include "VRRPv2VirtualRouter.h"
+#include "ansa/networklayer/common/VirtualForwarder.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2VirtualRouter.h"
 
 Define_Module(VRRPv2);
 
@@ -42,7 +42,7 @@ void VRRPv2::initialize(int stage)
     if (stage == 0)
     {
         // get the hostname
-        cModule *containingMod = findContainingNode(this);
+        cModule *containingMod = inet::findContainingNode(this);
         if (containingMod)
             hostname = containingMod->getFullName();
         else
@@ -56,7 +56,7 @@ void VRRPv2::initialize(int stage)
     updateDisplayString();
 
     // read the VRRP groups configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    DeviceConfigurator *devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     devConf->loadVRRPv2Config(this);
 
 
@@ -112,7 +112,7 @@ void VRRPv2::handleMessage(cMessage *msg)
 
             for (int i = 0; i < (int) virtualRouterTable.size(); i++)
                 if (virtualRouterTable.at(i)->getVrid() == advert->getVrid() &&
-                        ((IPv4ControlInfo *) msg->getControlInfo())->getInterfaceId() ==
+                        ((inet::IPv4ControlInfo *) msg->getControlInfo())->getInterfaceId() ==
                                 virtualRouterTable.at(i)->getInterface()->getInterfaceId()
                 )
                 {

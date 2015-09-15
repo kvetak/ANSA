@@ -24,11 +24,11 @@ package inet.ansa.nodes.inet;
 import inet.networklayer.ipv4.IIGMP;
 import inet.networklayer.ipv4.ICMP;
 import inet.networklayer.ipv4.ErrorHandling;
-import inet.networklayer.arp.ARP;
+import inet.networklayer.arp.ipv4.ARP;
 
 //Ansa includes
 import inet.ansa.networklayer.ipv4.AnsaIPv4;
-import inet.nodes.inet.NetworkLayer;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
 import inet.ansa.networklayer.pim.tables.PimInterfaceTable;
 import inet.ansa.networklayer.arp.AnsaARP;
 
@@ -145,7 +145,7 @@ module ansaNetworkLayer
 
         icmp.errorOut --> errorHandling.in;
 
-        ip.queueOut --> arp.ipIn;
+        ip.queueOut[i] --> arp.ipIn;
 
         igmp.routerOut --> igmpOut;
         igmp.routerIn <-- igmpIn;

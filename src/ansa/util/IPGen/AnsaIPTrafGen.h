@@ -24,7 +24,7 @@
 #include <vector>
 #include <omnetpp.h>
 
-#include "IPvXAddress.h"
+#include "networklayer/common/L3Address.h"
 
 
 /**
@@ -54,14 +54,14 @@ class INET_API AnsaIPTrafGen : public AnsaIPTrafSink
     int protocol;
     int msgByteLength;
     int numPackets;
-    std::vector<IPvXAddress> destAddresses;
+    std::vector<inet::L3Address> destAddresses;
 
     static int counter; // counter for generating a global number for each packet
 
     int numSent;
 
     // chooses random destination address
-    virtual IPvXAddress chooseDestAddr();
+    virtual inet::L3Address chooseDestAddr();
     virtual void sendPacket();
 
   protected:

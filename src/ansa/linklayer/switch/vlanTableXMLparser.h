@@ -10,7 +10,7 @@
 
 #include <omnetpp.h>
 #include <string>
-#include "vlanTable.h"
+#include "ansa/linklayer/switch/vlanTable.h"
 
 
 class INET_API VLANTableXMLparser {

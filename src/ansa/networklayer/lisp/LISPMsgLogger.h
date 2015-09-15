@@ -23,8 +23,8 @@
 #define LISPMSGLOGGER_H_
 
 #include <omnetpp.h>
-#include "LISPMsgEntry.h"
-#include "LISPMessages_m.h"
+#include "ansa/networklayer/lisp/LISPMsgEntry.h"
+#include "ansa/networklayer/lisp/LISPMessages_m.h"
 
 typedef std::list<LISPMsgEntry> MessageLog;
 typedef MessageLog::iterator MsgItem;
@@ -35,7 +35,7 @@ class LISPMsgLogger: public cSimpleModule {
     LISPMsgLogger();
     virtual ~LISPMsgLogger();
 
-    void addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, IPvXAddress addr, bool flag);
+    void addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, inet::L3Address addr, bool flag);
     LISPMsgEntry* findMsg(LISPMsgEntry::EMsgType type, unsigned long nonce);
     MessageLog& getMsgLogger();
 

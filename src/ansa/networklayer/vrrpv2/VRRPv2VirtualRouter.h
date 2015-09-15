@@ -23,13 +23,13 @@
 
 #include <omnetpp.h>
 
-#include "AnsaARP.h"
-#include "NotificationBoard.h"
-#include "IInterfaceTable.h"
-#include "AnsaInterfaceEntry.h"
-#include "IPv4Address.h"
-#include "MACAddress.h"
-#include "VRRPv2Advertisement_m.h"
+#include "ansa/networklayer/arp/AnsaARP.h"
+#include "base/NotificationBoard.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "linklayer/common/MACAddress.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2Advertisement_m.h"
 
 
 class VRRPv2VirtualRouter : public cSimpleModule
@@ -79,21 +79,21 @@ class VRRPv2VirtualRouter : public cSimpleModule
         VRRPState   state;
 
         const char*         hostname;
-        IInterfaceTable     *ift;
+        inet::IInterfaceTable     *ift;
         AnsaInterfaceEntry  *ie;
         AnsaARP             *arp;
         VirtualForwarder    *vf;
 
-        IPv4Address multicastIP;
-        MACAddress  virtualMAC;
+        inet::IPv4Address multicastIP;
+        inet::MACAddress  virtualMAC;
         VRRPArpType arpType;
         bool        own;
         std::string description;
         double      arpDelay;
 
         int         vrid;
-        IPv4Address IPprimary;
-        std::vector<IPv4Address> IPsecondary;
+        inet::IPv4Address IPprimary;
+        std::vector<inet::IPv4Address> IPsecondary;
         int         version;
         int         priority;
         int         protocol;
@@ -123,14 +123,14 @@ class VRRPv2VirtualRouter : public cSimpleModule
         /** @name Field setters */
         //@{
         virtual void setArp(int a) { arpType = (enum VRRPArpType) a; };
-        virtual void setIPPrimary(IPv4Address addr) { IPprimary = addr; };
+        virtual void setIPPrimary(inet::IPv4Address addr) { IPprimary = addr; };
         virtual void setIPPrimary(const char* addr) { IPprimary.set(addr); };
         virtual void setPriority(int p) { priority = p; };
         virtual void setPreemtion(bool p) { preemtion = p; };
         virtual void setLearn(bool l) { learn = l; }
         virtual void setAdvertisement(int advert) { advertisementInterval = advert; };
-        virtual void addIPSecondary(IPv4Address addr) { IPsecondary.push_back(addr); };
-        virtual void addIPSecondary(const char* addr) { IPsecondary.push_back(IPv4Address(addr)); };
+        virtual void addIPSecondary(inet::IPv4Address addr) { IPsecondary.push_back(addr); };
+        virtual void addIPSecondary(const char* addr) { IPsecondary.push_back(inet::IPv4Address(addr)); };
         virtual void setDescription(std::string d) { description = d; };
         virtual void setPreemtionDelay(int d) { preemtionDelay = true; preemTimerInit = d; }
         //@}
@@ -138,8 +138,8 @@ class VRRPv2VirtualRouter : public cSimpleModule
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
         //@{
         virtual AnsaInterfaceEntry* getInterface() { return ie; };
-        IPv4Address getPrimaryIP() { return IPprimary; };
-        MACAddress getVirtualMAC() { return virtualMAC; }
+        inet::IPv4Address getPrimaryIP() { return IPprimary; };
+        inet::MACAddress getVirtualMAC() { return virtualMAC; }
         int getVrid() const { return vrid; };
         int getArp() { return arpType; };
         int getPriority() { return priority; };
@@ -172,7 +172,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
          * @param address
          * @return
          */
-        virtual uint16_t getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<IPv4Address> address);
+        virtual uint16_t getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<inet::IPv4Address> address);
 
 
     protected:
@@ -289,7 +289,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
         virtual std::string debugEvent() const;
         virtual std::string debugStateMachine(std::string from, std::string to) const;
         virtual std::string debugPacketMaster(uint16_t checksum) const;
-        virtual std::string debugPacketBackup(int priority, IPv4Address ipaddr) const;
+        virtual std::string debugPacketBackup(int priority, inet::IPv4Address ipaddr) const;
         //@}
 };
 

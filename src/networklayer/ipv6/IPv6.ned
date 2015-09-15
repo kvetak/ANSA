@@ -35,34 +35,25 @@ package inet.networklayer.ipv6;
 // an ~IPv6ControlInfo to the packet, with the source and destination IPv6 address,
 // etc. of the IPv6 datagram in which the packet arrived.
 //
-// ~IPv6 can serve several higher-layer protocols. When delivering packets
-// to them, the output gate is determined from the Protocol field in the
-// IPv6 datagram class. The protocol-to-gateindex mapping must be given
-// in the protocolMapping string parameter, in the following format:
-// <pre>
-// protocolnumber:gateindex, protocolnumber:gateindex, ...
-// </pre>
-//
-// The recommended setting is:
-// - TCP (6) : 0
-// - UDP (17) : 1
-// - RSVP (46) : 2
-// - ICMPv6 (89) : 3
-//
-// That is, <tt>protocolMapping="6:0,17:1,46:2,89:3"</tt>
+// ~IPv6 can serve several higher-layer protocols. The higher layer protocols should
+// send one or more RegisterProtocol message (a simple cMessage with
+// ~IPRegisterProtocolCommand controlinfo and kind=IP_C_REGISTER_PROTOCOL)
+// to IPv4 module, for fill up the protocol-to-gateindex map.
+// When delivering packets to them, the output gate is determined from the Protocol
+// field in the IPv6 header.
 //
 // <b>Routing and interfacing with lower layers</b>
 //
-// The routing table is stored in the module ~RoutingTable6. When a datagram
-// needs to be routed, IPv6 queries ~RoutingTable6 for the output interface
+// The routing table is stored in the module ~IPv6RoutingTable. When a datagram
+// needs to be routed, IPv6 queries ~IPv6RoutingTable for the output interface
 // (or "port") and next hop address of the packet. This is done by directly
-// calling C++ methods of ~RoutingTable6. No message exchange with ~RoutingTable6
+// calling C++ methods of ~IPv6RoutingTable. No message exchange with ~IPv6RoutingTable
 // takes place.
 //
 //#FIXME TBD describe operation
 //
 // Routing protocol implementations can also query and manipulate the route table
-// by calling ~RoutingTable6's methods in C++.
+// by calling ~IPv6RoutingTable's methods in C++.
 //
 // <b>Performance model, QoS</b>
 //
@@ -70,23 +61,26 @@ package inet.networklayer.ipv6;
 // datagrams are processed in order. The processing time is determined by the
 // procDelay module parameter.
 //
-// @see ~RoutingTable6, ~IPv6ControlInfo, ~IPv6NeighbourDiscovery, ~ICMPv6
+// @see ~IPv6RoutingTable, ~IPv6ControlInfo, ~IPv6NeighbourDiscovery, ~ICMPv6
 //
 // @author Andras Varga
 //
 simple IPv6
 {
     parameters:
+        string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;
+        string ipv6NeighbourDiscoveryModule;
+        string icmpv6Module;
+        string ipv6TunnelingModule;
         double procDelay @unit("s") = default(0s);
-        string protocolMapping;
         @display("i=block/network2");
+		string protocolMapping;
     gates:
         input transportIn[] @labels(IPv6ControlInfo/down,TCPSegment,UDPPacket);
         output transportOut[] @labels(IPv6ControlInfo/up,TCPSegment,UDPPacket);
         input queueIn[] @labels(IPv6Datagram);
         output queueOut[] @labels(IPv6Datagram);
-        input icmpIn;
-        output icmpOut;
         input ndIn;
         output ndOut;
         // tunneling gates - CB
@@ -98,6 +92,9 @@ simple IPv6
         input xMIPv6In;
         output xMIPv6Out;
         
+        //added by Michal Ruprich 24.08.15
+        input icmpIn;
+        output icmpOut;
         input lispIn;
         output lispOut;
 }

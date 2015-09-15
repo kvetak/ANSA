@@ -22,19 +22,20 @@
 
 //  Cleanup and rewrite: Andras Varga, 2004
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ModuleAccess.h"
-#include "IRoutingTable.h"
+#include "common/ModuleAccess.h"
+#include "networklayer/contract/IRoutingTable.h"
+#include "networklayer/ipv4/RoutingTableAccess.h"
 
 
 /**
  * Gives access to the IRoutingTable.
  */
-class INET_API RoutingTableAccess : public ModuleAccess<IRoutingTable>
+class INET_API RoutingTableAccess : public inet::ModuleAccess<inet::IRoutingTable>
 {
     public:
-        RoutingTableAccess() : ModuleAccess<IRoutingTable>("routingTable") {}
+        RoutingTableAccess() : inet::ModuleAccess<inet::IRoutingTable>("routingTable") {}
 };
 
 #endif

@@ -19,8 +19,8 @@
 * @detail Represents RIPng interface
 */
 
-#include "RIPngInterface.h"
-#include "RIPngProcess.h"
+#include "ansa/applications/ripng/RIPngInterface.h"
+#include "ansa/applications/ripng/RIPngProcess.h"
 
 namespace RIPng
 {

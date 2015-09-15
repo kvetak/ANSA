@@ -17,8 +17,8 @@ package inet.examples.ansa.rBridge.multidest;
 
 import inet.ansa.RBridge;
 import inet.ansa.nodes.inet.AnsaHost;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 //
 // TODO Auto-generated network

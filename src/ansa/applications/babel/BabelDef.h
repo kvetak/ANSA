@@ -25,11 +25,13 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "IPvXAddress.h"
 #include "cmessage.h"
 #include "simtime_t.h"
+#include "networklayer/common/L3Address.h"
 
-#include "BabelMessage_m.h"
+
+
+#include "ansa/applications/babel/BabelMessage_m.h"
 
 //#define BABEL_DEBUG     // Print debug informations
 //#define NDEBUG        // Disable ASSERTs
@@ -43,8 +45,8 @@ const uint8_t MAGIC = 42;
 const uint8_t VERSION = 2;
 
 const int PORT = 6696;
-const IPvXAddress MCASTG6 = IPv6Address("ff02::1:6");
-const IPvXAddress MCASTG4 = IPv4Address("224.0.0.111");
+const inet::L3Address MCASTG6 = inet::IPv6Address("ff02::1:6");
+const inet::L3Address MCASTG4 = inet::IPv4Address("224.0.0.111");
 
 //Default intervals (in CENTIseconds!!!)
 const uint16_t HELLO_INTERVAL_CS = 400;
@@ -91,14 +93,14 @@ inline int bitsToBytesLen(T plen)
     return static_cast<int>(ceil(static_cast<double>(plen) / 8.0));
 }
 
-int getAeOfAddr(const IPvXAddress& addr);
-int getAeOfPrefix(const IPvXAddress& prefix);
+int getAeOfAddr(const inet::L3Address& addr);
+int getAeOfPrefix(const inet::L3Address& prefix);
 
-int copyRawAddr(const IPv4Address& addr, char *dst, uint8_t *aedst=NULL);
-int copyRawAddr(const IPv6Address& addr, char *dst, uint8_t *aedst=NULL);
-int copyRawAddr(const IPvXAddress& addr, char *dst, uint8_t *aedst=NULL);
+int copyRawAddr(const inet::IPv4Address& addr, char *dst, uint8_t *aedst=NULL);
+int copyRawAddr(const inet::IPv6Address& addr, char *dst, uint8_t *aedst=NULL);
+int copyRawAddr(const inet::L3Address& addr, char *dst, uint8_t *aedst=NULL);
 
-IPvXAddress readRawAddr(uint8_t ae, char *src);
+inet::L3Address readRawAddr(uint8_t ae, char *src);
 
 //uint16_t computeRxcostKoutofj(uint16_t history, uint16_t nominalrxcost, unsigned int k=2, unsigned int j=3);
 //uint16_t koutofj(uint16_t history, uint16_t nominalrxcost, uint16_t txcost, unsigned int k=2, unsigned int j=3);
@@ -123,7 +125,7 @@ const double SEND_URGENT = 0.2;         ///< Send TLV with short buffering
 const double SEND_BUFFERED = DBL_MAX;   ///< Send TLV with buffering
 
 
-inline bool isLinkLocal64(const IPv6Address& addr)
+inline bool isLinkLocal64(const inet::IPv6Address& addr)
 {
     return (addr.words()[0] == LINK_LOCAL_PREFIX && addr.words()[1] == 0);
 }
@@ -325,7 +327,7 @@ public:
         id[1] = l;
     }
 
-    rid(const IPv6Address& a)
+    rid(const inet::IPv6Address& a)
     {
         id[0] = a.words()[2];
         id[1] = a.words()[3];
@@ -361,7 +363,7 @@ public:
     std::string str() const;
     const uint32_t* getRid() const {return id;}
     void setRid(uint32_t h, uint32_t l) {id[0] = h; id[1] = l;}
-    void setRid(const IPv6Address& a) {id[0] = a.words()[2]; id[1] = a.words()[3];}
+    void setRid(const inet::IPv6Address& a) {id[0] = a.words()[2]; id[1] = a.words()[3];}
 };
 
 

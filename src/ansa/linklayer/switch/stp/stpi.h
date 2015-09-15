@@ -8,15 +8,15 @@
 #ifndef STPI_H_
 #define STPI_H_
 
-#include "MACAddress.h"
-#include "macTable.h"
-#include "STPBPDU_m.h"
-#include "STPTCN_m.h"
+#include "linklayer/common/MACAddress.h"
+#include "ansa/linklayer/switch/macTable.h"
+#include "ansa/linklayer/switch/stp/STPBPDU_m.h"
+#include "ansa/linklayer/switch/stp/STPTCN_m.h"
 
 
 class stpi {
 public:
-	stpi(unsigned int _vlan, unsigned int portCount, MACAddress _bridgeAddress, MACTable * _addrTable);
+	stpi(unsigned int _vlan, unsigned int portCount, inet::MACAddress _bridgeAddress, MACTable * _addrTable);
 	virtual ~stpi();
 
 	/* WARNING SEND HACK */
@@ -65,10 +65,10 @@ public:
 		/* discovered values */
 		unsigned int rootPathCost;
 		unsigned int rootPriority;
-		MACAddress rootID;
+		inet::MACAddress rootID;
 
 		unsigned int bridgePriority;
-		MACAddress bridgeID;
+		inet::MACAddress bridgeID;
 
 		unsigned int portPriority; // of designated bridge
 		unsigned int portID;
@@ -122,7 +122,7 @@ public:
     void tryRoot();
     /* compare two BridgeIDs (resp. PortID), positive -- first is the superior, zero -- same ID,
      * and negative -- first is inferior */
-    int superiorID(unsigned int, MACAddress, unsigned int, MACAddress);
+    int superiorID(unsigned int, inet::MACAddress, unsigned int, inet::MACAddress);
     int superiorPort(unsigned int, unsigned int, unsigned int, unsigned int);
     /* comparsion of all IDs in tPort structure */
     int superiorTPort(tPort, tPort);
@@ -150,13 +150,13 @@ public:
 
 	unsigned int portCount;
 
-	MACAddress bridgeAddress;
+	inet::MACAddress bridgeAddress;
 	unsigned int bridgePriority;
 
 	/* discovered values */
 	unsigned int rootPathCost;
 	unsigned int rootPriority;
-	MACAddress rootID;
+	inet::MACAddress rootID;
 
 	/* SET BY MGMT */
 	unsigned int maxAge;

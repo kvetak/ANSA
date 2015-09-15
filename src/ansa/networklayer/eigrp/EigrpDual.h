@@ -18,10 +18,10 @@
 
 #include <omnetpp.h>
 
-#include "IPv4Address.h"
-#include "EigrpRoute.h"
-#include "IEigrpPdm.h"
-#include "EigrpDualStack.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "ansa/networklayer/eigrp/tables/EigrpRoute.h"
+#include "ansa/networklayer/eigrp/pdms/IEigrpPdm.h"
+#include "ansa/networklayer/eigrp/EigrpDualStack.h"
 
 /**
  * Class represents DUAL automaton.

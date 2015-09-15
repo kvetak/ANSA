@@ -18,10 +18,13 @@
 // Required for MACAddress declarations
 //
 cplusplus {{
-#include "Ieee80211MgmtFrames_m.h"
+#include "inet/linklayer/ieee80211/mgmt/Ieee80211MgmtFrames_m.h"
 }}
 
 class noncobject MACAddress;
+
+namespace inet::ieee80211;
+
 
 class noncobject Ieee80211SupportedRatesElement;
 
@@ -99,7 +102,7 @@ class Ieee80211PrimRequest
 //
 class Ieee80211PrimConfirm
 {
-    int resultCode enum(Ieee80211PrimResultCode);
+    int resultCode @enum(Ieee80211PrimResultCode);
 }
 
 //
@@ -107,11 +110,11 @@ class Ieee80211PrimConfirm
 //
 class Ieee80211Prim_ScanRequest extends Ieee80211PrimRequest
 {
-    int BSSType enum(Ieee80211BSSType); // determines type of BSS's to include in the scan
+    int BSSType @enum(Ieee80211BSSType); // determines type of BSS's to include in the scan
     MACAddress BSSID; // specific BSSID to scan for (default: any)
     string SSID;      // SSID to scan for SSID (default: any)
     bool activeScan;  // whether to perform active or passive scanning
-    simtime_t probeDelay; // delay (in ìs) to be used prior to transmitting a Probe frame during active scanning
+    simtime_t probeDelay; // delay (in ï¿½s) to be used prior to transmitting a Probe frame during active scanning
     int channelList[]; // list of channels to scan (default: all channels)
     simtime_t minChannelTime; // minimum time to spend on each channel when scanning
     simtime_t maxChannelTime; // maximum time to spend on each channel when scanning
@@ -170,7 +173,7 @@ class Ieee80211Prim_AuthenticateConfirm extends Ieee80211PrimConfirm
 class Ieee80211Prim_DeauthenticateRequest extends Ieee80211PrimRequest
 {
     MACAddress address;
-    int reasonCode enum(Ieee80211ReasonCode);
+    int reasonCode @enum(Ieee80211ReasonCode);
 }
 
 //
@@ -215,5 +218,6 @@ class Ieee80211Prim_ReassociateConfirm extends Ieee80211Prim_AssociateConfirm
 class Ieee80211Prim_DisassociateRequest extends Ieee80211PrimRequest
 {
     MACAddress address;
-    int reasonCode enum(Ieee80211ReasonCode);
+    int reasonCode @enum(Ieee80211ReasonCode);
 }
+

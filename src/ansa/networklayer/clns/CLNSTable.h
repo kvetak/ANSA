@@ -26,18 +26,18 @@
 #ifndef CLNSTABLE_H_
 #define CLNSTABLE_H_
 
-//#include "INETDefs.h"
+//#include "common/INETDefs.h"
 
 #include <iomanip>
 #include <csimplemodule.h>
-#include "INotifiable.h"
-#include "NotificationBoard.h"
+#include "base/INotifiable.h"
+#include "base/NotificationBoard.h"
 #include <vector>
-#include "InterfaceTableAccess.h"
-#include "ISIStypes.h" //TODO A2 delete -> this imply reverted dependency
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "ansa/networklayer/isis/ISIStypes.h" //TODO A2 delete -> this imply reverted dependency
 
-class IInterfaceTable;
-class InterfaceEntry;
+class inet::IInterfaceTable;
+class inet::InterfaceEntry;
 
 /* It will get renamed to CLNPRoute or RoutingTable under CLNP */
 
@@ -96,7 +96,7 @@ public:
 class CLNSTable: public cSimpleModule, protected INotifiable {
         friend class CLNSRoute;
 protected:
-    IInterfaceTable *ift; // cached pointer
+    inet::IInterfaceTable *ift; // cached pointer
     NotificationBoard *nb; // cached pointer
     int test;
     std::vector<int> table;

@@ -22,9 +22,9 @@
 #ifndef RIPROUTINGTABLEENTRY_H_
 #define RIPROUTINGTABLEENTRY_H_
 
-#include "AnsaIPv4Route.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4Route.h"
 
-#include "RIPTimer_m.h"
+#include "ansa/applications/rip/RIPTimer_m.h"
 
 namespace RIP
 {
@@ -35,7 +35,7 @@ namespace RIP
 class RoutingTableEntry : public ANSAIPv4Route
 {
   public:
-    RoutingTableEntry(IPv4Address network, IPv4Address netMask);
+    RoutingTableEntry(inet::IPv4Address network, inet::IPv4Address netMask);
     RoutingTableEntry(RoutingTableEntry& entry);
     virtual ~RoutingTableEntry();
 

@@ -19,11 +19,11 @@
 * @detail RIPng module, handles RIPng processes, adds/removes processes, sets parameters to processes.
 */
 
-#include "IPv6InterfaceData.h"
+#include "networklayer/ipv6/IPv6InterfaceData.h"
 
-#include "RIPngRouting.h"
-#include "RIPngProcess.h"
-#include "deviceConfigurator.h"
+#include "ansa/applications/ripng/RIPngRouting.h"
+#include "ansa/applications/ripng/RIPngProcess.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
 
 Define_Module(RIPngRouting);
 
@@ -96,14 +96,14 @@ RIPng::Interface *RIPngRouting::enableRIPngOnInterface(const char *processName, 
 
     ev << "   Enabling RIPng on " << interfaceName << routerText << endl;
 
-    InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
+    inet::InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
     if (interface == NULL)
         return NULL;
 
     return enableRIPngOnInterface(process, interface);
 }
 
-RIPng::Interface *RIPngRouting::enableRIPngOnInterface(RIPngProcess *process, InterfaceEntry *interface)
+RIPng::Interface *RIPngRouting::enableRIPngOnInterface(RIPngProcess *process, inet::InterfaceEntry *interface)
 {
     ASSERT(process != NULL);
 
@@ -172,7 +172,7 @@ void RIPngRouting::moveInterfaceToSocket(RIPng::Interface *interface, int port)
     Sockets::iterator it = sockets.find(SocketsKey(interfaceId, port));
     if (it == sockets.end())
     {
-        UDPSocket socket;
+        inet::UDPSocket socket;
         socket.setOutputGate(gate("udpOut"));
         socket.setReuseAddress(true);
         //so every RIPng message sent from RIPng interface uses correct link-local source address
@@ -257,7 +257,7 @@ void RIPngRouting::removeProcess(const char *processName)
     }
 }
 
-void RIPngRouting::moveProcessToSocket(RIPngProcess *process, int oldPort, int port, IPv6Address &multicastAddress)
+void RIPngRouting::moveProcessToSocket(RIPngProcess *process, int oldPort, int port, inet::IPv6Address &multicastAddress)
 {
     GlobalSockets::iterator it;
     if (oldPort != -1)
@@ -313,14 +313,17 @@ void RIPngRouting::moveProcessToSocket(RIPngProcess *process, int oldPort, int p
 //-- MESSAGES HANDLING
 //
 //
-void RIPngRouting::sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, int interfaceId, bool globalSourceAddress)
+void RIPngRouting::sendMessage(RIPngMessage *msg, inet::IPv6Address &addr, int port, int interfaceId, bool globalSourceAddress)
 {
+    inet::UDPSocket::SendOptions options;
+    options.outInterfaceId = interfaceId;
+
     if (globalSourceAddress)
     {// "uses" global-unicast address as the source address
         GlobalSockets::iterator it = globalSockets.find(port);
         if (it != globalSockets.end())
         {
-            it->second->socket.sendTo(msg, addr, port, interfaceId);
+            it->second->socket.sendTo(msg, addr, port, &options);
         }
     }
     else
@@ -328,17 +331,17 @@ void RIPngRouting::sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, i
         Sockets::iterator it = sockets.find(SocketsKey(interfaceId, port));
         if (it != sockets.end())
         {
-            it->second->socket.sendTo(msg, addr, port, interfaceId);
+            it->second->socket.sendTo(msg, addr, port, &options);
         }
     }
 }
 
 void RIPngRouting::forwardRIPngMessage(RIPngMessage *msg)
 {
-    UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
+    inet::UDPDataIndication *controlInfo = check_and_cast<inet::UDPDataIndication *>(msg->getControlInfo());
     int sourceInterfaceId = controlInfo->getInterfaceId();
     int destPort = controlInfo->getDestPort();
-    const IPv6Address &destAddr = controlInfo->getDestAddr().get6();
+    const inet::IPv6Address &destAddr = controlInfo->getDestAddr().toIPv6();
 
     Sockets::iterator it = sockets.find(SocketsKey(sourceInterfaceId, destPort));
     if (it != sockets.end())
@@ -366,14 +369,14 @@ void RIPngRouting::forwardRIPngMessage(RIPngMessage *msg)
 //-- COMMANDS
 //
 //
-void RIPngRouting::setPortAndAddress(const char *processName, int port, IPv6Address &address)
+void RIPngRouting::setPortAndAddress(const char *processName, int port, inet::IPv6Address &address)
 {
     RIPngProcess *process = getProcess(processName);
     if (process != NULL)
         setPortAndAddress(process, port, address);
 }
 
-void RIPngRouting::setPortAndAddress(RIPngProcess *process, int port, IPv6Address &address)
+void RIPngRouting::setPortAndAddress(RIPngProcess *process, int port, inet::IPv6Address &address)
 {
     int oldPort = process->getRIPngPort();
 
@@ -589,7 +592,7 @@ void RIPngRouting::initialize(int stage)
     ift = InterfaceTableAccess().get();
 
     // get the hostname
-    cModule *containingMod = findContainingNode(this);
+    cModule *containingMod = inet::findContainingNode(this);
     if (!containingMod)
         hostName = "";
     else
@@ -598,7 +601,7 @@ void RIPngRouting::initialize(int stage)
     routerText = " (Router " + hostName + ") ";
 
     const char *RIPngAddressString = par("RIPngAddress");
-    RIPngAddress = IPv6Address(RIPngAddressString);
+    RIPngAddress = inet::IPv6Address(RIPngAddressString);
     RIPngPort = par("RIPngPort");
 
     connNetworkMetric = par("connectedNetworkMetric");
@@ -615,11 +618,11 @@ void RIPngRouting::initialize(int stage)
 
     // subscribe for changes in the device
     nb = NotificationBoardAccess().get();
-    nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-    nb->subscribe(this, NF_IPv6_ROUTE_DELETED);
+    nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+    nb->subscribe(this, inet::NF_IPv6_ROUTE_DELETED);
 
     // read the RIPng process configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    DeviceConfigurator *devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     devConf->loadRIPngConfig(this);
 
     WATCH_PTRVECTOR(processes);
@@ -652,11 +655,11 @@ void RIPngRouting::handleMessage(cMessage *msg)
     {// timers
         forwardRIPngTimer(check_and_cast<RIPngTimer*> (msg));
     }
-    else if (msg->getKind() == UDP_I_DATA)
+    else if (msg->getKind() == inet::UDP_I_DATA)
     {// process incoming message
         forwardRIPngMessage(check_and_cast<RIPngMessage*> (msg));
     }
-    else if (msg->getKind() == UDP_I_ERROR)
+    else if (msg->getKind() == inet::UDP_I_ERROR)
     {
         ev << "Ignoring UDP error report" << endl;
         delete msg;
@@ -676,7 +679,7 @@ void RIPngRouting::receiveChangeNotification(int category, const cObject *detail
        return;
 
    Enter_Method_Silent();
-   printNotificationBanner(category, details);
+   inet::printNotificationBanner(category, details);
 
    //Deliver notification to every process
    int numProcesses = processes.size();

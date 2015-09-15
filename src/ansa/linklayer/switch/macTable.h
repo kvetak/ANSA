@@ -18,9 +18,9 @@
 #define __MACTABLE_H__
 
 
-#include "MACAddress.h"
-#include "Ethernet.h"
-#include "EtherFrame_m.h"
+#include "linklayer/common/MACAddress.h"
+#include "linklayer/ethernet/Ethernet.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
 
 #include <string>
 #include <vector>
@@ -51,7 +51,7 @@ public:
 
   /* enahanced MAC table record */
   typedef struct s_record {
-	  MACAddress addr; // mac address
+	  inet::MACAddress addr; // mac address
 	  simtime_t insert_time; // time of insertion of update for ageing process
 	  tPortList portList; // list of destination ports (multiple ports for group adresses)
 	  tType type; // record type = {static, dynamic, group}
@@ -60,17 +60,17 @@ public:
 
   /* compare structure for std::map */
   struct MAC_compare{
-	  bool operator()(const MACAddress& u1, const MACAddress& u2) const
+	  bool operator()(const inet::MACAddress& u1, const inet::MACAddress& u2) const
 		  {return u1.compareTo(u2) < 0;}
   };
 
   /* table map type */
-  typedef std::map<MACAddress, tRecord, MAC_compare> AddressTable;
+  typedef std::map<inet::MACAddress, tRecord, MAC_compare> AddressTable;
 
   /* PUBLIC METHODS */
-  void update(MACAddress& addr, int port);
-  tSpec getSpec(MACAddress& addr);
-  tPortList& getPorts(MACAddress& addr);
+  void update(inet::MACAddress& addr, int port);
+  tSpec getSpec(inet::MACAddress& addr);
+  tPortList& getPorts(inet::MACAddress& addr);
   void flush();
   void enableFasterAging(); // Aging ~ Ageing by Longman dictionary of contemporary english http://ldoceonline.com/
   void resetAging();
@@ -84,17 +84,17 @@ private:
   /* MGMT */
   void flushAged();
   void removeOldest();
-  void add(MACAddress addr, int port, tType type, tSpec spec);
-  void remove(MACAddress addr);
-  void removePort(MACAddress addr, int port);
-  void addStatic(MACAddress addr, tPortList ports);
+  void add(inet::MACAddress addr, int port, tType type, tSpec spec);
+  void remove(inet::MACAddress addr);
+  void removePort(inet::MACAddress addr, int port);
+  void addStatic(inet::MACAddress addr, tPortList ports);
 
   /* mCast */
-  void addGroup(MACAddress addr, tPortList ports); // TODO B2
-  void addGroupPort(MACAddress addr, int port); // TODO B2
-  void removeGroup(MACAddress addr); // TODO B2
-  void removeGroupPort(MACAddress addr, int port); // TODO B2
-  void alterGroup(MACAddress addr, tPortList ports); // TODO B2
+  void addGroup(inet::MACAddress addr, tPortList ports); // TODO B2
+  void addGroupPort(inet::MACAddress addr, int port); // TODO B2
+  void removeGroup(inet::MACAddress addr); // TODO B2
+  void removeGroupPort(inet::MACAddress addr, int port); // TODO B2
+  void alterGroup(inet::MACAddress addr, tPortList ports); // TODO B2
 
 protected:
 	AddressTable table;

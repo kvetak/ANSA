@@ -16,34 +16,36 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "INETDefs.h"
-#include "IPvXAddress.h"
-#include "IPvXAddressResolver.h"
+#include "common/INETDefs.h"
+#include "networklayer/common/L3Address.h"
+#include "networklayer/common/L3AddressResolver.h"
 
 #ifdef WITH_IPv4
-#include "IPv4Datagram.h"
-#endif
+#include "networklayer/ipv4/IPv4Datagram.h"
+#endif // ifdef WITH_IPv4
 
 #ifdef WITH_IPv6
-#include "IPv6Datagram.h"
-#endif
+#include "networklayer/ipv6/IPv6Datagram.h"
+#endif // ifdef WITH_IPv6
 
 #ifdef WITH_UDP
-#include "UDPPacket.h"
-#endif
+#include "transportlayer/udp/UDPPacket.h"
+#endif // ifdef WITH_UDP
 
 #ifdef WITH_TCP_COMMON
-#include "TCPSegment.h"
-#endif
+#include "transportlayer/tcp_common/TCPSegment.h"
+#endif // ifdef WITH_TCP_COMMON
 
-#include "BehaviorAggregateClassifier.h"
-#include "DiffservUtil.h"
+#include "networklayer/diffserv/BehaviorAggregateClassifier.h"
+#include "networklayer/diffserv/DiffservUtil.h"
+
+namespace inet {
 
 using namespace DiffservUtil;
 
 Define_Module(BehaviorAggregateClassifier);
 
-simsignal_t BehaviorAggregateClassifier::pkClassSignal = SIMSIGNAL_NULL;
+simsignal_t BehaviorAggregateClassifier::pkClassSignal = registerSignal("pkClass");
 
 void BehaviorAggregateClassifier::initialize()
 {
@@ -53,19 +55,17 @@ void BehaviorAggregateClassifier::initialize()
     int numDscps = (int)dscps.size();
     if (numDscps > numOutGates)
         throw cRuntimeError("%s dscp values are given, but the module has only %d out gates",
-                                numDscps, numOutGates);
+                numDscps, numOutGates);
     for (int i = 0; i < numDscps; ++i)
         dscpToGateIndexMap[dscps[i]] = i;
 
     numRcvd = 0;
     WATCH(numRcvd);
-
-    pkClassSignal = registerSignal("pkClass");
 }
 
 void BehaviorAggregateClassifier::handleMessage(cMessage *msg)
 {
-    cPacket *packet = check_and_cast<cPacket*>(msg);
+    cPacket *packet = check_and_cast<cPacket *>(msg);
     numRcvd++;
     int clazz = classifyPacket(packet);
     emit(pkClassSignal, clazz);
@@ -75,10 +75,10 @@ void BehaviorAggregateClassifier::handleMessage(cMessage *msg)
     else
         send(packet, "defaultOut");
 
-    if (ev.isGUI())
-    {
+    if (hasGUI()) {
         char buf[20] = "";
-        if (numRcvd>0) sprintf(buf+strlen(buf), "rcvd:%d ", numRcvd);
+        if (numRcvd > 0)
+            sprintf(buf + strlen(buf), "rcvd:%d ", numRcvd);
         getDisplayString().setTagArg("t", 0, buf);
     }
 }
@@ -86,9 +86,8 @@ void BehaviorAggregateClassifier::handleMessage(cMessage *msg)
 int BehaviorAggregateClassifier::classifyPacket(cPacket *packet)
 {
     int dscp = getDscpFromPacket(packet);
-    if (dscp >= 0)
-    {
-        std::map<int,int>::iterator it = dscpToGateIndexMap.find(dscp);
+    if (dscp >= 0) {
+        auto it = dscpToGateIndexMap.find(dscp);
         if (it != dscpToGateIndexMap.end())
             return it->second;
     }
@@ -97,18 +96,20 @@ int BehaviorAggregateClassifier::classifyPacket(cPacket *packet)
 
 int BehaviorAggregateClassifier::getDscpFromPacket(cPacket *packet)
 {
-    for (; packet; packet = packet->getEncapsulatedPacket())
-    {
+    for ( ; packet; packet = packet->getEncapsulatedPacket()) {
 #ifdef WITH_IPv4
         IPv4Datagram *ipv4Datagram = dynamic_cast<IPv4Datagram *>(packet);
         if (ipv4Datagram)
             return ipv4Datagram->getDiffServCodePoint();
-#endif
+#endif // ifdef WITH_IPv4
 #ifdef WITH_IPv6
         IPv6Datagram *ipv6Datagram = dynamic_cast<IPv6Datagram *>(packet);
         if (ipv6Datagram)
             return ipv6Datagram->getDiffServCodePoint();
-#endif
+#endif // ifdef WITH_IPv6
     }
     return -1;
 }
+
+} // namespace inet
+

@@ -19,7 +19,7 @@
 * @detail Represents RIP interface
 */
 
-#include "RIPInterface.h"
+#include "ansa/applications/rip/RIPInterface.h"
 
 namespace RIP
 {

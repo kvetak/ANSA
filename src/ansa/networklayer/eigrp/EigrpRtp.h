@@ -18,10 +18,10 @@
 
 #include <omnetpp.h>
 
-#include "EigrpMsgReq.h"
-#include "EigrpInterfaceTable.h"
-#include "EigrpNeighborTable.h"
-#include "EigrpDualStack.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMsgReq.h"
+#include "ansa/networklayer/eigrp/tables/EigrpInterfaceTable.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNeighborTable.h"
+#include "ansa/networklayer/eigrp/EigrpDualStack.h"
 
 class EigrpRtp;
 
@@ -132,7 +132,7 @@ class EigrpRtpT : public cSimpleModule
 
 };
 
-class EigrpRtp : public EigrpRtpT<IPv4Address>
+class EigrpRtp : public EigrpRtpT<inet::IPv4Address>
 {
 //container class for IPv4RTP, must exist because of Define_Module()
 public:
@@ -140,7 +140,7 @@ public:
 };
 
 #ifndef DISABLE_EIGRP_IPV6
-class EigrpRtp6 : public EigrpRtpT<IPv6Address>
+class EigrpRtp6 : public EigrpRtpT<inet::IPv6Address>
 {
 //container class for IPv6RTP, must exist because of Define_Module()
 public:

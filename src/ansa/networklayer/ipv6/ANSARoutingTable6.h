@@ -23,18 +23,19 @@
 #ifndef __INET_ANSA_ANSAROUTINGTABLE6_H
 #define __INET_ANSA_ANSAROUTINGTABLE6_H
 
-#include "RoutingTable6.h"
+#include "networklayer/ipv6/IPv6RoutingTable.h"
+#include "networklayer/ipv6/IPv6Route.h"
 
 class IInterfaceTable;
 class InterfaceEntry;
 class ANSARoutingTable6;
 
 /**
- * Extends IPv6Route by administrative distance.
- * TODO: watch this class and changes in INET! - especially IPv6Route class
- * @see IPv6Route
+ * Extends inet::IPv6Route by administrative distance.
+ * TODO: watch this class and changes in INET! - especially inet::IPv6Route class
+ * @see inet::IPv6Route
  */
-class ANSAIPv6Route : public IPv6Route
+class ANSAIPv6Route : public inet::IPv6Route
 {
   public:
 
@@ -80,7 +81,7 @@ class ANSAIPv6Route : public IPv6Route
         dUnknown = 255
     };
 
-    enum ChangeCodes // field codes for changed() - IPv4Route-like
+    enum ChangeCodes // field codes for changed() - inet::IPv4Route-like
     {
         F_NEXTHOP,
         F_IFACE,
@@ -90,7 +91,7 @@ class ANSAIPv6Route : public IPv6Route
     };
 
   protected:
-    IInterfaceTable *ift;     ///< cached pointer
+    inet::IInterfaceTable *ift;     ///< cached pointer
     ANSARoutingTable6 *rt;    ///< the routing table in which this route is inserted, or NULL
     unsigned int  _adminDist;
     /** Should be set if route source is a "routing protocol" **/
@@ -100,7 +101,7 @@ class ANSAIPv6Route : public IPv6Route
     void changedSilent(int fieldCode);
 
   public:
-    ANSAIPv6Route(IPv6Address destPrefix, int length, RouteSrc src);
+    ANSAIPv6Route(inet::IPv6Address destPrefix, int length, RouteSrc src);
 
     /** To be called by the routing table when this route is added or removed from it */
     virtual void setRoutingTable(ANSARoutingTable6 *rt) {this->rt = rt;}
@@ -117,7 +118,7 @@ class ANSAIPv6Route : public IPv6Route
     virtual void setAdminDist(unsigned int adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changed(F_ADMINDIST);} }
     virtual void setRoutingProtocolSource(RoutingProtocolSource routingProtocolSource) {  if (routingProtocolSource != _routingProtocolSource) { _routingProtocolSource = routingProtocolSource; changed(F_ROUTINGPROTSOURCE);} }
     virtual void setInterfaceId(int interfaceId)  { if (interfaceId != _interfaceID) { _interfaceID = interfaceId; changed(F_IFACE);} }
-    virtual void setNextHop(const IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changed(F_NEXTHOP);} }
+    virtual void setNextHop(const inet::IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changed(F_NEXTHOP);} }
     virtual void setMetric(int metric)  { if (metric != _metric) { _metric = metric; changed(F_METRIC);} }
 
     /**
@@ -127,7 +128,7 @@ class ANSAIPv6Route : public IPv6Route
     virtual void setAdminDistSilent(RouteAdminDist adminDist)  { if (adminDist != _adminDist) { _adminDist = adminDist; changedSilent(F_ADMINDIST);} }
     virtual void setRoutingProtocolSourceSilent(RoutingProtocolSource routingProtocolSource) {  if (routingProtocolSource != _routingProtocolSource) { _routingProtocolSource = routingProtocolSource; changedSilent(F_ROUTINGPROTSOURCE);} }
     virtual void setInterfaceIdSilent(int interfaceId)  { if (interfaceId != _interfaceID) { _interfaceID = interfaceId; changedSilent(F_IFACE);} }
-    virtual void setNextHopSilent(const IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changedSilent(F_NEXTHOP);} }
+    virtual void setNextHopSilent(const inet::IPv6Address& nextHop)  {if (nextHop != _nextHop) { _nextHop = nextHop; changedSilent(F_NEXTHOP);} }
     virtual void setMetricSilent(int metric)  { if (metric != _metric) { _metric = metric; changedSilent(F_METRIC);} }
 };
 
@@ -136,7 +137,7 @@ class ANSAIPv6Route : public IPv6Route
  * TODO: watch this class and changes in INET! - especially RoutingTable6 class
  * @see RoutingTable6
  */
-class ANSARoutingTable6 : public RoutingTable6
+class ANSARoutingTable6 : public inet::IPv6RoutingTable
 {
   protected:
     virtual void addRoute(ANSAIPv6Route *route);
@@ -144,12 +145,12 @@ class ANSARoutingTable6 : public RoutingTable6
   public:
     ANSARoutingTable6();
     virtual ~ANSARoutingTable6();
-
+    NotificationBoard* nb;
     /**
      * Finds route with the given prefix and prefix length.
      * @return NULL, if route does not exist
      */
-    virtual IPv6Route *findRoute(const IPv6Address& prefix, int prefixLength);
+    virtual inet::IPv6Route *findRoute(const inet::IPv6Address& prefix, int prefixLength);
 
     /**
      * Finds route with the given prefix, prefix length and nexthop.
@@ -159,7 +160,7 @@ class ANSARoutingTable6 : public RoutingTable6
      * @param   nexthop     Next-hop address
      * @return  If found return pointer to route, otherwise NULL
      */
-    virtual IPv6Route *findRoute(const IPv6Address& prefix, int prefixLength, const IPv6Address& nexthop);
+    virtual inet::IPv6Route *findRoute(const inet::IPv6Address& prefix, int prefixLength, const inet::IPv6Address& nexthop);
 
     /**
      * Prepares routing table for adding new route.
@@ -177,25 +178,25 @@ class ANSARoutingTable6 : public RoutingTable6
      * @return true, if it is safe to add route,
      *         false otherwise
      */
-    virtual bool prepareForAddRoute(IPv6Route *route);
+    virtual bool prepareForAddRoute(inet::IPv6Route *route);
 
-    virtual void addOrUpdateOnLinkPrefix(const IPv6Address& destPrefix, int prefixLength,
+    virtual void addOrUpdateOnLinkPrefix(const inet::IPv6Address& destPrefix, int prefixLength,
                                  int interfaceId, simtime_t expiryTime);
 
-    virtual void addOrUpdateOwnAdvPrefix(const IPv6Address& destPrefix, int prefixLength,
+    virtual void addOrUpdateOwnAdvPrefix(const inet::IPv6Address& destPrefix, int prefixLength,
                                  int interfaceId, simtime_t expiryTime);
 
     /**
      * @see prepareForAddRoute
      */
-    virtual void addStaticRoute(const IPv6Address& destPrefix, int prefixLength,
-                        unsigned int interfaceId, const IPv6Address& nextHop,
+    virtual void addStaticRoute(const inet::IPv6Address& destPrefix, int prefixLength,
+                        unsigned int interfaceId, const inet::IPv6Address& nextHop,
                         int metric = 0);
 
     /**
      * @see prepareForAddRoute
      */
-    virtual void addDefaultRoute(const IPv6Address& raSrcAddr, unsigned int ifID,
+    virtual void addDefaultRoute(const inet::IPv6Address& raSrcAddr, unsigned int ifID,
         simtime_t routerLifetime);
 
     /**
@@ -203,16 +204,16 @@ class ANSARoutingTable6 : public RoutingTable6
      */
     virtual void addRoutingProtocolRoute(ANSAIPv6Route *route);
 
-    /**
-     * Must be reimplemented because of cache handling.
-     */
-    virtual void removeRoute(IPv6Route *route);
+//    /**
+//     * Must be reimplemented because of cache handling.
+//     */
+//    virtual void removeRoute(inet::IPv6Route *route);
 
     /**
      * Same as removeRoute, except route deleted notification is not fired.
      * @see prapareForAddRoute
      */
-    virtual void removeRouteSilent(IPv6Route *route);
+    virtual void removeRouteSilent(inet::IPv6Route *route);
 
     /**
      * To be called from route objects whenever a field changes. Used for

@@ -15,7 +15,7 @@
 
 package inet.ansa.networklayer.arp;
 
-import inet.networklayer.arp.ARP;
+import inet.networklayer.arp.ipv4.ARP;
 
 //simple AnsaARP extends ARP {} 
 

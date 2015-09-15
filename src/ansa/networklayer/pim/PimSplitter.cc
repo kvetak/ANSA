@@ -22,7 +22,7 @@
  *  it send Hello messages and it manages table of PIM interfaces.
  */
 
-#include "PimSplitter.h"
+#include "ansa/networklayer/pim/PimSplitter.h"
 
 using namespace std;
 
@@ -43,10 +43,10 @@ PIMHello* PimSplitter::createHelloPkt(int iftID)
 	PIMHello *msg = new PIMHello();
 	msg->setName("PIMHello");
 
-	IPv4ControlInfo *ctrl = new IPv4ControlInfo();
-	IPv4Address ga1("224.0.0.13");
+	inet::IPv4ControlInfo *ctrl = new inet::IPv4ControlInfo();
+	inet::IPv4Address ga1("224.0.0.13");
 	ctrl->setDestAddr(ga1);
-	//ctrl->setProtocol(IP_PROT_PIM);
+	//ctrl->setProtocol(inet::IP_PROT_PIM);
 	ctrl->setProtocol(103);
 	ctrl->setTimeToLive(1);
 	ctrl->setInterfaceId(iftID);
@@ -102,7 +102,7 @@ void PimSplitter::processHelloPkt(PIMPacket *msg)
 {
     EV << "PIM::processHelloPkt" << endl;
 
-    IPv4ControlInfo *ctrl = dynamic_cast<IPv4ControlInfo *>(msg->getControlInfo());
+    inet::IPv4ControlInfo *ctrl = dynamic_cast<inet::IPv4ControlInfo *>(msg->getControlInfo());
     PimNeighbor newEntry;
     PIMnlt *nlt;
 
@@ -154,7 +154,7 @@ void PimSplitter::processNLTimer(PIMTimer *timer)
 	EV << "PIM::processNLTimer"<< endl;
 	PIMnlt *nlt = check_and_cast <PIMnlt *> (timer);
 	int id = nlt->getNtId();
-	IPv4Address neighbor;
+	inet::IPv4Address neighbor;
 
 	// if neighbor exists store its IP address
 	if (pimNbt->getNeighborsByID(id) != NULL)
@@ -183,7 +183,7 @@ void PimSplitter::processPIMPkt(PIMPacket *pkt)
 {
 	EV << "PIM::processPIMPkt" << endl;
 
-	IPv4ControlInfo *ctrl = dynamic_cast<IPv4ControlInfo *>(pkt->getControlInfo());
+	inet::IPv4ControlInfo *ctrl = dynamic_cast<inet::IPv4ControlInfo *>(pkt->getControlInfo());
 	int intID = ctrl->getInterfaceId();
 	int mode = 0;
 
@@ -245,7 +245,7 @@ void PimSplitter::handleMessage(cMessage *msg)
    else if (dynamic_cast<PIMPacket *>(msg) && (strcmp(msg->getArrivalGate()->getName(), "transportIn") == 0))
    {
 	   PIMPacket *pkt = check_and_cast<PIMPacket *>(msg);
-	   IPv4ControlInfo *ctrl = dynamic_cast<IPv4ControlInfo *>(pkt->getControlInfo());
+	   inet::IPv4ControlInfo *ctrl = dynamic_cast<inet::IPv4ControlInfo *>(pkt->getControlInfo());
 	   std::cout << simTime() << " " << hostname << "(" << ctrl->getInterfaceId() << "): " << pkt->getName() << " (" << ctrl->getSrcAddr() << ", " << ctrl->getDestAddr() << ")" << endl;
 	   if (pkt->getType() == Hello)
 		   processHelloPkt(pkt);
@@ -289,8 +289,8 @@ void PimSplitter::initialize(int stage)
 		pimNbt = PimNeighborTableAccess().get();
 
 		// subscribtion of notifications (future use)
-		nb->subscribe(this, NF_IPv4_NEW_MULTICAST);
-		nb->subscribe(this, NF_INTERFACE_IPv4CONFIG_CHANGED);
+		nb->subscribe(this, inet::NF_IPv4_NEW_MULTICAST);
+		nb->subscribe(this, inet::NF_INTERFACE_IPv4CONFIG_CHANGED);
 
 		// is PIM enabled?
 		if (pimIft->getNumInterface() == 0)
@@ -316,7 +316,7 @@ void PimSplitter::initialize(int stage)
  * @see newMulticast()
  * @see igmpChange()
  */
-void PimSplitter::receiveChangeNotification(int category, const cPolymorphic *details)
+void PimSplitter::receiveChangeNotification(simsignal_t signal, const cPolymorphic *details)
 {
 	// ignore notifications during initialize
 	if (simulation.getContextType()==CTX_INITIALIZE)
@@ -327,25 +327,25 @@ void PimSplitter::receiveChangeNotification(int category, const cPolymorphic *de
 		return;
 
 	Enter_Method_Silent();
-	printNotificationBanner(category, details);
+	inet::printNotificationBanner(signal, details);
 
 	// according to category of event...
-	switch (category)
-	{
+	//switch (category)
+	//{
 		// new multicast data appears in router
-		case NF_IPv4_NEW_MULTICAST:
-			EV <<  "PimSplitter::receiveChangeNotification - NEW MULTICAST" << endl;
-			IPv4ControlInfo *ctrl;
-			ctrl = (IPv4ControlInfo *)(details);
-			newMulticast(ctrl->getDestAddr(), ctrl->getSrcAddr());
-			break;
-
+	if(signal == inet::NF_IPv4_NEW_MULTICAST)
+	{
+        EV <<  "PimSplitter::receiveChangeNotification - NEW MULTICAST" << endl;
+        inet::IPv4ControlInfo *ctrl;
+        ctrl = (inet::IPv4ControlInfo *)(details);
+        newMulticast(ctrl->getDestAddr(), ctrl->getSrcAddr());
+	}
 		// configuration of interface changed, it means some change from IGMP
-		case NF_INTERFACE_IPv4CONFIG_CHANGED:
-			EV << "PimSplitter::receiveChangeNotification - IGMP change" << endl;
-			InterfaceEntry * interface = (InterfaceEntry *)(details);
-			igmpChange(interface);
-			break;
+	else if(signal == inet::NF_INTERFACE_IPv4CONFIG_CHANGED)
+	{
+        EV << "PimSplitter::receiveChangeNotification - IGMP change" << endl;
+        inet::InterfaceEntry * interface = (inet::InterfaceEntry *)(details);
+        igmpChange(interface);
 	}
 }
 
@@ -358,7 +358,7 @@ void PimSplitter::receiveChangeNotification(int category, const cPolymorphic *de
  * @param interface Pointer to interface where IP address changed.
  * @see addRemoveAddr
  */
-void PimSplitter::igmpChange(InterfaceEntry *interface)
+void PimSplitter::igmpChange(inet::InterfaceEntry *interface)
 {
 	int intId = interface->getInterfaceId();
 	PimInterface * pimInt = pimIft->getInterfaceByIntID(intId);
@@ -366,12 +366,20 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 	// save old and new set of multicast IP address assigned to interface
 	if(pimInt)
 	{
-	vector<IPv4Address> multicastAddrsOld = pimInt->getIntMulticastAddresses();
-	vector<IPv4Address> multicastAddrsNew = pimInt->deleteLocalIPs(interface->ipv4Data()->getReportedMulticastGroups());
+	vector<inet::IPv4Address> multicastAddrsOld = pimInt->getIntMulticastAddresses();
+	vector<inet::IPv4Address> reportedMulticast;
+
+	for(int i=0; i<interface->ipv4Data()->getNumOfReportedMulticastGroups(); i++)
+	{
+	    reportedMulticast.push_back(interface->ipv4Data()->getReportedMulticastGroup(i));
+	}
+
+	//vector<inet::IPv4Address> multicastAddrsNew = pimInt->deleteLocalIPs(interface->ipv4Data()->getReportedMulticastGroups());
+	vector<inet::IPv4Address> multicastAddrsNew = pimInt->deleteLocalIPs(reportedMulticast);
 
 	// vectors of new and removed multicast addresses
-	vector<IPv4Address> add;
-	vector<IPv4Address> remove;
+	vector<inet::IPv4Address> add;
+	vector<inet::IPv4Address> remove;
 
 	// which address was removed from interface
 	for (unsigned int i = 0; i < multicastAddrsOld.size(); i++)
@@ -417,9 +425,9 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 		addr->setAddr(remove);
 		addr->setInt(pimInt);
         if (pimInt->getMode() == Dense)
-            nb->fireChangeNotification(NF_IPv4_NEW_IGMP_REMOVED, addr);
+            nb->fireChangeNotification(inet::NF_IPv4_NEW_IGMP_REMOVED, addr);
         if (pimInt->getMode() == Sparse)
-            nb->fireChangeNotification(NF_IPv4_NEW_IGMP_REMOVED_PIMSM, addr);
+            nb->fireChangeNotification(inet::NF_IPv4_NEW_IGMP_REMOVED_PIMSM, addr);
 	}
 
 	// notification about new multicast address to PIM modules
@@ -433,9 +441,9 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
 		addr->setAddr(add);
 		addr->setInt(pimInt);
 		if (pimInt->getMode() == Dense)
-		    nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED, addr);
+		    nb->fireChangeNotification(inet::NF_IPv4_NEW_IGMP_ADDED, addr);
 		if (pimInt->getMode() == Sparse)
-		    nb->fireChangeNotification(NF_IPv4_NEW_IGMP_ADDED_PISM, addr);
+		    nb->fireChangeNotification(inet::NF_IPv4_NEW_IGMP_ADDED_PISM, addr);
 	}
 	}
 }
@@ -451,12 +459,12 @@ void PimSplitter::igmpChange(InterfaceEntry *interface)
  * @param srcAddr Source IP address.
  * @see MulticastIPRoute
  */
-void PimSplitter::newMulticast(IPv4Address destAddr, IPv4Address srcAddr)
+void PimSplitter::newMulticast(inet::IPv4Address destAddr, inet::IPv4Address srcAddr)
 {
 	EV << "PimSplitter::newMulticast - group: " << destAddr << ", source: " << srcAddr << endl;
 
 	// find RPF interface for new multicast stream
-	InterfaceEntry *inInt = rt->getInterfaceForDestAddr(srcAddr);
+	inet::InterfaceEntry *inInt = rt->getInterfaceForDestAddr(srcAddr);
 	if (inInt == NULL)
 	{
 		EV << "ERROR: PimSplitter::newMulticast(): cannot find RPF interface, routing information is missing.";
@@ -477,9 +485,9 @@ void PimSplitter::newMulticast(IPv4Address destAddr, IPv4Address srcAddr)
 		{
             // Directly connected routes to source does not have next hop
             // RPF neighbor is source of packet
-            IPv4Address rpf;
-            const IPv4Route *routeToSrc = rt->findBestMatchingRoute(srcAddr);
-            if (routeToSrc->getSource() == IPv4Route::IFACENETMASK)
+            inet::IPv4Address rpf;
+            const inet::IPv4Route *routeToSrc = rt->findBestMatchingRoute(srcAddr);
+            if (routeToSrc->getSourceType() == inet::IPv4Route::IFACENETMASK)
             {
                 newRoute->addFlag(AnsaIPv4MulticastRoute::A);
                 rpf = srcAddr;
@@ -491,12 +499,12 @@ void PimSplitter::newMulticast(IPv4Address destAddr, IPv4Address srcAddr)
             newRoute->setInInt(inInt, inInt->getInterfaceId(), rpf);
 		}
 		if (pimInt->getMode() == Sparse)
-		    newRoute->setInInt(inInt, inInt->getInterfaceId(), IPv4Address("0.0.0.0"));
+		    newRoute->setInInt(inInt, inInt->getInterfaceId(), inet::IPv4Address("0.0.0.0"));
 
 		// notification for PIM module about new multicast route
 		if (pimInt->getMode() == Dense)
-			nb->fireChangeNotification(NF_IPv4_NEW_MULTICAST_DENSE, newRoute);
+			nb->fireChangeNotification(inet::NF_IPv4_NEW_MULTICAST_DENSE, newRoute);
 		if (pimInt->getMode() == Sparse)
-		    nb->fireChangeNotification(NF_IPv4_NEW_MULTICAST_SPARSE, newRoute);
+		    nb->fireChangeNotification(inet::NF_IPv4_NEW_MULTICAST_SPARSE, newRoute);
 	}
 }

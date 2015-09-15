@@ -15,7 +15,7 @@
 
 package inet.examples.ansa.switchtest;
 
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 import inet.ansa.ANSASwitch;
 
 

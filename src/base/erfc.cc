@@ -17,7 +17,7 @@
 
 #ifdef _MSC_VER
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 //
 // Implementation of the error function, from the Mobility Framework

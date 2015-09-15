@@ -18,13 +18,13 @@
 * @brief
 * @detail
 */
-#include "VRRPv2VirtualRouter.h"
+#include "ansa/networklayer/vrrpv2/VRRPv2VirtualRouter.h"
 
 
-#include "InterfaceTableAccess.h"
-#include "deviceConfigurator.h"
-#include "TCPIPchecksum.h"
-#include "IPv4ControlInfo.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
+#include "common/serializer/TCPIPchecksum.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
 
 Define_Module(VRRPv2VirtualRouter);
 
@@ -79,7 +79,7 @@ void VRRPv2VirtualRouter::initialize(int stage)
     loadDefaultConfig();
 
     //load the Virtual Router process configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    DeviceConfigurator *devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     devConf->loadVRRPv2VirtualRouterConfig(this);
     EV << hostname << "(vrrp-configuration)# " << showConfig() << endl;
 
@@ -336,7 +336,7 @@ void VRRPv2VirtualRouter::handleMessage(cMessage *msg)
 bool VRRPv2VirtualRouter::handleAdvertisement(VRRPv2Advertisement* msg)
 {
     // MUST verify the TTL is 255
-    IPv4ControlInfo* controlInfo = check_and_cast<IPv4ControlInfo *>(msg->getControlInfo());
+    inet::IPv4ControlInfo* controlInfo = check_and_cast<inet::IPv4ControlInfo *>(msg->getControlInfo());
 
     if (controlInfo->getTimeToLive() != 255)
     {
@@ -402,7 +402,7 @@ void VRRPv2VirtualRouter::handleAdvertisementBackup(VRRPv2Advertisement* msg)
     {
         //Remain Backup
         if (msg->getPriority() == priority
-                && ((IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()) {
+                && ((inet::IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()) {
             masterDownTimerInit = getMasterDownInterval();
             stateBackup(TIMER_START);
             return;
@@ -427,7 +427,7 @@ void VRRPv2VirtualRouter::handleAdvertisementMaster(VRRPv2Advertisement* msg)
     }
     else if ((((int) msg->getPriority()) > priority)
             || (msg->getPriority() == priority
-                    && ((IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()))
+                    && ((inet::IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()))
     {
         cancelAdverTimer();
         masterDownTimerInit = getMasterDownInterval();
@@ -449,7 +449,7 @@ void VRRPv2VirtualRouter::handleAdvertisementMaster(VRRPv2Advertisement* msg)
 
 void VRRPv2VirtualRouter::sendAdvertisement() {
 
-    IPv4ControlInfo* controlInfo = new IPv4ControlInfo();
+    inet::IPv4ControlInfo* controlInfo = new inet::IPv4ControlInfo();
     controlInfo->setMacSrc(virtualMAC);
     controlInfo->setSrcAddr(ie->ipv4Data()->getIPAddress());
     controlInfo->setDestAddr(multicastIP);
@@ -536,7 +536,7 @@ void VRRPv2VirtualRouter::createVirtualMAC()
     virtualMAC.setAddressByte(5, vrid);
 }
 
-uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<IPv4Address> address) {
+uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<inet::IPv4Address> address) {
 
     uint32_t vrrpHead1 = 0;
     vrrpHead1 = version;
@@ -566,7 +566,7 @@ uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, in
     for (int i = 0; i < (int) address.size(); i++)
         data.push_back(address.at(i).getInt());
 
-    return TCPIPchecksum::checksum(data.data(), data.size() * 4);
+    return inet::serializer::TCPIPchecksum::checksum(data.data(), data.size() * 4);
 }
 /***
  *   PRINT
@@ -636,7 +636,7 @@ std::string VRRPv2VirtualRouter::debugPacketMaster(uint16_t checksum) const
     return result.str();
 }
 
-std::string VRRPv2VirtualRouter::debugPacketBackup(int priority, IPv4Address ipaddr) const
+std::string VRRPv2VirtualRouter::debugPacketBackup(int priority, inet::IPv4Address ipaddr) const
 {
     std::stringstream result;
     result << "Grp " << vrid << " Advertisement priority " << priority << ", ipaddr " << ipaddr;

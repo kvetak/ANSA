@@ -20,14 +20,13 @@
 #define __INET_ACLCONTAINER_H
 
 #include <omnetpp.h>
-#include "IPv4Address.h"
-#include "IPvXAddressResolver.h"
-#include "RoutingTableAccess.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/ipv4/RoutingTableAccess.h"
 
 
-#include "IPv4Datagram.h"
-#include "TCPSegment.h"
-#include "UDPPacket.h"
+#include "networklayer/ipv4/IPv4Datagram.h"
+#include "transportlayer/tcp_common/TCPSegment.h"
+#include "transportlayer/udp/UDPPacket.h"
 
 /* VYCET POZADOVANYCH AKCI - DENY (ZAHODIT PAKET) NEBO PERMIT (PROPUSTIT PAKET) */
 const bool A_PERMIT = true;
@@ -59,7 +58,7 @@ enum TPortOP
 
 struct TIP
 {
-	IPv4Address ipAddr, netmask;
+	inet::IPv4Address ipAddr, netmask;
 	int portBeg, portEnd;
 	TPortOP port_op;
 };
@@ -100,7 +99,7 @@ class AclContainer : public cSimpleModule
 {
 private:
 	bool loadConfigFromXML(const char* filename);
-	bool processPacket(IPv4Datagram* packet, TRULES* acl);
+	bool processPacket(inet::IPv4Datagram* packet, TRULES* acl);
 	bool compareValues(TRULES* acl, TIP source, TIP dest, int protocol);
 	TRULES* getRulesByAclName(std::string name);
 	bool ipIsEqual(TIP* ip, TIP* packet);
@@ -109,7 +108,7 @@ private:
 	void getProtocol(std::string pom, TRule* rule);
 	void getPort(std::string pom, std::string p_beg, std::string p_end, TIP *ip);
 	void andIpWithMask(TRule* rule);
-	IPv4Address negateWildcard(IPv4Address wc);
+	inet::IPv4Address negateWildcard(inet::IPv4Address wc);
 
 private:
 	std::list<TACL> acls;

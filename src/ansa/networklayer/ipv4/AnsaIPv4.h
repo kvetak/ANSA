@@ -23,21 +23,22 @@
 #ifndef __INET_ANSAIPV4_H
 #define __INET_ANSAIPV4_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 #ifdef WITH_MANET
-#include "ControlManetRouting_m.h"
+#include "routing/extras/base/ControlManetRouting_m.h"
 #endif
 
-#include "ARPPacket_m.h"
-#include "IPv4.h"
-#include "PimSplitter.h"
-#include "AnsaInterfaceEntry.h"
-#include "AnsaRoutingTable.h"
-#include "AnsaRoutingTableAccess.h"
-#include "PimInterfaceTable.h"
-#include "PIMPacket_m.h"
-#include "pimSM.h"
+#include "networklayer/arp/ipv4/ARPPacket_m.h"
+#include "networklayer/ipv4/IPv4.h"
+#include "ansa/networklayer/pim/PimSplitter.h"
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTableAccess.h"
+#include "ansa/networklayer/pim/tables/PimInterfaceTable.h"
+#include "ansa/networklayer/pim/PIMPacket_m.h"
+#include "ansa/networklayer/pim/modes/pimSM.h"
+#include "common/NotifierConsts.h"
 
 /*
  * Migration towards ANSAINET2.2
@@ -53,7 +54,7 @@ enum AnsaIPProtocolId
 
 class LISPCore;
 
-class INET_API AnsaIPv4 : public IPv4
+class INET_API AnsaIPv4 : public inet::IPv4
 {
     private:
         AnsaRoutingTable            *rt;
@@ -62,19 +63,19 @@ class INET_API AnsaIPv4 : public IPv4
 
     protected:
 
-        virtual void handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *fromIE);
-        virtual void routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, InterfaceEntry *fromIE);
-        virtual void routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute *routeG, IPv4Datagram *datagram, IPv4ControlInfo *ctrl);
-        virtual void routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram, IPv4ControlInfo *ctrl);
-        virtual IPv4Datagram *encapsulate(cPacket *transportPacket, IPv4ControlInfo *controlInfo);
-        virtual void routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, IPv4Address destNextHopAddr);
+        virtual void handlePacketFromNetwork(inet::IPv4Datagram *datagram, inet::InterfaceEntry *fromIE);
+        virtual void routeMulticastPacket(inet::IPv4Datagram *datagram, inet::InterfaceEntry *destIE, inet::InterfaceEntry *fromIE);
+        virtual void routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute *routeG, inet::IPv4Datagram *datagram, inet::IPv4ControlInfo *ctrl);
+        virtual void routePimDM (AnsaIPv4MulticastRoute *route, inet::IPv4Datagram *datagram, inet::IPv4ControlInfo *ctrl);
+        virtual inet::IPv4Datagram *encapsulate(cPacket *transportPacket, inet::IPv4ControlInfo *controlInfo);
+        virtual void routeUnicastPacket(inet::IPv4Datagram *datagram, inet::InterfaceEntry *destIE, inet::IPv4Address destNextHopAddr);
         virtual void handleMessageFromHL(cPacket *msg);
-        virtual void reassembleAndDeliver(IPv4Datagram *datagram);
-        virtual InterfaceEntry *determineOutgoingInterfaceForMulticastDatagram(IPv4Datagram *datagram, InterfaceEntry *multicastIFOption);
+        virtual void reassembleAndDeliver(inet::IPv4Datagram *datagram);
+        virtual inet::InterfaceEntry *determineOutgoingInterfaceForMulticastDatagram(inet::IPv4Datagram *datagram, inet::InterfaceEntry *multicastIFOption);
 
-        virtual void fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarder);
-        virtual void sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarderId);
-        int getVirtualForwarderId(InterfaceEntry *ie, MACAddress addr);
+        virtual void fragmentAndSend(inet::IPv4Datagram *datagram, inet::InterfaceEntry *ie, inet::IPv4Address nextHopAddr, int vforwarder);
+        virtual void sendDatagramToOutput(inet::IPv4Datagram *datagram, inet::InterfaceEntry *ie, inet::IPv4Address nextHopAddr, int vforwarderId);
+        int getVirtualForwarderId(inet::InterfaceEntry *ie, inet::MACAddress addr);
     public:
         AnsaIPv4() {}
 

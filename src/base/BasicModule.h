@@ -22,10 +22,10 @@
 #ifndef BASIC_MODULE_H
 #define BASIC_MODULE_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 #include "NotificationBoard.h"
-#include "NotifierConsts.h"
+#include "common/NotifierConsts.h"
 
 #ifndef EV
 #define EV (ev.isDisabled()||!debug) ? (std::ostream&)ev : ev << logName() << "::" << getClassName() << ": "

@@ -23,7 +23,7 @@
  * @todo Z9
  */
 
-#include "RBridgeSplitter.h"
+#include "ansa/linklayer/rbridge/RBridgeSplitter.h"
 
 Define_Module(RBridgeSplitter);
 
@@ -34,9 +34,9 @@ void RBridgeSplitter::initialize(int stage){
 
         isisModule = ISISAccess().get();
 
-        this->vlanTableModule = ModuleAccess<RBVLANTable>("rBVLANTable").get();
+        this->vlanTableModule = inet::ModuleAccess<RBVLANTable>("rBVLANTable").get();
 
-//        this->portTableModule = ModuleAccess<RBPortTable>("rBVPortTable").get();
+//        this->portTableModule = inet::ModuleAccess<RBPortTable>("rBVPortTable").get();
 
         this->ift = InterfaceTableAccess().get();
     }
@@ -58,7 +58,7 @@ void RBridgeSplitter::handleMessage(cMessage *msg)
     {
         if (dynamic_cast<AnsaEtherFrame *>(msg))
         {
-//            EthernetIIFrame * frame = (EthernetIIFrame *) msg;
+//            inet::EthernetIIFrame * frame = (inet::EthernetIIFrame *) msg;
             AnsaEtherFrame * frame = (AnsaEtherFrame *) msg;
             //if src unicast
             //trillModule->learn(msg);
@@ -68,16 +68,16 @@ void RBridgeSplitter::handleMessage(cMessage *msg)
 
         }
 
-        else if (dynamic_cast<EthernetIIFrame *>(msg))
+        else if (dynamic_cast<inet::EthernetIIFrame *>(msg))
         {
-            EthernetIIFrame * frame = (EthernetIIFrame *) msg;
+            inet::EthernetIIFrame * frame = (inet::EthernetIIFrame *) msg;
             //if src unicast
             //trillModule->learn(msg);
 
             //check integrity, ...
 
             //if ethertype == L2_ISIS AND Outer.MacDA == ALL-IS-IS-RBridges
-            if (frame->getEtherType() == ETHERTYPE_L2_ISIS)
+            if (frame->getEtherType() == inet::ETHERTYPE_L2_ISIS)
             {
                 trillModule->learn(frame);
                 this->send(msg, "isisOut", gateIndex);

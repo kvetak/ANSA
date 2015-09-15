@@ -17,7 +17,7 @@
 
 package inet.linklayer.ext;
 
-import inet.linklayer.IExternalNic;
+import inet.linklayer.contract.IExternalNic;
 
 //
 // Implements an interface that corresponds to a real interface
@@ -29,6 +29,7 @@ import inet.linklayer.IExternalNic;
 simple ExtInterface like IExternalNic
 {
     parameters:
+        string interfaceTableModule;   // The path to the InterfaceTable module
         string filterString;
         string device;
         int mtu @unit("B") = default(1500B);

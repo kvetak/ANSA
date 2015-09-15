@@ -39,21 +39,24 @@
 #include <map>
 #include <string>
 
-#include "NotificationBoard.h"
-#include "MACAddress.h"
-#include "Ethernet.h"
+#include "base/NotificationBoard.h"
+#include "linklayer/common/MACAddress.h"
+#include "linklayer/ethernet/Ethernet.h"
 
-#include "EtherFrame_m.h"
-#include "AnsaEtherFrame_m.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "ansa/linklayer/switch/AnsaEtherFrame_m.h"
 
-#include "RBMACTable.h"
-#include "RBVLANTable.h"
-#include "TRILLInterfaceData.h"
-#include "TRILLFrame.h"
+#include "ansa/linklayer/rbridge/RBMACTable.h"
+#include "ansa/linklayer/rbridge/RBVLANTable.h"
+#include "ansa/linklayer/rbridge/TRILLInterfaceData.h"
+#include "ansa/linklayer/rbridge/TRILLFrame.h"
 
-#include "CLNSTableAccess.h"
+#include "ansa/networklayer/clns/CLNSTableAccess.h"
 
-//#include "stp/stp.h"
+#include "linklayer/common/Ieee802Ctrl.h"
+#include "networklayer/common/InterfaceEntry.h"
+
+//#include "ansa/linklayer/switch/stp/stp.h"
 //#include "ISIS.h"
 class ISIS;
 
@@ -79,26 +82,26 @@ class TRILL : public cSimpleModule
           int VID; // frame's VLAN ID
           int rPort; // reception port
           RBVLANTable::tVIDPortList portList; // suggested(then applied) list of destination ports
-          MACAddress src; // source MAC address of the original frame
-          MACAddress dest; // destination MAC address of the original frame
-          int etherType; // EtherType from EthernetIIFrame
+          inet::MACAddress src; // source MAC address of the original frame
+          inet::MACAddress dest; // destination MAC address of the original frame
+          int etherType; // EtherType from inet::EthernetIIFrame
           std::string name; // for simulation frame name
           RBMACTable::ESTRecord record;
-          TRILLInterfaceData *d;
+          inet::TRILLInterfaceData *d;
           TRILL::FrameCategory category;
 //          std::vector<unsigned char *> systemIDs; //for forwarding TRILL MultiDest (maybe even TRILL unicast)
-//          InterfaceEntry *ie
-          Ieee802Ctrl *ctrl;
+          inet::InterfaceEntry *ie;
+          inet::Ieee802Ctrl *ctrl;
         } tFrameDescriptor;
 
 
 
 
-        MACAddress getBridgeAddress();
+        inet::MACAddress getBridgeAddress();
 
         bool isAllowedByGate(int vlan, int gateId);//returns true if vlan is allowed on interface specified by gateId
         void learn(AnsaEtherFrame * frame);
-        void learn(EthernetIIFrame * frame);
+        void learn(inet::EthernetIIFrame * frame);
 
 
       private:
@@ -118,15 +121,15 @@ class TRILL : public cSimpleModule
 
 
       protected:
-      MACAddress bridgeGroupAddress;
-      MACAddress bridgeAddress;
+      inet::MACAddress bridgeGroupAddress;
+      inet::MACAddress bridgeAddress;
 
       RBMACTable * rbMACTable;
       RBVLANTable * vlanTable;
 //      Stp * spanningTree;
       ISIS* isis;
       CLNSTable *clnsTable;
-      IInterfaceTable *ift;
+      inet::IInterfaceTable *ift;
 
       cMessage * currentMsg;
 
@@ -142,17 +145,17 @@ class TRILL : public cSimpleModule
       void relay(tFrameDescriptor& frame);
       void dispatch(tFrameDescriptor& frame);
 
-      bool ingress(tFrameDescriptor& tmp, EthernetIIFrame *frame, int rPort);
+      bool ingress(tFrameDescriptor& tmp, inet::EthernetIIFrame *frame, int rPort);
       bool ingress(tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPort);
       void egress(tFrameDescriptor& frame);
 
       void learn(tFrameDescriptor& frame);
 
       void processFrame(cMessage * msg);
-      void handleIncomingFrame(EthernetIIFrame *frame);
+      void handleIncomingFrame(inet::EthernetIIFrame *frame);
 
-      void handleAndDispatchFrame(EthernetIIFrame *frame, int inputport);
-      void broadcastFrame(EthernetIIFrame *frame, int inputport);
+      void handleAndDispatchFrame(inet::EthernetIIFrame *frame, int inputport);
+      void broadcastFrame(inet::EthernetIIFrame *frame, int inputport);
 
       void sinkMsg(cMessage *msg);
       void sinkDupMsg(cMessage *msg);
@@ -161,9 +164,9 @@ class TRILL : public cSimpleModule
       void deliverBPDU(tFrameDescriptor& frame);
 
      // void tagMsg(int _vlan);
-      AnsaEtherFrame * tagMsg(EthernetIIFrame * _frame, int _vlan);
+      AnsaEtherFrame * tagMsg(inet::EthernetIIFrame * _frame, int _vlan);
       //void untagMsg();
-      EthernetIIFrame * untagMsg(AnsaEtherFrame * _frame);
+      inet::EthernetIIFrame * untagMsg(AnsaEtherFrame * _frame);
 
       /* NEW */
       FrameCategory classify(tFrameDescriptor &frameDesc);
@@ -213,7 +216,6 @@ class TRILL : public cSimpleModule
         os << "---END OF DESCRIPTOR---" << std::endl;
         return os;
     }
-
 
 
 

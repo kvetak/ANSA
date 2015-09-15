@@ -16,8 +16,8 @@
 #ifndef ANSAETHERMACFULLDUPLEX_H_
 #define ANSAETHERMACFULLDUPLEX_H_
 
-#include "AnsaEtherMACBaseVF.h"
-#include "EtherMACBase.h"
+#include "ansa/linklayer/ethernet/AnsaEtherMACBaseVF.h"
+#include "linklayer/ethernet/EtherMACBase.h"
 
 class INET_API AnsaEtherMACFullDuplex : public AnsaEtherMACBaseVF
 {
@@ -41,9 +41,9 @@ class INET_API AnsaEtherMACFullDuplex : public AnsaEtherMACBaseVF
 
     // helpers
     virtual void startFrameTransmission();
-    virtual void processFrameFromUpperLayer(EtherFrame *frame);
-    virtual void processMsgFromNetwork(EtherTraffic *msg);
-    virtual void processReceivedDataFrame(EtherFrame *frame);
+    virtual void processFrameFromUpperLayer(inet::EtherFrame *frame);
+    virtual void processMsgFromNetwork(inet::EtherTraffic *msg);
+    virtual void processReceivedDataFrame(inet::EtherFrame *frame);
     virtual void processPauseCommand(int pauseUnits);
     virtual void scheduleEndIFGPeriod();
     virtual void scheduleEndPausePeriod(int pauseUnits);

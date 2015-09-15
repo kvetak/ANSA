@@ -24,9 +24,9 @@ import inet.networklayer.ipv6.IPv6ErrorHandling;
 import inet.networklayer.ipv6.IPv6;
 import inet.networklayer.icmpv6.IPv6NeighbourDiscovery;
 import inet.networklayer.icmpv6.ICMPv6;
-import inet.networklayer.IxMIPv6Support;
-import inet.networklayer.IIPv6Tunneling;
-import inet.base.IHook;
+import inet.networklayer.contract.IxMIPv6Support;
+import inet.networklayer.contract.IIPv6Tunneling;
+import inet.common.IHook;
 
 
 //

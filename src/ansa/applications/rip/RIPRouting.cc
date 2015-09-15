@@ -19,22 +19,25 @@
 * @detail Implements RIP protocol.
 */
 
-#include "RIPRouting.h"
+#include "ansa/applications/rip/RIPRouting.h"
 
-#include "IPv4InterfaceData.h"
-#include "IPv4ControlInfo.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
 
-#include "deviceConfigurator.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
+
+//Added by Michal Ruprich from ANSA
+#include "common/NotifierConsts.h"
 
 Define_Module(RIPRouting);
 
 //TODO: set context pointer to the timer messages - like RIPng
 
-std::ostream& operator<<(std::ostream& os, const RIP::RoutingTableEntry& e)
-{
-    os << e.RIPInfo();
-    return os;
-};
+//std::ostream& operator<<(std::ostream& os, const RIP::RoutingTableEntry& e)
+//{
+//    os << e.RIPInfo();
+//    return os;
+//};
 
 RIPRouting::RIPRouting()
 {
@@ -81,7 +84,7 @@ RIPRouting::~RIPRouting()
 //-- RIP ROUTING TABLE METHODS
 //
 //
-RIP::RoutingTableEntry* RIPRouting::getRoutingTableEntry(const IPv4Address &network, const IPv4Address &netmask)
+RIP::RoutingTableEntry* RIPRouting::getRoutingTableEntry(const inet::IPv4Address &network, const inet::IPv4Address &netmask)
 {
     RIP::RoutingTableEntry *route = NULL;
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
@@ -116,7 +119,7 @@ void RIPRouting::addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool create
     ++numRoutes;
 }
 
-void RIPRouting::removeRoutingTableEntry(IPv4Address &network, int netmask)
+void RIPRouting::removeRoutingTableEntry(inet::IPv4Address &network, int netmask)
 {
     for (RoutingTableIt it=routingTable.begin(); it!=routingTable.end(); it++)
     {
@@ -171,9 +174,9 @@ void RIPRouting::removeAllRoutingTableEntries()
     routingTable.clear();
 }
 
-void RIPRouting::updateRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry, RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr)
+void RIPRouting::updateRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry, RIPRTE &rte, int sourceIntId, inet::IPv4Address &sourceAddr)
 {
-    const IPv4Address &nextHop = routingTableEntry->getGateway();
+    const inet::IPv4Address &nextHop = routingTableEntry->getGateway();
     unsigned int newMetric = rte.getMetric();
     ++newMetric;
     unsigned int oldMetric = routingTableEntry->getMetric();
@@ -260,7 +263,7 @@ RIP::Interface *RIPRouting::getEnabledInterfaceByName(const char *interfaceName)
 {
     RIP::Interface *enabledRIPInterface = NULL;
 
-    InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
+    inet::InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
     if (interface != NULL)
     {
         int interfaceId = interface->getInterfaceId();
@@ -341,9 +344,9 @@ RIPMessage *RIPRouting::createMessage()
     return msg;
 }
 
-UDPSocket *RIPRouting::createAndSetSocketForInt(RIP::Interface* interface)
+inet::UDPSocket *RIPRouting::createAndSetSocketForInt(RIP::Interface* interface)
 {
-    UDPSocket *socket = new UDPSocket();
+    inet::UDPSocket *socket = new inet::UDPSocket();
     socket->setOutputGate(gate("udpOut"));
     //so every RIP message sent from RIP interface uses correct source address
     socket->setReuseAddress(true);
@@ -358,7 +361,7 @@ UDPSocket *RIPRouting::createAndSetSocketForInt(RIP::Interface* interface)
 
 RIP::Interface *RIPRouting::enableRIPOnInterface(const char *interfaceName)
 {
-    InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
+    inet::InterfaceEntry *interface = ift->getInterfaceByName(interfaceName);
     int interfaceId = interface->getInterfaceId();
 
     return enableRIPOnInterface(interfaceId);
@@ -541,17 +544,19 @@ RIPMessage *RIPRouting::makeUpdateMessageForInterface(RIP::Interface *interface,
     return msg;
 }
 
-void RIPRouting::sendMessage(RIPMessage *msg, IPv4Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress)
+void RIPRouting::sendMessage(RIPMessage *msg, inet::IPv4Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress)
 {
     ASSERT(enabledInterfaceIndex < getEnabledInterfacesCount());
     int outInterface = getEnabledInterface(enabledInterfaceIndex)->getId();
+    inet::UDPSocket::SendOptions options;
+    options.outInterfaceId = outInterface;
     if (globalSourceAddress)
     {// "uses" global-unicast address as the source address
-        globalSocket.sendTo(msg, addr, port, outInterface);
+        globalSocket.sendTo(msg, addr, port, &options);
     }
     else
     {
-        sockets[enabledInterfaceIndex]->sendTo(msg, addr, port, outInterface);
+        sockets[enabledInterfaceIndex]->sendTo(msg, addr, port, &options);
     }
 }
 
@@ -562,7 +567,7 @@ void RIPRouting::sendAllRoutesRequest()
 
     RIPRTE rte = RIPRTE();
     rte.setAFI(0);
-    rte.setIPv4Address(IPv4Address()); // IPv4 Address 0.0.0.0
+    rte.setIPv4Address(inet::IPv4Address()); // IPv4 Address 0.0.0.0
     rte.setMetric(16);
     rte.setNetMask(0);
     rte.setRouteTag(0);
@@ -646,7 +651,7 @@ RIPRTE RIPRouting::makeRTEFromRoutingTableEntry(RIP::RoutingTableEntry *routingT
     rte.setIPv4Address(routingTableEntry->getDestination());
     rte.setMetric(routingTableEntry->getMetric());
     rte.setRouteTag(routingTableEntry->getRouteTag());
-    rte.setNextHop(IPv4Address::UNSPECIFIED_ADDRESS);
+    rte.setNextHop(inet::IPv4Address::UNSPECIFIED_ADDRESS);
     rte.setAFI(2);
 
     return rte;
@@ -659,9 +664,9 @@ RIPRTE RIPRouting::makeRTEFromRoutingTableEntry(RIP::RoutingTableEntry *routingT
 //
 void RIPRouting::handleRIPMessage(RIPMessage *msg)
 {
-    UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
-    IPv4Address sourceAddr = controlInfo->getSrcAddr().get4();
-    IPv4Address destAddr = controlInfo->getDestAddr().get4();
+    inet::UDPDataIndication *controlInfo = check_and_cast<inet::UDPDataIndication *>(msg->getControlInfo());
+    inet::IPv4Address sourceAddr = controlInfo->getSrcAddr().toIPv4();
+    inet::IPv4Address destAddr = controlInfo->getDestAddr().toIPv4();
     int sourcePort = controlInfo->getSrcPort();
     int sourceInterfaceId = controlInfo->getInterfaceId();
 
@@ -672,7 +677,7 @@ void RIPRouting::handleRIPMessage(RIPMessage *msg)
         return;
     }
 
-    EV << "RIP: Received packet: " << UDPSocket::getReceivedPacketInfo(msg) << endl;
+    EV << "RIP: Received packet: " << inet::UDPSocket::getReceivedPacketInfo(msg) << endl;
     int command = msg->getCommand();
     int version = msg->getVersion();
     if (version != 2)
@@ -695,7 +700,7 @@ void RIPRouting::handleRIPMessage(RIPMessage *msg)
 //-- RESPONSE PROCESSING
 //
 //
-void RIPRouting::handleResponse(RIPMessage *response, int srcInt, IPv4Address &srcAddr)
+void RIPRouting::handleResponse(RIPMessage *response, int srcInt, inet::IPv4Address &srcAddr)
 {
     if (!checkMessageValidity(response))
         return;
@@ -705,7 +710,7 @@ void RIPRouting::handleResponse(RIPMessage *response, int srcInt, IPv4Address &s
 
 bool RIPRouting::checkMessageValidity(RIPMessage *response)
 {
-    UDPDataIndication *controlInfo = check_and_cast<UDPDataIndication *>(response->getControlInfo());
+    inet::UDPDataIndication *controlInfo = check_and_cast<inet::UDPDataIndication *>(response->getControlInfo());
 
     // is from RIP port
     if (controlInfo->getSrcPort() != RIPPort)
@@ -714,7 +719,7 @@ bool RIPRouting::checkMessageValidity(RIPMessage *response)
         return false;
     }
 
-    IPv4Address sourceAddr = controlInfo->getSrcAddr().get4();
+    inet::IPv4Address sourceAddr = controlInfo->getSrcAddr().toIPv4();
     // source addr. is not from this device
     if (rt->isLocalAddress(sourceAddr))
     {
@@ -731,7 +736,7 @@ bool RIPRouting::checkMessageValidity(RIPMessage *response)
     return true;
 }
 
-void RIPRouting::processRTEs(RIPMessage *response, int sourceIntId, IPv4Address &sourceAddr)
+void RIPRouting::processRTEs(RIPMessage *response, int sourceIntId, inet::IPv4Address &sourceAddr)
 {
     unsigned int rtesSize = response->getRtesArraySize();
     RIPRTE rte;
@@ -756,14 +761,14 @@ void RIPRouting::processRTEs(RIPMessage *response, int sourceIntId, IPv4Address 
     bBlockTriggeredUpdateMessage = false;
 }
 
-void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr)
+void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, inet::IPv4Address &sourceAddr)
 {
     if (!checkAndLogRTE(rte, sourceAddr))
         return;
 
-    IPv4Address &network = rte.getIPv4Address();
-    IPv4Address netmask = IPv4Address::makeNetmask(rte.getNetMask());
-    IPv4Address &gateway = rte.getNextHop();
+    inet::IPv4Address &network = rte.getIPv4Address();
+    inet::IPv4Address netmask = inet::IPv4Address::makeNetmask(rte.getNetMask());
+    inet::IPv4Address &gateway = rte.getNextHop();
     if (gateway.isUnspecified())
     {
         gateway = sourceAddr;
@@ -773,7 +778,7 @@ void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAdd
         bool nextHopOK = false;
         for (int i=0; i<ift->getNumInterfaces(); i++)
         {
-            IPv4InterfaceData *intData = ift->getInterface(i)->ipv4Data();
+            inet::IPv4InterfaceData *intData = ift->getInterface(i)->ipv4Data();
             if (intData->getIPAddress().prefixMatches(gateway, intData->getNetmask().getNetmaskLength()))
             {
                 nextHopOK = true;
@@ -812,17 +817,17 @@ void RIPRouting::processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAdd
     }
 }
 
-bool RIPRouting::checkAndLogRTE(RIPRTE &rte, IPv4Address &sourceAddr)
+bool RIPRouting::checkAndLogRTE(RIPRTE &rte, inet::IPv4Address &sourceAddr)
 {
     // netmask is valid (0-32)
     // metric is valid (0-16)
     if ( rte.getNetMask() > 32 ||
          rte.getMetric() > 16 ||
          rte.getIPv4Address().isMulticast() ||
-         (  rte.getIPv4Address().getAddressCategory() == IPv4Address::BROADCAST ||
-            rte.getIPv4Address().getAddressCategory() == IPv4Address::LOOPBACK  ||
-            rte.getIPv4Address().getAddressCategory() == IPv4Address::RESERVED  ||
-            rte.getIPv4Address().getAddressCategory() == IPv4Address::UNSPECIFIED
+         (  rte.getIPv4Address().getAddressCategory() == inet::IPv4Address::BROADCAST ||
+            rte.getIPv4Address().getAddressCategory() == inet::IPv4Address::LOOPBACK  ||
+            rte.getIPv4Address().getAddressCategory() == inet::IPv4Address::RESERVED  ||
+            rte.getIPv4Address().getAddressCategory() == inet::IPv4Address::UNSPECIFIED
          )
        )
     {
@@ -844,7 +849,7 @@ bool RIPRouting::checkAndLogRTE(RIPRTE &rte, IPv4Address &sourceAddr)
 //-- REQUEST PROCESSING
 //
 //
-void RIPRouting::handleRequest(RIPMessage *request, int srcPort, IPv4Address &srcAddr, IPv4Address &destAddr, unsigned long RIPIntInd)
+void RIPRouting::handleRequest(RIPMessage *request, int srcPort, inet::IPv4Address &srcAddr, inet::IPv4Address &destAddr, unsigned long RIPIntInd)
 {
     ASSERT(RIPIntInd < getEnabledInterfacesCount());
     RIP::Interface *RIPInt = getEnabledInterface(RIPIntInd);
@@ -869,7 +874,7 @@ void RIPRouting::handleRequest(RIPMessage *request, int srcPort, IPv4Address &sr
         for (unsigned int i = 0; i < rteNum; i++)
         {
             RIPRTE rte = request->getRtes(i);
-            routingTableEntry = getRoutingTableEntry(rte.getIPv4Address(), IPv4Address::makeNetmask(rte.getNetMask()));
+            routingTableEntry = getRoutingTableEntry(rte.getIPv4Address(), inet::IPv4Address::makeNetmask(rte.getNetMask()));
             EV << "RTE [" << i << "]: " << rte.getIPv4Address() << "/" << int(rte.getNetMask()) << endl;
             if (routingTableEntry != NULL)
             {// match for the requested rte
@@ -1035,7 +1040,7 @@ void RIPRouting::initialize(int stage)
         return;
 
     // get the hostname
-    cModule *containingMod = findContainingNode(this);
+    cModule *containingMod = inet::findContainingNode(this);
     if (!containingMod)
         hostName = "";
     else
@@ -1051,8 +1056,8 @@ void RIPRouting::initialize(int stage)
     ift = InterfaceTableAccess().get();
     // subscribe for changes in the device
     nb = NotificationBoardAccess().get();
-    nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-    nb->subscribe(this, NF_IPv4_ROUTE_DELETED);
+    nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+    nb->subscribe(this, inet::NF_IPv4_ROUTE_DELETED);
 
     numRoutes = 0;
     WATCH(numRoutes);
@@ -1060,7 +1065,7 @@ void RIPRouting::initialize(int stage)
     WATCH_PTRVECTOR(routingTable);
 
     const char *RIPAddressString = par("RIPAddress");
-    RIPAddress = IPv4Address(RIPAddressString);
+    RIPAddress = inet::IPv4Address(RIPAddressString);
     RIPPort = par("RIPPort");
 
     connNetworkMetric = par("connectedNetworkMetric");
@@ -1075,7 +1080,7 @@ void RIPRouting::initialize(int stage)
     deviceId = par("deviceId");
 
     // read the RIP process configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    DeviceConfigurator *devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     devConf->loadRIPConfig(this);
 
     //Multicast must be enabled on every interface because of globalSocket.joinMulticastGroup(RIPAddress, -1);
@@ -1113,11 +1118,11 @@ void RIPRouting::handleMessage(cMessage *msg)
     {// timers
         handleTimer(check_and_cast<RIPTimer*> (msg));
     }
-    else if (msg->getKind() == UDP_I_DATA)
+    else if (msg->getKind() == inet::UDP_I_DATA)
     {// process incoming message
         handleRIPMessage(check_and_cast<RIPMessage*> (msg));
     }
-    else if (msg->getKind() == UDP_I_ERROR)
+    else if (msg->getKind() == inet::UDP_I_ERROR)
     {
         ev << "Ignoring UDP error report" << endl;
         delete msg;
@@ -1137,15 +1142,15 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
        return;
 
    Enter_Method_Silent();
-   printNotificationBanner(category, details);
+   inet::printNotificationBanner(category, details);
 
-   if (category == NF_INTERFACE_STATE_CHANGED)
+   if (category == inet::NF_INTERFACE_STATE_CHANGED)
    {
-       InterfaceEntry *interfaceEntry = check_and_cast<InterfaceEntry*>(details);
+       inet::InterfaceEntry *interfaceEntry = check_and_cast<inet::InterfaceEntry*>(details);
        int interfaceEntryId = interfaceEntry->getInterfaceId();
 
        // an interface went down
-       if (interfaceEntry->isDown())
+       if (interfaceEntry->getState()==inet::InterfaceEntry::DOWN)
        {
            // delete interface from RIP interfaces
            int size = getEnabledInterfacesCount();
@@ -1200,7 +1205,7 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
                bBlockTriggeredUpdateMessage = false;
            }
        }
-       else if (!interfaceEntry->isDown())
+       else if (!(interfaceEntry->getState()==inet::InterfaceEntry::DOWN))
        {
            bool alreadyEnabled = false;
            int size = getEnabledInterfacesCount();
@@ -1262,10 +1267,10 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
    }
 
 
-   if (category == NF_IPv4_ROUTE_DELETED)
+   if (category == inet::NF_IPv4_ROUTE_DELETED)
    {
        // if route from other routing protocol was deleted, check "RIP routing table"
-       IPv4Route *route = check_and_cast<IPv4Route *>(details);
+       inet::IPv4Route *route = check_and_cast<inet::IPv4Route *>(details);
 
        RIP::RoutingTableEntry *routingTableEntryInRIPRT;
        RIP::RoutingTableEntry *RIPRoute = dynamic_cast<RIP::RoutingTableEntry *>(route);
@@ -1288,9 +1293,9 @@ void RIPRouting::receiveChangeNotification(int category, const cObject *details)
        }
    }
 
-   if (category == NF_IPv4_ROUTE_CHANGED)
+   if (category == inet::NF_IPv4_ROUTE_CHANGED)
    {
-       IPv4Route *changedRoute = check_and_cast<IPv4Route *>(details);
+       inet::IPv4Route *changedRoute = check_and_cast<inet::IPv4Route *>(details);
        ANSAIPv4Route *changedRouteANSA = dynamic_cast<ANSAIPv4Route *>(changedRoute);
        RIP::RoutingTableEntry *changedRouteRIPng = dynamic_cast<RIP::RoutingTableEntry *>(changedRoute);
 

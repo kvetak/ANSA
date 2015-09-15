@@ -16,7 +16,7 @@
 #ifndef EIGRPDISABLEDINTERFACES_H_
 #define EIGRPDISABLEDINTERFACES_H_
 
-#include "EigrpInterfaceTable.h"
+#include "ansa/networklayer/eigrp/tables/EigrpInterfaceTable.h"
 
 /**
  * Table with disabled EIGRP interfaces. Used to store the settings of interfaces.

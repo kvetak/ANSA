@@ -6,7 +6,7 @@
  *  Author: Tomas Suchomel, xsucho00
  */
 
-#include "acl.h"
+#include "ansa/acl/acl.h"
 
 Define_Module(acl);
 
@@ -94,9 +94,9 @@ void acl::andIpWithMask(TRule* rule)
  * @param wc	- IPAddress structure with wildcard mask
  * @see loadConfigFromXML()
  */
-IPv4Address acl::negateWildcard(IPv4Address wc)
+inet::IPv4Address acl::negateWildcard(inet::IPv4Address wc)
 {
-	return (IPv4Address(~(wc.getInt())));
+	return (inet::IPv4Address(~(wc.getInt())));
 }
 
 /*
@@ -219,8 +219,8 @@ void acl::getPort(std::string pom, std::string p_beg, std::string p_end, TIP *ip
 bool acl::loadConfigFromXML(const char* fileName)
 {
 	/* get access into Routing Table and Interface Table modules */
-	IRoutingTable* rt = RoutingTableAccess().get();
-	IInterfaceTable* ift = InterfaceTableAccess().get();
+	inet::IRoutingTable* rt = RoutingTableAccess().get();
+	inet::IInterfaceTable* ift = InterfaceTableAccess().get();
 
 	/* resolution of configuration XML file according to specified filename */
 	cXMLElement* document = ev.getXMLDocument(fileName);
@@ -292,13 +292,13 @@ bool acl::loadConfigFromXML(const char* fileName)
 				else if (strcmp(tagName, "IP_src") == 0)
 					rule.source.ipAddr.set(value);
 				else if (strcmp(tagName, "WC_src") == 0)
-					rule.source.netmask = negateWildcard(IPv4Address(value));
+					rule.source.netmask = negateWildcard(inet::IPv4Address(value));
 				else if (strcmp(tagName, "protocol") == 0)
 					getProtocol(value, &rule);
 				else if (strcmp(tagName, "IP_dst") == 0)
 					rule.dest.ipAddr.set(value);
 				else if (strcmp(tagName, "WC_dst") == 0)
-					rule.dest.netmask = negateWildcard(IPv4Address(value));
+					rule.dest.netmask = negateWildcard(inet::IPv4Address(value));
 				else if (strcmp(tagName, "port_op_src") == 0)
 					src_port_op = value;
 				else if (strcmp(tagName, "port_beg_src") == 0)
@@ -360,7 +360,7 @@ bool acl::loadConfigFromXML(const char* fileName)
 		/* processing interface information - binding ACL list to interface and direction */
 		while (interface != NULL)
 		{
-			InterfaceEntry *targetInt = ift->getInterfaceByName(interface->getNodeValue());
+			inet::InterfaceEntry *targetInt = ift->getInterfaceByName(interface->getNodeValue());
 			TInterface _if;
 
 			_if.gateIndex = targetInt->getNetworkLayerGateIndex();
@@ -410,7 +410,7 @@ TACL* acl::getRules(int gateIndex, bool dir)
  * @param acl		- list of ACL rules which fits current packet
  * @return Decision of action taken with current packet (permit/deny)
  */
-bool acl::processPacket(IPv4Datagram* packet, TACL* acl)
+bool acl::processPacket(inet::IPv4Datagram* packet, TACL* acl)
 {
 	TIP source, dest;
 	source.ipAddr = packet->getSrcAddress();
@@ -421,13 +421,13 @@ bool acl::processPacket(IPv4Datagram* packet, TACL* acl)
 	ev << "Packet Dest.  IP Address: " << dest.ipAddr.str() << endl;
 	ev << "Packet Protocol ID      : " << protocol << endl;
 
-	UDPPacket *udppacket;
-	TCPSegment *tcppacket;
+	inet::UDPPacket *udppacket;
+	inet::tcp::TCPSegment *tcppacket;
 
 	switch (protocol)
 	{
 		case PROT_UDP: // if protocol is UDP, ports need to be checked
-			udppacket = dynamic_cast<UDPPacket *> (packet->decapsulate());
+			udppacket = dynamic_cast<inet::UDPPacket *> (packet->decapsulate());
 			source.portBeg = udppacket->getSourcePort();
 			ev << "UDP packet, source port: " << source.portBeg << endl;
 			dest.portBeg = udppacket->getDestinationPort();
@@ -435,7 +435,7 @@ bool acl::processPacket(IPv4Datagram* packet, TACL* acl)
 			delete udppacket;
 			break;
 		case PROT_TCP: // if protocol is TCP, ports need to be checked
-			tcppacket = dynamic_cast<TCPSegment *> (packet->decapsulate());
+			tcppacket = dynamic_cast<inet::tcp::TCPSegment *> (packet->decapsulate());
 			source.portBeg = tcppacket->getSrcPort();
 			ev << "TCP packet, source port: " << source.portBeg << endl;
 			dest.portBeg = tcppacket->getDestPort();
@@ -583,7 +583,7 @@ void acl::handleMessage(cMessage* msg)
 			else // ACL is bound within packet's interface and direction, need to filter
 			{
 				ev << "An ACL list bound correctly for this router/interface." << endl;
-				IPv4Datagram *packet = dynamic_cast<IPv4Datagram*> (copy); // dynamic_cast is taken
+				inet::IPv4Datagram *packet = dynamic_cast<inet::IPv4Datagram*> (copy); // dynamic_cast is taken
 				if (processPacket(packet, acl)) // action according to ACL is "permit"
 				{
 					if (dir)
@@ -619,7 +619,7 @@ void acl::initialize(int stage)
 	{
 			case 0: // get access to notification board
 				notificationBoard = NotificationBoardAccess().get();
-				notificationBoard->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+				notificationBoard->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
 				break;
 			case 4: // initialization of the ACL module
 				const char *fileName = par("configFile"); // XML file name read from parameter

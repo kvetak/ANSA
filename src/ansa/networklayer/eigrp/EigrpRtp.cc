@@ -13,13 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "IPv4ControlInfo.h"
-#include "IPv6ControlInfo.h"
-#include "ModuleAccess.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "networklayer/contract/ipv6/IPv6ControlInfo.h"
+#include "common/ModuleAccess.h"
 
-#include "EigrpNeighborTable.h"
-#include "EigrpRtp.h"
-#include "EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNeighborTable.h"
+#include "ansa/networklayer/eigrp/EigrpRtp.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
 
 #define EIGRP_RTP_DEBUG
 
@@ -242,7 +242,7 @@ EigrpRtpT<IPAddress>::~EigrpRtpT()
 }
 
 template <>
-void EigrpRtpT<IPv4Address>::initialize(int stage)
+void EigrpRtpT<inet::IPv4Address>::initialize(int stage)
 {
     if (stage == 3)
     {
@@ -259,7 +259,7 @@ void EigrpRtpT<IPv4Address>::initialize(int stage)
 
 #ifndef DISABLE_EIGRP_IPV6
 template <>
-void EigrpRtpT<IPv6Address>::initialize(int stage)
+void EigrpRtpT<inet::IPv6Address>::initialize(int stage)
 {
     if (stage == 3)
     {
@@ -380,20 +380,20 @@ void EigrpRtpT<IPAddress>::acknowledgeMsg(int neighId, int ifaceId, uint32_t ack
 }
 
 template <>
-EigrpNeighbor<IPv4Address> *EigrpRtpT<IPv4Address>::getNeighborId(EigrpMessage *msg)
+EigrpNeighbor<inet::IPv4Address> *EigrpRtpT<inet::IPv4Address>::getNeighborId(EigrpMessage *msg)
 {
-    IPv4ControlInfo *ctrlInfo =check_and_cast<IPv4ControlInfo *>(msg->getControlInfo());
-    IPv4Address srcAddr = ctrlInfo->getSrcAddr();
+    inet::IPv4ControlInfo *ctrlInfo =check_and_cast<inet::IPv4ControlInfo *>(msg->getControlInfo());
+    inet::IPv4Address srcAddr = ctrlInfo->getSrcAddr();
 
     return eigrpNt->findNeighbor(srcAddr);
 }
 
 #ifndef DISABLE_EIGRP_IPV6
 template <>
-EigrpNeighbor<IPv6Address> *EigrpRtpT<IPv6Address>::getNeighborId(EigrpMessage *msg)
+EigrpNeighbor<inet::IPv6Address> *EigrpRtpT<inet::IPv6Address>::getNeighborId(EigrpMessage *msg)
 {
-    IPv6ControlInfo *ctrlInfo =check_and_cast<IPv6ControlInfo *>(msg->getControlInfo());
-    IPv6Address srcAddr = ctrlInfo->getSrcAddr();
+    inet::IPv6ControlInfo *ctrlInfo =check_and_cast<inet::IPv6ControlInfo *>(msg->getControlInfo());
+    inet::IPv6Address srcAddr = ctrlInfo->getSrcAddr();
 
     return eigrpNt->findNeighbor(srcAddr);
 }
@@ -525,8 +525,8 @@ void EigrpRtpT<IPAddress>::sendRelMsg(EigrpMsgReq *msgReq)
     scheduleNextMsg(info.neighborIfaceId);
 }
 
-template class EigrpRtpT<IPv4Address>;
+template class EigrpRtpT<inet::IPv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpRtpT<IPv6Address>;
+template class EigrpRtpT<inet::IPv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */

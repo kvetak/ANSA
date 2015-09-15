@@ -23,16 +23,16 @@
 #define ANSAROUTINGTABLEACCESS_H_
 
 #include <omnetpp.h>
-#include "ModuleAccess.h"
-#include "AnsaRoutingTable.h"
+#include "common/ModuleAccess.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
 
 /**
  * @brief Class gives access to the MulticastRoutingTable.
  */
-class INET_API AnsaRoutingTableAccess : public ModuleAccess<AnsaRoutingTable>
+class INET_API AnsaRoutingTableAccess : public inet::ModuleAccess<AnsaRoutingTable>
 {
     public:
-        AnsaRoutingTableAccess() : ModuleAccess<AnsaRoutingTable>("routingTable") {}
+        AnsaRoutingTableAccess() : inet::ModuleAccess<AnsaRoutingTable>("routingTable") {}
 };
 
 #endif /* ANSAROUTINGTABLEACCESS_H_ */

@@ -21,7 +21,7 @@
 
 package inet.ansa.nodes.inet;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.applications.IUDPApp;
+import inet.applications.contract.IUDPApp;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.IPGen.AnsaIPTrafGen;
@@ -32,15 +32,15 @@ import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.applications.pingapp.PingApp;
 import inet.base.NotificationBoard;
 import inet.linklayer.ppp.PPPInterface;
-import inet.nodes.inet.NetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
-import inet.networklayer.ipv4.RoutingTable;
-import inet.networklayer.ipv6.RoutingTable6;
-import inet.transport.tcp.TCP;
-import inet.applications.IUDPApp;
-import inet.transport.IUDP;
-import inet.transport.udp.UDP;
+import inet.networklayer.ipv4.IPv4RoutingTable;
+import inet.networklayer.ipv6.IPv6RoutingTable;
+import inet.transportlayer.tcp.TCP;
+import inet.applications.contract.IUDPApp;
+import inet.transportlayer.contract.IUDP;
+import inet.transportlayer.udp.UDP;
 
 
 module AnsaHost
@@ -104,7 +104,7 @@ module AnsaHost
             parameters:
                 @display("p=213,117");
         }
-        networkLayer: NetworkLayer {
+        networkLayer: IPv4NetworkLayer {
             parameters:
                 @display("q=queue;p=213,212");
             gates:
@@ -119,10 +119,10 @@ module AnsaHost
             parameters:
                 @display("p=284,342,row,110;q=l2queue");
         }
-        routingTable6: RoutingTable6 {
+        routingTable6: IPv6RoutingTable {
             @display("p=197,35");
             isRouter = IPForward;
-            routingTable = routingTable;
+            routes = routingTable;
         }
         udpApp[numUdpApps]: <> like IUDPApp {
             parameters:
@@ -131,13 +131,13 @@ module AnsaHost
 
     connections allowunconnected:
 
-        tcp.ipOut --> networkLayer.tcpIn;
-        tcp.ipIn <-- networkLayer.tcpOut;
+        tcp.ipOut --> networkLayer.transportIn++;
+        tcp.ipIn <-- networkLayer.transportOut++;
 
-        udp.ipOut --> networkLayer.udpIn;
-        udp.ipIn <-- networkLayer.udpOut;
-        ipTrafGen.ipOut --> networkLayer.rsvpIn;
-        ipTrafGen.ipIn <-- networkLayer.rsvpOut;
+        udp.ipOut --> networkLayer.transportIn++;
+        udp.ipIn <-- networkLayer.transportOut++;
+        ipTrafGen.ipOut --> networkLayer.transportIn++;
+        ipTrafGen.ipIn <-- networkLayer.transportOut++;
 
         pingApp4.pingOut --> networkLayer.pingIn++;
         pingApp4.pingIn <-- networkLayer.pingOut++;

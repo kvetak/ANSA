@@ -19,16 +19,17 @@
 * @detail Represents RIP Routing Table Entry
 */
 
-#include "RIPRoutingTableEntry.h"
-
+#include "ansa/applications/rip/RIPRoutingTableEntry.h"
 #include "omnetpp.h"
 
-#include "InterfaceTableAccess.h"
+
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "networklayer/ipv4/IPv4Route.h"
 
 namespace RIP
 {
 
-RoutingTableEntry::RoutingTableEntry(IPv4Address network, IPv4Address netMask) :
+RoutingTableEntry::RoutingTableEntry(inet::IPv4Address network, inet::IPv4Address netMask) :
     ANSAIPv4Route(),
     _changeFlag(false),
     _routeTag(0)
@@ -36,7 +37,7 @@ RoutingTableEntry::RoutingTableEntry(IPv4Address network, IPv4Address netMask) :
     setDestination(network);
     setNetmask(netMask);
 
-    setSource(IPv4Route::RIP);
+    setSourceType(IRoute::RIP);
     setRoutingProtocolSource(pRIP);
     setAdminDist(dRIP);
     setTimer(NULL);

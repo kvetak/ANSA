@@ -26,19 +26,19 @@ import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.applications.IPingApp;
+import inet.applications.contract.IPingApp;
 import inet.applications.pingapp.PingApp;
-import inet.transport.IUDP;
-import inet.util.PcapRecorder;
+import inet.transportlayer.contract.IUDP;
+import inet.common.packet.PcapRecorder;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.networklayer.common.InterfaceTable;
-import inet.mobility.IMobility;
-import inet.linklayer.IWirelessNic;
-import inet.linklayer.IWiredNic;
-import inet.linklayer.IExternalNic;
+import inet.mobility.contract.IMobility;
+import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.IExternalNic;
 import inet.base.NotificationBoard;
-import inet.nodes.inet.NetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 import inet.ansa.nodes.inet.ansaNetworkLayer;
 
 module BabelRouter
@@ -96,7 +96,7 @@ module BabelRouter
                 ifIn[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
                 ifOut[sizeof(ethg)+sizeof(pppg)+sizeof(radioIn)];
         }
-        networkLayer6: NetworkLayer6 {
+        networkLayer6: IPv6NetworkLayer {
             parameters:
                 @display("p=298,393");
             gates:
@@ -203,8 +203,8 @@ module BabelRouter
         networkLayer.udpOut --> udp.ipIn;
         udp.ipOut --> networkLayer.udpIn;
 
-        udp.ipv6Out --> networkLayer6.udpIn;
-        networkLayer6.udpOut --> udp.ipv6In;
+        udp.ipv6Out --> networkLayer6.transportIn++;
+        networkLayer6.transportOut++ --> udp.ipv6In;
 
         udp.appOut++ --> babel.udpIn;
         babel.udpOut --> udp.appIn++;

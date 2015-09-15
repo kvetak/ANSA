@@ -18,23 +18,23 @@
 
 // This file is based on the PPP.h of INET written by Andras Varga.
 
-#ifndef __EXTINTERFACE_H
-#define __EXTINTERFACE_H
-
+#ifndef __INET_EXTINTERFACE_H
+#define __INET_EXTINTERFACE_H
 
 #ifndef MAX_MTU_SIZE
-#define MAX_MTU_SIZE 4000
-#endif
+#define MAX_MTU_SIZE    4000
+#endif // ifndef MAX_MTU_SIZE
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "MACBase.h"
-#include "ExtFrame_m.h"
-#include "cSocketRTScheduler.h"
+#include "linklayer/base/MACBase.h"
+#include "linklayer/ext/ExtFrame_m.h"
+#include "linklayer/ext/cSocketRTScheduler.h"
+
+namespace inet {
 
 // Forward declarations:
 class InterfaceEntry;
-
 
 /**
  * Implements an interface that corresponds to a real interface
@@ -49,7 +49,7 @@ class ExtInterface : public MACBase
 {
   protected:
     bool connected;
-    uint8 buffer[1<<16];
+    uint8 buffer[1 << 16];
     const char *device;
 
     // statistics
@@ -66,23 +66,20 @@ class ExtInterface : public MACBase
     void updateDisplayString();
 
     // MACBase functions
-    InterfaceEntry *createInterfaceEntry();
-    virtual void flushQueue();
-    virtual void clearQueue();
-    virtual bool isUpperMsg(cMessage *msg) {return msg->arrivedOn("upperLayerIn");}
-
-  private:
-    const char *tag_color;
-    const char *tag_width;
+    InterfaceEntry *createInterfaceEntry() override;
+    virtual void flushQueue() override;
+    virtual void clearQueue() override;
+    virtual bool isUpperMsg(cMessage *msg) override { return msg->arrivedOn("upperLayerIn"); }
 
   public:
-    virtual int numInitStages() const {return 4;}
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
 
-    virtual void finish();
+    virtual void finish() override;
 };
 
-#endif
+} // namespace inet
 
+#endif // ifndef __INET_EXTINTERFACE_H
 

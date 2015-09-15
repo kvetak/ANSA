@@ -18,10 +18,10 @@
 
 #include <omnetpp.h>
 
-#include "MACAddress.h"
-#include "Ethernet.h"
-#include "EtherFrame_m.h"
-#include "AnsaEtherFrame_m.h"
+#include "linklayer/common/MACAddress.h"
+#include "linklayer/ethernet/Ethernet.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "ansa/linklayer/switch/AnsaEtherFrame_m.h"
 
 /**
  * TODO G - Generated class

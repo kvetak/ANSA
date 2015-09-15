@@ -19,17 +19,17 @@
 * @detail Represents RIPng Routing Table Entry
 */
 
-#include "RIPngRoutingTableEntry.h"
-
+#include "ansa/applications/ripng/RIPngRoutingTableEntry.h"
 #include "omnetpp.h"
 
-#include "InterfaceTableAccess.h"
+
+#include "networklayer/common/InterfaceTableAccess.h"
 
 namespace RIPng
 {
 
-RoutingTableEntry::RoutingTableEntry(IPv6Address destPrefix, int length) :
-    ANSAIPv6Route(destPrefix, length, IPv6Route::ROUTING_PROT),
+RoutingTableEntry::RoutingTableEntry(inet::IPv6Address destPrefix, int length) :
+    ANSAIPv6Route(destPrefix, length, inet::IPv6Route::ROUTING_PROT),
     _changeFlag(false),
     _routeTag(0)
 {
@@ -41,7 +41,7 @@ RoutingTableEntry::RoutingTableEntry(IPv6Address destPrefix, int length) :
 }
 
 RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
-    ANSAIPv6Route(entry.getDestPrefix(), entry.getPrefixLength(), IPv6Route::ROUTING_PROT),
+    ANSAIPv6Route(entry.getDestPrefix(), entry.getPrefixLength(), inet::IPv6Route::ROUTING_PROT),
     _changeFlag(false)
 {
     setProcess(entry.getProcess());
@@ -50,7 +50,7 @@ RoutingTableEntry::RoutingTableEntry(RoutingTableEntry& entry) :
     setTimer(NULL);
     setGCTimer(NULL);
     setNextHop(entry.getNextHop());
-    setInterfaceId(entry.getInterfaceId());
+    setInterfaceId(entry.getInterface()->getInterfaceId());
     setMetric(entry.getMetric());
     setRouteTag(entry.getRouteTag());
     setCopy(&entry);
@@ -101,7 +101,7 @@ std::string RoutingTableEntry::RIPngInfo() const
         }
     }
 
-    out << ", " << ift->getInterfaceById(getInterfaceId())->getName();
+    out << ", " << ift->getInterfaceById(getInterface()->getInterfaceId())->getName();
     if (!getNextHop().isUnspecified())
         out << "/" << getNextHop();
 

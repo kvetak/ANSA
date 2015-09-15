@@ -22,7 +22,7 @@
  *  Hello messages.
  */
 
-#include "PimNeighborTable.h"
+#include "ansa/networklayer/pim/tables/PimNeighborTable.h"
 
 Define_Module(PimNeighborTable);
 
@@ -178,7 +178,7 @@ bool PimNeighborTable::isInTable(PimNeighbor entry)
  * @param addr IP address of neighbor.
  * @return Pointer to entry if entry was found in the table, otherwise NULL.
  */
-PimNeighbor *PimNeighborTable::findNeighbor(int intId, IPv4Address addr)
+PimNeighbor *PimNeighborTable::findNeighbor(int intId, inet::IPv4Address addr)
 {
 	for(int i = 0; i < getNumNeighbors(); i++)
 	{

@@ -15,16 +15,16 @@
 #include <map>
 #include <string>
 
-#include "NotificationBoard.h"
-#include "MACAddress.h"
-#include "Ethernet.h"
+#include "base/NotificationBoard.h"
+#include "linklayer/common/MACAddress.h"
+#include "linklayer/ethernet/Ethernet.h"
 
-#include "EtherFrame_m.h"
-#include "AnsaEtherFrame_m.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "ansa/linklayer/switch/AnsaEtherFrame_m.h"
 
-#include "macTable.h"
-#include "vlanTable.h"
-#include "stp/stp.h"
+#include "ansa/linklayer/switch/macTable.h"
+#include "ansa/linklayer/switch/vlanTable.h"
+#include "ansa/linklayer/switch/stp/stp.h"
 
 
 class ANSASwitchCore : public cSimpleModule
@@ -38,19 +38,19 @@ class ANSASwitchCore : public cSimpleModule
 	  int VID; // frame's VLAN ID
 	  int rPort; // reception port
 	  VLANTable::tVIDPortList portList; // suggested(then applied) list of destination ports
-	  MACAddress src; // source MAC address of the original frame
-	  MACAddress dest; // destination MAC address of the original frame
-	  int etherType; // EtherType from EthernetIIFrame
+	  inet::MACAddress src; // source MAC address of the original frame
+	  inet::MACAddress dest; // destination MAC address of the original frame
+	  int etherType; // EtherType from inet::EthernetIIFrame
 	  std::string name; // for simulation frame name
 	} tFrameDescriptor;
 
-	MACAddress getBridgeAddress();
+	inet::MACAddress getBridgeAddress();
 
   private:
 
   protected:
-  MACAddress bridgeGroupAddress;
-  MACAddress bridgeAddress;
+  inet::MACAddress bridgeGroupAddress;
+  inet::MACAddress bridgeAddress;
 
   MACTable * addrTable;
   VLANTable * vlanTable;
@@ -69,17 +69,17 @@ class ANSASwitchCore : public cSimpleModule
   void relay(tFrameDescriptor& frame);
   void dispatch(tFrameDescriptor& frame);
 
-  bool ingress(tFrameDescriptor& tmp, EthernetIIFrame *frame, int rPort);
+  bool ingress(tFrameDescriptor& tmp, inet::EthernetIIFrame *frame, int rPort);
   bool ingress(tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPort);
   void egress(tFrameDescriptor& frame);
 
   void learn(tFrameDescriptor& frame);
 
   void processFrame(cMessage * msg);
-  void handleIncomingFrame(EthernetIIFrame *frame);
+  void handleIncomingFrame(inet::EthernetIIFrame *frame);
 
-  void handleAndDispatchFrame(EthernetIIFrame *frame, int inputport);
-  void broadcastFrame(EthernetIIFrame *frame, int inputport);
+  void handleAndDispatchFrame(inet::EthernetIIFrame *frame, int inputport);
+  void broadcastFrame(inet::EthernetIIFrame *frame, int inputport);
 
   void sinkMsg(cMessage *msg);
   void sinkDupMsg(cMessage *msg);
@@ -88,10 +88,9 @@ class ANSASwitchCore : public cSimpleModule
   void deliverBPDU(tFrameDescriptor& frame);
 
  // void tagMsg(int _vlan);
-  AnsaEtherFrame * tagMsg(EthernetIIFrame * _frame, int _vlan);
+  AnsaEtherFrame * tagMsg(inet::EthernetIIFrame * _frame, int _vlan);
   //void untagMsg();
-  EthernetIIFrame * untagMsg(AnsaEtherFrame * _frame);
-
+  inet::EthernetIIFrame * untagMsg(AnsaEtherFrame * _frame);
 };
 
 

@@ -18,10 +18,10 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include "LISPMapDatabase.h"
+#include "ansa/networklayer/lisp/LISPMapDatabase.h"
 //Forward declaration
-#include "IPv4InterfaceData.h"
-#include "IPv6InterfaceData.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "networklayer/ipv6/IPv6InterfaceData.h"
 
 Define_Module(LISPMapDatabase);
 
@@ -66,18 +66,18 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
 
         for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
             for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
-                IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
-                IPv4Address adr4 =
+                inet::IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+                inet::IPv4Address adr4 =
                         (int4Data) ?
                                 int4Data->getIPAddress() :
-                                IPv4Address::UNSPECIFIED_ADDRESS;
-                IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
-                IPv6Address adr6 =
+                                inet::IPv4Address::UNSPECIFIED_ADDRESS;
+                inet::IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+                inet::IPv6Address adr6 =
                         (int6Data) ?
                                 int6Data->getPreferredAddress() :
-                                IPv6Address::UNSPECIFIED_ADDRESS;
-                if (it->getEidPrefix().getEidAddr().equals(LISPCommon::getNetworkAddress(adr4, it->getEidPrefix().getEidLength()))
-                    || it->getEidPrefix().getEidAddr().equals(LISPCommon::getNetworkAddress(adr6, it->getEidPrefix().getEidLength()))
+                                inet::IPv6Address::UNSPECIFIED_ADDRESS;
+                if (it->getEidPrefix().getEidAddr()==LISPCommon::getNetworkAddress(adr4, it->getEidPrefix().getEidLength())
+                    || it->getEidPrefix().getEidAddr()==LISPCommon::getNetworkAddress(adr6, it->getEidPrefix().getEidLength())
                    ) {
                     mstmp.push_back(*it);
                     break;
@@ -90,29 +90,29 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
 
     //Set EtrMappings LOCAL locators and add other locators to probingset
     for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
-        IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
-        IPv4Address adr4 =
+        inet::IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+        inet::IPv4Address adr4 =
                 (int4Data) ?
                         int4Data->getIPAddress() :
-                        IPv4Address::UNSPECIFIED_ADDRESS;
-        IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
-        IPv6Address adr6 =
+                        inet::IPv4Address::UNSPECIFIED_ADDRESS;
+        inet::IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+        inet::IPv6Address adr6 =
                 (int6Data) ?
                         int6Data->getPreferredAddress() :
-                        IPv6Address::UNSPECIFIED_ADDRESS;
+                        inet::IPv6Address::UNSPECIFIED_ADDRESS;
         for (MapStorageItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
             //Mark local and foreign locators
             for (LocatorItem jt = it->getRlocs().begin();
                     jt != it->getRlocs().end(); ++jt) {
                 //IF locator is local THEN mark it...
-                if (jt->getRlocAddr().equals(adr4) || jt->getRlocAddr().equals(adr6))
+                if ((jt->getRlocAddr()==adr4) || (jt->getRlocAddr()==adr6))
                     jt->setLocal(true);
             }
         }
     }
 }
 
-bool LISPMapDatabase::isOneOfMyEids(IPvXAddress addr) {
+bool LISPMapDatabase::isOneOfMyEids(inet::L3Address addr) {
     return (lookupMapEntry(addr) ? true : false);
 }
 

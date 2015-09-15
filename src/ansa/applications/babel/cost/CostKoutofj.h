@@ -24,7 +24,7 @@
 
 #include <omnetpp.h>
 
-#include "IBabelCostComputation.h"
+#include "ansa/applications/babel/cost/IBabelCostComputation.h"
 /**
  * TODO - Generated class
  */

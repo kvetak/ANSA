@@ -19,24 +19,24 @@
 package inet.ansa.nodes;
 
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
-import inet.applications.IPingApp;
-import inet.applications.ISCTPApp;
-import inet.applications.ITCPApp;
-import inet.applications.IUDPApp;
-import inet.transport.ISCTP;
-import inet.transport.ITCP;
-import inet.transport.IUDP;
+import inet.applications.contract.IPingApp;
+import inet.applications.contract.ISCTPApp;
+import inet.applications.contract.ITCPApp;
+import inet.applications.contract.IUDPApp;
+import inet.transportlayer.contract.ISCTP;
+import inet.transportlayer.contract.ITCP;
+import inet.transportlayer.contract.IUDP;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
-import inet.nodes.inet.NetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
-import inet.mobility.IMobility;
-import inet.linklayer.IWirelessNic;
-import inet.linklayer.IWiredNic;
-import inet.linklayer.IExternalNic;
+import inet.mobility.contract.IMobility;
+import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.IExternalNic;
 import inet.base.NotificationBoard;
-import inet.util.PcapRecorder;
+import inet.common.packet.PcapRecorder;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 
@@ -138,7 +138,7 @@ module ANSA_DualStackHost
         }
 
         // network layer
-        networkLayer: NetworkLayer {
+        networkLayer: IPv4NetworkLayer {
             parameters:
                 @display("p=290,348;q=queue");
             gates:
@@ -154,7 +154,7 @@ module ANSA_DualStackHost
                 //routingFile = routingFile;
         }
 
-        networkLayer6: NetworkLayer6 {
+        networkLayer6: IPv6NetworkLayer {
             parameters:
                 @display("p=512,348;q=queue");
             gates:
@@ -243,28 +243,29 @@ module ANSA_DualStackHost
 
 
 		//TCP
-        tcp.ipOut --> networkLayer.tcpIn if hasTcp;
-        tcp.ipIn <-- networkLayer.tcpOut if hasTcp;
-        tcp.ipv6Out --> networkLayer6.tcpIn if hasTcp;
-        tcp.ipv6In <-- networkLayer6.tcpOut if hasTcp;        
+        tcp.ipOut --> networkLayer.transportIn++ if hasTcp;
+        tcp.ipIn <-- networkLayer.transportOut++ if hasTcp;
+        tcp.ipv6Out --> networkLayer6.transportIn++ if hasTcp;
+        tcp.ipv6In <-- networkLayer6.transportOut++ if hasTcp;        
         for i=0..numTcpApps-1 {
             tcpApp[i].tcpOut --> tcp.appIn++;
             tcpApp[i].tcpIn <-- tcp.appOut++;
         }
         //UDP
-        udp.ipOut --> networkLayer.udpIn if hasUdp;
-        udp.ipIn <-- networkLayer.udpOut if hasUdp;
-		udp.ipv6Out --> networkLayer6.udpIn if hasUdp;
-        udp.ipv6In <-- networkLayer6.udpOut if hasUdp;
+        udp.ipOut --> networkLayer.transportIn++ if hasUdp;
+        udp.ipIn <-- networkLayer.transportOut++ if hasUdp;
+		udp.ipv6Out --> networkLayer6.transportIn++ if hasUdp;
+        udp.ipv6In <-- networkLayer6.transportOut++ if hasUdp;
         for i=0..numUdpApps-1 {
             udpApp[i].udpOut --> udp.appIn++;
             udpApp[i].udpIn <-- udp.appOut++;
         }
+        
         //SCTP
-        sctp.to_ip --> networkLayer.sctpIn if hasSctp;
-        networkLayer.sctpOut --> sctp.from_ip if hasSctp;
-        sctp.to_ipv6 --> networkLayer6.sctpIn if hasSctp;
-        networkLayer6.sctpOut --> sctp.from_ipv6 if hasSctp;        
+        sctp.to_ip --> networkLayer.transportIn++ if hasSctp;
+        networkLayer.transportOut++ --> sctp.from_ip if hasSctp;
+        sctp.to_ipv6 --> networkLayer6.transportIn++ if hasSctp;
+        networkLayer6.transportOut++ --> sctp.from_ipv6 if hasSctp;        
         for i=0..numSctpApps-1 {
             sctpApp[i].sctpOut --> sctp.from_appl++;
             sctp.to_appl++ --> sctpApp[i].sctpIn;

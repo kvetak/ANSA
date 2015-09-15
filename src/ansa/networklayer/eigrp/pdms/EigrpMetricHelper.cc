@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include <EigrpMetricHelper.h>
+#include "ansa/networklayer/eigrp/pdms/EigrpMetricHelper.h"
 
 bool operator==(const EigrpKValues& k1, const EigrpKValues& k2)
 {

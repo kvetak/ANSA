@@ -16,10 +16,10 @@
 package inet.examples.ansa.MLDv1;
 import inet.ansa.applications.ripng.RIPngRouter;
 import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.nodes.ethernet.EtherSwitch;
+import inet.node.ethernet.EtherSwitch;
 import ned.DatarateChannel;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 //
 // TODO documentation

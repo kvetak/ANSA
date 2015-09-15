@@ -19,7 +19,7 @@
  */
 
 
-#include <LISPMapEntry.h>
+#include "ansa/networklayer/lisp/LISPMapEntry.h"
 
 LISPMapEntry::LISPMapEntry() : ttl(0), expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
 {
@@ -74,7 +74,7 @@ void LISPMapEntry::setAction(const LISPCommon::EAct& action) {
     Action = action;
 }
 
-bool LISPMapEntry::isLocatorExisting(const IPvXAddress& address) const
+bool LISPMapEntry::isLocatorExisting(const inet::L3Address& address) const
 {
     for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
     {
@@ -85,7 +85,7 @@ bool LISPMapEntry::isLocatorExisting(const IPvXAddress& address) const
     //return mcentry->rloc.find(address) != mcentry->rloc.end() ? true : false;
 }
 
-LISPRLocator* LISPMapEntry::getLocator(const IPvXAddress& address)
+LISPRLocator* LISPMapEntry::getLocator(const inet::L3Address& address)
 {
     for (LocatorItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
     {
@@ -153,7 +153,7 @@ bool LISPMapEntry::operator <(const LISPMapEntry& other) const {
     return false;
 }
 
-void LISPMapEntry::removeLocator(IPvXAddress& address) {
+void LISPMapEntry::removeLocator(inet::L3Address& address) {
     LISPRLocator* rloc = getLocator(address);
     if (rloc) {
         RLOCs.remove(*rloc);

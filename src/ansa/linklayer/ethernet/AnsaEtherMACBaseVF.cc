@@ -13,17 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "AnsaEtherMACBaseVF.h"
+#include "ansa/linklayer/ethernet/AnsaEtherMACBaseVF.h"
 
-#include "EtherFrame_m.h"
-#include "InterfaceEntry.h"
-#include "AnsaInterfaceEntry.h"
-#include "InterfaceTableAccess.h"
-#include "opp_utils.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "common/INETUtils.h"
+
 
 void AnsaEtherMACBaseVF::initialize(int stage)
 {
-    MACBase::initialize(stage);
+    inet::MACBase::initialize(stage);
     if (stage == 0)    {
         physInGate = gate("phys$i");
         physOutGate = gate("phys$o");
@@ -69,7 +70,7 @@ void AnsaEtherMACBaseVF::registerInterface()
     interfaceEntry = new AnsaInterfaceEntry(this);
 
     // interface name: NIC module's name without special characters ([])
-    interfaceEntry->setName(OPP_Global::stripnonalnum(getParentModule()->getFullName()).c_str());
+    interfaceEntry->setName(inet::utils::stripnonalnum(getParentModule()->getFullName()).c_str());
 
     // generate a link-layer address to be used as interface token for IPv6
     interfaceEntry->setMACAddress(address);
@@ -86,13 +87,13 @@ void AnsaEtherMACBaseVF::registerInterface()
     interfaceEntry->setBroadcast(true);
 
     // add
-    IInterfaceTable *ift = InterfaceTableAccess().getIfExists();
+    inet::IInterfaceTable *ift = InterfaceTableAccess().getIfExists();
 
     if (ift)
         ift->addInterface(interfaceEntry);
 }
 
-bool AnsaEtherMACBaseVF::dropFrameNotForUs(EtherFrame *frame)
+bool AnsaEtherMACBaseVF::dropFrameNotForUs(inet::EtherFrame *frame)
 {
     // Current ethernet mac implementation does not support the configuration of multicast
     // ethernet address groups. We rather accept all multicast frames (just like they were
@@ -114,12 +115,12 @@ bool AnsaEtherMACBaseVF::dropFrameNotForUs(EtherFrame *frame)
     if (frame->getDest().isBroadcast())
         return false;
 
-    bool isPause = (dynamic_cast<EtherPauseFrame *>(frame) != NULL);
+    bool isPause = (dynamic_cast<inet::EtherPauseFrame *>(frame) != NULL);
 
     if (!isPause && (promiscuous || frame->getDest().isMulticast()))
         return false;
 
-    if (isPause && frame->getDest().equals(MACAddress::MULTICAST_PAUSE_ADDRESS))
+    if (isPause && frame->getDest().equals(inet::MACAddress::MULTICAST_PAUSE_ADDRESS))
         return false;
 
     if ((dynamic_cast<AnsaInterfaceEntry *>(interfaceEntry))->hasMacAddress(frame->getDest()))

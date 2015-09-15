@@ -16,10 +16,10 @@
 #ifndef ANSAINTERFACEENTRY_H_
 #define ANSAINTERFACEENTRY_H_
 
-#include "InterfaceEntry.h"
-#include "VirtualForwarder.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "ansa/networklayer/common/VirtualForwarder.h"
 
-class INET_API AnsaInterfaceEntry : public InterfaceEntry
+class INET_API AnsaInterfaceEntry : public inet::InterfaceEntry
 {
     public:
         typedef std::vector<VirtualForwarder *> VirtualForwarderVector;
@@ -31,12 +31,12 @@ class INET_API AnsaInterfaceEntry : public InterfaceEntry
         AnsaInterfaceEntry(cModule *interfaceModule);
         virtual ~AnsaInterfaceEntry() {};
 
-        bool hasMacAddress(const MACAddress& addr) const;
-        bool hasIPAddress(const IPv4Address& addr) const;
-        const MACAddress& getMacVirtualForwarderById(int vforwarderId) const;
-        const MACAddress& getMacAddressByIP(const IPv4Address& addr) const;
-        virtual int getVirtualForwarderId(const IPv4Address& addr);
-        virtual int getVirtualForwarderId(const MACAddress& addr);
+        bool hasMacAddress(const inet::MACAddress& addr) const;
+        bool hasIPAddress(const inet::IPv4Address& addr) const;
+        const inet::MACAddress& getMacVirtualForwarderById(int vforwarderId) const;
+        const inet::MACAddress& getMacAddressByIP(const inet::IPv4Address& addr) const;
+        virtual int getVirtualForwarderId(const inet::IPv4Address& addr);
+        virtual int getVirtualForwarderId(const inet::MACAddress& addr);
 
         /**
          * Adding Virtual Forwarder to this Interface

@@ -18,37 +18,37 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include <LISPEidPrefix.h>
+#include "ansa/networklayer/lisp/LISPEidPrefix.h"
 
 LISPEidPrefix::LISPEidPrefix() {
-    eidAddr = IPv4Address::UNSPECIFIED_ADDRESS;
+    eidAddr = inet::IPv4Address::UNSPECIFIED_ADDRESS;
     eidLen = DEFAULT_EIDLENGTH_VAL;
     eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
 
 LISPEidPrefix::LISPEidPrefix(const char* address, const char* length) {
-    eidAddr = IPvXAddress(address);
+    eidAddr = inet::L3Address(address);
     eidLen = (unsigned char)atoi(length);
     eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
 
-LISPEidPrefix::LISPEidPrefix(IPvXAddress address, unsigned char length) {
+LISPEidPrefix::LISPEidPrefix(inet::L3Address address, unsigned char length) {
     eidAddr = address;
     eidLen = length;
     eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
 
 LISPEidPrefix::~LISPEidPrefix() {
-    eidAddr = IPvXAddress();
-    eidNetwork = IPvXAddress();
+    eidAddr = inet::L3Address();
+    eidNetwork = inet::L3Address();
     eidLen = DEFAULT_EIDLENGTH_VAL;
 }
 
-const IPvXAddress& LISPEidPrefix::getEidAddr() const {
+const inet::L3Address& LISPEidPrefix::getEidAddr() const {
     return eidNetwork;
 }
 
-void LISPEidPrefix::setEidAddr(const IPvXAddress& eid) {
+void LISPEidPrefix::setEidAddr(const inet::L3Address& eid) {
     this->eidAddr = eid;
 }
 
@@ -60,9 +60,9 @@ std::string LISPEidPrefix::info() const {
     std::stringstream os;
 
     /*
-    if (eid.isIPv6() && eid == IPv6Address::UNSPECIFIED_ADDRESS)
+    if (eid.isIPv6() && eid == inet::IPv6Address::UNSPECIFIED_ADDRESS)
         os << "::0";
-    else if (!eid.isIPv6() && eid == IPv4Address::UNSPECIFIED_ADDRESS)
+    else if (!eid.isIPv6() && eid == inet::IPv4Address::UNSPECIFIED_ADDRESS)
         os << "0.0.0.0";
     else
     */
@@ -85,7 +85,7 @@ std::ostream& operator <<(std::ostream& os, const LISPEidPrefix& ep) {
 }
 
 LISPCommon::Afi LISPEidPrefix::getEidAfi() const {
-    return eidAddr.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+    return (eidAddr.getType()==inet::L3Address::IPv6) ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
 }
 
 bool LISPEidPrefix::operator <(const LISPEidPrefix& other) const {

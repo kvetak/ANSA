@@ -16,8 +16,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-#include "InterfaceStateManager.h"
-#include "InterfaceTableAccess.h"
+#include "ansa/util/InterfaceStateManager/InterfaceStateManager.h"
+#include "networklayer/common/InterfaceTableAccess.h"
 
 Define_Module(InterfaceStateManager);
 
@@ -43,7 +43,7 @@ void InterfaceStateManager::processCommand(const cXMLElement& node)
 {
    if (!strcmp(node.getTagName(), "interfacedown"))
     {
-      InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
+      inet::InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
       EV << "interface " << node.getAttribute("int") << " is going DOWN" << endl;
       if (targetInt == NULL){
          throw cRuntimeError("Interface %s not found", node.getAttribute("int"));
@@ -52,7 +52,7 @@ void InterfaceStateManager::processCommand(const cXMLElement& node)
     }
     else if(!strcmp(node.getTagName(), "interfaceup"))
     {
-      InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
+      inet::InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
       EV << "interface " << node.getAttribute("int") << " is going UP" << endl;
       if (targetInt == NULL){
          throw cRuntimeError("Interface %s not found", node.getAttribute("int"));
@@ -73,21 +73,21 @@ void InterfaceStateManager::processCommand(const cXMLElement& node)
  * @param toDown        - new interface state
  */
 
-void InterfaceStateManager::changeInterfaceState(InterfaceEntry *targetInt, bool toDown)
+void InterfaceStateManager::changeInterfaceState(inet::InterfaceEntry *targetInt, bool toDown)
 {
   Enter_Method_Silent();
   
   if(targetInt != NULL)
   {
-    bool isDown = targetInt->isDown();
+    bool isDown = (targetInt->getState()==inet::InterfaceEntry::DOWN);
     if(!isDown && toDown)
-      targetInt->setDown();
+      targetInt->setState(inet::InterfaceEntry::DOWN);
     /*
      * Migration towards ANSAINET2.2
      */
      else
       if(isDown && !toDown)
-        targetInt->setState(InterfaceEntry::UP);
+        targetInt->setState(inet::InterfaceEntry::UP);
   }
   else
     EV << "Interface NOT found\n";
@@ -101,7 +101,7 @@ void InterfaceStateManager::changeInterfaceState(InterfaceEntry *targetInt, bool
  */
 void InterfaceStateManager::processInterfaceConfigCommand(const cXMLElement& node)
 {
-    InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
+    inet::InterfaceEntry *targetInt = ift->getInterfaceByName(node.getAttribute("int"));
     if (targetInt == NULL)
         throw cRuntimeError("Interface %s not found", node.getAttribute("int"));
 

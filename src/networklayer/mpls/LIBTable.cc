@@ -14,29 +14,24 @@
 //
 
 #include <iostream>
-#include "LIBTable.h"
-#include "XMLUtils.h"
-#include "RoutingTableAccess.h"
+#include "networklayer/mpls/LIBTable.h"
+#include "common/XMLUtils.h"
+
+namespace inet {
 
 Define_Module(LIBTable);
 
 void LIBTable::initialize(int stage)
 {
-    if (stage==0)
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         maxLabel = 0;
-
-    // we have to wait until routerId gets assigned in stage 3
-    if (stage==4)
-    {
-        RoutingTableAccess routingTableAccess;
-        IRoutingTable *rt = routingTableAccess.get();
-        routerId = rt->getRouterId();
-
-        // read configuration
-
-        readTableFromXML(par("config").xmlValue());
-
         WATCH_VECTOR(lib);
+    }
+    else if (stage == INITSTAGE_NETWORK_LAYER) {
+        // read configuration
+        readTableFromXML(par("config").xmlValue());
     }
 }
 
@@ -50,17 +45,16 @@ bool LIBTable::resolveLabel(std::string inInterface, int inLabel,
 {
     bool any = (inInterface.length() == 0);
 
-    for (unsigned int i = 0; i < lib.size(); i++)
-    {
-        if (!any && lib[i].inInterface != inInterface)
+    for (auto & elem : lib) {
+        if (!any && elem.inInterface != inInterface)
             continue;
 
-        if (lib[i].inLabel != inLabel)
+        if (elem.inLabel != inLabel)
             continue;
 
-        outLabel = lib[i].outLabel;
-        outInterface = lib[i].outInterface;
-        color = lib[i].color;
+        outLabel = elem.outLabel;
+        outInterface = elem.outInterface;
+        color = elem.color;
 
         return true;
     }
@@ -68,10 +62,9 @@ bool LIBTable::resolveLabel(std::string inInterface, int inLabel,
 }
 
 int LIBTable::installLibEntry(int inLabel, std::string inInterface, const LabelOpVector& outLabel,
-            std::string outInterface, int color)
+        std::string outInterface, int color)
 {
-    if (inLabel == -1)
-    {
+    if (inLabel == -1) {
         LIBEntry newItem;
         newItem.inLabel = ++maxLabel;
         newItem.inInterface = inInterface;
@@ -81,28 +74,25 @@ int LIBTable::installLibEntry(int inLabel, std::string inInterface, const LabelO
         lib.push_back(newItem);
         return newItem.inLabel;
     }
-    else
-    {
-        for (unsigned int i = 0; i < lib.size(); i++)
-        {
-            if (lib[i].inLabel != inLabel)
+    else {
+        for (auto & elem : lib) {
+            if (elem.inLabel != inLabel)
                 continue;
 
-            lib[i].inInterface = inInterface;
-            lib[i].outLabel = outLabel;
-            lib[i].outInterface = outInterface;
-            lib[i].color = color;
+            elem.inInterface = inInterface;
+            elem.outLabel = outLabel;
+            elem.outInterface = outInterface;
+            elem.color = color;
             return inLabel;
         }
         ASSERT(false);
-        return 0; // prevent warning
+        return 0;    // prevent warning
     }
 }
 
 void LIBTable::removeLibEntry(int inLabel)
 {
-    for (unsigned int i = 0; i < lib.size(); i++)
-    {
+    for (unsigned int i = 0; i < lib.size(); i++) {
         if (lib[i].inLabel != inLabel)
             continue;
 
@@ -112,15 +102,16 @@ void LIBTable::removeLibEntry(int inLabel)
     ASSERT(false);
 }
 
-void LIBTable::readTableFromXML(const cXMLElement* libtable)
+void LIBTable::readTableFromXML(const cXMLElement *libtable)
 {
+    using namespace xmlutils;
+
     ASSERT(libtable);
     ASSERT(!strcmp(libtable->getTagName(), "libtable"));
     checkTags(libtable, "libentry");
     cXMLElementList list = libtable->getChildrenByTagName("libentry");
-    for (cXMLElementList::iterator it=list.begin(); it != list.end(); it++)
-    {
-        const cXMLElement& entry = **it;
+    for (auto & elem : list) {
+        const cXMLElement& entry = *elem;
 
         checkTags(&entry, "inLabel inInterface outLabel outInterface color");
 
@@ -131,28 +122,24 @@ void LIBTable::readTableFromXML(const cXMLElement* libtable)
         newItem.color = getParameterIntValue(&entry, "color", 0);
 
         cXMLElementList ops = getUniqueChild(&entry, "outLabel")->getChildrenByTagName("op");
-        for (cXMLElementList::iterator oit=ops.begin(); oit != ops.end(); oit++)
-        {
-            const cXMLElement& op = **oit;
+        for (auto & ops_oit : ops) {
+            const cXMLElement& op = *ops_oit;
             const char *val = op.getAttribute("value");
             const char *code = op.getAttribute("code");
             ASSERT(code);
             LabelOp l;
 
-            if (!strcmp(code, "push"))
-            {
+            if (!strcmp(code, "push")) {
                 l.optcode = PUSH_OPER;
                 ASSERT(val);
                 l.label = atoi(val);
                 ASSERT(l.label > 0);
             }
-            else if (!strcmp(code, "pop"))
-            {
+            else if (!strcmp(code, "pop")) {
                 l.optcode = POP_OPER;
                 ASSERT(!val);
             }
-            else if (!strcmp(code, "swap"))
-            {
+            else if (!strcmp(code, "swap")) {
                 l.optcode = SWAP_OPER;
                 ASSERT(val);
                 l.label = atoi(val);
@@ -203,13 +190,11 @@ LabelOpVector LIBTable::popLabel()
     return vec;
 }
 
-std::ostream & operator<<(std::ostream & os, const LabelOpVector& label)
+std::ostream& operator<<(std::ostream& os, const LabelOpVector& label)
 {
     os << "{";
-    for (unsigned int i = 0; i < label.size(); i++)
-    {
-        switch (label[i].optcode)
-        {
+    for (unsigned int i = 0; i < label.size(); i++) {
+        switch (label[i].optcode) {
             case PUSH_OPER:
                 os << "PUSH " << label[i].label;
                 break;
@@ -235,7 +220,7 @@ std::ostream & operator<<(std::ostream & os, const LabelOpVector& label)
     return os;
 }
 
-std::ostream & operator<<(std::ostream & os, const LIBTable::LIBEntry & lib)
+std::ostream& operator<<(std::ostream& os, const LIBTable::LIBEntry& lib)
 {
     os << "inLabel:" << lib.inLabel;
     os << "    inInterface:" << lib.inInterface;
@@ -244,3 +229,6 @@ std::ostream & operator<<(std::ostream & os, const LIBTable::LIBEntry & lib)
     os << "    color:" << lib.color;
     return os;
 }
+
+} // namespace inet
+

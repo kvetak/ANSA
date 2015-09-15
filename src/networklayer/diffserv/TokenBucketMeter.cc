@@ -16,8 +16,11 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "TokenBucketMeter.h"
-#include "DiffservUtil.h"
+#include "networklayer/diffserv/TokenBucketMeter.h"
+#include "networklayer/diffserv/DiffservUtil.h"
+#include "common/ModuleAccess.h"
+
+namespace inet {
 
 using namespace DiffservUtil;
 
@@ -25,47 +28,48 @@ Define_Module(TokenBucketMeter);
 
 void TokenBucketMeter::initialize(int stage)
 {
-    if (stage == 0)
-    {
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         numRcvd = 0;
         numRed = 0;
         WATCH(numRcvd);
         WATCH(numRed);
-    }
-    else if (stage == 2)
-    {
-        const char *cirStr = par("cir");
-        CIR = parseInformationRate(cirStr, "cir", *this, 0);
+
         CBS = 8 * (int)par("cbs");
         colorAwareMode = par("colorAwareMode");
         Tc = CBS;
+    }
+    else if (stage == INITSTAGE_NETWORK_LAYER) {
+        const char *cirStr = par("cir");
+        IInterfaceTable *ift = findModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+        CIR = parseInformationRate(cirStr, "cir", ift, *this, 0);
         lastUpdateTime = simTime();
     }
 }
 
 void TokenBucketMeter::handleMessage(cMessage *msg)
 {
-    cPacket *packet = findIPDatagramInPacket(check_and_cast<cPacket*>(msg));
+    cPacket *packet = findIPDatagramInPacket(check_and_cast<cPacket *>(msg));
     if (!packet)
-        error("TokenBucketMeter received a packet that does not encapsulate an IP datagram.");
+        throw cRuntimeError("TokenBucketMeter received a packet that does not encapsulate an IP datagram.");
 
     numRcvd++;
     int color = meterPacket(packet);
-    if (color == GREEN)
-    {
+    if (color == GREEN) {
         send(packet, "greenOut");
     }
-    else
-    {
+    else {
         numRed++;
         send(packet, "redOut");
     }
 
-    if (ev.isGUI())
-    {
+    if (hasGUI()) {
         char buf[50] = "";
-        if (numRcvd>0) sprintf(buf+strlen(buf), "rcvd: %d ", numRcvd);
-        if (numRed>0) sprintf(buf+strlen(buf), "red:%d ", numRed);
+        if (numRcvd > 0)
+            sprintf(buf + strlen(buf), "rcvd: %d ", numRcvd);
+        if (numRed > 0)
+            sprintf(buf + strlen(buf), "red:%d ", numRed);
         getDisplayString().setTagArg("t", 0, buf);
     }
 }
@@ -74,7 +78,7 @@ int TokenBucketMeter::meterPacket(cPacket *packet)
 {
     // update token buckets
     simtime_t currentTime = simTime();
-    long numTokens = (long)(SIMTIME_DBL(currentTime-lastUpdateTime) * CIR);
+    long numTokens = (long)(SIMTIME_DBL(currentTime - lastUpdateTime) * CIR);
     lastUpdateTime = currentTime;
     if (Tc + numTokens <= CBS)
         Tc += numTokens;
@@ -85,8 +89,7 @@ int TokenBucketMeter::meterPacket(cPacket *packet)
     int oldColor = colorAwareMode ? getColor(packet) : -1;
     int newColor;
     int packetSizeInBits = packet->getBitLength();
-    if (oldColor <= GREEN && Tc - packetSizeInBits >= 0)
-    {
+    if (oldColor <= GREEN && Tc - packetSizeInBits >= 0) {
         Tc -= packetSizeInBits;
         newColor = GREEN;
     }
@@ -96,3 +99,6 @@ int TokenBucketMeter::meterPacket(cPacket *packet)
     setColor(packet, newColor);
     return newColor;
 }
+
+} // namespace inet
+

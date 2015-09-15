@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#include "portTable.h"
+#include "ansa/linklayer/switch/portTable.h"
 
 Define_Module(PortTable);
 

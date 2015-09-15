@@ -16,13 +16,12 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
-#ifndef VOIPSTREAM_AUDIOOUTFILE_H
-#define VOIPSTREAM_AUDIOOUTFILE_H
+#ifndef __INET_AUDIOOUTFILE_H
+#define __INET_AUDIOOUTFILE_H
 
 #define __STDC_CONSTANT_MACROS
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -30,13 +29,15 @@ extern "C" {
 #include <libavutil/mathematics.h>
 };
 
+namespace inet {
+
 /**
  * Records audio into a file.
  */
 class AudioOutFile
 {
   public:
-    AudioOutFile() : opened(false), audio_st(NULL), oc(NULL) {};
+    AudioOutFile() : opened(false), audio_st(nullptr), oc(nullptr) {};
     ~AudioOutFile();
 
     void open(const char *resultFile, int sampleRate, short int sampleBits);
@@ -45,7 +46,7 @@ class AudioOutFile
     bool isOpen() const { return opened; }
 
   protected:
-    void addAudioStream(enum CodecID codec_id, int sampleRate, short int sampleBits);
+    void addAudioStream(enum AVCodecID codec_id, int sampleRate, short int sampleBits);
 
   protected:
     bool opened;
@@ -53,5 +54,7 @@ class AudioOutFile
     AVFormatContext *oc;
 };
 
+} // namespace inet
 
-#endif // VOIPSTREAM_AUDIOOUTFILE_H
+#endif // ifndef __INET_AUDIOOUTFILE_H
+

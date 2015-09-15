@@ -9,16 +9,15 @@
 #define ACL_H_
 
 #include <omnetpp.h>
-#include "IPv4Address.h"
-#include "IPvXAddressResolver.h"
-#include "IRoutingTable.h"
-#include "RoutingTableAccess.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "IPv4Datagram.h"
-#include "TCPSegment.h"
-#include "UDPPacket.h"
-#include "NotificationBoard.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/contract/IRoutingTable.h"
+#include "networklayer/ipv4/RoutingTableAccess.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "networklayer/ipv4/IPv4Datagram.h"
+#include "transportlayer/tcp_common/TCPSegment.h"
+#include "transportlayer/udp/UDPPacket.h"
+#include "base/NotificationBoard.h"
 
 /* VYCET POZADOVANYCH AKCI - DENY (ZAHODIT PAKET) NEBO PERMIT (PROPUSTIT PAKET) */
 const bool A_PERMIT = true;
@@ -50,7 +49,7 @@ enum TPortOP
 
 struct TIP
 {
-	IPv4Address ipAddr, netmask;
+	inet::IPv4Address ipAddr, netmask;
 	int portBeg, portEnd;
 	TPortOP port_op;
 };
@@ -90,7 +89,7 @@ class acl : public cSimpleModule, protected INotifiable
 {
 private:
 	bool loadConfigFromXML(const char* filename);
-	bool processPacket(IPv4Datagram* packet, TACL* acl);
+	bool processPacket(inet::IPv4Datagram* packet, TACL* acl);
 	TACL* getRules(int gateIndex, bool dir);
 	bool filterPacket(TACL* acl, TIP source, TIP dest, int protocol);
 	bool ipIsEqual(TIP* ip, TIP* packet);
@@ -99,7 +98,7 @@ private:
 	void getProtocol(std::string pom, TRule* rule);
 	void getPort(std::string pom, std::string p_beg, std::string p_end, TIP *ip);
 	void andIpWithMask(TRule* rule);
-	IPv4Address negateWildcard(IPv4Address wc);
+	inet::IPv4Address negateWildcard(inet::IPv4Address wc);
 
 private:
 	std::list<TACL> acls;

@@ -19,8 +19,13 @@
 
 cplusplus {{
 #include <iostream>
-#include "IPv6Address.h"
-#include "IPProtocolId_m.h"
+#include "inet/networklayer/contract/ipv6/IPv6Address.h"
+#include "inet/networklayer/common/IPProtocolId_m.h"
+}}
+
+namespace inet;
+
+cplusplus {{
 class IPv6ExtensionHeader;
 typedef IPv6ExtensionHeader *IPv6ExtensionHeaderPtr;
 std::ostream& operator<<(std::ostream& os, IPv6ExtensionHeaderPtr eh);
@@ -46,7 +51,6 @@ class noncobject IPv6ExtensionHeaderPtr;
 packet IPv6Datagram
 {
     @customize(true);
-
     IPv6Address srcAddress;
     IPv6Address destAddress;
     unsigned char trafficClass;
@@ -54,7 +58,7 @@ packet IPv6Datagram
     abstract int explicitCongestionNotification;  // maps to bits 6-7 of trafficClass
     unsigned int flowLabel;
     short hopLimit = 0;
-    int transportProtocol enum(IPProtocolId);
+    int transportProtocol @enum(IPProtocolId);
 
     abstract IPv6ExtensionHeaderPtr extensionHeader[]; // array of extension headers, subclassed from ~IPv6ExtensionHeader
 }
@@ -66,6 +70,6 @@ packet IPv6Datagram
 class IPv6ExtensionHeader
 {
     short extensionType;
-    short byteLength = 8;
+    short byteLength = 0;   // byteLength = n * 8;
 }
 

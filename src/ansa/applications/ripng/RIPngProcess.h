@@ -23,24 +23,24 @@
 #define RIPNGPROCESS_H_
 
 #include <omnetpp.h>
-#include "IPv6Address.h"
-#include "ANSARoutingTable6.h"
-#include "ANSARoutingTable6Access.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6Access.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
 
-#include "RIPngInterface.h"
-#include "RIPngRoutingTableEntry.h"
+#include "ansa/applications/ripng/RIPngInterface.h"
+#include "ansa/applications/ripng/RIPngRoutingTableEntry.h"
 
-#include "UDPControlInfo_m.h"
-#include "RIPngMessage_m.h"
-#include "RIPngTimer_m.h"
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
+#include "ansa/applications/ripng/RIPngMessage_m.h"
+#include "ansa/applications/ripng/RIPngTimer_m.h"
 
 class RIPngRouting;
 
 /**
  *  Represents routing protocol RIPng. RIPng uses UDP and communicates
- *  using UDPSocket.
+ *  using inet::UDPSocket.
  */
 class RIPngProcess
 {
@@ -73,7 +73,7 @@ class RIPngProcess
     simtime_t     routeTimeout;
     simtime_t     routeGarbageCollectionTimeout;
     simtime_t     regularUpdateTimeout;
-    IPv6Address   RIPngAddress;
+    inet::IPv6Address   RIPngAddress;
     int           RIPngPort;
     unsigned int  distance;
     bool          poisonReverse;
@@ -91,7 +91,7 @@ class RIPngProcess
     bool bSendTriggeredUpdateMessage;
     bool bBlockTriggeredUpdateMessage;
 
-    IInterfaceTable*                                ift;                ///< Provides access to the interface table.
+    inet::IInterfaceTable*                                ift;                ///< Provides access to the interface table.
     ANSARoutingTable6*                              rt;                 ///< Provides access to the IPv6 routing table.
     std::vector<RIPng::Interface*>                  enabledInterfaces;  ///< Interfaces which has allowed RIPng
     std::vector<RIPng::Interface*>                  downInterfaces;     ///< Interfaces which has allowed RIPng and are down - for keeping configuration, on every down interface must be called RIPng->setOutputPortOnInterface(interface, -1);
@@ -127,7 +127,7 @@ class RIPngProcess
     simtime_t getRouteTimeout() { return routeTimeout; }
     simtime_t getRouteGarbageCollectionTimeout() { return routeGarbageCollectionTimeout; }
     simtime_t getRegularUpdateTimeout() { return regularUpdateTimeout; }
-    IPv6Address getRIPngAddress() { return RIPngAddress; }
+    inet::IPv6Address getRIPngAddress() { return RIPngAddress; }
     int getRIPngPort() { return RIPngPort; }
 
     bool setDistance(unsigned int distance);
@@ -139,15 +139,15 @@ class RIPngProcess
     bool setRouteTimeout(simtime_t routeTimeout);
     bool setRouteGarbageCollectionTimeout(simtime_t routeGarbageCollectionTimeout);
     bool setRegularUpdateTimeout(simtime_t regularUpdateTimeout);
-    bool setRIPngAddress(IPv6Address RIPngAddress) { if (RIPngAddress.isMulticast()) { this->RIPngAddress = RIPngAddress; return true; } return false; }
+    bool setRIPngAddress(inet::IPv6Address RIPngAddress) { if (RIPngAddress.isMulticast()) { this->RIPngAddress = RIPngAddress; return true; } return false; }
     bool setRIPngPort(int RIPngPort) { if (RIPngPort > 0 && RIPngPort <= 65535) { this->RIPngPort = RIPngPort; return true; } return false; }
 
     //-- RIPNG ROUTING TABLE METHODS
     typedef RoutingTable::iterator  RoutingTableIt;
     unsigned long                   getRoutingTableEntryCount() const { return routingTable.size(); }
-    RIPng::RoutingTableEntry*       getRoutingTableEntry(const IPv6Address &prefix, int prefixLength);
+    RIPng::RoutingTableEntry*       getRoutingTableEntry(const inet::IPv6Address &prefix, int prefixLength);
     void                            addRoutingTableEntry(RIPng::RoutingTableEntry* entry, bool createTimers = true);
-    void                            removeRoutingTableEntry(IPv6Address &prefix, int prefixLength);
+    void                            removeRoutingTableEntry(inet::IPv6Address &prefix, int prefixLength);
     void                            removeRoutingTableEntry(RIPng::RoutingTableEntry *entry);
     void                            removeRoutingTableEntry(RoutingTableIt it);
 
@@ -158,7 +158,7 @@ class RIPngProcess
      * @param srcRIPngIntInd [in] index of the RIPng interface where was (the update message with) the rte "received"
      * @param sourceAddr [in] source of the received rte
      */
-    void                            updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTableEntry, RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &sourceAddr);
+    void                            updateRoutingTableEntry(RIPng::RoutingTableEntry *routingTableEntry, RIPngRTE &rte, int srcRIPngIntInd, inet::IPv6Address &sourceAddr);
     void                            removeAllRoutingTableEntries();
 
     //-- RIPNG INTERFACES METHODS
@@ -189,7 +189,7 @@ class RIPngProcess
      * @param interface [in] The interface on which to enable RIPng.
      * @return created RIPng interface
      */
-    RIPng::Interface *enableRIPngOnInterface(InterfaceEntry *interface);
+    RIPng::Interface *enableRIPngOnInterface(inet::InterfaceEntry *interface);
 
     /**
      * Disables RIPng on the interface (removes it from the "RIPng interface table")
@@ -257,7 +257,7 @@ class RIPngProcess
      *  @see sendRegularUpdateMessage()
      *  @see sendTriggeredUpdateMessage()
      */
-    void sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress);
+    void sendMessage(RIPngMessage *msg, inet::IPv6Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress);
 
     /**
      *  Sends request for all routes to RIPng address and port
@@ -303,7 +303,7 @@ class RIPngProcess
      * @param srcAddr [in] source address of the response
      * @see processMessage()
      */
-    void handleResponse(RIPngMessage *response, int srcRIPngIntInd, IPv6Address &srcAddr);
+    void handleResponse(RIPngMessage *response, int srcRIPngIntInd, inet::IPv6Address &srcAddr);
 
     /**
      *  Checks for response message validity as is described in RFC 2080
@@ -318,7 +318,7 @@ class RIPngProcess
      *  @param srcRIPngIntInd [in] index of the RIPng interface which "received message"
      *  @param sourceAddr [in] an IPv6 address of the source of the RTEs
      */
-    void processRTEs(RIPngMessage *response, int srcRIPngIntInd, IPv6Address &sourceAddr);
+    void processRTEs(RIPngMessage *response, int srcRIPngIntInd, inet::IPv6Address &sourceAddr);
 
     /**
      *  Process single RTE from the response message
@@ -326,7 +326,7 @@ class RIPngProcess
      *  @param srcRIPngIntInd [in] index of the RIPng interface which "received message"
      *  @param sourceAddr [in] an IPv6 address of the source of the RTE
      */
-    void processRTE(RIPngRTE &rte, int srcRIPngIntInd, IPv6Address &sourceAddr);
+    void processRTE(RIPngRTE &rte, int srcRIPngIntInd, inet::IPv6Address &sourceAddr);
 
     /**
      *  Checks for the rte validity as is described in RFC 2080
@@ -334,7 +334,7 @@ class RIPngProcess
      *  @param sourceAddr [in] rte originator
      *  @return true if the rte is valid, false otherwise
      */
-    bool checkAndLogRTE(RIPngRTE &rte, IPv6Address &sourceAddr);
+    bool checkAndLogRTE(RIPngRTE &rte, inet::IPv6Address &sourceAddr);
 
     //-- REQUEST PROCESSING
     /**
@@ -346,7 +346,7 @@ class RIPngProcess
      * @param ripngIntInd [in] ripng interface index of the interface on which the request was received
      * @see processMessage()
      */
-    void handleRequest(RIPngMessage *request, int srcPort, IPv6Address &srcAddr, IPv6Address &destAddr, unsigned long ripngIntInd);
+    void handleRequest(RIPngMessage *request, int srcPort, inet::IPv6Address &srcAddr, inet::IPv6Address &destAddr, unsigned long ripngIntInd);
 
   public:
     //-- TIMERS

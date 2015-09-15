@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "EigrpNetworkTable.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNetworkTable.h"
 
 template<typename IPAddress>
 EigrpNetworkTable<IPAddress>::~EigrpNetworkTable()
@@ -63,9 +63,9 @@ EigrpNetwork<IPAddress> *EigrpNetworkTable<IPAddress>::findNetworkById(int netId
 
 
 template<>
-bool EigrpNetworkTable<IPv4Address>::isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId)
+bool EigrpNetworkTable<inet::IPv4Address>::isInterfaceIncluded(const inet::IPv4Address& ifAddress, const inet::IPv4Address& ifMask, int *resultNetId)
 {
-    typename std::vector<EigrpNetwork<IPv4Address> *>::iterator it;
+    typename std::vector<EigrpNetwork<inet::IPv4Address> *>::iterator it;
     int netMaskLen, ifMaskLen;
 
     if (ifAddress.isUnspecified())
@@ -73,8 +73,8 @@ bool EigrpNetworkTable<IPv4Address>::isInterfaceIncluded(const IPv4Address& ifAd
 
     for (it = networkVec.begin(); it != networkVec.end(); it++)
     {
-        IPv4Address netPrefix = (*it)->getAddress();
-        IPv4Address netMask = (*it)->getMask();
+        inet::IPv4Address netPrefix = (*it)->getAddress();
+        inet::IPv4Address netMask = (*it)->getMask();
 
         netMaskLen = (netMask.isUnspecified()) ? getNetmaskLength(netPrefix.getNetworkMask()) : getNetmaskLength(netMask);
         ifMaskLen = getNetmaskLength(ifMask);
@@ -106,9 +106,9 @@ bool EigrpNetworkTable<IPv4Address>::isInterfaceIncluded(const IPv4Address& ifAd
  * In other words matching is much simpler that in the IPv4.
  */
 template<>
-bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAddress, const IPv6Address& ifMask, int *resultNetId)
+bool EigrpNetworkTable<inet::IPv6Address>::isInterfaceIncluded(const inet::IPv6Address& ifAddress, const inet::IPv6Address& ifMask, int *resultNetId)
 {
-    typename std::vector<EigrpNetwork<IPv6Address> *>::iterator it;
+    typename std::vector<EigrpNetwork<inet::IPv6Address> *>::iterator it;
     int netMaskLen, ifMaskLen;
 
     if (ifAddress.isUnspecified())
@@ -116,8 +116,8 @@ bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAd
 
     for (it = networkVec.begin(); it != networkVec.end(); it++)
     {//go through all networks and determine if ifAddress is from that network
-        IPv6Address netPrefix = (*it)->getAddress();    //network address
-        IPv6Address netMask = (*it)->getMask();         //network mask
+        inet::IPv6Address netPrefix = (*it)->getAddress();    //network address
+        inet::IPv6Address netMask = (*it)->getMask();         //network mask
 
         netMaskLen = getNetmaskLength(netMask);
         ifMaskLen = getNetmaskLength(ifMask);
@@ -135,8 +135,8 @@ bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAd
     return false;
 }
 
-template class EigrpNetworkTable<IPv4Address>;
+template class EigrpNetworkTable<inet::IPv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpNetworkTable<IPv6Address>;
+template class EigrpNetworkTable<inet::IPv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */

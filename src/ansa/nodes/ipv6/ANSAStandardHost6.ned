@@ -20,7 +20,7 @@
 
 package inet.ansa.nodes.ipv6;
 
-import inet.nodes.ipv6.StandardHost6;
+import inet.node.ipv6.StandardHost6;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 
 //

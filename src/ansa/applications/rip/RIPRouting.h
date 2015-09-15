@@ -23,25 +23,25 @@
 #define RIPROUTING_H_
 
 #include <omnetpp.h>
-#include "UDPSocket.h"
-#include "IPv4Address.h"
-#include "AnsaRoutingTable.h"
-#include "AnsaRoutingTableAccess.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "NotificationBoard.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTableAccess.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "base/NotificationBoard.h"
 
-#include "RIPInterface.h"
-#include "RIPRoutingTableEntry.h"
-#include "xmlParser.h"
+#include "ansa/applications/rip/RIPInterface.h"
+#include "ansa/applications/rip/RIPRoutingTableEntry.h"
+#include "ansa/util/deviceConfigurator/xmlParser.h"
 
-#include "UDPControlInfo_m.h"
-#include "RIPMessage_m.h"
-#include "RIPTimer_m.h"
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
+#include "ansa/applications/rip/RIPMessage_m.h"
+#include "ansa/applications/rip/RIPTimer_m.h"
 
 /**
  *  Represents routing protocol RIP. RIP uses UDP and communicates
- *  using UDPSocket.
+ *  using inet::UDPSocket.
  */
 class RIPRouting : public cSimpleModule, protected INotifiable
 {
@@ -60,7 +60,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     simtime_t   routeTimeout;
     simtime_t   routeGarbageCollectionTimeout;
     simtime_t   regularUpdateTimeout;
-    IPv4Address RIPAddress;
+    inet::IPv4Address RIPAddress;
     int         RIPPort;
 
     RIPTimer *regularUpdateTimer;
@@ -72,14 +72,14 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     bool bSendTriggeredUpdateMessage;
     bool bBlockTriggeredUpdateMessage;
 
-    IInterfaceTable*                                ift;                ///< Provides access to the interface table.
+    inet::IInterfaceTable*                                ift;                ///< Provides access to the interface table.
     AnsaRoutingTable*                               rt;                 ///< Provides access to the IPv4 routing table.
     NotificationBoard*                              nb;                 ///< Provides access to the notification board
     std::vector<RIP::Interface*>                    enabledInterfaces;  ///< Interfaces which has allowed RIP
     std::vector<RIP::Interface*>                    downInterfaces;     ///< Interfaces which has allowed RIP and are down - for keeping configuration
 
-    std::vector<UDPSocket*>                         sockets;            ///< UDP Socket for every RIP interface
-    UDPSocket                                       globalSocket;       ///< Socket for "send" messages with global unicast address as a source
+    std::vector<inet::UDPSocket*>                         sockets;            ///< UDP Socket for every RIP interface
+    inet::UDPSocket                                       globalSocket;       ///< Socket for "send" messages with global unicast address as a source
 
     typedef std::vector<RIP::RoutingTableEntry*> RoutingTable;
     RoutingTable routingTable;                                          ///< The RIP routing table.
@@ -90,15 +90,15 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     simtime_t getRouteTimeout() { return routeTimeout; }
     simtime_t getRouteGarbageCollectionTimeout() { return routeGarbageCollectionTimeout; }
     simtime_t getRegularUpdateTimeout() { return regularUpdateTimeout; }
-    IPv4Address getRIPAddress() { return RIPAddress; }
+    inet::IPv4Address getRIPAddress() { return RIPAddress; }
     int getRIPPort() { return RIPPort; }
 
     //-- RIP ROUTING TABLE METHODS
     typedef RoutingTable::iterator RoutingTableIt;
     unsigned long                   getRoutingTableEntryCount() const { return routingTable.size(); }
-    RIP::RoutingTableEntry*         getRoutingTableEntry(const IPv4Address &network, const IPv4Address &netmask);
+    RIP::RoutingTableEntry*         getRoutingTableEntry(const inet::IPv4Address &network, const inet::IPv4Address &netmask);
     void                            addRoutingTableEntry(RIP::RoutingTableEntry* entry, bool createTimers = true);
-    void                            removeRoutingTableEntry(IPv4Address &network, int netmask);
+    void                            removeRoutingTableEntry(inet::IPv4Address &network, int netmask);
     void                            removeRoutingTableEntry(RIP::RoutingTableEntry *entry);
     void                            removeRoutingTableEntry(RoutingTableIt it);
 
@@ -109,7 +109,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      * @param sourceIntId [in] interface where was (the update message with) the rte received
      * @param sourceAddr [in] source (nexthop) of the received rte
      */
-    void                            updateRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry, RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr);
+    void                            updateRoutingTableEntry(RIP::RoutingTableEntry *routingTableEntry, RIPRTE &rte, int sourceIntId, inet::IPv4Address &sourceAddr);
     void                            removeAllRoutingTableEntries();
 
     //-- RIP INTERFACES METHODS
@@ -137,11 +137,11 @@ class RIPRouting : public cSimpleModule, protected INotifiable
     RIPMessage *createMessage();
 
     /**
-     * Creates and sets UDPSocket
+     * Creates and sets inet::UDPSocket
      * @param interface [in] interface for which is constructed socket
      * @return pointer to the newly created socket
      */
-    UDPSocket *createAndSetSocketForInt(RIP::Interface* interface);
+    inet::UDPSocket *createAndSetSocketForInt(RIP::Interface* interface);
 
   public:
     /**
@@ -216,7 +216,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      *  @see sendRegularUpdateMessage()
      *  @see sendTriggeredUpdateMessage()
      */
-    void sendMessage(RIPMessage *msg, IPv4Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress);
+    void sendMessage(RIPMessage *msg, inet::IPv4Address &addr, int port, unsigned long enabledInterfaceIndex, bool globalSourceAddress);
 
     /**
      *  Sends request for all routes to RIP address and port
@@ -260,7 +260,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      * @param srcAddr [in] source address of the response
      * @see processMessage()
      */
-    void handleResponse(RIPMessage *response, int srcInt, IPv4Address &srcAddr);
+    void handleResponse(RIPMessage *response, int srcInt, inet::IPv4Address &srcAddr);
 
     /**
      *  Checks for response message validity as is described in RFC 2080
@@ -275,7 +275,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      *  @param sourceIntId [in] interface ID from which the RTEs have been received
      *  @param sourceAddr [in] an IPv4 address of the source of the RTEs
      */
-    void processRTEs(RIPMessage *response, int sourceIntId, IPv4Address &sourceAddr);
+    void processRTEs(RIPMessage *response, int sourceIntId, inet::IPv4Address &sourceAddr);
 
     /**
      *  Process single RTE from the response message
@@ -283,7 +283,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      *  @param sourceIntId [in] interface ID from which the RTE has been received
      *  @param sourceAddr [in] an IPv4 address of the source of the RTE
      */
-    void processRTE(RIPRTE &rte, int sourceIntId, IPv4Address &sourceAddr);
+    void processRTE(RIPRTE &rte, int sourceIntId, inet::IPv4Address &sourceAddr);
 
     /**
      *  Checks for the rte validity as is described in RFC 2080
@@ -291,7 +291,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      *  @param sourceAddr [in] rte originator
      *  @return true if the rte is valid, false otherwise
      */
-    bool checkAndLogRTE(RIPRTE &rte, IPv4Address &sourceAddr);
+    bool checkAndLogRTE(RIPRTE &rte, inet::IPv4Address &sourceAddr);
 
     //-- REQUEST PROCESSING
     /**
@@ -303,7 +303,7 @@ class RIPRouting : public cSimpleModule, protected INotifiable
      * @param ripngIntInd [in] rip interface index of the interface on which the request was received
      * @see processMessage()
      */
-    void handleRequest(RIPMessage *request, int srcPort, IPv4Address &srcAddr, IPv4Address &destAddr, unsigned long ripIntInd);
+    void handleRequest(RIPMessage *request, int srcPort, inet::IPv4Address &srcAddr, inet::IPv4Address &destAddr, unsigned long ripIntInd);
 
     //-- TIMEOUTS
     /**

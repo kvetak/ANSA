@@ -16,18 +16,16 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
-#ifndef VOIPSTREAM_VOIPSTREAMRECEIVER_H
-#define VOIPSTREAM_VOIPSTREAMRECEIVER_H
+#ifndef __INET_VOIPSTREAMRECEIVER_H
+#define __INET_VOIPSTREAMRECEIVER_H
 
 #ifndef HAVE_FFMPEG
 #error Please install libavcodec, libavformat, libavutil or disable 'VoIPStream' feature
-#endif
-
+#endif // ifndef HAVE_FFMPEG
 
 #define __STDC_CONSTANT_MACROS
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -37,71 +35,72 @@ extern "C" {
 #include <iostream>
 #include <sys/stat.h>
 
-#include "IPvXAddressResolver.h"
-#include "UDPControlInfo_m.h"
-#include "UDPSocket.h"
-#include "VoIPStreamPacket_m.h"
-#include "AudioOutFile.h"
-#include "ILifecycle.h"
-#include "LifecycleOperation.h"
+#include "networklayer/common/L3AddressResolver.h"
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+#include "applications/voipstream/VoIPStreamPacket_m.h"
+#include "applications/voipstream/AudioOutFile.h"
+#include "common/lifecycle/ILifecycle.h"
+#include "common/lifecycle/LifecycleOperation.h"
+
+namespace inet {
 
 class VoIPStreamReceiver : public cSimpleModule, public ILifecycle
 {
   public:
-    VoIPStreamReceiver() { resultFile = ""; }
+    VoIPStreamReceiver() {}
     ~VoIPStreamReceiver();
 
-    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback)
-    { Enter_Method_Silent(); throw cRuntimeError("Unsupported lifecycle operation '%s'", operation->getClassName()); return true; }
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
   protected:
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 2; }
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
 
     virtual void createConnection(VoIPStreamPacket *vp);
     virtual void checkSourceAndParameters(VoIPStreamPacket *vp);
     virtual void closeConnection();
     virtual void decodePacket(VoIPStreamPacket *vp);
-    static void initSignals();
 
     class Connection
     {
       public:
-        Connection() : offline(true), oc(NULL), fmt(NULL), audio_st(NULL), decCtx(NULL), pCodecDec(NULL) {}
-        void addAudioStream(enum CodecID codec_id);
+        Connection() {}
+        void addAudioStream(enum AVCodecID codec_id);
         void openAudio(const char *fileName);
         void writeAudioFrame(uint8_t *buf, int len);
         void writeLostSamples(int sampleCount);
         void closeAudio();
 
-        bool offline;
-        uint16_t seqNo;
-        uint32_t timeStamp;
-        uint32_t ssrc;
-        enum CodecID codec;
-        short sampleBits;
-        int sampleRate;
-        int samplesPerPacket;
-        int transmitBitrate;
+      public:
+        bool offline = true;
+        uint16_t seqNo = 0;
+        uint32_t timeStamp = 0;
+        uint32_t ssrc = 0;
+        enum AVCodecID codec = AV_CODEC_ID_NONE;
+        short sampleBits = 0;
+        int sampleRate = 0;
+        int samplesPerPacket = 0;
+        int transmitBitrate = 0;
         simtime_t lastPacketFinish;
-        AVFormatContext *oc;
-        AVOutputFormat *fmt;
-        AVStream *audio_st;
-        AVCodecContext *decCtx;
-        AVCodec *pCodecDec;
+        AVFormatContext *oc = nullptr;
+        AVOutputFormat *fmt = nullptr;
+        AVStream *audio_st = nullptr;
+        AVCodecContext *decCtx = nullptr;
+        AVCodec *pCodecDec = nullptr;
         AudioOutFile outFile;
-        IPvXAddress srcAddr;
-        int srcPort;
-        IPvXAddress destAddr;
-        int destPort;
+        L3Address srcAddr;
+        int srcPort = -1;
+        L3Address destAddr;
+        int destPort = -1;
     };
 
   protected:
-    int localPort;
+    int localPort = -1;
     simtime_t playoutDelay;
-    const char *resultFile;
+    const char *resultFile = nullptr;
 
     UDPSocket socket;
 
@@ -116,4 +115,7 @@ class VoIPStreamReceiver : public cSimpleModule, public ILifecycle
     static simsignal_t delaySignal;
 };
 
-#endif // VOIPSTREAM_VOIPSTREAMRECEIVER_H
+} // namespace inet
+
+#endif // ifndef __INET_VOIPSTREAMRECEIVER_H
+

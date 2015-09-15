@@ -13,8 +13,8 @@
 
 #include <omnetpp.h>
 
-#include "EigrpTimer_m.h"
-#include "EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/EigrpTimer_m.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
 
 /**
  * Class represents one entry in EIGRP Neighbor Table.

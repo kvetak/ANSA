@@ -19,7 +19,12 @@
 //
 
 cplusplus {{
-#include "IPv4Address.h"
+#include "inet/networklayer/contract/ipv4/IPv4Address.h"
+}}
+
+namespace inet;
+
+cplusplus {{
 typedef std::vector<IPv4Address> IPAddressVector;
 typedef std::vector<struct EroObj_t> EroVector;
 typedef std::vector<struct FlowDescriptor_t> FlowDescriptorVector;

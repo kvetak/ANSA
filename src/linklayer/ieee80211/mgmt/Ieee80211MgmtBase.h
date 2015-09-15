@@ -15,18 +15,20 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef IEEE80211_MGMT_BASE_H
-#define IEEE80211_MGMT_BASE_H
+#ifndef __INET_IEEE80211MGMTBASE_H
+#define __INET_IEEE80211MGMTBASE_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "MACAddress.h"
-#include "PassiveQueueBase.h"
-#include "NotificationBoard.h"
-#include "Ieee80211Frame_m.h"
-#include "Ieee80211MgmtFrames_m.h"
-#include "ILifecycle.h"
+#include "linklayer/common/MACAddress.h"
+#include "common/queue/PassiveQueueBase.h"
+#include "linklayer/ieee80211/mac/Ieee80211Frame_m.h"
+#include "linklayer/ieee80211/mgmt/Ieee80211MgmtFrames_m.h"
+#include "common/lifecycle/ILifecycle.h"
 
+namespace inet {
+
+namespace ieee80211 {
 
 /**
  * Abstract base class for 802.11 infrastructure mode management components.
@@ -35,17 +37,17 @@
  *
  * @author Andras Varga
  */
-class INET_API Ieee80211MgmtBase : public PassiveQueueBase, public ILifecycle, public INotifiable
+class INET_API Ieee80211MgmtBase : public PassiveQueueBase, public ILifecycle
 {
   protected:
     // configuration
     int frameCapacity;
     MACAddress myAddress;
-    bool isOperational;     // for lifecycle
+    bool isOperational;    // for lifecycle
 
     // state
-    cQueue dataQueue; // queue for data frames
-    cQueue mgmtQueue; // queue for management frames (higher priority than data frames)
+    cQueue dataQueue;    // queue for data frames
+    cQueue mgmtQueue;    // queue for management frames (higher priority than data frames)
 
     // statistics
     long numDataFramesReceived;
@@ -56,11 +58,11 @@ class INET_API Ieee80211MgmtBase : public PassiveQueueBase, public ILifecycle, p
     static simsignal_t dataQueueLenSignal;
 
   protected:
-    virtual int numInitStages() const {return 2;}
-    virtual void initialize(int);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int) override;
 
     /** Dispatches incoming messages to handleTimer(), handleUpperMessage() or processFrame(). */
-    virtual void handleMessage(cMessage *msg);
+    virtual void handleMessage(cMessage *msg) override;
 
     /** Should be redefined to deal with self-messages */
     virtual void handleTimer(cMessage *frame) = 0;
@@ -75,16 +77,16 @@ class INET_API Ieee80211MgmtBase : public PassiveQueueBase, public ILifecycle, p
     virtual void sendOrEnqueue(cPacket *frame);
 
     /** Redefined from PassiveQueueBase. */
-    virtual cMessage *enqueue(cMessage *msg);
+    virtual cMessage *enqueue(cMessage *msg) override;
 
     /** Redefined from PassiveQueueBase. */
-    virtual cMessage *dequeue();
+    virtual cMessage *dequeue() override;
 
     /** Redefined from IPassiveQueue. */
-    virtual bool isEmpty();
+    virtual bool isEmpty() override;
 
     /** Redefined from PassiveQueueBase: send message to MAC */
-    virtual void sendOut(cMessage *msg);
+    virtual void sendOut(cMessage *msg) override;
 
     /** Utility method to dispose of an unhandled frame */
     virtual void dropManagementFrame(Ieee80211ManagementFrame *frame);
@@ -112,13 +114,19 @@ class INET_API Ieee80211MgmtBase : public PassiveQueueBase, public ILifecycle, p
 
     /** lifecycle support */
     //@{
+
   protected:
     virtual void start();
     virtual void stop();
 
   public:
-    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
     //@}
 };
 
-#endif
+} // namespace ieee80211
+
+} // namespace inet
+
+#endif // ifndef __INET_IEEE80211MGMTBASE_H
+

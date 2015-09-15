@@ -15,32 +15,28 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "linklayer/ieee80211/mgmt/Ieee80211MgmtBase.h"
 
-#include "Ieee80211MgmtBase.h"
+#include "linklayer/common/Ieee802Ctrl.h"
+#include "common/lifecycle/LifecycleOperation.h"
+#include "common/ModuleAccess.h"
+#include "common/lifecycle/NodeOperations.h"
+#include "common/lifecycle/NodeStatus.h"
 
-#include "Ieee802Ctrl_m.h"
-#include "LifecycleOperation.h"
-#include "NodeOperations.h"
-#include "NodeStatus.h"
+namespace inet {
 
-simsignal_t Ieee80211MgmtBase::dataQueueLenSignal = SIMSIGNAL_NULL;
+namespace ieee80211 {
 
-static std::ostream& operator<<(std::ostream& out, cMessage *msg)
-{
-    out << "(" << msg->getClassName() << ")" << msg->getFullName();
-    return out;
-}
+simsignal_t Ieee80211MgmtBase::dataQueueLenSignal = registerSignal("dataQueueLen");
 
 void Ieee80211MgmtBase::initialize(int stage)
 {
-    if (stage==0)
-    {
+    if (stage == INITSTAGE_LOCAL) {
         PassiveQueueBase::initialize();
 
         dataQueue.setName("wlanDataQueue");
         mgmtQueue.setName("wlanMgmtQueue");
-        dataQueueLenSignal = registerSignal("dataQueueLen");
-        emit(dataQueueLenSignal, dataQueue.length());
+        emit(dataQueueLenSignal, dataQueue.getLength());
 
         numDataFramesReceived = 0;
         numMgmtFramesReceived = 0;
@@ -52,15 +48,13 @@ void Ieee80211MgmtBase::initialize(int stage)
         // configuration
         frameCapacity = par("frameCapacity");
     }
-    else if (stage==1)
-    {
+    else if (stage == INITSTAGE_LINK_LAYER) {
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
-
+    }
+    else if (stage == INITSTAGE_LINK_LAYER_2) {
         // obtain our address from MAC
-        cModule *mac = getParentModule()->getSubmodule("mac");
-        if (!mac)
-            error("MAC module not found; it is expected to be next to this submodule and called 'mac'");
+        cModule *mac = getModuleFromPar<cModule>(par("macModule"), this);
         myAddress.setAddress(mac->par("address").stringValue());
     }
 }
@@ -70,21 +64,18 @@ void Ieee80211MgmtBase::handleMessage(cMessage *msg)
     if (!isOperational)
         throw cRuntimeError("Message '%s' received when module is OFF", msg->getName());
 
-    if (msg->isSelfMessage())
-    {
+    if (msg->isSelfMessage()) {
         // process timers
         EV << "Timer expired: " << msg << "\n";
         handleTimer(msg);
     }
-    else if (msg->arrivedOn("macIn"))
-    {
+    else if (msg->arrivedOn("macIn")) {
         // process incoming frame
         EV << "Frame arrived from MAC: " << msg << "\n";
         Ieee80211DataOrMgmtFrame *frame = check_and_cast<Ieee80211DataOrMgmtFrame *>(msg);
         processFrame(frame);
     }
-    else if (msg->arrivedOn("agentIn"))
-    {
+    else if (msg->arrivedOn("agentIn")) {
         // process command from agent
         EV << "Command arrived from agent: " << msg << "\n";
         int msgkind = msg->getKind();
@@ -93,14 +84,13 @@ void Ieee80211MgmtBase::handleMessage(cMessage *msg)
 
         handleCommand(msgkind, ctrl);
     }
-    else
-    {
+    else {
         // packet from upper layers, to be sent out
         cPacket *pk = PK(msg);
         EV << "Packet arrived from upper layers: " << pk << "\n";
         if (pk->getByteLength() > 2312)
-            error("message from higher layer (%s)%s is too long for 802.11b, %d bytes (fragmentation is not supported yet)",
-                  pk->getClassName(), pk->getName(), (int)(pk->getByteLength()));
+            throw cRuntimeError("message from higher layer (%s)%s is too long for 802.11b, %d bytes (fragmentation is not supported yet)",
+                    pk->getClassName(), pk->getName(), (int)(pk->getByteLength()));
 
         handleUpperMessage(pk);
     }
@@ -114,50 +104,47 @@ void Ieee80211MgmtBase::sendOrEnqueue(cPacket *frame)
 
 cMessage *Ieee80211MgmtBase::enqueue(cMessage *msg)
 {
-    ASSERT(dynamic_cast<Ieee80211DataOrMgmtFrame *>(msg)!=NULL);
-    bool isDataFrame = dynamic_cast<Ieee80211DataFrame *>(msg)!=NULL;
+    ASSERT(dynamic_cast<Ieee80211DataOrMgmtFrame *>(msg) != nullptr);
+    bool isDataFrame = dynamic_cast<Ieee80211DataFrame *>(msg) != nullptr;
 
-    if (!isDataFrame)
-    {
+    if (!isDataFrame) {
         // management frames are inserted into mgmtQueue
         mgmtQueue.insert(msg);
-        return NULL;
+        return nullptr;
     }
-    else if (frameCapacity && dataQueue.length() >= frameCapacity)
-    {
+    else if (frameCapacity && dataQueue.getLength() >= frameCapacity) {
         EV << "Queue full, dropping packet.\n";
         return msg;
     }
-    else
-    {
+    else {
         dataQueue.insert(msg);
-        emit(dataQueueLenSignal, dataQueue.length());
-        return NULL;
+        emit(dataQueueLenSignal, dataQueue.getLength());
+        return nullptr;
     }
 }
 
 bool Ieee80211MgmtBase::isEmpty()
 {
-    if (!mgmtQueue.empty())
+    if (!mgmtQueue.isEmpty())
         return false;
 
-    return dataQueue.empty();
+    return dataQueue.isEmpty();
 }
 
 cMessage *Ieee80211MgmtBase::dequeue()
 {
     // management frames have priority
-    if (!mgmtQueue.empty())
+    if (!mgmtQueue.isEmpty())
         return (cMessage *)mgmtQueue.pop();
 
     // return a data frame if we have one
-    if (dataQueue.empty())
-        return NULL;
+    if (dataQueue.isEmpty())
+        return nullptr;
 
     cMessage *pk = (cMessage *)dataQueue.pop();
 
     // statistics
-    emit(dataQueueLenSignal, dataQueue.length());
+    emit(dataQueueLenSignal, dataQueue.getLength());
     return pk;
 }
 
@@ -182,65 +169,65 @@ void Ieee80211MgmtBase::sendUp(cMessage *msg)
 
 void Ieee80211MgmtBase::processFrame(Ieee80211DataOrMgmtFrame *frame)
 {
-    switch (frame->getType())
-    {
-      case ST_DATA:
-        numDataFramesReceived++;
-        handleDataFrame(check_and_cast<Ieee80211DataFrame *>(frame));
-        break;
+    switch (frame->getType()) {
+        case ST_DATA:
+        case ST_DATA_WITH_QOS:
+            numDataFramesReceived++;
+            handleDataFrame(check_and_cast<Ieee80211DataFrame *>(frame));
+            break;
 
-      case ST_AUTHENTICATION:
-        numMgmtFramesReceived++;
-        handleAuthenticationFrame(check_and_cast<Ieee80211AuthenticationFrame *>(frame));
-        break;
+        case ST_AUTHENTICATION:
+            numMgmtFramesReceived++;
+            handleAuthenticationFrame(check_and_cast<Ieee80211AuthenticationFrame *>(frame));
+            break;
 
-      case ST_DEAUTHENTICATION:
-        numMgmtFramesReceived++;
-        handleDeauthenticationFrame(check_and_cast<Ieee80211DeauthenticationFrame *>(frame));
-        break;
+        case ST_DEAUTHENTICATION:
+            numMgmtFramesReceived++;
+            handleDeauthenticationFrame(check_and_cast<Ieee80211DeauthenticationFrame *>(frame));
+            break;
 
-      case ST_ASSOCIATIONREQUEST:
-        numMgmtFramesReceived++;
-        handleAssociationRequestFrame(check_and_cast<Ieee80211AssociationRequestFrame *>(frame));
-        break;
+        case ST_ASSOCIATIONREQUEST:
+            numMgmtFramesReceived++;
+            handleAssociationRequestFrame(check_and_cast<Ieee80211AssociationRequestFrame *>(frame));
+            break;
 
-      case ST_ASSOCIATIONRESPONSE:
-        numMgmtFramesReceived++;
-        handleAssociationResponseFrame(check_and_cast<Ieee80211AssociationResponseFrame *>(frame));
-        break;
+        case ST_ASSOCIATIONRESPONSE:
+            numMgmtFramesReceived++;
+            handleAssociationResponseFrame(check_and_cast<Ieee80211AssociationResponseFrame *>(frame));
+            break;
 
-      case ST_REASSOCIATIONREQUEST:
-        numMgmtFramesReceived++;
-        handleReassociationRequestFrame(check_and_cast<Ieee80211ReassociationRequestFrame *>(frame));
-        break;
+        case ST_REASSOCIATIONREQUEST:
+            numMgmtFramesReceived++;
+            handleReassociationRequestFrame(check_and_cast<Ieee80211ReassociationRequestFrame *>(frame));
+            break;
 
-      case ST_REASSOCIATIONRESPONSE:
-        numMgmtFramesReceived++;
-        handleReassociationResponseFrame(check_and_cast<Ieee80211ReassociationResponseFrame *>(frame));
-        break;
+        case ST_REASSOCIATIONRESPONSE:
+            numMgmtFramesReceived++;
+            handleReassociationResponseFrame(check_and_cast<Ieee80211ReassociationResponseFrame *>(frame));
+            break;
 
-      case ST_DISASSOCIATION:
-        numMgmtFramesReceived++;
-        handleDisassociationFrame(check_and_cast<Ieee80211DisassociationFrame *>(frame));
-        break;
+        case ST_DISASSOCIATION:
+            numMgmtFramesReceived++;
+            handleDisassociationFrame(check_and_cast<Ieee80211DisassociationFrame *>(frame));
+            break;
 
-      case ST_BEACON:
-        numMgmtFramesReceived++;
-        handleBeaconFrame(check_and_cast<Ieee80211BeaconFrame *>(frame));
-        break;
+        case ST_BEACON:
+            numMgmtFramesReceived++;
+            handleBeaconFrame(check_and_cast<Ieee80211BeaconFrame *>(frame));
+            break;
 
-      case ST_PROBEREQUEST:
-        numMgmtFramesReceived++;
-        handleProbeRequestFrame(check_and_cast<Ieee80211ProbeRequestFrame *>(frame));
-        break;
+        case ST_PROBEREQUEST:
+            numMgmtFramesReceived++;
+            handleProbeRequestFrame(check_and_cast<Ieee80211ProbeRequestFrame *>(frame));
+            break;
 
-      case ST_PROBERESPONSE:
-        numMgmtFramesReceived++;
-        handleProbeResponseFrame(check_and_cast<Ieee80211ProbeResponseFrame *>(frame));
-        break;
+        case ST_PROBERESPONSE:
+            numMgmtFramesReceived++;
+            handleProbeResponseFrame(check_and_cast<Ieee80211ProbeResponseFrame *>(frame));
+            break;
 
-      default:
-        throw cRuntimeError("Unexpected frame type (%s)%s", frame->getClassName(), frame->getName());
+        default:
+            throw cRuntimeError("Unexpected frame type (%s)%s", frame->getClassName(), frame->getName());
     }
 }
 
@@ -248,15 +235,15 @@ bool Ieee80211MgmtBase::handleOperationStage(LifecycleOperation *operation, int 
 {
     Enter_Method_Silent();
     if (dynamic_cast<NodeStartOperation *>(operation)) {
-        if (stage == NodeStartOperation::STAGE_PHYSICAL_LAYER)
+        if ((NodeStartOperation::Stage)stage == NodeStartOperation::STAGE_PHYSICAL_LAYER)
             start();
     }
     else if (dynamic_cast<NodeShutdownOperation *>(operation)) {
-        if (stage == NodeStartOperation::STAGE_PHYSICAL_LAYER)
+        if ((NodeShutdownOperation::Stage)stage == NodeShutdownOperation::STAGE_PHYSICAL_LAYER)
             stop();
     }
     else if (dynamic_cast<NodeCrashOperation *>(operation)) {
-        if (stage == NodeStartOperation::STAGE_LOCAL)  // crash is immediate
+        if ((NodeCrashOperation::Stage)stage == NodeCrashOperation::STAGE_CRASH) // crash is immediate
             stop();
     }
     else
@@ -273,8 +260,12 @@ void Ieee80211MgmtBase::stop()
 {
     clear();
     dataQueue.clear();
-    emit(dataQueueLenSignal, dataQueue.length());
+    emit(dataQueueLenSignal, dataQueue.getLength());
     mgmtQueue.clear();
     isOperational = false;
 }
+
+} // namespace ieee80211
+
+} // namespace inet
 

@@ -26,16 +26,16 @@
 #ifndef CLNSTABLEACCESS_H_
 #define CLNSTABLEACCESS_H_
 
-//#include "INETDefs.h"
+//#include "common/INETDefs.h"
 
-#include "ModuleAccess.h"
-#include "CLNSTable.h"
+#include "common/ModuleAccess.h"
+#include "ansa/networklayer/clns/CLNSTable.h"
 
-class CLNSTableAccess: public ModuleAccess<CLNSTable>
+class CLNSTableAccess: public inet::ModuleAccess<CLNSTable>
 {
     public:
         CLNSTableAccess() :
-            ModuleAccess<CLNSTable>("clnsTable") {}
+            inet::ModuleAccess<CLNSTable>("clnsTable") {}
 
 };
 

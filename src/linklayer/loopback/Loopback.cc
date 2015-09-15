@@ -20,24 +20,19 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "Loopback.h"
+#include "linklayer/loopback/Loopback.h"
 
-#include "opp_utils.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "IPassiveQueue.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
+#include "common/INETUtils.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "common/queue/IPassiveQueue.h"
+#include "common/NotifierConsts.h"
 
+namespace inet {
 
 Define_Module(Loopback);
 
-simsignal_t Loopback::packetSentToUpperSignal = SIMSIGNAL_NULL;
-simsignal_t Loopback::packetReceivedFromUpperSignal = SIMSIGNAL_NULL;
-
-Loopback::Loopback()
-{
-}
+simsignal_t Loopback::packetSentToUpperSignal = registerSignal("packetSentToUpper");
+simsignal_t Loopback::packetReceivedFromUpperSignal = registerSignal("packetReceivedFromUpper");
 
 Loopback::~Loopback()
 {
@@ -48,22 +43,17 @@ void Loopback::initialize(int stage)
     MACBase::initialize(stage);
 
     // all initialization is done in the first stage
-    if (stage == 0)
-    {
+    if (stage == INITSTAGE_LOCAL) {
         numSent = numRcvdOK = 0;
         WATCH(numSent);
         WATCH(numRcvdOK);
-
-        packetSentToUpperSignal = registerSignal("packetSentToUpper");
-        packetReceivedFromUpperSignal = registerSignal("packetReceivedFromUpper");
-
+    }
+    else if (stage == INITSTAGE_LINK_LAYER) {
         // register our interface entry in IInterfaceTable
         registerInterface();
     }
-
     // update display string when addresses have been autoconfigured etc.
-    if (stage == 3)
-    {
+    else if (stage == INITSTAGE_LAST) {
         updateDisplayString();
     }
 }
@@ -72,11 +62,8 @@ InterfaceEntry *Loopback::createInterfaceEntry()
 {
     InterfaceEntry *ie = new InterfaceEntry(this);
 
-    // interface name: NIC module's name without special characters ([])
-    ie->setName(OPP_Global::stripnonalnum(getParentModule()->getFullName()).c_str());
-
 //    // generate a link-layer address to be used as interface token for IPv6
-//    InterfaceToken token(0, simulation.getUniqueNumber(), 64);
+//    InterfaceToken token(0, getSimulation()->getUniqueNumber(), 64);
 //    ie->setInterfaceToken(token);
 
     // capabilities
@@ -88,8 +75,7 @@ InterfaceEntry *Loopback::createInterfaceEntry()
 
 void Loopback::handleMessage(cMessage *msg)
 {
-    if (!isOperational)
-    {
+    if (!isOperational) {
         handleMessageWhenDown(msg);
         return;
     }
@@ -104,7 +90,7 @@ void Loopback::handleMessage(cMessage *msg)
     numSent++;
     send(msg, "netwOut");
 
-    if (ev.isGUI())
+    if (hasGUI())
         updateDisplayString();
 }
 
@@ -125,21 +111,21 @@ bool Loopback::isUpperMsg(cMessage *msg)
 
 void Loopback::updateDisplayString()
 {
-    if (ev.isDisabled())
-    {
+    if (getEnvir()->isDisabled()) {
         // speed up things
         getDisplayString().setTagArg("t", 0, "");
     }
-    else
-    {
+    else {
         /* TBD find solution for displaying IPv4 address without dependence on IPv4 or IPv6
                 IPv4Address addr = interfaceEntry->ipv4Data()->getIPAddress();
                 sprintf(buf, "%s / %s\nrcv:%ld snt:%ld", addr.isUnspecified()?"-":addr.str().c_str(), datarateText, numRcvdOK, numSent);
-        */
+         */
         char buf[80];
         sprintf(buf, "rcv:%ld snt:%ld", numRcvdOK, numSent);
 
         getDisplayString().setTagArg("t", 0, buf);
     }
 }
+
+} // namespace inet
 

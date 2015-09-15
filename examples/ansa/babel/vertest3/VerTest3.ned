@@ -17,10 +17,10 @@ package inet.examples.ansa.babel.vertest3;
 
 import inet.ansa.applications.babel.BabelRouter;
 import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.world.scenario.ScenarioManager;
-import inet.world.radio.ChannelControl;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
+//import inet.world.radio.ChannelControl;
 
 network VerTest3
 {

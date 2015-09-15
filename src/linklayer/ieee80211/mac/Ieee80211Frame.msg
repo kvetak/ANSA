@@ -19,13 +19,16 @@
 // Required for MACAddress declarations
 //
 cplusplus {{
-#include "Ieee80211Consts.h"
-#include "MACAddress.h"
-#include "Ieee802Ctrl_m.h" // for ~EtherType
+#include "inet/linklayer/ieee80211/mac/Ieee80211Consts.h"
+#include "inet/linklayer/common/MACAddress.h"
+#include "inet/linklayer/common/Ieee802Ctrl_m.h" // for ~EtherType
 }}
 
-enum EtherType;
 class noncobject MACAddress;
+
+enum EtherType;
+
+namespace inet::ieee80211;
 
 //
 // 802.11 frame type constants (type+subtype), for the "type" field of
@@ -59,6 +62,7 @@ enum Ieee80211FrameType
 
     // data (CFPOLL/CFACK subtypes omitted):
     ST_DATA = 0x20;
+    ST_DATA_WITH_QOS = 0x28;
     //Feedback frame for multicast tramsmission
     ST_LBMS_REQUEST = 0x30;
     ST_LBMS_REPORT = 0x31;
@@ -75,7 +79,7 @@ enum Ieee80211FrameType
 packet Ieee80211Frame
 {
     byteLength = LENGTH_ACK / 8;
-    short type enum(Ieee80211FrameType); // type and subtype
+    short type @enum(Ieee80211FrameType); // type and subtype
     bool toDS;
     bool fromDS;
     bool retry;
@@ -83,7 +87,7 @@ packet Ieee80211Frame
     simtime_t duration = -1; // "duration" in the Duration/ID field (-1=no duration)
     short AID = -1;          // "id" (Association ID) in the Duration/ID field (-1=no ID)
     MACAddress receiverAddress; // aka address1
-    simtime_t MACArrive;
+    simtime_t MACArrive;    // FIXME remove it, technical data, used inside of MAC module
 }
 
 //
@@ -145,9 +149,17 @@ packet Ieee80211DataOrMgmtFrame extends Ieee80211TwoAddressFrame
 //
 packet Ieee80211DataFrame extends Ieee80211DataOrMgmtFrame
 {
-    byteLength = LENGTH_DATAHDR / 8;
-    type = ST_DATA;
-    MACAddress address4;
+//  The presence of the Address 4 field is determined by the setting of the To DS and From DS subfields of
+//  the Frame Control field (see below). The QoS Control field is present when the QoS subfield of the Subtype
+//  field is set to 1 (8.3.2.1 Data frame format)
+//  FIXME: byteLength is not a constant value (DATAFRAME_HEADER_MINLENGTH / 8 = 28).
+//  For example, with Address 4 and without QoS the correct length is 34 bytes.
+//  Without Address 4 and QoS the correct value is indeed 28.
+//  With Address 4 and QoS the correct value is indeed 36.
+    byteLength = DATAFRAME_HEADER_MINLENGTH / 8;
+    type = ST_DATA;         // or ST_DATA_WITH_QOS
+    MACAddress address4;    // optional field, exists when toDS and fromDS are true
+    uint16 qos;             // optional field, exists when type = ST_DATA_WITH_QOS
 }
 
 //
@@ -155,8 +167,8 @@ packet Ieee80211DataFrame extends Ieee80211DataOrMgmtFrame
 //
 packet Ieee80211DataFrameWithSNAP extends Ieee80211DataFrame
 {
-    byteLength = LENGTH_DATAHDR / 8 + SNAP_HEADER_BYTES;
-    int etherType enum (EtherType);
+    byteLength = DATAFRAME_HEADER_MINLENGTH / 8 + SNAP_HEADER_BYTES;
+    int etherType @enum(EtherType);
 }
 
 //
@@ -165,5 +177,5 @@ packet Ieee80211DataFrameWithSNAP extends Ieee80211DataFrame
 packet Ieee80211ManagementFrame extends Ieee80211DataOrMgmtFrame
 {
     short Category;
-    //short action enum(WirelessNetworkManagementAction); // action
+    //short action @enum(WirelessNetworkManagementAction); // action
 }

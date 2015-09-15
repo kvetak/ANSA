@@ -19,10 +19,10 @@
 
 
 #include <omnetpp.h>
-#include "AnsaIPTrafGen.h"
-#include "IPv4ControlInfo.h"
-#include "IPv6ControlInfo.h"
-#include "IPvXAddressResolver.h"
+#include "ansa/util/IPGen/AnsaIPTrafGen.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "networklayer/contract/ipv6/IPv6ControlInfo.h"
+#include "networklayer/common/L3AddressResolver.h"
 
 
 Define_Module(AnsaIPTrafSink);
@@ -49,18 +49,18 @@ void AnsaIPTrafSink::handleMessage(cMessage *msg)
 
 void AnsaIPTrafSink::printPacket(cPacket *msg)
 {
-    IPvXAddress src, dest;
+    inet::L3Address src, dest;
     int protocol = -1;
-    if (dynamic_cast<IPv4ControlInfo *>(msg->getControlInfo())!=NULL)
+    if (dynamic_cast<inet::IPv4ControlInfo *>(msg->getControlInfo())!=NULL)
     {
-        IPv4ControlInfo *ctrl = (IPv4ControlInfo *)msg->getControlInfo();
+        inet::IPv4ControlInfo *ctrl = (inet::IPv4ControlInfo *)msg->getControlInfo();
         src = ctrl->getSrcAddr();
         dest = ctrl->getDestAddr();
         protocol = ctrl->getProtocol();
     }
-    else if (dynamic_cast<IPv6ControlInfo *>(msg->getControlInfo())!=NULL)
+    else if (dynamic_cast<inet::IPv6ControlInfo *>(msg->getControlInfo())!=NULL)
     {
-        IPv6ControlInfo *ctrl = (IPv6ControlInfo *)msg->getControlInfo();
+        inet::IPv6ControlInfo *ctrl = (inet::IPv6ControlInfo *)msg->getControlInfo();
         src = ctrl->getSrcAddr();
         dest = ctrl->getDestAddr();
         protocol = ctrl->getProtocol();
@@ -109,7 +109,7 @@ void AnsaIPTrafGen::initialize(int stage)
     cStringTokenizer tokenizer(destAddrs);
     const char *token;
     while ((token = tokenizer.nextToken())!=NULL)
-        destAddresses.push_back(IPvXAddressResolver().resolve(token));
+        destAddresses.push_back(inet::L3AddressResolver().resolve(token));
 
     counter = 0;
 
@@ -123,7 +123,7 @@ void AnsaIPTrafGen::initialize(int stage)
     scheduleAt(startTime, timer);
 }
 
-IPvXAddress AnsaIPTrafGen::chooseDestAddr()
+inet::L3Address AnsaIPTrafGen::chooseDestAddr()
 {
     int k = intrand(destAddresses.size());
     return destAddresses[k];
@@ -139,12 +139,12 @@ void AnsaIPTrafGen::sendPacket()
     cPacket *payload = new cPacket(msgName);
     payload->setByteLength(msgByteLength);
 
-    IPvXAddress destAddr = chooseDestAddr();
-    if (!destAddr.isIPv6())
+    inet::L3Address destAddr = chooseDestAddr();
+    if (!(destAddr.getType() == inet::L3Address::IPv6))
     {
         // send to IPv4
-        IPv4ControlInfo *controlInfo = new IPv4ControlInfo();
-        controlInfo->setDestAddr(destAddr.get4());
+        inet::IPv4ControlInfo *controlInfo = new inet::IPv4ControlInfo();
+        controlInfo->setDestAddr(destAddr.toIPv4());
         controlInfo->setProtocol(protocol);
         payload->setControlInfo(controlInfo);
 
@@ -156,8 +156,8 @@ void AnsaIPTrafGen::sendPacket()
     else
     {
         // send to IPv6
-        IPv6ControlInfo *controlInfo = new IPv6ControlInfo();
-        controlInfo->setDestAddr(destAddr.get6());
+        inet::IPv6ControlInfo *controlInfo = new inet::IPv6ControlInfo();
+        controlInfo->setDestAddr(destAddr.toIPv6());
         controlInfo->setProtocol(protocol);
         payload->setControlInfo(controlInfo);
 

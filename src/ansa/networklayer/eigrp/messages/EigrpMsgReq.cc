@@ -5,7 +5,7 @@
  *      Author: honza
  */
 
-#include "EigrpMsgReq.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMsgReq.h"
 
 int EigrpMsgReq::findMsgRoute(int routeId) const
 {

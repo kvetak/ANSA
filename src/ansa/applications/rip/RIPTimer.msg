@@ -19,10 +19,10 @@
 // @detail RIP timer
 
 cplusplus {{
-#include "IPv4Address.h"
+#include "inet/networklayer/contract/ipv4/IPv4Address.h"
 }}
 
-class noncobject IPv4Address;
+class noncobject inet::IPv4Address;
 
 enum RIPTimerType
 {

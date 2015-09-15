@@ -22,7 +22,7 @@
  * @detail Splits transport protocols to appropriates modules
  */
 
-#include "ipSplitter.h"
+#include "ansa/networklayer/ipSplitter/ipSplitter.h"
 
 Define_Module(IpSplitter);
 
@@ -39,11 +39,11 @@ void IpSplitter::handleMessage(cMessage *msg){
     // packet coming from network layer modules within the router
     if(gateName == "isisIn"){
 
-        Ieee802Ctrl *ctrl = new Ieee802Ctrl();
-        ctrl->setDsap(SAP_CLNS);
-        ctrl->setSsap(SAP_CLNS);
+        inet::Ieee802Ctrl *ctrl = new inet::Ieee802Ctrl();
+        ctrl->setDsap(inet::SAP_CLNS);
+        ctrl->setSsap(inet::SAP_CLNS);
 
-        MACAddress ma;
+        inet::MACAddress ma;
 
         ISISMessage *isisMsg = (ISISMessage *) msg;
         switch(isisMsg->getType()){
@@ -86,7 +86,7 @@ void IpSplitter::handleMessage(cMessage *msg){
     else
     {
         // IPv6 datagram, send it to networkLayer6 via ipv6Out
-        if (dynamic_cast<IPv6Datagram *>(msg))
+        if (dynamic_cast<inet::IPv6Datagram *>(msg))
         {
             //NetworkLayer6 is connected
             if (this->gate("ipv6Out", gateIndex)->isConnected())

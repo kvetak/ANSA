@@ -18,7 +18,7 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include <LISPCommon.h>
+#include "ansa/networklayer/lisp/LISPCommon.h"
 #include <bitset>
 
 // --------------- VALUES ---------------
@@ -165,7 +165,7 @@ void LISPCommon::parseIpAddress(const char* str, std::string& address, std::stri
     length = len;
 }
 
-int LISPCommon::getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2)
+int LISPCommon::getNumMatchingPrefixBits4(inet::IPv4Address addr1, inet::IPv4Address addr2)
 {
     const uint32 w1 = addr1.getInt();
     const uint32 w2 = addr2.getInt();
@@ -184,7 +184,7 @@ int LISPCommon::getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2)
 }
 
 
-int LISPCommon::getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2)
+int LISPCommon::getNumMatchingPrefixBits6(inet::IPv6Address addr1, inet::IPv6Address addr2)
 {
     //EV << "addr1 " << addr1 << "    addr2 " << addr2 << endl;
     uint32 *w1 = addr1.words();
@@ -224,33 +224,33 @@ int LISPCommon::getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2)
  *         or -1 for exact match,
  *         or -2 when addresses are imcomparable (one is IPv4, another one IPv6).
  */
-int LISPCommon::doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2)
+int LISPCommon::doPrefixMatch(inet::L3Address addr1, inet::L3Address addr2)
 {
-    if ( addr1.isIPv6() xor addr2.isIPv6() )
+    if ( (addr1.getType()==inet::L3Address::IPv6) xor (addr2.getType()==inet::L3Address::IPv6) )
         return -2;
     int res;
     //IPv4
-    if (!addr1.isIPv6())
-        res = LISPCommon::getNumMatchingPrefixBits4(addr1.get4(), addr2.get4());
+    if (!(addr1.getType()==inet::L3Address::IPv4))
+        res = LISPCommon::getNumMatchingPrefixBits4(addr1.toIPv4(), addr2.toIPv4());
     //IPv6
     else
-        res = LISPCommon::getNumMatchingPrefixBits6(addr1.get6(), addr2.get6());
+        res = LISPCommon::getNumMatchingPrefixBits6(addr1.toIPv6(), addr2.toIPv6());
     //EV << "Result " << res << endl;
     return res;
 }
 
-IPvXAddress LISPCommon::getNetworkAddress(IPvXAddress address, int length) {
+inet::L3Address LISPCommon::getNetworkAddress(inet::L3Address address, int length) {
     //IPv6
-    if (address.isIPv6() && length <= 128 && length >= 0) {
-        IPv6Address mask = IPv6Address::constructMask(length);
-        uint32 *w1 = address.get6().words();
+    if ((address.getType()==inet::L3Address::IPv6) && length <= 128 && length >= 0) {
+        inet::IPv6Address mask = inet::IPv6Address::constructMask(length);
+        uint32 *w1 = address.toIPv6().words();
         uint32 *w2 = mask.words();
-        return IPv6Address(w1[0] & w2[0], w1[1] & w2[1], w1[2] & w2[2], w1[3] & w2[3]);
+        return inet::IPv6Address(w1[0] & w2[0], w1[1] & w2[1], w1[2] & w2[2], w1[3] & w2[3]);
     }
     //IPv4
-    else if (!address.isIPv6() && length <= 32 && length >= 0) {
-        IPv4Address mask = IPv4Address::makeNetmask(length);
-        return address.get4().doAnd(mask);
+    else if (!(address.getType()==inet::L3Address::IPv4) && length <= 32 && length >= 0) {
+        inet::IPv4Address mask = inet::IPv4Address::makeNetmask(length);
+        return address.toIPv4().doAnd(mask);
     }
-    return IPvXAddress();
+    return inet::L3Address();
 }

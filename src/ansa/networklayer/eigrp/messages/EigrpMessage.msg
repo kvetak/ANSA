@@ -16,12 +16,12 @@
 
 
 cplusplus {{
-    #include "IPv4Address.h"
-    #include "IPv6Address.h"   
+    #include "inet/networklayer/contract/ipv4/IPv4Address.h"
+    #include "inet/networklayer/contract/ipv6/IPv6Address.h"   
 }}
 
-class noncobject IPv4Address;
-class noncobject IPv6Address;
+class noncobject inet::IPv4Address;
+class noncobject inet::IPv6Address;
 
 // Codes of EIGRP messages
 enum HeaderOpcode
@@ -130,14 +130,14 @@ struct EigrpMpIpv4Internal
     // value
     uint16_t afi;				// Address Family ID, IPv4 = 1, Ipv6 = 2
     uint16_t tid;				// Topology ID
-    IPv4Address routerID;		// Router ID
+    inet::IPv4Address routerID;		// Router ID
 
  	EigrpWideMetricPar metric;
  	EigrpRouteFlags flags;
  	
- 	IPv4Address nextHop;
- 	IPv4Address destMask;
- 	IPv4Address destAddress;
+ 	inet::IPv4Address nextHop;
+ 	inet::IPv4Address destMask;
+ 	inet::IPv4Address destAddress;
 };
 
 
@@ -150,14 +150,14 @@ struct EigrpMpIpv6Internal
     // value
     uint16_t afi = 2;				// Address Family ID, IPv4 = 1, Ipv6 = 2
     uint16_t tid;				// Topology ID
-    IPv4Address routerID;		// Router ID
+    inet::IPv4Address routerID;		// Router ID
 
  	EigrpWideMetricPar metric;
  	EigrpRouteFlags flags;
  	
- 	IPv6Address nextHop;
- 	IPv6Address destMask;
- 	IPv6Address destAddress;
+ 	inet::IPv6Address nextHop;
+ 	inet::IPv6Address destMask;
+ 	inet::IPv6Address destAddress;
 };
 
 
@@ -251,7 +251,7 @@ struct EigrpMsgRoute
     int routeId;           	// ID of route 
     bool unreachable;       // Route with maximal metric 
     bool invalid;
-    IPv4Address originator;
+    inet::IPv4Address originator;
 };
 
 // Message request

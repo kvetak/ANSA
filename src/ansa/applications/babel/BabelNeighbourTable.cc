@@ -19,7 +19,7 @@
 * @detail Represents data structure of Babel routing neighbour
 */
 
-#include "BabelNeighbourTable.h"
+#include "ansa/applications/babel/BabelNeighbourTable.h"
 #include <bitset>
 
 using namespace Babel;
@@ -200,7 +200,7 @@ int BabelNeighbourTable::getNumOfNeighOnIface(BabelInterface *iface)
     return numofneigh;
 }
 
-BabelNeighbour *BabelNeighbourTable::findNeighbour(BabelInterface *iface, const IPvXAddress& addr)
+BabelNeighbour *BabelNeighbourTable::findNeighbour(BabelInterface *iface, const inet::L3Address& addr)
 {
     std::vector<BabelNeighbour *>::iterator it;
 

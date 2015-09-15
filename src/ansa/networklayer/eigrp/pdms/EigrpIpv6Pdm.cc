@@ -23,13 +23,13 @@ topology table.
 
 #include <algorithm>
 
-#include "IPv6ControlInfo.h"
-#include "deviceConfigurator.h"
-#include "EigrpPrint.h"
-#include "EigrpIpv6Pdm.h"
-#include "IPv6Address.h"
+#include "networklayer/contract/ipv6/IPv6ControlInfo.h"
+#include "ansa/util/deviceConfigurator/deviceConfigurator.h"
+#include "ansa/networklayer/eigrp/pdms/EigrpPrint.h"
+#include "ansa/networklayer/eigrp/pdms/EigrpIpv6Pdm.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"
 
-#include "ANSARoutingTable6.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6.h"
 
 
 
@@ -39,7 +39,7 @@ topology table.
 Define_Module(EigrpIpv6Pdm);
 
 
-EigrpIpv6Pdm::EigrpIpv6Pdm() : EIGRP_IPV6_MULT(IPv6Address("FF02::A"))
+EigrpIpv6Pdm::EigrpIpv6Pdm() : EIGRP_IPV6_MULT(inet::IPv6Address("FF02::A"))
 {
     SPLITTER_OUTGW = "splitterOut";
     RTP_OUTGW = "rtpOut";
@@ -78,18 +78,18 @@ void EigrpIpv6Pdm::initialize(int stage)
         this->eigrpNt = Eigrpv6NeighTableAccess().get();
         this->eigrpTt = Eigrpv6TopolTableAccess().get();
         this->rt = ANSARoutingTable6Access().get();
-        //this->eigrpDual = ModuleAccess<EigrpDual>("eigrpDual").get();
+        //this->eigrpDual = inet::ModuleAccess<EigrpDual>("eigrpDual").get();
 
         this->ift = InterfaceTableAccess().get();
         this->nb = NotificationBoardAccess().get();
 
         this->eigrpIftDisabled = new EigrpDisabledInterfaces();
-        this->routingForNetworks = new EigrpNetworkTable<IPv6Address>();
-        this->eigrpDual = new EigrpDual<IPv6Address>(this);
+        this->routingForNetworks = new EigrpNetworkTable<inet::IPv6Address>();
+        this->eigrpDual = new EigrpDual<inet::IPv6Address>(this);
         this->eigrpMetric = new EigrpMetricHelper();
 
         // Load configuration of EIGRP
-        DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        DeviceConfigurator *conf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
         conf->loadEigrpIPv6Config(this);
 
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
@@ -100,9 +100,9 @@ void EigrpIpv6Pdm::initialize(int stage)
         WATCH(eigrpStub);
 
         // Subscribe for changes in the device
-        nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-        nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
-        nb->subscribe(this, NF_IPv6_ROUTE_DELETED);
+        nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+        nb->subscribe(this, inet::NF_INTERFACE_CONFIG_CHANGED);
+        nb->subscribe(this, inet::NF_IPv6_ROUTE_DELETED);
 
     }
 }
@@ -115,16 +115,16 @@ void EigrpIpv6Pdm::receiveChangeNotification(int category, const cObject *detail
         return;
 
     Enter_Method_Silent();
-    printNotificationBanner(category, details);
+    inet::printNotificationBanner(category, details);
 
-    if (category == NF_INTERFACE_STATE_CHANGED)
+    if (category == inet::NF_INTERFACE_STATE_CHANGED)
     {
-        InterfaceEntry *iface = check_and_cast<InterfaceEntry*>(details);
+        inet::InterfaceEntry *iface = check_and_cast<inet::InterfaceEntry*>(details);
         processIfaceStateChange(iface);
     }
-    else if (category == NF_INTERFACE_CONFIG_CHANGED)
+    else if (category == inet::NF_INTERFACE_CONFIG_CHANGED)
     {
-        InterfaceEntry *iface = check_and_cast<InterfaceEntry*>(details);
+        inet::InterfaceEntry *iface = check_and_cast<inet::InterfaceEntry*>(details);
         EigrpInterface *eigrpIface = getInterfaceById(iface->getInterfaceId());
         double ifParam;
 
@@ -147,13 +147,13 @@ void EigrpIpv6Pdm::receiveChangeNotification(int category, const cObject *detail
         }
 
     }
-    else if (category == NF_IPv6_ROUTE_DELETED)
+    else if (category == inet::NF_IPv6_ROUTE_DELETED)
     { //
         processRTRouteDel(details);
     }
 }
 
-void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
+void EigrpIpv6Pdm::processIfaceStateChange(inet::InterfaceEntry *iface)
 {
     EigrpInterface *eigrpIface;
     int ifaceId = iface->getInterfaceId();
@@ -168,9 +168,9 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
         {// through all known prefixes search prefixes belong to this interface
             if(it->ifaceId == ifaceId)
             {// belonging to same interface -> add
-                if(rt->findRoute(it->network, it->prefixLength, IPv6Address::UNSPECIFIED_ADDRESS) == NULL)
+                if(rt->findRoute(it->network, it->prefixLength, inet::IPv6Address::UNSPECIFIED_ADDRESS) == NULL)
                 {// route is not in RT -> add
-                    rt->addStaticRoute(it->network, it->prefixLength, ifaceId, IPv6Address::UNSPECIFIED_ADDRESS, 0);
+                    rt->addStaticRoute(it->network, it->prefixLength, ifaceId, inet::IPv6Address::UNSPECIFIED_ADDRESS, 0);
                 }
             }
         }
@@ -184,16 +184,16 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
             }
         }
     }
-    else if (iface->isDown() || !iface->hasCarrier())
+    else if ((iface->getState()==inet::InterfaceEntry::DOWN) || !iface->hasCarrier())
     { // an interface goes down
 
         //delete all directly-connected routes from RT
-        IPv6Route *route = NULL;
+        inet::IPv6Route *route = NULL;
         for(int i = 0; i < rt->getNumRoutes(); ++i)
         {
             route = rt->getRoute(i);
 
-            if(route->getInterfaceId() == ifaceId && route->getNextHop() == IPv6Address::UNSPECIFIED_ADDRESS && route->getDestPrefix() != IPv6Address::LINKLOCAL_PREFIX)
+            if(route->getInterface()->getInterfaceId() == ifaceId && route->getNextHop() == inet::IPv6Address::UNSPECIFIED_ADDRESS && route->getDestPrefix() != inet::IPv6Address::LINKLOCAL_PREFIX)
             {// Found Directly-connected (no link-local) route on interface -> remove
                 rt->removeRoute(route);
             }
@@ -211,7 +211,7 @@ void EigrpIpv6Pdm::processIfaceStateChange(InterfaceEntry *iface)
 
 void EigrpIpv6Pdm::processIfaceConfigChange(EigrpInterface *eigrpIface)
 {
-    EigrpRouteSource<IPv6Address> *source;
+    EigrpRouteSource<inet::IPv6Address> *source;
     int routeCount = eigrpTt->getNumRoutes();
     int ifaceId = eigrpIface->getInterfaceId();
     EigrpWideMetricPar ifParam = eigrpMetric->getParam(eigrpIface);
@@ -225,7 +225,7 @@ void EigrpIpv6Pdm::processIfaceConfigChange(EigrpInterface *eigrpIface)
         if (source->getIfaceId() == ifaceId && source->isValid())
         {
             // Update metric of source
-            if (source->getNexthopId() == EigrpNeighbor<IPv6Address>::UNSPEC_ID)
+            if (source->getNexthopId() == EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID)
             { // connected route
                 source->setMetricParams(ifParam);
                 metric = eigrpMetric->computeClassicMetric(ifParam, this->kValues);
@@ -240,7 +240,7 @@ void EigrpIpv6Pdm::processIfaceConfigChange(EigrpInterface *eigrpIface)
             }
 
             // Notify DUAL about event
-            eigrpDual->processEvent(EigrpDual<IPv6Address>::RECV_UPDATE, source, source->getNexthopId(), false);
+            eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::RECV_UPDATE, source, source->getNexthopId(), false);
         }
     }
 
@@ -250,10 +250,10 @@ void EigrpIpv6Pdm::processIfaceConfigChange(EigrpInterface *eigrpIface)
 
 void EigrpIpv6Pdm::processRTRouteDel(const cObject *details)
 {
-    IPv6Route *changedRt = check_and_cast<IPv6Route *>(details);
+    inet::IPv6Route *changedRt = check_and_cast<inet::IPv6Route *>(details);
     ANSAIPv6Route *changedAnsaRt = dynamic_cast<ANSAIPv6Route *>(changedRt);
     unsigned adminDist;
-    EigrpRouteSource<IPv6Address> *source = NULL;
+    EigrpRouteSource<inet::IPv6Address> *source = NULL;
 
     if (changedAnsaRt != NULL)
         adminDist = changedAnsaRt->getAdminDist();
@@ -278,7 +278,7 @@ void EigrpIpv6Pdm::processRTRouteDel(const cObject *details)
         {
             if (!source->getRouteInfo()->isActive())
             { // Process route in DUAL (no change of metric)
-                this->eigrpDual->processEvent(EigrpDual<IPv6Address>::LOST_ROUTE, source, IEigrpPdm::UNSPEC_SENDER, false);
+                this->eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::LOST_ROUTE, source, IEigrpPdm::UNSPEC_SENDER, false);
             }
         }
         // Else do nothing - EIGRP itself removed route from RT
@@ -316,13 +316,13 @@ void EigrpIpv6Pdm::handleMessage(cMessage *msg)
 void EigrpIpv6Pdm::processMsgFromNetwork(cMessage *msg)
 {
     // Get source IP address and interface ID
-    IPv6ControlInfo *ctrlInfo =check_and_cast<IPv6ControlInfo *>(msg->getControlInfo());
-    IPv6Address srcAddr = ctrlInfo->getSrcAddr();
+    inet::IPv6ControlInfo *ctrlInfo =check_and_cast<inet::IPv6ControlInfo *>(msg->getControlInfo());
+    inet::IPv6Address srcAddr = ctrlInfo->getSrcAddr();
     int ifaceId = ctrlInfo->getInterfaceId();
     cMessage *msgDup = NULL;
 
-    InterfaceEntry::State status = ift->getInterfaceById(ifaceId)->getState();
-    if(status == InterfaceEntry::DOWN || status == InterfaceEntry::GOING_UP )
+    inet::InterfaceEntry::State status = ift->getInterfaceById(ifaceId)->getState();
+    if(status == inet::InterfaceEntry::DOWN || status == inet::InterfaceEntry::GOING_UP )
     {// message received on DOWN or GOING_UP iface -> ignore
         EV << "Received message on DOWN interface - message ignored" << endl;
         return;
@@ -335,7 +335,7 @@ void EigrpIpv6Pdm::processMsgFromNetwork(cMessage *msg)
 #endif
 
     // Find neighbor if exists
-    EigrpNeighbor<IPv6Address> *neigh;
+    EigrpNeighbor<inet::IPv6Address> *neigh;
     if ((neigh = eigrpNt->findNeighbor(srcAddr)) != NULL)
     { // Reset hold timer
         resetTimer(neigh->getHoldTimer(), neigh->getHoldInt());
@@ -382,7 +382,7 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
     EigrpMessage *eigrpMsg = NULL;
     EigrpIpv6Message *eigrpMsgRt = NULL;
     int routeCnt = msgReq->getRoutesArraySize();
-    IPv6Address destAddress;
+    inet::IPv6Address destAddress;
     int destIface = msgReq->getDestInterface();
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(destIface);
     int64_t sizeOfMsg = 20;
@@ -460,12 +460,12 @@ void EigrpIpv6Pdm::processMsgFromRtp(cMessage *msg)
 }
 
 
-bool EigrpIpv6Pdm::getDestIpAddress(int destNeigh, IPv6Address *resultAddress)
+bool EigrpIpv6Pdm::getDestIpAddress(int destNeigh, inet::IPv6Address *resultAddress)
 {
-    EigrpNeighbor<IPv6Address> *neigh = NULL;
+    EigrpNeighbor<inet::IPv6Address> *neigh = NULL;
     const uint32 *addr = NULL;
 
-    if (destNeigh == EigrpNeighbor<IPv6Address>::UNSPEC_ID)
+    if (destNeigh == EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID)
     {// destination neighbor unset -> use multicast
         addr = EIGRP_IPV6_MULT.words();
         resultAddress->set(addr[0],addr[1],addr[2],addr[3]);
@@ -481,7 +481,7 @@ bool EigrpIpv6Pdm::getDestIpAddress(int destNeigh, IPv6Address *resultAddress)
     return true;
 }
 
-void EigrpIpv6Pdm::printSentMsg(int routeCnt, IPv6Address& destAddress, EigrpMsgReq *msgReq)
+void EigrpIpv6Pdm::printSentMsg(int routeCnt, inet::IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
     int type = msgReq->getOpcode();
 
@@ -509,7 +509,7 @@ void EigrpIpv6Pdm::printSentMsg(int routeCnt, IPv6Address& destAddress, EigrpMsg
     ev << endl;
 }
 
-void EigrpIpv6Pdm::printRecvMsg(EigrpMessage *msg, IPv6Address& addr, int ifaceId)
+void EigrpIpv6Pdm::printRecvMsg(EigrpMessage *msg, inet::IPv6Address& addr, int ifaceId)
 {
     EV << "EIGRP: received " << eigrp::UserMsgs[msg->getOpcode()];
     if (msg->getOpcode() == EIGRP_HELLO_MSG && msg->getAckNum() > 0)
@@ -531,7 +531,7 @@ void EigrpIpv6Pdm::processTimer(cMessage *msg)
 {
     EigrpTimer *timer = check_and_cast<EigrpTimer*>(msg);
     EigrpInterface *eigrpIface = NULL;
-    EigrpNeighbor<IPv6Address> *neigh = NULL;
+    EigrpNeighbor<inet::IPv6Address> *neigh = NULL;
     cObject *contextBasePtr = NULL;
     EigrpMsgReq *msgReq = NULL;
     int ifaceId = -1;
@@ -547,14 +547,14 @@ void EigrpIpv6Pdm::processTimer(cMessage *msg)
         scheduleAt(simTime() + eigrpIface->getHelloInt() - 0.5, timer);
 
         // send Hello message
-        msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv6Address>::UNSPEC_ID, eigrpIface->getInterfaceId());
+        msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, eigrpIface->getInterfaceId());
         send(msgReq, RTP_OUTGW);
         break;
 
     case EIGRP_HOLD_TIMER:
         // get neighbor from context
         contextBasePtr = (cObject*)timer->getContextPointer();
-        neigh = check_and_cast<EigrpNeighbor<IPv6Address> *>(contextBasePtr);
+        neigh = check_and_cast<EigrpNeighbor<inet::IPv6Address> *>(contextBasePtr);
         ifaceId = neigh->getIfaceId();
 
         // remove neighbor
@@ -567,7 +567,7 @@ void EigrpIpv6Pdm::processTimer(cMessage *msg)
         // Send goodbye and restart Hello timer
         eigrpIface = eigrpIft->findInterfaceById(ifaceId);
         resetTimer(eigrpIface->getHelloTimer(), eigrpIface->getHelloInt() - 0.5);
-        msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv6Address>::UNSPEC_ID, ifaceId);
+        msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, ifaceId);
         msgReq->setGoodbyeMsg(true);
         send(msgReq, RTP_OUTGW);
         break;
@@ -580,7 +580,7 @@ void EigrpIpv6Pdm::processTimer(cMessage *msg)
     }
 }
 
-void EigrpIpv6Pdm::processAckMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::processAckMsg(cMessage *msg, inet::IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<inet::IPv6Address> *neigh)
 {
     printRecvMsg(check_and_cast<EigrpIpv6Ack*>(msg), srcAddress, ifaceId);
     if (neigh->isStateUp() == false)
@@ -598,7 +598,7 @@ void EigrpIpv6Pdm::processAckMsg(cMessage *msg, IPv6Address& srcAddress, int ifa
     }
 }
 
-void EigrpIpv6Pdm::processHelloMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::processHelloMsg(cMessage *msg, inet::IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<inet::IPv6Address> *neigh)
 {
     EigrpIpv6Hello *hello = check_and_cast<EigrpIpv6Hello *>(msg);
     EigrpTlvParameter tlvParam = hello->getParameterTlv();
@@ -633,7 +633,7 @@ void EigrpIpv6Pdm::processHelloMsg(cMessage *msg, IPv6Address& srcAddress, int i
             // send Goodbye message and reset Hello timer
             EigrpInterface *iface = this->eigrpIft->findInterfaceById(ifaceId);
             resetTimer(iface->getHelloTimer(), iface->getHelloInt() - 0.5);
-            EigrpMsgReq *msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv6Address>::UNSPEC_ID, ifaceId);
+            EigrpMsgReq *msgReq = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, ifaceId);
             msgReq->setGoodbyeMsg(true);
             send(msgReq, RTP_OUTGW);
         }
@@ -642,11 +642,11 @@ void EigrpIpv6Pdm::processHelloMsg(cMessage *msg, IPv6Address& srcAddress, int i
     }
 }
 
-void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, inet::IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<inet::IPv6Address> *neigh)
 {
     EigrpIpv6Update *update = check_and_cast<EigrpIpv6Update *>(msg);
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
-    EigrpRouteSource<IPv6Address> *src;
+    EigrpRouteSource<inet::IPv6Address> *src;
     bool skipRoute, notifyDual, isSourceNew;
 
     printRecvMsg(update, srcAddress, ifaceId);
@@ -681,7 +681,7 @@ void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int 
 
             if (tlv.routerID == eigrpTt->getRouterId() || eigrpMetric->isParamMaximal(tlv.metric))
             { // Route with RID is equal to RID of router or tlv is unreachable route
-                IPv6Address nextHop = getNextHopAddr(tlv.nextHop, srcAddress);
+                inet::IPv6Address nextHop = getNextHopAddr(tlv.nextHop, srcAddress);
                 if (eigrpTt->findRoute(tlv.destAddress, tlv.destMask, nextHop) == NULL)
                     skipRoute = true;    // Route is not found in TT -> discard route
             }
@@ -694,7 +694,7 @@ void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int 
             { // process route
                 src = processInterRoute(tlv, srcAddress, neigh->getNeighborId(), eigrpIface, &notifyDual, &isSourceNew);
                 if (notifyDual)
-                    eigrpDual->processEvent(EigrpDual<IPv6Address>::RECV_UPDATE, src, neigh->getNeighborId(), isSourceNew);
+                    eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::RECV_UPDATE, src, neigh->getNeighborId(), isSourceNew);
                 else
                     ev << "EIGRP: route " << tlv.destAddress << " is not processed by DUAL, no change of metric" << endl;
             }
@@ -705,11 +705,11 @@ void EigrpIpv6Pdm::processUpdateMsg(cMessage *msg, IPv6Address& srcAddress, int 
     // else ignore message
 }
 
-void EigrpIpv6Pdm::processQueryMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::processQueryMsg(cMessage *msg, inet::IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<inet::IPv6Address> *neigh)
 {
     EigrpIpv6Query *query = check_and_cast<EigrpIpv6Query *>(msg);
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
-    EigrpRouteSource<IPv6Address> *src = NULL;
+    EigrpRouteSource<inet::IPv6Address> *src = NULL;
     bool notifyDual, isSourceNew;
 
     printRecvMsg(query, srcAddress, ifaceId);
@@ -723,17 +723,17 @@ void EigrpIpv6Pdm::processQueryMsg(cMessage *msg, IPv6Address& srcAddress, int i
     {
         src = processInterRoute(query->getInterRoutes(i), srcAddress, neigh->getNeighborId(), eigrpIface, &notifyDual, &isSourceNew);
         // Always notify DUAL
-        eigrpDual->processEvent(EigrpDual<IPv6Address>::RECV_QUERY, src, neigh->getNeighborId(), isSourceNew);
+        eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::RECV_QUERY, src, neigh->getNeighborId(), isSourceNew);
     }
     flushMsgRequests();
     eigrpTt->purgeTable();
 }
 
-void EigrpIpv6Pdm::processReplyMsg(cMessage *msg, IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::processReplyMsg(cMessage *msg, inet::IPv6Address& srcAddress, int ifaceId, EigrpNeighbor<inet::IPv6Address> *neigh)
 {
     EigrpIpv6Reply *reply = check_and_cast<EigrpIpv6Reply *>(msg);
     EigrpInterface *eigrpIface = eigrpIft->findInterfaceById(ifaceId);
-    EigrpRouteSource<IPv6Address> *src;
+    EigrpRouteSource<inet::IPv6Address> *src;
     bool notifyDual, isSourceNew;
 
     printRecvMsg(reply, srcAddress, ifaceId);
@@ -747,7 +747,7 @@ void EigrpIpv6Pdm::processReplyMsg(cMessage *msg, IPv6Address& srcAddress, int i
     {
         src = processInterRoute(reply->getInterRoutes(i), srcAddress, neigh->getNeighborId(), eigrpIface, &notifyDual, &isSourceNew);
         // Always notify DUAL
-        eigrpDual->processEvent(EigrpDual<IPv6Address>::RECV_REPLY, src, neigh->getNeighborId(), isSourceNew);
+        eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::RECV_REPLY, src, neigh->getNeighborId(), isSourceNew);
     }
     flushMsgRequests();
     eigrpTt->purgeTable();
@@ -756,12 +756,12 @@ void EigrpIpv6Pdm::processReplyMsg(cMessage *msg, IPv6Address& srcAddress, int i
 /**
  * @param neigh Neighbor which is next hop for a route in TLV.
  */
-EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::processInterRoute(EigrpMpIpv6Internal& tlv, IPv6Address& srcAddr,
+EigrpRouteSource<inet::IPv6Address> *EigrpIpv6Pdm::processInterRoute(EigrpMpIpv6Internal& tlv, inet::IPv6Address& srcAddr,
         int sourceNeighId, EigrpInterface *eigrpIface, bool *notifyDual, bool *isSourceNew)
 {
-    IPv6Address nextHop = getNextHopAddr(tlv.nextHop, srcAddr);
-    EigrpNeighbor<IPv6Address> *nextHopNeigh = eigrpNt->findNeighbor(nextHop);
-    EigrpRouteSource<IPv6Address> *src;
+    inet::IPv6Address nextHop = getNextHopAddr(tlv.nextHop, srcAddr);
+    EigrpNeighbor<inet::IPv6Address> *nextHopNeigh = eigrpNt->findNeighbor(nextHop);
+    EigrpRouteSource<inet::IPv6Address> *src;
     EigrpWideMetricPar newParam, oldParam, oldNeighParam;
     EigrpWideMetricPar ifParam = eigrpMetric->getParam(eigrpIface);
 
@@ -807,7 +807,7 @@ EigrpTimer *EigrpIpv6Pdm::createTimer(char timerKind, void *context)
     return timer;
 }
 
-EigrpIpv6Hello *EigrpIpv6Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Hello *EigrpIpv6Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, inet::IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv6Hello *msg = new EigrpIpv6Hello("EIGRPHello");
     EigrpTlvParameter paramTlv;
@@ -831,7 +831,7 @@ EigrpIpv6Hello *EigrpIpv6Pdm::createHelloMsg(int holdInt, EigrpKValues kValues, 
     return msg;
 }
 
-EigrpIpv6Ack *EigrpIpv6Pdm::createAckMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Ack *EigrpIpv6Pdm::createAckMsg(inet::IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv6Ack *msg = new EigrpIpv6Ack("EIGRPAck");
     addMessageHeader(msg, EIGRP_HELLO_MSG, msgReq);
@@ -840,7 +840,7 @@ EigrpIpv6Ack *EigrpIpv6Pdm::createAckMsg(IPv6Address& destAddress, EigrpMsgReq *
     return msg;
 }
 
-EigrpIpv6Update *EigrpIpv6Pdm::createUpdateMsg(const IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Update *EigrpIpv6Pdm::createUpdateMsg(const inet::IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv6Update *msg = new EigrpIpv6Update("EIGRPUpdate");
     addMessageHeader(msg, EIGRP_UPDATE_MSG, msgReq);
@@ -851,7 +851,7 @@ EigrpIpv6Update *EigrpIpv6Pdm::createUpdateMsg(const IPv6Address& destAddress, E
     return msg;
 }
 
-EigrpIpv6Query *EigrpIpv6Pdm::createQueryMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Query *EigrpIpv6Pdm::createQueryMsg(inet::IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv6Query *msg = new EigrpIpv6Query("EIGRPQuery");
     addMessageHeader(msg, EIGRP_QUERY_MSG, msgReq);
@@ -861,7 +861,7 @@ EigrpIpv6Query *EigrpIpv6Pdm::createQueryMsg(IPv6Address& destAddress, EigrpMsgR
     return msg;
 }
 
-EigrpIpv6Reply *EigrpIpv6Pdm::createReplyMsg(IPv6Address& destAddress, EigrpMsgReq *msgReq)
+EigrpIpv6Reply *EigrpIpv6Pdm::createReplyMsg(inet::IPv6Address& destAddress, EigrpMsgReq *msgReq)
 {
     EigrpIpv6Reply *msg = new EigrpIpv6Reply("EIGRPReply");
     addMessageHeader(msg, EIGRP_REPLY_MSG, msgReq);
@@ -882,9 +882,9 @@ void EigrpIpv6Pdm::addMessageHeader(EigrpMessage *msg, int opcode, EigrpMsgReq *
 }
 
 void EigrpIpv6Pdm::addCtrInfo(EigrpMessage *msg, int ifaceId,
-        const IPv6Address &destAddress)
+        const inet::IPv6Address &destAddress)
 {
-    IPv6ControlInfo *ctrl = new IPv6ControlInfo();
+    inet::IPv6ControlInfo *ctrl = new inet::IPv6ControlInfo();
     ctrl->setSrcAddr(ift->getInterfaceById(ifaceId)->ipv6Data()->getLinkLocalAddress());   //use link-local address as source address
     ctrl->setDestAddr(destAddress);
     ctrl->setProtocol(88);
@@ -894,12 +894,12 @@ void EigrpIpv6Pdm::addCtrInfo(EigrpMessage *msg, int ifaceId,
     msg->setControlInfo(ctrl);
 }
 
-void EigrpIpv6Pdm::createRouteTlv(EigrpMpIpv6Internal *routeTlv, EigrpRoute<IPv6Address> *route, bool unreachable)
+void EigrpIpv6Pdm::createRouteTlv(EigrpMpIpv6Internal *routeTlv, EigrpRoute<inet::IPv6Address> *route, bool unreachable)
 {
     EigrpWideMetricPar rtMetric = route->getRdPar();
     routeTlv->destAddress = route->getRouteAddress();
     routeTlv->destMask = route->getRouteMask();
-    routeTlv->nextHop = IPv6Address::UNSPECIFIED_ADDRESS;
+    routeTlv->nextHop = inet::IPv6Address::UNSPECIFIED_ADDRESS;
     setRouteTlvMetric(&routeTlv->metric, &rtMetric);
     if (unreachable)
     {
@@ -924,8 +924,8 @@ void EigrpIpv6Pdm::addRoutesToMsg(EigrpIpv6Message *msg, const EigrpMsgReq *msgR
 {
     // Add routes to the message
     int reqCnt = msgReq->getRoutesArraySize();
-    EigrpRouteSource<IPv6Address> *source = NULL;
-    EigrpRoute<IPv6Address> *route = NULL;
+    EigrpRouteSource<inet::IPv6Address> *source = NULL;
+    EigrpRoute<inet::IPv6Address> *route = NULL;
 
     msg->setInterRoutesArraySize(reqCnt);
     for (int i = 0; i < reqCnt; i++)
@@ -970,12 +970,12 @@ EigrpMsgReq *EigrpIpv6Pdm::createMsgReq(HeaderOpcode msgType, int destNeighbor, 
     return msgReq;
 }
 
-void EigrpIpv6Pdm::sendAllEigrpPaths(EigrpInterface *eigrpIface, EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::sendAllEigrpPaths(EigrpInterface *eigrpIface, EigrpNeighbor<inet::IPv6Address> *neigh)
 {
     int routeCnt = eigrpTt->getNumRouteInfo();
     int addedRoutes = 0;    // Number of routes in message
-    EigrpRoute<IPv6Address> *route;
-    EigrpRouteSource<IPv6Address> *source;
+    EigrpRoute<inet::IPv6Address> *route;
+    EigrpRouteSource<inet::IPv6Address> *source;
     EigrpMsgReq *msgReq = createMsgReq(EIGRP_UPDATE_MSG, neigh->getNeighborId(), neigh->getIfaceId());
 
     msgReq->setRoutesArraySize(routeCnt);
@@ -1011,10 +1011,10 @@ void EigrpIpv6Pdm::sendAllEigrpPaths(EigrpInterface *eigrpIface, EigrpNeighbor<I
     send(msgReq, RTP_OUTGW);
 }
 
-void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, IPv6Address &srcAddress, EigrpIpv6Hello *rcvMsg)
+void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, inet::IPv6Address &srcAddress, EigrpIpv6Hello *rcvMsg)
 {
     EigrpMsgReq *msgReqUpdate = NULL, *msgReqHello = NULL;
-    EigrpNeighbor<IPv6Address> *neigh;
+    EigrpNeighbor<inet::IPv6Address> *neigh;
     EigrpInterface *iface = eigrpIft->findInterfaceById(ifaceId);
     EigrpTlvParameter paramTlv = rcvMsg->getParameterTlv();
     EigrpStub stubConf = rcvMsg->getStubTlv().stub;
@@ -1029,7 +1029,7 @@ void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, IPv6Address &srcAddress, Eigr
         if (ecode == eigrp::M_NEIGH_BAD_KVALUES)
         { // Send Goodbye message and reset Hello timer
             resetTimer(iface->getHelloTimer(), iface->getHelloInt() - 0.5);
-            msgReqHello = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv6Address>::UNSPEC_ID, ifaceId);
+            msgReqHello = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, ifaceId);
             msgReqHello->setGoodbyeMsg(true);
             send(msgReqHello, RTP_OUTGW);
         }
@@ -1050,7 +1050,7 @@ void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, IPv6Address &srcAddress, Eigr
 
     // Reply with Hello message and reset Hello timer
     resetTimer(iface->getHelloTimer(), iface->getHelloInt() - 0.5);
-    msgReqHello = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<IPv6Address>::UNSPEC_ID, ifaceId);
+    msgReqHello = createMsgReq(EIGRP_HELLO_MSG, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, ifaceId);
     send(msgReqHello, RTP_OUTGW);
 
     // Send Update with INIT flag
@@ -1060,9 +1060,9 @@ void EigrpIpv6Pdm::processNewNeighbor(int ifaceId, IPv6Address &srcAddress, Eigr
 }
 
 int EigrpIpv6Pdm::checkNeighborshipRules(int ifaceId, int neighAsNum,
-        IPv6Address &neighAddr, const EigrpKValues &neighKValues)
+        inet::IPv6Address &neighAddr, const EigrpKValues &neighKValues)
 {
-    IPv6Address ifaceAddr, ifaceMask;
+    inet::IPv6Address ifaceAddr, ifaceMask;
 
     if (this->eigrpIft->findInterfaceById(ifaceId) == NULL)
     { // EIGRP must be enabled on interface
@@ -1079,7 +1079,7 @@ int EigrpIpv6Pdm::checkNeighborshipRules(int ifaceId, int neighAsNum,
     else
     {
         // check, if the neighbor uses as source address Link-local address
-        if (neighAddr.getScope() != IPv6Address::LINK)
+        if (neighAddr.getScope() != inet::IPv6Address::LINK)
         {//source address is not Link-local address -> bad
             return eigrp::M_NEIGH_BAD_SUBNET;
         }
@@ -1088,10 +1088,10 @@ int EigrpIpv6Pdm::checkNeighborshipRules(int ifaceId, int neighAsNum,
     return eigrp::M_OK;
 }
 
-EigrpNeighbor<IPv6Address> *EigrpIpv6Pdm::createNeighbor(EigrpInterface *eigrpIface, IPv6Address& address, uint16_t holdInt)
+EigrpNeighbor<inet::IPv6Address> *EigrpIpv6Pdm::createNeighbor(EigrpInterface *eigrpIface, inet::IPv6Address& address, uint16_t holdInt)
 {
     // Create record in the neighbor table
-    EigrpNeighbor<IPv6Address> *neigh = new EigrpNeighbor<IPv6Address>(eigrpIface->getInterfaceId(), eigrpIface->getInterfaceName(), address);
+    EigrpNeighbor<inet::IPv6Address> *neigh = new EigrpNeighbor<inet::IPv6Address>(eigrpIface->getInterfaceId(), eigrpIface->getInterfaceName(), address);
     EigrpTimer *holdt = createTimer(EIGRP_HOLD_TIMER, neigh);
     neigh->setHoldTimer(holdt);
     neigh->setHoldInt(holdInt);
@@ -1104,10 +1104,10 @@ EigrpNeighbor<IPv6Address> *EigrpIpv6Pdm::createNeighbor(EigrpInterface *eigrpIf
     return neigh;
 }
 
-void EigrpIpv6Pdm::removeNeighbor(EigrpNeighbor<IPv6Address> *neigh)
+void EigrpIpv6Pdm::removeNeighbor(EigrpNeighbor<inet::IPv6Address> *neigh)
 {
-    EigrpRouteSource<IPv6Address> *source = NULL;
-    EigrpRoute<IPv6Address> *route = NULL;
+    EigrpRouteSource<inet::IPv6Address> *source = NULL;
+    EigrpRoute<inet::IPv6Address> *route = NULL;
     // Find interface (enabled/disabled)
     EigrpInterface *eigrpIface = getInterfaceById(neigh->getIfaceId());
 
@@ -1145,27 +1145,27 @@ void EigrpIpv6Pdm::removeNeighbor(EigrpNeighbor<IPv6Address> *neigh)
 #ifdef EIGRP_DEBUG
                 ev << "     Create dummy route " << route->getRouteAddress() << " via <unspecified> for deletion of reply status handle" << endl;
 #endif
-                source = new EigrpRouteSource<IPv6Address>(ifaceId, ifaceName, nextHopId, routeId, route);
+                source = new EigrpRouteSource<inet::IPv6Address>(ifaceId, ifaceName, nextHopId, routeId, route);
                 eigrpTt->addRoute(source);
-                eigrpDual->processEvent(EigrpDual<IPv6Address>::NEIGHBOR_DOWN, source, nextHopId, true);
+                eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::NEIGHBOR_DOWN, source, nextHopId, true);
             }
             else
-                eigrpDual->processEvent(EigrpDual<IPv6Address>::NEIGHBOR_DOWN, source, nextHopId, false);
+                eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::NEIGHBOR_DOWN, source, nextHopId, false);
         }
         else
         { // Notify DUAL about event
             if (source != NULL)
-                eigrpDual->processEvent(EigrpDual<IPv6Address>::NEIGHBOR_DOWN, source, nextHopId, false);
+                eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::NEIGHBOR_DOWN, source, nextHopId, false);
         }
     }
 
     // Do not flush messages in transmit queue
 }
 
-ANSAIPv6Route *EigrpIpv6Pdm::createRTRoute(EigrpRouteSource<IPv6Address> *successor)
+ANSAIPv6Route *EigrpIpv6Pdm::createRTRoute(EigrpRouteSource<inet::IPv6Address> *successor)
 {
-    EigrpRoute<IPv6Address> *route = successor->getRouteInfo();
-    ANSAIPv6Route *rtEntry = new ANSAIPv6Route(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), IPv6Route::ROUTING_PROT);
+    EigrpRoute<inet::IPv6Address> *route = successor->getRouteInfo();
+    ANSAIPv6Route *rtEntry = new ANSAIPv6Route(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), inet::IPv6Route::ROUTING_PROT);
     rtEntry->setInterfaceId(successor->getIfaceId());
     rtEntry->setNextHop(successor->getNextHop());
     setRTRouteMetric(rtEntry, successor->getMetric());
@@ -1184,7 +1184,7 @@ ANSAIPv6Route *EigrpIpv6Pdm::createRTRoute(EigrpRouteSource<IPv6Address> *succes
     return rtEntry;
 }
 
-void EigrpIpv6Pdm::msgToAllIfaces(int destination, HeaderOpcode msgType, EigrpRouteSource<IPv6Address> *source, bool forcePoisonRev, bool forceUnreachable)
+void EigrpIpv6Pdm::msgToAllIfaces(int destination, HeaderOpcode msgType, EigrpRouteSource<inet::IPv6Address> *source, bool forcePoisonRev, bool forceUnreachable)
 {
     EigrpInterface *eigrpIface;
     int ifCount = eigrpIft->getNumInterfaces();
@@ -1221,9 +1221,9 @@ bool EigrpIpv6Pdm::applyStubToQuery(EigrpInterface *eigrpIface, int numOfNeigh)
     return false;
 }
 
-void EigrpIpv6Pdm::msgToIface(HeaderOpcode msgType, EigrpRouteSource<IPv6Address> *source, EigrpInterface *eigrpIface, bool forcePoisonRev, bool forceUnreachable)
+void EigrpIpv6Pdm::msgToIface(HeaderOpcode msgType, EigrpRouteSource<inet::IPv6Address> *source, EigrpInterface *eigrpIface, bool forcePoisonRev, bool forceUnreachable)
 {
-    EigrpNeighbor<IPv6Address> *neigh = NULL;
+    EigrpNeighbor<inet::IPv6Address> *neigh = NULL;
     EigrpMsgRoute msgRt;
     int ifaceId, destNeigh = 0;
 
@@ -1298,7 +1298,7 @@ EigrpMsgReq *EigrpIpv6Pdm::pushMsgRouteToQueue(HeaderOpcode msgType, int ifaceId
     return request;
 }
 
-bool EigrpIpv6Pdm::applySplitHorizon(EigrpInterface *destInterface, EigrpRouteSource<IPv6Address> *source, EigrpRoute<IPv6Address> *route)
+bool EigrpIpv6Pdm::applySplitHorizon(EigrpInterface *destInterface, EigrpRouteSource<inet::IPv6Address> *source, EigrpRoute<inet::IPv6Address> *route)
 {
     if (route->getNumSucc() <= 1)   // Only 1 successor, check its interface ID (source is always successor)
         return destInterface->getInterfaceId() == source->getIfaceId();
@@ -1306,13 +1306,13 @@ bool EigrpIpv6Pdm::applySplitHorizon(EigrpInterface *destInterface, EigrpRouteSo
         return eigrpTt->getBestSuccessorByIf(route, destInterface->getInterfaceId()) != NULL;
 }
 
-bool EigrpIpv6Pdm::applyStubToUpdate(EigrpRouteSource<IPv6Address> *src)
+bool EigrpIpv6Pdm::applyStubToUpdate(EigrpRouteSource<inet::IPv6Address> *src)
 {
     if (this->eigrpStub.recvOnlyRt)
         return true;    // Do not send any route
 
     // Send only specified type of route
-    else if (this->eigrpStub.connectedRt && src->getNexthopId() == EigrpNeighbor<IPv6Address>::UNSPEC_ID)
+    else if (this->eigrpStub.connectedRt && src->getNexthopId() == EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID)
         return false;
     else if (this->eigrpStub.redistributedRt && src->isRedistributed())
         return false;
@@ -1329,7 +1329,7 @@ bool EigrpIpv6Pdm::applyStubToUpdate(EigrpRouteSource<IPv6Address> *src)
 void EigrpIpv6Pdm::flushMsgRequests()
 {
     RequestVector::iterator it;
-    IPv6Address destAddress;
+    inet::IPv6Address destAddress;
 
     // Send Query
     for (it = reqQueue.begin(); it != reqQueue.end(); it++)
@@ -1371,11 +1371,11 @@ EigrpInterface *EigrpIpv6Pdm::getInterfaceById(int ifaceId)
         return eigrpIftDisabled->findInterface(ifaceId);
 }
 
-void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrpIface)
+void EigrpIpv6Pdm::disableInterface(inet::InterfaceEntry *iface, EigrpInterface *eigrpIface)
 {
     EigrpTimer* hellot;
-    EigrpNeighbor<IPv6Address> *neigh;
-    EigrpRouteSource<IPv6Address> *source;
+    EigrpNeighbor<inet::IPv6Address> *neigh;
+    EigrpRouteSource<inet::IPv6Address> *source;
     int neighCount;
     int ifaceId = eigrpIface->getInterfaceId();
 
@@ -1390,15 +1390,15 @@ void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
         cancelEvent(hellot);
 
     std::set<int>::iterator it;
-    EigrpNetwork<IPv6Address> *eigrpnet = NULL;
+    EigrpNetwork<inet::IPv6Address> *eigrpnet = NULL;
 
     for (it = eigrpIface->getNetworksIdsBegin(); it != eigrpIface->getNetworksIdsEnd(); ++it)
     {
         eigrpnet = routingForNetworks->findNetworkById(*it);
-        source = eigrpTt->findRoute(eigrpnet->getAddress(), eigrpnet->getMask(), EigrpNeighbor<IPv6Address>::UNSPEC_ID);
+        source = eigrpTt->findRoute(eigrpnet->getAddress(), eigrpnet->getMask(), EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID);
         ASSERT(source != NULL);
         // Notify DUAL about event
-        eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_DOWN, source, EigrpNeighbor<IPv6Address>::UNSPEC_ID, false);
+        eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::INTERFACE_DOWN, source, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, false);
     }
 
     eigrpIface->clearNetworkIds();
@@ -1428,7 +1428,7 @@ void EigrpIpv6Pdm::disableInterface(InterfaceEntry *iface, EigrpInterface *eigrp
 
 EigrpInterface *EigrpIpv6Pdm::addInterfaceToEigrp(int ifaceId, bool enabled)
 {
-    InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
+    inet::InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
     // create EIGRP interface
     EigrpInterface *eigrpIface = NULL;
 
@@ -1436,7 +1436,7 @@ EigrpInterface *EigrpIpv6Pdm::addInterfaceToEigrp(int ifaceId, bool enabled)
 
     if(eigrpIface == NULL)
     {// iface not found -> create new
-        eigrpIface = new EigrpInterface(iface, EigrpNetworkTable<IPv6Address>::UNSPEC_NETID, false);
+        eigrpIface = new EigrpInterface(iface, EigrpNetworkTable<inet::IPv6Address>::UNSPEC_NETID, false);
     }
 
     if (enabled)
@@ -1456,7 +1456,7 @@ EigrpInterface *EigrpIpv6Pdm::addInterfaceToEigrp(int ifaceId, bool enabled)
 void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface)
 {
     int ifaceId = eigrpIface->getInterfaceId();
-    EigrpRouteSource<IPv6Address> *src;
+    EigrpRouteSource<inet::IPv6Address> *src;
     EigrpWideMetricPar metricPar;
     bool isSourceNew;
 
@@ -1471,22 +1471,22 @@ void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface)
     }
 
     // Register multicast address on interface      //TODO - should be passive interface joined in multicast group?
-    IPv6InterfaceData *ifaceIpv6 = ift->getInterfaceById(ifaceId)->ipv6Data();
+    inet::IPv6InterfaceData *ifaceIpv6 = ift->getInterfaceById(ifaceId)->ipv6Data();
     ifaceIpv6->joinMulticastGroup(EIGRP_IPV6_MULT); //join to group FF02::A, optionally
     ifaceIpv6->assignAddress(EIGRP_IPV6_MULT, false, 0, 0); //add group address to interface, mandatory
 
 
     PrefixVector::iterator it;
-    EigrpNetwork<IPv6Address> *eigrpnet = NULL;
-    IPv6Address network;
-    IPv6Address mask;
+    EigrpNetwork<inet::IPv6Address> *eigrpnet = NULL;
+    inet::IPv6Address network;
+    inet::IPv6Address mask;
 
     for (it = netPrefixes.begin(); it != netPrefixes.end(); ++it)
     {// through all known prefixes search prefixes belonging to enabling interface
         if (it->ifaceId == ifaceId)
         {// found prefix belonging to interface
             network = it->network;
-            mask = IPv6Address(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).getPrefix(it->prefixLength);
+            mask = inet::IPv6Address(0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).getPrefix(it->prefixLength);
 
             eigrpnet = addNetwork(network, mask);
 
@@ -1496,7 +1496,7 @@ void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface)
             }
 
             // Create route
-            src = eigrpTt->findOrCreateRoute(network, mask, eigrpTt->getRouterId(), eigrpIface, EigrpNeighbor<IPv6Address>::UNSPEC_ID, &isSourceNew);
+            src = eigrpTt->findOrCreateRoute(network, mask, eigrpTt->getRouterId(), eigrpIface, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, &isSourceNew);
             ASSERT(isSourceNew == true);
             // Compute metric
             metricPar = eigrpMetric->getParam(eigrpIface);
@@ -1505,7 +1505,7 @@ void EigrpIpv6Pdm::enableInterface(EigrpInterface *eigrpIface)
             src->setMetric(metric);
 
             // Notify DUAL about event
-            eigrpDual->processEvent(EigrpDual<IPv6Address>::INTERFACE_UP, src, EigrpNeighbor<IPv6Address>::UNSPEC_ID, isSourceNew);
+            eigrpDual->processEvent(EigrpDual<inet::IPv6Address>::INTERFACE_UP, src, EigrpNeighbor<inet::IPv6Address>::UNSPEC_ID, isSourceNew);
         }
     }
 
@@ -1536,7 +1536,7 @@ void EigrpIpv6Pdm::startHelloTimer(EigrpInterface *eigrpIface, simtime_t interva
 // interface IEigrpModule
 //
 
-EigrpNetwork<IPv6Address> *EigrpIpv6Pdm::addNetwork(IPv6Address address, IPv6Address mask)
+EigrpNetwork<inet::IPv6Address> *EigrpIpv6Pdm::addNetwork(inet::IPv6Address address, inet::IPv6Address mask)
 {
     return routingForNetworks->addNetwork(address, mask);
 }
@@ -1573,7 +1573,7 @@ void EigrpIpv6Pdm::setPassive(bool passive, int ifaceId)
         eigrpIface = addInterfaceToEigrp(ifaceId, false);
     else if (eigrpIface->isEnabled())
     { // Disable sending and receiving of messages
-        InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
+        inet::InterfaceEntry *iface = ift->getInterfaceById(ifaceId);
         iface->ipv6Data()->leaveMulticastGroup(EIGRP_IPV6_MULT);
 
         if(iface->ipv6Data()->hasAddress(EIGRP_IPV6_MULT))
@@ -1599,7 +1599,7 @@ void EigrpIpv6Pdm::setPassive(bool passive, int ifaceId)
 // interface IEigrpPdm
 //
 
-void EigrpIpv6Pdm::sendUpdate(int destNeighbor, EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, bool forcePoisonRev, const char *reason)
+void EigrpIpv6Pdm::sendUpdate(int destNeighbor, EigrpRoute<inet::IPv6Address> *route, EigrpRouteSource<inet::IPv6Address> *source, bool forcePoisonRev, const char *reason)
 {
     ev << "DUAL: send Update message about " << route->getRouteAddress() << " to all neighbors, " << reason << endl;
     if (this->eigrpStubEnabled && applyStubToUpdate(source))
@@ -1610,7 +1610,7 @@ void EigrpIpv6Pdm::sendUpdate(int destNeighbor, EigrpRoute<IPv6Address> *route, 
     msgToAllIfaces(destNeighbor, EIGRP_UPDATE_MSG, source, forcePoisonRev, false);
 }
 
-void EigrpIpv6Pdm::sendQuery(int destNeighbor, EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, bool forcePoisonRev)
+void EigrpIpv6Pdm::sendQuery(int destNeighbor, EigrpRoute<inet::IPv6Address> *route, EigrpRouteSource<inet::IPv6Address> *source, bool forcePoisonRev)
 {
     bool forceUnreachable = false;
 
@@ -1629,10 +1629,10 @@ void EigrpIpv6Pdm::sendQuery(int destNeighbor, EigrpRoute<IPv6Address> *route, E
     msgToAllIfaces(destNeighbor, EIGRP_QUERY_MSG, source, forcePoisonRev, forceUnreachable);
 }
 
-void EigrpIpv6Pdm::sendReply(EigrpRoute<IPv6Address> *route, int destNeighbor, EigrpRouteSource<IPv6Address> *source, bool forcePoisonRev, bool isUnreachable)
+void EigrpIpv6Pdm::sendReply(EigrpRoute<inet::IPv6Address> *route, int destNeighbor, EigrpRouteSource<inet::IPv6Address> *source, bool forcePoisonRev, bool isUnreachable)
 {
     EigrpMsgRoute msgRt;
-    EigrpNeighbor<IPv6Address> *neigh = eigrpNt->findNeighborById(destNeighbor);
+    EigrpNeighbor<inet::IPv6Address> *neigh = eigrpNt->findNeighborById(destNeighbor);
 
     ev << "DUAL: send Reply message about " << route->getRouteAddress() << endl;
     if (neigh == NULL)
@@ -1661,10 +1661,10 @@ void EigrpIpv6Pdm::sendReply(EigrpRoute<IPv6Address> *route, int destNeighbor, E
 /**
  * @return if route is found in routing table then returns true.
  */
-bool EigrpIpv6Pdm::removeRouteFromRT(EigrpRouteSource<IPv6Address> *source, ANSAIPv6Route::RoutingProtocolSource *removedRtSrc)
+bool EigrpIpv6Pdm::removeRouteFromRT(EigrpRouteSource<inet::IPv6Address> *source, ANSAIPv6Route::RoutingProtocolSource *removedRtSrc)
 {
-    EigrpRoute<IPv6Address> *route = source->getRouteInfo();
-    IPv6Route *rtEntry =rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), source->getNextHop());
+    EigrpRoute<inet::IPv6Address> *route = source->getRouteInfo();
+    inet::IPv6Route *rtEntry =rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()), source->getNextHop());
     ANSAIPv6Route *ansaRtEntry = dynamic_cast<ANSAIPv6Route *>(rtEntry);
 
     if (rtEntry != NULL && ansaRtEntry != NULL)
@@ -1685,9 +1685,9 @@ bool EigrpIpv6Pdm::removeRouteFromRT(EigrpRouteSource<IPv6Address> *source, ANSA
     return rtEntry != NULL;
 }
 
-bool EigrpIpv6Pdm::isRTSafeForAdd(EigrpRoute<IPv6Address> *route, unsigned int eigrpAd)
+bool EigrpIpv6Pdm::isRTSafeForAdd(EigrpRoute<inet::IPv6Address> *route, unsigned int eigrpAd)
 {
-    IPv6Route *routeInTable = rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()));
+    inet::IPv6Route *routeInTable = rt->findRoute(route->getRouteAddress(), getNetmaskLength(route->getRouteMask()));
     ANSAIPv6Route *ansaRoute = NULL;
 
     if (routeInTable == NULL)
@@ -1700,17 +1700,17 @@ bool EigrpIpv6Pdm::isRTSafeForAdd(EigrpRoute<IPv6Address> *route, unsigned int e
             return false;
         return true;
     }
-    if (ansaRoute == NULL && routeInTable->getAdminDist() == IPv6Route::dUnknown)
-        return false;   // Connected route has AD = 255 (dUnknown) in IPv4Route
+    if (ansaRoute == NULL && routeInTable->getAdminDist() == inet::IPv6Route::dUnknown)
+        return false;   // Connected route has AD = 255 (dUnknown) in inet::IPv4Route
     if (routeInTable != NULL && routeInTable->getAdminDist() < eigrpAd)
-        return false;   // Other IPv4Route with right AD
+        return false;   // Other inet::IPv4Route with right AD
     return true;
 }
 
-EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::updateRoute(EigrpRoute<IPv6Address> *route, uint64_t dmin, bool *rtableChanged, bool removeUnreach)
+EigrpRouteSource<inet::IPv6Address> *EigrpIpv6Pdm::updateRoute(EigrpRoute<inet::IPv6Address> *route, uint64_t dmin, bool *rtableChanged, bool removeUnreach)
 {
-    EigrpRouteSource<IPv6Address> *source = NULL, *bestSuccessor = NULL;
-    IPv6Route *rtEntry = NULL;
+    EigrpRouteSource<inet::IPv6Address> *source = NULL, *bestSuccessor = NULL;
+    inet::IPv6Route *rtEntry = NULL;
     int routeNum = eigrpTt->getNumRoutes();
     int routeId = route->getRouteId();
     int pathsInRT = 0;      // Number of paths in RT (equal to number of successors)
@@ -1780,7 +1780,7 @@ EigrpRouteSource<IPv6Address> *EigrpIpv6Pdm::updateRoute(EigrpRoute<IPv6Address>
     return bestSuccessor;
 }
 
-bool EigrpIpv6Pdm::removeOldSuccessor(EigrpRouteSource<IPv6Address> *source, EigrpRoute<IPv6Address> *route)
+bool EigrpIpv6Pdm::removeOldSuccessor(EigrpRouteSource<inet::IPv6Address> *source, EigrpRoute<inet::IPv6Address> *route)
 {
     ANSAIPv6Route::RoutingProtocolSource srcProto = ANSAIPv6Route::pUnknown;
     bool rtFound, rtableChanged = false;
@@ -1805,7 +1805,7 @@ bool EigrpIpv6Pdm::removeOldSuccessor(EigrpRouteSource<IPv6Address> *source, Eig
     return rtableChanged;
 }
 
-bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, uint64_t dmin, IPv6Route *rtEntry)
+bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<inet::IPv6Address> *route, EigrpRouteSource<inet::IPv6Address> *source, uint64_t dmin, inet::IPv6Route *rtEntry)
 {
     ANSAIPv6Route *ansaRtEntry = NULL;
     bool rtableChanged = false;
@@ -1833,10 +1833,10 @@ bool EigrpIpv6Pdm::installRouteToRT(EigrpRoute<IPv6Address> *route, EigrpRouteSo
     return rtableChanged;
 }
 
-bool EigrpIpv6Pdm::setReplyStatusTable(EigrpRoute<IPv6Address> *route, EigrpRouteSource<IPv6Address> *source, bool forcePoisonRev, int *neighCount, int *stubCount)
+bool EigrpIpv6Pdm::setReplyStatusTable(EigrpRoute<inet::IPv6Address> *route, EigrpRouteSource<inet::IPv6Address> *source, bool forcePoisonRev, int *neighCount, int *stubCount)
 {
     int neighTotalCount = eigrpNt->getNumNeighbors();
-    EigrpNeighbor<IPv6Address> *neigh;
+    EigrpNeighbor<inet::IPv6Address> *neigh;
     EigrpInterface *eigrpIface = NULL;
 
     for (int i = 0; i < neighTotalCount; i++)
@@ -1880,7 +1880,7 @@ bool EigrpIpv6Pdm::setReplyStatusTable(EigrpRoute<IPv6Address> *route, EigrpRout
     return route->getReplyStatusSum() > 0;
 }
 
-bool EigrpIpv6Pdm::hasNeighborForUpdate(EigrpRouteSource<IPv6Address> *source)
+bool EigrpIpv6Pdm::hasNeighborForUpdate(EigrpRouteSource<inet::IPv6Address> *source)
 {
     int ifaceCnt = this->eigrpIft->getNumInterfaces();
     EigrpInterface *eigrpIface;
@@ -1899,9 +1899,9 @@ bool EigrpIpv6Pdm::hasNeighborForUpdate(EigrpRouteSource<IPv6Address> *source)
     return false;
 }
 
-void EigrpIpv6Pdm::setDelayedRemove(int neighId, EigrpRouteSource<IPv6Address> *src)
+void EigrpIpv6Pdm::setDelayedRemove(int neighId, EigrpRouteSource<inet::IPv6Address> *src)
 {
-    EigrpNeighbor<IPv6Address> *neigh = eigrpNt->findNeighborById(neighId);
+    EigrpNeighbor<inet::IPv6Address> *neigh = eigrpNt->findNeighborById(neighId);
 
 
     ASSERT(neigh != NULL);
@@ -1914,7 +1914,7 @@ void EigrpIpv6Pdm::setDelayedRemove(int neighId, EigrpRouteSource<IPv6Address> *
 #endif
 }
 
-void EigrpIpv6Pdm::sendUpdateToStubs(EigrpRouteSource<IPv6Address> *succ ,EigrpRouteSource<IPv6Address> *oldSucc, EigrpRoute<IPv6Address> *route)
+void EigrpIpv6Pdm::sendUpdateToStubs(EigrpRouteSource<inet::IPv6Address> *succ ,EigrpRouteSource<inet::IPv6Address> *oldSucc, EigrpRoute<inet::IPv6Address> *route)
 {
     if (!this->eigrpStubEnabled && eigrpNt->getStubCount() > 0)
     {
@@ -1933,7 +1933,7 @@ void EigrpIpv6Pdm::sendUpdateToStubs(EigrpRouteSource<IPv6Address> *succ ,EigrpR
     }
 }
 
-bool EigrpIpv6Pdm::addNetPrefix(const IPv6Address &network, const short int prefixLen, const int ifaceId)
+bool EigrpIpv6Pdm::addNetPrefix(const inet::IPv6Address &network, const short int prefixLen, const int ifaceId)
 {
     PrefixVector::iterator it;
 

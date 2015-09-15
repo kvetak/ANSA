@@ -19,7 +19,7 @@
  */
 
 
-#include <LISPSiteRecord.h>
+#include "ansa/networklayer/lisp/LISPSiteRecord.h"
 
 LISPSiteRecord::LISPSiteRecord() {
 

@@ -22,9 +22,9 @@
 #ifndef RIPNGROUTINGTABLEENTRY_H_
 #define RIPNGROUTINGTABLEENTRY_H_
 
-#include "ANSARoutingTable6.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6.h"
 
-#include "RIPngTimer_m.h"
+#include "ansa/applications/ripng/RIPngTimer_m.h"
 
 class RIPngProcess;
 
@@ -37,7 +37,7 @@ namespace RIPng
 class RoutingTableEntry : public ANSAIPv6Route
 {
   public:
-    RoutingTableEntry(IPv6Address destPrefix, int length);
+    RoutingTableEntry(inet::IPv6Address destPrefix, int length);
     RoutingTableEntry(RoutingTableEntry& entry);
     virtual ~RoutingTableEntry();
 

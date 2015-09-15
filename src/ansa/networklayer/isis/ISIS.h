@@ -35,36 +35,37 @@
 #include <queue>
 #include <iomanip>
 
-#include "CLNSTable.h"
-#include "CLNSTableAccess.h"
-#include "ISISMessage_m.h"
-#include "ISISInterfaceData.h"
+#include "ansa/networklayer/clns/CLNSTable.h"
+#include "ansa/networklayer/clns/CLNSTableAccess.h"
+#include "ansa/networklayer/isis/ISISMessage_m.h"
+#include "ansa/networklayer/isis/ISISInterfaceData.h"
 //#include "ISISLSPPacket.h"
-#include "Ieee802Ctrl_m.h"
-#include "MACAddress.h"
+#include "linklayer/common/Ieee802Ctrl_m.h"
+#include "linklayer/common/MACAddress.h"
 //#include "AnsaInterfaceTable.h"
 //#include "AnsaInterfaceTableAccess.h"
-#include "InterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
-#include "InterfaceStateManager.h"
-#include "RoutingTableAccess.h"
-#include "IRoutingTable.h"
+#include "networklayer/common/InterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "base/NotificationBoard.h"
+#include "common/NotifierConsts.h"
+#include "ansa/util/InterfaceStateManager/InterfaceStateManager.h"
+#include "networklayer/ipv4/RoutingTableAccess.h"
+#include "networklayer/contract/IRoutingTable.h"
 //#include "IPRoute.h"
-#include "IPv4Route.h"
-#include "ISISTimer_m.h"
-#include "xmlParser.h"
-#include "ISIStypes.h"
+#include "networklayer/ipv4/IPv4Route.h"
+#include "ansa/networklayer/isis/ISISTimer_m.h"
+#include "ansa/util/deviceConfigurator/xmlParser.h"
+#include "ansa/networklayer/isis/ISIStypes.h"
 #include <cmessage.h>
 #include <crng.h>
-//#include "TRILL.h"
+//#include "ansa/linklayer/rbridge/TRILL.h"
 class TRILL;
 
 //Multicast MAC adresses 01:80:c2:00:00:14 and :15 works so replace the ff:ff:...
 #define ISIS_ALL_L1_IS "01:80:c2:00:00:14"
 #define ISIS_ALL_L2_IS "01:80:c2:00:00:15"
 
+//class ISIS;
 //class ISISLSPPacket;
 /**
  * Single class providing all functionality of whole module.
@@ -78,7 +79,7 @@ class ISIS : public cSimpleModule, protected INotifiable
             L2_ISIS_MODE = 1, L3_ISIS_MODE = 2
         };
     private:
-        IInterfaceTable *ift; /*!< pointer to interface table */
+        inet::IInterfaceTable *ift; /*!< pointer to interface table */
         std::vector<ISISinterface> ISISIft; /*!< vector of available interfaces */
         CLNSTable *clnsTable; /*!< pointer to CLNS routing table */
         NotificationBoard *nb; /*!< Provides access to the notification board */
@@ -172,7 +173,7 @@ class ISIS : public cSimpleModule, protected INotifiable
         ISISadj *getAdjByGateIndex(int gateIndex, short circuitType, int offset = 0); // return something corresponding to adjacency on specified link
         ISISadj *getAdjBySystemID(unsigned char *systemID, short circuitType, int gateIndex = -1);
         ISISadj *getAdj(ISISMessage *inMsg, short circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
-        ISISadj *getAdjByMAC(const MACAddress &address, short circuitType, int gateIndex = -1);
+        ISISadj *getAdjByMAC(const inet::MACAddress &address, short circuitType, int gateIndex = -1);
         ISISinterface *getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
         bool isAdjBySystemID(unsigned char *systemID, short circuitType); //do we have adjacency for systemID on specified circuitType
         bool isUp(int gateIndex, short circuitType); //returns true if ISISInterface specified by the corresponding gateIndex have at least one adjacency in state UP
@@ -280,9 +281,9 @@ class ISIS : public cSimpleModule, protected INotifiable
         /* TLV */
         void addTLV(ISISMessage *inMsg, enum TLVtypes tlvType, short circuitType, int gateIndex = -1); //generate and add this tlvType LSP to message
         void addTLV(ISISMessage *inMsg, TLV_t *tlv); //add this TLV in message
-        void addTLV(std::vector<TLV_t*> *tlvtable, enum TLVtypes tlvType, short circuitType, InterfaceEntry *ie = NULL);
+        void addTLV(std::vector<TLV_t*> *tlvtable, enum TLVtypes tlvType, short circuitType, inet::InterfaceEntry *ie = NULL);
         std::vector<TLV_t *> genTLV(enum TLVtypes tlvType, short circuitType, int gateIndex = -1,
-                enum TLVtypes subTLVType = TLV_RESERVED, InterfaceEntry *ie = NULL);
+                enum TLVtypes subTLVType = TLV_RESERVED, inet::InterfaceEntry *ie = NULL);
         bool isAdjUp(short circuitType); //returns true if ANY adjacency is up on specified circuit level
         bool isAdjUp(ISISMessage *msg, short circuitType);
         TLV_t *getTLVByType(ISISMessage *inMsg, enum TLVtypes tlvType, int offset = 0);
@@ -335,13 +336,13 @@ class ISIS : public cSimpleModule, protected INotifiable
     public:
         ISIS();
         virtual ~ISIS(); //destructor
-        void insertIft(InterfaceEntry *entry, cXMLElement *device); //insert new interface to vector
+        void insertIft(inet::InterfaceEntry *entry, cXMLElement *device); //insert new interface to vector
         void appendISISInterface(ISISinterface iface);
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
         void setClnsTable(CLNSTable *clnsTable);
         void setTrill(TRILL *trill);
-        void setIft(IInterfaceTable *ift);
+        void setIft(inet::IInterfaceTable *ift);
         void setNb(NotificationBoard *nb);
         void subscribeNb(void);
         void setMode(ISIS_MODE mode);
@@ -390,6 +391,5 @@ class ISIS : public cSimpleModule, protected INotifiable
         int getNickname() const;
 
 };
-
 
 #endif /* ISIS_H_ */

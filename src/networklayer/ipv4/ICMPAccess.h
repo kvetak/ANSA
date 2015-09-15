@@ -20,19 +20,19 @@
 
 //  Cleanup and rewrite: Andras Varga, 2004
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ICMP.h"
-#include "ModuleAccess.h"
+#include "networklayer/ipv4/ICMP.h"
+#include "common/ModuleAccess.h"
 
 
 /**
  * Gives access to ICMP.
  */
-class INET_API ICMPAccess : public ModuleAccess<ICMP>
+class INET_API ICMPAccess : public inet::ModuleAccess<inet::ICMP>
 {
     public:
-        ICMPAccess() : ModuleAccess<ICMP>("icmp") {}
+        ICMPAccess() : inet::ModuleAccess<inet::ICMP>("icmp") {}
 };
 
 #endif

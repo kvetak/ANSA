@@ -16,9 +16,9 @@
 #ifndef EIGRPNETWORKTABLE_H_
 #define EIGRPNETWORKTABLE_H_
 
-#include "IPv4Address.h"
-#include "IPv6Address.h"
-#include "EigrpDualStack.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/contract/ipv6/IPv6Address.h"
+#include "ansa/networklayer/eigrp/EigrpDualStack.h"
 
 /**
  * Network for EIGRP routing.

@@ -17,11 +17,11 @@
  * @date 25.1.2013
  * @author Veronika Rybova, Tomas Prochazka (mailto:xproch21@stud.fit.vutbr.cz),
  * Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
- * @brief Inherited class from IPv4Route for PIM purposes
- * @detail File implements new functions for IPv4Route which are needed for PIM
+ * @brief Inherited class from inet::IPv4Route for PIM purposes
+ * @detail File implements new functions for inet::IPv4Route which are needed for PIM
  */
 
-#include "AnsaIPv4Route.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4Route.h"
 
 std::string ANSAIPv4Route::info() const
 {
@@ -63,7 +63,7 @@ std::string ANSAIPv4Route::detailedInfo() const
 
 const char *ANSAIPv4Route::getRouteSrcName() const
 {
-    switch (getSource())
+    switch (getSourceType())
     {
         case MANUAL:
         case IFACENETMASK:
@@ -107,7 +107,7 @@ AnsaIPv4MulticastRoute::AnsaIPv4MulticastRoute()
     jt = NULL;
     ppt = NULL;
 
-    RP = IPv4Address::UNSPECIFIED_ADDRESS;
+    RP = inet::IPv4Address::UNSPECIFIED_ADDRESS;
     sequencenumber = 0;
 
     this->setRoutingTable(NULL);
@@ -115,7 +115,7 @@ AnsaIPv4MulticastRoute::AnsaIPv4MulticastRoute()
      * Migration towards ANSAINET2.2
      */
     //this->setParent(NULL);
-    this->setSource(MANUAL);
+    this->setSourceType(MANUAL);
     this->setMetric(0);
 }
 
@@ -234,7 +234,7 @@ bool AnsaIPv4MulticastRoute::isOilistNull()
     return olistNull;
 }
 
-void AnsaIPv4MulticastRoute::addOutIntFull(InterfaceEntry *intPtr, int intId, intState forwading, intState mode, PIMpt *pruneTimer,
+void AnsaIPv4MulticastRoute::addOutIntFull(inet::InterfaceEntry *intPtr, int intId, intState forwading, intState mode, PIMpt *pruneTimer,
                                                 PIMet *expiryTimer, AssertState assert, RegisterState regState, bool show)
 {
     outInterface outIntf;
@@ -265,7 +265,7 @@ void AnsaIPv4MulticastRoute::addFlags(flag fl1, flag fl2, flag fl3,flag fl4)
         flags.push_back(fl4);
 }
 
-void AnsaIPv4MulticastRoute::setAddresses(IPv4Address multOrigin, IPv4Address multGroup, IPv4Address RP)
+void AnsaIPv4MulticastRoute::setAddresses(inet::IPv4Address multOrigin, inet::IPv4Address multGroup, inet::IPv4Address RP)
 {
     this->RP = RP;
     this->setMulticastGroup(multGroup);

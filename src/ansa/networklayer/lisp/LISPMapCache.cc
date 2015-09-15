@@ -18,10 +18,10 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include "LISPMapCache.h"
+#include "ansa/networklayer/lisp/LISPMapCache.h"
 //Forward declaration
-#include "IPv4InterfaceData.h"
-#include "IPv6InterfaceData.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "networklayer/ipv6/IPv6InterfaceData.h"
 
 Define_Module(LISPMapCache);
 
@@ -68,11 +68,11 @@ void LISPMapCache::initialize(int stage)
     restartMapCache();
 
 
-    //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    //DeviceConfigurator* devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     //parseConfig( par("configData").xmlValue() );
 
     //Create default record
-    //LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
+    //LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(inet::IPv4Address::UNSPECIFIED_ADDRESS, 0));
     //m1.setAction(LISPCommon::SEND_MAP_REQUEST);
     //this->addMapEntry(m1);
 
@@ -180,13 +180,13 @@ void LISPMapCache::parseSyncSetup(cXMLElement* config) {
         std::string addr = m->getAttribute(ADDRESS_ATTR);
 
         //Create a new member record
-        if (!isInSyncSet(IPvXAddress(addr.c_str())))
+        if (!isInSyncSet(inet::L3Address(addr.c_str())))
             SyncSet.push_back(LISPServerEntry(addr));
     }
 
 }
 
-LISPMapEntry* LISPMapCache::lookupMapEntry(IPvXAddress address) {
+LISPMapEntry* LISPMapCache::lookupMapEntry(inet::L3Address address) {
     LISPMapEntry* me = LISPMapStorageBase::lookupMapEntry(address);
     if (!me || me->getEidPrefix().getEidAddr().isUnspecified()) {
         emit(sigMiss, true);
@@ -198,7 +198,7 @@ LISPMapEntry* LISPMapCache::lookupMapEntry(IPvXAddress address) {
 
 void LISPMapCache::initPointers() {
     Ift = InterfaceTableAccess().get();
-    MapDb = ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
+    MapDb = inet::ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
 }
 
 void LISPMapCache::handleMessage(cMessage *msg)
@@ -261,20 +261,20 @@ void LISPMapCache::restartMapCache() {
     Enter_Method("restartMapCache()");
     clearMappingStorage();
 
-    //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    //DeviceConfigurator* devConf = inet::ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     parseConfig( par("configData").xmlValue() );
 
     //Create default record
-    LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
+    LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(inet::IPv4Address::UNSPECIFIED_ADDRESS, 0));
     m1.setAction(LISPCommon::SEND_MAP_REQUEST);
     this->addMapEntry(m1);
 
     updateDisplayString();
 }
 
-bool LISPMapCache::isInSyncSet(IPvXAddress ssmember) const {
+bool LISPMapCache::isInSyncSet(inet::L3Address ssmember) const {
     for (ServerCItem it = SyncSet.begin(); it != SyncSet.end(); ++it) {
-        if (it->getAddress().equals(ssmember))
+        if (it->getAddress()==ssmember)
             return true;
     }
     return false;
@@ -292,16 +292,16 @@ void LISPMapCache::notifySyncset(cComponent* src) {
     os << name << index ;
     //EV << "YYYYYY" << os.str() << endl;
 
-    IPv4InterfaceData* int4Data = Ift->getInterfaceByName(os.str().c_str())->ipv4Data();
-    IPv4Address adr4 =
+    inet::IPv4InterfaceData* int4Data = Ift->getInterfaceByName(os.str().c_str())->ipv4Data();
+    inet::IPv4Address adr4 =
             (int4Data) ?
                     int4Data->getIPAddress() :
-                    IPv4Address::UNSPECIFIED_ADDRESS;
-    IPv6InterfaceData* int6Data = Ift->getInterfaceByName(os.str().c_str())->ipv6Data();
-    IPv6Address adr6 =
+                    inet::IPv4Address::UNSPECIFIED_ADDRESS;
+    inet::IPv6InterfaceData* int6Data = Ift->getInterfaceByName(os.str().c_str())->ipv6Data();
+    inet::IPv6Address adr6 =
             (int6Data) ?
                     int6Data->getPreferredAddress() :
-                    IPv6Address::UNSPECIFIED_ADDRESS;
+                    inet::IPv6Address::UNSPECIFIED_ADDRESS;
 
     //Emt nonLISP
     if (ssAddrType == SSADDR_NONLISP) {
@@ -328,12 +328,12 @@ void LISPMapCache::notifySyncset(cComponent* src) {
             else if (ssAddrType == SSADDR_EID) {
                 for (MapStorageItem it = entrylist.begin(); it != entrylist.end(); ++it) {
                     for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
-                        IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
-                        IPv4Address nadr4 =
+                        inet::IPv4InterfaceData* int4Data = Ift->getInterface(i)->ipv4Data();
+                        inet::IPv4Address nadr4 =
                                 (int4Data) ?
                                         int4Data->getIPAddress() :
-                                        IPv4Address::UNSPECIFIED_ADDRESS;
-                        if (it->getEidPrefix().getEidAddr().equals(
+                                        inet::IPv4Address::UNSPECIFIED_ADDRESS;
+                        if (it->getEidPrefix().getEidAddr()==(
                                 LISPCommon::getNetworkAddress(nadr4, it->getEidPrefix().getEidLength())
                                 )
                            ) {
@@ -357,12 +357,12 @@ void LISPMapCache::notifySyncset(cComponent* src) {
             else if (ssAddrType == SSADDR_EID) {
                 for (MapStorageItem it = entrylist.begin(); it != entrylist.end(); ++it) {
                     for (int i = 0; i < Ift->getNumInterfaces(); ++i) {
-                        IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
-                        IPv6Address nadr6 =
+                        inet::IPv6InterfaceData* int6Data = Ift->getInterface(i)->ipv6Data();
+                        inet::IPv6Address nadr6 =
                                 (int6Data) ?
                                         int6Data->getPreferredAddress() :
-                                        IPv6Address::UNSPECIFIED_ADDRESS;
-                        if (it->getEidPrefix().getEidAddr().equals(
+                                        inet::IPv6Address::UNSPECIFIED_ADDRESS;
+                        if (it->getEidPrefix().getEidAddr()==(
                                 LISPCommon::getNetworkAddress(nadr6, it->getEidPrefix().getEidLength())
                                 )
                            ) {

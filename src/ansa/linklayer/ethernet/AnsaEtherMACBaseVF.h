@@ -16,15 +16,15 @@
 #ifndef ANSAETHERMACBASEVF_H_
 #define ANSAETHERMACBASEVF_H_
 
-#include "EtherMACBase.h"
+#include "linklayer/ethernet/EtherMACBase.h"
 
 // Forward declarations:
-class EtherFrame;
-class EtherTraffic;
+//class EtherFrame;
+//class EtherTraffic;
 class InterfaceEntry;
 class AnsaInterfaceEntry;
 
-class AnsaEtherMACBaseVF: public EtherMACBase {
+class AnsaEtherMACBaseVF: public inet::EtherMACBase {
 public:
     AnsaEtherMACBaseVF() {};
     virtual ~AnsaEtherMACBaseVF() {};
@@ -32,7 +32,7 @@ public:
     protected:
         virtual void initialize(int stage);
         virtual void registerInterface();
-        virtual bool dropFrameNotForUs(EtherFrame *frame);
+        virtual bool dropFrameNotForUs(inet::EtherFrame *frame);
 
 };
 

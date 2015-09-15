@@ -22,11 +22,11 @@
 #include <map>
 #include <vector>
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ModuleAccess.h"
-#include "INotifiable.h"
-#include "NotifierConsts.h"
+#include "common/ModuleAccess.h"
+#include "base/INotifiable.h"
+#include "common/NotifierConsts.h"
 
 /**
  * Acts as a intermediary between module where state changes can occur and
@@ -143,10 +143,10 @@ class INET_API NotificationBoard : public cSimpleModule
 /**
  * Gives access to the NotificationBoard instance within the host/router.
  */
-class INET_API NotificationBoardAccess : public ModuleAccess<NotificationBoard>
+class INET_API NotificationBoardAccess : public inet::ModuleAccess<NotificationBoard>
 {
   public:
-    NotificationBoardAccess() : ModuleAccess<NotificationBoard>("notificationBoard") {}
+    NotificationBoardAccess() : inet::ModuleAccess<NotificationBoard>("notificationBoard") {}
 };
 
 #endif

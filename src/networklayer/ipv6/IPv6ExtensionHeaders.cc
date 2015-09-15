@@ -15,11 +15,15 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "networklayer/ipv6/IPv6ExtensionHeaders.h"
 
-#include "IPv6ExtensionHeaders.h"
+namespace inet {
 
 void IPv6RoutingHeader::setAddressArraySize(unsigned int size)
 {
     IPv6RoutingHeader_Base::setAddressArraySize(size);
-    byteLength_var = 8 + 16 * size;
+    setByteLength(8 + 16 * size);
 }
+
+} // namespace inet
+

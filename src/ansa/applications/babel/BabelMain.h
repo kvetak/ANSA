@@ -24,22 +24,22 @@
 
 #include <omnetpp.h>
 
-#include "BabelDef.h"
-#include "BabelInterfaceTable.h"
-#include "BabelNeighbourTable.h"
-#include "BabelTopologyTable.h"
-#include "BabelSourceTable.h"
-#include "BabelPenSRTable.h"
-#include "BabelFtlv.h"
-#include "BabelBuffer.h"
-#include "BabelToAck.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "ansa/applications/babel/BabelInterfaceTable.h"
+#include "ansa/applications/babel/BabelNeighbourTable.h"
+#include "ansa/applications/babel/BabelTopologyTable.h"
+#include "ansa/applications/babel/BabelSourceTable.h"
+#include "ansa/applications/babel/BabelPenSRTable.h"
+#include "ansa/applications/babel/BabelFtlv.h"
+#include "ansa/applications/babel/BabelBuffer.h"
+#include "ansa/applications/babel/BabelToAck.h"
 
 
-#include "InterfaceTable.h"
-#include "InterfaceEntry.h"
-#include "NotificationBoard.h"
-#include "AnsaRoutingTable.h"
-#include "ANSARoutingTable6.h"
+#include "networklayer/common/InterfaceTable.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "base/NotificationBoard.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6.h"
 
 
 /**
@@ -53,16 +53,16 @@ class BabelMain : public cSimpleModule, public INotifiable
     int port;               ///< UDP port number
 
 
-    InterfaceEntry *mainInterface;
-    UDPSocket *socket4mcast;                ///< IPv4 socket for receive multicast
-    UDPSocket *socket6mcast;                ///< IPv6 socket for receive multicast
+    inet::InterfaceEntry *mainInterface;
+    inet::UDPSocket *socket4mcast;                ///< IPv4 socket for receive multicast
+    inet::UDPSocket *socket6mcast;                ///< IPv6 socket for receive multicast
     std::vector<Babel::BabelTimer *> timers;       ///< Pointers to all timers //TODO - uz nepouzivane - SMAZAT
     std::vector<BabelBuffer *> buffers;
     Babel::BabelTimer *buffgc;
     std::vector<BabelToAck *> ackwait;
 
   public:
-    IInterfaceTable *ift;
+    inet::IInterfaceTable *ift;
     NotificationBoard *nb;
     AnsaRoutingTable *rt4;
     ANSARoutingTable6 *rt6;
@@ -115,45 +115,45 @@ class BabelMain : public cSimpleModule, public INotifiable
     void processSourceGCTimer(BabelSource *source);
     void processRSResendTimer(BabelPenSR *request);
 
-    UDPSocket *createSocket();
+    inet::UDPSocket *createSocket();
 
     void activateInterface(BabelInterface *iface);
     void deactivateInterface(BabelInterface *iface);
 
 
     void processMessage(BabelMessage *msg);
-    void processAckReqTlv(char *tlv, BabelInterface *iniface, const IPvXAddress& src);
-    void processAckTlv(char *tlv, const IPvXAddress& src);
-    void processHelloTlv(char *tlv, BabelInterface *iniface, const IPvXAddress& src);
-    bool processIhuTlv(char *tlv, BabelInterface *iniface, const IPvXAddress& src, const IPvXAddress& dst);
-    bool processUpdateTlv(char *tlv, BabelInterface *iniface, const IPvXAddress& src, const Babel::rid& originator, const IPvXAddress& nh, Babel::netPrefix<IPvXAddress> *prevprefix);
-    void processRouteReqTlv(char *tlv, BabelInterface *iniface, const IPvXAddress& src, const IPvXAddress& dst);
-    void processSeqnoReqTlv(char *tlv, BabelInterface *iniface, const IPvXAddress& src);
+    void processAckReqTlv(char *tlv, BabelInterface *iniface, const inet::L3Address& src);
+    void processAckTlv(char *tlv, const inet::L3Address& src);
+    void processHelloTlv(char *tlv, BabelInterface *iniface, const inet::L3Address& src);
+    bool processIhuTlv(char *tlv, BabelInterface *iniface, const inet::L3Address& src, const inet::L3Address& dst);
+    bool processUpdateTlv(char *tlv, BabelInterface *iniface, const inet::L3Address& src, const Babel::rid& originator, const inet::L3Address& nh, Babel::netPrefix<inet::L3Address> *prevprefix);
+    void processRouteReqTlv(char *tlv, BabelInterface *iniface, const inet::L3Address& src, const inet::L3Address& dst);
+    void processSeqnoReqTlv(char *tlv, BabelInterface *iniface, const inet::L3Address& src);
 
-    void sendMessage(IPvXAddress dst, BabelInterface *outIface, BabelMessage *msg);
-    void sendTLV(IPvXAddress da, BabelInterface *oi, BabelFtlv *ftlv, double mt=Babel::SEND_BUFFERED);
+    void sendMessage(inet::L3Address dst, BabelInterface *outIface, BabelMessage *msg);
+    void sendTLV(inet::L3Address da, BabelInterface *oi, BabelFtlv *ftlv, double mt=Babel::SEND_BUFFERED);
     void sendTLV(BabelInterface *oi, BabelFtlv *ftlv, double mt=Babel::SEND_BUFFERED);
     void sendHelloTLV(BabelInterface *iface, double mt=Babel::SEND_BUFFERED);
-    void sendUpdateTLV(IPvXAddress da, BabelInterface *iface, BabelUpdateFtlv *update, double mt=Babel::SEND_BUFFERED, bool reliably=false);
+    void sendUpdateTLV(inet::L3Address da, BabelInterface *iface, BabelUpdateFtlv *update, double mt=Babel::SEND_BUFFERED, bool reliably=false);
     void sendUpdateTLV(BabelInterface *iface, BabelUpdateFtlv *update, double mt=Babel::SEND_BUFFERED, bool reliably=false);
-    void sendSeqnoReqTLV(IPvXAddress da, BabelInterface *iface, BabelSeqnoReqFtlv *request, BabelNeighbour *recfrom=NULL, double mt=Babel::SEND_URGENT);
+    void sendSeqnoReqTLV(inet::L3Address da, BabelInterface *iface, BabelSeqnoReqFtlv *request, BabelNeighbour *recfrom=NULL, double mt=Babel::SEND_URGENT);
     void sendSeqnoReqTLV(BabelInterface *iface, BabelSeqnoReqFtlv *request, BabelNeighbour *recfrom=NULL, double mt=Babel::SEND_URGENT);
 
-    void sendUpdate(IPvXAddress da, BabelInterface *iface, BabelRoute *route, double mt=Babel::SEND_BUFFERED, bool reliably=false);
+    void sendUpdate(inet::L3Address da, BabelInterface *iface, BabelRoute *route, double mt=Babel::SEND_BUFFERED, bool reliably=false);
     void sendUpdate(BabelInterface *iface, BabelRoute *route, double mt=Babel::SEND_BUFFERED, bool reliably=false);
     void sendFullDump(BabelInterface *iface);
 
-    BabelBuffer* findOrCreateBuffer(IPvXAddress da, BabelInterface *oi);
-    BabelBuffer* findBuffer(IPvXAddress da, BabelInterface *oi);
+    BabelBuffer* findOrCreateBuffer(inet::L3Address da, BabelInterface *oi);
+    BabelBuffer* findBuffer(inet::L3Address da, BabelInterface *oi);
     void deleteBuffer(BabelBuffer *todel);
     void deleteUnusedBuffers();
     void deleteBuffers();
     void flushBuffer(BabelBuffer *buff);
     void flushAllBuffers();
 
-    bool addOrUpdateRoute(const Babel::netPrefix<IPvXAddress>& prefix, BabelNeighbour *neigh, const Babel::rid& orig, const Babel::routeDistance& dist, const IPvXAddress& nh, uint16_t interval);
-    void addOrupdateSource(const Babel::netPrefix<IPvXAddress>& p, const Babel::rid& orig, const Babel::routeDistance& dist);
-    bool isFeasible(const Babel::netPrefix<IPvXAddress>& prefix, const Babel::rid& orig, const Babel::routeDistance& dist);
+    bool addOrUpdateRoute(const Babel::netPrefix<inet::L3Address>& prefix, BabelNeighbour *neigh, const Babel::rid& orig, const Babel::routeDistance& dist, const inet::L3Address& nh, uint16_t interval);
+    void addOrupdateSource(const Babel::netPrefix<inet::L3Address>& p, const Babel::rid& orig, const Babel::routeDistance& dist);
+    bool isFeasible(const Babel::netPrefix<inet::L3Address>& prefix, const Babel::rid& orig, const Babel::routeDistance& dist);
     void selectRoutes();
 
     void addToRT(BabelRoute *route);

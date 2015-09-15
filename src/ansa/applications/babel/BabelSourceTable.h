@@ -24,12 +24,12 @@
 
 #include <omnetpp.h>
 
-#include "BabelDef.h"
+#include "ansa/applications/babel/BabelDef.h"
 
 class BabelSource: public cObject
 {
 protected:
-    Babel::netPrefix<IPvXAddress> prefix;
+    Babel::netPrefix<inet::L3Address> prefix;
     Babel::rid originator;
     Babel::routeDistance feasibleDistance;
     Babel::BabelTimer *gcTimer;
@@ -38,7 +38,7 @@ public:
     BabelSource():
     gcTimer(NULL)
     {}
-    BabelSource(const Babel::netPrefix<IPvXAddress>& pre,
+    BabelSource(const Babel::netPrefix<inet::L3Address>& pre,
                 const Babel::rid& orig,
                 const Babel::routeDistance& fd,
                 Babel::BabelTimer *gct):
@@ -58,8 +58,8 @@ public:
     virtual std::string detailedInfo() const {return str();}
     friend std::ostream& operator<<(std::ostream& os, const BabelSource& bs);
 
-    const Babel::netPrefix<IPvXAddress>& getPrefix() const {return prefix;}
-    void setPrefix(Babel::netPrefix<IPvXAddress>& p) {prefix = p;}
+    const Babel::netPrefix<inet::L3Address>& getPrefix() const {return prefix;}
+    void setPrefix(Babel::netPrefix<inet::L3Address>& p) {prefix = p;}
 
     const Babel::rid& getOriginator() const {return originator;}
     void setOriginator(const Babel::rid& o) {originator = o;}
@@ -87,7 +87,7 @@ public:
 
     std::vector<BabelSource *>& getSources() {return sources;}
 
-    BabelSource *findSource(const Babel::netPrefix<IPvXAddress>& p, const Babel::rid& orig);
+    BabelSource *findSource(const Babel::netPrefix<inet::L3Address>& p, const Babel::rid& orig);
     BabelSource *addSource(BabelSource *source);
     void removeSource(BabelSource *source);
     void removeSources();

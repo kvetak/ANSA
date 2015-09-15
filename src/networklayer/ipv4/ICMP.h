@@ -16,16 +16,17 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef __INET_ICMP_H
 #define __INET_ICMP_H
 
 //  Cleanup and rewrite: Andras Varga, 2004
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
+#include "networklayer/ipv4/IIPv4RoutingTable.h"
 
-#include "ICMPMessage.h"
-#include "RoutingTableAccess.h"
+#include "networklayer/ipv4/ICMPMessage.h"
+
+namespace inet {
 
 class IPv4Datagram;
 class IPv4ControlInfo;
@@ -34,11 +35,12 @@ class PingPayload;
 /**
  * ICMP module.
  */
+// TODO: the word ping should not occur in ICMP code
+// TODO: move identifier, sequence number from PingPayload into ICMPControlInfo
 class INET_API ICMP : public cSimpleModule
 {
   protected:
-    RoutingTableAccess routingTableAccess;
-    typedef std::map<long,int> PingMap;
+    typedef std::map<long, int> PingMap;
     PingMap pingMap;
 
   protected:
@@ -49,17 +51,22 @@ class INET_API ICMP : public cSimpleModule
     virtual void sendEchoRequest(PingPayload *);
     virtual void sendToIP(ICMPMessage *, const IPv4Address& dest);
     virtual void sendToIP(ICMPMessage *msg);
+    virtual bool possiblyLocalBroadcast(const IPv4Address& addr, int interfaceId);
 
   public:
     /**
      * This method can be called from other modules to send an ICMP error packet
-     * in response to a received bogus packet.
+     * in response to a received bogus packet. It will not send ICMP error in response
+     * to broadcast or multicast packets -- in that case it will simply delete the packet.
+     * Kludge: if inputInterfaceId cannot be determined, pass in -1.
      */
-    virtual void sendErrorMessage(IPv4Datagram *datagram, ICMPType type, ICMPCode code);
+    virtual void sendErrorMessage(IPv4Datagram *datagram, int inputInterfaceId, ICMPType type, ICMPCode code);
 
     /**
      * This method can be called from other modules to send an ICMP error packet
      * in response to a received bogus packet from the transport layer (like UDP).
+     * It will not send ICMP error in response to broadcast or multicast packets --
+     * in that case it will simply delete the packet.
      * The ICMP error packet needs to include (part of) the original IPv4 datagram,
      * so this function will wrap back the transport packet into the IPv4 datagram
      * based on its IPv4ControlInfo.
@@ -67,8 +74,12 @@ class INET_API ICMP : public cSimpleModule
     virtual void sendErrorMessage(cPacket *transportPacket, IPv4ControlInfo *ctrl, ICMPType type, ICMPCode code);
 
   protected:
-    virtual void handleMessage(cMessage *msg);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_ICMP_H
 

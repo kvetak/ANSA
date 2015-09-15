@@ -23,7 +23,9 @@
  * @todo Z9
  */
 
-#include "TRILLInterfaceData.h"
+#include "ansa/linklayer/rbridge/TRILLInterfaceData.h"
+
+namespace inet{
 
 TRILLInterfaceData::TRILLInterfaceData()
 {
@@ -230,3 +232,4 @@ void TRILLInterfaceData::removeAppointedFowrwarder(int vlanId, int nickname)
 //        return false;
     }
 }
+}//namespace TRILL

@@ -22,12 +22,13 @@
 
 
 cplusplus {{
-#include "INETDefs.h"
-#include "IPv6Address.h"
-#include "IPv6Datagram.h" // added by CB
-#include "IPv6ExtensionHeaders.h" // 17.10.07 - CB
+#include "inet/common/INETDefs.h"
+#include "inet/networklayer/contract/ipv6/IPv6Address.h"
+#include "inet/networklayer/ipv6/IPv6Datagram.h" // added by CB
+#include "inet/networklayer/ipv6/IPv6ExtensionHeaders.h" // 17.10.07 - CB
 }}
 
+namespace inet;
 
 class noncobject IPv6Address;
 
@@ -50,7 +51,7 @@ enum MobilityHeaderType
 
 packet MobilityHeader // extends IPv6ExtensionHeader // TODO check how to define MobilityHeader as subclass of IPv6ExtensionHeader
 {
-    int mobilityHeaderType enum(MobilityHeaderType);
+    int mobilityHeaderType @enum(MobilityHeaderType);
 }
 
 
@@ -95,7 +96,7 @@ enum BAStatus
 
 packet BindingAcknowledgement extends MobilityHeader
 {
-    int status enum(BAStatus);
+    int status @enum(BAStatus);
     unsigned int sequenceNumber;
     unsigned int lifetime;
     bool keyManagementFlag = false;//K-Flag (Key Management Flag)
@@ -118,7 +119,7 @@ enum BEStatus
 
 packet BindingError extends MobilityHeader
 {
-    int status enum(BEStatus);
+    int status @enum(BEStatus);
     IPv6Address homeAddress;
     //Mobility Options not defined
 

@@ -18,20 +18,20 @@
 * @brief
 * @detail
 */
-#include "VirtualForwarder.h"
+#include "ansa/networklayer/common/VirtualForwarder.h"
 
 VirtualForwarder::VirtualForwarder()
 {
     disable = false;
 }
 
-void VirtualForwarder::addIPAddress(const IPv4Address &addr)
+void VirtualForwarder::addIPAddress(const inet::IPv4Address &addr)
 {
     if (!hasIPAddress(addr))
         ipAddr.push_back(addr);
 }
 
-void VirtualForwarder::removeIPAddress(const IPv4Address &addr)
+void VirtualForwarder::removeIPAddress(const inet::IPv4Address &addr)
 {
     int n = ipAddr.size();
     int i;
@@ -42,7 +42,7 @@ void VirtualForwarder::removeIPAddress(const IPv4Address &addr)
         ipAddr.erase(ipAddr.begin() + i);
 }
 
-bool VirtualForwarder::hasIPAddress(const IPv4Address& addr) const
+bool VirtualForwarder::hasIPAddress(const inet::IPv4Address& addr) const
 {
     return find(ipAddr.begin(), ipAddr.end(), addr) != ipAddr.end();
 }

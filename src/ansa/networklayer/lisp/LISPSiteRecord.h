@@ -24,8 +24,8 @@
 
 #include <sstream>
 #include <string>
-#include "LISPServerEntry.h"
-#include "LISPMapStorageBase.h"
+#include "ansa/networklayer/lisp/LISPServerEntry.h"
+#include "ansa/networklayer/lisp/LISPMapStorageBase.h"
 
 class LISPSiteRecord : public LISPMapStorageBase {
   public:

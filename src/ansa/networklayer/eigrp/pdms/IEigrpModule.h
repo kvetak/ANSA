@@ -8,8 +8,8 @@
 #ifndef IEIGRPMODULE_H_
 #define IEIGRPMODULE_H_
 
-#include "EigrpMessage_m.h"
-#include "EigrpNetworkTable.h"
+#include "ansa/networklayer/eigrp/messages/EigrpMessage_m.h"
+#include "ansa/networklayer/eigrp/tables/EigrpNetworkTable.h"
 
 /**
  * Interface for EIGRP configuration.
@@ -57,7 +57,7 @@ class IEigrpModule
      *
      * @param   routerID        EIGRP process routerID, represented as IPv4 address
      */
-    virtual void setRouterId(IPv4Address routerID) = 0;
+    virtual void setRouterId(inet::IPv4Address routerID) = 0;
 
     /**
      * Adds information about IPv6 network prefix

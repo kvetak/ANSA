@@ -28,19 +28,18 @@
 
 #include <csimplemodule.h>
 
-#include "IPv4Address.h"
-#include "IPvXAddressResolver.h"
-#include "IRoutingTable.h"
-#include "RoutingTableAccess.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "IPv4Datagram.h"
-#include "TCPSegment.h"
-#include "UDPPacket.h"
-#include "NotificationBoard.h"
-#include "MACAddress.h"
-#include "Ethernet.h"
-#include "EtherFrame_m.h"
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "networklayer/contract/IRoutingTable.h"
+#include "networklayer/ipv4/RoutingTableAccess.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "networklayer/ipv4/IPv4Datagram.h"
+#include "transportlayer/tcp_common/TCPSegment.h"
+#include "transportlayer/udp/UDPPacket.h"
+#include "base/NotificationBoard.h"
+#include "linklayer/common/MACAddress.h"
+#include "linklayer/ethernet/Ethernet.h"
+#include "linklayer/ethernet/EtherFrame_m.h"
 
 
 #include <string>

@@ -21,7 +21,7 @@
 package inet.ansa.nodes.inet;
 
 import inet.ansa.util.IPGen.AnsaIPTrafGen;
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 
 //

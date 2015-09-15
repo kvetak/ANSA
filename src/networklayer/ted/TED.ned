@@ -28,5 +28,7 @@ package inet.networklayer.ted;
 simple TED
 {
     parameters:
+        string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;
         @display("i=block/table");
 }

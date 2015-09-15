@@ -19,7 +19,7 @@
 * @detail Represents data structure for saving pending Seqno requests
 */
 
-#include <BabelPenSRTable.h>
+#include "ansa/applications/babel/BabelPenSRTable.h"
 
 using namespace Babel;
 
@@ -92,7 +92,7 @@ BabelPenSRTable::~BabelPenSRTable()
 
 
 
-BabelPenSR *BabelPenSRTable::findPenSR(const netPrefix<IPvXAddress>& p)
+BabelPenSR *BabelPenSRTable::findPenSR(const netPrefix<inet::L3Address>& p)
 {
     std::vector<BabelPenSR *>::iterator it;
 
@@ -107,7 +107,7 @@ BabelPenSR *BabelPenSRTable::findPenSR(const netPrefix<IPvXAddress>& p)
     return NULL;
 }
 
-BabelPenSR *BabelPenSRTable::findPenSR(const netPrefix<IPvXAddress>& p, BabelInterface *iface)
+BabelPenSR *BabelPenSRTable::findPenSR(const netPrefix<inet::L3Address>& p, BabelInterface *iface)
 {
     std::vector<BabelPenSR *>::iterator it;
 
@@ -159,7 +159,7 @@ void BabelPenSRTable::removePenSR(BabelPenSR *request)
 }
 
 
-void BabelPenSRTable::removePenSR(const netPrefix<IPvXAddress>& p)
+void BabelPenSRTable::removePenSR(const netPrefix<inet::L3Address>& p)
 {
     std::vector<BabelPenSR *>::iterator it;
 

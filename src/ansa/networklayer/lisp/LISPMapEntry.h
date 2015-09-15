@@ -23,9 +23,9 @@
 #define LISPMAPENTRY_H_
 
 #include <omnetpp.h>
-#include "LISPCommon.h"
-#include "LISPRLocator.h"
-#include "LISPEidPrefix.h"
+#include "ansa/networklayer/lisp/LISPCommon.h"
+#include "ansa/networklayer/lisp/LISPRLocator.h"
+#include "ansa/networklayer/lisp/LISPEidPrefix.h"
 
 #define LISP_DEFAULT_MAPSTATE INCOMPLETE
 
@@ -62,10 +62,10 @@ class LISPMapEntry {
 
     std::string info() const;
 
-    virtual bool isLocatorExisting(const IPvXAddress& address) const;
+    virtual bool isLocatorExisting(const inet::L3Address& address) const;
     virtual void addLocator(LISPRLocator& entry);
-    virtual LISPRLocator* getLocator(const IPvXAddress& address);
-    virtual void removeLocator(IPvXAddress& address);
+    virtual LISPRLocator* getLocator(const inet::L3Address& address);
+    virtual void removeLocator(inet::L3Address& address);
 
     LISPRLocator* getBestUnicastLocator();
 

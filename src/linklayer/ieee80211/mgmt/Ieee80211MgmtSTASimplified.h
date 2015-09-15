@@ -15,14 +15,16 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef IEEE80211_MGMT_SIMPLIFIEDSTA_H
-#define IEEE80211_MGMT_SIMPLIFIEDSTA_H
+#ifndef __INET_IEEE80211MGMTSTASIMPLIFIED_H
+#define __INET_IEEE80211MGMTSTASIMPLIFIED_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "Ieee80211MgmtBase.h"
-#include "NotificationBoard.h"
+#include "linklayer/ieee80211/mgmt/Ieee80211MgmtBase.h"
 
+namespace inet {
+
+namespace ieee80211 {
 
 /**
  * Used in 802.11 infrastructure mode: handles management frames for
@@ -39,17 +41,17 @@ class INET_API Ieee80211MgmtSTASimplified : public Ieee80211MgmtBase
     int receiveSequence;
 
   protected:
-    virtual int numInitStages() const {return 2;}
-    virtual void initialize(int);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int) override;
 
     /** Implements abstract Ieee80211MgmtBase method */
-    virtual void handleTimer(cMessage *msg);
+    virtual void handleTimer(cMessage *msg) override;
 
     /** Implements abstract Ieee80211MgmtBase method */
-    virtual void handleUpperMessage(cPacket *msg);
+    virtual void handleUpperMessage(cPacket *msg) override;
 
     /** Implements abstract Ieee80211MgmtBase method -- throws an error (no commands supported) */
-    virtual void handleCommand(int msgkind, cObject *ctrl);
+    virtual void handleCommand(int msgkind, cObject *ctrl) override;
 
     /** Utility function for handleUpperMessage() */
     virtual Ieee80211DataFrame *encapsulate(cPacket *msg);
@@ -57,25 +59,28 @@ class INET_API Ieee80211MgmtSTASimplified : public Ieee80211MgmtBase
     /** Utility method to decapsulate a data frame */
     virtual cPacket *decapsulate(Ieee80211DataFrame *frame);
 
-    /** Called by the NotificationBoard whenever a change occurs we're interested in */
-    virtual void receiveChangeNotification(int category, const cObject *details);
+    /** Called by the signal handler whenever a change occurs we're interested in */
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj);
 
     /** @name Processing of different frame types */
     //@{
-    virtual void handleDataFrame(Ieee80211DataFrame *frame);
-    virtual void handleAuthenticationFrame(Ieee80211AuthenticationFrame *frame);
-    virtual void handleDeauthenticationFrame(Ieee80211DeauthenticationFrame *frame);
-    virtual void handleAssociationRequestFrame(Ieee80211AssociationRequestFrame *frame);
-    virtual void handleAssociationResponseFrame(Ieee80211AssociationResponseFrame *frame);
-    virtual void handleReassociationRequestFrame(Ieee80211ReassociationRequestFrame *frame);
-    virtual void handleReassociationResponseFrame(Ieee80211ReassociationResponseFrame *frame);
-    virtual void handleDisassociationFrame(Ieee80211DisassociationFrame *frame);
-    virtual void handleBeaconFrame(Ieee80211BeaconFrame *frame);
-    virtual void handleProbeRequestFrame(Ieee80211ProbeRequestFrame *frame);
-    virtual void handleProbeResponseFrame(Ieee80211ProbeResponseFrame *frame);
+    virtual void handleDataFrame(Ieee80211DataFrame *frame) override;
+    virtual void handleAuthenticationFrame(Ieee80211AuthenticationFrame *frame) override;
+    virtual void handleDeauthenticationFrame(Ieee80211DeauthenticationFrame *frame) override;
+    virtual void handleAssociationRequestFrame(Ieee80211AssociationRequestFrame *frame) override;
+    virtual void handleAssociationResponseFrame(Ieee80211AssociationResponseFrame *frame) override;
+    virtual void handleReassociationRequestFrame(Ieee80211ReassociationRequestFrame *frame) override;
+    virtual void handleReassociationResponseFrame(Ieee80211ReassociationResponseFrame *frame) override;
+    virtual void handleDisassociationFrame(Ieee80211DisassociationFrame *frame) override;
+    virtual void handleBeaconFrame(Ieee80211BeaconFrame *frame) override;
+    virtual void handleProbeRequestFrame(Ieee80211ProbeRequestFrame *frame) override;
+    virtual void handleProbeResponseFrame(Ieee80211ProbeResponseFrame *frame) override;
     //@}
 };
 
-#endif
+} // namespace ieee80211
 
+} // namespace inet
+
+#endif // ifndef __INET_IEEE80211MGMTSTASIMPLIFIED_H
 

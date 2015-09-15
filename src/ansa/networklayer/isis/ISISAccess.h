@@ -27,14 +27,14 @@
 #ifndef ISISACCESS_H_
 #define ISISACCESS_H_
 
-#include "ModuleAccess.h"
-#include "ISIS.h"
+#include "common/ModuleAccess.h"
+#include "ansa/networklayer/isis/ISIS.h"
 
-class ISISAccess : public ModuleAccess<ISIS>
+class ISISAccess : public inet::ModuleAccess<ISIS>
 {
     public:
         ISISAccess() :
-                ModuleAccess<ISIS>("isis")
+                inet::ModuleAccess<ISIS>("isis")
         {
         }
 };

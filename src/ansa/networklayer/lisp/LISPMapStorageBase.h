@@ -22,10 +22,10 @@
 #ifndef LISPMAPSTORAGEBASE_H_
 #define LISPMAPSTORAGEBASE_H_
 
-#include "LISPEidPrefix.h"
-#include "LISPMapEntry.h"
-#include "LISPTStructs.h"
-#include "LISPCommon.h"
+#include "ansa/networklayer/lisp/LISPEidPrefix.h"
+#include "ansa/networklayer/lisp/LISPMapEntry.h"
+#include "ansa/networklayer/lisp/LISPTStructs.h"
+#include "ansa/networklayer/lisp/LISPCommon.h"
 
 typedef std::list<LISPMapEntry> MapStorage;
 typedef MapStorage::iterator MapStorageItem;
@@ -49,10 +49,10 @@ class LISPMapStorageBase
     void removeMapEntry(const LISPMapEntry& entry);
 
     LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
-    LISPMapEntry* findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref);
-    MapStorage findMapEntriesByLocator(const IPvXAddress& rloc);
+    LISPMapEntry* findMapEntryFromByLocator(const inet::L3Address& rloc, const LISPEidPrefix& eidPref);
+    MapStorage findMapEntriesByLocator(const inet::L3Address& rloc);
 
-    LISPMapEntry* lookupMapEntry(IPvXAddress address);
+    LISPMapEntry* lookupMapEntry(inet::L3Address address);
 
   protected:
     /**

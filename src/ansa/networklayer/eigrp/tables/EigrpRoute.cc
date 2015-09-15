@@ -5,7 +5,7 @@
  *      Author: honza
  */
 
-#include "EigrpRoute.h"
+#include "ansa/networklayer/eigrp/tables/EigrpRoute.h"
 
 
 

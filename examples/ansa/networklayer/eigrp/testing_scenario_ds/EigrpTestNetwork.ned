@@ -22,9 +22,9 @@ package inet.examples.ansa.networklayer.eigrp.testing_scenario_ds;
 
 import inet.ansa.networklayer.eigrp.EigrpRouterDS;
 import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.world.scenario.ScenarioManager;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
 
 
 network EigrpTestNetwork

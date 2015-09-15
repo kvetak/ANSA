@@ -1,6 +1,8 @@
 //
 // Copyright (C) 2005 Andras Varga
 //
+// Based on the video streaming app of the similar name by Johnny Lai.
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
 // as published by the Free Software Foundation; either version 2
@@ -15,18 +17,15 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
-//
-// based on the video streaming app of the similar name by Johnny Lai
-//
-
 #ifndef __INET_UDPVIDEOSTREAMCLI_H
 #define __INET_UDPVIDEOSTREAMCLI_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "AppBase.h"
-#include "UDPSocket.h"
+#include "applications/base/ApplicationBase.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+
+namespace inet {
 
 /**
  * A "Realtime" VideoStream client application.
@@ -34,36 +33,37 @@
  * Basic video stream application. Clients connect to server and get a stream of
  * video back.
  */
-class INET_API UDPVideoStreamCli : public AppBase
+class INET_API UDPVideoStreamCli : public ApplicationBase
 {
   protected:
+
+    // state
     UDPSocket socket;
-    cMessage *selfMsg;
+    cMessage *selfMsg = nullptr;
 
     // statistics
     static simsignal_t rcvdPkSignal;
 
-  public:
-    UDPVideoStreamCli() { selfMsg = NULL; }
-    virtual ~UDPVideoStreamCli() { cancelAndDelete(selfMsg); }
-
   protected:
-    ///@name Overridden cSimpleModule functions
-    //@{
-    virtual void initialize(int stage);
-    virtual void finish();
-    virtual void handleMessageWhenUp(cMessage *msg);
-    //@}
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void finish() override;
+    virtual void handleMessageWhenUp(cMessage *msg) override;
 
-  protected:
     virtual void requestStream();
     virtual void receiveStream(cPacket *msg);
 
-    //AppBase:
-    virtual bool startApp(IDoneCallback *doneCallback);
-    virtual bool stopApp(IDoneCallback *doneCallback);
-    virtual bool crashApp(IDoneCallback *doneCallback);
+    // ApplicationBase:
+    virtual bool handleNodeStart(IDoneCallback *doneCallback) override;
+    virtual bool handleNodeShutdown(IDoneCallback *doneCallback) override;
+    virtual void handleNodeCrash() override;
+
+  public:
+    UDPVideoStreamCli() { }
+    virtual ~UDPVideoStreamCli() { cancelAndDelete(selfMsg); }
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_UDPVIDEOSTREAMCLI_H
 

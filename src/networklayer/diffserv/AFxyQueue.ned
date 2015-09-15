@@ -18,8 +18,8 @@
 
 package inet.networklayer.diffserv;
 
-import inet.linklayer.queue.FIFOQueue;
-import inet.linklayer.queue.REDDropper;
+import inet.common.queue.FIFOQueue;
+import inet.common.queue.REDDropper;
 
 
 //

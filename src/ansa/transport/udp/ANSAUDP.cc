@@ -21,7 +21,7 @@
  *          that port again but with the specified address
  */
 
-#include "ANSAUDP.h"
+#include "ansa/transport/udp/ANSAUDP.h"
 
 Define_Module(ANSAUDP);
 
@@ -33,7 +33,7 @@ ANSAUDP::~ANSAUDP()
 {
 }
 
-void ANSAUDP::bind(int sockId, int gateIndex, const IPvXAddress& localAddr, int localPort)
+void ANSAUDP::bind(int sockId, int gateIndex, const inet::L3Address& localAddr, int localPort)
 {
     if (sockId == -1)
         error("sockId in BIND message not filled in");
@@ -69,7 +69,7 @@ void ANSAUDP::bind(int sockId, int gateIndex, const IPvXAddress& localAddr, int 
     }
 }
 
-UDP::SockDesc *ANSAUDP::ANSAfindSocketByLocalAddress(const IPvXAddress& localAddr, ushort localPort)
+inet::UDP::SockDesc *ANSAUDP::ANSAfindSocketByLocalAddress(const inet::L3Address& localAddr, ushort localPort)
 {
     SocketsByPortMap::iterator it = socketsByPortMap.find(localPort);
     if (it == socketsByPortMap.end())

@@ -25,9 +25,9 @@ package inet.examples.ansa.networklayer.eigrp.two_node6;
 import inet.ansa.networklayer.eigrp.EigrpRouter6;
 //import inet.ansa.nodes.inet.ANSAStandardHost;
 import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.world.scenario.ScenarioManager;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
 
 
 //

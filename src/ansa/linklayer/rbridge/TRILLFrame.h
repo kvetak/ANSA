@@ -27,7 +27,7 @@
 
 
 #include <omnetpp.h>
-#include "TRILLFrame_m.h"
+#include "ansa/linklayer/rbridge/TRILLFrame_m.h"
 
 // opp_msgc version check
 //#define MSGC_VERSION 0x0402

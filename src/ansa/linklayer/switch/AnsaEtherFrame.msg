@@ -1,21 +1,21 @@
 
 cplusplus {{
-#include "Ethernet.h"
-#include "MACAddress.h"
-#include "Ieee802Ctrl_m.h" // for enums
-#include "EtherFrame_m.h"
+#include "inet/linklayer/ethernet/Ethernet.h"
+#include "inet/linklayer/common/MACAddress.h"
+#include "inet/linklayer/common/Ieee802Ctrl_m.h" // for enums
+#include "inet/linklayer/ethernet/EtherFrame_m.h"
 }}
 
 
-class noncobject MACAddress;
+class noncobject inet::MACAddress;
 
-class noncobject MessageId;
+class noncobject inet::MessageId;
 
 enum EtherType;
 
 enum SAPCode;
 
-message EthernetIIFrame;
+message inet::EthernetIIFrame;
 
 
 // ANSA ehter frame with VLAN

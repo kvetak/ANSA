@@ -19,12 +19,12 @@
 
 package inet.examples.ansa.ripng;
 
-//import inet.networklayer.autorouting.ipv6.FlatNetworkConfigurator6;
-import inet.nodes.ethernet.Eth100M;
+//import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
+import inet.node.ethernet.Eth100M;
 import inet.ansa.applications.ripng.RIPngRouter;
 import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.world.scenario.ScenarioManager;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 
 network RIPngTestNetwork

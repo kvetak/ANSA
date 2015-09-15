@@ -17,7 +17,7 @@
 //
 
 
-#include "AclContainer.h"
+#include "ansa/acl/AclContainer.h"
 
 Define_Module(AclContainer);
 
@@ -105,9 +105,9 @@ void AclContainer::andIpWithMask(TRule* rule)
  * @param wc	- IPAddress structure with wildcard mask
  * @see loadConfigFromXML()
  */
-IPv4Address AclContainer::negateWildcard(IPv4Address wc)
+inet::IPv4Address AclContainer::negateWildcard(inet::IPv4Address wc)
 {
-	return (IPv4Address(~(wc.getInt())));
+	return (inet::IPv4Address(~(wc.getInt())));
 }
 
 /*
@@ -256,7 +256,7 @@ void AclContainer::initialize(int stage)
 bool AclContainer::loadConfigFromXML(const char* fileName)
 {
 	/* get access into Routing Table and Interface Table modules */
-	IRoutingTable* rt = RoutingTableAccess().get();
+	inet::IRoutingTable* rt = RoutingTableAccess().get();
 
 	/* resolution of configuration XML file according to specified filename */
 	cXMLElement* document = ev.getXMLDocument(fileName);
@@ -322,13 +322,13 @@ bool AclContainer::loadConfigFromXML(const char* fileName)
 				else if (strcmp(tagName, "IP_src") == 0)
 					rule.source.ipAddr.set(value);
 				else if (strcmp(tagName, "WC_src") == 0)
-					rule.source.netmask = negateWildcard(IPv4Address(value));
+					rule.source.netmask = negateWildcard(inet::IPv4Address(value));
 				else if (strcmp(tagName, "protocol") == 0)
 					getProtocol(value, &rule);
 				else if (strcmp(tagName, "IP_dst") == 0)
 					rule.dest.ipAddr.set(value);
 				else if (strcmp(tagName, "WC_dst") == 0)
-					rule.dest.netmask = negateWildcard(IPv4Address(value));
+					rule.dest.netmask = negateWildcard(inet::IPv4Address(value));
 				else if (strcmp(tagName, "port_op_src") == 0)
 					src_port_op = value;
 				else if (strcmp(tagName, "port_beg_src") == 0)
@@ -420,7 +420,7 @@ TRULES* AclContainer::getRulesByAclName(std::string name)
  * @param acl		- list of ACL rules which fits current packet
  * @return Decision of action taken with current packet (permit/deny)
  */
-bool AclContainer::processPacket(IPv4Datagram* packet, TRULES* acl)
+bool AclContainer::processPacket(inet::IPv4Datagram* packet, TRULES* acl)
 {
 	TIP source, dest;
 	source.ipAddr = packet->getSrcAddress();
@@ -431,13 +431,13 @@ bool AclContainer::processPacket(IPv4Datagram* packet, TRULES* acl)
 	ev << "Packet Dest.  IP Address: " << dest.ipAddr.str() << endl;
 	ev << "Packet Protocol ID      : " << protocol << endl;
 
-	UDPPacket *udppacket;
-	TCPSegment *tcppacket;
+	inet::UDPPacket *udppacket;
+	inet::tcp::TCPSegment *tcppacket;
 
 	switch (protocol)
 	{
 		case PROT_UDP: // if protocol is UDP, ports need to be checked
-			udppacket = dynamic_cast<UDPPacket *> (packet->decapsulate());
+			udppacket = dynamic_cast<inet::UDPPacket *> (packet->decapsulate());
 			source.portBeg = udppacket->getSourcePort();
 			ev << "UDP packet, source port: " << source.portBeg << endl;
 			dest.portBeg = udppacket->getDestinationPort();
@@ -445,7 +445,7 @@ bool AclContainer::processPacket(IPv4Datagram* packet, TRULES* acl)
 			delete udppacket;
 			break;
 		case PROT_TCP: // if protocol is TCP, ports need to be checked
-			tcppacket = dynamic_cast<TCPSegment *> (packet->decapsulate());
+			tcppacket = dynamic_cast<inet::tcp::TCPSegment *> (packet->decapsulate());
 			source.portBeg = tcppacket->getSrcPort();
 			ev << "TCP packet, source port: " << source.portBeg << endl;
 			dest.portBeg = tcppacket->getDestPort();
@@ -519,7 +519,7 @@ bool AclContainer::matchPacketToAcl(std::string name, cMessage *msg)
 	string typ = test->getClassName();
 	if (typ == "IPDatagram")
 	{
-	   IPv4Datagram *packet = dynamic_cast<IPv4Datagram*> (copy);
+	    inet::IPv4Datagram *packet = dynamic_cast<inet::IPv4Datagram*> (copy);
 	   bool result =  processPacket(packet, acl);
      delete copy;
      return result;   

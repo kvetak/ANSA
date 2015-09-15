@@ -48,12 +48,17 @@ simple Ieee80211MgmtAP like IIeee80211Mgmt
         int numAuthSteps = default(4); // use 2 for Open System auth, 4 for WEP
         string encapDecap = default("eth") @enum("true", "false", "eth");   // if "eth", frames sent up are converted to EthernetIIFrame
         //dataRate: numeric; XXX TBD
+        string radioModule = default("^.radio");   // The path to the Radio module  //FIXME remove default value
+        string macModule;               // The path to the MAC module
         @display("i=block/cogwheel");
-        @signal[enqueuePk](type=cMessage);
-        @signal[dequeuePk](type=cMessage);
-        @signal[dropPkByQueue](type=cMessage);
-        @signal[queueingTime](type=simtime_t; unit=s);
+        @signal[enqueuePk](type=cPacket);
+        @signal[dequeuePk](type=cPacket);
+        @signal[dropPkByQueue](type=cPacket);
+        @signal[queueingTime](type=simtime_t);
         @signal[dataQueueLen](type=long);  // number of stored packets
+        @signal[rcvdPk](type=cPacket);
+        @signal[NF_L2_AP_ASSOCIATED](type="Ieee80211MgmtAP::NotificationInfoSta");
+        @signal[NF_L2_AP_DISASSOCIATED](type="Ieee80211MgmtAP::NotificationInfoSta");
         @statistic[dataQueueLen](title="data queue length"; record=max,timeavg,vector; interpolationmode=sample-hold);
         @statistic[dropPkByQueue](title="packets dropped by queue"; source=dropPkByQueue; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
     gates:

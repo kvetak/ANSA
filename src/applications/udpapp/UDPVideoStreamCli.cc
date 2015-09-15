@@ -1,6 +1,8 @@
 //
 // Copyright (C) 2005 Andras Varga
 //
+// Based on the video streaming app of the similar name by Johnny Lai.
+//
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
 // as published by the Free Software Foundation; either version 2
@@ -15,58 +17,46 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "applications/udpapp/UDPVideoStreamCli.h"
 
-//
-// based on the video streaming app of the similar name by Johnny Lai
-//
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
+#include "networklayer/common/L3AddressResolver.h"
 
-#include "UDPVideoStreamCli.h"
-
-#include "UDPControlInfo_m.h"
-#include "IPvXAddressResolver.h"
-
+namespace inet {
 
 Define_Module(UDPVideoStreamCli);
 
-simsignal_t UDPVideoStreamCli::rcvdPkSignal = SIMSIGNAL_NULL;
+simsignal_t UDPVideoStreamCli::rcvdPkSignal = registerSignal("rcvdPk");
 
 void UDPVideoStreamCli::initialize(int stage)
 {
-    AppBase::initialize(stage);
+    ApplicationBase::initialize(stage);
 
-    if (stage == 0)
-    {
+    if (stage == INITSTAGE_LOCAL) {
         selfMsg = new cMessage("UDPVideoStreamStart");
-
-        // statistics
-        rcvdPkSignal = registerSignal("rcvdPk");
     }
 }
 
 void UDPVideoStreamCli::finish()
 {
-    AppBase::finish();
+    ApplicationBase::finish();
 }
 
-void UDPVideoStreamCli::handleMessageWhenUp(cMessage* msg)
+void UDPVideoStreamCli::handleMessageWhenUp(cMessage *msg)
 {
-    if (msg->isSelfMessage())
-    {
+    if (msg->isSelfMessage()) {
         requestStream();
     }
-    else if (msg->getKind() == UDP_I_DATA)
-    {
+    else if (msg->getKind() == UDP_I_DATA) {
         // process incoming packet
         receiveStream(PK(msg));
     }
-    else if (msg->getKind() == UDP_I_ERROR)
-    {
-        EV << "Ignoring UDP error report\n";
+    else if (msg->getKind() == UDP_I_ERROR) {
+        EV_WARN << "Ignoring UDP error report\n";
         delete msg;
     }
-    else
-    {
-        error("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
+    else {
+        throw cRuntimeError("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
     }
 }
 
@@ -75,31 +65,31 @@ void UDPVideoStreamCli::requestStream()
     int svrPort = par("serverPort");
     int localPort = par("localPort");
     const char *address = par("serverAddress");
-    IPvXAddress svrAddr = IPvXAddressResolver().resolve(address);
+    L3Address svrAddr = L3AddressResolver().resolve(address);
 
-    if (svrAddr.isUnspecified())
-    {
-        EV << "Server address is unspecified, skip sending video stream request\n";
+    if (svrAddr.isUnspecified()) {
+        EV_ERROR << "Server address is unspecified, skip sending video stream request\n";
         return;
     }
 
-    EV << "Requesting video stream from " << svrAddr << ":" << svrPort << "\n";
+    EV_INFO << "Requesting video stream from " << svrAddr << ":" << svrPort << "\n";
 
     socket.setOutputGate(gate("udpOut"));
     socket.bind(localPort);
 
     cPacket *pk = new cPacket("VideoStrmReq");
+    pk->setByteLength(1);   //FIXME set packet length
     socket.sendTo(pk, svrAddr, svrPort);
 }
 
 void UDPVideoStreamCli::receiveStream(cPacket *pk)
 {
-    EV << "Video stream packet: " << UDPSocket::getReceivedPacketInfo(pk) << endl;
+    EV_INFO << "Video stream packet: " << UDPSocket::getReceivedPacketInfo(pk) << endl;
     emit(rcvdPkSignal, pk);
     delete pk;
 }
 
-bool UDPVideoStreamCli::startApp(IDoneCallback *doneCallback)
+bool UDPVideoStreamCli::handleNodeStart(IDoneCallback *doneCallback)
 {
     simtime_t startTimePar = par("startTime");
     simtime_t startTime = std::max(startTimePar, simTime());
@@ -107,16 +97,17 @@ bool UDPVideoStreamCli::startApp(IDoneCallback *doneCallback)
     return true;
 }
 
-bool UDPVideoStreamCli::stopApp(IDoneCallback *doneCallback)
+bool UDPVideoStreamCli::handleNodeShutdown(IDoneCallback *doneCallback)
 {
     cancelEvent(selfMsg);
     //TODO if(socket.isOpened()) socket.close();
     return true;
 }
 
-bool UDPVideoStreamCli::crashApp(IDoneCallback *doneCallback)
+void UDPVideoStreamCli::handleNodeCrash()
 {
     cancelEvent(selfMsg);
-    return true;
 }
+
+} // namespace inet
 

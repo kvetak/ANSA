@@ -17,12 +17,12 @@ package inet.examples.ansa.babel.wireless;
 
 import inet.ansa.applications.babel.BabelRouter;
 import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.world.scenario.ScenarioManager;
-import inet.world.radio.ChannelControl;
+import inet.node.ethernet.Eth100M;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
+//import inet.world.radio.ChannelControl;
 
-import inet.nodes.wireless.AccessPoint;
+import inet.node.wireless.AccessPoint;
 
 network wireless
 {
@@ -40,10 +40,10 @@ network wireless
                 @display("p=450,290");
         }
 
-        channelControl: ChannelControl {
-            parameters:
-                @display("p=60,50");
-        }
+//        channelControl: ChannelControl {
+//            parameters:
+//                @display("p=60,50");
+//        }
 
         ap: AccessPoint {
             @display("p=175,196;r=,,#707070");

@@ -19,7 +19,7 @@
 * @detail Computes link cost using ETX method
 */
 
-#include "CostEtx.h"
+#include "ansa/applications/babel/cost/CostEtx.h"
 
 Define_Module(CostEtx);
 

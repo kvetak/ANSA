@@ -23,14 +23,14 @@ package inet.ansa.applications.ripng;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.applications.ripng.RIPngRouting;
 import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.nodes.ipv6.NetworkLayer6;
+import inet.networklayer.ipv6.IPv6NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.base.NotificationBoard;
 import inet.ansa.transport.udp.ANSAUDP;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
-import inet.linklayer.IWiredNic;
+import inet.linklayer.contract.IWiredNic;
 
 module RIPngRouter
 {
@@ -81,7 +81,7 @@ module RIPngRouter
         }
 
         // network layer
-        networkLayer: NetworkLayer6 {
+        networkLayer: IPv6NetworkLayer {
             parameters:
                 @display("p=184,193;q=queue");
         }
@@ -113,8 +113,8 @@ module RIPngRouter
         RIPng.udpOut --> udp.appIn[0];
         RIPng.udpIn <-- udp.appOut[0];
 
-        udp.ipv6Out --> networkLayer.udpIn;
-        udp.ipv6In <-- networkLayer.udpOut;
+        udp.ipv6Out --> networkLayer.transportIn++;
+        udp.ipv6In <-- networkLayer.transportOut++;
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;

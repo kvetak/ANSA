@@ -20,10 +20,10 @@
 
 package inet.linklayer.ethernet;
 
-import inet.base.IHook;
-import inet.linklayer.IEtherMAC;
-import inet.linklayer.ITrafficConditioner;
-import inet.linklayer.IWiredNic;
+import inet.common.IHook;
+import inet.linklayer.contract.IEtherMAC;
+import inet.linklayer.contract.ITrafficConditioner;
+import inet.linklayer.contract.IWiredNic;
 
 
 //
@@ -33,6 +33,7 @@ import inet.linklayer.IWiredNic;
 module EthernetInterface like IWiredNic
 {
     parameters:
+        string interfaceTableModule;
         bool csmacdSupport = default(false);  // by default CSMA/CD is turned off, so only point-to-point duplex links are supported.
         string macType = default(csmacdSupport ? "EtherMAC" : "EtherMACFullDuplex"); // ~EtherMAC or ~EtherMACFullDuplex
         string queueType = default(""); // ~DropTailQueue, or a Diffserv queue; set to "" for use of an internal queue
@@ -42,6 +43,7 @@ module EthernetInterface like IWiredNic
         int numOutputHooks = default(0);
         int numInputHooks = default(0);
         @display("i=block/ifcard;bgl=2");
+        *.interfaceTableModule = default(absPath(interfaceTableModule));
     gates:
         input upperLayerIn;
         output upperLayerOut;
@@ -66,7 +68,7 @@ module EthernetInterface like IWiredNic
         }
         mac: <macType> like IEtherMAC {
             parameters:
-                queueModule = (queueType == "" ? "" : "queue");
+                queueModule = (queueType == "" ? "" : "^.queue");
                 txQueueLimit = (queueType == "" ? 10000 : 1); // queue sends one packet at a time
                 @display("p=182,321");
         }
@@ -79,7 +81,7 @@ module EthernetInterface like IWiredNic
         mac.phys <--> { @display("m=s"); } <--> phys;
 
         if queueType != "" {
-            encap.lowerLayerOut --> queue.in ;
+            encap.lowerLayerOut --> queue.in;
             queue.out --> mac.upperLayerIn;
         }
 
@@ -143,7 +145,7 @@ module EthernetInterface like IWiredNic
 
         // there are output hooks, there is egressTC
         if numOutputHooks > 0 && egressTCType != "" {
-            outputHook[numInputHooks-1].out --> egressTC.in;
+            outputHook[numOutputHooks-1].out --> egressTC.in;
         }
 }
 

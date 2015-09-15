@@ -23,8 +23,8 @@
 #define LISPSERVERENTRY_H_
 
 #include <omnetpp.h>
-#include "IPvXAddress.h"
-#include "LISPCommon.h"
+#include "networklayer/common/L3Address.h"
+#include "ansa/networklayer/lisp/LISPCommon.h"
 
 class LISPServerEntry {
   public:
@@ -47,13 +47,13 @@ class LISPServerEntry {
     void setProxyReply(bool proxyReply);
     bool isQuickRegistration() const;
     void setQuickRegistration(bool quickRegistration);
-    const IPvXAddress& getAddress() const;
-    void setAddress(const IPvXAddress& address);
+    const inet::L3Address& getAddress() const;
+    void setAddress(const inet::L3Address& address);
     simtime_t getLastTime() const;
     void setLastTime(simtime_t lastTime);
 
   private:
-    IPvXAddress address;
+    inet::L3Address address;
     std::string key;
     bool proxyReply;
     bool mapNotify;

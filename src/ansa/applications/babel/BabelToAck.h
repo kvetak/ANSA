@@ -22,8 +22,8 @@
 #ifndef BABELTOACK_H_
 #define BABELTOACK_H_
 
-#include "BabelDef.h"
-#include "BabelInterfaceTable.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "ansa/applications/babel/BabelInterfaceTable.h"
 
 
 
@@ -31,11 +31,11 @@ class BabelToAck : public cObject
 {
   protected:
     uint16_t nonce;
-    std::vector<IPvXAddress> dstNodes;
+    std::vector<inet::L3Address> dstNodes;
     int resendNum;
     Babel::BabelTimer *resendTimer;
 
-    IPvXAddress dst;
+    inet::L3Address dst;
     BabelInterface *outIface;
     BabelMessage *msg;
 
@@ -48,7 +48,7 @@ class BabelToAck : public cObject
         msg(NULL)
         {};
 
-    BabelToAck(uint16_t n, int rn, Babel::BabelTimer *rt, IPvXAddress d, BabelInterface *oi, BabelMessage *m):
+    BabelToAck(uint16_t n, int rn, Babel::BabelTimer *rt, inet::L3Address d, BabelInterface *oi, BabelMessage *m):
         nonce(n),
         resendNum(rn),
         resendTimer(rt),
@@ -77,8 +77,8 @@ class BabelToAck : public cObject
     Babel::BabelTimer* getResendTimer() const {return resendTimer;}
     void setResendTimer(Babel::BabelTimer* rt) {resendTimer = rt;}
 
-    const IPvXAddress& getDst() const {return dst;}
-    void setDst(const IPvXAddress& d) {dst = d;}
+    const inet::L3Address& getDst() const {return dst;}
+    void setDst(const inet::L3Address& d) {dst = d;}
 
     BabelInterface* getOutIface() const {return outIface;}
     void setOutIface(BabelInterface* oi) {outIface = oi;}
@@ -86,8 +86,8 @@ class BabelToAck : public cObject
     BabelMessage* getMsg() const {return msg;}
     void setMsg(BabelMessage* m) {msg = m;}
 
-    void addDstNode(IPvXAddress dn);
-    void removeDstNode(IPvXAddress dn);
+    void addDstNode(inet::L3Address dn);
+    void removeDstNode(inet::L3Address dn);
     size_t dstNodesSize() {return dstNodes.size();}
 
 };

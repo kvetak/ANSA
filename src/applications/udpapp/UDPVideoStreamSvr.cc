@@ -1,5 +1,6 @@
 //
 // Copyright (C) 2005 Andras Varga
+// Based on the video streaming app of the similar name by Johnny Lai.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -15,21 +16,16 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "applications/udpapp/UDPVideoStreamSvr.h"
 
-//
-// based on the video streaming app of the similar name by Johnny Lai
-//
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
 
-
-#include "UDPVideoStreamSvr.h"
-
-#include "UDPControlInfo_m.h"
-
+namespace inet {
 
 Define_Module(UDPVideoStreamSvr);
 
-simsignal_t UDPVideoStreamSvr::reqStreamBytesSignal = SIMSIGNAL_NULL;
-simsignal_t UDPVideoStreamSvr::sentPkSignal = SIMSIGNAL_NULL;
+simsignal_t UDPVideoStreamSvr::reqStreamBytesSignal = registerSignal("reqStreamBytes");
+simsignal_t UDPVideoStreamSvr::sentPkSignal = registerSignal("sentPk");
 
 inline std::ostream& operator<<(std::ostream& out, const UDPVideoStreamSvr::VideoStreamData& d)
 {
@@ -38,21 +34,17 @@ inline std::ostream& operator<<(std::ostream& out, const UDPVideoStreamSvr::Vide
     return out;
 }
 
-UDPVideoStreamSvr::UDPVideoStreamSvr()
-{
-}
-
 UDPVideoStreamSvr::~UDPVideoStreamSvr()
 {
-    for(VideoStreamMap::iterator it = streams.begin(); it  != streams.end(); ++it)
-        cancelAndDelete(it->second.timer);
+    for (auto & elem : streams)
+        cancelAndDelete(elem.second.timer);
 }
 
 void UDPVideoStreamSvr::initialize(int stage)
 {
-    AppBase::initialize(stage);
-    if (stage == 0)
-    {
+    ApplicationBase::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         sendInterval = &par("sendInterval");
         packetLen = &par("packetLen");
         videoSize = &par("videoSize");
@@ -61,8 +53,6 @@ void UDPVideoStreamSvr::initialize(int stage)
         // statistics
         numStreams = 0;
         numPkSent = 0;
-        reqStreamBytesSignal = registerSignal("reqStreamBytes");
-        sentPkSignal = registerSignal("sentPk");
 
         WATCH_MAP(streams);
     }
@@ -74,24 +64,20 @@ void UDPVideoStreamSvr::finish()
 
 void UDPVideoStreamSvr::handleMessageWhenUp(cMessage *msg)
 {
-    if (msg->isSelfMessage())
-    {
+    if (msg->isSelfMessage()) {
         // timer for a particular video stream expired, send packet
         sendStreamData(msg);
     }
-    else if (msg->getKind() == UDP_I_DATA)
-    {
+    else if (msg->getKind() == UDP_I_DATA) {
         // start streaming
         processStreamRequest(msg);
     }
-    else if (msg->getKind() == UDP_I_ERROR)
-    {
-        EV << "Ignoring UDP error report\n";
+    else if (msg->getKind() == UDP_I_ERROR) {
+        EV_WARN << "Ignoring UDP error report\n";
         delete msg;
     }
-    else
-    {
-        error("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
+    else {
+        throw cRuntimeError("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
     }
 }
 
@@ -120,7 +106,7 @@ void UDPVideoStreamSvr::processStreamRequest(cMessage *msg)
 
 void UDPVideoStreamSvr::sendStreamData(cMessage *timer)
 {
-    VideoStreamMap::iterator it = streams.find(timer->getId());
+    auto it = streams.find(timer->getId());
     if (it == streams.end())
         throw cRuntimeError("Model error: Stream not found for timer");
 
@@ -142,13 +128,11 @@ void UDPVideoStreamSvr::sendStreamData(cMessage *timer)
     numPkSent++;
 
     // reschedule timer if there's bytes left to send
-    if (d->bytesLeft > 0)
-    {
+    if (d->bytesLeft > 0) {
         simtime_t interval = (*sendInterval);
-        scheduleAt(simTime()+interval, timer);
+        scheduleAt(simTime() + interval, timer);
     }
-    else
-    {
+    else {
         streams.erase(it);
         delete timer;
     }
@@ -156,12 +140,12 @@ void UDPVideoStreamSvr::sendStreamData(cMessage *timer)
 
 void UDPVideoStreamSvr::clearStreams()
 {
-    for(VideoStreamMap::iterator it = streams.begin(); it  != streams.end(); ++it)
-        cancelAndDelete(it->second.timer);
+    for (auto & elem : streams)
+        cancelAndDelete(elem.second.timer);
     streams.clear();
 }
 
-bool UDPVideoStreamSvr::startApp(IDoneCallback *doneCallback)
+bool UDPVideoStreamSvr::handleNodeStart(IDoneCallback *doneCallback)
 {
     socket.setOutputGate(gate("udpOut"));
     socket.bind(localPort);
@@ -169,16 +153,17 @@ bool UDPVideoStreamSvr::startApp(IDoneCallback *doneCallback)
     return true;
 }
 
-bool UDPVideoStreamSvr::stopApp(IDoneCallback *doneCallback)
+bool UDPVideoStreamSvr::handleNodeShutdown(IDoneCallback *doneCallback)
 {
     clearStreams();
     //TODO if(socket.isOpened()) socket.close();
     return true;
 }
 
-bool UDPVideoStreamSvr::crashApp(IDoneCallback *doneCallback)
+void UDPVideoStreamSvr::handleNodeCrash()
 {
     clearStreams();
-    return true;
 }
+
+} // namespace inet
 

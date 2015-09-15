@@ -20,7 +20,7 @@
  * @details Implementation according to RFC3973.
  */
 
-#include "pimDM.h"
+#include "ansa/networklayer/pim/modes/pimDM.h"
 
 
 Define_Module(pimDM);
@@ -38,7 +38,7 @@ using namespace std;
  * @param intId ID of outgoing interface.
  * @see PIMJoinPrune()
  */
-void pimDM::sendPimJoinPrune(IPv4Address nextHop, IPv4Address src, IPv4Address grp, int intId)
+void pimDM::sendPimJoinPrune(inet::IPv4Address nextHop, inet::IPv4Address src, inet::IPv4Address grp, int intId)
 {
 	EV << "pimDM::sendPimJoinPrune" << endl;
 	EV << "UpstreamNeighborAddress: " << nextHop << ", Source: " << src << ", Group: " << grp << ", IntId: " << intId << endl;
@@ -63,10 +63,10 @@ void pimDM::sendPimJoinPrune(IPv4Address nextHop, IPv4Address src, IPv4Address g
 	msg->setMulticastGroups(0, *group);
 
 	// set IP Control info
-	IPv4ControlInfo *ctrl = new IPv4ControlInfo();
-	IPv4Address ga1("224.0.0.13");
+	inet::IPv4ControlInfo *ctrl = new inet::IPv4ControlInfo();
+	inet::IPv4Address ga1("224.0.0.13");
 	ctrl->setDestAddr(ga1);
-	//ctrl->setProtocol(IP_PROT_PIM);
+	//ctrl->setProtocol(inet::IP_PROT_PIM);
 	ctrl->setProtocol(103);
 	ctrl->setTimeToLive(1);
 	ctrl->setInterfaceId(intId);
@@ -90,8 +90,8 @@ void pimDM::sendPimGraftAck(PIMGraftAck *msg)
 	msg->setType(GraftAck);
 
 	// set IP Control info
-	IPv4ControlInfo *oldCtrl = (IPv4ControlInfo*) (msg->removeControlInfo());
-	IPv4ControlInfo *ctrl = new IPv4ControlInfo();
+	inet::IPv4ControlInfo *oldCtrl = (inet::IPv4ControlInfo*) (msg->removeControlInfo());
+	inet::IPv4ControlInfo *ctrl = new inet::IPv4ControlInfo();
 	ctrl->setDestAddr(oldCtrl->getSrcAddr());
 	ctrl->setSrcAddr(oldCtrl->getDestAddr());
 	ctrl->setProtocol(103);
@@ -115,7 +115,7 @@ void pimDM::sendPimGraftAck(PIMGraftAck *msg)
  * @param intId ID of outgoing interface.
  * @see PIMGraft()
  */
-void pimDM::sendPimGraft(IPv4Address nextHop, IPv4Address src, IPv4Address grp, int intId)
+void pimDM::sendPimGraft(inet::IPv4Address nextHop, inet::IPv4Address src, inet::IPv4Address grp, int intId)
 {
 	EV << "pimDM::sendPimGraft" << endl;
 	EV << "UpstreamNeighborAddress: " << nextHop << ", Source: " << src << ", Group: " << grp << ", IntId: " << intId << endl;
@@ -137,9 +137,9 @@ void pimDM::sendPimGraft(IPv4Address nextHop, IPv4Address src, IPv4Address grp, 
 	msg->setMulticastGroups(0, *group);
 
 	// set IP Control info
-	IPv4ControlInfo *ctrl = new IPv4ControlInfo();
+	inet::IPv4ControlInfo *ctrl = new inet::IPv4ControlInfo();
 	ctrl->setDestAddr(nextHop);
-	//ctrl->setProtocol(IP_PROT_PIM);
+	//ctrl->setProtocol(inet::IP_PROT_PIM);
 	ctrl->setProtocol(103);
 	ctrl->setTimeToLive(1);
 	ctrl->setInterfaceId(intId);
@@ -160,7 +160,7 @@ void pimDM::sendPimGraft(IPv4Address nextHop, IPv4Address src, IPv4Address grp, 
  * @param P Indicator of pruned outgoing interface. If interface is pruned it is set to 1, otherwise to 0.
  * @see PIMStateRefresh()
  */
-void pimDM::sendPimStateRefresh(IPv4Address originator, IPv4Address src, IPv4Address grp, int intId, bool P)
+void pimDM::sendPimStateRefresh(inet::IPv4Address originator, inet::IPv4Address src, inet::IPv4Address grp, int intId, bool P)
 {
 	EV << "pimDM::sendPimStateRefresh" << endl;
 
@@ -173,9 +173,9 @@ void pimDM::sendPimStateRefresh(IPv4Address originator, IPv4Address src, IPv4Add
 	msg->setP(P);
 
 	// set IP Control info
-	IPv4ControlInfo *ctrl = new IPv4ControlInfo();
+	inet::IPv4ControlInfo *ctrl = new inet::IPv4ControlInfo();
 	ctrl->setDestAddr(grp);
-	//ctrl->setProtocol(IP_PROT_PIM);
+	//ctrl->setProtocol(inet::IP_PROT_PIM);
 	ctrl->setProtocol(103);
 	ctrl->setTimeToLive(1);
 	ctrl->setInterfaceId(intId);
@@ -197,7 +197,7 @@ void pimDM::sendPimStateRefresh(IPv4Address originator, IPv4Address src, IPv4Add
  * @return Pointer to new Prune Timer.
  * @see PIMpt()
  */
-PIMpt* pimDM::createPruneTimer(IPv4Address source, IPv4Address group, int intId, int holdTime)
+PIMpt* pimDM::createPruneTimer(inet::IPv4Address source, inet::IPv4Address group, int intId, int holdTime)
 {
 	PIMpt *timer = new PIMpt();
 	timer->setName("PimPruneTimer");
@@ -221,7 +221,7 @@ PIMpt* pimDM::createPruneTimer(IPv4Address source, IPv4Address group, int intId,
  * @return Pointer to new Graft Retry Timer.
  * @see PIMgrt()
  */
-PIMgrt* pimDM::createGraftRetryTimer(IPv4Address source, IPv4Address group)
+PIMgrt* pimDM::createGraftRetryTimer(inet::IPv4Address source, inet::IPv4Address group)
 {
 	PIMgrt *timer = new PIMgrt();
 	timer->setName("PIMGraftRetryTimer");
@@ -243,7 +243,7 @@ PIMgrt* pimDM::createGraftRetryTimer(IPv4Address source, IPv4Address group)
  * @return Pointer to new Source Active Timer
  * @see PIMsat()
  */
-PIMsat* pimDM::createSourceActiveTimer(IPv4Address source, IPv4Address group)
+PIMsat* pimDM::createSourceActiveTimer(inet::IPv4Address source, inet::IPv4Address group)
 {
 	PIMsat *timer = new PIMsat();
 	timer->setName("PIMSourceActiveTimer");
@@ -265,7 +265,7 @@ PIMsat* pimDM::createSourceActiveTimer(IPv4Address source, IPv4Address group)
  * @return Pointer to new Source Active Timer
  * @see PIMsrt()
  */
-PIMsrt* pimDM::createStateRefreshTimer(IPv4Address source, IPv4Address group)
+PIMsrt* pimDM::createStateRefreshTimer(inet::IPv4Address source, inet::IPv4Address group)
 {
 	PIMsrt *timer = new PIMsrt();
 	timer->setName("PIMStateRefreshTimer");
@@ -294,7 +294,7 @@ PIMsrt* pimDM::createStateRefreshTimer(IPv4Address source, IPv4Address group)
  * @see PIMgrt()
  * @see processJoinPruneGraftPacket()
  */
-void pimDM::processGraftPacket(IPv4Address source, IPv4Address group, IPv4Address sender, int intId)
+void pimDM::processGraftPacket(inet::IPv4Address source, inet::IPv4Address group, inet::IPv4Address sender, int intId)
 {
 	EV << "pimDM::processGraftPacket" << endl;
 
@@ -453,11 +453,11 @@ void pimDM::processJoinPruneGraftPacket(PIMJoinPrune *pkt, PIMPacketType type)
 {
 	EV << "pimDM::processJoinePruneGraftPacket" << endl;
 
-	IPv4ControlInfo *ctrl =  (IPv4ControlInfo *) pkt->getControlInfo();
-	IPv4Address sender = ctrl->getSrcAddr();
-	InterfaceEntry * nt = rt->getInterfaceForDestAddr(sender);
+	inet::IPv4ControlInfo *ctrl =  (inet::IPv4ControlInfo *) pkt->getControlInfo();
+	inet::IPv4Address sender = ctrl->getSrcAddr();
+	inet::InterfaceEntry * nt = rt->getInterfaceForDestAddr(sender);
 	vector<PimNeighbor> neighbors = pimNbt->getNeighborsByIntID(nt->getInterfaceId());
-	IPv4Address addr = nt->ipv4Data()->getIPAddress();
+	inet::IPv4Address addr = nt->ipv4Data()->getIPAddress();
 
 	// does packet belong to this router?
 	if (pkt->getUpstreamNeighborAddress() != nt->ipv4Data()->getIPAddress() && type != GraftAck)
@@ -470,13 +470,13 @@ void pimDM::processJoinPruneGraftPacket(PIMJoinPrune *pkt, PIMPacketType type)
 	for (unsigned int i = 0; i < pkt->getMulticastGroupsArraySize(); i++)
 	{
 		MulticastGroup group = pkt->getMulticastGroups(i);
-		IPv4Address groupAddr = group.getGroupAddress();
+		inet::IPv4Address groupAddr = group.getGroupAddress();
 
 		// go through list of joined sources
 		//EV << "JoinedSourceAddressArraySize: " << group.getJoinedSourceAddressArraySize() << endl;
 		for (unsigned int j = 0; j < group.getJoinedSourceAddressArraySize(); j++)
 		{
-			IPv4Address source = (group.getJoinedSourceAddress(j)).IPaddress;
+			inet::IPv4Address source = (group.getJoinedSourceAddress(j)).IPaddress;
 			AnsaIPv4MulticastRoute *route = rt->getRouteFor(groupAddr, source);
 
 			if (type == JoinPrune)
@@ -499,7 +499,7 @@ void pimDM::processJoinPruneGraftPacket(PIMJoinPrune *pkt, PIMPacketType type)
 			//EV << "JoinedPrunedAddressArraySize: " << group.getPrunedSourceAddressArraySize() << endl;
 			for(unsigned int k = 0; k < group.getPrunedSourceAddressArraySize(); k++)
 			{
-				IPv4Address source = (group.getPrunedSourceAddress(k)).IPaddress;
+				inet::IPv4Address source = (group.getPrunedSourceAddress(k)).IPaddress;
 				AnsaIPv4MulticastRoute *route = rt->getRouteFor(groupAddr, source);
 
 				if (source != route->getOrigin())
@@ -554,7 +554,7 @@ void pimDM::processStateRefreshPacket(PIMStateRefresh *pkt)
 	bool pruneIndicator;
 
 	// chceck if State Refresh msg has came to RPF interface
-	IPv4ControlInfo *ctrl = (IPv4ControlInfo*) pkt->getControlInfo();
+	inet::IPv4ControlInfo *ctrl = (inet::IPv4ControlInfo*) pkt->getControlInfo();
 	if (ctrl->getInterfaceId() != route->getInIntId())
 	{
 		delete pkt;
@@ -614,8 +614,8 @@ void pimDM::processPruneTimer(PIMpt *timer)
 {
 	EV << "pimDM::processPruneTimer" << endl;
 
-	IPv4Address source = timer->getSource();
-	IPv4Address group = timer->getGroup();
+	inet::IPv4Address source = timer->getSource();
+	inet::IPv4Address group = timer->getGroup();
 	int intId = timer->getIntId();
 
 	// find correct (S,G) route which timer belongs to
@@ -891,15 +891,15 @@ void pimDM::initialize(int stage)
 		}
 
 		// subscribe for notifications
-		nb->subscribe(this, NF_IPv4_NEW_MULTICAST_DENSE);
-		nb->subscribe(this, NF_IPv4_NEW_IGMP_ADDED);
-		nb->subscribe(this, NF_IPv4_NEW_IGMP_REMOVED);
-		nb->subscribe(this, NF_IPv4_DATA_ON_PRUNED_INT);
-		nb->subscribe(this, NF_IPv4_DATA_ON_NONRPF);
-		nb->subscribe(this, NF_IPv4_DATA_ON_RPF);
+		nb->subscribe(this, inet::NF_IPv4_NEW_MULTICAST_DENSE);
+		nb->subscribe(this, inet::NF_IPv4_NEW_IGMP_ADDED);
+		nb->subscribe(this, inet::NF_IPv4_NEW_IGMP_REMOVED);
+		nb->subscribe(this, inet::NF_IPv4_DATA_ON_PRUNED_INT);
+		nb->subscribe(this, inet::NF_IPv4_DATA_ON_NONRPF);
+		nb->subscribe(this, inet::NF_IPv4_DATA_ON_RPF);
 		//nb->subscribe(this, NF_IPv4_RPF_CHANGE);
-		nb->subscribe(this, NF_IPv4_ROUTE_ADDED);
-		nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+		nb->subscribe(this, inet::NF_IPv4_ROUTE_ADDED);
+		nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
 	}
 }
 
@@ -913,7 +913,7 @@ void pimDM::initialize(int stage)
  * @see newMulticast()
  * @see newMulticastAddr()
  */
-void pimDM::receiveChangeNotification(int category, const cPolymorphic *details)
+void pimDM::receiveChangeNotification(simsignal_t signal, const cPolymorphic *details)
 {
 	// ignore notifications during initialize
 	if (simulation.getContextType()==CTX_INITIALIZE)
@@ -924,68 +924,68 @@ void pimDM::receiveChangeNotification(int category, const cPolymorphic *details)
 		return;
 
 	Enter_Method_Silent();
-	printNotificationBanner(category, details);
-	IPv4ControlInfo *ctrl;
+	inet::printNotificationBanner(signal, details);
+	inet::IPv4ControlInfo *ctrl;
 	AnsaIPv4MulticastRoute *route;
 	addRemoveAddr *members;
 
 	// according to category of event...
-	switch (category)
+//	switch (category)
+//	{
+	if(signal == inet::NF_INTERFACE_STATE_CHANGED)
 	{
-	    case NF_INTERFACE_STATE_CHANGED:
-	        EV <<  "pimDM::INTERFACE CHANGE" << endl;
-	        setUpInterface();
-	        break;
-
+        EV <<  "pimDM::INTERFACE CHANGE" << endl;
+        setUpInterface();
+	}
 		// new multicast data appears in router
-		case NF_IPv4_NEW_MULTICAST_DENSE:
-			EV <<  "pimDM::receiveChangeNotification - NEW MULTICAST DENSE" << endl;
-			route = (AnsaIPv4MulticastRoute *)(details);
-			newMulticast(route);
-			break;
-
+	else if(signal == inet::NF_IPv4_NEW_MULTICAST_DENSE)
+	{
+        EV <<  "pimDM::receiveChangeNotification - NEW MULTICAST DENSE" << endl;
+        route = (AnsaIPv4MulticastRoute *)(details);
+        newMulticast(route);
+	}
 		// configuration of interface changed, it means some change from IGMP, address were added.
-		case NF_IPv4_NEW_IGMP_ADDED:
-			EV << "pimDM::receiveChangeNotification - IGMP change - address were added." << endl;
-			members = (addRemoveAddr *) (details);
-			newMulticastAddr(members);
-			break;
-
+	else if(signal == inet::NF_IPv4_NEW_IGMP_ADDED)
+	{
+        EV << "pimDM::receiveChangeNotification - IGMP change - address were added." << endl;
+        members = (addRemoveAddr *) (details);
+        newMulticastAddr(members);
+	}
 		// configuration of interface changed, it means some change from IGMP, address were removed.
-		case NF_IPv4_NEW_IGMP_REMOVED:
-			EV << "pimDM::receiveChangeNotification - IGMP change - address were removed." << endl;
-			members = (addRemoveAddr *) (details);
-			oldMulticastAddr(members);
-			break;
-
-		case NF_IPv4_DATA_ON_PRUNED_INT:
-			EV << "pimDM::receiveChangeNotification - Data appears on pruned interface." << endl;
-			ctrl = (IPv4ControlInfo *)(details);
-			dataOnPruned(ctrl->getDestAddr(), ctrl->getSrcAddr());
-			break;
-
+	else if(signal == inet::NF_IPv4_NEW_IGMP_REMOVED)
+	{
+        EV << "pimDM::receiveChangeNotification - IGMP change - address were removed." << endl;
+        members = (addRemoveAddr *) (details);
+        oldMulticastAddr(members);
+	}
+	else if(signal == inet::NF_IPv4_DATA_ON_PRUNED_INT)
+	{
+        EV << "pimDM::receiveChangeNotification - Data appears on pruned interface." << endl;
+        ctrl = (inet::IPv4ControlInfo *)(details);
+        dataOnPruned(ctrl->getDestAddr(), ctrl->getSrcAddr());
+	}
 		// data come to non-RPF interface
-		case NF_IPv4_DATA_ON_NONRPF:
-			EV << "pimDM::receiveChangeNotification - Data appears on non-RPF interface." << endl;
-			ctrl = (IPv4ControlInfo *)(details);
-			dataOnNonRpf(ctrl->getDestAddr(), ctrl->getSrcAddr(), ctrl->getInterfaceId());
-			break;
-
+	else if(signal == inet::NF_IPv4_DATA_ON_NONRPF)
+	{
+        EV << "pimDM::receiveChangeNotification - Data appears on non-RPF interface." << endl;
+        ctrl = (inet::IPv4ControlInfo *)(details);
+        dataOnNonRpf(ctrl->getDestAddr(), ctrl->getSrcAddr(), ctrl->getInterfaceId());
+	}
 		// data come to RPF interface
-		case NF_IPv4_DATA_ON_RPF:
-			EV << "pimDM::receiveChangeNotification - Data appears on RPF interface." << endl;
-			route = (AnsaIPv4MulticastRoute *)(details);
-			dataOnRpf(route);
-			break;
-
+	else if(signal == inet::NF_IPv4_DATA_ON_RPF)
+	{
+        EV << "pimDM::receiveChangeNotification - Data appears on RPF interface." << endl;
+        route = (AnsaIPv4MulticastRoute *)(details);
+        dataOnRpf(route);
+	}
 		// RPF interface has changed
-		case NF_IPv4_ROUTE_ADDED:
-			EV << "pimDM::receiveChangeNotification - RPF interface has changed." << endl;
-			IPv4Route *entry = (IPv4Route *) (details);
-			vector<AnsaIPv4MulticastRoute*> routes = rt->getRoutesForSource(entry->getDestination());
-			for (unsigned int i = 0; i < routes.size(); i++)
-				rpfIntChange(routes[i]);
-			break;
+	else if(signal == inet::NF_IPv4_ROUTE_ADDED)
+	{
+        EV << "pimDM::receiveChangeNotification - RPF interface has changed." << endl;
+        inet::IPv4Route *entry = (inet::IPv4Route *) (details);
+        vector<AnsaIPv4MulticastRoute*> routes = rt->getRoutesForSource(entry->getDestination());
+        for (unsigned int i = 0; i < routes.size(); i++)
+            rpfIntChange(routes[i]);
 	}
 }
 
@@ -1002,10 +1002,10 @@ void pimDM::setUpInterface()
             newentry = pimIft->getInterface(i);
             if (newentry->getInterfaceID() == 101 || newentry->getInterfaceID() == 103)
             {
-                if (newentry->isLocalIntMulticastAddress(IPv4Address("226.1.1.1")))
-                    newentry->removeIntMulticastAddress(IPv4Address("226.1.1.1"));
+                if (newentry->isLocalIntMulticastAddress(inet::IPv4Address("226.1.1.1")))
+                    newentry->removeIntMulticastAddress(inet::IPv4Address("226.1.1.1"));
                 else
-                    newentry->addIntMulticastAddress(IPv4Address("226.1.1.1"));
+                    newentry->addIntMulticastAddress(inet::IPv4Address("226.1.1.1"));
             }
         }
     }
@@ -1027,9 +1027,9 @@ void pimDM::setUpInterface()
  */
 void pimDM::rpfIntChange(AnsaIPv4MulticastRoute *route)
 {
-	IPv4Address source = route->getOrigin();
-	IPv4Address group = route->getMulticastGroup();
-	InterfaceEntry *newRpf = rt->getInterfaceForDestAddr(source);
+	inet::IPv4Address source = route->getOrigin();
+	inet::IPv4Address group = route->getMulticastGroup();
+	inet::InterfaceEntry *newRpf = rt->getInterfaceForDestAddr(source);
 	int rpfId = newRpf->getInterfaceId();
 
 	// is there any change?
@@ -1067,7 +1067,7 @@ void pimDM::rpfIntChange(AnsaIPv4MulticastRoute *route)
 	}
 
 	// old RPF should be now outgoing interface if it is not down
-	if (!oldRpf.intPtr->isDown())
+	if (!(oldRpf.intPtr->getState()==inet::InterfaceEntry::DOWN))
 	{
 	    AnsaIPv4MulticastRoute::outInterface newOutInt;
 		newOutInt.intId = oldRpf.intId;
@@ -1111,7 +1111,7 @@ void pimDM::dataOnRpf(AnsaIPv4MulticastRoute *route)
  * @see sendPimJoinPrune()
  * @see createPruneTimer()
  */
-void pimDM::dataOnNonRpf(IPv4Address group, IPv4Address source, int intId)
+void pimDM::dataOnNonRpf(inet::IPv4Address group, inet::IPv4Address source, int intId)
 {
 	EV << "pimDM::dataOnNonRpf, intID: " << intId << endl;
 
@@ -1125,7 +1125,7 @@ void pimDM::dataOnNonRpf(IPv4Address group, IPv4Address source, int intId)
 	if (pimNbt->getNumNeighborsOnInt(intId) == 1)
 	{
 		// send Prune msg to the neighbor who sent these multicast data
-		IPv4Address nextHop = (pimNbt->getNeighborsByIntID(intId))[0].getAddr();
+		inet::IPv4Address nextHop = (pimNbt->getNeighborsByIntID(intId))[0].getAddr();
 		sendPimJoinPrune(nextHop, source, group, intId);
 
 		// find incoming interface
@@ -1165,7 +1165,7 @@ void pimDM::dataOnNonRpf(IPv4Address group, IPv4Address source, int intId)
  * @param source Source IP address.
  * @see sendPimJoinPrune()
  */
-void pimDM::dataOnPruned(IPv4Address group, IPv4Address source)
+void pimDM::dataOnPruned(inet::IPv4Address group, inet::IPv4Address source)
 {
 	EV << "pimDM::dataOnPruned" << endl;
 	AnsaIPv4MulticastRoute *route = rt->getRouteFor(group, source);
@@ -1195,7 +1195,7 @@ void pimDM::dataOnPruned(IPv4Address group, IPv4Address source)
 void pimDM::oldMulticastAddr(addRemoveAddr *members)
 {
 	EV << "pimDM::oldMulticastAddr" << endl;
-	vector<IPv4Address> oldAddr = members->getAddr();
+	vector<inet::IPv4Address> oldAddr = members->getAddr();
 	PimInterface * pimInt = members->getInt();
 	bool connected = false;
 
@@ -1276,7 +1276,7 @@ void pimDM::oldMulticastAddr(addRemoveAddr *members)
 void pimDM::newMulticastAddr(addRemoveAddr *members)
 {
 	EV << "pimDM::newMulticastAddr" << endl;
-	vector<IPv4Address> newAddr = members->getAddr();
+	vector<inet::IPv4Address> newAddr = members->getAddr();
 	PimInterface * pimInt = members->getInt();
 	bool forward = false;
 

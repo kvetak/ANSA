@@ -17,8 +17,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-
 package inet.linklayer.ieee80211.mac;
+
+import inet.linklayer.base.MACProtocolBase;
+import inet.linklayer.contract.IMACProtocol;
+
 
 //
 // Implementation of the 802.11 MAC protocol. This module is intended
@@ -53,7 +56,7 @@ package inet.linklayer.ieee80211.mac;
 // listen interval which is related to power management, capability information
 // which is related to PCF and other non-modelled features).
 //
-simple Ieee80211Mac
+simple Ieee80211Mac extends MACProtocolBase like IMACProtocol
 {
     parameters:
         string address = default("auto"); // MAC address as hex string (12 hex digits), or
@@ -81,10 +84,13 @@ simple Ieee80211Mac
         bool prioritizeMulticast = default(false); // if true, prioritize multicast frames (9.3.2.1 Fundamental access)
 
         double bitrate @unit("bps");
-        string opMode @enum("b","g","a","p") = default("g");
-        string wifiPreambleMode @enum("LONG","SHORT") = default("LONG"); // preamble mode; see IEEE 2007, 19.3.2
+        string opMode @enum("a", "b", "g", "n", "p") = default("g");
 
-        double basicBitrate @unit("bps") = default(2e6bps);
+		// TODO: These bitrates are not a real degrees of freedom
+		// with OFDM modulation the basic bitrate is 6Mbps
+        double basicBitrate @unit("bps") = default(1e6bps); // used for broadcast frames
+        double controlBitrate @unit("bps") = default(1e6bps); // used for control frames
+
         int mtu @unit("B") = default(2304B);
         double slotTime @unit("s") = default(9us);
         int rtsThresholdBytes @unit("B") = default(2346B); // longer messages will be sent using RTS/CTS
@@ -93,7 +99,7 @@ simple Ieee80211Mac
         int cwMaxData = default(-1); // contention window for normal data frames, -1 means default
         int cwMinMulticast = default(-1); // contention window for broadcast messages, -1 means default
 
-        double phyHeaderLength = default(-1); // if -1, the MAC will compute it in function of the modulation type
+        double phyHeaderLength @unit("s") = default(-1s); // when <0, the MAC will compute it in function of the modulation type
         bool forceBitRate = default(false); // if true, the MAC will force the bitrate to the physical layer
         int autoBitrate @enum(0,1,2) = default(0); // 0 = constant bit rate (autobitrate algorithm disabled), 1 = ARF Rate, 2 = AARF Rate
         // parameters used by the autobitrate
@@ -111,10 +117,15 @@ simple Ieee80211Mac
         // statistics
         double throughputTimePeriod @unit("s") = default(0); // period of time used by throughput measurement statistic
         bool multiMac = default(false); // allows multiples mac interfaces in the same link layer
+
+        @class(Ieee80211Mac);
         @display("i=block/layer");
 
-        @signal[packetSentToLower](type=IdealWirelessFrame);
-        @signal[packetReceivedFromLower](type=IdealWirelessFrame);
+        @signal[NF_LINK_FULL_PROMISCUOUS](type=cPacket);
+        @signal[NF_LINK_PROMISCUOUS](type=cPacket);
+        @signal[NF_LINK_BREAK](type=Ieee80211DataOrMgmtFrame);
+        @signal[packetSentToLower](type=Ieee80211Frame);
+        @signal[packetReceivedFromLower](type=cPacket);     // expected type=Ieee80211Frame
         @signal[packetSentToUpper](type=cPacket);   // cPacket with Ieee802Ctrl ctrlinfo
         @signal[packetReceivedFromUpper](type=cPacket);   // cPacket with Ieee802Ctrl ctrlinfo
 
@@ -124,8 +135,8 @@ simple Ieee80211Mac
         @statistic[rcvdPkFromLL](title="packets received from lower layer"; source=packetReceivedFromLower; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
 
     gates:
-        input upperLayerIn @labels(Ieee80211Frame);
-        output upperLayerOut @labels(Ieee80211Frame);
-        input lowerLayerIn @labels(Ieee80211Frame);
-        output lowerLayerOut @labels(Ieee80211Frame);
+        upperLayerIn @labels(Ieee80211Frame);
+        upperLayerOut @labels(Ieee80211Frame);
+        lowerLayerIn @labels(Ieee80211Frame);
+        lowerLayerOut @labels(Ieee80211Frame);
 }

@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "EigrpDual.h"
-#include "EigrpMetricHelper.h"
+#include "ansa/networklayer/eigrp/EigrpDual.h"
+#include "ansa/networklayer/eigrp/pdms/EigrpMetricHelper.h"
 
 #include <omnetpp.h>
 
@@ -890,8 +890,8 @@ void EigrpDual<IPAddress>::processTransition18(int event, EigrpRouteSource<IPAdd
         invalidateRoute(source);
 }
 
-template class EigrpDual<IPv4Address>;
+template class EigrpDual<inet::IPv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpDual<IPv6Address>;
+template class EigrpDual<inet::IPv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */

@@ -20,7 +20,7 @@
 * @detail File contains useful functions for printing EIGRP informations (CUT + PASTE from EigrpIpv4Pdm.cc)
 */
 
-#include "EigrpPrint.h"
+#include "ansa/networklayer/eigrp/pdms/EigrpPrint.h"
 
 
 namespace eigrp
@@ -57,13 +57,13 @@ const char *UserMsgs[] =
 
 }; // end of namespace eigrp
 
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv4Address>& network)
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<inet::IPv4Address>& network)
 {
     os << "Address:" << network.getAddress() << " Mask:" << network.getMask();
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv6Address>& network)
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<inet::IPv6Address>& network)
 {
     os << "Address:" << network.getAddress() << " Mask: /" << getNetmaskLength(network.getMask());
     return os;

@@ -16,8 +16,8 @@
 package inet.examples.ansa.switchtest;
 
 import inet.ansa.util.linkBreaker.LinkBreaker;
-import inet.nodes.inet.StandardHost;
-import inet.nodes.ethernet.EtherHost;
+import inet.node.inet.StandardHost;
+import inet.node.ethernet.EtherHost;
 //import inet.ansa.AnsaDualStackHost;
 import inet.ansa.ANSASwitch;
 

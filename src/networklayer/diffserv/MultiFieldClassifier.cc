@@ -16,62 +16,61 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "INETDefs.h"
-#include "IPvXAddress.h"
-#include "IPvXAddressResolver.h"
+#include "common/INETDefs.h"
+#include "networklayer/common/L3Address.h"
+#include "networklayer/common/L3AddressResolver.h"
 
 #ifdef WITH_IPv4
-#include "IPv4Datagram.h"
-#endif
+#include "networklayer/ipv4/IPv4Datagram.h"
+#endif // ifdef WITH_IPv4
 
 #ifdef WITH_IPv6
-#include "IPv6Datagram.h"
-#endif
+#include "networklayer/ipv6/IPv6Datagram.h"
+#endif // ifdef WITH_IPv6
 
 #ifdef WITH_UDP
-#include "UDPPacket.h"
-#endif
+#include "transportlayer/udp/UDPPacket.h"
+#endif // ifdef WITH_UDP
 
 #ifdef WITH_TCP_COMMON
-#include "TCPSegment.h"
-#endif
+#include "transportlayer/tcp_common/TCPSegment.h"
+#endif // ifdef WITH_TCP_COMMON
 
-#include "MultiFieldClassifier.h"
-#include "DiffservUtil.h"
+#include "networklayer/diffserv/MultiFieldClassifier.h"
+#include "networklayer/diffserv/DiffservUtil.h"
+
+namespace inet {
 
 using namespace DiffservUtil;
 
 #ifdef WITH_IPv4
 bool MultiFieldClassifier::Filter::matches(IPv4Datagram *datagram)
 {
-    if (srcPrefixLength > 0 && (srcAddr.isIPv6() || !datagram->getSrcAddress().prefixMatches(srcAddr.get4(), srcPrefixLength)))
+    if (srcPrefixLength > 0 && (srcAddr.getType() != L3Address::IPv4 || !datagram->getSrcAddress().prefixMatches(srcAddr.toIPv4(), srcPrefixLength)))
         return false;
-    if (destPrefixLength > 0 && (destAddr.isIPv6() || !datagram->getDestAddress().prefixMatches(destAddr.get4(), destPrefixLength)))
+    if (destPrefixLength > 0 && (destAddr.getType() != L3Address::IPv4 || !datagram->getDestAddress().prefixMatches(destAddr.toIPv4(), destPrefixLength)))
         return false;
     if (protocol >= 0 && datagram->getTransportProtocol() != protocol)
         return false;
     if (tosMask != 0 && (tos & tosMask) != (datagram->getTypeOfService() & tosMask))
         return false;
-    if (srcPortMin >= 0 || destPortMin >= 0)
-    {
+    if (srcPortMin >= 0 || destPortMin >= 0) {
         int srcPort = -1, destPort = -1;
         cPacket *packet = datagram->getEncapsulatedPacket();
 #ifdef WITH_UDP
-        UDPPacket *udpPacket = dynamic_cast<UDPPacket*>(packet);
-        if (udpPacket)
-        {
+        UDPPacket *udpPacket = dynamic_cast<UDPPacket *>(packet);
+        if (udpPacket) {
             srcPort = udpPacket->getSourcePort();
             destPort = udpPacket->getDestinationPort();
         }
-#endif
+#endif // ifdef WITH_UDP
 #ifdef WITH_TCP_COMMON
-        TCPSegment *tcpSegment = dynamic_cast<TCPSegment*>(packet);
-        if (tcpSegment)
-        {
+        tcp::TCPSegment *tcpSegment = dynamic_cast<tcp::TCPSegment *>(packet);
+        if (tcpSegment) {
             srcPort = tcpSegment->getSrcPort();
             destPort = tcpSegment->getDestPort();
         }
-#endif
+#endif // ifdef WITH_TCP_COMMON
 
         if (srcPortMin >= 0 && (srcPort < srcPortMin || srcPort > srcPortMax))
             return false;
@@ -81,39 +80,37 @@ bool MultiFieldClassifier::Filter::matches(IPv4Datagram *datagram)
 
     return true;
 }
-#endif
+
+#endif // ifdef WITH_IPv4
 
 #ifdef WITH_IPv6
 bool MultiFieldClassifier::Filter::matches(IPv6Datagram *datagram)
 {
-    if (srcPrefixLength > 0 && (!srcAddr.isIPv6() || !datagram->getSrcAddress().matches(srcAddr.get6(), srcPrefixLength)))
+    if (srcPrefixLength > 0 && (srcAddr.getType() != L3Address::IPv6 || !datagram->getSrcAddress().matches(srcAddr.toIPv6(), srcPrefixLength)))
         return false;
-    if (destPrefixLength > 0 && (!destAddr.isIPv6() || !datagram->getDestAddress().matches(destAddr.get6(), destPrefixLength)))
+    if (destPrefixLength > 0 && (destAddr.getType() != L3Address::IPv6 || !datagram->getDestAddress().matches(destAddr.toIPv6(), destPrefixLength)))
         return false;
     if (protocol >= 0 && datagram->getTransportProtocol() != protocol)
         return false;
     if (tosMask != 0 && (tos & tosMask) != (datagram->getTrafficClass() & tosMask))
         return false;
-    if (srcPortMin >= 0 || destPortMin >= 0)
-    {
+    if (srcPortMin >= 0 || destPortMin >= 0) {
         int srcPort = -1, destPort = -1;
         cPacket *packet = datagram->getEncapsulatedPacket();
 #ifdef WITH_UDP
-        UDPPacket *udpPacket = dynamic_cast<UDPPacket*>(packet);
-        if (udpPacket)
-        {
+        UDPPacket *udpPacket = dynamic_cast<UDPPacket *>(packet);
+        if (udpPacket) {
             srcPort = udpPacket->getSourcePort();
             destPort = udpPacket->getDestinationPort();
         }
-#endif
+#endif // ifdef WITH_UDP
 #ifdef WITH_TCP_COMMON
-        TCPSegment *tcpSegment = dynamic_cast<TCPSegment*>(packet);
-        if (tcpSegment)
-        {
+        tcp::TCPSegment *tcpSegment = dynamic_cast<tcp::TCPSegment *>(packet);
+        if (tcpSegment) {
             srcPort = tcpSegment->getSrcPort();
             destPort = tcpSegment->getDestPort();
         }
-#endif
+#endif // ifdef WITH_TCP_COMMON
 
         if (srcPortMin >= 0 && (srcPort < srcPortMin || srcPort > srcPortMax))
             return false;
@@ -123,26 +120,24 @@ bool MultiFieldClassifier::Filter::matches(IPv6Datagram *datagram)
 
     return true;
 }
-#endif
 
+#endif // ifdef WITH_IPv6
 
 Define_Module(MultiFieldClassifier);
 
-simsignal_t MultiFieldClassifier::pkClassSignal = SIMSIGNAL_NULL;
+simsignal_t MultiFieldClassifier::pkClassSignal = registerSignal("pkClass");
 
 void MultiFieldClassifier::initialize(int stage)
 {
-    if (stage == 0)
-    {
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
         numOutGates = gateSize("outs");
 
         numRcvd = 0;
         WATCH(numRcvd);
-
-        pkClassSignal = registerSignal("pkClass");
     }
-    else if (stage == 3)
-    {
+    else if (stage == INITSTAGE_NETWORK_LAYER_3) {
         cXMLElement *config = par("filters").xmlValue();
         configureFilters(config);
     }
@@ -150,7 +145,7 @@ void MultiFieldClassifier::initialize(int stage)
 
 void MultiFieldClassifier::handleMessage(cMessage *msg)
 {
-    cPacket *packet = check_and_cast<cPacket*>(msg);
+    cPacket *packet = check_and_cast<cPacket *>(msg);
 
     numRcvd++;
     int gateIndex = classifyPacket(packet);
@@ -161,52 +156,51 @@ void MultiFieldClassifier::handleMessage(cMessage *msg)
     else
         send(packet, "defaultOut");
 
-    if (ev.isGUI())
-    {
+    if (hasGUI()) {
         char buf[20] = "";
-        if (numRcvd>0) sprintf(buf+strlen(buf), "rcvd:%d ", numRcvd);
+        if (numRcvd > 0)
+            sprintf(buf + strlen(buf), "rcvd:%d ", numRcvd);
         getDisplayString().setTagArg("t", 0, buf);
     }
 }
 
 int MultiFieldClassifier::classifyPacket(cPacket *packet)
 {
-    for (; packet; packet = packet->getEncapsulatedPacket())
-    {
+    for ( ; packet; packet = packet->getEncapsulatedPacket()) {
 #ifdef WITH_IPv4
-        IPv4Datagram *ipv4Datagram = dynamic_cast<IPv4Datagram*>(packet);
-        if (ipv4Datagram)
-        {
-            for (std::vector<Filter>::iterator it = filters.begin(); it != filters.end(); ++it)
-                if (it->matches(ipv4Datagram))
-                    return it->gateIndex;
+        IPv4Datagram *ipv4Datagram = dynamic_cast<IPv4Datagram *>(packet);
+        if (ipv4Datagram) {
+            for (auto & elem : filters)
+                if (elem.matches(ipv4Datagram))
+                    return elem.gateIndex;
+
             return -1;
         }
-#endif
+#endif // ifdef WITH_IPv4
 #ifdef WITH_IPv6
         IPv6Datagram *ipv6Datagram = dynamic_cast<IPv6Datagram *>(packet);
-        if (ipv6Datagram)
-        {
-            for (std::vector<Filter>::iterator it = filters.begin(); it != filters.end(); ++it)
-                if (it->matches(ipv6Datagram))
-                    return it->gateIndex;
+        if (ipv6Datagram) {
+            for (auto & elem : filters)
+                if (elem.matches(ipv6Datagram))
+                    return elem.gateIndex;
+
             return -1;
         }
-#endif
+#endif // ifdef WITH_IPv6
     }
 
     return -1;
 }
 
-void MultiFieldClassifier::addFilter(const Filter &filter)
+void MultiFieldClassifier::addFilter(const Filter& filter)
 {
     if (filter.gateIndex < 0 || filter.gateIndex >= numOutGates)
         throw cRuntimeError("no output gate for gate index %d", filter.gateIndex);
-    if (!filter.srcAddr.isUnspecified() && ((filter.srcAddr.isIPv6() && filter.srcPrefixLength > 128) ||
-                                            (!filter.srcAddr.isIPv6() && filter.srcPrefixLength > 32)))
+    if (!filter.srcAddr.isUnspecified() && ((filter.srcAddr.getType() == L3Address::IPv6 && filter.srcPrefixLength > 128) ||
+                                            (filter.srcAddr.getType() == L3Address::IPv4 && filter.srcPrefixLength > 32)))
         throw cRuntimeError("srcPrefixLength is invalid");
-    if (!filter.destAddr.isUnspecified() && ((filter.destAddr.isIPv6() && filter.destPrefixLength > 128) ||
-                                             (!filter.destAddr.isIPv6() && filter.destPrefixLength > 32)))
+    if (!filter.destAddr.isUnspecified() && ((filter.destAddr.getType() == L3Address::IPv6 && filter.destPrefixLength > 128) ||
+                                             (filter.destAddr.getType() == L3Address::IPv4 && filter.destPrefixLength > 32)))
         throw cRuntimeError("srcPrefixLength is invalid");
     if (filter.protocol != -1 && (filter.protocol < 0 || filter.protocol > 0xff))
         throw cRuntimeError("protocol is not a valid protocol number");
@@ -232,13 +226,11 @@ void MultiFieldClassifier::addFilter(const Filter &filter)
 
 void MultiFieldClassifier::configureFilters(cXMLElement *config)
 {
-    IPvXAddressResolver addressResolver;
+    L3AddressResolver addressResolver;
     cXMLElementList filterElements = config->getChildrenByTagName("filter");
-    for (int i = 0; i < (int)filterElements.size(); i++)
-    {
-        cXMLElement *filterElement = filterElements[i];
-        try
-        {
+    for (auto & filterElements_i : filterElements) {
+        cXMLElement *filterElement = filterElements_i;
+        try {
             const char *gateAttr = getRequiredAttribute(filterElement, "gate");
             const char *srcAddrAttr = filterElement->getAttribute("srcAddress");
             const char *srcPrefixLengthAttr = filterElement->getAttribute("srcPrefixLength");
@@ -261,19 +253,19 @@ void MultiFieldClassifier::configureFilters(cXMLElement *config)
             if (srcPrefixLengthAttr)
                 filter.srcPrefixLength = parseIntAttribute(srcPrefixLengthAttr, "srcPrefixLength");
             else if (srcAddrAttr)
-                filter.srcPrefixLength = filter.srcAddr.isIPv6() ? 128 : 32;
+                filter.srcPrefixLength = filter.srcAddr.getType() == L3Address::IPv6 ? 128 : 32;
             if (destAddrAttr)
                 filter.destAddr = addressResolver.resolve(destAddrAttr);
             if (destPrefixLengthAttr)
                 filter.destPrefixLength = parseIntAttribute(destPrefixLengthAttr, "destPrefixLength");
             else if (destAddrAttr)
-                filter.destPrefixLength = filter.destAddr.isIPv6() ? 128 : 32;
+                filter.destPrefixLength = filter.destAddr.getType() == L3Address::IPv6 ? 128 : 32;
             if (protocolAttr)
                 filter.protocol = parseProtocol(protocolAttr, "protocol");
             if (tosAttr)
                 filter.tos = parseIntAttribute(tosAttr, "tos");
             if (tosMaskAttr)
-                filter.tosMask = parseIntAttribute(tosAttr, "tosMask");
+                filter.tosMask = parseIntAttribute(tosMaskAttr, "tosMask");
             if (srcPortAttr)
                 filter.srcPortMin = filter.srcPortMax = parseIntAttribute(srcPortAttr, "srcPort");
             if (srcPortMinAttr)
@@ -289,11 +281,11 @@ void MultiFieldClassifier::configureFilters(cXMLElement *config)
 
             addFilter(filter);
         }
-        catch (std::exception& e)
-        {
+        catch (std::exception& e) {
             throw cRuntimeError("Error in XML <filter> element at %s: %s", filterElement->getSourceLocation(), e.what());
         }
     }
 }
 
+} // namespace inet
 

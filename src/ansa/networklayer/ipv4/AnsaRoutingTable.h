@@ -22,18 +22,19 @@
 #ifndef ANSAROUTINGTABLE_H_
 #define ANSAROUTINGTABLE_H_
 
-#include "RoutingTable.h"
-#include "AnsaIPv4Route.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "NotificationBoard.h"
+#include "networklayer/ipv4/IIPv4RoutingTable.h"
+#include "networklayer/ipv4/IPv4RoutingTable.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4Route.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "base/NotificationBoard.h"
 
 /**
  * AnsaRouteVector represents multicast table. It is list of AnsaMulticast routes.
  */
 typedef std::vector<AnsaIPv4MulticastRoute *> routeVector;
 
-class INET_API AnsaRoutingTable : public RoutingTable {
+class INET_API AnsaRoutingTable : public inet::IPv4RoutingTable {
 
     protected:
         routeVector multicastRoutes;                        /**< Multicast routing table based on AnsaIPv4MulticastRoute which is inherited from IPv4MulticastRoute. */
@@ -48,12 +49,12 @@ class INET_API AnsaRoutingTable : public RoutingTable {
         /**
          * reimplemented - delete routes for the given interface except EIGRP routes
          */
-        void deleteInterfaceRoutes(InterfaceEntry *entry);
+        void deleteInterfaceRoutes(inet::InterfaceEntry *entry);
 
         /**
          * Insert connected route into the routing table.
          */
-        void insertConnectedRoute(InterfaceEntry *ie);
+        void insertConnectedRoute(inet::InterfaceEntry *ie);
 
     public:
       AnsaRoutingTable(){};
@@ -62,7 +63,7 @@ class INET_API AnsaRoutingTable : public RoutingTable {
     public:
 
       /**
-       * reimplemented - adds ANSAIPv4Routes instead of IPv4Route
+       * reimplemented - adds ANSAIPv4Routes instead of inet::IPv4Route
        */
       virtual void updateNetmaskRoutes();
 
@@ -70,9 +71,9 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        * Finds route to the given network.
        * @return NULL, if route does not exist
        */
-      virtual IPv4Route *findRoute(const IPv4Address& network, const IPv4Address& netmask);
+      virtual inet::IPv4Route *findRoute(const inet::IPv4Address& network, const inet::IPv4Address& netmask);
 
-      IPv4Route *findRoute(const IPv4Address& network, const IPv4Address& netmask, const IPv4Address& nexthop);
+      inet::IPv4Route *findRoute(const inet::IPv4Address& network, const inet::IPv4Address& netmask, const inet::IPv4Address& nexthop);
 
       /**
        * Prepares routing table for adding new route.
@@ -81,7 +82,7 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        * @return true, if it is safe to add route,
        *         false otherwise
        */
-      virtual bool prepareForAddRoute(IPv4Route *route);
+      virtual bool prepareForAddRoute(inet::IPv4Route *route);
 
       /**
        * Prepares routing table for adding new route.
@@ -90,17 +91,17 @@ class INET_API AnsaRoutingTable : public RoutingTable {
        * @return true, if it is safe to add route,
        *         false otherwise
        */
-      virtual bool prepareForAddRouteAndNotify(IPv4Route *route);
+      virtual bool prepareForAddRouteAndNotify(inet::IPv4Route *route);
 
       /**
        * @see removeRouteSilent and prepareForAddRoute in @class ANSARoutingTable6
        */
-      bool deleteRouteSilent(IPv4Route *entry);
+      bool deleteRouteSilent(inet::IPv4Route *entry);
 
       //rozsireni routing table
-      virtual AnsaIPv4MulticastRoute *getRouteFor(IPv4Address group, IPv4Address source);
-      virtual std::vector<AnsaIPv4MulticastRoute*> getRouteFor(IPv4Address group);
-      virtual std::vector<AnsaIPv4MulticastRoute*> getRoutesForSource(IPv4Address source);
+      virtual AnsaIPv4MulticastRoute *getRouteFor(inet::IPv4Address group, inet::IPv4Address source);
+      virtual std::vector<AnsaIPv4MulticastRoute*> getRouteFor(inet::IPv4Address group);
+      virtual std::vector<AnsaIPv4MulticastRoute*> getRoutesForSource(inet::IPv4Address source);
       void generateShowIPMroute();
 
       int getNumRoutes() const;
@@ -111,8 +112,8 @@ class INET_API AnsaRoutingTable : public RoutingTable {
 
       virtual bool isMulticastForwardingEnabled() { return multicastForward; }
 
-      virtual bool isLocalAddress(const IPv4Address& dest) const;
-      virtual InterfaceEntry *getInterfaceByAddress(const IPv4Address& addr) const;
+      virtual bool isLocalAddress(const inet::IPv4Address& dest) const;
+      virtual inet::InterfaceEntry *getInterfaceByAddress(const inet::IPv4Address& addr) const;
 
 };
 

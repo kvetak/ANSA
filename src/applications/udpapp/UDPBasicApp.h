@@ -16,65 +16,69 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef __INET_UDPBASICAPP_H
 #define __INET_UDPBASICAPP_H
 
 #include <vector>
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "AppBase.h"
-#include "UDPSocket.h"
+#include "applications/base/ApplicationBase.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
 
+namespace inet {
 
 /**
  * UDP application. See NED for more info.
  */
-class INET_API UDPBasicApp : public AppBase
+class INET_API UDPBasicApp : public ApplicationBase
 {
   protected:
     enum SelfMsgKinds { START = 1, SEND, STOP };
 
-    UDPSocket socket;
-    int localPort, destPort;
-    std::vector<IPvXAddress> destAddresses;
+    // parameters
+    std::vector<L3Address> destAddresses;
+    int localPort = -1, destPort = -1;
     simtime_t startTime;
     simtime_t stopTime;
-    cMessage *selfMsg;
+
+    // state
+    UDPSocket socket;
+    cMessage *selfMsg = nullptr;
 
     // statistics
-    int numSent;
-    int numReceived;
+    int numSent = 0;
+    int numReceived = 0;
 
     static simsignal_t sentPkSignal;
     static simsignal_t rcvdPkSignal;
 
+  protected:
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessageWhenUp(cMessage *msg) override;
+    virtual void finish() override;
+
     // chooses random destination address
-    virtual IPvXAddress chooseDestAddr();
+    virtual L3Address chooseDestAddr();
     virtual void sendPacket();
     virtual void processPacket(cPacket *msg);
     virtual void setSocketOptions();
-
-  public:
-    UDPBasicApp();
-    ~UDPBasicApp();
-
-  protected:
-    virtual int numInitStages() const {return 4;}
-    virtual void initialize(int stage);
-    virtual void handleMessageWhenUp(cMessage *msg);
-    virtual void finish();
 
     virtual void processStart();
     virtual void processSend();
     virtual void processStop();
 
-    //AppBase:
-    bool startApp(IDoneCallback *doneCallback);
-    bool stopApp(IDoneCallback *doneCallback);
-    bool crashApp(IDoneCallback *doneCallback);
+    virtual bool handleNodeStart(IDoneCallback *doneCallback) override;
+    virtual bool handleNodeShutdown(IDoneCallback *doneCallback) override;
+    virtual void handleNodeCrash() override;
+
+  public:
+    UDPBasicApp() {}
+    ~UDPBasicApp();
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_UDPBASICAPP_H
 

@@ -26,8 +26,9 @@
 #define __ANSAINET_IPSPLITTER_H_
 
 #include <omnetpp.h>
-#include "IPv6Datagram.h"
-#include "ISIS.h"
+#include "networklayer/ipv6/IPv6Datagram.h"
+#include "ansa/networklayer/isis/ISIS.h"
+#include "linklayer/common/Ieee802Ctrl.h"
 
 class IpSplitter : public cSimpleModule
 {

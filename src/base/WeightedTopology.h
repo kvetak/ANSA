@@ -21,7 +21,7 @@
 #define __INET_INETTOPOLOGY_H
 
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 /**
  * expands cTopology with weighted shortest path finder algorithm

@@ -21,14 +21,14 @@
 
 #include <algorithm>
 
-#include "AnsaRoutingTable.h"
-#include "IPv4InterfaceData.h"
-#include "AnsaInterfaceEntry.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTable.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
 
-Define_Module(AnsaRoutingTable);
+//Define_Module(AnsaRoutingTable);
 
 /** Defined in RoutingTable.cc */
-std::ostream& operator<<(std::ostream& os, const IPv4Route& e);
+std::ostream& operator<<(std::ostream& os, const inet::IPv4Route& e);
 
 /** Printout of structure AnsaIPv4MulticastRoute (one route in table). */
 std::ostream& operator<<(std::ostream& os, const AnsaIPv4MulticastRoute& e)
@@ -50,16 +50,19 @@ AnsaRoutingTable::~AnsaRoutingTable()
 //        delete multicastRoutes[i];
 }
 
-IPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Address& netmask)
+inet::IPv4Route *AnsaRoutingTable::findRoute(const inet::IPv4Address& network, const inet::IPv4Address& netmask)
 {
     //TODO: assume only ANSAIPv4Route in the routing table?
-
-    IPv4Route *route = NULL;
-    for (RouteVector::const_iterator it = routes.begin(); it != routes.end(); ++it)
+    //Editted by Michal Ruprich from ANSA due to changes in IPv4RoutingTable
+    inet::IPv4Route *route = NULL;
+    int count = getNumRoutes();
+    //for (RouteVector::const_iterator it = routes.begin(); it != routes.end(); ++it)
+    for(int i = 0; i<count; i++)
     {
-        if ((*it)->getDestination()==network && (*it)->getNetmask()==netmask) // match
+        inet::IPv4Route *inner_route = getRoute(i);
+        if (inner_route->getDestination()==network && inner_route->getNetmask()==netmask) // match
         {
-            route = (*it);
+            route = inner_route;
             break;
         }
     }
@@ -67,24 +70,27 @@ IPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Add
     return route;
 }
 
-IPv4Route *AnsaRoutingTable::findRoute(const IPv4Address& network, const IPv4Address& netmask, const IPv4Address& nexthop)
+inet::IPv4Route *AnsaRoutingTable::findRoute(const inet::IPv4Address& network, const inet::IPv4Address& netmask, const inet::IPv4Address& nexthop)
 {
-    IPv4Route *route = NULL;
-    for (RouteVector::const_iterator it = routes.begin(); it != routes.end(); ++it)
+    //Editted by Michal Ruprich from ANSA due to changes in IPv4RoutingTable
+    inet::IPv4Route *route = NULL;
+    int count = getNumRoutes();
+    //for (RouteVector::const_iterator it = routes.begin(); it != routes.end(); ++it)
+    for(int i = 0; i<count; i++)
     {
-        route = *it;
-        if (route->getDestination()==network && route->getNetmask()==netmask && route->getGateway() == nexthop)
+        route = getRoute(i);
+        if (route->getDestination()==network && route->getNetmask()==netmask) // match
             return route;
     }
 
     return NULL;
 }
 
-bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
+bool AnsaRoutingTable::prepareForAddRoute(inet::IPv4Route *route)
 {
     //TODO: assume only ANSAIPv4Route in the routing table?
 
-    IPv4Route *routeInTable = findRoute(route->getDestination(), route->getNetmask());
+    inet::IPv4Route *routeInTable = findRoute(route->getDestination(), route->getNetmask());
 
     if (routeInTable)
     {
@@ -120,11 +126,11 @@ bool AnsaRoutingTable::prepareForAddRoute(IPv4Route *route)
     return true;
 }
 
-bool AnsaRoutingTable::prepareForAddRouteAndNotify(IPv4Route *route)
+bool AnsaRoutingTable::prepareForAddRouteAndNotify(inet::IPv4Route *route)
 {
     //TODO: assume only ANSAIPv4Route in the routing table?
 
-    IPv4Route *routeInTable = findRoute(route->getDestination(), route->getNetmask());
+    inet::IPv4Route *routeInTable = findRoute(route->getDestination(), route->getNetmask());
 
     if (routeInTable)
     {
@@ -160,7 +166,7 @@ bool AnsaRoutingTable::prepareForAddRouteAndNotify(IPv4Route *route)
     return true;
 }
 
-bool AnsaRoutingTable::deleteRouteSilent(IPv4Route *entry)
+bool AnsaRoutingTable::deleteRouteSilent(inet::IPv4Route *entry)
 {
     Enter_Method("deleteRouteSilent(...)");
 
@@ -178,17 +184,22 @@ bool AnsaRoutingTable::deleteRouteSilent(IPv4Route *entry)
 
 void AnsaRoutingTable::updateNetmaskRoutes()
 {
+    //Editted by Michal Ruprich from ANSA due to changes in IPv4RoutingTable
+    //TODO - check while running
     // first, delete all routes with src=IFACENETMASK
-    for (unsigned int k=0; k<routes.size(); k++)
+    for (unsigned int k=0; k<(unsigned int)getNumRoutes(); k++)
     {
-        if (routes[k]->getSource()==IPv4Route::IFACENETMASK)
+        //if (routes[k]->getSource()==inet::IPv4Route::IFACENETMASK)
+        inet::IPv4Route* route = getRoute(k);
+        if(route->getSourceType()==inet::IPv4Route::IFACENETMASK)
         {
-            std::vector<IPv4Route *>::iterator it = routes.begin()+(k--);  // '--' is necessary because indices shift down
-            IPv4Route *route = *it;
-            routes.erase(it);
+            //std::vector<inet::IPv4Route *>::iterator it = routes.begin()+(k--);  // '--' is necessary because indices shift down
+            //inet::IPv4Route *route = *it;
+            //routes.erase(it);
+            deleteRoute(route);
             ASSERT(route->getRoutingTable() == this); // still filled in, for the listeners' benefit
-            nb->fireChangeNotification(NF_IPv4_ROUTE_DELETED, route);
-            delete route;
+            nb->fireChangeNotification(inet::NF_IPv4_ROUTE_DELETED, route);
+            //delete route;
         }
     }
 
@@ -198,21 +209,22 @@ void AnsaRoutingTable::updateNetmaskRoutes()
     // Update - process only interfaces in up state
     for (int i=0; i<ift->getNumInterfaces(); i++)
     {
-        InterfaceEntry *ie = ift->getInterface(i);
-        if (ie->isUp() && ie->ipv4Data()->getNetmask()!=IPv4Address::ALLONES_ADDRESS)
+        inet::InterfaceEntry *ie = ift->getInterface(i);
+        if (ie->isUp() && ie->ipv4Data()->getNetmask()!=inet::IPv4Address::ALLONES_ADDRESS)
         {
             ANSAIPv4Route *route = new ANSAIPv4Route();
-            route->setSource(IPv4Route::IFACENETMASK);
+            route->setSourceType(inet::IPv4Route::IFACENETMASK);
             route->setDestination(ie->ipv4Data()->getIPAddress().doAnd(ie->ipv4Data()->getNetmask()));
             route->setNetmask(ie->ipv4Data()->getNetmask());
-            route->setGateway(IPv4Address());
+            route->setGateway(inet::IPv4Address());
             route->setMetric(ie->ipv4Data()->getMetric());
             route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
             route->setInterface(ie);
             route->setRoutingTable(this);
-            RouteVector::iterator pos = upper_bound(routes.begin(), routes.end(), route, routeLessThan);
-            routes.insert(pos, route);
-            nb->fireChangeNotification(NF_IPv4_ROUTE_ADDED, route);
+            //RouteVector::iterator pos = upper_bound(routes.begin(), routes.end(), route, routeLessThan);
+            //routes.insert(pos, route);
+            internalAddRoute(route);
+            nb->fireChangeNotification(inet::NF_IPv4_ROUTE_ADDED, route);
         }
     }
 
@@ -256,7 +268,8 @@ void AnsaRoutingTable::updateDisplayString()
         return;
 
     char buf[80];
-    sprintf(buf, "%d routes\n%d multicast routes", (int)routes.size(), (int)multicastRoutes.size());
+    //sprintf(buf, "%d routes\n%d multicast routes", (int)routes.size(), (int)multicastRoutes.size());
+    sprintf(buf, "%d routes\n%d multicast routes", getNumRoutes(), getNumMulticastRoutes());
 
     getDisplayString().setTagArg("t", 0, buf);
 }
@@ -274,25 +287,28 @@ void AnsaRoutingTable::initialize(int stage)
 {
     if (stage==0)
     {
-        // get a pointer to IInterfaceTable
+        // get a pointer to inet::IInterfaceTable
         ift = InterfaceTableAccess().get();
 
         nb = NotificationBoardAccess().get();
 
-        IPForward = par("IPForward").boolValue();
+        //IPForward = par("IPForward").boolValue();
+        forwarding = par("IPForward").boolValue();
         multicastForward = par("forwardMulticast").boolValue();
 
-        nb->subscribe(this, NF_INTERFACE_CREATED);
-        nb->subscribe(this, NF_INTERFACE_DELETED);
-        nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-        nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
-        nb->subscribe(this, NF_INTERFACE_IPv4CONFIG_CHANGED);
+        /*
+        nb->subscribe(this, inet::NF_INTERFACE_CREATED);
+        nb->subscribe(this, inet::NF_INTERFACE_DELETED);
+        nb->subscribe(this, inet::NF_INTERFACE_STATE_CHANGED);
+        nb->subscribe(this, inet::NF_INTERFACE_CONFIG_CHANGED);
+        nb->subscribe(this, inet::NF_INTERFACE_IPv4CONFIG_CHANGED);
+        */
 
         // watch multicast table
         WATCH_VECTOR(showMRoute);
-        WATCH_PTRVECTOR(routes);
+        //WATCH_PTRVECTOR(routes);
         WATCH_PTRVECTOR(multicastRoutes);
-        WATCH(IPForward);
+        WATCH(forwarding);
         WATCH(routerId);
     }
     else if (stage==3)
@@ -302,7 +318,7 @@ void AnsaRoutingTable::initialize(int stage)
         configureRouterId();
 
         // We don't want to call this method:
-        // 1. adds IPv4Route instead of ANSAIPv4Route (method is not overridden)
+        // 1. adds inet::IPv4Route instead of ANSAIPv4Route (method is not overridden)
         // 2. directly connected routes are added in the deviceConfigurator
         //updateNetmaskRoutes();
 
@@ -312,43 +328,43 @@ void AnsaRoutingTable::initialize(int stage)
 
 void AnsaRoutingTable::receiveChangeNotification(int category, const cObject *details)
 {
-    InterfaceEntry *entry = NULL;
+    inet::InterfaceEntry *entry = NULL;
 
     if (simulation.getContextType()==CTX_INITIALIZE)
         return;  // ignore notifications during initialize
 
     Enter_Method_Silent();
-    printNotificationBanner(category, details);
+    inet::printNotificationBanner(category, details);
 
-    if (category==NF_INTERFACE_CREATED)
+    if (category==inet::NF_INTERFACE_CREATED)
     {
         // add netmask route for the new interface
         updateNetmaskRoutes();
     }
-    else if (category==NF_INTERFACE_DELETED)
+    else if (category==inet::NF_INTERFACE_DELETED)
     {
         // remove all routes that point to that interface
-        entry = const_cast<InterfaceEntry*>(check_and_cast<const InterfaceEntry*>(details));
+        entry = const_cast<inet::InterfaceEntry*>(check_and_cast<const inet::InterfaceEntry*>(details));
         deleteInterfaceRoutes(entry);
     }
-    else if (category==NF_INTERFACE_STATE_CHANGED)
+    else if (category==inet::NF_INTERFACE_STATE_CHANGED)
     {
-        entry = const_cast<InterfaceEntry*>(check_and_cast<const InterfaceEntry*>(details));
+        entry = const_cast<inet::InterfaceEntry*>(check_and_cast<const inet::InterfaceEntry*>(details));
 
         if (entry->isUp())
         { // an interface goes up
             insertConnectedRoute(entry);
         }
-        else if (entry->isDown() || !entry->hasCarrier())
+        else if ((entry->getState()==inet::InterfaceEntry::DOWN) || !entry->hasCarrier())
         { // an interface goes down
             deleteInterfaceRoutes(entry);
         }
     }
-    else if (category==NF_INTERFACE_CONFIG_CHANGED)
+    else if (category==inet::NF_INTERFACE_CONFIG_CHANGED)
     {
         invalidateCache();
     }
-    else if (category==NF_INTERFACE_IPv4CONFIG_CHANGED)
+    else if (category==inet::NF_INTERFACE_IPv4CONFIG_CHANGED)
     {
         // if anything IPv4-related changes in the interfaces, interface netmask
         // based routes have to be re-built.
@@ -356,14 +372,18 @@ void AnsaRoutingTable::receiveChangeNotification(int category, const cObject *de
     }
 }
 
-void AnsaRoutingTable::deleteInterfaceRoutes(InterfaceEntry *entry)
+void AnsaRoutingTable::deleteInterfaceRoutes(inet::InterfaceEntry *entry)
 {
     bool changed = false;
 
     // delete unicast routes using this interface
-    for (RouteVector::iterator it = routes.begin(); it != routes.end(); )
+    //for (RouteVector::iterator it = routes.begin(); it != routes.end(); )
+    inet::IPv4Route* route = nullptr;
+    for(int i=0; i<getNumRoutes();)
     {
-        IPv4Route *route = *it;
+        if(route == nullptr)
+            route = getRoute(i);
+
         ANSAIPv4Route *ansaRoute = dynamic_cast<ANSAIPv4Route *>(route);
         ANSAIPv4Route::RoutingProtocolSource rtSrc = ANSAIPv4Route::pUnknown;
         if (ansaRoute != NULL)
@@ -373,14 +393,15 @@ void AnsaRoutingTable::deleteInterfaceRoutes(InterfaceEntry *entry)
         if (route->getInterface() == entry &&
                 (ansaRoute == NULL || (rtSrc != ANSAIPv4Route::pEIGRP && rtSrc != ANSAIPv4Route::pEIGRPext)))
         {
-            it = routes.erase(it);
+
+            route = internalRemoveRoute(route);
             ASSERT(route->getRoutingTable() == this); // still filled in, for the listeners' benefit
-            nb->fireChangeNotification(NF_IPv4_ROUTE_DELETED, route);
+            nb->fireChangeNotification(inet::NF_IPv4_ROUTE_DELETED, route);
             delete route;
             changed = true;
         }
         else
-            ++it;
+            ++i;
     }
 
     // delete or update multicast routes:
@@ -388,12 +409,12 @@ void AnsaRoutingTable::deleteInterfaceRoutes(InterfaceEntry *entry)
     //   2. remove entry from output interface list
     for (routeVector::iterator it = multicastRoutes.begin(); it != multicastRoutes.end(); )
     {
-        IPv4MulticastRoute *route = *it;
+        inet::IPv4MulticastRoute *route = *it;
         if (route->getInInterface() && route->getInInterface()->getInterface() == entry)
         {
             it = multicastRoutes.erase(it);
             ASSERT(route->getRoutingTable() == this); // still filled in, for the listeners' benefit
-            nb->fireChangeNotification(NF_IPv4_MROUTE_DELETED, route);
+            nb->fireChangeNotification(inet::NF_IPv4_MROUTE_DELETED, route);
             delete route;
             changed = true;
         }
@@ -402,7 +423,7 @@ void AnsaRoutingTable::deleteInterfaceRoutes(InterfaceEntry *entry)
             bool removed = route->removeOutInterface(entry);
             if (removed)
             {
-                nb->fireChangeNotification(NF_IPv4_MROUTE_CHANGED, route);
+                nb->fireChangeNotification(inet::NF_IPv4_MROUTE_CHANGED, route);
                 changed = true;
             }
             ++it;
@@ -416,13 +437,13 @@ void AnsaRoutingTable::deleteInterfaceRoutes(InterfaceEntry *entry)
     }
 }
 
-void AnsaRoutingTable::insertConnectedRoute(InterfaceEntry *ie)
+void AnsaRoutingTable::insertConnectedRoute(inet::InterfaceEntry *ie)
 {
     ANSAIPv4Route *route = new ANSAIPv4Route();
-    route->setSource(IPv4Route::IFACENETMASK);
+    route->setSourceType(inet::IPv4Route::IFACENETMASK);
     route->setDestination(ie->ipv4Data()->getIPAddress().doAnd(ie->ipv4Data()->getNetmask()));
     route->setNetmask(ie->ipv4Data()->getNetmask());
-    route->setGateway(IPv4Address());
+    route->setGateway(inet::IPv4Address());
     route->setMetric(ie->ipv4Data()->getMetric());
     route->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
     route->setInterface(ie);
@@ -567,7 +588,7 @@ bool AnsaRoutingTable::deleteMulticastRoute(const AnsaIPv4MulticastRoute *entry)
  * @return Pointer to found multicast route.
  * @see getRoute()
  */
-AnsaIPv4MulticastRoute *AnsaRoutingTable::getRouteFor(IPv4Address group, IPv4Address source)
+AnsaIPv4MulticastRoute *AnsaRoutingTable::getRouteFor(inet::IPv4Address group, inet::IPv4Address source)
 {
     Enter_Method("getMulticastRoutesFor(%x, %x)", group.getInt(), source.getInt()); // note: str().c_str() too slow here here
     EV << "MulticastRoutingTable::getRouteFor - group = " << group << ", source = " << source << endl;
@@ -599,7 +620,7 @@ AnsaIPv4MulticastRoute *AnsaRoutingTable::getRouteFor(IPv4Address group, IPv4Add
  * @return Vecotr of pointers to routes in multicast table.
  * @see getRoute()
  */
-std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRouteFor(IPv4Address group)
+std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRouteFor(inet::IPv4Address group)
 {
     Enter_Method("getMulticastRoutesFor(%x)", group.getInt()); // note: str().c_str() too slow here here
     EV << "MulticastRoutingTable::getRouteFor - address = " << group << endl;
@@ -638,7 +659,7 @@ void AnsaRoutingTable::generateShowIPMroute()
         os << "(";
         if (ipr->getOrigin().isUnspecified()) os << "*, "; else os << ipr->getOrigin() << ",  ";
         os << ipr->getMulticastGroup() << "), ";
-        if (ipr->getOrigin() == IPv4Address::UNSPECIFIED_ADDRESS)
+        if (ipr->getOrigin() == inet::IPv4Address::UNSPECIFIED_ADDRESS)
             if (!ipr->getRP().isUnspecified()) os << "RP is " << ipr->getRP()<< ", ";
         os << "flags: ";
         std::vector<AnsaIPv4MulticastRoute::flag> flags = ipr->getFlags();
@@ -711,7 +732,7 @@ void AnsaRoutingTable::generateShowIPMroute()
  * @return Vector of found multicast routes.
  * @see getNetwork()
  */
-std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRoutesForSource(IPv4Address source)
+std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRoutesForSource(inet::IPv4Address source)
 {
     Enter_Method("getRoutesForSource(%x)", source.getInt()); // note: str().c_str() too slow here here
     EV << "MulticastRoutingTable::getRoutesForSource - source = " << source << endl;
@@ -730,7 +751,7 @@ std::vector<AnsaIPv4MulticastRoute*> AnsaRoutingTable::getRoutesForSource(IPv4Ad
     return routes;
 }
 
-bool AnsaRoutingTable::isLocalAddress(const IPv4Address& dest) const
+bool AnsaRoutingTable::isLocalAddress(const inet::IPv4Address& dest) const
 {
     Enter_Method("isLocalAddress A (%u.%u.%u.%u)", dest.getDByte(0), dest.getDByte(1), dest.getDByte(2), dest.getDByte(3)); // note: str().c_str() too slow here
 
@@ -739,7 +760,7 @@ bool AnsaRoutingTable::isLocalAddress(const IPv4Address& dest) const
         // collect interface addresses if not yet done
         for (int i=0; i<ift->getNumInterfaces(); i++)
         {
-            IPv4Address interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
+            inet::IPv4Address interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
             localAddresses.insert(interfaceAddr);
         }
     }
@@ -755,7 +776,7 @@ bool AnsaRoutingTable::isLocalAddress(const IPv4Address& dest) const
     return it!=localAddresses.end();
 }
 
-InterfaceEntry *AnsaRoutingTable::getInterfaceByAddress(const IPv4Address& addr) const
+inet::InterfaceEntry *AnsaRoutingTable::getInterfaceByAddress(const inet::IPv4Address& addr) const
 {
     Enter_Method("getInterfaceByAddress(%u.%u.%u.%u)", addr.getDByte(0), addr.getDByte(1), addr.getDByte(2), addr.getDByte(3)); // note: str().c_str() too slow here
 
@@ -763,7 +784,7 @@ InterfaceEntry *AnsaRoutingTable::getInterfaceByAddress(const IPv4Address& addr)
         return NULL;
     for (int i=0; i<ift->getNumInterfaces(); ++i)
     {
-        InterfaceEntry* ie = ift->getInterface(i);
+        inet::InterfaceEntry* ie = ift->getInterface(i);
         if (ie->ipv4Data()->getIPAddress()==addr)
             return ie;
 

@@ -13,20 +13,20 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
-#include "EtherHub.h"
+#include "linklayer/ethernet/EtherHub.h"
 
+namespace inet {
 
 Define_Module(EtherHub);
 
+simsignal_t EtherHub::pkSignal = registerSignal("pk");
 
-simsignal_t EtherHub::pkSignal = SIMSIGNAL_NULL;
-
-static cEnvir& operator<<(cEnvir& out, cMessage *msg)
+inline std::ostream& operator<<(std::ostream& os, cMessage *msg)
 {
-    out.printf("(%s)%s", msg->getClassName(), msg->getFullName());
-    return out;
+    os << "(" << msg->getClassName() << ")" << msg->getFullName();
+    return os;
 }
 
 void EtherHub::initialize()
@@ -34,7 +34,6 @@ void EtherHub::initialize()
     numPorts = gateSize("ethg");
     inputGateBaseId = gateBaseId("ethg$i");
     outputGateBaseId = gateBaseId("ethg$o");
-    pkSignal = registerSignal("pk");
 
     numMessages = 0;
     WATCH(numMessages);
@@ -42,7 +41,7 @@ void EtherHub::initialize()
     // ensure we receive frames when their first bits arrive
     for (int i = 0; i < numPorts; i++)
         gate(inputGateBaseId + i)->setDeliverOnReceptionStart(true);
-    subscribe(POST_MODEL_CHANGE, this);  // we'll need to do the same for dynamically added gates as well
+    subscribe(POST_MODEL_CHANGE, this);    // we'll need to do the same for dynamically added gates as well
 
     checkConnections(true);
 }
@@ -53,15 +52,13 @@ void EtherHub::checkConnections(bool errorWhenAsymmetric)
     double datarate = 0.0;
     dataratesDiffer = false;
 
-    for (int i = 0; i < numPorts; i++)
-    {
+    for (int i = 0; i < numPorts; i++) {
         cGate *igate = gate(inputGateBaseId + i);
         cGate *ogate = gate(outputGateBaseId + i);
         if (!igate->isConnected() && !ogate->isConnected())
             continue;
 
-        if (!igate->isConnected() || !ogate->isConnected())
-        {
+        if (!igate->isConnected() || !ogate->isConnected()) {
             // half connected gate
             if (errorWhenAsymmetric)
                 throw cRuntimeError("The input or output gate not connected at port %i", i);
@@ -75,8 +72,7 @@ void EtherHub::checkConnections(bool errorWhenAsymmetric)
 
         if (numActivePorts == 1)
             datarate = drate;
-        else if (datarate != drate)
-        {
+        else if (datarate != drate) {
             if (errorWhenAsymmetric)
                 throw cRuntimeError("The input datarate at port %i differs from datarates of previous ports", i);
             dataratesDiffer = true;
@@ -86,8 +82,7 @@ void EtherHub::checkConnections(bool errorWhenAsymmetric)
         cChannel *outTrChannel = ogate->getTransmissionChannel();
         drate = outTrChannel->getNominalDatarate();
 
-        if (datarate != drate)
-        {
+        if (datarate != drate) {
             if (errorWhenAsymmetric)
                 throw cRuntimeError("The output datarate at port %i differs from datarates of previous ports", i);
             dataratesDiffer = true;
@@ -106,11 +101,9 @@ void EtherHub::receiveSignal(cComponent *source, simsignal_t signalID, cObject *
     ASSERT(signalID == POST_MODEL_CHANGE);
 
     // if new gates have been added, we need to call setDeliverOnReceptionStart(true) on them
-    cPostGateVectorResizeNotification *notif = dynamic_cast<cPostGateVectorResizeNotification*>(obj);
-    if (notif)
-    {
-        if (strcmp(notif->gateName, "ethg") == 0)
-        {
+    cPostGateVectorResizeNotification *notif = dynamic_cast<cPostGateVectorResizeNotification *>(obj);
+    if (notif) {
+        if (strcmp(notif->gateName, "ethg") == 0) {
             int newSize = gateSize("ethg");
             for (int i = notif->oldSize; i < newSize; i++)
                 gate(inputGateBaseId + i)->setDeliverOnReceptionStart(true);
@@ -119,16 +112,14 @@ void EtherHub::receiveSignal(cComponent *source, simsignal_t signalID, cObject *
     }
 
     cPostPathCreateNotification *connNotif = dynamic_cast<cPostPathCreateNotification *>(obj);
-    if (connNotif)
-    {
+    if (connNotif) {
         if ((this == connNotif->pathStartGate->getOwnerModule()) || (this == connNotif->pathEndGate->getOwnerModule()))
             checkConnections(false);
         return;
     }
 
     cPostPathCutNotification *cutNotif = dynamic_cast<cPostPathCutNotification *>(obj);
-    if (cutNotif)
-    {
+    if (cutNotif) {
         if ((this == cutNotif->pathStartGate->getOwnerModule()) || (this == cutNotif->pathEndGate->getOwnerModule()))
             checkConnections(false);
         return;
@@ -136,11 +127,9 @@ void EtherHub::receiveSignal(cComponent *source, simsignal_t signalID, cObject *
 
     // note: we are subscribed to the channel object too
     cPostParameterChangeNotification *parNotif = dynamic_cast<cPostParameterChangeNotification *>(obj);
-    if (parNotif)
-    {
+    if (parNotif) {
         cChannel *channel = dynamic_cast<cDatarateChannel *>(parNotif->par->getOwner());
-        if (channel)
-        {
+        if (channel) {
             cGate *gate = channel->getSourceGate();
             if (gate->pathContains(this))
                 checkConnections(false);
@@ -161,21 +150,18 @@ void EtherHub::handleMessage(cMessage *msg)
     numMessages++;
     emit(pkSignal, msg);
 
-    if (numPorts <= 1)
-    {
+    if (numPorts <= 1) {
         delete msg;
         return;
     }
 
-    for (int i = 0; i < numPorts; i++)
-    {
-        if (i != arrivalPort)
-        {
+    for (int i = 0; i < numPorts; i++) {
+        if (i != arrivalPort) {
             cGate *ogate = gate(outputGateBaseId + i);
             if (!ogate->isConnected())
                 continue;
 
-            bool isLast = (arrivalPort == numPorts-1) ? (i == numPorts-2) : (i == numPorts-1);
+            bool isLast = (arrivalPort == numPorts - 1) ? (i == numPorts - 2) : (i == numPorts - 1);
             cMessage *msg2 = isLast ? msg : msg->dup();
 
             // stop current transmission
@@ -185,7 +171,7 @@ void EtherHub::handleMessage(cMessage *msg)
             send(msg2, ogate);
 
             if (isLast)
-                msg = NULL;  // msg sent, do not delete it.
+                msg = nullptr; // msg sent, do not delete it.
         }
     }
     delete msg;
@@ -199,4 +185,6 @@ void EtherHub::finish()
     if (t > 0)
         recordScalar("messages/sec", numMessages / t);
 }
+
+} // namespace inet
 

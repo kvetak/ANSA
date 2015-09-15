@@ -26,11 +26,11 @@
 #define PIMNEIGHBOR_H_
 
 #include <omnetpp.h>
-#include "INETDefs.h"
-#include "InterfaceEntry.h"
-#include "NotificationBoard.h"
+#include "common/INETDefs.h"
+#include "networklayer/common/InterfaceEntry.h"
+#include "base/NotificationBoard.h"
 
-#include "PIMTimer_m.h"
+#include "ansa/networklayer/pim/PIMTimer_m.h"
 
 
 
@@ -45,8 +45,8 @@ class INET_API PimNeighbor: public cPolymorphic
 	protected:
 		int					id;					/**< Unique identifier of entry. */
 		int 				intID;          	/**< Identification of interface. */
-		InterfaceEntry 		*intPtr;			/**< Link to interface table entry. */
-		IPv4Address 			addr; 				/**< IP address of neighbor. */
+		inet::InterfaceEntry 		*intPtr;			/**< Link to interface table entry. */
+		inet::IPv4Address 			addr; 				/**< IP address of neighbor. */
 		int					ver;				/**< PIM version. */
 		PIMnlt 				*nlt;				/**< Pointer to Neighbor Livness Timer. */
 
@@ -58,8 +58,8 @@ class INET_API PimNeighbor: public cPolymorphic
 	    // set methods
 	    void setId(int id)  {this->id = id;}										/**< Set unique identifier of entry. */
 	    void setInterfaceID(int intID)  {this->intID = intID;}						/**< Set interface ID. */
-	    void setInterfacePtr(InterfaceEntry *intPtr)  {this->intPtr = intPtr;}		/**< Set pointer to interface. */
-	    void setAddr(IPv4Address addr) {this->addr = addr;}							/**< Set IP address of neighbor. */
+	    void setInterfacePtr(inet::InterfaceEntry *intPtr)  {this->intPtr = intPtr;}		/**< Set pointer to interface. */
+	    void setAddr(inet::IPv4Address addr) {this->addr = addr;}							/**< Set IP address of neighbor. */
 	    void setVersion(int ver) {this->ver = ver;}									/**< Set PIM version (from Hello msg). */
 	    void setNlt(PIMnlt *nlt) {this->nlt = nlt;}									/**< Set pointer to NeighborLivenessTimer. */
 
@@ -67,8 +67,8 @@ class INET_API PimNeighbor: public cPolymorphic
 	    // get methods
 	    int getId() const {return id;}												/**< Get unique identifier of entry. */
 	    int getInterfaceID() const {return intID;}									/**< Get interface ID. */
-	    InterfaceEntry *getInterfacePtr() const {return intPtr;}					/**< Get pointer to interface. */
-	    IPv4Address getAddr() const {return addr;}									/**< Get IP address of neighbor. */
+	    inet::InterfaceEntry *getInterfacePtr() const {return intPtr;}					/**< Get pointer to interface. */
+	    inet::IPv4Address getAddr() const {return addr;}									/**< Get IP address of neighbor. */
 	    int getVersion() const {return ver;}										/**< Get PIM version. */
 	    PIMnlt *getNlt() const {return nlt;}										/**< Get pointer to NeighborLivenessTimer. */
 };
@@ -97,7 +97,7 @@ class INET_API PimNeighborTable: public cSimpleModule
 		virtual PimNeighbor *getNeighborsByID(int id);
 		virtual int getIdCounter(){return this->id;}								/**< Get counter of entry IDs */
 		virtual bool isInTable(PimNeighbor entry);
-		virtual PimNeighbor *findNeighbor(int intId, IPv4Address addr);
+		virtual PimNeighbor *findNeighbor(int intId, inet::IPv4Address addr);
 		virtual int getNumNeighborsOnInt(int intId);
 
 	protected:
@@ -108,10 +108,10 @@ class INET_API PimNeighborTable: public cSimpleModule
 /**
  * @brief Class gives access to the PimNeighborTable.
  */
-class INET_API PimNeighborTableAccess : public ModuleAccess<PimNeighborTable>
+class INET_API PimNeighborTableAccess : public inet::ModuleAccess<PimNeighborTable>
 {
 	public:
-		PimNeighborTableAccess() : ModuleAccess<PimNeighborTable>("PimNeighborTable") {}
+		PimNeighborTableAccess() : inet::ModuleAccess<PimNeighborTable>("PimNeighborTable") {}
 };
 
 #endif /* PIMNEIGHBOR_H_ */

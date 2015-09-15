@@ -25,19 +25,19 @@
 #ifndef __INET_ANSA_ROUTING_TABLE6_ACCESS_H
 #define __INET_ANSA_ROUTING_TABLE6_ACCESS_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ModuleAccess.h"
-#include "ANSARoutingTable6.h"
+#include "common/ModuleAccess.h"
+#include "ansa/networklayer/ipv6/ANSARoutingTable6.h"
 
 
 /**
  * Gives access to ANSARoutingTable6
  */
-class ANSARoutingTable6Access : public ModuleAccess<ANSARoutingTable6>
+class ANSARoutingTable6Access : public inet::ModuleAccess<ANSARoutingTable6>
 {
     public:
-        ANSARoutingTable6Access() : ModuleAccess<ANSARoutingTable6>("routingTable6") {}
+        ANSARoutingTable6Access() : inet::ModuleAccess<ANSARoutingTable6>("routingTable6") {}
 };
 
 #endif

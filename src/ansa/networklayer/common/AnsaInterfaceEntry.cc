@@ -13,10 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "AnsaInterfaceEntry.h"
-#include "InterfaceEntry.h"
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+#include "networklayer/common/InterfaceEntry.h"
 
-AnsaInterfaceEntry::AnsaInterfaceEntry(cModule *interfaceModule) : InterfaceEntry(interfaceModule) {}
+AnsaInterfaceEntry::AnsaInterfaceEntry(cModule *interfaceModule) : inet::InterfaceEntry(interfaceModule) {}
 
 void AnsaInterfaceEntry::addVirtualForwarder(VirtualForwarder* vforw)
 {
@@ -32,7 +32,7 @@ void AnsaInterfaceEntry::removeVirtualForwarder(VirtualForwarder* vforw)
     delete vforw;
 }
 
-int AnsaInterfaceEntry::getVirtualForwarderId(const IPv4Address& addr)
+int AnsaInterfaceEntry::getVirtualForwarderId(const inet::IPv4Address& addr)
 {
     if (vforwarder.empty())
         return -1;
@@ -44,7 +44,7 @@ int AnsaInterfaceEntry::getVirtualForwarderId(const IPv4Address& addr)
     return -1;
 }
 
-int AnsaInterfaceEntry::getVirtualForwarderId(const MACAddress& addr)
+int AnsaInterfaceEntry::getVirtualForwarderId(const inet::MACAddress& addr)
 {
     if (vforwarder.empty())
         return -1;
@@ -56,7 +56,7 @@ int AnsaInterfaceEntry::getVirtualForwarderId(const MACAddress& addr)
     return -1;
 }
 
-const MACAddress& AnsaInterfaceEntry::getMacAddressByIP(const IPv4Address& addr) const
+const inet::MACAddress& AnsaInterfaceEntry::getMacAddressByIP(const inet::IPv4Address& addr) const
 {
     if (vforwarder.empty())
         return getMacAddress();
@@ -68,15 +68,15 @@ const MACAddress& AnsaInterfaceEntry::getMacAddressByIP(const IPv4Address& addr)
     return getMacAddress();
 }
 
-const MACAddress& AnsaInterfaceEntry::getMacVirtualForwarderById(int vforwarderId) const
+const inet::MACAddress& AnsaInterfaceEntry::getMacVirtualForwarderById(int vforwarderId) const
 {
     if (vforwarder.empty())
-        return MACAddress::UNSPECIFIED_ADDRESS;
+        return inet::MACAddress::UNSPECIFIED_ADDRESS;
 
     return vforwarder.at(vforwarderId)->getMacAddress();
 }
 
-bool AnsaInterfaceEntry::hasIPAddress(const IPv4Address& addr) const
+bool AnsaInterfaceEntry::hasIPAddress(const inet::IPv4Address& addr) const
 {
     if (vforwarder.empty())
         return false;
@@ -88,7 +88,7 @@ bool AnsaInterfaceEntry::hasIPAddress(const IPv4Address& addr) const
     return false;
 }
 
-bool AnsaInterfaceEntry::hasMacAddress(const MACAddress& addr) const
+bool AnsaInterfaceEntry::hasMacAddress(const inet::MACAddress& addr) const
 {
     if (vforwarder.empty())
         return false;

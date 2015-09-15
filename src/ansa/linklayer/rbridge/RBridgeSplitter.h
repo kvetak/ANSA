@@ -28,13 +28,13 @@
 #define RBRIDGESPLITTER_H_
 
 #include <csimplemodule.h>
-#include "ISISAccess.h"
-#include "TRILLAccess.h"
-#include "RBVLANTable.h"
+#include "ansa/networklayer/isis/ISISAccess.h"
+#include "ansa/linklayer/rbridge/TRILLAccess.h"
+#include "ansa/linklayer/rbridge/RBVLANTable.h"
 //#include "RBPortTable.h"
-#include "AnsaEtherFrame_m.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
+#include "ansa/linklayer/switch/AnsaEtherFrame_m.h"
+#include "networklayer/contract/IInterfaceTable.h"
+#include "networklayer/common/InterfaceTableAccess.h"
 
 
 class RBridgeSplitter : public cSimpleModule
@@ -47,7 +47,7 @@ class RBridgeSplitter : public cSimpleModule
         TRILL *trillModule;
         RBVLANTable *vlanTableModule;
 //        RBPortTable *portTableModule;
-        IInterfaceTable *ift;
+        inet::IInterfaceTable *ift;
     protected:
       virtual void initialize(int stage);
       virtual int numInitStages() const

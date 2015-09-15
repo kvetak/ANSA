@@ -19,7 +19,7 @@
 #ifndef __INET_IPASSIVEQUEUE_H
 #define __INET_IPASSIVEQUEUE_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 class IPassiveQueueListener;
 

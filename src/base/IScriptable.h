@@ -18,7 +18,7 @@
 #ifndef ISCRIPTABLE_H
 #define ISCRIPTABLE_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
 
 /**

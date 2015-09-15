@@ -15,38 +15,45 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
-#ifndef __DHCPLEASE_H__
-#define __DHCPLEASE_H__
 
-#include "Byte.h"
-#include "IPv4Address.h"
-#include "MACAddress.h"
-#include "ARP.h"
+#ifndef __INET_DHCPLEASE_H
+#define __INET_DHCPLEASE_H
 
+#include "networklayer/contract/ipv4/IPv4Address.h"
+#include "linklayer/common/MACAddress.h"
+#include "networklayer/arp/ipv4/ARP.h"
+
+namespace inet {
+
+/**
+ * Describes a DHCP lease.
+ */
 class DHCPLease
 {
-    public:
-        long xid;
-        IPv4Address ip;
-        MACAddress mac;
-        IPv4Address gateway;
-        IPv4Address network;
-        IPv4Address netmask;
-        IPv4Address dns;
-        IPv4Address ntp;
-        IPv4Address server_id;
-        std::string host_name;
-        simtime_t lease_time;
-        simtime_t renewal_time;
-        simtime_t rebind_time;
-        Byte parameter_request_list;
-        bool leased;
-
-        friend std::ostream& operator <<(std::ostream& os, DHCPLease obj)
-        {
-            os << "xid:" << obj.xid << " ip:" << obj.ip << " network:" << obj.network << " netmask:" << obj.netmask
-                    << " MAC:" << obj.mac << endl;
-            return (os);
-        }
+  public:
+    long xid = -1;
+    IPv4Address ip;
+    MACAddress mac;
+    IPv4Address gateway;
+    IPv4Address subnetMask;
+    IPv4Address dns;
+    IPv4Address ntp;
+    IPv4Address serverId;
+    std::string hostName;
+    simtime_t leaseTime;
+    simtime_t renewalTime;
+    simtime_t rebindTime;
+    bool leased = false;
 };
-#endif
+
+inline std::ostream& operator<<(std::ostream& os, DHCPLease obj)
+{
+    os << " IP: " << obj.ip << " with subnet mask: " << obj.subnetMask
+       << " to " << obj.mac;
+    return os;
+}
+
+} // namespace inet
+
+#endif // ifndef __INET_DHCPLEASE_H
+

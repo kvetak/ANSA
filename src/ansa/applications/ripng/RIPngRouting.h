@@ -24,18 +24,18 @@
 
 #include <omnetpp.h>
 
-#include "UDPSocket.h"
-#include "InterfaceTableAccess.h"
-#include "NotificationBoard.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "base/NotificationBoard.h"
 
-#include "RIPngProcess.h"
-#include "RIPngInterface.h"
+#include "ansa/applications/ripng/RIPngProcess.h"
+#include "ansa/applications/ripng/RIPngInterface.h"
 
-#include "RIPngMessage_m.h"
+#include "ansa/applications/ripng/RIPngMessage_m.h"
 
 /**
  *  Represents routing protocol RIPng. RIPng uses UDP and communicates
- *  using UDPSocket.
+ *  using inet::UDPSocket.
  */
 class RIPngRouting : public cSimpleModule, protected INotifiable
 {
@@ -44,7 +44,7 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
     virtual ~RIPngRouting();
 
   protected:
-    IInterfaceTable* ift;    ///< Provides access to the interface table.
+    inet::IInterfaceTable* ift;    ///< Provides access to the interface table.
     NotificationBoard* nb;   ///< Provides access to the notification board
 
     const char  *deviceId;   ///< Id of the device which contains this routing process.
@@ -56,7 +56,7 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
     simtime_t    routeTimeout;
     simtime_t    routeGarbageCollectionTimeout;
     simtime_t    regularUpdateTimeout;
-    IPv6Address  RIPngAddress;
+    inet::IPv6Address  RIPngAddress;
     int          RIPngPort;
     unsigned int distance;
 
@@ -79,13 +79,13 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
     simtime_t getRouteTimeout() { return routeTimeout; }
     simtime_t getRouteGarbageCollectionTimeout() { return routeGarbageCollectionTimeout; }
     simtime_t getRegularUpdateTimeout() { return regularUpdateTimeout; }
-    IPv6Address getRIPngAddress() { return RIPngAddress; }
+    inet::IPv6Address getRIPngAddress() { return RIPngAddress; }
     int getRIPngPort() { return RIPngPort; }
 
 
     //-- COMMANDS
-    void setPortAndAddress(const char *processName, int port, IPv6Address &address);
-    void setPortAndAddress(RIPngProcess *process, int port, IPv6Address &address);
+    void setPortAndAddress(const char *processName, int port, inet::IPv6Address &address);
+    void setPortAndAddress(RIPngProcess *process, int port, inet::IPv6Address &address);
     void setDistance(const char *processName, int distance);
     void setDistance(RIPngProcess *process, int distance);
     void setPoisonReverse(const char *processName, bool poisonReverse);
@@ -108,7 +108,7 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
      * @return created RIPng interface
      */
     RIPng::Interface *enableRIPngOnInterface(const char *processName, const char *interfaceName);
-    RIPng::Interface *enableRIPngOnInterface(RIPngProcess *process, InterfaceEntry *interface);
+    RIPng::Interface *enableRIPngOnInterface(RIPngProcess *process, inet::InterfaceEntry *interface);
 
     /**
      * Disable RIPng with the given name on the interface.
@@ -173,10 +173,10 @@ class RIPngRouting : public cSimpleModule, protected INotifiable
      * If process is initializing -1 is passed as oldPort.
      * All RIPng process interfaces are moved to the proper socket for sending messages @see moveInterfaceToSocket.
      */
-    void          moveProcessToSocket(RIPngProcess *process, int oldPort, int port, IPv6Address &multicastAddress);
+    void moveProcessToSocket(RIPngProcess *process, int oldPort, int port, inet::IPv6Address &multicastAddress);
 
     //-- MESSAGES HANDLING
-    void sendMessage(RIPngMessage *msg, IPv6Address &addr, int port, int interfaceId, bool globalSourceAddress);
+    void sendMessage(RIPngMessage *msg, inet::IPv6Address &addr, int port, int interfaceId, bool globalSourceAddress);
 
   protected:
     /**

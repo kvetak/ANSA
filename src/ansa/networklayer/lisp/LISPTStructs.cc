@@ -18,7 +18,7 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include <LISPTStructs.h>
+#include "ansa/networklayer/lisp/LISPTStructs.h"
 
 std::ostream& operator <<(std::ostream& os, const TAfiAddrs& tas) {
     for (TAfiAddrCItem it = tas.begin(); it != tas.end(); ++it)

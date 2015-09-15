@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-#include "sink.h"
+#include "ansa/linklayer/switch/sink.h"
 
 Define_Module(sink);
 
@@ -23,7 +23,7 @@ void sink::initialize() {
 
 void sink::handleMessage(cMessage *msg) {
 
-	if (dynamic_cast<EthernetIIFrame*>(msg)) {
+	if (dynamic_cast<inet::EthernetIIFrame*>(msg)) {
 		bubble("EhernetIIFrame");
 
 	} else if (dynamic_cast<AnsaEtherFrame*>(msg)) {

@@ -33,6 +33,8 @@ import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.base.NotificationBoard;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ppp.PPPInterface;
+import inet.linklayer.contract.IWiredNic;
+
 module PIMRouter
 {
     parameters:
@@ -131,5 +133,5 @@ module PIMRouter
 
 
 }
-import inet.linklayer.IWiredNic;
+
 

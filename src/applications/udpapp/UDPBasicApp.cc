@@ -16,24 +16,20 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
+#include "applications/udpapp/UDPBasicApp.h"
 
-#include "UDPBasicApp.h"
+#include "networklayer/common/L3AddressResolver.h"
+#include "common/ModuleAccess.h"
+#include "common/lifecycle/NodeOperations.h"
+#include "transportlayer/contract/udp/UDPControlInfo_m.h"
 
-#include "InterfaceTableAccess.h"
-#include "IPvXAddressResolver.h"
-#include "NodeOperations.h"
-#include "UDPControlInfo_m.h"
-
+namespace inet {
 
 Define_Module(UDPBasicApp);
 
-simsignal_t UDPBasicApp::sentPkSignal = SIMSIGNAL_NULL;
-simsignal_t UDPBasicApp::rcvdPkSignal = SIMSIGNAL_NULL;
+simsignal_t UDPBasicApp::sentPkSignal = registerSignal("sentPk");
+simsignal_t UDPBasicApp::rcvdPkSignal = registerSignal("rcvdPk");
 
-UDPBasicApp::UDPBasicApp()
-{
-    selfMsg = NULL;
-}
 
 UDPBasicApp::~UDPBasicApp()
 {
@@ -42,25 +38,20 @@ UDPBasicApp::~UDPBasicApp()
 
 void UDPBasicApp::initialize(int stage)
 {
-    AppBase::initialize(stage);
+    ApplicationBase::initialize(stage);
 
-    // because of IPvXAddressResolver, we need to wait until interfaces are registered,
-    // address auto-assignment takes place etc.
-    if (stage == 0)
-    {
+    if (stage == INITSTAGE_LOCAL) {
         numSent = 0;
         numReceived = 0;
         WATCH(numSent);
         WATCH(numReceived);
-        sentPkSignal = registerSignal("sentPk");
-        rcvdPkSignal = registerSignal("rcvdPk");
 
         localPort = par("localPort");
         destPort = par("destPort");
         startTime = par("startTime").doubleValue();
         stopTime = par("stopTime").doubleValue();
         if (stopTime >= SIMTIME_ZERO && stopTime < startTime)
-            error("Invalid startTime/stopTime parameters");
+            throw cRuntimeError("Invalid startTime/stopTime parameters");
         selfMsg = new cMessage("sendTimer");
     }
 }
@@ -69,7 +60,7 @@ void UDPBasicApp::finish()
 {
     recordScalar("packets sent", numSent);
     recordScalar("packets received", numReceived);
-    AppBase::finish();
+    ApplicationBase::finish();
 }
 
 void UDPBasicApp::setSocketOptions()
@@ -83,9 +74,8 @@ void UDPBasicApp::setSocketOptions()
         socket.setTypeOfService(typeOfService);
 
     const char *multicastInterface = par("multicastInterface");
-    if (multicastInterface[0])
-    {
-        IInterfaceTable *ift = InterfaceTableAccess().get(this);
+    if (multicastInterface[0]) {
+        IInterfaceTable *ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         InterfaceEntry *ie = ift->getInterfaceByName(multicastInterface);
         if (!ie)
             throw cRuntimeError("Wrong multicastInterface setting: no interface named \"%s\"", multicastInterface);
@@ -97,13 +87,24 @@ void UDPBasicApp::setSocketOptions()
         socket.setBroadcast(true);
 
     bool joinLocalMulticastGroups = par("joinLocalMulticastGroups");
-    if (joinLocalMulticastGroups)
-        socket.joinLocalMulticastGroups();
+    if (joinLocalMulticastGroups) {
+        MulticastGroupList mgl = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this)->collectMulticastGroups();
+        socket.joinLocalMulticastGroups(mgl);
+    }
 }
 
-IPvXAddress UDPBasicApp::chooseDestAddr()
+L3Address UDPBasicApp::chooseDestAddr()
 {
     int k = intrand(destAddresses.size());
+    if (destAddresses[k].isLinkLocal()) {    // KLUDGE for IPv6
+        const char *destAddrs = par("destAddresses");
+        cStringTokenizer tokenizer(destAddrs);
+        const char *token = nullptr;
+
+        for (int i = 0; i <= k; ++i)
+            token = tokenizer.nextToken();
+        destAddresses[k] = L3AddressResolver().resolve(token);
+    }
     return destAddresses[k];
 }
 
@@ -114,7 +115,7 @@ void UDPBasicApp::sendPacket()
     cPacket *payload = new cPacket(msgName);
     payload->setByteLength(par("messageLength").longValue());
 
-    IPvXAddress destAddr = chooseDestAddr();
+    L3Address destAddr = chooseDestAddr();
 
     emit(sentPkSignal, payload);
     socket.sendTo(payload, destAddr, destPort);
@@ -124,31 +125,29 @@ void UDPBasicApp::sendPacket()
 void UDPBasicApp::processStart()
 {
     socket.setOutputGate(gate("udpOut"));
-    socket.bind(localPort);
+    const char *localAddress = par("localAddress");
+    socket.bind(*localAddress ? L3AddressResolver().resolve(localAddress) : L3Address(), localPort);
     setSocketOptions();
 
     const char *destAddrs = par("destAddresses");
     cStringTokenizer tokenizer(destAddrs);
     const char *token;
 
-    while ((token = tokenizer.nextToken()) != NULL) {
-        IPvXAddress result;
-        IPvXAddressResolver().tryResolve(token, result);
+    while ((token = tokenizer.nextToken()) != nullptr) {
+        L3Address result;
+        L3AddressResolver().tryResolve(token, result);
         if (result.isUnspecified())
-            EV << "cannot resolve destination address: " << token << endl;
+            EV_ERROR << "cannot resolve destination address: " << token << endl;
         else
             destAddresses.push_back(result);
     }
 
-    if (!destAddresses.empty())
-    {
+    if (!destAddresses.empty()) {
         selfMsg->setKind(SEND);
         processSend();
     }
-    else
-    {
-        if (stopTime >= SIMTIME_ZERO)
-        {
+    else {
+        if (stopTime >= SIMTIME_ZERO) {
             selfMsg->setKind(STOP);
             scheduleAt(stopTime, selfMsg);
         }
@@ -159,13 +158,11 @@ void UDPBasicApp::processSend()
 {
     sendPacket();
     simtime_t d = simTime() + par("sendInterval").doubleValue();
-    if (stopTime < SIMTIME_ZERO || d < stopTime)
-    {
+    if (stopTime < SIMTIME_ZERO || d < stopTime) {
         selfMsg->setKind(SEND);
         scheduleAt(d, selfMsg);
     }
-    else
-    {
+    else {
         selfMsg->setKind(STOP);
         scheduleAt(stopTime, selfMsg);
     }
@@ -178,33 +175,38 @@ void UDPBasicApp::processStop()
 
 void UDPBasicApp::handleMessageWhenUp(cMessage *msg)
 {
-    if (msg->isSelfMessage())
-    {
+    if (msg->isSelfMessage()) {
         ASSERT(msg == selfMsg);
         switch (selfMsg->getKind()) {
-            case START: processStart(); break;
-            case SEND:  processSend(); break;
-            case STOP:  processStop(); break;
-            default: throw cRuntimeError("Invalid kind %d in self message", (int)selfMsg->getKind());
+            case START:
+                processStart();
+                break;
+
+            case SEND:
+                processSend();
+                break;
+
+            case STOP:
+                processStop();
+                break;
+
+            default:
+                throw cRuntimeError("Invalid kind %d in self message", (int)selfMsg->getKind());
         }
     }
-    else if (msg->getKind() == UDP_I_DATA)
-    {
+    else if (msg->getKind() == UDP_I_DATA) {
         // process incoming packet
         processPacket(PK(msg));
     }
-    else if (msg->getKind() == UDP_I_ERROR)
-    {
-        EV << "Ignoring UDP error report\n";
+    else if (msg->getKind() == UDP_I_ERROR) {
+        EV_WARN << "Ignoring UDP error report\n";
         delete msg;
     }
-    else
-    {
-        error("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
+    else {
+        throw cRuntimeError("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
     }
 
-    if (ev.isGUI())
-    {
+    if (hasGUI()) {
         char buf[40];
         sprintf(buf, "rcvd: %d pks\nsent: %d pks", numReceived, numSent);
         getDisplayString().setTagArg("t", 0, buf);
@@ -214,23 +216,22 @@ void UDPBasicApp::handleMessageWhenUp(cMessage *msg)
 void UDPBasicApp::processPacket(cPacket *pk)
 {
     emit(rcvdPkSignal, pk);
-    EV << "Received packet: " << UDPSocket::getReceivedPacketInfo(pk) << endl;
+    EV_INFO << "Received packet: " << UDPSocket::getReceivedPacketInfo(pk) << endl;
     delete pk;
     numReceived++;
 }
 
-bool UDPBasicApp::startApp(IDoneCallback *doneCallback)
+bool UDPBasicApp::handleNodeStart(IDoneCallback *doneCallback)
 {
     simtime_t start = std::max(startTime, simTime());
-    if ((stopTime < SIMTIME_ZERO) || (start < stopTime) || (start == stopTime && startTime == stopTime))
-    {
+    if ((stopTime < SIMTIME_ZERO) || (start < stopTime) || (start == stopTime && startTime == stopTime)) {
         selfMsg->setKind(START);
         scheduleAt(start, selfMsg);
     }
     return true;
 }
 
-bool UDPBasicApp::stopApp(IDoneCallback *doneCallback)
+bool UDPBasicApp::handleNodeShutdown(IDoneCallback *doneCallback)
 {
     if (selfMsg)
         cancelEvent(selfMsg);
@@ -238,10 +239,11 @@ bool UDPBasicApp::stopApp(IDoneCallback *doneCallback)
     return true;
 }
 
-bool UDPBasicApp::crashApp(IDoneCallback *doneCallback)
+void UDPBasicApp::handleNodeCrash()
 {
     if (selfMsg)
         cancelEvent(selfMsg);
-    return true;
 }
+
+} // namespace inet
 

@@ -23,15 +23,15 @@
 #define LISPTSTRUCTS_H_
 
 #include <string>
-#include "LISPMapEntry.h"
+#include "ansa/networklayer/lisp/LISPMapEntry.h"
 
 class TAfiAddr {
   public:
     TAfiAddr() {};
-    TAfiAddr(IPvXAddress addr) : address(addr) {};
+    TAfiAddr(inet::L3Address addr) : address(addr) {};
 
-    IPvXAddress address;
-    LISPCommon::Afi afi() const { return address.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4; };
+    inet::L3Address address;
+    LISPCommon::Afi afi() const { return address.getType()==inet::L3Address::IPv6 ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4; };
 
     std::string info() const;
 };

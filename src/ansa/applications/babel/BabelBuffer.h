@@ -21,15 +21,15 @@
 #ifndef BABELBUFFER_H_
 #define BABELBUFFER_H_
 
-#include "BabelDef.h"
-#include "BabelInterfaceTable.h"
-#include "BabelFtlv.h"
+#include "ansa/applications/babel/BabelDef.h"
+#include "ansa/applications/babel/BabelInterfaceTable.h"
+#include "ansa/applications/babel/BabelFtlv.h"
 
 
 class BabelBuffer : public cObject
 {
   protected:
-    IPvXAddress dst;
+    inet::L3Address dst;
     BabelInterface *outIface;
     std::vector<BabelFtlv *> tlvs;
     Babel::BabelTimer *flushTimer;
@@ -40,7 +40,7 @@ class BabelBuffer : public cObject
         flushTimer(NULL)
         {};
 
-    BabelBuffer(IPvXAddress da, BabelInterface *oi, Babel::BabelTimer *ft):
+    BabelBuffer(inet::L3Address da, BabelInterface *oi, Babel::BabelTimer *ft):
         dst(da),
         outIface(oi),
         flushTimer(ft)
@@ -54,8 +54,8 @@ class BabelBuffer : public cObject
     virtual std::string detailedInfo() const {return str();}
     friend std::ostream& operator<<(std::ostream& os, const BabelBuffer& buff);
 
-    const IPvXAddress& getDst() const {return dst;}
-    void setDst(const IPvXAddress& d) {dst = d;}
+    const inet::L3Address& getDst() const {return dst;}
+    void setDst(const inet::L3Address& d) {dst = d;}
 
     Babel::BabelTimer* getFlushTimer() const {return flushTimer;}
     void setFlushTimer(Babel::BabelTimer* ft) {flushTimer = ft;}
@@ -71,7 +71,7 @@ class BabelBuffer : public cObject
     size_t tlvsSize() const {return tlvs.size();}
     std::vector<BabelFtlv *>::iterator eraseTlv(std::vector<BabelFtlv *>::iterator it) {return tlvs.erase(it);}
     void addTlv(BabelFtlv *tlv) {tlvs.push_back(tlv);}
-    std::vector<BabelFtlv *>::iterator getSimilarUpdateTlv(IPvXAddress nh, Babel::rid origin);
+    std::vector<BabelFtlv *>::iterator getSimilarUpdateTlv(inet::L3Address nh, Babel::rid origin);
     bool containTlv(uint8_t tlvtype) const;
 
 };

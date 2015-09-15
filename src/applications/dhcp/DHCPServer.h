@@ -1,6 +1,7 @@
 //
 // Copyright (C) 2008 Juan-Carlos Maureira
 // Copyright (C) INRIA
+// Copyright (C) 2013 OpenSim Ltd.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -16,73 +17,116 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __DHCPSERVER_H__
-#define __DHCPSERVER_H__
+#ifndef __INET_DHCPSERVER_H
+#define __INET_DHCPSERVER_H
 
 #include <vector>
 #include <map>
-#include "INETDefs.h"
-#include "DHCP_m.h"
-#include "DHCPOptions.h"
-#include "DHCPLease.h"
-#include "InterfaceTable.h"
-#include "ARP.h"
-#include "UDPSocket.h"
 
-class NotificationBoard;
+#include "common/INETDefs.h"
 
-class INET_API DHCPServer : public cSimpleModule, public INotifiable, public ILifecycle
+#include "applications/dhcp/DHCPMessage_m.h"
+#include "applications/dhcp/DHCPLease.h"
+#include "networklayer/common/InterfaceTable.h"
+#include "networklayer/arp/ipv4/ARP.h"
+#include "transportlayer/contract/udp/UDPSocket.h"
+
+namespace inet {
+
+/**
+ * Implements a DHCP server. See NED file for more details.
+ */
+class INET_API DHCPServer : public cSimpleModule, public cListener, public ILifecycle
 {
-    protected:
-        // Transmission Timer
-        enum TIMER_TYPE
-        {
-            PROC_DELAY
-        };
+  protected:
+    typedef std::map<IPv4Address, DHCPLease> DHCPLeased;
+    enum TimerType {
+        START_DHCP
+    };
+    DHCPLeased leased;    // lookup table for lease infos
 
-        // list of leased ip
-        typedef std::map<IPv4Address, DHCPLease> DHCPLeased;
-        DHCPLeased leased;
+    bool isOperational = false;    // lifecycle
+    int numSent = 0;    // num of sent UDP packets
+    int numReceived = 0;    // num of received UDP packets
+    int serverPort = -1;    // server port
+    int clientPort = -1;    // client port
 
-        std::vector<cMessage *> messagesBeingProcessed;
+    /* Set by management, see DHCPServer NED file. */
+    unsigned int maxNumOfClients = 0;
+    unsigned int leaseTime = 0;
+    IPv4Address subnetMask;
+    IPv4Address gateway;
+    IPv4Address ipAddressStart;
 
-        int numSent;
-        int numReceived;
+    InterfaceEntry *ie = nullptr;    // interface to serve DHCP requests on
+    UDPSocket socket;
+    simtime_t startTime;    // application start time
+    cMessage *startTimer = nullptr;    // self message to start DHCP server
 
-        int bootps_port; // server
-        int bootpc_port; // client
+  protected:
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
 
-        simtime_t proc_delay; // process delay
+    /*
+     * Opens a UDP socket for client-server communication.
+     */
+    virtual void openSocket();
 
-        InterfaceEntry* ie; // interface to listen
-        NotificationBoard* nb;
-        UDPSocket socket;
+    /*
+     * Performs a database lookup by MAC address for lease information.
+     */
+    virtual DHCPLease *getLeaseByMac(MACAddress mac);
 
-    protected:
-        virtual int numInitStages() const { return 4; }
-        virtual void initialize(int stage);
-        virtual void handleMessage(cMessage *msg);
-        virtual void handleIncomingPacket(DHCPMessage *pkt);
-        virtual void openSocket();
+    /*
+     * Gets the next available lease to be assigned.
+     */
+    virtual DHCPLease *getAvailableLease(IPv4Address requestedAddress, MACAddress& clientMAC);
 
-        virtual void cancelMessagesBeingProcessed();
-        // search for a mac into the leased ip
-        virtual DHCPLease* getLeaseByMac(MACAddress mac);
-        // get the next available lease to be assigned
-        virtual DHCPLease* getAvailableLease();
-        virtual void handleTimer(cMessage *msg);
-        virtual void processPacket(DHCPMessage *packet);
-        virtual void sendOffer(DHCPLease* lease);
-        virtual void sendACK(DHCPLease* lease);
-        virtual void sendToUDP(cPacket *msg, int srcPort, const IPvXAddress& destAddr, int destPort);
-        virtual void receiveChangeNotification(int category, const cPolymorphic *details);
+    /*
+     * Implements the server's state machine.
+     */
+    virtual void processDHCPMessage(DHCPMessage *packet);
 
-    public:
-        DHCPServer();
-        virtual ~DHCPServer();
+    /*
+     * Send DHCPOFFER message to client in response to DHCPDISCOVER with offer of configuration
+     * parameters.
+     */
+    virtual void sendOffer(DHCPLease *lease);
 
-        virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback);
+    /*
+     * Send DHCPACK message to client with configuration parameters, including committed network address.
+     */
+    virtual void sendACK(DHCPLease *lease, DHCPMessage *packet);
+
+    /*
+     * Send DHCPNAK message to client indicating client's notion of network address is incorrect
+     * (e.g., client has moved to new subnet) or client's lease as expired.
+     */
+    virtual void sendNAK(DHCPMessage *msg);
+
+    virtual void handleSelfMessages(cMessage *msg);
+    virtual InterfaceEntry *chooseInterface();
+    virtual void sendToUDP(cPacket *msg, int srcPort, const L3Address& destAddr, int destPort);
+
+    /*
+     * Signal handler for cObject, override cListener function.
+     */
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj) override;
+
+    virtual void startApp();
+    virtual void stopApp();
+    /*
+     * For lifecycle management.
+     */
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
+
+  public:
+    DHCPServer();
+    virtual ~DHCPServer();
 };
 
-#endif
+} // namespace inet
+
+#endif // ifndef __INET_DHCPSERVER_H
 

@@ -24,19 +24,19 @@
 #define PIMSM_H
 
 #include <omnetpp.h>
-#include "PIMPacket_m.h"
-#include "PIMTimer_m.h"
+#include "ansa/networklayer/pim/PIMPacket_m.h"
+#include "ansa/networklayer/pim/PIMTimer_m.h"
 
-#include "InterfaceTableAccess.h"
-#include "AnsaRoutingTableAccess.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
-#include "PimNeighborTable.h"
-#include "PimInterfaceTable.h"
-#include "IPv4ControlInfo.h"
-#include "IPv4InterfaceData.h"
-#include "AnsaIPv4Route.h"
-#include "AnsaIPv4.h"
+#include "networklayer/common/InterfaceTableAccess.h"
+#include "ansa/networklayer/ipv4/AnsaRoutingTableAccess.h"
+#include "base/NotificationBoard.h"
+#include "common/NotifierConsts.h"
+#include "ansa/networklayer/pim/tables/PimNeighborTable.h"
+#include "ansa/networklayer/pim/tables/PimInterfaceTable.h"
+#include "networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "networklayer/ipv4/IPv4InterfaceData.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4Route.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4.h"
 
 #define KAT 180.0                       /**< Keep alive timer, if RPT is disconnect */
 #define KAT2 210.0                      /**< Keep alive timer, if RPT is connect */
@@ -54,10 +54,10 @@
 
 struct multDataInfo
 {
-    IPv4Address origin;
-    IPv4Address group;
+    inet::IPv4Address origin;
+    inet::IPv4Address group;
     unsigned interface_id;
-    IPv4Address srcAddr;
+    inet::IPv4Address srcAddr;
 };
 
 enum joinPruneMsg
@@ -81,12 +81,12 @@ class pimSM : public cSimpleModule, protected INotifiable
 {
     private:
         AnsaRoutingTable            *rt;            /**< Pointer to routing table. */
-        IInterfaceTable             *ift;           /**< Pointer to interface table. */
+        inet::IInterfaceTable             *ift;           /**< Pointer to interface table. */
         NotificationBoard           *nb;            /**< Pointer to notification table. */
         PimInterfaceTable           *pimIft;        /**< Pointer to table of PIM interfaces. */
         PimNeighborTable            *pimNbt;        /**< Pointer to table of PIM neighbors. */
 
-        IPv4Address RPAddress;
+        inet::IPv4Address RPAddress;
         std::string SPTthreshold;
 
     private:
@@ -105,21 +105,21 @@ class pimSM : public cSimpleModule, protected INotifiable
         void processPrunePendingTimer(PIMppt *timer);
 
 
-        void restartExpiryTimer(AnsaIPv4MulticastRoute *route, InterfaceEntry *originIntf, int holdTime);
+        void restartExpiryTimer(AnsaIPv4MulticastRoute *route, inet::InterfaceEntry *originIntf, int holdTime);
         void dataOnRpf(AnsaIPv4MulticastRoute *route);
 
         // set timers
-        PIMkat* createKeepAliveTimer(IPv4Address source, IPv4Address group);
-        PIMrst* createRegisterStopTimer(IPv4Address source, IPv4Address group);
-        PIMet*  createExpiryTimer(int intID, int holdtime, IPv4Address group, IPv4Address source, int StateType);
-        PIMjt*  createJoinTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, int JoinType);
-        PIMppt* createPrunePendingTimer(IPv4Address group, IPv4Address JPaddr, IPv4Address upstreamNbr, JPMsgType JPtype);
+        PIMkat* createKeepAliveTimer(inet::IPv4Address source, inet::IPv4Address group);
+        PIMrst* createRegisterStopTimer(inet::IPv4Address source, inet::IPv4Address group);
+        PIMet*  createExpiryTimer(int intID, int holdtime, inet::IPv4Address group, inet::IPv4Address source, int StateType);
+        PIMjt*  createJoinTimer(inet::IPv4Address group, inet::IPv4Address JPaddr, inet::IPv4Address upstreamNbr, int JoinType);
+        PIMppt* createPrunePendingTimer(inet::IPv4Address group, inet::IPv4Address JPaddr, inet::IPv4Address upstreamNbr, JPMsgType JPtype);
 
         // pim messages
-        void sendPIMRegister(IPv4ControlInfo *ctrl);
-        void sendPIMRegisterStop(IPv4Address source, IPv4Address dest, IPv4Address multGroup, IPv4Address multSource);
-        void sendPIMRegisterNull(IPv4Address multSource, IPv4Address multDest);
-        void sendPIMJoinPrune(IPv4Address multGroup, IPv4Address joinPruneIPaddr, IPv4Address upstreamNbr, joinPruneMsg JoinPrune, JPMsgType JPtype);
+        void sendPIMRegister(inet::IPv4ControlInfo *ctrl);
+        void sendPIMRegisterStop(inet::IPv4Address source, inet::IPv4Address dest, inet::IPv4Address multGroup, inet::IPv4Address multSource);
+        void sendPIMRegisterNull(inet::IPv4Address multSource, inet::IPv4Address multDest);
+        void sendPIMJoinPrune(inet::IPv4Address multGroup, inet::IPv4Address joinPruneIPaddr, inet::IPv4Address upstreamNbr, joinPruneMsg JoinPrune, JPMsgType JPtype);
         void sendPIMJoinTowardSource(multDataInfo *info);
         void forwardMulticastData(multDataInfo *info);
 
@@ -127,21 +127,21 @@ class pimSM : public cSimpleModule, protected INotifiable
         void processPIMPkt(PIMPacket *pkt);
         void processRegisterPacket(PIMRegister *pkt);
         void processRegisterStopPacket(PIMRegisterStop *pkt);
-        void processJoinPacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
-        void processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, EncodedAddress encodedAddr);
+        void processJoinPacket(PIMJoinPrune *pkt, inet::IPv4Address multGroup, EncodedAddress encodedAddr);
+        void processPrunePacket(PIMJoinPrune *pkt, inet::IPv4Address multGroup, EncodedAddress encodedAddr);
         void processJoinPrunePacket(PIMJoinPrune *pkt);
-        void processSGJoin(PIMJoinPrune *pkt,IPv4Address multOrigin, IPv4Address multGroup);
-        void processJoinRouteGexistOnRP(IPv4Address multGroup, IPv4Address packetOrigin, int msgHoldtime);
+        void processSGJoin(PIMJoinPrune *pkt,inet::IPv4Address multOrigin, inet::IPv4Address multGroup);
+        void processJoinRouteGexistOnRP(inet::IPv4Address multGroup, inet::IPv4Address packetOrigin, int msgHoldtime);
 
     public:
         //PIM-SM clear implementation
         void setRPAddress(std::string address);
         void setSPTthreshold(std::string address);
-        IPv4Address getRPAddress () {return RPAddress;}
+        inet::IPv4Address getRPAddress () {return RPAddress;}
         std::string getSPTthreshold () {return SPTthreshold;}
-        virtual bool IamRP (IPv4Address RPaddress);
-        bool IamDR (IPv4Address sourceAddr);
-        IPv4ControlInfo *setCtrlForMessage (IPv4Address destAddr,IPv4Address srcAddr,int protocol, int interfaceId, int TTL);
+        virtual bool IamRP (inet::IPv4Address RPaddress);
+        bool IamDR (inet::IPv4Address sourceAddr);
+        inet::IPv4ControlInfo *setCtrlForMessage (inet::IPv4Address destAddr,inet::IPv4Address srcAddr,int protocol, int interfaceId, int TTL);
 
 	protected:
 		virtual int numInitStages() const  {return 5;}

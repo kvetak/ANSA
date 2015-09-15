@@ -23,9 +23,9 @@
 
 
 #include <omnetpp.h>
-#include "AnsaIPv4.h"
-#include "LISPCore.h"
-#include "AnsaIPv4RoutingDecision_m.h"
+#include "ansa/networklayer/ipv4/AnsaIPv4.h"
+#include "ansa/networklayer/lisp/LISPCore.h"
+#include "ansa/networklayer/contact/AnsaIPv4RoutingDecision_m.h"
 
 Define_Module(AnsaIPv4);
 
@@ -43,7 +43,7 @@ void AnsaIPv4::initialize(int stage)
     {
         QueueBase::initialize();
 
-        lispmod = ModuleAccess<LISPCore>("lispCore").getIfExists();
+        lispmod = inet::ModuleAccess<LISPCore>("lispCore").getIfExists();
 
         ift = InterfaceTableAccess().get();
         rt = AnsaRoutingTableAccess().get();
@@ -77,7 +77,7 @@ void AnsaIPv4::initialize(int stage)
 #ifdef WITH_MANET
         // test for the presence of MANET routing
         // check if there is a protocol -> gate mapping
-        int gateindex = mapping.getOutputGateForProtocol(IP_PROT_MANET);
+        int gateindex = mapping.getOutputGateForProtocol(inet::IP_PROT_MANET);
         if (gateSize("transportOut")-1<gateindex)
             return;
 
@@ -103,7 +103,7 @@ void AnsaIPv4::initialize(int stage)
     }
 }
 
-void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *fromIE)
+void AnsaIPv4::handlePacketFromNetwork(inet::IPv4Datagram *datagram, inet::InterfaceEntry *fromIE)
 {
     ASSERT(datagram);
     ASSERT(fromIE);
@@ -121,14 +121,14 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         if (dblrand() <= relativeHeaderLength)
         {
             EV << "bit error found, sending ICMP_PARAMETER_PROBLEM\n";
-            icmpAccess.get()->sendErrorMessage(datagram, ICMP_PARAMETER_PROBLEM, 0);
+            icmpAccess.get()->sendErrorMessage(datagram, -1, inet::ICMP_PARAMETER_PROBLEM, 0);
             return;
         }
     }
 
     // remove control info, but keep the one on the last fragment of DSR and MANET datagrams
-    if (datagram->getTransportProtocol()!=IP_PROT_DSR && datagram->getTransportProtocol()!=IP_PROT_MANET
-            && !datagram->getDestAddress().isMulticast() && datagram->getTransportProtocol()!=IP_PROT_PIM)
+    if (datagram->getTransportProtocol()!=inet::IP_PROT_DSR && datagram->getTransportProtocol()!=inet::IP_PROT_MANET
+            && !datagram->getDestAddress().isMulticast() && datagram->getTransportProtocol()!=inet::IP_PROT_PIM)
     {
         delete datagram->removeControlInfo();
     }
@@ -136,9 +136,9 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         delete datagram->removeControlInfo(); // delete all control message except the last
 
     //MYWORK Add all neccessery info to the IP Control Info for future use.
-    if (datagram->getDestAddress().isMulticast() || datagram->getTransportProtocol() == IP_PROT_PIM)
+    if (datagram->getDestAddress().isMulticast() || datagram->getTransportProtocol() == inet::IP_PROT_PIM)
     {
-        IPv4ControlInfo *ctrl = (IPv4ControlInfo*)(datagram->removeControlInfo());
+        inet::IPv4ControlInfo *ctrl = (inet::IPv4ControlInfo*)(datagram->removeControlInfo());
         ctrl->setSrcAddr(datagram->getSrcAddress());
         ctrl->setDestAddr(datagram->getDestAddress());
         ctrl->setInterfaceId(getSourceInterfaceFrom(datagram)->getInterfaceId());
@@ -147,7 +147,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
 
 
     // route packet
-    IPv4Address &destAddr = datagram->getDestAddress();
+    inet::IPv4Address &destAddr = datagram->getDestAddress();
 
     EV << "Received datagram `" << datagram->getName() << "' with dest=" << destAddr << "\n";
 
@@ -160,11 +160,11 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         // check for local delivery
         // Note: multicast routers will receive IGMP datagrams even if their interface is not joined to the group
         if (fromIE->ipv4Data()->isMemberOfMulticastGroup(destAddr) ||
-                (rt->isMulticastForwardingEnabled() && datagram->getTransportProtocol() == IP_PROT_IGMP))
+                (rt->isMulticastForwardingEnabled() && datagram->getTransportProtocol() == inet::IP_PROT_IGMP))
             reassembleAndDeliver(datagram->dup());
 
         //FIXME temporary hack to catch "IGMP" for initialization PIM Join/Prune (*,G) PIM-SM
-        if (datagram->getTransportProtocol() == IP_PROT_IGMP)
+        if (datagram->getTransportProtocol() == inet::IP_PROT_IGMP)
         {
             EV << "AnsaIPv4::handlePacketFromNetwork - IGMP packet received" << endl;
 
@@ -178,15 +178,15 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         }
 
         //PIM send PIM packet to PIM module
-        if (datagram->getTransportProtocol() == IP_PROT_PIM)
+        if (datagram->getTransportProtocol() == inet::IP_PROT_PIM)
         {
             cPacket *packet = decapsulate(datagram);
-            send(packet, "transportOut", mapping.getOutputGateForProtocol(IP_PROT_PIM));
+            send(packet, "transportOut", mapping.getOutputGateForProtocol(inet::IP_PROT_PIM));
             return;
         }
 
         // don't forward if IP forwarding is off, or if dest address is link-scope
-        if (!rt->isIPForwardingEnabled() || destAddr.isLinkLocalMulticast())
+        if (!rt->isForwardingEnabled() || destAddr.isLinkLocalMulticast())
             delete datagram;
         else if (datagram->getTimeToLive() == 0)
         {
@@ -194,7 +194,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
             delete datagram;
         }
         else
-            routeMulticastPacket(datagram, NULL, getSourceInterfaceFrom(datagram));
+            routeMulticastPacket(datagram, NULL, (inet::InterfaceEntry*)getSourceInterfaceFrom(datagram));
     }
     else
     {
@@ -202,7 +202,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         if (manetRouting)
             sendRouteUpdateMessageToManet(datagram);
 #endif
-        InterfaceEntry *broadcastIE = NULL;
+        inet::InterfaceEntry *broadcastIE = NULL;
 
         // check for local delivery; we must accept also packets coming from the interfaces that
         // do not yet have an IP address assigned. This happens during DHCP requests.
@@ -213,13 +213,13 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         else if (destAddr.isLimitedBroadcastAddress() || (broadcastIE=rt->findInterfaceByLocalBroadcastAddress(destAddr)))
         {
             // broadcast datagram on the target subnet if we are a router
-            if (broadcastIE && fromIE != broadcastIE && rt->isIPForwardingEnabled())
-                IPv4::fragmentAndSend(datagram->dup(), broadcastIE, IPv4Address::ALLONES_ADDRESS);
+            if (broadcastIE && fromIE != broadcastIE && rt->isForwardingEnabled())
+                IPv4::fragmentAndSend(datagram->dup(), broadcastIE, inet::IPv4Address::ALLONES_ADDRESS);
 
             EV << "Broadcast received\n";
             reassembleAndDeliver(datagram);
         }
-        else if (!rt->isIPForwardingEnabled())
+        else if (!rt->isForwardingEnabled())
         {
             EV << "forwarding off, dropping packet\n";
             numDropped++;
@@ -227,7 +227,7 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
         }
         else
         {
-            routeUnicastPacket(datagram, NULL/*destIE*/, IPv4Address::UNSPECIFIED_ADDRESS);
+            routeUnicastPacket(datagram, NULL/*destIE*/, inet::IPv4Address::UNSPECIFIED_ADDRESS);
         }
     }
 }
@@ -248,12 +248,12 @@ void AnsaIPv4::handlePacketFromNetwork(IPv4Datagram *datagram, InterfaceEntry *f
  * @param fromIE Pointer to incoming interface.
  * @see routeMulticastPacket()
  */
-void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, InterfaceEntry *fromIE)
+void AnsaIPv4::routeMulticastPacket(inet::IPv4Datagram *datagram, inet::InterfaceEntry *destIE, inet::InterfaceEntry *fromIE)
 {
     ASSERT(fromIE);
-    IPv4Address destAddr = datagram->getDestAddress();
-    IPv4Address srcAddr = datagram->getSrcAddress();
-    IPv4ControlInfo *ctrl = (IPv4ControlInfo *) datagram->getControlInfo();
+    inet::IPv4Address destAddr = datagram->getDestAddress();
+    inet::IPv4Address srcAddr = datagram->getSrcAddress();
+    inet::IPv4ControlInfo *ctrl = (inet::IPv4ControlInfo *) datagram->getControlInfo();
     ASSERT(destAddr.isMulticast());
     ASSERT(!destAddr.isLinkLocalMulticast());
 
@@ -263,14 +263,14 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     EV << "Routing multicast datagram `" << datagram->getName() << "' with dest=" << destAddr << "\n";
 
     AnsaIPv4MulticastRoute *route = rt->getRouteFor(destAddr, srcAddr);
-    AnsaIPv4MulticastRoute *routeG = rt->getRouteFor(destAddr, IPv4Address::UNSPECIFIED_ADDRESS);
+    AnsaIPv4MulticastRoute *routeG = rt->getRouteFor(destAddr, inet::IPv4Address::UNSPECIFIED_ADDRESS);
 
     numMulticast++;
 
     // Process datagram only if sent locally or arrived on the shortest
     // route (provided routing table already contains srcAddr) = RPF interface;
     // otherwise discard and continue.
-    InterfaceEntry *rpfInt = rt->getInterfaceForDestAddr(datagram->getSrcAddress());
+    inet::InterfaceEntry *rpfInt = rt->getInterfaceForDestAddr(datagram->getSrcAddress());
     if (fromIE!=NULL && rpfInt!=NULL && fromIE!=rpfInt)
     {
         //MYWORK RPF interface has changed
@@ -283,7 +283,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
         if (!rt->isLocalMulticastAddress(destAddr) && !destAddr.isLinkLocalMulticast())
         {
             EV << "Data on non-RPF interface" << endl;
-            nb->fireChangeNotification(NF_IPv4_DATA_ON_NONRPF, ctrl);
+            nb->fireChangeNotification(inet::NF_IPv4_DATA_ON_NONRPF, ctrl);
             return;
         }
         else
@@ -298,7 +298,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     //MYWORK for local traffic to given destination (PIM messages)
     if (fromIE == NULL && destIE != NULL)
     {
-        IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
+        inet::IPv4Datagram *datagramCopy = (inet::IPv4Datagram *) datagram->dup();
         datagramCopy->setSrcAddress(destIE->ipv4Data()->getIPAddress());
         IPv4::fragmentAndSend(datagramCopy, destIE, destAddr);
 
@@ -314,7 +314,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
         if (rt->isLocalMulticastAddress(destAddr))
         {
             EV << "isLocalMulticastAddress." << endl;
-            IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
+            inet::IPv4Datagram *datagramCopy = (inet::IPv4Datagram *) datagram->dup();
 
             // FIXME code from the MPLS model: set packet dest address to routerId
             datagramCopy->setDestAddress(rt->getRouterId());
@@ -322,7 +322,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
         }
 
         // don't forward if IP forwarding is off
-        if (!rt->isIPForwardingEnabled())
+        if (!rt->isForwardingEnabled())
         {
             EV << "IP forwarding is off." << endl;
             delete datagram;
@@ -350,7 +350,7 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     if (route == NULL && routeG == NULL)
     {
         EV << "AnsaIP::routeMulticastPacket - Multicast route does not exist, try to add." << endl;
-        nb->fireChangeNotification(NF_IPv4_NEW_MULTICAST, ctrl);
+        nb->fireChangeNotification(inet::NF_IPv4_NEW_MULTICAST, ctrl);
         if (intfMode == Dense)
         {
             delete datagram->removeControlInfo();
@@ -379,11 +379,11 @@ void AnsaIPv4::routeMulticastPacket(IPv4Datagram *datagram, InterfaceEntry *dest
     delete datagram;
 }
 
-void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
+void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, inet::IPv4Datagram *datagram, inet::IPv4ControlInfo *ctrl)
 {
-    IPv4Address destAddr = datagram->getDestAddress();
+    inet::IPv4Address destAddr = datagram->getDestAddress();
 
-    nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF, route);
+    nb->fireChangeNotification(inet::NF_IPv4_DATA_ON_RPF, route);
 
     // data won't be sent because there is no outgoing interface and/or route is pruned
     AnsaIPv4MulticastRoute::InterfaceVector outInt = route->getOutInt();
@@ -393,7 +393,7 @@ void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram
         if(ctrl != NULL)
         {
             if (!route->isFlagSet(AnsaIPv4MulticastRoute::A))
-                nb->fireChangeNotification(NF_IPv4_DATA_ON_PRUNED_INT, ctrl);
+                nb->fireChangeNotification(inet::NF_IPv4_DATA_ON_PRUNED_INT, ctrl);
         }
         delete datagram;
         return;
@@ -406,8 +406,8 @@ void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram
         if (outInt[i].forwarding == AnsaIPv4MulticastRoute::Pruned)
             continue;
 
-        InterfaceEntry *destIE = outInt[i].intPtr;
-        IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
+        inet::InterfaceEntry *destIE = outInt[i].intPtr;
+        inet::IPv4Datagram *datagramCopy = (inet::IPv4Datagram *) datagram->dup();
 
         // set datagram source address if not yet set
         if (datagramCopy->getSrcAddress().isUnspecified())
@@ -416,27 +416,27 @@ void AnsaIPv4::routePimDM (AnsaIPv4MulticastRoute *route, IPv4Datagram *datagram
     }
 }
 
-void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute *routeG, IPv4Datagram *datagram, IPv4ControlInfo *ctrl)
+void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute *routeG, inet::IPv4Datagram *datagram, inet::IPv4ControlInfo *ctrl)
 {
 
-    IPv4Address destAddr = datagram->getDestAddress();
-    InterfaceEntry *rpfInt = rt->getInterfaceForDestAddr(datagram->getSrcAddress());
+    inet::IPv4Address destAddr = datagram->getDestAddress();
+    inet::InterfaceEntry *rpfInt = rt->getInterfaceForDestAddr(datagram->getSrcAddress());
     AnsaIPv4MulticastRoute *routePtr = NULL;
-    InterfaceEntry *intToRP = NULL;
+    inet::InterfaceEntry *intToRP = NULL;
 
     //if (S,G) route exist, prefer (S,G) olist
     if (routeG)
     {
         //outInt = routeG->getOutInt();
         routePtr = routeG;
-        nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, routeG);
+        nb->fireChangeNotification(inet::NF_IPv4_DATA_ON_RPF_PIMSM, routeG);
     }
     if (route)
     {
         //outInt = route->getOutInt();
         routePtr = route;
         intToRP = rt->getInterfaceForDestAddr(routePtr->getRP());
-        nb->fireChangeNotification(NF_IPv4_DATA_ON_RPF_PIMSM, route);
+        nb->fireChangeNotification(inet::NF_IPv4_DATA_ON_RPF_PIMSM, route);
     }
 
     AnsaIPv4MulticastRoute::InterfaceVector outInt = routePtr->getOutInt();
@@ -449,8 +449,8 @@ void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute
         // RPF check before datagram sending
         if (outInt[i].intId == rpfInt->getInterfaceId())
             continue;
-        InterfaceEntry *destIE = outInt[i].intPtr;
-        IPv4Datagram *datagramCopy = (IPv4Datagram *) datagram->dup();
+        inet::InterfaceEntry *destIE = outInt[i].intPtr;
+        inet::IPv4Datagram *datagramCopy = (inet::IPv4Datagram *) datagram->dup();
 
         // set datagram source address if not yet set
         if (datagramCopy->getSrcAddress().isUnspecified())
@@ -461,7 +461,7 @@ void AnsaIPv4::routePimSM (AnsaIPv4MulticastRoute *route, AnsaIPv4MulticastRoute
     if (route && route->isFlagSet(AnsaIPv4MulticastRoute::F)
             && route->isFlagSet(AnsaIPv4MulticastRoute::P)
             && (route->getRegStatus(intToRP->getInterfaceId()) == AnsaIPv4MulticastRoute::Join))
-        nb->fireChangeNotification(NF_IPv4_MDATA_REGISTER, ctrl);
+        nb->fireChangeNotification(inet::NF_IPv4_MDATA_REGISTER, ctrl);
 }
 
 void AnsaIPv4::handleMessageFromHL(cPacket *msg)
@@ -476,27 +476,27 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
     }
 
     // encapsulate and send
-    IPv4Datagram *datagram = dynamic_cast<IPv4Datagram *>(msg);
-    IPv4ControlInfo *controlInfo = NULL;
+    inet::IPv4Datagram *datagram = dynamic_cast<inet::IPv4Datagram *>(msg);
+    inet::IPv4ControlInfo *controlInfo = NULL;
     //FIXME dubious code, remove? how can the HL tell IP whether it wants tunneling or forwarding?? --Andras
-    if (datagram) // if HL sends an IPv4Datagram, route the packet
+    if (datagram) // if HL sends an inet::IPv4Datagram, route the packet
     {
-        // Dsr routing, Dsr is a HL protocol and send IPv4Datagram
-        if (datagram->getTransportProtocol()==IP_PROT_DSR)
+        // Dsr routing, Dsr is a HL protocol and send inet::IPv4Datagram
+        if (datagram->getTransportProtocol()==inet::IP_PROT_DSR)
         {
-            controlInfo = check_and_cast<IPv4ControlInfo*>(datagram->removeControlInfo());
+            controlInfo = check_and_cast<inet::IPv4ControlInfo*>(datagram->removeControlInfo());
         }
     }
     else
     {
         // encapsulate
-        controlInfo = check_and_cast<IPv4ControlInfo*>(msg->removeControlInfo());
+        controlInfo = check_and_cast<inet::IPv4ControlInfo*>(msg->removeControlInfo());
         datagram = encapsulate(msg, controlInfo);
     }
 
     // extract requested interface and next hop
-    InterfaceEntry *destIE = NULL;
-    IPv4Address nextHopAddress = IPv4Address::UNSPECIFIED_ADDRESS;
+    inet::InterfaceEntry *destIE = NULL;
+    inet::IPv4Address nextHopAddress = inet::IPv4Address::UNSPECIFIED_ADDRESS;
     int vforwarder = -1;
     bool multicastLoop = true;
 
@@ -516,7 +516,7 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
     delete controlInfo;
 
     // send
-    IPv4Address &destAddr = datagram->getDestAddress();
+    inet::IPv4Address &destAddr = datagram->getDestAddress();
 
     EV << "Sending datagram `" << datagram->getName() << "' with dest=" << destAddr << "\n";
 
@@ -527,7 +527,7 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
         // loop back a copy
         if (multicastLoop && (!destIE || !destIE->isLoopback()))
         {
-            InterfaceEntry *loopbackIF = ift->getFirstLoopbackInterface();
+            inet::InterfaceEntry *loopbackIF = ift->getFirstLoopbackInterface();
             if (loopbackIF)
                 fragmentAndSend(datagram->dup(), loopbackIF, destAddr, vforwarder);
         }
@@ -568,7 +568,7 @@ void AnsaIPv4::handleMessageFromHL(cPacket *msg)
     }
 }
 
-void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE, IPv4Address destNextHopAddr)
+void AnsaIPv4::routeUnicastPacket(inet::IPv4Datagram *datagram, inet::InterfaceEntry *destIE, inet::IPv4Address destNextHopAddr)
 {
     if ( lispmod
          && lispmod->isOneOfMyEids( datagram->getSrcAddress() )
@@ -578,11 +578,11 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
         send(datagram, "lispOut");
         return;
     }
-    IPv4Address destAddr = datagram->getDestAddress();
+    inet::IPv4Address destAddr = datagram->getDestAddress();
 
     EV << "Routing datagram `" << datagram->getName() << "' with dest=" << destAddr << ": ";
 
-    IPv4Address nextHopAddr;
+    inet::IPv4Address nextHopAddr;
     // if output port was explicitly requested, use that, otherwise use IPv4 routing
     if (destIE)
     {
@@ -594,7 +594,7 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
         else if (destIE->isBroadcast())
         {
             // if the interface is broadcast we must search the next hop
-            const IPv4Route *re = rt->findBestMatchingRoute(destAddr);
+            const inet::IPv4Route *re = rt->findBestMatchingRoute(destAddr);
             if (re && re->getInterface() == destIE)
                 nextHopAddr = re->getGateway();
         }
@@ -602,7 +602,7 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
     else
     {
         // use IPv4 routing (lookup in routing table)
-        const IPv4Route *re = rt->findBestMatchingRoute(destAddr);
+        const inet::IPv4Route *re = rt->findBestMatchingRoute(destAddr);
         if (re)
         {
             destIE = re->getInterface();
@@ -619,9 +619,9 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
             else
             {
 #endif
-                EV << "unroutable, sending ICMP_DESTINATION_UNREACHABLE\n";
+                EV << "unroutable, sending inet::ICMP_DESTINATION_UNREACHABLE\n";
                 numUnroutable++;
-                icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE, 0);
+                icmpAccess.get()->sendErrorMessage(datagram, -1, inet::ICMP_DESTINATION_UNREACHABLE, 0);
 #ifdef WITH_MANET
             }
 #endif
@@ -640,7 +640,7 @@ void AnsaIPv4::routeUnicastPacket(IPv4Datagram *datagram, InterfaceEntry *destIE
     }
 }
 
-void AnsaIPv4::reassembleAndDeliver(IPv4Datagram *datagram)
+void AnsaIPv4::reassembleAndDeliver(inet::IPv4Datagram *datagram)
 {
     EV << "Local delivery\n";
 
@@ -672,24 +672,24 @@ void AnsaIPv4::reassembleAndDeliver(IPv4Datagram *datagram)
     // decapsulate and send on appropriate output gate
     int protocol = datagram->getTransportProtocol();
 
-    if (protocol==IP_PROT_ICMP)
+    if (protocol==inet::IP_PROT_ICMP)
     {
         // incoming ICMP packets are handled specially
-        handleReceivedICMP(check_and_cast<ICMPMessage *>(decapsulate(datagram)));
+        handleIncomingICMP(check_and_cast<inet::ICMPMessage *>(decapsulate(datagram)));
         numLocalDeliver++;
     }
-    else if (protocol==IP_PROT_IP)
+    else if (protocol==inet::IP_PROT_IP)
     {
         // tunnelled IP packets are handled separately
         send(decapsulate(datagram), "preRoutingOut");  //FIXME There is no "preRoutingOut" gate in the IPv4 module.
     }
-    else if (protocol==IP_PROT_PIM)
+    else if (protocol==inet::IP_PROT_PIM)
     {
         cPacket *packet = decapsulate(datagram);
-        send(packet, "transportOut", mapping.getOutputGateForProtocol(IP_PROT_PIM));
+        send(packet, "transportOut", mapping.getOutputGateForProtocol(inet::IP_PROT_PIM));
         return;
     }
-    else if (protocol==IP_PROT_DSR)
+    else if (protocol==inet::IP_PROT_DSR)
     {
 #ifdef WITH_MANET
         // If the protocol is Dsr Send directely the datagram to manet routing
@@ -713,12 +713,12 @@ void AnsaIPv4::reassembleAndDeliver(IPv4Datagram *datagram)
         else
         {
             EV << "L3 Protocol not connected. discarding packet" << endl;
-            icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE, ICMP_DU_PROTOCOL_UNREACHABLE);
+            icmpAccess.get()->sendErrorMessage(datagram, -1, inet::ICMP_DESTINATION_UNREACHABLE, inet::ICMP_DU_PROTOCOL_UNREACHABLE);
         }
     }
 }
 
-void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarder)
+void AnsaIPv4::fragmentAndSend(inet::IPv4Datagram *datagram, inet::InterfaceEntry *ie, inet::IPv4Address nextHopAddr, int vforwarder)
 {
     // fill in source address
     if (datagram->getSrcAddress().isUnspecified())
@@ -732,8 +732,8 @@ void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4A
     if (datagram->getTimeToLive() < 0)
     {
         // drop datagram, destruction responsibility in ICMP
-        EV << "datagram TTL reached zero, sending ICMP_TIME_EXCEEDED\n";
-        icmpAccess.get()->sendErrorMessage(datagram, ICMP_TIME_EXCEEDED, 0);
+        EV << "datagram TTL reached zero, sending inet::ICMP_TIME_EXCEEDED\n";
+        icmpAccess.get()->sendErrorMessage(datagram, -1, inet::ICMP_TIME_EXCEEDED, 0);
         numDropped++;
         return;
     }
@@ -750,9 +750,9 @@ void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4A
     // if "don't fragment" bit is set, throw datagram away and send ICMP error message
     if (datagram->getDontFragment())
     {
-        EV << "datagram larger than MTU and don't fragment bit set, sending ICMP_DESTINATION_UNREACHABLE\n";
-        icmpAccess.get()->sendErrorMessage(datagram, ICMP_DESTINATION_UNREACHABLE,
-                                                     ICMP_FRAGMENTATION_ERROR_CODE);
+        EV << "datagram larger than MTU and don't fragment bit set, sending inet::ICMP_DESTINATION_UNREACHABLE\n";
+        icmpAccess.get()->sendErrorMessage(datagram, -1, inet::ICMP_DESTINATION_UNREACHABLE,
+                                                     inet::ICMP_FRAGMENTATION_ERROR_CODE);
         numDropped++;
         return;
     }
@@ -785,7 +785,7 @@ void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4A
 
         // FIXME is it ok that full encapsulated packet travels in every datagram fragment?
         // should better travel in the last fragment only. Cf. with reassembly code!
-        IPv4Datagram *fragment = (IPv4Datagram *) datagram->dup();
+        inet::IPv4Datagram *fragment = (inet::IPv4Datagram *) datagram->dup();
         fragment->setName(fragMsgName.c_str());
 
         // "more fragments" bit is unchanged in the last fragment, otherwise true
@@ -801,17 +801,17 @@ void AnsaIPv4::fragmentAndSend(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4A
     delete datagram;
 }
 
-IPv4Datagram *AnsaIPv4::encapsulate(cPacket *transportPacket, IPv4ControlInfo *controlInfo)
+inet::IPv4Datagram *AnsaIPv4::encapsulate(cPacket *transportPacket, inet::IPv4ControlInfo *controlInfo)
 {
-    IPv4Datagram *datagram = createIPv4Datagram(transportPacket->getName());
-    datagram->setByteLength(IP_HEADER_BYTES);
+    inet::IPv4Datagram *datagram = createIPv4Datagram(transportPacket->getName());
+    datagram->setByteLength(inet::IP_HEADER_BYTES);
     datagram->encapsulate(transportPacket);
 
     // set source and destination address
-    IPv4Address dest = controlInfo->getDestAddr();
+    inet::IPv4Address dest = controlInfo->getDestAddr();
     datagram->setDestAddress(dest);
 
-    IPv4Address src = controlInfo->getSrcAddr();
+    inet::IPv4Address src = controlInfo->getSrcAddr();
 
     // when source address was given, use it; otherwise it'll get the address
     // of the outgoing interface after routing
@@ -856,9 +856,9 @@ IPv4Datagram *AnsaIPv4::encapsulate(cPacket *transportPacket, IPv4ControlInfo *c
  *   3. if no route, choose the interface according to the source address
  *   4. or if the source address is unspecified, choose the first MULTICAST interface
  */
-InterfaceEntry *AnsaIPv4::determineOutgoingInterfaceForMulticastDatagram(IPv4Datagram *datagram, InterfaceEntry *multicastIFOption)
+inet::InterfaceEntry *AnsaIPv4::determineOutgoingInterfaceForMulticastDatagram(inet::IPv4Datagram *datagram, inet::InterfaceEntry *multicastIFOption)
 {
-    InterfaceEntry *ie = NULL;
+    inet::InterfaceEntry *ie = NULL;
     if (multicastIFOption)
     {
         ie = multicastIFOption;
@@ -866,7 +866,7 @@ InterfaceEntry *AnsaIPv4::determineOutgoingInterfaceForMulticastDatagram(IPv4Dat
     }
     if (!ie)
     {
-        IPv4Route *route = rt->findBestMatchingRoute(datagram->getDestAddress());
+        inet::IPv4Route *route = rt->findBestMatchingRoute(datagram->getDestAddress());
         if (route)
             ie = route->getInterface();
         if (ie)
@@ -887,7 +887,7 @@ InterfaceEntry *AnsaIPv4::determineOutgoingInterfaceForMulticastDatagram(IPv4Dat
     return ie;
 }
 
-void AnsaIPv4::sendDatagramToOutput(IPv4Datagram *datagram, InterfaceEntry *ie, IPv4Address nextHopAddr, int vforwarderId)
+void AnsaIPv4::sendDatagramToOutput(inet::IPv4Datagram *datagram, inet::InterfaceEntry *ie, inet::IPv4Address nextHopAddr, int vforwarderId)
 {
     if (vforwarderId == -1)
     {

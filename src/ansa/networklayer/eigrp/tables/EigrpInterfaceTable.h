@@ -18,10 +18,10 @@
 
 #include <omnetpp.h>
 
-#include "ModuleAccess.h"
+#include "common/ModuleAccess.h"
 
-#include "EigrpTimer_m.h"
-#include "InterfaceEntry.h"
+#include "ansa/networklayer/eigrp/EigrpTimer_m.h"
+#include "networklayer/common/InterfaceEntry.h"
 
 /**
  * Represent EIGRP interface.
@@ -54,7 +54,7 @@ class EigrpInterface: public cObject
     int stubCount;          /**< Number of stub neighbors on interface */
 
   public:
-    EigrpInterface(InterfaceEntry *iface, int networkId, bool enabled);
+    EigrpInterface(inet::InterfaceEntry *iface, int networkId, bool enabled);
     ~EigrpInterface();
 
     bool operator==(const EigrpInterface& iface) const
@@ -104,7 +104,7 @@ class EigrpInterface: public cObject
     void setMtu(int mtu) { this->mtu = mtu; }
     int getMtu() const { return mtu; }
 
-    bool isMulticastAllowedOnIface(InterfaceEntry *iface);
+    bool isMulticastAllowedOnIface(inet::InterfaceEntry *iface);
 
     void setSplitHorizon(bool shEnabled) { this->splitHorizon = shEnabled; }
     bool isSplitHorizonEn() const { return this->splitHorizon; }
@@ -185,16 +185,16 @@ class EigrpInterfaceTable : public cSimpleModule
     EigrpInterface *getInterface(int k) const { return eigrpInterfaces[k]; }
 };
 
-class INET_API EigrpIfTableAccess : public ModuleAccess<EigrpInterfaceTable>
+class INET_API EigrpIfTableAccess : public inet::ModuleAccess<EigrpInterfaceTable>
 {
     public:
-    EigrpIfTableAccess() : ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable") {}
+    EigrpIfTableAccess() : inet::ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable") {}
 };
 
-class INET_API EigrpIfTable6Access : public ModuleAccess<EigrpInterfaceTable>
+class INET_API EigrpIfTable6Access : public inet::ModuleAccess<EigrpInterfaceTable>
 {
     public:
-    EigrpIfTable6Access() : ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable6") {}
+    EigrpIfTable6Access() : inet::ModuleAccess<EigrpInterfaceTable>("eigrpInterfaceTable6") {}
 };
 
 #endif

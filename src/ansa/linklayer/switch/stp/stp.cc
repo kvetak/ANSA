@@ -13,10 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "stp.h"
-#include "ansaSwitchCore.h"
-#include "vlanTable.h"
-#include "stpXMLparser.h"
+#include "ansa/linklayer/switch/stp/stp.h"
+#include "ansa/linklayer/switch/ansaSwitchCore.h"
+#include "ansa/linklayer/switch/vlanTable.h"
+#include "ansa/linklayer/switch/stp/stpXMLparser.h"
 
 Define_Module(Stp);
 

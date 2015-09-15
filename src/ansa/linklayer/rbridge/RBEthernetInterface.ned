@@ -15,8 +15,8 @@
 
 package inet.ansa.linklayer.rbridge;
 
-import inet.linklayer.IWiredNic;
-import inet.linklayer.IOutputQueue;
+import inet.linklayer.contract.IWiredNic;
+import inet.common.queue.IOutputQueue;
 import inet.linklayer.ethernet.EtherEncap;
 import inet.linklayer.ethernet.EtherMAC;
 import inet.ansa.linklayer.ethernet.AnsaEtherMAC;

@@ -20,19 +20,19 @@
 #ifndef __INET_INTERFACETABLEACCESS_H
 #define __INET_INTERFACETABLEACCESS_H
 
-#include "INETDefs.h"
+#include "common/INETDefs.h"
 
-#include "ModuleAccess.h"
-#include "IInterfaceTable.h"
+#include "common/ModuleAccess.h"
+#include "networklayer/contract/IInterfaceTable.h"
 
 
 /**
  * Gives access to IInterfaceTable.
  */
-class INET_API InterfaceTableAccess : public ModuleAccess<IInterfaceTable>
+class INET_API InterfaceTableAccess : public inet::ModuleAccess<inet::IInterfaceTable>
 {
     public:
-        InterfaceTableAccess() : ModuleAccess<IInterfaceTable>("interfaceTable") {}
+        InterfaceTableAccess() : inet::ModuleAccess<inet::IInterfaceTable>("interfaceTable") {}
 };
 
 #endif

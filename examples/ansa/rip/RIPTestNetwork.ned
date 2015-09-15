@@ -19,11 +19,11 @@
 
 package inet.examples.ansa.rip;
 
-import inet.nodes.ethernet.Eth100M;
+import inet.node.ethernet.Eth100M;
 import inet.ansa.applications.rip.RIPRouter;
 import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.world.scenario.ScenarioManager;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network RIPTestNetwork
 {

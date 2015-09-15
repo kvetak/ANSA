@@ -18,7 +18,7 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include "LISPCore.h"
+#include "ansa/networklayer/lisp/LISPCore.h"
 
 Define_Module(LISPCore);
 
@@ -115,7 +115,7 @@ void LISPCore::parseMapServerConfig(cXMLElement* config) {
 }
 
 LISPServerEntry* LISPCore::findServerEntryByAddress(ServerAddresses& list,
-        IPvXAddress& addr) {
+        inet::L3Address& addr) {
     for (ServerItem it = list.begin(); it != list.end(); ++it ) {
         if (it->getAddress() == addr)
             return &(*it);
@@ -245,7 +245,7 @@ void LISPCore::scheduleRlocProbing() {
         rlocprobe->setPreviousNonce(DEFAULT_NONCE_VAL);
         rlocprobe->setRetryCount(0);
         //Shift IPv6 probes +30 seconds from IPv4 ones
-        if (ciscoStartupDelays && it->getEids().back().first.getEidAddr().isIPv6()) {
+        if (ciscoStartupDelays && (it->getEids().back().first.getEidAddr().getType()==inet::L3Address::IPv6)) {
             scheduleAt(simTime() + DEFAULT_PROBETIMER_VAL/2, rlocprobe);
         }
         //IPv4 or otherwise IPv4/IPv6 probes start at the same time
@@ -271,7 +271,7 @@ void LISPCore::scheduleCacheSync(const LISPEidPrefix& eidPref) {
     }
 }
 
-void LISPCore::scheduleWholeCacheSync(IPvXAddress& ssmember) {
+void LISPCore::scheduleWholeCacheSync(inet::L3Address& ssmember) {
     Enter_Method("scheduleWholeCacheSync()");
     //IF map-cache content changes AND cache synchronization is enabled THEN
     if (MapCache->getSyncType() != LISPMapCache::SYNC_NONE) {
@@ -289,14 +289,14 @@ void LISPCore::initPointers() {
     // access to the routing and interface table
     //Rt = AnsaRoutingTableAccess().get();
     // local MapCache
-    MapCache = ModuleAccess<LISPMapCache>(MAPCACHE_MOD).get();
+    MapCache = inet::ModuleAccess<LISPMapCache>(MAPCACHE_MOD).get();
     //MapDb
-    MapDb = ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
+    MapDb = inet::ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
 
     //MapDb pointer when needed
     bool hasSiteDB = this->getParentModule()->par(HASSITEDB_PAR).boolValue();
     if (hasSiteDB)
-        SiteDb = ModuleAccess<LISPSiteDatabase>(SITEDB_MOD).get();
+        SiteDb = inet::ModuleAccess<LISPSiteDatabase>(SITEDB_MOD).get();
 
     //If node is acting as MS and it has not MapDB then throw error
     if (!hasSiteDB && (mapServerV4 || mapServerV6)) {
@@ -309,7 +309,7 @@ void LISPCore::initPointers() {
     }
 
     //MsgLogger pointer
-    MsgLog = ModuleAccess<LISPMsgLogger>(LOGGER_MOD).get();
+    MsgLog = inet::ModuleAccess<LISPMsgLogger>(LOGGER_MOD).get();
     if (!MsgLog)
         EV << "MsgLogger not available, omitting logging." << endl;
 }
@@ -608,16 +608,16 @@ void LISPCore::handleCotrol(cMessage* msg) {
 }
 
 void LISPCore::handleDataEncaps(cMessage* msg) {
-    IPvXAddress dstAddr, srcAddr;
+    inet::L3Address dstAddr, srcAddr;
     //IPv4 packet
     if (msg->arrivedOn(IPV4_GATEIN)) {
-        IPv4Datagram* datagram = check_and_cast<IPv4Datagram*>(msg);
+        inet::IPv4Datagram* datagram = check_and_cast<inet::IPv4Datagram*>(msg);
         srcAddr = datagram->getSrcAddress();
         dstAddr = datagram->getDestAddress();
     }
     //IPv6 packet
     else if (msg->arrivedOn(IPV6_GATEIN)) {
-        IPv6Datagram* datagram = check_and_cast<IPv6Datagram*>(msg);
+        inet::IPv6Datagram* datagram = check_and_cast<inet::IPv6Datagram*>(msg);
         srcAddr = datagram->getSrcAddress();
         dstAddr = datagram->getDestAddress();
     }
@@ -653,17 +653,17 @@ void LISPCore::handleDataDecaps(cMessage* msg) {
     if (dynamic_cast<LISPHeader*>(msg)) {
         /*
         LISPHeader* lidata = check_and_cast<LISPHeader*>(msg);
-        UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lidata->getControlInfo());
-        IPvXAddress dst = udpi->getDestAddr();
+        inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lidata->getControlInfo());
+        inet::L3Address dst = udpi->getDestAddr();
         MsgLog->addMsg(lidata, LISPMsgEntry::DATA, dst, false);
         */
 
         cPacket* pip = ((cPacket*)msg)->decapsulate();
 
         //Ordinary encapsulated data message that should be forwarded by this ETR
-        if (dynamic_cast<IPv4Datagram*>(pip))
+        if (dynamic_cast<inet::IPv4Datagram*>(pip))
             send(pip, IPV4_GATEOUT);
-        else if (dynamic_cast<IPv6Datagram*>(pip))
+        else if (dynamic_cast<inet::IPv6Datagram*>(pip))
             send(pip, IPV6_GATEOUT);
 
         updateStats(PACKET_FORWARD);
@@ -735,8 +735,8 @@ void LISPCore::sendMapRegister(LISPServerEntry& se) {
 
 void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
     //Log
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmreg->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
     MsgLog->addMsg(lmreg, LISPMsgEntry::REGISTER, src, false);
 
     //Check whether device has SiteDB
@@ -762,15 +762,15 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
     LISPSite* si = SiteDb->findSiteInfoByKey(authData);
 
     if (si) {
-        UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
-        IPvXAddress src = udpi->getSrcAddr();
+        inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmreg->getControlInfo());
+        inet::L3Address src = udpi->getSrcAddr();
 
         LISPSiteRecord* srec = SiteDb->updateSiteEtr(si, src, lmreg->getProxyBit());
 
         for (TRecordCItem it = lmreg->getRecords().begin(); it != lmreg->getRecords().end(); ++it) {
             //Trying to store EID from AF that server does not operate
-            if ( (it->EidPrefix.getEidAddr().isIPv6()  && !mapServerV6)
-                 || (!it->EidPrefix.getEidAddr().isIPv6() && !mapServerV4) ) {
+            if ( ((it->EidPrefix.getEidAddr().getType()==inet::L3Address::IPv6)  && !mapServerV6)
+                 || (!(it->EidPrefix.getEidAddr().getType()==inet::L3Address::IPv6)  && !mapServerV4) ) {
                 EV << "Map-register contains EID " << it->EidPrefix << " with AF not recognized by map server!" << endl;
                 continue;
             }
@@ -792,8 +792,8 @@ void LISPCore::receiveMapRegister(LISPMapRegister* lmreg) {
 void LISPCore::sendMapNotify(LISPMapRegister* lmreg) {
     LISPMapNotify* lmnot = new LISPMapNotify(NOTIFY_MSG);
 
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreg->getControlInfo());
-    IPvXAddress dst = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmreg->getControlInfo());
+    inet::L3Address dst = udpi->getSrcAddr();
 
     //Copy Map-Register content onto Map-Notify
     lmnot->setNonce(lmreg->getNonce());
@@ -815,8 +815,8 @@ void LISPCore::sendMapNotify(LISPMapRegister* lmreg) {
 
 void LISPCore::receiveMapNotify(LISPMapNotify* lmnot) {
     //Retrieve source IP address
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmnot->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmnot->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
 
     //Log
     MsgLog->addMsg(lmnot, LISPMsgEntry::NOTIFY, src, false);
@@ -830,8 +830,8 @@ void LISPCore::receiveMapNotify(LISPMapNotify* lmnot) {
             //TODO: Instead of parsing some simple check that every ETR was replied
             /*
              * FIXME: Vesely - Testing purposes MapRequest generation
-            IPvXAddress src = IPvXAddress("192.168.2.1");
-            IPvXAddress dst = IPvXAddress("192.168.1.1");
+            inet::L3Address src = inet::L3Address("192.168.2.1");
+            inet::L3Address dst = inet::L3Address("192.168.1.1");
 
             LISPRequestTimer* reqtim = new LISPRequestTimer(REQUEST_TIMER);
             reqtim->setSrcEid(src);
@@ -873,7 +873,7 @@ TRecord LISPCore::prepareTRecord(LISPMapEntry* me, bool Abit, LISPCommon::EAct a
     return rec;
 }
 
-unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddress& dstEid) {
+unsigned long LISPCore::sendEncapsulatedMapRequest(inet::L3Address& srcEid, inet::L3Address& dstEid) {
     LISPMapRequest* lmreq = new LISPMapRequest(REQUEST_MSG);
 
     //General fields
@@ -896,7 +896,7 @@ unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddr
 
         //Multiple Recs in Map-Request, TODO: Vesely - Currently it is not supported yet
         lmreq->setRecordCount(1);
-        LISPEidPrefix irec = dstEid.isIPv6() ? LISPEidPrefix(dstEid, 128) : LISPEidPrefix(dstEid, 32);
+        LISPEidPrefix irec = (dstEid.getType()==inet::L3Address::IPv6) ? LISPEidPrefix(dstEid, 128) : LISPEidPrefix(dstEid, 32);
         lmreq->getRecs().push_back(irec);
 
         //Map-Reply Record
@@ -913,34 +913,34 @@ unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddr
     lmreq->setByteLength(countPacketSize(lmreq));
 
     //Create UDP Envelope
-    UDPPacket* udpPacket = new UDPPacket(REQUEST_MSG);
-    udpPacket->setByteLength(UDP_HEADER_BYTES);
+    inet::UDPPacket* udpPacket = new inet::UDPPacket(REQUEST_MSG);
+    udpPacket->setByteLength(inet::UDP_HEADER_BYTES);
     udpPacket->encapsulate(lmreq);
     udpPacket->setSourcePort(CONTROL_PORT_VAL);
     udpPacket->setDestinationPort(CONTROL_PORT_VAL);
 
     cPacket* middle;
     //Create IPv6 envelope
-    if (srcEid.isIPv6() && dstEid.isIPv6()) {
-        IPv6Datagram *datagram = new IPv6Datagram(REQUEST_MSG);
-        datagram->setByteLength(IPv6_HEADER_BYTES);
+    if ((srcEid.getType()==inet::L3Address::IPv6) && (dstEid.getType()==inet::L3Address::IPv6)) {
+        inet::IPv6Datagram *datagram = new inet::IPv6Datagram(REQUEST_MSG);
+        datagram->setByteLength(inet::IPv6_HEADER_BYTES);
         datagram->encapsulate(udpPacket);
-        datagram->setSrcAddress(srcEid.get6());
-        datagram->setDestAddress(dstEid.get6());
+        datagram->setSrcAddress(srcEid.toIPv6());
+        datagram->setDestAddress(dstEid.toIPv6());
         datagram->setHopLimit(DEFAULT_IPTTL_VAL);
-        datagram->setTransportProtocol(IP_PROT_UDP);
+        datagram->setTransportProtocol(inet::IP_PROT_UDP);
         middle = datagram;
 
     }
     //...else IPv4 envelope
     else {
-        IPv4Datagram *datagram = new IPv4Datagram(REQUEST_MSG);
-        datagram->setByteLength(IP_HEADER_BYTES);
+        inet::IPv4Datagram *datagram = new inet::IPv4Datagram(REQUEST_MSG);
+        datagram->setByteLength(inet::IP_HEADER_BYTES);
         datagram->encapsulate(udpPacket);
-        datagram->setSrcAddress(srcEid.get4());
-        datagram->setDestAddress(dstEid.get4());
+        datagram->setSrcAddress(srcEid.toIPv4());
+        datagram->setDestAddress(dstEid.toIPv4());
         datagram->setTimeToLive(DEFAULT_IPTTL_VAL);
-        datagram->setTransportProtocol(IP_PROT_UDP);
+        datagram->setTransportProtocol(inet::IP_PROT_UDP);
         middle = datagram;
     }
 
@@ -957,13 +957,13 @@ unsigned long LISPCore::sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddr
 }
 
 void LISPCore::receiveMapRequest(LISPMapRequest* lmreq) {
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmreq->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
     //Log
     MsgLog->addMsg(lmreq, LISPMsgEntry::REQUEST, src, true);
 
     //Process as MR-MS
-    if ( ( this->mapResolverV4 && !src.isIPv6() ) || ( this->mapResolverV6 && src.isIPv6() ) ) {
+    if ( ( this->mapResolverV4 && !(src.getType()==inet::L3Address::IPv6) ) || ( this->mapResolverV6 && (src.getType()==inet::L3Address::IPv6) ) ) {
 
         //Parse request(s)
         //Vesely - Current version should contain single request, thus FOR has 1 iteration
@@ -984,7 +984,7 @@ void LISPCore::receiveMapRequest(LISPMapRequest* lmreq) {
                 bool proxyReply = false;
                 for (EtrItem jt = res.begin(); jt != res.end(); ++jt) {
                     //TODO: Vesely - Is it okay to erase ETR servers which have different AFI?
-                    if ( (*jt).getServerEntry().getAddress().isIPv6() xor src.isIPv6() )
+                    if ( ((*jt).getServerEntry().getAddress().getType()==inet::L3Address::IPv6) xor (src.getType()==inet::L3Address::IPv6) )
                         res.erase(jt++);
                     //Filter only the best EID from each ETR TODO: Vesely - What if I want more less precise mapping answers?
                     LISPMapEntry me = *( (*jt).lookupMapEntry( it->getEidAddr() ) );
@@ -1059,7 +1059,7 @@ void LISPCore::delegateMapRequest(LISPMapRequest* lmreq, Etrs& etrs) {
     LISPMapRequest* copy = lmreq->dup();
 
     //Log and send
-    IPvXAddress dst = etrs.front().getServerEntry().getAddress();
+    inet::L3Address dst = etrs.front().getServerEntry().getAddress();
     MsgLog->addMsg(lmreq, LISPMsgEntry::REQUEST, dst, true);
     controlTraf.sendTo(copy, dst, CONTROL_PORT_VAL);
 }
@@ -1090,12 +1090,12 @@ void LISPCore::sendMapReplyFromMs(LISPMapRequest* lmreq, Etrs& etrs) {
 
     //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
     //Log and send
-    IPvXAddress dst = lmreq->getItrRlocs().front().address;
+    inet::L3Address dst = lmreq->getItrRlocs().front().address;
     MsgLog->addMsg(lmrep, LISPMsgEntry::REPLY, dst, true);
     controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
 }
 
-void LISPCore::sendMapReplyFromEtr(LISPMapRequest* lmreq, const IPvXAddress& eidAddress) {
+void LISPCore::sendMapReplyFromEtr(LISPMapRequest* lmreq, const inet::L3Address& eidAddress) {
     LISPMapReply* lmrep = new LISPMapReply(REPLY_MSG);
 
     //General fields
@@ -1119,14 +1119,14 @@ void LISPCore::sendMapReplyFromEtr(LISPMapRequest* lmreq, const IPvXAddress& eid
 
     //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
     //Log and send
-    IPvXAddress dst = lmreq->getItrRlocs().front().address;
+    inet::L3Address dst = lmreq->getItrRlocs().front().address;
     MsgLog->addMsg(lmrep, LISPMsgEntry::REPLY, dst, true);
     controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
 }
 
 void LISPCore::receiveMapReply(LISPMapReply* lmrep) {
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmrep->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmrep->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
     //Log
     MsgLog->addMsg(lmrep, LISPMsgEntry::REPLY, src, false);
     if ( !MsgLog->findMsg(LISPMsgEntry::REQUEST, lmrep->getNonce()) ) {
@@ -1170,12 +1170,12 @@ void LISPCore::sendNegativeMapReply(LISPMapRequest* lmreq, const LISPEidPrefix& 
 
     //Respond to !!!first!!! ITR-RLOC in Map-Request message TODO: Vesely - Is this ok?
     //Log and send
-    IPvXAddress dst = lmreq->getItrRlocs().front().address;
+    inet::L3Address dst = lmreq->getItrRlocs().front().address;
     MsgLog->addMsg(lmrep, LISPMsgEntry::NEGATIVE_REPLY, dst, true);
     controlTraf.sendTo(lmrep, dst, CONTROL_PORT_VAL);
 }
 
-unsigned long LISPCore::sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid) {
+unsigned long LISPCore::sendRlocProbe(inet::L3Address& dstLoc, LISPEidPrefix& eid) {
     LISPMapRequest* lmreq = new LISPMapRequest(REQUESTPROBE_MSG);
     lmreq->setDisplayString("b=15,15,oval,green,green,0");
 
@@ -1229,9 +1229,9 @@ unsigned long LISPCore::sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid) {
 }
 
 void LISPCore::receiveRlocProbe(LISPMapRequest* lmreq) {
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
-    IPvXAddress dst = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmreq->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
+    inet::L3Address dst = udpi->getSrcAddr();
     //Log
     MsgLog->addMsg(lmreq, LISPMsgEntry::RLOC_PROBE, src, false);
 
@@ -1265,8 +1265,8 @@ void LISPCore::sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask) {
     lmrep->setDisplayString("b=15,15,oval,lightgreen,lightgreen,0");
 
     //Retrieve source IP address
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmreq->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmreq->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
 
     //EV << "Bitmask is: " << bitmask;
     lmrep->setNonce(lmreq->getNonce());
@@ -1301,8 +1301,8 @@ void LISPCore::sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask) {
 }
 
 void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lmrep->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lmrep->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
     //Log
     MsgLog->addMsg(lmrep, LISPMsgEntry::RLOC_PROBE_REPLY, src, false);
     if ( !MsgLog->findMsg(LISPMsgEntry::RLOC_PROBE, lmrep->getNonce()) ) {
@@ -1328,7 +1328,7 @@ void LISPCore::receiveRlocProbeReply(LISPMapReply* lmrep) {
     }
 }
 
-unsigned long LISPCore::sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eidPref) {
+unsigned long LISPCore::sendCacheSync(inet::L3Address& setmember, LISPEidPrefix& eidPref) {
     //EV << "sendCacheSync() - " << setmember << "   EID: " << eidPref << endl;
     //if (eidPref.getEidAddr().isUnspecified()) {
     //    EV << "Cannot send CacheSync containing default MapCache record!" << endl;
@@ -1383,8 +1383,8 @@ unsigned long LISPCore::sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eid
 
 void LISPCore::receiveCacheSync(LISPCacheSync* lcs) {
     //Log
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lcs->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lcs->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
     MsgLog->addMsg(lcs, LISPMsgEntry::CACHE_SYNC, src, false);
 
     //Check for 0 records
@@ -1426,8 +1426,8 @@ void LISPCore::receiveCacheSync(LISPCacheSync* lcs) {
 void LISPCore::sendCacheSyncAck(LISPCacheSync* lcs) {
     LISPCacheSyncAck* lca = new LISPCacheSyncAck(CACHESYNCACK_MSG);
 
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lcs->getControlInfo());
-    IPvXAddress dst = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lcs->getControlInfo());
+    inet::L3Address dst = udpi->getSrcAddr();
 
     //Copy Map-Register content onto Map-Notify
     lca->setNonce(lcs->getNonce());
@@ -1447,8 +1447,8 @@ void LISPCore::sendCacheSyncAck(LISPCacheSync* lcs) {
 
 void LISPCore::receiveCacheSyncAck(LISPCacheSyncAck* lca) {
     //Retrieve source IP address
-    UDPDataIndication* udpi = check_and_cast<UDPDataIndication*>(lca->getControlInfo());
-    IPvXAddress src = udpi->getSrcAddr();
+    inet::UDPDataIndication* udpi = check_and_cast<inet::UDPDataIndication*>(lca->getControlInfo());
+    inet::L3Address src = udpi->getSrcAddr();
 
     //Log
     MsgLog->addMsg(lca, LISPMsgEntry::CACHE_SYNC_ACK, src, false);
@@ -1461,7 +1461,7 @@ void LISPCore::receiveCacheSyncAck(LISPCacheSyncAck* lca) {
         EV << "Unsolicited Cache-Sync-Ack received!" << endl;
 }
 
-bool LISPCore::isOneOfMyEids(IPvXAddress addr) {
+bool LISPCore::isOneOfMyEids(inet::L3Address addr) {
     return MapDb->isOneOfMyEids(addr) ;
 }
 
@@ -1497,7 +1497,7 @@ void LISPCore::updateStats(bool flag) {
     updateDisplayString();
 }
 
-unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAddress dstaddr, LISPMapEntry* mapentry, cPacket* packet) {
+unsigned long LISPCore::sendEncapsulatedDataMessage(inet::L3Address srcaddr, inet::L3Address dstaddr, LISPMapEntry* mapentry, cPacket* packet) {
 
     //LISPHeader
     LISPHeader* lidata = new LISPHeader(DATA_MSG);
@@ -1521,7 +1521,7 @@ unsigned long LISPCore::sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAdd
     lidata->encapsulate(packet);
 
     //Retrieve the best RLOC
-    IPvXAddress rlocaddr = mapentry->getBestUnicastLocator()->getRlocAddr();
+    inet::L3Address rlocaddr = mapentry->getBestUnicastLocator()->getRlocAddr();
     //EV << "Chosen RLOC addr is>" << rlocaddr << endl;
 
     //Data packets are omitted from msg logging

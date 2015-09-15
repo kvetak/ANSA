@@ -5,7 +5,7 @@
  *      Author: aranel
  */
 
-#include "stpXMLparser.h"
+#include "ansa/linklayer/switch/stp/stpXMLparser.h"
 
 stpXMLparser::stpXMLparser(Stp * _stp) {
 	stp = _stp;

@@ -21,10 +21,10 @@ cplusplus {{
 #error Please install libavcodec, libavformat, libavutil or disable 'VoIPStream' feature.
 #endif
 
-#include "ByteArrayMessage.h"
+#include "inet/common/ByteArray.h"
 }};
 
-class ByteArrayMessage;
+namespace inet;
 
 //
 // For the type field of VoIPPacket
@@ -35,10 +35,12 @@ enum VoIPStreamPacketType
     SILENCE = 2;
 }
 
+class noncobject ByteArray;
+
 //
 // Packet type used by VoIPSourceApp and VoIPSinkApp
 //
-packet VoIPStreamPacket extends ByteArrayMessage
+packet VoIPStreamPacket
 {
     int type @enum(VoIPStreamPacketType);
 
@@ -47,6 +49,7 @@ packet VoIPStreamPacket extends ByteArrayMessage
     int sampleRate;
     int transmitBitrate;
     int samplesPerPacket;
+    ByteArray bytes;
 
     uint16_t seqNo; // packet sequence number
     uint32_t timeStamp; // increased with every packet
