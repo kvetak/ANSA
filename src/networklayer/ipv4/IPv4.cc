@@ -125,11 +125,13 @@ void IPv4::endService(cPacket *msg)
         // dispatch ARP packets to ARP
         handleARP((ARPPacket *)msg);
     }
-    else
+    else if(dynamic_cast<IPv4Datagram*>(msg))
     {
         IPv4Datagram *dgram = check_and_cast<IPv4Datagram *>(msg);
         InterfaceEntry *fromIE = getSourceInterfaceFrom(dgram);
         handlePacketFromNetwork(dgram, fromIE);
+    }else{
+      delete msg;
     }
 
     if (ev.isGUI())
