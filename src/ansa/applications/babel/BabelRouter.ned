@@ -25,7 +25,7 @@ import inet.ansa.applications.babel.BabelMain;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
-import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
+import inet.ansa.applications.babel.BabelDeviceConfigurator;
 import inet.applications.IPingApp;
 import inet.applications.pingapp.PingApp;
 import inet.transport.IUDP;
@@ -128,13 +128,21 @@ module BabelRouter
                 @display("p=298,46");
         }
 
-        deviceConfigurator: DeviceConfigurator {
+        babelDeviceConfigurator: BabelDeviceConfigurator {
             parameters:
                 @display("p=189,46");
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
         }
+        
+        //deviceConfigurator: DeviceConfigurator {
+        //    parameters:
+        //        @display("p=189,46");
+        //        deviceId = deviceId;
+        //        deviceType = "Router";
+        //        configFile = configFile;
+        //}
 
         ipSplitter: IpSplitter {
             parameters:

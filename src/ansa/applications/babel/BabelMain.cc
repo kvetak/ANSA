@@ -21,7 +21,8 @@
 
 #include "BabelMain.h"
 #include "InterfaceTableAccess.h"
-#include "deviceConfigurator.h"
+//#include "deviceConfigurator.h"
+#include "BabelDeviceConfigurator.h"
 #include "IPv6InterfaceData.h"
 #include "UDPControlInfo_m.h"
 #include <cmath>
@@ -69,8 +70,11 @@ void BabelMain::initialize(int stage)
     //bit = BabelInterfaceTableAccess().get();
     //bsend = BabelSenderAccess().get();
 
-    DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    BabelDeviceConfigurator *conf = ModuleAccess<BabelDeviceConfigurator>("babelDeviceConfigurator").get();
     conf->loadBabelConfig(this);
+
+    //DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    //conf->loadBabelConfig(this);
 
     WATCH(routerId);
     WATCH(seqno);
