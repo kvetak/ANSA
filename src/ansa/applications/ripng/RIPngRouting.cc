@@ -23,7 +23,7 @@
 
 #include "RIPngRouting.h"
 #include "RIPngProcess.h"
-#include "deviceConfigurator.h"
+#include "RIPngDeviceConfigurator.h"
 
 Define_Module(RIPngRouting);
 
@@ -619,7 +619,7 @@ void RIPngRouting::initialize(int stage)
     nb->subscribe(this, NF_IPv6_ROUTE_DELETED);
 
     // read the RIPng process configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    RIPngDeviceConfigurator *devConf = ModuleAccess<RIPngDeviceConfigurator>("RIPngDeviceConfigurator").get();
     devConf->loadRIPngConfig(this);
 
     WATCH_PTRVECTOR(processes);

@@ -25,7 +25,6 @@
 #include "IPv6ControlInfo.h"
 
 #include "RIPngRouting.h"
-#include "deviceConfigurator.h"
 
 std::ostream& operator<<(std::ostream& os, const RIPng::RoutingTableEntry& e)
 {

@@ -24,7 +24,9 @@ import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
-import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
+//import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
+import inet.ansa.applications.rip.RIPDeviceConfigurator;
+import inet.ansa.applications.ripng.RIPngDeviceConfigurator;
 import inet.transport.IUDP;
 import inet.util.PcapRecorder;
 import inet.networklayer.common.InterfaceTable;
@@ -39,14 +41,14 @@ import inet.nodes.ipv6.NetworkLayer6;
 
 module ANSA_RouterRIPDual
 {
-    parameters:     
+    parameters:
         @display("i=abstract/router;bgb=699,569");
         @node;
         @labels(node,ethernet-node,wireless-node);
-        
-        string ethType = default("EthernetInterface"); 
-		int numOfLoopbacks = default(0);
-		
+
+        string ethType = default("EthernetInterface");
+        int numOfLoopbacks = default(0);
+
         int numUdpApps = default(2);  // 2 UDPapps for RIP and RIPng
         bool hasUdp = default(numUdpApps>0);
         string udpType = default(firstAvailable("UDP","UDP_None"));
@@ -127,7 +129,7 @@ module ANSA_RouterRIPDual
 
         pcapRecorder[numPcapRecorders]: PcapRecorder {
             parameters:
-                @display("p=75,302,r,10;i=abstract/cache;is=n");
+                @display("p=75,350,r,10;i=abstract/cache;is=n");
         }
 
 
@@ -136,9 +138,17 @@ module ANSA_RouterRIPDual
                 @display("p=75,125");
         }
 
-        deviceConfigurator: DeviceConfigurator {
+        RIPngDeviceConfigurator: RIPngDeviceConfigurator {
             parameters:
                 @display("p=75,208");
+                deviceId = deviceId;
+                deviceType = "Router";
+                configFile = configFile;
+        }
+
+        RIPDeviceConfigurator: RIPDeviceConfigurator {
+            parameters:
+                @display("p=75,272");
                 deviceId = deviceId;
                 deviceType = "Router";
                 configFile = configFile;
