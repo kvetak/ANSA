@@ -81,7 +81,6 @@ class BabelDeviceConfigurator : public cSimpleModule  {
       //xmlParser
       static bool Str2Int(int *retValue, const char *str);
       static bool Str2Bool(bool *ret, const char *str);
-      static bool Str2Bool(const char *str);
 
       static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, const char *configFile);
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);

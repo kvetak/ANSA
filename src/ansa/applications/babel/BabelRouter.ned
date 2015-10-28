@@ -135,14 +135,6 @@ module BabelRouter
                 deviceType = "Router";
                 configFile = configFile;
         }
-        
-        //deviceConfigurator: DeviceConfigurator {
-        //    parameters:
-        //        @display("p=189,46");
-        //        deviceId = deviceId;
-        //        deviceType = "Router";
-        //        configFile = configFile;
-        //}
 
         ipSplitter: IpSplitter {
             parameters:

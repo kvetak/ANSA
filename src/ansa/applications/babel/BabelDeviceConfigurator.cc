@@ -1375,34 +1375,6 @@ bool BabelDeviceConfigurator::Str2Int(int *retValue, const char *str){
    return true;
 }
 
-bool BabelDeviceConfigurator::Str2Bool(const char *str)
-{
-    if (  (strcmp(str, "yes") == 0)
-       || (strcmp(str, "enabled") == 0)
-       || (strcmp(str, "enable") == 0)
-       || (strcmp(str, "on") == 0)
-       || (strcmp(str, "true") == 0))
-        return true;
-
-    if (  (strcmp(str, "no") == 0)
-       || (strcmp(str, "disabled") == 0)
-       || (strcmp(str, "disable") == 0)
-       || (strcmp(str, "off") == 0)
-       || (strcmp(str, "false") == 0))
-        return false;
-
-    int value;
-    if (Str2Int(&value, str)){
-       if (value == 0)
-          return false;
-       else
-           return true;
-    }
-
-    return false;
-
-}
-
 bool BabelDeviceConfigurator::Str2Bool(bool *ret, const char *str){
 
    if (  (strcmp(str, "yes") == 0)
