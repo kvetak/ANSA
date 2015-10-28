@@ -15,7 +15,6 @@
 
 package inet.examples.ansa.vrrpv2.Simple;
 
-import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
 import inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter;
 import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
 import inet.nodes.ethernet.Eth100M;

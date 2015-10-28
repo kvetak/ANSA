@@ -23,7 +23,7 @@
 
 #include "VirtualForwarder.h"
 #include "deviceConfigurator.h"
-#include "VRRPv2VirtualRouter.h"
+#include "VRRPv2DeviceConfigurator.h"
 
 Define_Module(VRRPv2);
 
@@ -56,7 +56,7 @@ void VRRPv2::initialize(int stage)
     updateDisplayString();
 
     // read the VRRP groups configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    VRRPv2DeviceConfigurator *devConf = ModuleAccess<VRRPv2DeviceConfigurator>("VRRPv2DeviceConfigurator").get();
     devConf->loadVRRPv2Config(this);
 
 
