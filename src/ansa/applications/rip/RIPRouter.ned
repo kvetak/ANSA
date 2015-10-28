@@ -23,7 +23,7 @@ package inet.ansa.applications.rip;
 import inet.ansa.networklayer.ipSplitter.IpSplitter;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.applications.rip.RIPRouting;
-import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
+import inet.ansa.applications.rip.RIPDeviceConfigurator;
 import inet.nodes.inet.NetworkLayer;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
@@ -48,7 +48,7 @@ module RIPRouter
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
 
-        deviceConfigurator: DeviceConfigurator {
+        RIPDeviceConfigurator: RIPDeviceConfigurator {
             @display("p=53,113");
             deviceId = deviceId;
             deviceType = "Router";

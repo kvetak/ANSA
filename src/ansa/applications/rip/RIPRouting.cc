@@ -24,7 +24,7 @@
 #include "IPv4InterfaceData.h"
 #include "IPv4ControlInfo.h"
 
-#include "deviceConfigurator.h"
+#include "RIPDeviceConfigurator.h"
 
 Define_Module(RIPRouting);
 
@@ -1075,7 +1075,7 @@ void RIPRouting::initialize(int stage)
     deviceId = par("deviceId");
 
     // read the RIP process configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+    RIPDeviceConfigurator *devConf = ModuleAccess<RIPDeviceConfigurator>("RIPDeviceConfigurator").get();
     devConf->loadRIPConfig(this);
 
     //Multicast must be enabled on every interface because of globalSocket.joinMulticastGroup(RIPAddress, -1);
