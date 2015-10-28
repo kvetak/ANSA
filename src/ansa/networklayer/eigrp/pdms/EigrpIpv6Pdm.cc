@@ -24,7 +24,7 @@ topology table.
 #include <algorithm>
 
 #include "IPv6ControlInfo.h"
-#include "deviceConfigurator.h"
+#include "EigrpDeviceConfigurator.h"
 #include "EigrpPrint.h"
 #include "EigrpIpv6Pdm.h"
 #include "IPv6Address.h"
@@ -89,7 +89,7 @@ void EigrpIpv6Pdm::initialize(int stage)
         this->eigrpMetric = new EigrpMetricHelper();
 
         // Load configuration of EIGRP
-        DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        EigrpDeviceConfigurator *conf = ModuleAccess<EigrpDeviceConfigurator>("eigrpDeviceConfigurator").get();
         conf->loadEigrpIPv6Config(this);
 
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());

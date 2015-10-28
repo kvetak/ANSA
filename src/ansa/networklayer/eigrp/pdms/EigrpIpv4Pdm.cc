@@ -23,7 +23,7 @@ topology table.
 #include <algorithm>
 
 #include "IPv4ControlInfo.h"
-#include "deviceConfigurator.h"
+#include "EigrpDeviceConfigurator.h"
 #include "AnsaIPv4Route.h"
 #include "EigrpPrint.h"
 #include "EigrpIpv4Pdm.h"
@@ -88,7 +88,7 @@ void EigrpIpv4Pdm::initialize(int stage)
         this->eigrpTt->setRouterId(rid);
 
         // Load configuration of EIGRP
-        DeviceConfigurator *conf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        EigrpDeviceConfigurator *conf = ModuleAccess<EigrpDeviceConfigurator>("eigrpDeviceConfigurator").get();
         conf->loadEigrpIPv4Config(this);
 
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
