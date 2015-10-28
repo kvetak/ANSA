@@ -22,7 +22,7 @@
 
 
 #include "InterfaceTableAccess.h"
-#include "VRRPv2DeviceConfigurator.h"
+#include "deviceConfigurator.h"
 #include "TCPIPchecksum.h"
 #include "IPv4ControlInfo.h"
 
@@ -79,7 +79,7 @@ void VRRPv2VirtualRouter::initialize(int stage)
     loadDefaultConfig();
 
     //load the Virtual Router process configuration
-    VRRPv2DeviceConfigurator *devConf = ModuleAccess<VRRPv2DeviceConfigurator>("VRRPv2DeviceConfigurator").get();
+    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
     devConf->loadVRRPv2VirtualRouterConfig(this);
     EV << hostname << "(vrrp-configuration)# " << showConfig() << endl;
 
