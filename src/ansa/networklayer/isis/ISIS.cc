@@ -28,7 +28,7 @@
 #include "ISIS.h"
 #include "TRILL.h"
 
-#include "deviceConfigurator.h"
+#include "ISISDeviceConfigurator.h"
 #include "TRILLInterfaceData.h"
 
 Define_Module(ISIS);
@@ -312,7 +312,7 @@ void ISIS::initialize(int stage)
 
     if (stage == 3)
     {
-        DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        ISISDeviceConfigurator *devConf = ModuleAccess<ISISDeviceConfigurator>("ISISDeviceConfigurator").get();
         devConf->loadISISConfig(this, this->mode);
 
 
