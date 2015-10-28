@@ -24,7 +24,7 @@ package inet.ansa.networklayer.pim;
 
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.networklayer.pim.pim;
-import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
+import inet.ansa.networklayer.pim.PIMDeviceConfigurator;
 import inet.ansa.nodes.inet.ansaNetworkLayer;
 import inet.linklayer.loopback.LoopbackInterface;
 import inet.networklayer.common.InterfaceTable;
@@ -51,7 +51,7 @@ module PIMRouter
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
 
-        deviceConfigurator: DeviceConfigurator {
+        PIMDeviceConfigurator: PIMDeviceConfigurator {
             @display("p=80,113");
             deviceId = deviceId;
             deviceType = "Router";

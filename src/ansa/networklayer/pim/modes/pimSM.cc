@@ -21,7 +21,7 @@
  */
 
 #include "pimSM.h"
-#include "deviceConfigurator.h"
+#include "PIMDeviceConfigurator.h"
 
 
 Define_Module(pimSM);
@@ -97,7 +97,7 @@ void pimSM::initialize(int stage)
         nb->subscribe(this, NF_IPv4_NEW_IGMP_REMOVED_PIMSM);
         nb->subscribe(this, NF_IPv4_DATA_ON_RPF_PIMSM);
 
-        DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        PIMDeviceConfigurator *devConf = ModuleAccess<PIMDeviceConfigurator>("PIMDeviceConfigurator").get();
         devConf->loadPimGlobalConfig(this);
 
     }
