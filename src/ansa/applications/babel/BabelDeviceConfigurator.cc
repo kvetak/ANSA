@@ -325,7 +325,7 @@ void BabelDeviceConfigurator::loadStaticRouting(cXMLElement* route)
             delete ANSAStaticRoute;
         }
 
-        route = xmlParser::GetStaticRoute(route, NULL);
+        route = GetStaticRoute(route, NULL);
     }
 }
 

@@ -25,7 +25,6 @@
 #include "PimInterfaceTable.h"
 #include "IPv4InterfaceData.h"
 
-#include "RIPRouting.h"
 #include "pimSM.h"
 
 class PIMDeviceConfigurator : public cSimpleModule

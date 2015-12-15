@@ -1069,7 +1069,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
         return;
     }
 
-    cXMLElement *isisRouting = xmlParser::GetIsisRouting(device);
+    cXMLElement *isisRouting = GetIsisRouting(device);
     if (isisRouting == NULL)
     {
         if(isisMode == ISIS::L3_ISIS_MODE){

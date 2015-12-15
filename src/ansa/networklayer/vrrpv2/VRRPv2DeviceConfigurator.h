@@ -23,11 +23,10 @@
 #include "AnsaRoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "IPv4InterfaceData.h"
+#include "RoutingTableAccess.h"
 
 #include "VRRPv2.h"
 #include "VRRPv2VirtualRouter.h"
-
-#include "pimSM.h"
 
 class VRRPv2DeviceConfigurator : public cSimpleModule  {
 

@@ -30,6 +30,7 @@ topology table.
 #include "IPv6Address.h"
 
 #include "ANSARoutingTable6.h"
+#include "ANSARoutingTable6Access.h"
 
 
 

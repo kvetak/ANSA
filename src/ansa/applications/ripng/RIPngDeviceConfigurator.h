@@ -24,9 +24,9 @@
 #include "AnsaRoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "IPv4InterfaceData.h"
+#include "RoutingTableAccess.h"
 
 #include "RIPngRouting.h"
-#include "pimSM.h"
 
 /**
  * TODO - Generated class

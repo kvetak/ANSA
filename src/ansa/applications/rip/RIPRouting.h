@@ -33,7 +33,6 @@
 
 #include "RIPInterface.h"
 #include "RIPRoutingTableEntry.h"
-#include "xmlParser.h"
 
 #include "UDPControlInfo_m.h"
 #include "RIPMessage_m.h"

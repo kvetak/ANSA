@@ -850,7 +850,7 @@ void BabelMain::setRouterId(uint32_t h, uint32_t l)
  */
 BabelTimer *BabelMain::createTimer(short kind, void *context, const char *suffix, bool autodelete)
 {
-    string timerstr = timerT::toStr(kind);
+    std::string timerstr = timerT::toStr(kind);
     if(suffix)
     {
         timerstr += "-";

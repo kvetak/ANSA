@@ -18,21 +18,19 @@
 
 
 #include <omnetpp.h>
+#include <algorithm>
 
 #include "RoutingTable6Access.h"
 #include "InterfaceTableAccess.h"
 #include "AnsaRoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "IPv4InterfaceData.h"
+#include "ANSARoutingTable6Access.h"
+#include "RoutingTableAccess.h"
 
 #include "BabelMain.h"
 #include "BabelInterfaceTable.h"
 #include "IBabelCostComputation.h"
-
-
-#include "RIPngRouting.h"
-#include "RIPRouting.h"
-#include "pimSM.h"
 
 class BabelDeviceConfigurator : public cSimpleModule  {
 

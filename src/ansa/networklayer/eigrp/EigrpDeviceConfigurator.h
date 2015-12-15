@@ -21,14 +21,12 @@
 #include "RoutingTable6Access.h"
 #include "InterfaceTableAccess.h"
 #include "AnsaRoutingTableAccess.h"
+#include "RoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "IPv4InterfaceData.h"
 
 #include "IEigrpModule.h"
 #include "EigrpNetworkTable.h"
-
-#include "RIPngRouting.h"
-#include "pimSM.h"
 
 class EigrpDeviceConfigurator : public cSimpleModule
 {

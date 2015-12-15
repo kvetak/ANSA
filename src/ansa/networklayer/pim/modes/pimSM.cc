@@ -746,7 +746,7 @@ void pimSM::processPrunePacket(PIMJoinPrune *pkt, IPv4Address multGroup, Encoded
     if (encodedAddr.R && encodedAddr.W && encodedAddr.S)    // (*,G) Prune
     {
         EV << "(*,G) Prune processing" << endl;
-        vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);
+        std::vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(multGroup);
         for (unsigned int j = 0; j < routes.size(); j++)
         {
             AnsaIPv4MulticastRoute *route = routes[j];
@@ -1600,7 +1600,7 @@ void pimSM::removeMulticastReciever(addRemoveAddr *members)
     for (unsigned int i = 0; i < remMembers.size(); i++)
     {
         EV << "Removed multicast address: " << remMembers[i] << endl;
-        vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(remMembers[i]);
+        std::vector<AnsaIPv4MulticastRoute*> routes = rt->getRouteFor(remMembers[i]);
 
         // there is no route for group in the table
         if (routes.size() == 0)
