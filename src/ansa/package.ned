@@ -1,0 +1,4 @@
+package ansa;
+
+@namespace(inet);
+
