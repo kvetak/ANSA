@@ -15,6 +15,7 @@
 
 package ansa.node;
 
+import ansa.routing.babel.BabelRouting;
 import inet.applications.contract.IUDPApp;
 import inet.routing.contract.IBGPRouting;
 import inet.routing.contract.IIPRouting;
@@ -57,6 +58,7 @@ module ANSA_Router extends ANSA_NodeBase
             parameters:
                 @display("p=418,80");
         }
+        
         udp: <udpType> like IUDP if hasRIP {
             @display("p=472,180");
         }
