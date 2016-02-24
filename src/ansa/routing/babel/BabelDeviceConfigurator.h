@@ -39,15 +39,15 @@ class BabelDeviceConfigurator
 {
 
    private:
-      const char *deviceType;
-      const char *deviceId;
-      const char *configFile;
-      cXMLElement *device;
+      const char *deviceId = nullptr;
+      const char *deviceType = nullptr;
+      const char *configFile = nullptr;
+      cXMLElement *device = nullptr;
 
    protected:
-      IInterfaceTable *ift;
-      IRoutingTable *rt6;
-      IRoutingTable *rt;
+      IInterfaceTable *ift = nullptr;
+      //IRoutingTable *rt6;
+      //IRoutingTable *rt;
       //PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
       //virtual int numInitStages() const {return 11;}
@@ -80,6 +80,9 @@ class BabelDeviceConfigurator
 //      void loadPimInterfaceConfig(cXMLElement *iface);
 
    public:
+      BabelDeviceConfigurator();
+      BabelDeviceConfigurator(const char* devId, const char* devType, const char* confFile, IInterfaceTable* intf);
+      virtual ~BabelDeviceConfigurator();
       //xmlParser
       static bool Str2Int(int *retValue, const char *str);
       static bool Str2Bool(bool *ret, const char *str);

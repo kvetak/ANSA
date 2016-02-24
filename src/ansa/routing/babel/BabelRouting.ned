@@ -22,19 +22,33 @@ import ansa.routing.babel.BabelMain;
 import ansa.routing.babel.cost.CostKoutofj;
 import ansa.routing.babel.cost.CostEtx;
 
+import inet.applications.contract.IUDPApp;
 
-module BabelRouting
+
+module BabelRouting like IUDPApp
 {
     parameters:
-
         @display("i=block/network2;bgb=205,215,white");
+        int udpPort = default(6696);
+        string deviceId = default("");
+        string deviceType = default("Router");
+        string configFile = default("config.xml");
+        
+       	string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;
+        
     gates:
         input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);
+        output udpOut @labels(UDPControlInfo/down);        
 
     submodules:
         babelMain: BabelMain {
             @display("p=50,50;i=block/circle");
+            interfaceTableModule = interfaceTableModule;
+            routingTableModule = routingTableModule;
+            deviceId = deviceId;
+            deviceType = deviceType;
+            configFile = configFile;
         }
         cost2outof3: CostKoutofj {
             @display("p=50,150;");

@@ -47,7 +47,7 @@
 
 namespace inet {
 
-class BabelMain : public cListener, public cSimpleModule
+class INET_API BabelMain : protected cListener, public cSimpleModule
 //, public INotifiable
 {
   protected:
@@ -55,7 +55,7 @@ class BabelMain : public cListener, public cSimpleModule
     uint16_t seqno;         ///< Router's sequence number
     int port;               ///< UDP port number
 
-
+    cModule *host = nullptr;    // the host module that owns this module
     InterfaceEntry *mainInterface;
     UDPSocket *socket4mcast;                ///< IPv4 socket for receive multicast
     UDPSocket *socket6mcast;                ///< IPv6 socket for receive multicast

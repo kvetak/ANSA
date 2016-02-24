@@ -62,45 +62,56 @@ void BabelMain::initialize(int stage)
     ev << "Generated sequence number: " << seqno << endl;
 #endif
 
-    //set main interface
-    //ift = InterfaceTableAccess().get();
-    ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
-    setMainInterface();
-    socket4mcast = createSocket();
-    socket4mcast->bind(defval::MCASTG4, port);
-    socket4mcast->joinMulticastGroup(defval::MCASTG4, mainInterface->getInterfaceId());
-    socket6mcast = createSocket();
-    socket6mcast->bind(defval::MCASTG6, port);
-    socket4mcast->joinMulticastGroup(defval::MCASTG6, mainInterface->getInterfaceId());
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        host = getParentModule()->getParentModule();
+        //set main interface
+        //ift = InterfaceTableAccess().get();
+        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+        setMainInterface();
 
-    //rt4 = AnsaRoutingTableAccess().get();
-    //rt6 = ANSARoutingTable6Access().get();
-    rt4 = check_and_cast<IPv4RoutingTable*>(getModuleFromPar<IPv4RoutingTable>(par("routingTableModule"), this)->getSubmodule("ipv4"));
-    rt6 = check_and_cast<IPv6RoutingTable*>(getModuleFromPar<IPv6RoutingTable>(par("routingTableModule"), this)->getSubmodule("ipv6"));
+        socket4mcast = createSocket();
+        socket4mcast->setMulticastLoop(false);
+        socket4mcast->bind(defval::MCASTG4, port);
+        socket6mcast = createSocket();
+        socket6mcast->setMulticastLoop(false);
+        socket6mcast->bind(defval::MCASTG6, port);
+        for (int k = 0; k < ift->getNumInterfaces(); ++k) {
+                InterfaceEntry *ie = ift->getInterface(k);
+            if (ie->isMulticast() && !ie->isLoopback()) {
+                socket4mcast->joinMulticastGroup(defval::MCASTG4, ie->getInterfaceId());
+                socket6mcast->joinMulticastGroup(defval::MCASTG6, ie->getInterfaceId());
+            }
+        }
 
-    //bit = BabelInterfaceTableAccess().get();
-    //bsend = BabelSenderAccess().get();
+        //rt4 = AnsaRoutingTableAccess().get();
+        //rt6 = ANSARoutingTable6Access().get();
+        rt4 = check_and_cast<IPv4RoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("ipv4"));
+        rt6 = check_and_cast<IPv6RoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("ipv6"));
 
-    //BabelDeviceConfigurator *conf = ModuleAccess<BabelDeviceConfigurator>("babelDeviceConfigurator").get();
-    BabelDeviceConfigurator *conf = new BabelDeviceConfigurator();
-    conf->loadBabelConfig(this);
+        //bit = BabelInterfaceTableAccess().get();
+        //bsend = BabelSenderAccess().get();
 
-    WATCH(routerId);
-    WATCH(seqno);
-    WATCH_PTRVECTOR(buffers);
-    WATCH_PTRVECTOR(ackwait);
-    WATCH_PTRVECTOR(bit.getInterfaces());
-    WATCH_PTRVECTOR(bnt.getNeighbours());
-    WATCH_PTRVECTOR(btt.getRoutes());
-    WATCH_PTRVECTOR(bst.getSources());
-    WATCH_PTRVECTOR(bpsrt.getRequests());
+        //BabelDeviceConfigurator *conf = ModuleAccess<BabelDeviceConfigurator>("babelDeviceConfigurator").get();
+        BabelDeviceConfigurator *conf = new BabelDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
+        conf->loadBabelConfig(this);
+
+        WATCH(routerId);
+        WATCH(seqno);
+        WATCH_PTRVECTOR(buffers);
+        WATCH_PTRVECTOR(ackwait);
+        WATCH_PTRVECTOR(bit.getInterfaces());
+        WATCH_PTRVECTOR(bnt.getNeighbours());
+        WATCH_PTRVECTOR(btt.getRoutes());
+        WATCH_PTRVECTOR(bst.getSources());
+        WATCH_PTRVECTOR(bpsrt.getRequests());
 
 
-    buffgc = createTimer(timerT::BUFFERGC, NULL, NULL, false);
-    resetTimer(buffgc, defval::BUFFER_GC_INTERVAL);
+        buffgc = createTimer(timerT::BUFFERGC, NULL, NULL, false);
+        resetTimer(buffgc, defval::BUFFER_GC_INTERVAL);
 
-    //nb = NotificationBoardAccess().get();
-    //nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+        //nb = NotificationBoardAccess().get();
+        host->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+    }
 
 }
 

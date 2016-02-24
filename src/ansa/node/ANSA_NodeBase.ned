@@ -52,9 +52,10 @@ module ANSA_NodeBase
         bool multicastForwarding = default(false);
         string energyStorageType = default("");
         string energyGeneratorType = default("");
-        routingTable.forwarding = forwarding;
         
+        routingTable.forwarding = forwarding;        
         routingTable.multicastForwarding = multicastForwarding;   // for IPv4, IPv6, Generic
+        
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
         *.energySourceModule = default(energyStorageType != "" ? absPath(".energyStorage") : "");

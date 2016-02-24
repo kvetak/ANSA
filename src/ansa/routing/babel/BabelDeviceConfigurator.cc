@@ -27,7 +27,7 @@ void BabelDeviceConfigurator::initialize(int stage){
         configFile = par("configFile");
 
         device = GetDevice(deviceType, deviceId, configFile);
-        if (device == NULL)
+        if (device == nullptr)
         {
             ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             return;
@@ -38,7 +38,7 @@ void BabelDeviceConfigurator::initialize(int stage){
         // get table of interfaces of this device
 
         ift = InterfaceTableAccess().get();
-        if (ift == NULL)
+        if (ift == nullptr)
             throw cRuntimeError("InterfaceTable not found");
 
         //////////////////////////
@@ -46,7 +46,7 @@ void BabelDeviceConfigurator::initialize(int stage){
         //////////////////////////
         // get routing table of this device
         rt = RoutingTableAccess().getIfExists();
-        if (rt != NULL)
+        if (rt != nullptr)
         {
             for (int i=0; i<ift->getNumInterfaces(); ++i)
             {
@@ -54,17 +54,17 @@ void BabelDeviceConfigurator::initialize(int stage){
                 rt->configureInterfaceForIPv4(ift->getInterface(i));
             }
 
-            if (device != NULL)
+            if (device != nullptr)
             {
-                cXMLElement *iface = GetInterface(NULL, device);
-                if (iface == NULL)
+                cXMLElement *iface = GetInterface(nullptr, device);
+                if (iface == nullptr)
                     ev << "No IPv4 interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
                 else
                     loadInterfaceConfig(iface);
 
                 // configure static routing
-                cXMLElement *route = GetStaticRoute(NULL, device);
-                if (route == NULL && strcmp(deviceType, "Router") == 0)
+                cXMLElement *route = GetStaticRoute(nullptr, device);
+                if (route == nullptr && strcmp(deviceType, "Router") == 0)
                     ev << "No IPv4 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
                 else
                     loadStaticRouting(route);
@@ -76,25 +76,25 @@ void BabelDeviceConfigurator::initialize(int stage){
         //////////////////////////
         // get routing table of this device
         rt6 = RoutingTable6Access().getIfExists();
-        if (rt6 != NULL)
+        if (rt6 != nullptr)
         {
             // RFC 4861 specifies that sending RAs should be disabled by default
             for (int i = 0; i < ift->getNumInterfaces(); i++)
                 ift->getInterface(i)->ipv6Data()->setAdvSendAdvertisements(false);
 
-            if (device == NULL)
+            if (device == nullptr)
                 return;
 
             // configure interfaces - addressing
-            cXMLElement *iface = GetInterface(NULL, device);
-            if (iface == NULL)
+            cXMLElement *iface = GetInterface(nullptr, device);
+            if (iface == nullptr)
                 ev << "No IPv6 interface configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             else
                 loadInterfaceConfig6(iface);
 
             // configure static routing
-            cXMLElement *route = GetStaticRoute6(NULL, device);
-            if (route == NULL && strcmp(deviceType, "Router") == 0)
+            cXMLElement *route = GetStaticRoute6(nullptr, device);
+            if (route == nullptr && strcmp(deviceType, "Router") == 0)
                 ev << "No IPv6 static routing configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             else
                 loadStaticRouting6(route);
@@ -103,7 +103,7 @@ void BabelDeviceConfigurator::initialize(int stage){
             // interface. This needs to be performed when all IPv6 addresses are already assigned
             // and there are matching records in the routing table.
             cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter6");
-            if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+            if (gateway == nullptr && strcmp(deviceType, "Host") == 0)
                 ev << "No IPv6 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
             else
                 loadDefaultRouter6(gateway);
@@ -111,19 +111,19 @@ void BabelDeviceConfigurator::initialize(int stage){
     }
     else if(stage == 3)
     {
-        if (device == NULL)
+        if (device == nullptr)
             return;
 
         if (isMulticastEnabled(device))
         {
             // get PIM interface table of this device
             pimIft = PimInterfaceTableAccess().get();
-            if (pimIft == NULL)
+            if (pimIft == nullptr)
                 throw cRuntimeError("PimInterfaces not found");
 
             // fill pim interfaces table from config file
-            cXMLElement *iface = GetInterface(NULL, device);
-            if (iface != NULL)
+            cXMLElement *iface = GetInterface(nullptr, device);
+            if (iface != nullptr)
             {
                 loadPimInterfaceConfig(iface);
 
@@ -140,7 +140,7 @@ void BabelDeviceConfigurator::initialize(int stage){
     }
     else if(stage == 4)
     {
-        if (device == NULL)
+        if (device == nullptr)
             return;
 
         //////////////////////////
@@ -152,9 +152,9 @@ void BabelDeviceConfigurator::initialize(int stage){
         // ANSARoutingTable: dir. conn. routes are added by deviceConfigurator in stage 2
         // "inet" RoutingTable: dir. conn. routes are added by initialite() in the RoutingTable stage 3
         cXMLElement *gateway = device->getFirstChildWithTag("DefaultRouter");
-        if (gateway == NULL && strcmp(deviceType, "Host") == 0)
+        if (gateway == nullptr && strcmp(deviceType, "Host") == 0)
             ev << "No IPv4 default-router configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
-        else if (gateway != NULL ) {
+        else if (gateway != nullptr ) {
             loadDefaultRouter(gateway);
             gateway = gateway->getNextSiblingWithTag("DefaultRouter");
             if (gateway)
@@ -165,10 +165,10 @@ void BabelDeviceConfigurator::initialize(int stage){
     }
     else if(stage == 10)
     {
-        if(device == NULL)
+        if(device == nullptr)
             return;
 
-        cXMLElement *iface = GetInterface(NULL, device);
+        cXMLElement *iface = GetInterface(nullptr, device);
         addIPv4MulticastGroups(iface);
         addIPv6MulticastGroups(iface);
     }
@@ -183,11 +183,11 @@ void BabelDeviceConfigurator::handleMessage(cMessage *msg){
 void BabelDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
-   while (route != NULL){
+   while (route != nullptr){
 
       // get network address string with prefix
       cXMLElement *network = route->getFirstChildWithTag("NetworkAddress");
-      if (network == NULL){
+      if (network == nullptr){
          throw cRuntimeError("IPv6 network address for static route not set");
       }
 
@@ -205,7 +205,7 @@ void BabelDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
       // get IPv6 next hop address string without prefix
       cXMLElement *nextHop = route->getFirstChildWithTag("NextHopAddress");
-      if (nextHop == NULL){
+      if (nextHop == nullptr){
          throw cRuntimeError("IPv6 next hop address for static route not set");
       }
 
@@ -215,7 +215,7 @@ void BabelDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // optinal argument - administrative distance is set to 1 if not set
       cXMLElement *distance = route->getFirstChildWithTag("AdministrativeDistance");
       int adminDistance = 1;
-      if (distance != NULL){
+      if (distance != nullptr){
          if (!Str2Int(&adminDistance, distance->getNodeValue())){
             adminDistance = 0;
          }
@@ -231,7 +231,7 @@ void BabelDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
       // browse connected routes and find one that matches next hop address
       const IPv6Route *record = rt6->doLongestPrefixMatch(addrNextHop);
-      if (record == NULL){
+      if (record == nullptr){
          ev << "No directly connected route for IPv6 next hop address " << addrNextHop << " found" << endl;
       }else{
          // add static route
@@ -240,7 +240,7 @@ void BabelDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
 
       // get next static route
-      route = GetStaticRoute6(route, NULL);
+      route = GetStaticRoute6(route, nullptr);
    }
 }
 
@@ -248,7 +248,7 @@ void BabelDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
-    while (route != NULL)
+    while (route != nullptr)
     {
         ANSAIPv4Route *ANSAStaticRoute = new ANSAIPv4Route();
 
@@ -268,7 +268,7 @@ void BabelDeviceConfigurator::loadStaticRouting(cXMLElement* route)
             else if (nodeName=="NextHopAddress")
             {
                 ANSAStaticRoute->setGateway(IPv4Address((*routeElemIt)->getNodeValue()));
-                InterfaceEntry *intf=NULL;
+                InterfaceEntry *intf=nullptr;
                 for (int i=0; i<ift->getNumInterfaces(); i++)
                 {
                     intf = ift->getInterface(i);
@@ -304,7 +304,7 @@ void BabelDeviceConfigurator::loadStaticRouting(cXMLElement* route)
         ANSAStaticRoute->setAdminDist(ANSAIPv4Route::dDirectlyConnected);
 
         //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add IPv4Route
-        if (ANSArt != NULL)
+        if (ANSArt != nullptr)
         {
             rt->addRoute(ANSAStaticRoute);
         }
@@ -322,7 +322,7 @@ void BabelDeviceConfigurator::loadStaticRouting(cXMLElement* route)
             delete ANSAStaticRoute;
         }
 
-        route = GetStaticRoute(route, NULL);
+        route = GetStaticRoute(route, nullptr);
     }
 }
 */
@@ -332,9 +332,16 @@ void BabelDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
 void BabelDeviceConfigurator::loadBabelConfig(BabelMain *bMain)
 {
-    ASSERT(bMain != NULL);
+    ASSERT(bMain != nullptr);
 
-    if (device == NULL)
+    device = GetDevice(deviceType, deviceId, configFile);
+    if (device == nullptr)
+    {
+        ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        return;
+    }
+
+    if (device == nullptr)
     {
        EV << "No configuration found for this device (" << deviceType <<
                " id=" << deviceId << ")" << endl;
@@ -348,16 +355,16 @@ void BabelDeviceConfigurator::loadBabelConfig(BabelMain *bMain)
 
 void BabelDeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelMain *bMain)
 {
-    ASSERT(bMain != NULL);
-    ASSERT(device != NULL);
+    ASSERT(bMain != nullptr);
+    ASSERT(device != nullptr);
 
-    cXMLElement *processElem = NULL;
-    cXMLElement *routerIdElem = NULL;
-    cXMLElement *portElem = NULL;
+    cXMLElement *processElem = nullptr;
+    cXMLElement *routerIdElem = nullptr;
+    cXMLElement *portElem = nullptr;
 
     //Check if Babel routing is enabled
     processElem = GetBabelProcess(device);
-    if (processElem == NULL)
+    if (processElem == nullptr)
     {// Babel is not enabled
         EV << "No Babel configuration found." << endl;
         return;
@@ -365,7 +372,7 @@ void BabelDeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelM
 
     //Find explicitly specified routerId, or generate EUI64
     routerIdElem = processElem->getFirstChildWithTag("RouterId");
-    if(routerIdElem == NULL)
+    if(routerIdElem == nullptr)
     {// not found -> generate
         bMain->generateRouterId();
 
@@ -388,10 +395,10 @@ void BabelDeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelM
             size_t colon3 = ridstr.find(':', colon2 + 1);
 
             //convert strings to uint
-            uint16_t ridpart0 = strtoul(ridstr.substr(0, colon1).c_str(), NULL, 16);
-            uint16_t ridpart1 = strtoul(ridstr.substr(colon1 + 1, colon2 - (colon1 + 1)).c_str(), NULL, 16);
-            uint16_t ridpart2 = strtoul(ridstr.substr(colon2 + 1, colon3 - (colon2 + 1)).c_str(), NULL, 16);
-            uint16_t ridpart3 = strtoul(ridstr.substr(colon3 + 1).c_str(), NULL, 16);
+            uint16_t ridpart0 = strtoul(ridstr.substr(0, colon1).c_str(), nullptr, 16);
+            uint16_t ridpart1 = strtoul(ridstr.substr(colon1 + 1, colon2 - (colon1 + 1)).c_str(), nullptr, 16);
+            uint16_t ridpart2 = strtoul(ridstr.substr(colon2 + 1, colon3 - (colon2 + 1)).c_str(), nullptr, 16);
+            uint16_t ridpart3 = strtoul(ridstr.substr(colon3 + 1).c_str(), nullptr, 16);
 
             //convert to uint32_t
             bMain->setRouterId((ridpart0<<16) | ridpart1, (ridpart2<<16) | ridpart3);
@@ -407,7 +414,7 @@ void BabelDeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelM
 
     //Find explicitly specified port
     portElem = processElem->getFirstChildWithTag("Port");
-    if(portElem != NULL)
+    if(portElem != nullptr)
     {
         int porttmp;
         bool success = Str2Int(&porttmp, portElem->getNodeValue());
@@ -426,25 +433,25 @@ void BabelDeviceConfigurator::loadBabelProcessConfig(cXMLElement *device, BabelM
 
 void BabelDeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, BabelMain *bMain)
 {
-    cXMLElement *ifaceElem = NULL;
-    cXMLElement *babelIfaceElem = NULL;
+    cXMLElement *ifaceElem = nullptr;
+    cXMLElement *babelIfaceElem = nullptr;
 
-    if ((ifaceElem = GetInterface(ifaceElem, device)) == NULL)
+    if ((ifaceElem = GetInterface(ifaceElem, device)) == nullptr)
         return;
 
-    while (ifaceElem != NULL)
+    while (ifaceElem != nullptr)
     {
         // Get interface ID
         const char *ifaceName = ifaceElem->getAttribute("name");
         InterfaceEntry *iface = ift->getInterfaceByName(ifaceName);
-        if (iface == NULL){
+        if (iface == nullptr){
             throw cRuntimeError("No interface called %s on this device", ifaceName);
         }
 
 
         babelIfaceElem = ifaceElem->getFirstChildWithTag("Babel");
 
-        if (babelIfaceElem != NULL)
+        if (babelIfaceElem != nullptr)
         {// interface contains babel configuration
 
             BabelInterface *bIface = new BabelInterface(iface);
@@ -452,15 +459,15 @@ void BabelDeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, Bab
             //remember local prefixes
             cXMLElement *ipv4AddrElem = ifaceElem->getFirstChildWithTag("IPAddress");
             cXMLElement *ipv4MaskElem = ifaceElem->getFirstChildWithTag("Mask");
-            if(ipv4AddrElem != NULL && ipv4MaskElem != NULL)
+            if(ipv4AddrElem != nullptr && ipv4MaskElem != nullptr)
             {
                 bIface->addDirectlyConn(Babel::netPrefix<L3Address>(IPv4Address(ipv4AddrElem->getNodeValue()), IPv4Address(ipv4MaskElem->getNodeValue()).getNetmaskLength()));
             }
 
 
             // for each IPv6 address - save info about network prefix
-            cXMLElement *ipv6AddrElem = GetIPv6Address(NULL, ifaceElem);
-            while (ipv6AddrElem != NULL)
+            cXMLElement *ipv6AddrElem = GetIPv6Address(nullptr, ifaceElem);
+            while (ipv6AddrElem != nullptr)
             {
                 // get address string
                 string addrFull = ipv6AddrElem->getNodeValue();
@@ -482,7 +489,7 @@ void BabelDeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, Bab
                     bIface->addDirectlyConn(Babel::netPrefix<L3Address>(ipv6, prefixLen));
                 }
                 // get next IPv6 address
-                ipv6AddrElem = GetIPv6Address(ipv6AddrElem, NULL);
+                ipv6AddrElem = GetIPv6Address(ipv6AddrElem, nullptr);
             }
 
 
@@ -516,8 +523,26 @@ void BabelDeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, Bab
             }
         }
 
-        ifaceElem = GetInterface(ifaceElem, NULL);
+        ifaceElem = GetInterface(ifaceElem, nullptr);
     }
+}
+
+BabelDeviceConfigurator::BabelDeviceConfigurator() {
+    deviceId = nullptr;
+    deviceType = nullptr;
+    configFile = nullptr;
+}
+
+BabelDeviceConfigurator::BabelDeviceConfigurator(const char* devId,
+        const char* devType, const char* confFile, IInterfaceTable* intf)
+: deviceId(devId), deviceType(devType), configFile(confFile), ift(intf)
+{
+}
+
+BabelDeviceConfigurator::~BabelDeviceConfigurator() {
+    deviceId = nullptr;
+    deviceType = nullptr;
+    configFile = nullptr;
 }
 
 void BabelDeviceConfigurator::loadBabelInterface(cXMLElement *ifaceElem, BabelMain *bMain, BabelInterface *bIface)
@@ -705,22 +730,22 @@ void BabelDeviceConfigurator::loadBabelInterface(cXMLElement *ifaceElem, BabelMa
 void BabelDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
-   while (iface != NULL){
+   while (iface != nullptr){
 
       // get interface name and find matching interface in interface table
       const char *ifaceName = iface->getAttribute("name");
       InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
-      if (ie == NULL){
+      if (ie == nullptr){
          //throw cRuntimeError("No interface called %s on this device", ifaceName);
          EV << "No interface called %s on this device" << ifaceName << endl;
          // get next interface
-         iface = GetInterface(iface, NULL);
+         iface = GetInterface(iface, nullptr);
          continue;
       }
 
       // for each IPv6 address
-      cXMLElement *addr = GetIPv6Address(NULL, iface);
-      while (addr != NULL){
+      cXMLElement *addr = GetIPv6Address(nullptr, iface);
+      while (addr != nullptr){
 
          // get address string
          string addrFull = addr->getNodeValue();
@@ -744,7 +769,7 @@ void BabelDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
          rt6->addStaticRoute(ipv6.getPrefix(prefixLen), prefixLen, ie->getInterfaceId(), IPv6Address::UNSPECIFIED_ADDRESS, 0);
 
          // get next IPv6 address
-         addr = GetIPv6Address(addr, NULL);
+         addr = GetIPv6Address(addr, nullptr);
       }
 
       setInterfaceParamters(ie); //TODO - verify
@@ -784,8 +809,8 @@ void BabelDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       }
 
       // for each IPv6 prefix
-      cXMLElement *prefix = GetAdvPrefix(NULL, iface);
-      while (prefix != NULL){
+      cXMLElement *prefix = GetAdvPrefix(nullptr, iface);
+      while (prefix != nullptr){
 
          // get address string
          string addrFull = prefix->getNodeValue();
@@ -804,7 +829,7 @@ void BabelDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
          int value;
 
          value = 2592000;
-         if (validLifeTime != NULL){
+         if (validLifeTime != nullptr){
             if (!Str2Int(&value, validLifeTime)){
                throw cRuntimeError("Unable to parse valid lifetime %s on IPv6 prefix %s on interface %s", validLifeTime, addrFull.c_str(), ifaceName);
             }
@@ -812,7 +837,7 @@ void BabelDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
          }
 
          value = 604800;
-         if (preferredLifeTime != NULL){
+         if (preferredLifeTime != nullptr){
             if (!Str2Int(&value, preferredLifeTime)){
                throw cRuntimeError("Unable to parse preferred lifetime %s on IPv6 prefix %s on interface %s", preferredLifeTime, addrFull.c_str(), ifaceName);
             }
@@ -826,20 +851,20 @@ void BabelDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
          ie->ipv6Data()->addAdvPrefix(advPrefix);
 
          // get next IPv6 address
-         prefix = GetAdvPrefix(prefix, NULL);
+         prefix = GetAdvPrefix(prefix, nullptr);
       }
 
 
 
       // get next interface
-      iface = GetInterface(iface, NULL);
+      iface = GetInterface(iface, nullptr);
    }
 }
 
 
 void BabelDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
-   if (gateway == NULL)
+   if (gateway == nullptr)
       return;
 
    // get default-router address string (without prefix)
@@ -848,7 +873,7 @@ void BabelDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    // browse routing table to find the best route to default-router
    const IPv6Route *route = rt6->doLongestPrefixMatch(nextHop);
-   if (route == NULL){
+   if (route == nullptr){
       return;
    }
 
@@ -860,11 +885,11 @@ void BabelDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 void BabelDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 {
     // for each interface node
-    while (iface != NULL)
+    while (iface != nullptr)
     {
         // get PIM node
         cXMLElement* pimNode = iface->getElementByPath("Pim");
-        if (pimNode == NULL)
+        if (pimNode == nullptr)
           break;                //FIXME it is break ok?
 
         // create new PIM interface
@@ -875,7 +900,7 @@ void BabelDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 
         // get PIM mode for interface
         cXMLElement* pimMode = pimNode->getElementByPath("Mode");
-        if (pimMode == NULL)
+        if (pimMode == nullptr)
           continue;
 
         const char *mode = pimMode->getNodeValue();
@@ -889,12 +914,12 @@ void BabelDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 
         // get PIM mode for interface
         cXMLElement* stateRefreshMode = pimNode->getElementByPath("StateRefresh");
-        if (stateRefreshMode != NULL)
+        if (stateRefreshMode != nullptr)
         {
             EV << "Nasel State Refresh" << endl;
             // will router send state refresh msgs?
             cXMLElement* origMode = stateRefreshMode->getElementByPath("OriginationInterval");
-            if (origMode != NULL)
+            if (origMode != nullptr)
             {
                 EV << "Nasel Orig" << endl;
                 newentry.setSR(true);
@@ -924,14 +949,14 @@ void BabelDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         pimIft->addInterface(newentry);
 
         // get next interface
-        iface = GetInterface(iface, NULL);
+        iface = GetInterface(iface, nullptr);
     }
 }
 
 
 void BabelDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 {
-    if (gateway == NULL)
+    if (gateway == nullptr)
       return;
 
     // get default-router address string (without prefix)
@@ -940,13 +965,13 @@ void BabelDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 
     // browse routing table to find the best route to default-router
     const IPv4Route *route = rt->findBestMatchingRoute(nextHop);
-    if (route == NULL)
+    if (route == nullptr)
       return;
 
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
     //To the ANSA RoutingTable add ANSAIPv4Route, to the inet RoutingTable add IPv4Route
-    if (ANSArt != NULL)
+    if (ANSArt != nullptr)
     {
         ANSAIPv4Route *defaultRoute = new ANSAIPv4Route();
         defaultRoute->setSource(IPv4Route::MANUAL);
@@ -975,11 +1000,11 @@ void BabelDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 
 void BabelDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 {
-    while (iface != NULL)
+    while (iface != nullptr)
     {
         // get MCastGroups Node
         cXMLElement* MCastGroupsNode = iface->getElementByPath("MCastGroups");
-        if (MCastGroupsNode == NULL)
+        if (MCastGroupsNode == nullptr)
         {
             break;
         }
@@ -998,18 +1023,18 @@ void BabelDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
         }
         if(empty)
             EV << "No Multicast Groups found for this interface " << iface->getAttribute("name") << " on this device: " <<  deviceType << " id=" << deviceId << endl;
-        iface = GetInterface(iface, NULL);
+        iface = GetInterface(iface, nullptr);
     }
 
 }
 
 void BabelDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 {
-    while (iface != NULL)
+    while (iface != nullptr)
     {
         // get MCastGroups Node
         cXMLElement* MCastGroupsNode6 = iface->getElementByPath("MCastGroups6");
-        if (MCastGroupsNode6 == NULL)
+        if (MCastGroupsNode6 == nullptr)
         {
             break;
         }
@@ -1028,7 +1053,7 @@ void BabelDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
         }
         if(empty)
             EV << "No Multicast6 Groups found for this interface " << iface->getAttribute("name") << " on this device: " <<  deviceType << " id=" << deviceId << endl;
-        iface = GetInterface(iface, NULL);
+        iface = GetInterface(iface, nullptr);
     }
 
 }
@@ -1038,16 +1063,16 @@ void BabelDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
-    while (iface != NULL)
+    while (iface != nullptr)
     {
         // get interface name and find matching interface in interface table
         const char *ifaceName = iface->getAttribute("name");
         InterfaceEntry *ie = ift->getInterfaceByName(ifaceName);
 
-        if (ie == NULL) {
+        if (ie == nullptr) {
            //throw cRuntimeError("No interface called %s on this device", ifaceName);
             EV << "No interface " << ifaceName << "called on this device" << endl;
-            iface = GetInterface(iface, NULL);
+            iface = GetInterface(iface, nullptr);
             continue;
         }
 
@@ -1103,7 +1128,7 @@ void BabelDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
         //Add directly connected routes to the ANSA rt version only
         //--- inet routing table adds dir. conn. routes in its own initialize method
-        if (ANSArt != NULL)
+        if (ANSArt != nullptr)
         {
             ANSAIPv4Route *route = new ANSAIPv4Route();
             route->setSource(IPv4Route::IFACENETMASK);
@@ -1118,7 +1143,7 @@ void BabelDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
                 ANSArt->addRoute(route);
         }
 
-        iface = GetInterface(iface, NULL);
+        iface = GetInterface(iface, nullptr);
     }
 }
 
@@ -1130,10 +1155,10 @@ void BabelDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
     cGate *outGw;
     cChannel *link;
 
-    if (host != NULL && gateId != -1)
+    if (host != nullptr && gateId != -1)
     { // Get link type
         outGw = host->gate(gateId);
-        if ((link = outGw->getChannel()) == NULL)
+        if ((link = outGw->getChannel()) == nullptr)
             return;
 
         const char *linkType = link->getChannelType()->getName();
@@ -1173,14 +1198,14 @@ cXMLElement * BabelDeviceConfigurator::GetDevice(const char *deviceType, const c
 
    // get access to the XML file (if exists)
    cXMLElement *config = ev.getXMLDocument(configFile);
-   if (config == NULL)
-      return NULL;
+   if (config == nullptr)
+      return nullptr;
 
 
    string type = deviceType;
    string id = deviceId;
    if (type.empty() || id.empty())
-      return NULL;
+      return nullptr;
 
    // create string that describes device node, such as <Router id="10.0.0.1">
    string deviceNodePath = type;
@@ -1198,19 +1223,19 @@ cXMLElement * BabelDeviceConfigurator::GetDevice(const char *deviceType, const c
 cXMLElement * BabelDeviceConfigurator::GetInterface(cXMLElement *iface, cXMLElement *device){
 
    // initial call of the method - find <Interfaces> and get first "Interface" node
-   if (device != NULL){
+   if (device != nullptr){
 
       cXMLElement *ifaces = device->getFirstChildWithTag("Interfaces");
-      if (ifaces == NULL)
-         return NULL;
+      if (ifaces == nullptr)
+         return nullptr;
 
       iface = ifaces->getFirstChildWithTag("Interface");
 
    // repeated call - get another "Interface" sibling node
-   }else if (iface != NULL){
+   }else if (iface != nullptr){
       iface = iface->getNextSiblingWithTag("Interface");
    }else{
-      iface = NULL;
+      iface = nullptr;
    }
 
    return iface;
@@ -1219,14 +1244,14 @@ cXMLElement * BabelDeviceConfigurator::GetInterface(cXMLElement *iface, cXMLElem
 cXMLElement * BabelDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
 
    // initial call of the method - get first "IPv6Address" child node
-   if (iface != NULL){
+   if (iface != nullptr){
       addr = iface->getFirstChildWithTag("IPv6Address");
 
    // repeated call - get another "IPv6Address" sibling node
-   }else if (addr != NULL){
+   }else if (addr != nullptr){
       addr = addr->getNextSiblingWithTag("IPv6Address");
    }else{
-      addr = NULL;
+      addr = nullptr;
    }
 
    return addr;
@@ -1235,14 +1260,14 @@ cXMLElement * BabelDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLEle
 cXMLElement * BabelDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
    // initial call of the method - get first "NdpAdvPrefix" child node
-   if (iface != NULL){
+   if (iface != nullptr){
       prefix = iface->getFirstChildWithTag("NdpAdvPrefix");
 
    // repeated call - get another "NdpAdvPrefix" sibling node
-   }else if (prefix != NULL){
+   }else if (prefix != nullptr){
       prefix = prefix->getNextSiblingWithTag("NdpAdvPrefix");
    }else{
-      prefix = NULL;
+      prefix = nullptr;
    }
 
    return prefix;
@@ -1252,23 +1277,23 @@ cXMLElement * BabelDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLE
 
    // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
-   if (device != NULL){
+   if (device != nullptr){
 
       cXMLElement *routing = device->getFirstChildWithTag("Routing6");
-      if (routing == NULL)
-         return NULL;
+      if (routing == nullptr)
+         return nullptr;
 
       cXMLElement *staticRouting = routing->getFirstChildWithTag("Static");
-      if (staticRouting == NULL)
-         return NULL;
+      if (staticRouting == nullptr)
+         return nullptr;
 
       route = staticRouting->getFirstChildWithTag("Route");
 
    // repeated call - get another "Route" sibling node
-   }else if (route != NULL){
+   }else if (route != nullptr){
       route = route->getNextSiblingWithTag("Route");
    }else{
-      route = NULL;
+      route = nullptr;
    }
 
    return route;
@@ -1278,23 +1303,23 @@ cXMLElement * BabelDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLEl
 
    // initial call of the method - find <Routing6> -> <Static>
    // and then get first "Route" child node
-   if (device != NULL){
+   if (device != nullptr){
 
       cXMLElement *routing = device->getFirstChildWithTag("Routing");
-      if (routing == NULL)
-         return NULL;
+      if (routing == nullptr)
+         return nullptr;
 
       cXMLElement *staticRouting = routing->getFirstChildWithTag("Static");
-      if (staticRouting == NULL)
-         return NULL;
+      if (staticRouting == nullptr)
+         return nullptr;
 
       route = staticRouting->getFirstChildWithTag("Route");
 
    // repeated call - get another "Route" sibling node
-   }else if (route != NULL){
+   }else if (route != nullptr){
       route = route->getNextSiblingWithTag("Route");
    }else{
-      route = NULL;
+      route = nullptr;
    }
 
    return route;
@@ -1303,14 +1328,14 @@ cXMLElement * BabelDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLEl
 
 const char *BabelDeviceConfigurator::GetNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue)
 {
-    ASSERT(node != NULL);
+    ASSERT(node != nullptr);
 
     cXMLElement* paramElem = node->getElementByPath(paramName);
-    if (paramElem == NULL)
+    if (paramElem == nullptr)
         return defaultValue;
 
     const char *paramValue = paramElem->getNodeValue();
-    if (paramValue == NULL)
+    if (paramValue == nullptr)
         return defaultValue;
 
     return paramValue;
@@ -1318,10 +1343,10 @@ const char *BabelDeviceConfigurator::GetNodeParamConfig(cXMLElement *node, const
 
 const char *BabelDeviceConfigurator::GetNodeAttrConfig(cXMLElement *node, const char *attrName, const char *defaultValue)
 {
-    ASSERT(node != NULL);
+    ASSERT(node != nullptr);
 
     const char *attrValue = node->getAttribute(attrName);
-    if (attrValue == NULL)
+    if (attrValue == nullptr)
         return defaultValue;
 
     return attrValue;
@@ -1334,15 +1359,15 @@ const char *BabelDeviceConfigurator::GetNodeAttrConfig(cXMLElement *node, const 
 cXMLElement *BabelDeviceConfigurator::GetBabelProcess(cXMLElement *device)
 {
 
-    if (device == NULL)
+    if (device == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     cXMLElement *routing = device->getFirstChildWithTag("Routing");
-    if (routing == NULL)
+    if (routing == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     return routing->getFirstChildWithTag("Babel");
@@ -1354,11 +1379,11 @@ cXMLElement *BabelDeviceConfigurator::GetBabelProcess(cXMLElement *device)
  */
 bool BabelDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
-   if (retValue == NULL || str == NULL){
+   if (retValue == nullptr || str == nullptr){
       return false;
    }
 
-   char *tail = NULL;
+   char *tail = nullptr;
    long value = 0;
    errno = 0;
 
@@ -1413,12 +1438,12 @@ bool BabelDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element
     cXMLElement* routingNode = device->getElementByPath("Routing");
-    if (routingNode == NULL)
+    if (routingNode == nullptr)
          return false;
 
     // Multicast element
     cXMLElement* multicastNode = routingNode->getElementByPath("Multicast");
-    if (multicastNode == NULL)
+    if (multicastNode == nullptr)
        return false;
 
 

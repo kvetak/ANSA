@@ -58,8 +58,13 @@ module ANSA_Router extends ANSA_NodeBase
             parameters:
                 @display("p=418,80");
         }
-        
-        udp: <udpType> like IUDP if hasRIP {
+
+        babel: <"BabelRouting"> like IUDPApp if hasBABEL {
+            parameters:
+                @display("p=511,80");
+        }
+
+        udp: <udpType> like IUDP if (hasRIP || hasBABEL) {
             @display("p=472,180");
         }
         pim: <"PIMRouting"> like IPIMRouting if hasPIM {
@@ -83,6 +88,14 @@ module ANSA_Router extends ANSA_NodeBase
         if hasRIP {
             rip.udpOut --> udp.appIn++;
             rip.udpIn <-- udp.appOut++;
+
+            udp.ipOut --> networkLayer.transportIn++;
+            udp.ipIn <-- networkLayer.transportOut++;
+        }
+        
+		if hasBABEL {
+            babel.udpOut --> udp.appIn++;
+            babel.udpIn <-- udp.appOut++;
 
             udp.ipOut --> networkLayer.transportIn++;
             udp.ipIn <-- networkLayer.transportOut++;

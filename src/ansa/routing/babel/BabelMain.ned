@@ -21,7 +21,13 @@ package ansa.routing.babel;
 
 simple BabelMain
 {
-     @display("i=block/network2;bgb=578,280");
+    parameters:
+		@display("i=block/network2;bgb=578,280");
+		string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;
+        string deviceId = default("");
+        string deviceType = default("Router");
+        string configFile = default("config.xml");        
     
     gates:
         input udpIn;
