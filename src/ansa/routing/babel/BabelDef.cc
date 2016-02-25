@@ -36,14 +36,26 @@ Register_Class(BabelMessage);
  */
 void BabelMessage::copy(const BabelMessage& other)
 {
-    this->magic_var = other.magic_var;
-    this->version_var = other.version_var;
-    this->length_var = other.length_var;
-    delete [] this->body_var;
-    this->body_var = (other.body_arraysize==0) ? NULL : new char[other.body_arraysize];
-    body_arraysize = other.body_arraysize;
-    for (unsigned int i=0; i<body_arraysize; i++)
-        this->body_var[i] = other.body_var[i];
+
+//    this->magic_var = other.magic_var;
+//    this->version_var = other.version_var;
+//    this->length_var = other.length_var;
+//    delete [] this->body_var;
+//    this->body_var = (other.body_arraysize==0) ? NULL : new char[other.body_arraysize];
+//    body_arraysize = other.body_arraysize;
+//    for (unsigned int i=0; i<body_arraysize; i++)
+//        this->body_var[i] = other.body_var[i];
+
+    this->setMagic(other.getMagic());
+    this->setVersion(other.getVersion());
+    this->setLength(other.getLength());
+    //delete [] this->getBody();
+    const char * bch = (other.getBodyArraySize()==0) ? NULL : new char[other.getBodyArraySize()];
+    unsigned int bl = other.getBodyArraySize();
+    this->setBody(bch, bl);
+    //this->setBodyArraySize(other.getBodyArraySize());
+//    for (unsigned int i=0; i<this->getBodyArraySize(); i++)
+//        this->getBody()[i] = other.getBody()[i];
 }
 
 /**
@@ -54,21 +66,13 @@ void BabelMessage::copy(const BabelMessage& other)
  */
 void BabelMessage::setBodyArraySize(unsigned int size)
 {
-    char *body_var2 = (size==0) ? NULL : new char[size];
-    unsigned int sz = body_arraysize < size ? body_arraysize : size;
-    for (unsigned int i=0; i<sz; i++)
-        body_var2[i] = this->body_var[i];
-    for (unsigned int i=sz; i<size; i++)
-        body_var2[i] = 0;
-    body_arraysize = size;
-    delete [] this->body_var;
-    this->body_var = body_var2;
+    BabelMessage_Base::setBodyArraySize(size);
 
     // change length of body in header
-    this->length_var = body_arraysize;
+    this->setLength(getBodyArraySize());
 
     // change length of packet in control info
-    this->setByteLength(body_arraysize + sizeof(magic_var) + sizeof(version_var) + sizeof(length_var));
+    this->setByteLength(getBodyArraySize() + sizeof(getMagic()) + sizeof(getVersion()) + sizeof(getLength()));
 }
 
 /**
@@ -82,7 +86,8 @@ void BabelMessage::setBody(const char *data, unsigned int size)
     setBodyArraySize(size);
     for(unsigned int i=0; i<size; ++i)
     {
-        body_var[i] = data[i];
+        //body_var[i] = data[i];
+        this->BabelMessage_Base::setBody(i, data[i]);
     }
 }
 
@@ -100,7 +105,8 @@ void BabelMessage::addToBody(const char *data, unsigned int datasize)
     setBodyArraySize(oldsize + datasize);
     for(unsigned int i=0; i<datasize; ++i)
     {
-        body_var[oldsize + i] = data[i];
+        //body_var[oldsize + i] = data[i];
+        this->BabelMessage_Base::setBody((oldsize + i), data[i]);
     }
 }
 
@@ -117,7 +123,7 @@ int BabelMessage::getNextTlv(int offset) const
 
     if(static_cast<int>(getBodyArraySize()) < bodysize)
     {//message with body shorter than specified in header field -> parsing is not safe
-        ev << "Babel message body length error - body is shorter than specified! Body ignored." << endl;
+        EV << "Babel message body length error - body is shorter than specified! Body ignored." << endl;
         return -1;
     }
 
@@ -129,7 +135,7 @@ int BabelMessage::getNextTlv(int offset) const
     {// previous tlv specified
         if(bodysize <= offset)
         {// there is no type
-            ev << "Babel message body out of bounds (body length: " << bodysize << ", real body size: " << getBodyArraySize() << ") - bad offset: " << offset << endl;
+            EV << "Babel message body out of bounds (body length: " << bodysize << ", real body size: " << getBodyArraySize() << ") - bad offset: " << offset << endl;
             return -1;
         }
 
@@ -141,7 +147,7 @@ int BabelMessage::getNextTlv(int offset) const
         {// other TLV types - with length
             if(bodysize <= (offset + 1))
             {// there is no length in body
-                ev << "Babel message body out of bounds (body length: " << bodysize << ", real body size: " << getBodyArraySize() << ") - bad TLV format" << endl;
+                EV << "Babel message body out of bounds (body length: " << bodysize << ", real body size: " << getBodyArraySize() << ") - bad TLV format" << endl;
                 return -1;
             }
 
@@ -165,7 +171,11 @@ int BabelMessage::getNextTlv(int offset) const
 
 char *BabelMessage::getBody() const
 {
-    return body_var;
+    char* bvar = new char[getBodyArraySize()];
+    for (unsigned i=0; i<getBodyArraySize(); i++) {
+        bvar[i] = this->BabelMessage_Base::getBody(i);
+    }
+    return bvar;
 }
 
 /**
@@ -1394,8 +1404,10 @@ template<>
 int netPrefix<L3Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) const
 {
     ASSERT(dst != NULL);
-    ASSERT(toomit >= 0 && ((addr.getType()==L3Address::IPv6 && static_cast<unsigned int>(toomit) <= (4 * sizeof(uint32_t))) ||
-                          (!addr.getType()==L3Address::IPv6 && static_cast<unsigned int>(toomit) <= sizeof(uint32_t))));
+    ASSERT(toomit >= 0 && ( ( (addr.getType()==L3Address::IPv6) && static_cast<unsigned int>(toomit) <= (4 * sizeof(uint32_t)))
+                          ||
+                            (!(addr.getType()==L3Address::IPv6) && static_cast<unsigned int>(toomit) <=      sizeof(uint32_t)))
+                          );
 
     uint32_t ad[4];
     if (addr.getType()==L3Address::IPv6) {
@@ -1530,7 +1542,9 @@ int netPrefix<L3Address>::bytesToOmit(const netPrefix<L3Address>& prevprefix) co
         return 0;
     }
 
-    ASSERT((addr.getType()==L3Address::IPv6 && plenbytes <= 16) || (!addr.getType()==L3Address::IPv6 && plenbytes <= 4));
+    ASSERT(    (  addr.getType()==L3Address::IPv6  && plenbytes <= 16)
+            || (!(addr.getType()==L3Address::IPv6) && plenbytes <= 4)
+          );
 
     if(addr.getType()==L3Address::IPv6 && isLinkLocal64(addr.toIPv6()) && isLinkLocal64(prevprefix.getAddr().toIPv6()))
     {// both are link-local IPv6 -> compare only last 64 bits

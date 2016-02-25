@@ -208,23 +208,23 @@
     <Host id="2001:db8:c::2">
 		<Interfaces>
 			<Interface name="eth0">
-				<IPAddress>192.168.3.2</IPAddress>
+				<IPAddress>10.0.3.2</IPAddress>
                 <Mask>255.255.255.0</Mask>
 				<IPv6Address>2001:db8:c::2/64</IPv6Address>
 			</Interface>
 		</Interfaces>
-		<DefaultRouter>192.168.3.1</DefaultRouter>
+		<DefaultRouter>10.0.3.1</DefaultRouter>
 		<DefaultRouter6>2001:db8:c::1</DefaultRouter6>
 	</Host>
 	<Host id="2001:db8:d::2">
 		<Interfaces>
 			<Interface name="eth0">
-				<IPAddress>192.168.4.2</IPAddress>
+				<IPAddress>10.0.4.2</IPAddress>
                 <Mask>255.255.255.0</Mask>
 				<IPv6Address>2001:db8:d::2/64</IPv6Address>
 			</Interface>
 		</Interfaces>
-		<DefaultRouter>192.168.4.1</DefaultRouter>
+		<DefaultRouter>10.0.4.1</DefaultRouter>
 		<DefaultRouter6>2001:db8:d::1</DefaultRouter6>
 	</Host>
 </Devices>

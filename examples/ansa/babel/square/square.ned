@@ -28,13 +28,7 @@ network square
     submodules:
         configurator: IPv4NetworkConfigurator {
             parameters:
-                config = xml("<config></config>");
-                assignAddresses = false;
-                assignDisjunctSubnetAddresses = false;
-                addStaticRoutes = false;
-                addDefaultRoutes = false;
-                addSubnetRoutes = false;
-                optimizeRoutes = false;
+                config = xmldoc("networkConfig.xml");
                 @display("p=450,290");
         }
 

@@ -26,6 +26,9 @@ module ANSA_BabelRouter extends ANSA_Router
     parameters:
         hasBABEL = true;
         string deviceId = default("");  
-        babel.deviceId = deviceId;       
+        string configFile = default("");
+        **.deviceId = deviceId;
+        **.configFile = default("config.xml");
+               
 }
 

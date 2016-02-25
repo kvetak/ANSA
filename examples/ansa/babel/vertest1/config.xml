@@ -4,23 +4,25 @@
 	<!-- R1 -->
 	<Router id="2001:db8:a::1">
         <Interfaces>
-            <Interface name="eth0">
+            <Interface name="eth2">
             	<IPAddress>10.0.1.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 
                 <IPv6Address>2001:db8:a::1/64</IPv6Address>
                 <Babel>
-					<AFSend>passive</AFSend>
+                	<AFSend>passive</AFSend>
+					<AFDistribute>IPv4</AFDistribute>					
                 </Babel>
             </Interface>
-            <Interface name="eth1">
+            <Interface name="eth0">
             	<IPAddress>192.168.12.1</IPAddress>
-                <Mask>255.255.255.252</Mask>
+                <Mask>255.255.255.0</Mask>
                 
 				<IPv6Address>2001:db8:12::1/64</IPv6Address>
 				<IPv6Address>fe80:12::1/10</IPv6Address>
 				<Babel>
-                	<HelloInterval>400</HelloInterval>
+                	<AFDistribute>IPv4</AFDistribute>
+                	<AFSend>IPv4</AFSend>
                 </Babel>
             </Interface>
         </Interfaces>
@@ -37,23 +39,25 @@
     <!-- R2 -->
     <Router id="2001:db8:b::1">
         <Interfaces>
-            <Interface name="eth0">
+            <Interface name="eth3">
             	<IPAddress>10.0.2.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
 
                 <IPv6Address>2001:db8:b::1/64</IPv6Address>
 				<Babel>
 					<AFSend>passive</AFSend>
+					<AFDistribute>IPv4</AFDistribute>
                 </Babel>
             </Interface>
-            <Interface name="eth1">
+            <Interface name="eth0">
             	<IPAddress>192.168.12.2</IPAddress>
-                <Mask>255.255.255.252</Mask>
+                <Mask>255.255.255.0</Mask>
                 
                 <IPv6Address>2001:db8:12::2/64</IPv6Address>
                 <IPv6Address>fe80:12::2/10</IPv6Address>
                 <Babel>
-                	<HelloInterval>400</HelloInterval>
+                	<AFDistribute>IPv4</AFDistribute>
+                	<AFSend>IPv4</AFSend>
                 </Babel>
             </Interface>
         </Interfaces>

@@ -37,13 +37,13 @@ network VerTest1
             parameters:
                 @display("p=250,357");
             gates:
-                ethg[2];
+                ethg[3];
         }
         R2: ANSA_BabelRouter {
             parameters:
                 @display("p=250,207");
             gates:
-                ethg[2];
+                ethg[4];
         }
         
        
@@ -59,9 +59,10 @@ network VerTest1
         }
 
     connections allowunconnected:
-        R1.ethg++ <--> Eth100M <--> LAN1.ethg++;
-        R2.ethg++ <--> Eth100M <--> LAN2.ethg++;
-        R1.ethg++ <--> Eth100M <--> R2.ethg++;
+        R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
+
+        R1.ethg[2] <--> Eth100M <--> LAN1.ethg++;
+        R2.ethg[3] <--> Eth100M <--> LAN2.ethg++;
 
 }
 
