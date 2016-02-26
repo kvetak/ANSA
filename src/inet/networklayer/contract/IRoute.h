@@ -50,6 +50,8 @@ class INET_API IRoute
         MANET2,    ///< managed by manet, search approximate address
         DYMO,    ///< managed by DYMO routing
         AODV,    ///< managed by AODV routing
+        //XXX: Vesely - Inherit IRoute
+        EIGRP, LISP, BABEL
     };
 
     /** Field codes for NB_ROUTE_CHANGED notifications */

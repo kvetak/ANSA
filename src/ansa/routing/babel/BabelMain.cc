@@ -78,6 +78,7 @@ void BabelMain::initialize(int stage)
 
         //rt4 = AnsaRoutingTableAccess().get();
         //rt6 = ANSARoutingTable6Access().get();
+        //rt = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
         rt4 = check_and_cast<IPv4RoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("ipv4"));
         rt6 = check_and_cast<IPv6RoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("ipv6"));
 
@@ -2537,50 +2538,17 @@ void BabelMain::addToRT(BabelRoute *route)
     {// local route -> already in table
         return;
     }
-//XXX: Vesely - Immediate rewrite needed!!!
-    if(route->getPrefix().getAddr().getType()==L3Address::IPv6)
-    {// IPv6
 
-        IPv6Route *newentry = new IPv6Route(route->getPrefix().getAddr().toIPv6(), route->getPrefix().getLen(), IRoute::ZEBRA);
-        //newentry->setRoutingProtocolSource(ANSAIPv6Route::pBABEL);
-        //newentry->setAdminDist(ANSAIPv6Route::dBABEL);
-        newentry->setMetric(route->metric());
-        newentry->setNextHop(route->getNextHop().toIPv6());
-        //newentry->setInterface(route->getNeighbour()->getInterface()->getInterfaceId());
-        newentry->setInterface(route->getNeighbour()->getInterface()->getInterface());
-
-        //if (rt6->prepareForAddRoute(newentry))
-        //{
-            rt6->addRoutingProtocolRoute(newentry);
-        //    route->setRTEntry(newentry);
-        //}
-        //else
-        //{// route exists with lower administrative distance
-        //    delete newentry;
-        //}
-    }
-    else
-    {// IPv4
-        IPv4Route *newentry = new IPv4Route();
-        newentry->setDestination(route->getPrefix().getAddr().toIPv4());
-        newentry->setNetmask(IPv4Address::makeNetmask(route->getPrefix().getLen()));
-        //newentry->setSource(IPv4Route::ZEBRA);  // Set any source except IFACENETMASK and MANUAL
-        //newentry->setRoutingProtocolSource(ANSAIPv4Route::pBABEL);
-        //newentry->setAdminDist(ANSAIPv4Route::dBABEL);
-        newentry->setMetric(route->metric());
-        newentry->setGateway(route->getNextHop().toIPv4());
-        newentry->setInterface(route->getNeighbour()->getInterface()->getInterface());
-
-        //if (rt4->prepareForAddRoute(newentry))
-        //{
-            rt4->addRoute(newentry);
-        //    route->setRTEntry(newentry);
-        //}
-        //else
-        //{// route exists with lower administrative distance
-        //    delete newentry;
-        //}
-    }
+    IRoutingTable* rt = route->getPrefix().getAddr().getType() == L3Address::IPv4 ? check_and_cast<IRoutingTable*>(rt4) : check_and_cast<IRoutingTable*>(rt6);
+    IRoute* ro = rt->createRoute();
+    ro->setSourceType(IRoute::BABEL);
+    ro->setSource(this);
+    ro->setDestination(route->getPrefix().getAddr());
+    ro->setPrefixLength(route->getPrefix().getLen());
+    ro->setInterface(route->getNeighbour()->getInterface()->getInterface());
+    ro->setNextHop(route->getNextHop());
+    ro->setMetric(route->metric());
+    rt->addRoute(ro);
 }
 
 /**
