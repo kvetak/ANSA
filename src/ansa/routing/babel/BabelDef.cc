@@ -1593,9 +1593,9 @@ int netPrefix<L3Address>::bytesToOmit(const netPrefix<L3Address>& prevprefix) co
     return toomit;
 }
 
-
-}
 template class netPrefix<IPv4Address>;
 template class netPrefix<IPv6Address>;
 template class netPrefix<L3Address>;
+
+}
 }

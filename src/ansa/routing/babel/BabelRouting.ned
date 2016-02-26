@@ -31,8 +31,8 @@ module BabelRouting like IUDPApp
         @display("i=block/network2;bgb=205,215,white");
         int udpPort = default(6696);
         string deviceId = default("");
-        string deviceType = default("Router");
-        string configFile = default("config.xml");
+        string deviceType = default("Router");        
+        xml configFile = default(xmldoc("config.xml"));
         
        	string interfaceTableModule;   // The path to the InterfaceTable module
         string routingTableModule;

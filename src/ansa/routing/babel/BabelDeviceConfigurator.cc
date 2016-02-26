@@ -337,7 +337,7 @@ void BabelDeviceConfigurator::loadBabelConfig(BabelMain *bMain)
     device = GetDevice(deviceType, deviceId, configFile);
     if (device == nullptr)
     {
-        ev << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
+        EV << "No configuration found for this device (" << deviceType << " id=" << deviceId << ")" << endl;
         return;
     }
 
@@ -454,7 +454,7 @@ void BabelDeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, Bab
         if (babelIfaceElem != nullptr)
         {// interface contains babel configuration
 
-            BabelInterface *bIface = new BabelInterface(iface);
+            BabelInterface *bIface = new BabelInterface(iface,bMain->getIntuniform());
 
             //remember local prefixes
             cXMLElement *ipv4AddrElem = ifaceElem->getFirstChildWithTag("IPAddress");
@@ -534,7 +534,7 @@ BabelDeviceConfigurator::BabelDeviceConfigurator() {
 }
 
 BabelDeviceConfigurator::BabelDeviceConfigurator(const char* devId,
-        const char* devType, const char* confFile, IInterfaceTable* intf)
+        const char* devType, cXMLElement* confFile, IInterfaceTable* intf)
 : deviceId(devId), deviceType(devType), configFile(confFile), ift(intf)
 {
 }
@@ -1194,10 +1194,10 @@ double BabelDeviceConfigurator::getDefaultDelay(const char *linkType)
 
 
 
-cXMLElement * BabelDeviceConfigurator::GetDevice(const char *deviceType, const char *deviceId, const char *configFile){
+cXMLElement * BabelDeviceConfigurator::GetDevice(const char *deviceType, const char *deviceId, cXMLElement* configFile){
 
    // get access to the XML file (if exists)
-   cXMLElement *config = ev.getXMLDocument(configFile);
+   cXMLElement *config = configFile;
    if (config == nullptr)
       return nullptr;
 

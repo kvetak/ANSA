@@ -41,7 +41,7 @@ class BabelDeviceConfigurator
    private:
       const char *deviceId = nullptr;
       const char *deviceType = nullptr;
-      const char *configFile = nullptr;
+      cXMLElement* configFile = nullptr;
       cXMLElement *device = nullptr;
 
    protected:
@@ -81,13 +81,13 @@ class BabelDeviceConfigurator
 
    public:
       BabelDeviceConfigurator();
-      BabelDeviceConfigurator(const char* devId, const char* devType, const char* confFile, IInterfaceTable* intf);
+      BabelDeviceConfigurator(const char* devId, const char* devType, cXMLElement* confFile, IInterfaceTable* intf);
       virtual ~BabelDeviceConfigurator();
       //xmlParser
       static bool Str2Int(int *retValue, const char *str);
       static bool Str2Bool(bool *ret, const char *str);
 
-      static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, const char *configFile);
+      static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, cXMLElement* configFile);
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);
       //static cXMLElement * GetStaticRoute(cXMLElement *route, cXMLElement *device);
       //static cXMLElement * GetStaticRoute6(cXMLElement *route, cXMLElement *device);

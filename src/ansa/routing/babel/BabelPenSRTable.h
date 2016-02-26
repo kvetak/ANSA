@@ -58,7 +58,7 @@ public:
         {
             ASSERT(outIface != NULL);
 
-            if(resendTimer != NULL);
+            if(resendTimer != NULL)
             {
                 resendTimer->setContextPointer(this);
             }

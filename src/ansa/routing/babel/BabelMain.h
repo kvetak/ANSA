@@ -80,14 +80,16 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
     BabelSourceTable bst;
     BabelPenSRTable bpsrt;
 
+    int getIntuniform();
+
 
 
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     //virtual void receiveChangeNotification(int category, const cObject *details);
-    virtual void initialize(int stage);
-    virtual void finish();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void finish() override;
+    virtual void handleMessage(cMessage *msg) override;
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
 
   public:
@@ -178,6 +180,21 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
 
     bool removeNeighboursOnIface(BabelInterface *iface);
     bool removeRoutesByNeigh(BabelNeighbour *neigh);
+/*
+    const double roughly(const double value)
+    {
+        double variance=0.25;
+        ASSERT(variance > 0.0 && variance <= 1.0);
+        return value * uniform(1.0 - variance, 1.0 + variance);
+    }
+    */
+    template <typename T>
+    inline T roughly(T value, double variance=0.25)
+    {
+        ASSERT(variance > 0.0 && variance <= 1.0);
+
+        return value * uniform(1.0 - variance, 1.0 + variance);
+    }
 };
 }
 #endif

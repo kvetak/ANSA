@@ -62,7 +62,7 @@ class BabelInterface : public cObject
         afdist(Babel::AF::IPv6),
         splitHorizon(false),
         wired(false),
-        helloSeqno(intuniform(0,UINT16_MAX)),
+        helloSeqno(0),
         helloInterval(Babel::defval::HELLO_INTERVAL_CS),
         updateInterval(Babel::defval::UPDATE_INTERVAL_MULT * Babel::defval::HELLO_INTERVAL_CS),
         helloTimer(NULL),
@@ -74,13 +74,13 @@ class BabelInterface : public cObject
         ccm(NULL)
         {}
 
-    BabelInterface(InterfaceEntry *iface) :
+    BabelInterface(InterfaceEntry *iface, uint16_t hellSeq) :
         interface(iface),
         afsend(Babel::AF::IPv6),
         afdist(Babel::AF::IPv6),
         splitHorizon(false),
         wired(false),
-        helloSeqno(intuniform(0,UINT16_MAX)),
+        helloSeqno(hellSeq),
         helloInterval(Babel::defval::HELLO_INTERVAL_CS),
         updateInterval(Babel::defval::UPDATE_INTERVAL_MULT * Babel::defval::HELLO_INTERVAL_CS),
         helloTimer(NULL),

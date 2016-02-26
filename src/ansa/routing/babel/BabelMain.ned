@@ -27,7 +27,7 @@ simple BabelMain
         string routingTableModule;
         string deviceId = default("");
         string deviceType = default("Router");
-        string configFile = default("config.xml");        
+        xml configFile = default(xmldoc("config.xml"));        
     
     gates:
         input udpIn;

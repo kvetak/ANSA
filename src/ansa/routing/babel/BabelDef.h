@@ -27,8 +27,8 @@
 #include <string>
 //#include "L3Address.h"
 #include "inet/networklayer/common/L3Address.h"
-#include "cmessage.h"
-#include "simtime_t.h"
+//#include "cmessage.h"
+//#include "simtime_t.h"
 
 #include "ansa/routing/babel/BabelMessage_m.h"
 
@@ -154,7 +154,7 @@ inline int comparemod16(uint16_t a, uint16_t b)
         return ((b - a) & 0x8000) ? 1 : -1;
     }
 }
-
+/*
 template <typename T>
 inline T roughly(T value, double variance=0.25)
 {
@@ -162,7 +162,7 @@ inline T roughly(T value, double variance=0.25)
 
     return value * uniform(1.0 - variance, 1.0 + variance);
 }
-
+*/
 
 
 

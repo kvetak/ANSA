@@ -2762,6 +2762,10 @@ bool BabelMain::removeNeighboursOnIface(BabelInterface *iface)
     return changed;
 }
 
+int BabelMain::getIntuniform() {
+    return intuniform(0,UINT16_MAX);
+}
+
 /**
  * Removes routes by neighbour
  *
