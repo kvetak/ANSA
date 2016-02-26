@@ -28,7 +28,7 @@
 #include "ansa/routing/babel/BabelNeighbourTable.h"
 #include "ansa/routing/babel/BabelFtlv.h"
 namespace inet {
-class BabelPenSR : public cObject
+class INET_API BabelPenSR : public cObject
 {
 protected:
     BabelSeqnoReqFtlv request;

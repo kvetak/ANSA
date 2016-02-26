@@ -349,15 +349,17 @@ void IPv4::datagramLocalOut(IPv4Datagram *datagram, const InterfaceEntry *destIE
 
     if (datagram->getDestAddress().isMulticast()) {
         destIE = determineOutgoingInterfaceForMulticastDatagram(datagram, destIE);
-//XXX: Vesely - FIX
-/*
+
+#if defined(ANSAINET)
+        //XXX: Vesely - Multicast loop removed
+#else
         // loop back a copy
         if (multicastLoop && (!destIE || !destIE->isLoopback())) {
             const InterfaceEntry *loopbackIF = ift->getFirstLoopbackInterface();
             if (loopbackIF)
                 fragmentPostRouting(datagram->dup(), loopbackIF, destAddr);
         }
-*/
+#endif
         if (destIE) {
             numMulticast++;
             fragmentPostRouting(datagram, destIE, destAddr);

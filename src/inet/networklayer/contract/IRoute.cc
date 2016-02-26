@@ -60,7 +60,14 @@ const char *IRoute::sourceTypeName(SourceType sourceType)
 
         case AODV:
             return "AODV";
-
+#ifdef ANSAINET
+        case EIGRP:
+            return "EIGRP";
+        case LISP:
+            return "LISP";
+        case BABEL:
+            return "BABEL";
+#endif
         default:
             return "???";
     }
@@ -84,4 +91,3 @@ const char *IMulticastRoute::sourceTypeName(SourceType sourceType)
 }
 
 } // namespace inet
-

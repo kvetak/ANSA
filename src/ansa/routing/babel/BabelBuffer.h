@@ -26,7 +26,7 @@
 #include "ansa/routing/babel/BabelFtlv.h"
 namespace inet {
 
-class BabelBuffer : public cObject
+class INET_API BabelBuffer : public cObject
 {
   protected:
     L3Address dst;

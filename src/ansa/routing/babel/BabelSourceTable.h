@@ -26,7 +26,7 @@
 
 #include "ansa/routing/babel/BabelDef.h"
 namespace inet {
-class BabelSource: public cObject
+class INET_API BabelSource: public cObject
 {
 protected:
     Babel::netPrefix<L3Address> prefix;

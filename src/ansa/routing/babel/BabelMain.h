@@ -42,8 +42,6 @@
 //#include "NotificationBoard.h"
 //#include "AnsaRoutingTable.h"
 //#include "ANSARoutingTable6.h"
-#include "inet/networklayer/contract/IRoute.h"
-#include "inet/networklayer/contract/IRoutingTable.h"
 #include "inet/networklayer/ipv4/IPv4RoutingTable.h"
 #include "inet/networklayer/ipv6/IPv6RoutingTable.h"
 

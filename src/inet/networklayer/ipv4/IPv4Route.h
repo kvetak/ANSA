@@ -52,6 +52,10 @@ class INET_API IPv4Route : public cObject, public IRoute
         dEIGRPExternal = 170,
         dBGPInternal = 200,
         dDHCPlearned = 254,
+#ifdef ANSAINET
+        dBABEL = 125,
+        dLISP = 210,
+#endif
         dUnknown = 255
     };
 
@@ -118,7 +122,9 @@ class INET_API IPv4Route : public cObject, public IRoute
 
     /** Source of route. MANUAL (read from file), from routing protocol, etc */
     SourceType getSourceType() const override { return sourceType; }
-
+#ifdef ANSAINET
+    const char* getSourceTypeAbbreviation() const;
+#endif
     /** Route source specific preference value */
     unsigned int getAdminDist() const { return adminDist; }
 

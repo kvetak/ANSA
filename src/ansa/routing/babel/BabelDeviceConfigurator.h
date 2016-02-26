@@ -34,7 +34,7 @@
 #include "ansa/routing/babel/BabelInterfaceTable.h"
 #include "ansa/routing/babel/cost/IBabelCostComputation.h"
 namespace inet {
-class BabelDeviceConfigurator
+class INET_API BabelDeviceConfigurator
         //: public cSimpleModule
 {
 

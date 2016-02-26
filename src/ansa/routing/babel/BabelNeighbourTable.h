@@ -28,7 +28,7 @@
 #include "ansa/routing/babel/BabelInterfaceTable.h"
 
 namespace inet {
-class BabelNeighbour : public cObject
+class INET_API BabelNeighbour : public cObject
 {
   protected:
     BabelInterface *interface;

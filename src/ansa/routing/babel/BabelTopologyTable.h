@@ -29,7 +29,7 @@
 #include "ansa/routing/babel/BabelNeighbourTable.h"
 
 namespace inet {
-class BabelRoute : public cObject
+class INET_API BabelRoute : public cObject
 {
 protected:
     Babel::netPrefix<L3Address> prefix;

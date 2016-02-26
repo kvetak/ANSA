@@ -103,6 +103,9 @@ inline void printElapsedTime(const char *name, long startTime)
 
 #define TIME(CODE)    { long startTime = clock(); CODE; printElapsedTime( #CODE, startTime); }
 
+//XXX: ANSAINET macro
+#define ANSAINET
+
 } // namespace inet
 
 #endif // ifndef __INET_INETDEFS_H
