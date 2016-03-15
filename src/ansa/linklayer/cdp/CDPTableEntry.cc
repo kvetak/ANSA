@@ -13,25 +13,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#define ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#include "inet/common/INETDefs.h"
+#include "CDPTableEntry.h"
 
 namespace inet {
 
-class INET_API ANSA_MultiNetworkLayerLowerMultiplexer : public cSimpleModule
-{
-public:
-    ANSA_MultiNetworkLayerLowerMultiplexer(){};
-    virtual ~ANSA_MultiNetworkLayerLowerMultiplexer(){};
+CDPTableEntry::CDPTableEntry() {
+    // TODO Auto-generated constructor stub
 
+}
 
-protected:
-  virtual void handleMessage(cMessage *message) override;
-  int getProtocolCount();
-  int getProtocolIndex(cMessage *message);
-};
+CDPTableEntry::~CDPTableEntry() {
+    // TODO Auto-generated destructor stub
+}
 
 } /* namespace inet */
-
-#endif /* ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_ */

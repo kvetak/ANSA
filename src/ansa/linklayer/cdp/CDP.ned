@@ -13,25 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#define ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#include "inet/common/INETDefs.h"
+package ansa.linklayer.cdp;
 
-namespace inet {
+import inet.networklayer.contract.INetworkLayerLower;
 
-class INET_API ANSA_MultiNetworkLayerLowerMultiplexer : public cSimpleModule
+//TODO: davat INetworkLayerLower? (nebude mit nekdy switch problem)
+simple CDP like INetworkLayerLower
 {
-public:
-    ANSA_MultiNetworkLayerLowerMultiplexer(){};
-    virtual ~ANSA_MultiNetworkLayerLowerMultiplexer(){};
-
-
-protected:
-  virtual void handleMessage(cMessage *message) override;
-  int getProtocolCount();
-  int getProtocolIndex(cMessage *message);
-};
-
-} /* namespace inet */
-
-#endif /* ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_ */
+    parameters:
+    	@display("i=block/network2");
+    	
+    	int timer @unit(s) = default(60s);
+    	int holdTime = default(180);
+    	int version = default(2);
+    	bool odr = default(false);
+	gates:
+        input ifIn[] @labels(INetworkDatagram/up);
+        output ifOut[] @labels(INetworkDatagram/down);
+}

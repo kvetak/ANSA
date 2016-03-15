@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<scenario>
+
+    <at t="530">
+        <tell module="lifecycleController" target="R1" operation="NodeShutdownOperation"/>
+    </at>
+	<at t="50">
+        <disconnect src-module="R1" src-gate="ethg$o[0]" />
+        <disconnect src-module="R2" src-gate="ethg$o[0]" />		
+  	</at>
+
+  	<at t="250">
+        <connect src-module="R1" src-gate="ethg[2]"
+                 dest-module="R2" dest-gate="ethg[2]"
+                 channel-type="inet.node.ethernet.Eth100M">
+        </connect>		
+  	</at>
+</scenario>

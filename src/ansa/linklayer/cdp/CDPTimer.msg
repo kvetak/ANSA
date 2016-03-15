@@ -13,25 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#define ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#include "inet/common/INETDefs.h"
+namespace inet;
 
-namespace inet {
-
-class INET_API ANSA_MultiNetworkLayerLowerMultiplexer : public cSimpleModule
+enum CDPTimerType
 {
-public:
-    ANSA_MultiNetworkLayerLowerMultiplexer(){};
-    virtual ~ANSA_MultiNetworkLayerLowerMultiplexer(){};
+    CDPUpdateTime = 0;
+    CDPHoldTime = 1;
+    CDPStartUp = 2;
+}
 
-
-protected:
-  virtual void handleMessage(cMessage *message) override;
-  int getProtocolCount();
-  int getProtocolIndex(cMessage *message);
-};
-
-} /* namespace inet */
-
-#endif /* ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_ */
+//CDP timers
+message CDPTimer
+{
+    char timerType enum(CDPTimerType) = CDPUpdateTime;
+    int index;
+}

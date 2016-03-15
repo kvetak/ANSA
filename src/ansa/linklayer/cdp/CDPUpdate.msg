@@ -13,25 +13,38 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#define ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#include "inet/common/INETDefs.h"
+namespace inet;
 
-namespace inet {
-
-class INET_API ANSA_MultiNetworkLayerLowerMultiplexer : public cSimpleModule
+enum CDPTLVType
 {
-public:
-    ANSA_MultiNetworkLayerLowerMultiplexer(){};
-    virtual ~ANSA_MultiNetworkLayerLowerMultiplexer(){};
+	TLV_ADDRESS = 2;
+	TLV_CAPABILITIES = 4;
+	TLV_DEVICE_ID = 1;
+	TLV_DUPLEX = 11;
+	TLV_IP_PREFIX = 7;
+	TLV_LOCATION = 12;
+	TLV_LOCATION_SERVER = 13;
+	TLV_NATIVE_VLAN = 10;
+	TLV_PLATFORM = 6;
+	TLV_PORT_ID = 3;
+	TLV_VERSION = 5;
+	TLV_VTP = 9;
+	TLV_ODR = 99; //TODO:zjistit cislo
+}
 
+// TLV structure
+class CDPTLV
+{
+    uint16_t	type @enum(CDPTLVType); 
+    uint16_t	length;
+    string		value;
+}
 
-protected:
-  virtual void handleMessage(cMessage *message) override;
-  int getProtocolCount();
-  int getProtocolIndex(cMessage *message);
-};
-
-} /* namespace inet */
-
-#endif /* ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_ */
+//CDP update packet
+packet CDPUpdate
+{
+    char		version = 2;
+    unsigned char		ttl;
+    uint16_t	checksum;
+    CDPTLV		tlv[];
+}

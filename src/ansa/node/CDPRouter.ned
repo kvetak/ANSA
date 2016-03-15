@@ -1,6 +1,5 @@
 //
-// Copyright (C) 2013 Opensim Ltd.
-// Author: Levente Meszaros
+// Copyright (C) 2005 Andras Babos
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -16,12 +15,16 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "ansa/networklayer/multi/ANSA_MultiNetworkLayerUpperMultiplexer.h"
 
-namespace inet {
+package ansa.node;
 
-Define_Module(ANSA_MultiNetworkLayerUpperMultiplexer);
+import ansa.node.ANSA_Router;
 
 
-} // namespace inet
+module CDPRouter extends ANSA_Router
+{
+    parameters:
+        string deviceId = default("");
+            
+}
 
