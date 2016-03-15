@@ -18,6 +18,8 @@
 
 package ansa.networklayer.multi;
 
+import ansa.linklayer.cdp.CDP;
+import inet.networklayer.contract.INetworkLayerLower;
 import inet.networklayer.contract.INetworkLayer;
 import inet.networklayer.multi.MultiNetworkLayerUpperMultiplexer;
 import inet.networklayer.multi.MultiNetworkLayerLowerMultiplexer;
@@ -26,7 +28,7 @@ import inet.networklayer.multi.MultiNetworkLayerLowerMultiplexer;
 // This module provides network protocol specific multiplexing.
 // It's part of MultiNetworkLayer and it's meant to be used there.
 //
-simple ANSA_MultiNetworkLayerUpperMultiplexer extends MultiNetworkLayerUpperMultiplexer
+simple MultiNetworkLayerUpperMultiplexer extends MultiNetworkLayerUpperMultiplexer
 {
 }
 
@@ -34,8 +36,16 @@ simple ANSA_MultiNetworkLayerUpperMultiplexer extends MultiNetworkLayerUpperMult
 // This module provides network protocol specific multiplexing.
 // It's part of MultiNetworkLayer and it's meant to be used there.
 //
-simple ANSA_MultiNetworkLayerLowerMultiplexer extends MultiNetworkLayerLowerMultiplexer
+simple ANSA_MultiNetworkLayerLowerMultiplexer
 {
+    parameters:
+        @display("i=block/fork");
+
+    gates:
+        input ifUpperIn[] @labels(INetworkDatagram);
+        output ifUpperOut[] @labels(INetworkDatagram);
+        input ifLowerIn[] @labels(INetworkDatagram);
+        output ifLowerOut[] @labels(INetworkDatagram);
 }
 
 //
@@ -49,9 +59,13 @@ module ANSA_MultiNetworkLayer like INetworkLayer
 {
     parameters:
         @display("i=block/fork");
-        bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
-        bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
-        bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
+        //bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
+        //bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
+        //bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
+        bool enableCLNS = false;
+        bool enableIPv6 = false;
+        bool enableIPv4 = true;
+        bool enableCDP = default(true);
         string interfaceTableModule;
         *.interfaceTableModule = default(absPath(interfaceTableModule));
         string routingTableModule;
@@ -77,7 +91,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         clns: <"GenericNetworkLayer"> like INetworkLayer if enableCLNS {
             @display("p=500,300");
         }
-        upperMultiplexer: ANSA_MultiNetworkLayerUpperMultiplexer {
+        upperMultiplexer: MultiNetworkLayerUpperMultiplexer {
             @display("p=300,100");
             gates:
                 transportLowerIn[3*sizeof(transportOut)];
@@ -88,10 +102,13 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         lowerMultiplexer: ANSA_MultiNetworkLayerLowerMultiplexer {
             @display("p=300,500");
             gates:
-                ifUpperOut[3*sizeof(ifIn)];
-                ifUpperIn[3*sizeof(ifOut)];
+                ifUpperOut[4*sizeof(ifIn)];
+                ifUpperIn[4*sizeof(ifOut)];
         }
 
+        cdp: <"CDP"> like INetworkLayerLower if enableCDP  {
+            @display("p=461,500");
+        }
     connections allowunconnected:
         // transport
         for i=0..sizeof(transportIn)-1 {
@@ -123,15 +140,17 @@ module ANSA_MultiNetworkLayer like INetworkLayer
 
         // interface
         for i=0..sizeof(ifIn)-1 {
-            lowerMultiplexer.ifUpperOut[0+3*i] --> ipv4.ifIn++ if enableIPv4;
-            lowerMultiplexer.ifUpperOut[1+3*i] --> ipv6.ifIn++ if enableIPv6;
-            lowerMultiplexer.ifUpperOut[2+3*i] --> clns.ifIn++ if enableCLNS;
+            lowerMultiplexer.ifUpperOut[0+4*i] --> ipv4.ifIn++ if enableIPv4;
+            lowerMultiplexer.ifUpperOut[1+4*i] --> ipv6.ifIn++ if enableIPv6;
+            lowerMultiplexer.ifUpperOut[2+4*i] --> clns.ifIn++ if enableCLNS;
+            lowerMultiplexer.ifUpperOut[3+4*i] --> cdp.ifIn++ if enableCDP;
             ifIn[i] --> { @display("m=s"); } --> lowerMultiplexer.ifLowerIn++;
         }
         for i=0..sizeof(ifOut)-1 {
-            ipv4.ifOut++ --> lowerMultiplexer.ifUpperIn[0+3*i] if enableIPv4;
-            ipv6.ifOut++ --> lowerMultiplexer.ifUpperIn[1+3*i] if enableIPv6;
-            clns.ifOut++ --> lowerMultiplexer.ifUpperIn[2+3*i] if enableCLNS;
+            ipv4.ifOut++ --> lowerMultiplexer.ifUpperIn[0+4*i] if enableIPv4;
+            ipv6.ifOut++ --> lowerMultiplexer.ifUpperIn[1+4*i] if enableIPv6;
+            clns.ifOut++ --> lowerMultiplexer.ifUpperIn[2+4*i] if enableCLNS;
+            cdp.ifOut++ --> lowerMultiplexer.ifUpperIn[3+4*i] if enableCDP;
             lowerMultiplexer.ifLowerOut++ --> { @display("m=s"); } --> ifOut[i];
         }
 }
