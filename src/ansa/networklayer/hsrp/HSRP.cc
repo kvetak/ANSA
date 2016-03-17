@@ -119,7 +119,7 @@ void HSRP::handleMessage(cMessage *msg)
                     printf("iid:%d, virmac:", ift->getInterfaceByName("eth0")->getInterfaceId());
                     std::cout<<virtualMAC->str()<<"virtip"<<virtualIP->str()<<std::endl;
                     fflush(stdout);
-                    sendARPGratuitous(ift->getInterfaceByName("eth0"), virtualMAC->toMAC(), virtualIP->toIPv4(), 2);
+//                    sendARPGratuitous(ift->getInterfaceByName("eth0"), virtualMAC->toMAC(), virtualIP->toIPv4(), 2);
                 }
                 else if (msg == hellotimer){
                     sendMessage(HELLO);
