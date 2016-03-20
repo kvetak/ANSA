@@ -16,7 +16,9 @@
 package inet.examples.ansa.hsrp.basics;
 
 import ansa.node.HSRPRouter;
-import inet.node.inet.StandardHost;
+import ansa.node.ANSA_Host;
+import inet.common.lifecycle.LifecycleController;
+//import inet.world.scenario.ScenarioManager;
 import inet.node.ethernet.EtherSwitch;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 //import inet.node.ethernet.EtherLink;
@@ -37,13 +39,13 @@ network Basics
         R2: HSRPRouter {
             @display("p=454,176");
         }
-        H1: StandardHost {
+        H1: ANSA_Host {
             @display("p=236,374");
         }
         SW1: EtherSwitch {
             @display("p=236,299");
         }
-        H2: StandardHost {
+        H2: ANSA_Host {
             @display("p=425,50");
         }
         SW2: EtherSwitch {

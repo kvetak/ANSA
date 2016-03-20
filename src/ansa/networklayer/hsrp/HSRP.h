@@ -27,6 +27,8 @@
 #include "inet/networklayer/contract/IRoutingTable.h"
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
+//#include "inet/common/lifecycle/ILifecycle.h"
+
 namespace inet {
 
 class HSRP : public cSimpleModule{
@@ -40,16 +42,17 @@ class HSRP : public cSimpleModule{
         IRoutingTable *rt = nullptr;
         ARP *arp = nullptr;
         L3Address *HsrpMulticast = nullptr;
-        L3Address *virtualIP = nullptr;
-        L3Address *virtualMAC = nullptr;
+        IPv4Address *virtualIP = nullptr;
+        MACAddress *virtualMAC = nullptr;
         cMessage *hellotimer = nullptr;
         cMessage *activetimer = nullptr;
         cMessage *standbytimer = nullptr;
         cMessage *initmessage = nullptr;
+        cModule *containingModule = nullptr;
 
     protected:
         virtual void initialize( int stage);
-        virtual int numInitStages() const {return 3;};
+        virtual int numInitStages() const {return NUM_INIT_STAGES;};
         void handleMessage(cMessage *msg);
         void sendMessage(OP_CODE opCode);
         HSRPMessage *generateMessage(OP_CODE opCode);
@@ -64,7 +67,6 @@ class HSRP : public cSimpleModule{
         void listenState();
         void learnState();
         void speakState();
-        void sendARPGratuitous(InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode);
 
 
     public:

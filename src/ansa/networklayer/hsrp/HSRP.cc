@@ -16,7 +16,7 @@
 #include "HSRP.h"
 #include <iostream>
 #include "inet/common/ModuleAccess.h"
-
+#include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
 
 namespace inet {
 
@@ -38,19 +38,20 @@ void HSRP::initialize(int stage)
         hsrpUdpPort = 1985;
         socket = new UDPSocket(); //UDP socket used for sending messages
         HsrpMulticast = new L3Address(par("multicastIPv4")); //HSRP multicast address
-        virtualMAC = new L3Address(par("virtualMAC").stringValue());
+        virtualMAC = new MACAddress(par("virtualMAC").stringValue());
         hellotimer = new cMessage("helloTimer");
         standbytimer = new cMessage("standbyTimer");
         activetimer = new cMessage("activeTimer");
         initmessage = new cMessage("startHSRP");
         if (strcmp(par("virtualIP").stringValue(), "") != 0){
-            virtualIP = new L3Address(par("virtualIP").stringValue());
+            virtualIP = new IPv4Address(par("virtualIP").stringValue());
         }
     }
     if (stage == 2){ //init hsrp variables and start hsrp process
         scheduleAt(simTime() , initmessage);
-        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);//getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
-//        arp = new ARP(); //snad arp cache FIXME: to je divne...
+        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
+        containingModule = findContainingNode(this);
+        arp = dynamic_cast<ARP *>(containingModule->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp"));
     }
 }
 
@@ -114,12 +115,13 @@ void HSRP::handleMessage(cMessage *msg)
                     std::cout<<"\n"<<par("deviceId").stringValue()<<"]ACtive state;"<<std::endl;
                     fflush(stdout);
                     sendMessage(HELLO);
-                    //TODO send gratious ARP
-//                    InterfaceEntry *ie = ift->getInterfaceByName("eth0");
+                    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
+                    printf("hereIgo\n");
+                    printf("id:%d",(destInterface->getInterfaceId()));
+                    arp->sendARPGratuitous(destInterface,*(virtualMAC), *(virtualIP), ARP_REQUEST);//TODO send gratious ARP
                     printf("iid:%d, virmac:", ift->getInterfaceByName("eth0")->getInterfaceId());
                     std::cout<<virtualMAC->str()<<"virtip"<<virtualIP->str()<<std::endl;
                     fflush(stdout);
-//                    sendARPGratuitous(ift->getInterfaceByName("eth0"), virtualMAC->toMAC(), virtualIP->toIPv4(), 2);
                 }
                 else if (msg == hellotimer){
                     sendMessage(HELLO);
@@ -244,7 +246,7 @@ void HSRP::handleMessageLearn(HSRPMessage *msg)
         if (msg->getState() == ACTIVE){ //TODO podle RFC pouze ACTIVE... zjistit GNS jestli ne i STANDBY
             std::cout<<par("deviceId").stringValue()<<"] got- "<<msg->getAddress().str(true)<<std::endl;
             fflush(stdout);
-            L3Address *a = new L3Address(msg->getAddress());
+            IPv4Address *a = new IPv4Address(msg->getAddress());
             virtualIP = a;
             fflush(stdout);
             listenState();
@@ -267,6 +269,8 @@ void HSRP::handleMessageStandby(HSRPMessage *msg)
                 //send coup m.
                 sendMessage(HELLO);
                 //TODO send gratious arp
+                const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
+                arp->sendARPGratuitous(destInterface,*(virtualMAC), *(virtualIP), ARP_REQUEST);//TODOX
                 break;
             }
             else if (msg->getPriority() > par("priority").doubleValue()){
@@ -402,6 +406,7 @@ void HSRP::handleMessageListen(HSRPMessage *msg)
  * Other usefull functions
  *
  */
+
 void HSRP::bindMulticast(){
     //bind to multicast for listening of other HSRP routers
     socket->setOutputGate(gate("udpOut"));
@@ -434,13 +439,14 @@ HSRPMessage *HSRP::generateMessage(OP_CODE opCode)
     msg->setPriority(par("priority"));
     msg->setGroup(par("group"));
     if (virtualIP != nullptr)
-        msg->setAddress(virtualIP ->toIPv4());
+        msg->setAddress(*(virtualIP));
     return msg;
 }
 
 void HSRP::sendMessage(OP_CODE opCode)
 {
     HSRPMessage *packet = generateMessage(opCode);
+    packet->setBitLength(HSRP_HEADER_SIZE);
     const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO for now just specific Interface
     UDPSocket::SendOptions options;
     options.outInterfaceId = destInterface->getInterfaceId();
