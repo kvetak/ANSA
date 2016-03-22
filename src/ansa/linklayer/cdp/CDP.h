@@ -118,10 +118,11 @@ protected:
     int capabilitiesPosition(std::string capability);
     bool hasRoutingProtocol();
     bool parseIPAddress(const char *text, unsigned char tobytes[]);
-    bool ipInterfaceExist();
+    bool ipInterfaceExist(int interfaceId);
     uint16_t checksum(CDPUpdate *msg);
     void activateInterface(InterfaceEntry *interface);
     void deactivateInterface(InterfaceEntry *interface);
+    bool isInterfaceSupported(const char *name);
 
     InterfaceEntry *getPortInterfaceEntry(unsigned int gateId);
 
@@ -133,6 +134,7 @@ protected:
 
     //neighbour table
     CDPTableEntry *newTableEntry(CDPUpdate *msg);
+    void updateTableEntry(CDPUpdate *msg, CDPTableEntry *entry);
     CDPTableEntry *findEntryInTable(std::string name, int port);
     void deleteEntryInTable(CDPTableEntry *entry);
 
@@ -146,7 +148,7 @@ protected:
     void setTlvCapabilities(CDPUpdate *msg, int pos);
     void setTlvDuplex(CDPUpdate *msg, int pos, int interfaceId);
     void setTlvODR(CDPUpdate *msg, int pos, int interfaceId);
-    void setTlvIpPrefix(CDPUpdate *msg, int pos);
+    void setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId);
 
 private:
     IRoute *addRoute(const L3Address& dest, int prefixLength, const InterfaceEntry *ie, const L3Address& nextHop, int metric);

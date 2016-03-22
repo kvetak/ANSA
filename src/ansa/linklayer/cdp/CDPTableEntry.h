@@ -32,8 +32,8 @@ public:
     int getPortReceive(){return this->portReceive;}
     void setPortReceive(int portReceive){this->portReceive = portReceive;}
 
-    int getPortSend(){return this->portSend;}
-    void setPortSend(int portSend){this->portSend = portSend;}
+    std::string getPortSend(){return this->portSend;}
+    void setPortSend(std::string portSend){this->portSend = portSend;}
 
     simtime_t getLastUpdate(){return this->lastUpdate;}
     void setLastUpdated(simtime_t lastUpdate){this->lastUpdate = lastUpdate;}
@@ -56,7 +56,7 @@ public:
 private:
     std::string name;
     int portReceive;
-    int portSend;
+    std::string portSend;
     simtime_t lastUpdate;
     CDPTimer *holdTimeTimer;
     bool fullDuplex;

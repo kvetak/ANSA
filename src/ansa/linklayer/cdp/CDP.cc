@@ -76,10 +76,12 @@ void CDP::initialize(int stage)
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(containingModule->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
 
-        if(sendIpPrefixes && odr && containingModule->getSubmodule("routingTable") != nullptr)
+        if(containingModule->getSubmodule("routingTable") != nullptr)
         {
+            sendIpPrefixes = true;
             //rt4 = check_and_cast<IPv4RoutingTable*>(containingModule->getSubmodule("routingTable")->getSubmodule("ipv4"));
-            rt = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
+            if(odr)
+                rt = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
         }
     }
 }
@@ -94,7 +96,7 @@ void CDP::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj D
     InterfaceEntry *interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
     int outputGateid = interface->getNodeOutputGateId();
 
-    if(interface->isUp() && containingModule->gate(outputGateid)->isPathOK() && interface->hasCarrier())
+    if(interface->isUp() && containingModule->gate(outputGateid)->isPathOK())
         activateInterface(interface);
     else
         deactivateInterface(interface);
@@ -142,18 +144,19 @@ void CDP::scheduleALL()
 {
     InterfaceEntry *interface;
 
-    if(containingModule->gateSize("ethg$o") < 1) return;
-
-    for(int i=0; i < containingModule->gate("ethg$o", 0)->getVectorSize(); ++i)
+    for(int i=0; i < ift->getNumInterfaces(); i++)
     {
-        interface = ift->getInterfaceByNodeOutputGateId(containingModule->gate("ethg$o", i)->getId());
-        activateInterface(interface);
+        if(isInterfaceSupported(ift->getInterface(i)->getInterfaceModule()->getName()))
+        {
+            interface = ift->getInterface(i);
+            activateInterface(interface);
+        }
     }
 }
 
 void CDP::activateInterface(InterfaceEntry *interface)
 {
-    if(!interface->isUp() || !containingModule->gate(interface->getNodeOutputGateId())->isPathOK() || !interface->hasCarrier())
+    if(!interface->isUp() || !containingModule->gate(interface->getNodeOutputGateId())->isPathOK())
         return;
 
     CDPTimer *updateTimer = new CDPTimer();
@@ -164,7 +167,7 @@ void CDP::activateInterface(InterfaceEntry *interface)
     CDPInterface *cdpInterface = new CDPInterface(interface, updateTimer);
     cdpInterfaceTable.addInterface(cdpInterface);
 
-    EV << "Interface go up, id:" << interface->getInterfaceId() <<  "\n";
+    EV << "Interface " << interface->getName() << " go up, id:" << interface->getInterfaceId() <<  "\n";
 }
 
 void CDP::deactivateInterface(InterfaceEntry *interface)
@@ -174,8 +177,16 @@ void CDP::deactivateInterface(InterfaceEntry *interface)
     {
         cancelAndDelete(cdpInterface->getUpdateTimer());
         cdpInterfaceTable.removeInterface(cdpInterface->getInterfaceId());
-        EV << "Interface go down, id: " << interface->getInterfaceId()<<"\n";
+        EV << "Interface " << interface->getName() << " go down, id: " << interface->getInterfaceId() << "\n";
     }
+}
+
+bool CDP::isInterfaceSupported(const char *name)
+{
+    if(strcmp(name, "eth") == 0 || strcmp(name, "ppp") == 0)
+        return true;
+    else
+        return false;
 }
 
 ///************************ END OF CDP OPERATION ****************************///
@@ -211,7 +222,11 @@ InterfaceEntry *CDP::getPortInterfaceEntry(unsigned int portNum)
 {
     cGate *gate = containingModule->gate("ethg$i", portNum);
     if (!gate)
-        throw cRuntimeError("gate is nullptr");
+    {
+        gate = containingModule->gate("ppp$i", portNum);
+        if (!gate)
+            throw cRuntimeError("gate is nullptr");
+    }
     InterfaceEntry *gateIfEntry = ift->getInterfaceByNodeInputGateId(gate->getId());
     if (!gateIfEntry)
         throw cRuntimeError("gate's Interface is nullptr");
@@ -221,6 +236,8 @@ InterfaceEntry *CDP::getPortInterfaceEntry(unsigned int portNum)
 
 CDPTableEntry *CDP::newTableEntry(CDPUpdate *msg)
 {
+    EV << "NEW ENTRY " << msg->getTlv(0).getValue() << " " << msg->getArrivalGateId() << "\n";
+
     CDPTableEntry *entry = new CDPTableEntry();
 
     for(unsigned int i=0; i < msg->getTlvArraySize(); i++)
@@ -231,7 +248,7 @@ CDPTableEntry *CDP::newTableEntry(CDPUpdate *msg)
                 entry->setName(msg->getTlv(i).getValue());
                 break;
             case TLV_PORT_ID:
-                entry->setPortSend(atoi(msg->getTlv(i).getValue()));
+                entry->setPortSend(msg->getTlv(i).getValue());
                 break;
             case TLV_DUPLEX:
                 entry->setFullDuplex(msg->getTlv(i).getValue());
@@ -251,7 +268,7 @@ CDPTableEntry *CDP::newTableEntry(CDPUpdate *msg)
                 //cdpInterfaceTable.findInterfaceById(interfaceId)->setSendODRUpdate(true);
                 break;
             case TLV_IP_PREFIX:
-                EV << "PRIJMUTI ADRES!!!!!!!!!!\n";
+                //EV << "PRIJMUTI ADRES!!!!!!!!!!\n";
                 break;
         }
     }
@@ -268,24 +285,67 @@ CDPTableEntry *CDP::newTableEntry(CDPUpdate *msg)
     return entry;
 }
 
+void CDP::updateTableEntry(CDPUpdate *msg, CDPTableEntry *entry)
+{
+    EV << "UPDATE ENTRY" << msg->getTlv(0).getValue() << " " << msg->getArrivalGateId() << "\n";
+
+    int begin = 0, address, netmask, interfaceId;
+    std::string prefix;
+    const char *prefixes;
+
+    entry->setLastUpdated(simTime());
+    for(unsigned int i=0; i < msg->getTlvArraySize(); i++)
+    {
+        switch(msg->getTlv(i).getType())
+        {
+            case TLV_IP_PREFIX:
+                    prefixes = msg->getTlv(i).getValue();
+                    for(unsigned int i = begin; i < strlen(prefixes);
+                            i+=IPV4_ADDRESS_STRING_LENGTH + NETMASK_STRING_LENGTH)
+                    {
+                        prefix.assign(prefixes, begin, IPV4_ADDRESS_STRING_LENGTH);
+                        address = stoi (prefix,nullptr,16);
+                        begin += IPV4_ADDRESS_STRING_LENGTH;
+                        prefix.assign(prefixes, begin, NETMASK_STRING_LENGTH);
+                        netmask = stoi (prefix,nullptr,16);
+                        begin += NETMASK_STRING_LENGTH;
+                    }
+                    break;
+            case TLV_PORT_ID:
+                entry->setPortSend(msg->getTlv(i).getValue());
+                break;
+            case TLV_VERSION:
+                entry->setVersion(msg->getTlv(i).getValue());
+                break;
+            case TLV_CAPABILITIES:
+                entry->setCapabilities(msg->getTlv(i).getValue());
+                break;
+            case TLV_PLATFORM:
+                entry->setPlatform(msg->getTlv(i).getValue());
+                break;
+            case TLV_ODR:
+                break;
+        }
+    }
+
+    //reschedule holdtime
+    if (entry->getHoldTimeTimer()->isScheduled())
+        cancelEvent(entry->getHoldTimeTimer());
+    scheduleAt(simTime() + (simtime_t)msg->getTtl(), entry->getHoldTimeTimer());
+}
+
 void CDP::getCapabilities(cProperty *property)
 {
     int capabilityPos;
     cap[0]=cap[1]=cap[2]=cap[3]=0;
-    sendIpPrefixes = false;
 
     if(property != NULL)
     {
         for(int i=0; i < property->getNumValues(""); i++)
         {
             capabilityPos = capabilitiesPosition(property->getValue("", i));
-            if(capabilityPos == -1)
-                continue;
-            else if(capabilityPos == 0 ||   //router
-                    capabilityPos == 4 ||   //host
-                    capabilityPos == 5)     //IGMP
-                sendIpPrefixes = true;
-            cap[3-capabilityPos/8] |= 1 << capabilityPos%8;
+            if(capabilityPos != -1)
+                cap[3-capabilityPos/8] |= 1 << capabilityPos%8;
         }
     }
 }
@@ -325,7 +385,7 @@ void CDP::sendUpdate(int interfaceId)
     controlInfo->setInterfaceId(interfaceId);
     msg->setControlInfo(controlInfo);
 
-    send(msg, "ifOut", ift->getInterfaceById(interfaceId)->getInterfaceModule()->getIndex());
+    send(msg, "ifOut", ift->getInterfaceById(interfaceId)->getNetworkLayerGateIndex());
 }
 
 void CDP::handleUpdate(CDPUpdate *msg)
@@ -334,47 +394,10 @@ void CDP::handleUpdate(CDPUpdate *msg)
         return;
     CDPTableEntry *entry = findEntryInTable(msg->getTlv(0).getValue(), msg->getArrivalGateId());
 
-    int begin = 0, address, netmask, interfaceId;
-    std::string prefix;
-    const char *prefixes;
-
     if(entry != NULL)
-    {
-        EV << "UPDATE ENTRY" << msg->getTlv(0).getValue() << " " << msg->getArrivalGateId() << "\n";
-        entry->setLastUpdated(simTime());
-
-        for(unsigned int i=0; i < msg->getTlvArraySize(); i++)
-        {
-            switch(msg->getTlv(i).getType())
-            {
-                case TLV_IP_PREFIX:
-                        prefixes = msg->getTlv(i).getValue();
-                        for(unsigned int i = begin; i < strlen(prefixes);
-                                i+=IPV4_ADDRESS_STRING_LENGTH + NETMASK_STRING_LENGTH)
-                        {
-                            prefix.assign(prefixes, begin, IPV4_ADDRESS_STRING_LENGTH);
-                            address = stoi (prefix,nullptr,16);
-                            begin += IPV4_ADDRESS_STRING_LENGTH;
-                            prefix.assign(prefixes, begin, NETMASK_STRING_LENGTH);
-                            netmask = stoi (prefix,nullptr,16);
-                            begin += NETMASK_STRING_LENGTH;
-                        }
-                        break;
-            }
-        }
-
-        //reschedule holdtime
-        if (entry->getHoldTimeTimer()->isScheduled())
-            cancelEvent(entry->getHoldTimeTimer());
-        scheduleAt(simTime() + (simtime_t)msg->getTtl(), entry->getHoldTimeTimer());
-    }
+        updateTableEntry(msg, entry);
     else
-    {
-        EV << "NEW ENTRY" << msg->getTlv(0).getValue() << " " << msg->getArrivalGateId() << "\n";
-
-        entry = newTableEntry(msg);
-        table.push_back(entry);
-    }
+        table.push_back(newTableEntry(msg));
 }
 
 void CDP::handleTimer(CDPTimer *msg)
@@ -604,9 +627,7 @@ void CDP::setTlvVersion(CDPUpdate *msg, int pos)
 {
     CDPTLV *tlv = new CDPTLV();
     tlv->setType(TLV_VERSION);
-
-    //TODO: upravit na verzi SW
-    tlv->setValue(SSTR(1).c_str());
+    tlv->setValue("1.0");
     tlv->setLength(getTlvSize(tlv));
     msg->setTlv(pos, tlv[0]);
 }
@@ -642,7 +663,7 @@ void CDP::setTlvODR(CDPUpdate *msg, int pos, int interfaceId)
     msg->setTlv(pos, tlv[0]);
 }
 
-void CDP::setTlvIpPrefix(CDPUpdate *msg, int pos)
+void CDP::setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId)
 {
     CDPTLV *tlv = new CDPTLV();
     tlv->setType(TLV_IP_PREFIX);
@@ -651,7 +672,9 @@ void CDP::setTlvIpPrefix(CDPUpdate *msg, int pos)
     for(int i=0; i < ift->getNumInterfaces(); i++)
     {
         if(ift->getInterface(i)->ipv4Data() != nullptr &&
-                !ift->getInterface(i)->ipv4Data()->getIPAddress().isUnspecified())
+                !ift->getInterface(i)->ipv4Data()->getIPAddress().isUnspecified() &&
+                ift->getInterface(i)->getInterfaceId() != interfaceId &&
+                !ift->getInterface(i)->isLoopback())
         {
             prefix = SSTR(ift->getInterface(i)->ipv4Data()->getIPAddress().getInt());
             if(prefix.size() < 8) prefix = "0" + prefix;
@@ -683,14 +706,6 @@ uint16_t CDP::checksum(CDPUpdate *msg)
         a += msg->getTlv(i).getLength();
         a += msg->getTlv(i).getValue();
     }
-    /*EV << a.size() <<"\n";
-    unsigned char p;
-    for(int i = 0; i < a.size(); i++)
-    {
-        p = a.at(i)-'0';
-        EV << +p << " ";
-    }
-    EV << "\n";*/
     serialized = a.c_str();
     int count = a.size();
     uint32_t sum = 0;
@@ -749,11 +764,13 @@ bool CDP::parseIPAddress(const char *text, unsigned char tobytes[])
     return i == 4;    // must have all 4 numbers
 }
 
-bool CDP::ipInterfaceExist()
+bool CDP::ipInterfaceExist(int interfaceId)
 {
     for(int i=0; i < ift->getNumInterfaces(); i++)
         if(ift->getInterface(i)->ipv4Data() != nullptr &&
-                !ift->getInterface(i)->ipv4Data()->getIPAddress().isUnspecified())
+                !ift->getInterface(i)->ipv4Data()->getIPAddress().isUnspecified() &&
+                ift->getInterface(i)->getInterfaceId() != interfaceId &&
+                !ift->getInterface(i)->isLoopback())
             return true;
     return false;
 }
@@ -779,11 +796,10 @@ void CDP::createTlv(CDPUpdate *msg, int interfaceId)
         msg->setTlvArraySize(++count);
         setTlvODR(msg, count-1, interfaceId);
     }
-    //TODO: neposilat adresu ze ktere se posila CDP paket
-    else if(sendIpPrefixes && ipInterfaceExist() && !hasRoutingProtocol())  //ip prefix
+    else if(sendIpPrefixes && ipInterfaceExist(interfaceId) && !hasRoutingProtocol())  //ip prefix
     {
         msg->setTlvArraySize(++count);
-        setTlvIpPrefix(msg, count-1);
+        setTlvIpPrefix(msg, count-1, interfaceId);
     }
 }
 

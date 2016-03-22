@@ -37,6 +37,10 @@ network basicRouter
                 config = xmldoc("./networkConfig.xml");
                 @display("p=48,181");
         }
+        
+        H: ANSA_Host {
+            @display("p=58,288");
+        }
 
         R1: ANSA_Router {
             parameters:
@@ -56,7 +60,13 @@ network basicRouter
             gates:
                 ethg[3];
         }
-
+        R4: ANSA_Router {
+            parameters:
+            	@display("p=421,167");
+            gates:
+                pppg[1];
+        }
+        
         lifecycleController: LifecycleController {
             @display("p=48,68");
         }
@@ -64,18 +74,10 @@ network basicRouter
         scenarioManager: ScenarioManager {
             @display("p=48,123");
         }
-
-        H: ANSA_Host {
-            @display("p=58,288");
-        }
-        R4: ANSA_Router {
-            @display("p=421,167");
-        }
     connections allowunconnected:
         R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
         R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
         R3.ethg[0] <--> Eth100M <--> R1.ethg[1];
         H.ethg++ <--> Eth100M <--> R1.ethg[2];
         R4.pppg++ <--> Eth100M <--> R2.pppg++;
-        R2.pppg++ <--> Eth100M <--> R4.pppg++;
 }
