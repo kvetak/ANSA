@@ -32,7 +32,7 @@ simple HSRP like IUDPApp
     	int group				= default(0);	//group number of actual device
 //    	IPv4Address address;     	
       	string virtualIP;	//virtual IP address of actual HSRP device  
-      	string virtualMAC	= default("00-00-0C-07-AC-00");	//MAC address of actual HSRP device 
+//      	string virtualMAC	= default("00-00-0C-07-AC-00");	//MAC address of actual HSRP device 
       	string multicastIPv4 = default("224.0.0.2");	//multicast address of HSRP
       	
     gates:

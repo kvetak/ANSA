@@ -38,6 +38,7 @@ class HSRP : public cSimpleModule{
         int hsrpUdpPort; //hsrp udp port (usually 1985)
         IL3AddressType *addressType = nullptr;    // address type of the routing table
         int HsrpState;
+        int HSRPgroup;
         IInterfaceTable *ift = nullptr;
         IRoutingTable *rt = nullptr;
         ARP *arp = nullptr;
@@ -55,6 +56,7 @@ class HSRP : public cSimpleModule{
         virtual int numInitStages() const {return NUM_INIT_STAGES;};
         void handleMessage(cMessage *msg);
         void sendMessage(OP_CODE opCode);
+        void setVirtualMAC();
         HSRPMessage *generateMessage(OP_CODE opCode);
         void bindMulticast();
         void scheduleTimer(cMessage *msg);

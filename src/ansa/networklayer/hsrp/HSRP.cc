@@ -15,8 +15,11 @@
 
 #include "HSRP.h"
 #include <iostream>
+#include <iomanip>
+
 #include "inet/common/ModuleAccess.h"
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
+
 
 namespace inet {
 
@@ -33,22 +36,23 @@ HSRP::HSRP() {
  */
 void HSRP::initialize(int stage)
 {
-    if (stage == 1){ //Init common variables
 
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
         hsrpUdpPort = 1985;
         socket = new UDPSocket(); //UDP socket used for sending messages
         HsrpMulticast = new L3Address(par("multicastIPv4")); //HSRP multicast address
-        virtualMAC = new MACAddress(par("virtualMAC").stringValue());
         hellotimer = new cMessage("helloTimer");
         standbytimer = new cMessage("standbyTimer");
         activetimer = new cMessage("activeTimer");
         initmessage = new cMessage("startHSRP");
+        HSRPgroup = (int)par("group").doubleValue();
         if (strcmp(par("virtualIP").stringValue(), "") != 0){
             virtualIP = new IPv4Address(par("virtualIP").stringValue());
         }
-    }
-    if (stage == 2){ //init hsrp variables and start hsrp process
         scheduleAt(simTime() , initmessage);
+        setVirtualMAC();
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
         containingModule = findContainingNode(this);
         arp = dynamic_cast<ARP *>(containingModule->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp"));
@@ -139,6 +143,12 @@ void HSRP::handleMessage(cMessage *msg)
     }
     else
     {//got message from another router
+
+        //FIXME Zkontroluj sli spada do moji skupiny a zajima me...?
+        if ((double)HSRPm->getGroup() != par("group").doubleValue()){
+            EV_DEBUG << "Wrong message with GID:" <<HSRPm->getGroup() << "\n";
+            return;
+        }
 
         std::cout<<"\n"<<par("deviceId").stringValue()<<"]Got messag!!!!!!!!!!!"<<std::endl;
         fflush(stdout);
@@ -406,6 +416,13 @@ void HSRP::handleMessageListen(HSRPMessage *msg)
  * Other usefull functions
  *
  */
+
+void HSRP::setVirtualMAC()
+{
+    virtualMAC = new MACAddress("00-00-0C-07-AC-00");
+    virtualMAC->setAddressByte(5, HSRPgroup);
+    EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
+}
 
 void HSRP::bindMulticast(){
     //bind to multicast for listening of other HSRP routers
