@@ -27,6 +27,7 @@ simple CDP like INetworkLayerLower
     	int holdTime = default(180);
     	int version = default(2);
     	bool odr = default(false);
+        string routingTableModule = default("");
 	gates:
         input ifIn[] @labels(INetworkDatagram/up);
         output ifOut[] @labels(INetworkDatagram/down);

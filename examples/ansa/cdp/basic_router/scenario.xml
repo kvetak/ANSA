@@ -10,8 +10,8 @@
   	</at>
 
   	<at t="250">
-        <connect src-module="R1" src-gate="ethg[2]"
-                 dest-module="R2" dest-gate="ethg[2]"
+        <connect src-module="R1" src-gate="ethg[0]"
+                 dest-module="R2" dest-gate="ethg[0]"
                  channel-type="inet.node.ethernet.Eth100M">
         </connect>		
   	</at>

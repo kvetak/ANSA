@@ -72,6 +72,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         ipv4.routingTableModule = default(absPath(routingTableModule) + ".ipv4");
         ipv6.routingTableModule = default(absPath(routingTableModule) + ".ipv6");
         clns.routingTableModule = default(absPath(routingTableModule) + ".clns");
+        cdp.routingTableModule = default(absPath(routingTableModule) + ".ipv4");
 
     gates:
         input ifIn[] @labels(INetworkDatagram);
@@ -106,7 +107,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
                 ifUpperIn[4*sizeof(ifOut)];
         }
 
-        cdp: <"CDP"> like INetworkLayerLower if enableCDP  {
+        cdp: <"CDP"> like INetworkLayerLower if enableCDP {
             @display("p=461,500");
         }
     connections allowunconnected:

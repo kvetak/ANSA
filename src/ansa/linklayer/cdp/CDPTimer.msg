@@ -26,5 +26,5 @@ enum CDPTimerType
 message CDPTimer
 {
     char timerType enum(CDPTimerType) = CDPUpdateTime;
-    int index;
+    int interfaceId;
 }

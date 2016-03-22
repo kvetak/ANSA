@@ -16,6 +16,7 @@
 package inet.examples.ansa.cdp.basic_router;
 
 import ansa.node.ANSA_Host;
+import ansa.node.CDPRouter;
 import inet.common.lifecycle.LifecycleController;
 import ansa.node.ANSA_Router;
 import inet.node.ethernet.Eth100M;
@@ -67,9 +68,14 @@ network basicRouter
         H: ANSA_Host {
             @display("p=58,288");
         }
+        R4: ANSA_Router {
+            @display("p=421,167");
+        }
     connections allowunconnected:
         R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
         R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
         R3.ethg[0] <--> Eth100M <--> R1.ethg[1];
         H.ethg++ <--> Eth100M <--> R1.ethg[2];
+        R4.pppg++ <--> Eth100M <--> R2.pppg++;
+        R2.pppg++ <--> Eth100M <--> R4.pppg++;
 }
