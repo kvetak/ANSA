@@ -27,7 +27,7 @@
 
 cplusplus {{
 #include "inet/networklayer/contract/ipv4/IPv4Address.h"
-//#include "inet/networklayer/common/L3Address.h"
+const int HSRP_HEADER_SIZE = 96;
 }}
 
 class noncobject IPv4Address;

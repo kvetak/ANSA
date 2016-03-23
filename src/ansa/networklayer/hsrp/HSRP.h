@@ -33,6 +33,7 @@ namespace inet {
 
 class HSRP : public cSimpleModule{
     protected:
+        const char* CONFIG_PAR = "configData";
         std::string hostname;
         UDPSocket *socket;    // bound to the HSRP port (see udpPort parameter)
         int hsrpUdpPort; //hsrp udp port (usually 1985)
@@ -69,6 +70,7 @@ class HSRP : public cSimpleModule{
         void listenState();
         void learnState();
         void speakState();
+        void parseConfig(cXMLElement *config);
 
 
     public:

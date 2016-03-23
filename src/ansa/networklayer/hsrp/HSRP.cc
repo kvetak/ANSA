@@ -15,6 +15,7 @@
 
 #include "HSRP.h"
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 
 #include "inet/common/ModuleAccess.h"
@@ -40,6 +41,9 @@ void HSRP::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+
+        this->parseConfig(par(CONFIG_PAR));
+
         hsrpUdpPort = 1985;
         socket = new UDPSocket(); //UDP socket used for sending messages
         HsrpMulticast = new L3Address(par("multicastIPv4")); //HSRP multicast address
@@ -416,6 +420,55 @@ void HSRP::handleMessageListen(HSRPMessage *msg)
  * Other usefull functions
  *
  */
+
+void HSRP::parseConfig(cXMLElement *config)
+{
+    //Config element is empty
+    if (!config)
+        return;
+
+    //Go through all interfaces and look for HSRP section
+    cXMLElementList msa = config->getChildrenByTagName("Interface");
+    for (cXMLElementList::iterator i = msa.begin(); i != msa.end(); ++i) {
+        cXMLElement* m = *i;
+
+        //Get through each group
+        cXMLElementList gr = m->getElementsByTagName("Group");
+        for (cXMLElementList::iterator j = gr.begin(); j != gr.end(); ++j) {
+            cXMLElement* group = *j;
+
+            //get GID
+            int gid;
+            std::stringstream strValue;
+            if (!group->getAttribute("id")) {
+                EV << "Config XML file missing tag or attribute - Group id" << endl;
+                continue;
+            } else
+            {
+                strValue << group->getAttribute("id");
+                strValue >> gid;
+                EV_DEBUG << "Setting GID:" <<gid<< endl;
+                HSRPgroup = gid;
+            }
+
+            //get virtual IP
+            std::string virtip;
+            if (!group->getAttribute("IPAddress")) {
+                EV << "Config XML file missing tag or attribute - ADDRESS" << endl;
+                continue;
+            } else
+            {
+                virtip = group->getAttribute("IPAddress");
+                EV_DEBUG << "Setting virtip:" <<virtip<< endl;
+                virtualIP = new IPv4Address(virtip.c_str());
+            }
+            printf("DevConf>> vrid:%s, GID: %d!\n", virtip.c_str(),  gid);
+            fflush(stdout);
+        }
+    }
+
+
+}
 
 void HSRP::setVirtualMAC()
 {
