@@ -298,6 +298,8 @@ void HSRP::handleMessageStandby(HSRPMessage *msg)
                 cancelEvent(activetimer);
                 sendMessage(HELLO);
                 //TODO send gratious ARP
+                const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
+                arp->sendARPGratuitous(destInterface,*(virtualMAC), *(virtualIP), ARP_REQUEST);//TODO send gratious ARP
             }
             break;
         case SPEAK:
@@ -361,6 +363,8 @@ void HSRP::handleMessageSpeak(HSRPMessage *msg)
                 //TODO send coup message to active
                 //TODO send hello message with current state atd
                 //TODO gratious ARP? WTF?
+                const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
+                arp->sendARPGratuitous(destInterface,*(virtualMAC), *(virtualIP), ARP_REQUEST);//TODO send gratious ARP
             }
             break;
 
@@ -453,12 +457,12 @@ void HSRP::parseConfig(cXMLElement *config)
 
             //get virtual IP
             std::string virtip;
-            if (!group->getAttribute("IPAddress")) {
+            if (!group->getAttribute("ip")) {
                 EV << "Config XML file missing tag or attribute - ADDRESS" << endl;
                 continue;
             } else
             {
-                virtip = group->getAttribute("IPAddress");
+                virtip = group->getAttribute("ip");
                 EV_DEBUG << "Setting virtip:" <<virtip<< endl;
                 virtualIP = new IPv4Address(virtip.c_str());
             }
