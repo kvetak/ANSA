@@ -20,23 +20,15 @@ import inet.applications.contract.IUDPApp;
 simple HSRP like IUDPApp
 {
     parameters:
-     	@display("i=block/network2");
-     	xml configData = default(xml("<HSRP />"));
-     	string deviceId;     	
-		string interfaceTableModule = default(".interfaceTableModule");
-        string routingTableModule = default(".routingTableModule");
-//      	string arp; //path to the arp cache
-        int version				= default(1);	//default version of HSRP is 1
-    	int hellotime @unit(s)	= default(3s);	//hellotime of actual device
-    	int holdtime @unit(s)	= default(10s);	//holdtime of actual device
-    	int priority			= default(100);	//priority of actual device
-    	int group				= default(0);	//group number of actual device
-//    	IPv4Address address;     	
-      	string virtualIP;	//virtual IP address of actual HSRP device  
-//      	string virtualMAC	= default("00-00-0C-07-AC-00");	//MAC address of actual HSRP device 
-      	string multicastIPv4 = default("224.0.0.2");	//multicast address of HSRP
-      	
+        @display("i=block/network2");
+        xml configData = default(xml("<HSRP />"));
+        string deviceId;      
+        
+        string interfaceTableModule = default(".interfaceTableModule");
+            
     gates:
+        input hsrpIn[] @labels(UDPControlInfo/down);
+        output hsrpOut[] @labels(UDPControlInfo/up);       
         input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);
+        output udpOut @lables(UDPControlInfo/down);
 }
