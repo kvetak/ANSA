@@ -25,6 +25,7 @@ simple HSRPVirtualRouter like IUDPApp
      	xml configData = default(xml("<HSRP />"));
      	string deviceId;     	
 		string interfaceTableModule;
+		string arp;
 //        string routingTableModule = default(".routingTableModule");
 		int interface;
 		int vrid;

@@ -39,7 +39,7 @@ class HSRP : public cSimpleModule{
         virtual void updateDisplayString();
         void sendMessage(OP_CODE opCode);
         void parseConfig(cXMLElement *config);
-        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip);
+        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority);
 
     public:
         HSRP();

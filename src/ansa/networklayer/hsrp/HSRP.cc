@@ -36,10 +36,7 @@ void HSRP::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
-        printf("prd\n");
-        fflush(stdout);
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
-
         this->parseConfig(par(CONFIG_PAR));
     }
 }
@@ -52,7 +49,7 @@ void HSRP::handleMessage(cMessage *msg)
 
 } //end handleMessage
 
-void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip){
+void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority){
     int gateSize = virtualRouterTable.size() + 1;
     this->setGateSize("hsrpIn",gateSize);
     this->setGateSize("hsrpOut", gateSize);
@@ -72,7 +69,10 @@ void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     module->par("vrid") = vrid;
     module->par("interface") = interface;
     module->par("virtualIP") = vip;
+    module->par("priority") = priority;
     module->par("interfaceTableModule") = ift->getFullPath();
+    cModule *containingModule = findContainingNode(this);
+    module->par("arp") = containingModule->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp")->getFullPath();
 
     std::cout<< "full path:"<<ift->getFullPath()<<std::endl;
     module->finalizeParameters();
@@ -122,12 +122,26 @@ void HSRP::parseConfig(cXMLElement *config){
                 EV_DEBUG << "Setting GID:" <<gid<< endl;
             }
 
+            //get Priority
+            std::stringstream strValue2;
+            int priority;
+            if (!group->getAttribute("priority")) {
+                EV << "Config XML file missing tag or attribute - Priority" << endl;
+                priority = 100;
+//                continue;
+            } else
+            {
+                strValue2 << group->getAttribute("priority");
+                strValue2 >> priority;
+                EV_DEBUG << "Setting priority:" <<priority<< endl;
+            }
+
             //get virtual IP
             std::string virtip;
             if (!group->getAttribute("ip")) {
-                EV << "Config XML file missing tag or attribute - ADDRESS" << endl;
+                EV << "Config XML file missing tag or attribute - Ip" << endl;
                 virtip = "";
-                continue;
+//                continue;
             } else
             {
                 virtip = group->getAttribute("ip");
@@ -138,7 +152,7 @@ void HSRP::parseConfig(cXMLElement *config){
             fflush(stdout);
 
             int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
-            addVirtualRouter(iid , gid, ifname.c_str(), virtip);
+            addVirtualRouter(iid , gid, ifname.c_str(), virtip, priority);
         }// end each group
     }//end each interface
 }//end parseConfig

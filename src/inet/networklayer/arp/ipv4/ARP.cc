@@ -494,7 +494,7 @@ void ARP::sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Ad
     // fill out everything in ARP Request packet except dest MAC address
     ARPPacket *arp = new ARPPacket("arpGrt");
     arp->setByteLength(ARP_HEADER_BYTES);
-    arp->setOpcode(ARP_REPLY);
+    arp->setOpcode(opCode);
     arp->setSrcMACAddress(srcAddr);
     arp->setSrcIPAddress(ipAddr);
     arp->setDestIPAddress(ipAddr);
