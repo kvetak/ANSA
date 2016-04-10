@@ -10,6 +10,7 @@
 
 #include <omnetpp.h>
 #include "HSRPMessage_m.h"
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
 
 #include "inet/transportlayer/contract/udp/UDPSocket.h"
 #include "inet/networklayer/arp/ipv4/ARP.h"
@@ -24,23 +25,35 @@ namespace inet {
 
 class HSRPVirtualRouter : public cSimpleModule{
     protected:
-        std::string hostname;
-        UDPSocket *socket;    // bound to the HSRP port (see udpPort parameter)
-        int hsrpUdpPort; //hsrp udp port (usually 1985)
-        IL3AddressType *addressType = nullptr;    // address type of the routing table
-        int HsrpState;
-        int HSRPgroup;
-        IInterfaceTable *ift = nullptr;
-        IRoutingTable *rt = nullptr;
-        ARP *arp = nullptr;
-        L3Address *HsrpMulticast = nullptr;
-        IPv4Address *virtualIP = nullptr;
-        MACAddress *virtualMAC = nullptr;
+//        std::string hostname;
+
+        /*Variable needed for UDP*/
+        UDPSocket *socket;      //UDP socket used for sending messages
+        int hsrpUdpPort;        //hsrp udp port (usually 1985)
+
+        /*Variables needed for  OMNET*/
+        IInterfaceTable *ift = nullptr;      //usable interfaces of this router
+        ARP *arp = nullptr;                  //arp table for sending arp gratuious.
+        AnsaInterfaceEntry *ie = nullptr;    //Interface which is running HSRP group
+        VirtualForwarder *vf = nullptr;      //Particular HSRP group is represented by VF on each interface
+        cModule *containingModule = nullptr; //helper for looking for particular module
+
+        /*HSRP specific variables*/
+        int HsrpState;                      //state of hsrp virtual router
+        int HSRPgroup;                      //group of hsrp virtual router
+        L3Address *HsrpMulticast = nullptr; //multicast address of HSRP (224.0.0.2)
+        IPv4Address *virtualIP = nullptr;   //Primary IP of the HSRP group
+        MACAddress *virtualMAC = nullptr;   //MAC of the HSRP group
+        bool preempt;                       //preemption flag
+        int priority;                       //priority value of hsrp group
+        int helloTime;
+        int holdTime;
+
+        /*HSRP timers*/
         cMessage *hellotimer = nullptr;
         cMessage *activetimer = nullptr;
         cMessage *standbytimer = nullptr;
-        cMessage *initmessage = nullptr;
-        cModule *containingModule = nullptr;
+        cMessage *initmessage = nullptr;     //TODO
 
     protected:
         virtual void initialize( int stage);
@@ -49,7 +62,6 @@ class HSRPVirtualRouter : public cSimpleModule{
         void sendMessage(OP_CODE opCode);
         void setVirtualMAC();
         HSRPMessage *generateMessage(OP_CODE opCode);
-        void bindMulticast();
         void scheduleTimer(cMessage *msg);
         void handleMessageStandby(HSRPMessage *msg);
         void handleMessageSpeak(HSRPMessage *msg);
@@ -61,9 +73,13 @@ class HSRPVirtualRouter : public cSimpleModule{
         void learnState();
         void speakState();
         void parseConfig(cXMLElement *config);
+        void learnTimers(HSRPMessage *msg);
 
 
     public:
+        virtual AnsaInterfaceEntry* getInterface() { return ie; };
+        int getGroup() const { return HSRPgroup; };
+//        virtual InterfaceEntry* getInterface() { return ie; };
         HSRPVirtualRouter();
         virtual ~HSRPVirtualRouter();
     };

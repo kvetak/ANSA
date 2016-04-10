@@ -508,6 +508,16 @@ void ARP::sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Ad
     controlInfo->setInterfaceId(ie->getInterfaceId());
     arp->setControlInfo(controlInfo);
 
+    ARPCacheEntry *entry = new ARPCacheEntry();
+    auto where = arpCache.insert(arpCache.begin(), std::make_pair(ipAddr, entry));
+    entry->myIter = where;
+    entry->ie = ie;
+
+    entry->pending = false;
+    entry->timer = nullptr;
+    entry->numRetries = 0;
+
+    updateARPCache(entry, srcAddr);
     // send out
     send(arp, netwOutGate);
 //    sendPacketToNIC(arp, ie, srcAddr, ETHERTYPE_ARP);

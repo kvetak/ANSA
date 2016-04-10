@@ -28,6 +28,8 @@
 cplusplus {{
 #include "inet/networklayer/contract/ipv4/IPv4Address.h"
 const int HSRP_HEADER_SIZE = 96;
+const std::string HSRP_MULTICAST_ADDRESS = "224.0.0.2";
+const int HSRP_UDP_PORT = 1985;
 }}
 
 class noncobject IPv4Address;

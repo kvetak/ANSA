@@ -24,7 +24,7 @@ simple HSRP like IUDPApp
         xml configData = default(xml("<HSRP />"));
         string deviceId;      
         
-        string interfaceTableModule = default(".interfaceTableModule");
+        string interfaceTableModule = default(".interfaceTableModule");        
             
     gates:
         input hsrpIn[] @labels(UDPControlInfo/down);

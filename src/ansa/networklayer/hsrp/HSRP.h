@@ -17,7 +17,7 @@
 #define HSRP_H_
 
 #include <omnetpp.h>
-//#include "HSRPMessage_m.h"
+#include "HSRPMessage_m.h"
 #include "HSRPVirtualRouter.h"
 
 namespace inet {
@@ -30,6 +30,9 @@ class HSRP : public cSimpleModule{
     protected:
         const char* CONFIG_PAR = "configData";
         std::vector<HSRPVirtualRouter *> virtualRouterTable;
+        std::vector<int> multicastInterfaces;
+        L3Address *HsrpMulticast = nullptr;
+        UDPSocket *socket;    // bound to the HSRP port (see udpPort parameter)
 
         IInterfaceTable *ift = nullptr;
     protected:
@@ -39,7 +42,8 @@ class HSRP : public cSimpleModule{
         virtual void updateDisplayString();
         void sendMessage(OP_CODE opCode);
         void parseConfig(cXMLElement *config);
-        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority);
+        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt);
+        void checkAndJoinMulticast(int InterfaceId);
 
     public:
         HSRP();

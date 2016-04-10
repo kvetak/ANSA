@@ -26,18 +26,17 @@ simple HSRPVirtualRouter like IUDPApp
      	string deviceId;     	
 		string interfaceTableModule;
 		string arp;
-//        string routingTableModule = default(".routingTableModule");
+//        string routingTableModule;// = default(".routingTableModule");
 		int interface;
 		int vrid;
 
-        int version				= default(1);	//default version of HSRP is 1
-    	int hellotime @unit(s)	= default(3s);	//hellotime of actual device
-    	int holdtime @unit(s)	= default(10s);	//holdtime of actual device
-    	int priority			= default(100);	//priority of actual device
-//    	int group				= default(0);	//group number of actual device 	
-      	string virtualIP;	//virtual IP address of actual HSRP device  
- 
-      	string multicastIPv4 = default("224.0.0.2");	//multicast address of HSRP
+        int version				= default(1);	  //default version of HSRP is 1
+    	int hellotime @unit(s)	= default(3s);	  //hellotime of actual device
+    	int holdtime @unit(s)	= default(10s);	  //holdtime of actual device
+    	int priority			= default(100);	  //priority of actual device
+    	bool preempt			= default(false); //preemption flag
+    	int group				= default(0);	  //group number of actual device 	
+      	string virtualIP;	//virtual IP address of actual HSRP device        	
       	
   	    gates:
         input udpIn @labels(UDPControlInfo/up);

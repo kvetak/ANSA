@@ -23,9 +23,9 @@ import inet.routing.contract.IPIMRouting;
 import inet.transportlayer.contract.ITCP;
 import inet.transportlayer.contract.IUDP;
 
-import ansa.node.ANSA_NodeBase;
+import ansa.node.ANSA_NodeBaseWithVF;
 
-module ANSA_Router extends ANSA_NodeBase
+module ANSA_Router extends ANSA_NodeBaseWithVF
 {
     parameters:
         @display("i=abstract/router");

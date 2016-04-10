@@ -33,6 +33,8 @@
 #include "inet/common/INETUtils.h"
 #include "inet/common/ModuleAccess.h"
 
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+
 namespace inet {
 
 using namespace utils;
@@ -327,6 +329,15 @@ InterfaceEntry *IPv4RoutingTable::getInterfaceByAddress(const IPv4Address& addr)
         InterfaceEntry *ie = ift->getInterface(i);
         if (ie->ipv4Data()->getIPAddress() == addr)
             return ie;
+#if defined(ANSAINET)
+        if (!ie->isLoopback() && dynamic_cast<AnsaInterfaceEntry *>(ie))
+        {
+            AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ie);
+            if (ieVF->hasIPAddress(addr))
+                return ie;
+
+        }
+#endif
     }
     return nullptr;
 }
@@ -358,7 +369,14 @@ bool IPv4RoutingTable::isLocalAddress(const IPv4Address& dest) const
             localAddresses.insert(interfaceAddr);
         }
     }
-
+#if defined(ANSAINET)
+    for (int i=0; i<ift->getNumInterfaces(); i++)
+    {
+        AnsaInterfaceEntry* ieVF = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterface(i));
+        if (ieVF && ieVF->hasIPAddress(dest))
+            return true;
+    }
+#endif
     auto it = localAddresses.find(dest);
     return it != localAddresses.end();
 }
