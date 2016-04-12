@@ -136,9 +136,7 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                     std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]ACtive state;"<<std::endl;
                     fflush(stdout);
                     sendMessage(HELLO);
-//                    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
-//                    printf("id:%d",(destInterface->getInterfaceId()));
-                    arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);//TODO send gratious ARP
+                    arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);
                     printf("iid:%d, virmac:", ift->getInterfaceByName("eth0")->getInterfaceId());
                     std::cout<<virtualMAC->str()<<"virtip"<<virtualIP->str()<<std::endl;
                     fflush(stdout);
@@ -296,7 +294,8 @@ void HSRPVirtualRouter::handleMessageStandby(HSRPMessage *msg)
     switch(msg->getState()){
         case ACTIVE:
             //h - lower priority from Active
-            if (msg->getPriority() < priority){ // TODO if preempt enable
+//            if (msg->getPriority() < priority){
+            if (isHigherPriorityThan(msg)) {
                 if (preempt){
                     if (activetimer->isScheduled())
                         cancelEvent(activetimer);
@@ -307,15 +306,15 @@ void HSRPVirtualRouter::handleMessageStandby(HSRPMessage *msg)
                     scheduleTimer(standbytimer);
                     sendMessage(COUP);
                     sendMessage(HELLO);
-//                    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
-                    arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);//TODOX
+//                    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0");
+                    arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);
                 }else{
                     scheduleTimer(activetimer);
                 }
                 break;
             }
             //g - higher priority from Active
-            else if (msg->getPriority() > priority){
+            else if (!isHigherPriorityThan(msg)){
                 learnTimers(msg);
                 scheduleTimer(activetimer);
             }
@@ -328,13 +327,13 @@ void HSRPVirtualRouter::handleMessageStandby(HSRPMessage *msg)
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Active state;"<<std::endl;
                 fflush(stdout);
                 sendMessage(HELLO);
-//                const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
-                arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);//TODO send gratious ARP
+//                const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0");
+                arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);
             }
             break;
         case SPEAK:
             //f - higher prio from Speak
-            if (msg->getPriority() > priority){
+            if (!isHigherPriorityThan(msg)){
                 HsrpState = LISTEN;
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Listen state;"<<std::endl;
                 fflush(stdout);
@@ -343,7 +342,7 @@ void HSRPVirtualRouter::handleMessageStandby(HSRPMessage *msg)
             break;
         case STANDBY:
             //k - higher priority from Standby
-            if (msg->getPriority() > priority){
+            if (!isHigherPriorityThan(msg)){
                 HsrpState = LISTEN;
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Listen state;"<<std::endl;
                 fflush(stdout);
@@ -364,7 +363,7 @@ void HSRPVirtualRouter::handleMessageSpeak(HSRPMessage *msg)
     switch(msg->getState()){
         case SPEAK:
             //f - higher prio from Speak
-            if (msg->getPriority() > priority){
+            if (!isHigherPriorityThan(msg)){
                 HsrpState = LISTEN;
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Listen state;"<<std::endl;
                 fflush(stdout);
@@ -373,7 +372,7 @@ void HSRPVirtualRouter::handleMessageSpeak(HSRPMessage *msg)
             break;
         case STANDBY:
             //l - lower prio from Standby
-            if (msg->getPriority() < priority){
+            if (isHigherPriorityThan(msg)){
                 HsrpState = STANDBY;
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Standby state;"<<std::endl;
                 fflush(stdout);
@@ -387,9 +386,9 @@ void HSRPVirtualRouter::handleMessageSpeak(HSRPMessage *msg)
                 scheduleTimer(standbytimer);
             }
             break;
-        case ACTIVE: //TODO just if preemption is set
+        case ACTIVE:
             //h - lower prio from Active
-            if (msg->getPriority() < priority){
+            if (isHigherPriorityThan(msg)){
                 if (preempt){
                     if (activetimer->isScheduled())
                         cancelEvent(activetimer);
@@ -398,9 +397,9 @@ void HSRPVirtualRouter::handleMessageSpeak(HSRPMessage *msg)
                     std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Active state;"<<std::endl;
                     fflush(stdout);
                     scheduleTimer(standbytimer);
-                    sendMessage(COUP);//TODO jen tak?
+                    sendMessage(COUP);
                     sendMessage(HELLO);
-//                    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO
+//                    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0");
                     arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);
                 }else{
                     scheduleTimer(activetimer);
@@ -422,7 +421,7 @@ void HSRPVirtualRouter::handleMessageActive(HSRPMessage *msg)
     switch (msg->getState()){
         case ACTIVE:
             //g - higher priority from Active
-            if (msg->getPriority() > priority){
+            if (!isHigherPriorityThan(msg)){
                 HsrpState = SPEAK;
                 vf->setDisable();
                 scheduleTimer(activetimer);
@@ -439,7 +438,7 @@ void HSRPVirtualRouter::handleMessageActive(HSRPMessage *msg)
 
     //j - higher priority COUP from some router
     if (msg->getOp_code() == COUP){
-        if (msg->getPriority() > priority){
+        if (!isHigherPriorityThan(msg)){
             HsrpState = SPEAK;
             vf->setDisable();
             scheduleTimer(activetimer);
@@ -462,7 +461,8 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
     switch (msg->getState()){
         case ACTIVE:
             if (msg->getOp_code() == RESIGN){
-                HsrpState = SPEAK;//TODO posila zpravu rovnou nebo az po timeru
+                HsrpState = SPEAK;
+                sendMessage(HELLO);//TODO-fakt ji posila rovnou?
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Speak state;"<<std::endl;
                 fflush(stdout);
                 scheduleTimer(activetimer);
@@ -470,7 +470,7 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
                 scheduleTimer(hellotimer);
             }
             //h - lower prio from Active
-            if (msg->getPriority() < priority){
+            if (isHigherPriorityThan(msg)){
                 if (preempt){
                     if (activetimer->isScheduled())
                         cancelEvent(activetimer);
@@ -479,7 +479,6 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
                     std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Active state;"<<std::endl;
                     fflush(stdout);
                     scheduleTimer(standbytimer);
-                    //FIXME COUP Message
                     sendMessage(COUP);
                     sendMessage(HELLO);
                     arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);
@@ -496,7 +495,7 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
             break;
         case STANDBY:
             //l - receipt Hello of lower prio from Standby
-            if (msg->getPriority() < priority){
+            if (isHigherPriorityThan(msg)){
                 HsrpState = SPEAK;//TODO poslat rovnou HELLO?
                 std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Speak state;"<<std::endl;
                 fflush(stdout);
@@ -560,9 +559,9 @@ void HSRPVirtualRouter::sendMessage(OP_CODE opCode)
 {
     HSRPMessage *packet = generateMessage(opCode);
     packet->setBitLength(HSRP_HEADER_SIZE);
-    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0"); //TODO for now just specific Interface
+//    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0");
     UDPSocket::SendOptions options;
-    options.outInterfaceId = destInterface->getInterfaceId();
+    options.outInterfaceId = ie->getInterfaceId();
 //    options.srcAddr = ift->getInterfaceByName("eth0")->ipv4Data()->getIPAddress(); //getInterfaceByName("eth0")->ipv4Data()->getIPAddress(); //TODO srcIP?? how to get
     socket->setTimeToLive(1);
     socket->sendTo(packet, *HsrpMulticast, hsrpUdpPort, &options);
@@ -580,6 +579,21 @@ void HSRPVirtualRouter::learnTimers(HSRPMessage *msg)
         holdTime = msg->getHoldtime();
         std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Changing holdTime;"<<std::endl;
         fflush(stdout);
+    }
+}
+
+bool HSRPVirtualRouter::isHigherPriorityThan(HSRPMessage *HSRPm){
+    if (HSRPm->getPriority() < priority){
+        return true;
+    }else if (HSRPm->getPriority() > priority){
+        return false;
+    }else{// ==
+        printf("------doslo na lamani chleba\n");
+        if (ie->ipv4Data()->getIPAddress() > ((IPv4ControlInfo *) HSRPm->getControlInfo())->getSrcAddr() ){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
 

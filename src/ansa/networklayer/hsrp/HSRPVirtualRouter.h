@@ -20,6 +20,7 @@
 #include "inet/networklayer/contract/IRoutingTable.h"
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
+#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 
 namespace inet {
 
@@ -74,7 +75,7 @@ class HSRPVirtualRouter : public cSimpleModule{
         void speakState();
         void parseConfig(cXMLElement *config);
         void learnTimers(HSRPMessage *msg);
-
+        bool isHigherPriorityThan(HSRPMessage *HSRPm);
 
     public:
         virtual AnsaInterfaceEntry* getInterface() { return ie; };
