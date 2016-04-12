@@ -6,8 +6,7 @@
 				<IPAddress>192.168.1.1</IPAddress>
 				<Mask>255.255.255.0</Mask>
 				<HSRP>
-					<Group id="2" ip="192.168.1.254" priority = "101"></Group>
-					<Group id="3" ip="192.168.1.253" priority = "99"></Group>					
+					<Group ip="192.168.1.254" priority = "100"></Group>											
 				</HSRP>				
 			</Interface>		
 				
@@ -25,8 +24,7 @@
 				<IPAddress>192.168.1.2</IPAddress>
 				<Mask>255.255.255.0</Mask>
 				<HSRP>
-					<Group id="2" ip="192.168.1.254"></Group>		
-					<Group id="3" ip="192.168.1.253"></Group>			
+					<Group ip="192.168.1.254" priority = "100"></Group>				
 				</HSRP>				
 			</Interface>		
 				
