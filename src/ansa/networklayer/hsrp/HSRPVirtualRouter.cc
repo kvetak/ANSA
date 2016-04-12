@@ -188,11 +188,11 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                 handleMessageSpeak(HSRPm);
                 break;
             case STANDBY:
-                std::cout<<par("deviceId").getName()<<"]"<<HSRPgroup<<"] STANDBY state"<<std::endl;
+                std::cout<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"] STANDBY state"<<std::endl;
                 fflush(stdout);
                 handleMessageStandby(HSRPm); break;
             case ACTIVE:
-                std::cout<<par("deviceId").getName()<<"]"<<HSRPgroup<<"] ACTIVE state"<<std::endl;
+                std::cout<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"] ACTIVE state"<<std::endl;
                 fflush(stdout);
                 handleMessageActive(HSRPm); break;
             default: return;
@@ -552,6 +552,7 @@ HSRPMessage *HSRPVirtualRouter::generateMessage(OP_CODE opCode)
     msg->setGroup(HSRPgroup);
     if (virtualIP != nullptr)
         msg->setAddress(*(virtualIP));
+
     return msg;
 }
 
@@ -559,10 +560,11 @@ void HSRPVirtualRouter::sendMessage(OP_CODE opCode)
 {
     HSRPMessage *packet = generateMessage(opCode);
     packet->setBitLength(HSRP_HEADER_SIZE);
-//    const InterfaceEntry *destInterface = ift->getInterfaceByName("eth0");
+
     UDPSocket::SendOptions options;
     options.outInterfaceId = ie->getInterfaceId();
-//    options.srcAddr = ift->getInterfaceByName("eth0")->ipv4Data()->getIPAddress(); //getInterfaceByName("eth0")->ipv4Data()->getIPAddress(); //TODO srcIP?? how to get
+    options.srcAddr = ie->ipv4Data()->getIPAddress();
+
     socket->setTimeToLive(1);
     socket->sendTo(packet, *HsrpMulticast, hsrpUdpPort, &options);
 }
@@ -583,13 +585,15 @@ void HSRPVirtualRouter::learnTimers(HSRPMessage *msg)
 }
 
 bool HSRPVirtualRouter::isHigherPriorityThan(HSRPMessage *HSRPm){
+    UDPDataIndication *ci =check_and_cast<UDPDataIndication *>(HSRPm->getControlInfo());
     if (HSRPm->getPriority() < priority){
         return true;
     }else if (HSRPm->getPriority() > priority){
         return false;
     }else{// ==
-        printf("------doslo na lamani chleba\n");
-        if (ie->ipv4Data()->getIPAddress() > ((IPv4ControlInfo *) HSRPm->getControlInfo())->getSrcAddr() ){
+        std::cout<<"ie IP:"<<ie->ipv4Data()->getIPAddress().str(false)<<"recv mess IP:"<<ci->getSrcAddr().str()<<std::endl;
+        fflush(stdout);
+        if (ie->ipv4Data()->getIPAddress() > ci->getSrcAddr().toIPv4() ){
             return true;
         }else{
             return false;
