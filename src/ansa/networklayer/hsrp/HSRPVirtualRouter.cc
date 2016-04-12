@@ -37,14 +37,7 @@ void HSRPVirtualRouter::initialize(int stage)
         hsrpUdpPort = HSRP_UDP_PORT;
         HsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
         HSRPgroup = (int)par("vrid");
-        if (strcmp(par("virtualIP").stringValue(), "") != 0){
-            virtualIP = new IPv4Address(par("virtualIP").stringValue());
-            printf("\n IP nastavena!!\n");
-        }else{
-            virtualIP = new IPv4Address("0.0.0.0");
-            printf("\n IP NEnastavena\n");
-        }
-        fflush(stdout);
+        virtualIP = new IPv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
         preempt = (bool)par("preempt");
         setVirtualMAC();
@@ -69,7 +62,6 @@ void HSRPVirtualRouter::initialize(int stage)
         vf->addIPAddress(*virtualIP);
         vf->setMACAddress(*virtualMAC);
         ie->addVirtualForwarder(vf);
-        vf->setDisable();
 
         //get socket ready
         socket = new UDPSocket();
@@ -93,6 +85,7 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
         fflush(stdout);
         if (msg == initmessage){
             HsrpState = INIT;
+            vf->setDisable();
             std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]Init state;"<<std::endl;
             fflush(stdout);
             initState();
@@ -200,7 +193,10 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                 std::cout<<par("deviceId").getName()<<"]"<<HSRPgroup<<"] STANDBY state"<<std::endl;
                 fflush(stdout);
                 handleMessageStandby(HSRPm); break;
-            case ACTIVE: handleMessageActive(HSRPm); break;
+            case ACTIVE:
+                std::cout<<par("deviceId").getName()<<"]"<<HSRPgroup<<"] ACTIVE state"<<std::endl;
+                fflush(stdout);
+                handleMessageActive(HSRPm); break;
             default: return;
         }
         delete HSRPm;
@@ -428,6 +424,7 @@ void HSRPVirtualRouter::handleMessageActive(HSRPMessage *msg)
             //g - higher priority from Active
             if (msg->getPriority() > priority){
                 HsrpState = SPEAK;
+                vf->setDisable();
                 scheduleTimer(activetimer);
                 scheduleTimer(standbytimer);
             }
@@ -444,6 +441,7 @@ void HSRPVirtualRouter::handleMessageActive(HSRPMessage *msg)
     if (msg->getOp_code() == COUP){
         if (msg->getPriority() > priority){
             HsrpState = SPEAK;
+            vf->setDisable();
             scheduleTimer(activetimer);
             scheduleTimer(standbytimer);
             sendMessage(RESIGN);

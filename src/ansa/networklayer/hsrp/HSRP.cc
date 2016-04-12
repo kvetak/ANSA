@@ -146,16 +146,16 @@ void HSRP::parseConfig(cXMLElement *config){
         for (cXMLElementList::iterator j = gr.begin(); j != gr.end(); ++j) {
             cXMLElement* group = *j;
 
-            //get GID - obligatory
+            //get GID
             int gid;
-            std::stringstream strValue;
+            std::stringstream strGID;
             if (!group->getAttribute("id")) {
                 EV << "Config XML file missing tag or attribute - Group id" << endl;
-                continue;
+                gid = 0; //def val
             } else
             {
-                strValue << group->getAttribute("id");
-                strValue >> gid;
+                strGID << group->getAttribute("id");
+                strGID >> gid;
                 EV_DEBUG << "Setting GID:" <<gid<< endl;
             }
 
@@ -164,7 +164,7 @@ void HSRP::parseConfig(cXMLElement *config){
             int priority;
             if (!group->getAttribute("priority")) {
                 EV << "Config XML file missing tag or attribute - Priority" << endl;
-                priority = 100;
+                priority = 100;//def val
             } else
             {
                 strValue2 << group->getAttribute("priority");
@@ -176,7 +176,7 @@ void HSRP::parseConfig(cXMLElement *config){
             bool preempt;
             if (!group->getAttribute("preempt")) {
                 EV << "Config XML file missing tag or attribute - Preempt" << endl;
-                preempt = false;
+                preempt = false; //def val
             } else
             {
                 if (strcmp("false",group->getAttribute("preempt"))){
@@ -192,7 +192,7 @@ void HSRP::parseConfig(cXMLElement *config){
             std::string virtip;
             if (!group->getAttribute("ip")) {
                 EV << "Config XML file missing tag or attribute - Ip" << endl;
-                virtip = "";
+                virtip = "0.0.0.0";//sign that ip is not set
             } else
             {
                 virtip = group->getAttribute("ip");
