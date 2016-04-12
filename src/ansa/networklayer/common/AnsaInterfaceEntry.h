@@ -16,7 +16,8 @@
 #ifndef ANSAINTERFACEENTRY_H_
 #define ANSAINTERFACEENTRY_H_
 
-#include "VirtualForwarder.h"
+#include "ansa/networklayer/common/VirtualForwarder.h"
+
 namespace inet{
 class INET_API AnsaInterfaceEntry : public InterfaceEntry
 {

@@ -27,6 +27,7 @@ class EtherTraffic;
 class InterfaceEntry;
 class AnsaInterfaceEntry;
 
+
 class AnsaEtherMACBaseVF: public EtherMACBase {
 public:
     AnsaEtherMACBaseVF() {};

@@ -30,13 +30,13 @@ simple HSRPVirtualRouter like IUDPApp
 		int interface;
 		int vrid;
 
-        int version				= default(1);	  //default version of HSRP is 1
-    	int hellotime @unit(s)	= default(3s);	  //hellotime of actual device
-    	int holdtime @unit(s)	= default(10s);	  //holdtime of actual device
-    	int priority			= default(100);	  //priority of actual device
-    	bool preempt			= default(false); //preemption flag
-    	int group				= default(0);	  //group number of actual device 	
-      	string virtualIP;	//virtual IP address of actual HSRP device        	
+        int version				= default(1);	 	 //default version of HSRP is 1
+    	int hellotime @unit(s)	= default(3s);	  	//hellotime of actual device
+    	int holdtime @unit(s)	= default(10s);	  	//holdtime of actual device
+    	int priority			= default(100);	 	 //priority of actual device
+    	bool preempt			= default(false);	 //preemption flag
+    	int group				= default(0);	    	//group number of actual device 	
+      	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device        	
       	
   	    gates:
         input udpIn @labels(UDPControlInfo/up);

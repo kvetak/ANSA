@@ -39,9 +39,12 @@ void HSRPVirtualRouter::initialize(int stage)
         HSRPgroup = (int)par("vrid");
         if (strcmp(par("virtualIP").stringValue(), "") != 0){
             virtualIP = new IPv4Address(par("virtualIP").stringValue());
+            printf("\n IP nastavena!!\n");
         }else{
             virtualIP = new IPv4Address("0.0.0.0");
+            printf("\n IP NEnastavena\n");
         }
+        fflush(stdout);
         priority = (int)par("priority");
         preempt = (bool)par("preempt");
         setVirtualMAC();
@@ -66,6 +69,7 @@ void HSRPVirtualRouter::initialize(int stage)
         vf->addIPAddress(*virtualIP);
         vf->setMACAddress(*virtualMAC);
         ie->addVirtualForwarder(vf);
+        vf->setDisable();
 
         //get socket ready
         socket = new UDPSocket();
