@@ -54,7 +54,7 @@ class HSRPVirtualRouter : public cSimpleModule{
         cMessage *hellotimer = nullptr;
         cMessage *activetimer = nullptr;
         cMessage *standbytimer = nullptr;
-        cMessage *initmessage = nullptr;     //TODO
+        cMessage *initmessage = nullptr;
 
     protected:
         virtual void initialize( int stage);
@@ -80,7 +80,7 @@ class HSRPVirtualRouter : public cSimpleModule{
     public:
         virtual AnsaInterfaceEntry* getInterface() { return ie; };
         int getGroup() const { return HSRPgroup; };
-//        virtual InterfaceEntry* getInterface() { return ie; };
+
         HSRPVirtualRouter();
         virtual ~HSRPVirtualRouter();
     };

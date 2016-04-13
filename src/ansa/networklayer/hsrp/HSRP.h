@@ -17,8 +17,13 @@
 #define HSRP_H_
 
 #include <omnetpp.h>
+
 #include "HSRPMessage_m.h"
 #include "HSRPVirtualRouter.h"
+
+#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "inet/common/ModuleAccess.h"
 
 namespace inet {
 /**
@@ -44,6 +49,7 @@ class HSRP : public cSimpleModule{
         void parseConfig(cXMLElement *config);
         void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt);
         void checkAndJoinMulticast(int InterfaceId);
+        bool is_unique(std::string virtip, int iid);
 
     public:
         HSRP();

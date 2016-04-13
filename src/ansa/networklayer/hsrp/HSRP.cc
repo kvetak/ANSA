@@ -14,12 +14,6 @@
 // 
 
 #include "HSRP.h"
-//#include "inet/networklayer/ipv4/ICMPMessage.h"
-#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
-#include "inet/common/ModuleAccess.h"
-//#include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
-//#include "inet/networklayer/contract/INetworkProtocolControlInfo.h"
-//#include "inet/linklayer/common/Ieee802Ctrl.h"
 
 namespace inet {
 
@@ -128,7 +122,7 @@ void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
 }
 
 void HSRP::parseConfig(cXMLElement *config){
-    //naparsuje config - >>> a rovnou zaklada HSRPVirtRoutery!! TODO
+    //naparsuje config - >>> a rovnou zaklada HSRPVirtRoutery
 
     //Config element is empty
     if (!config)
@@ -188,45 +182,74 @@ void HSRP::parseConfig(cXMLElement *config){
                 EV_DEBUG << "Setting preemption:" <<preempt<< endl;
             }
 
+            //get interface id
+            int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
+
             //get virtual IP
             std::string virtip;
             if (!group->getAttribute("ip")) {
                 EV << "Config XML file missing tag or attribute - Ip" << endl;
-                virtip = "0.0.0.0";//sign that ip is not set
+                virtip = "0.0.0.0"; //sign that ip is not set
             } else
             {
                 virtip = group->getAttribute("ip");
-                EV_DEBUG << "Setting virtip:" <<virtip<< endl;
-//                virtualIP = new IPv4Address(virtip.c_str()); //TODO chybi!
+                if (is_unique(virtip, iid)){
+                    EV_DEBUG << "Setting virtip:" <<virtip<< endl;
+                }else{
+                    std::cerr<<par("deviceId").stringValue()<<" Group "<<gid<<": Wrong HSRP group IP in config file."<<endl;
+                    fflush(stderr);
+                    continue;
+                }
             }
-            printf("DevConf>> vrid:%s, GID: %d!\n", virtip.c_str(),  gid);
-            fflush(stdout);
 
-            printf("num. interf:%d, ifname: %s\n", ift->getNumInterfaces(), ifname.c_str());
-            fflush(stdout);
-            int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
-            //FIXME: udelat i uncheck v pripade zruseni skupiny
+
             checkAndJoinMulticast(iid);
             addVirtualRouter(iid , gid, ifname.c_str(), virtip, priority, preempt);
         }// end each group
     }//end each interface
 }//end parseConfig
 
+//interface join multicast group if it is not joined yet
 void HSRP::checkAndJoinMulticast(int InterfaceId){
-    bool contain=0;
+    bool contain=false;
     for (int i = 0; i < (int) multicastInterfaces.size(); i++){
         if (multicastInterfaces[i] == InterfaceId){
-            contain = 1;
+            contain = true;
         }
     }
-    printf("Contain:%d,", contain);
+
     if (!contain){
-        printf("added\n");
         socket->joinMulticastGroup(*HsrpMulticast,InterfaceId);
         multicastInterfaces.push_back(InterfaceId);
     }
-    printf("not added\n");
-    fflush(stdout);
+}
+
+
+//check if virtual IP is unique in this router
+bool HSRP::is_unique(std::string virtip, int iid){
+
+//    IPv4Address *adr = new IPv4Address(virtip.c_str());
+
+    //check local virtual IPs
+    for (int i = 0; i < (int) virtualRouterTable.size(); i++){
+//        EV_DEBUG<<"Compared virtual Address:"<<virtualRouterTable.at(i)->getIPaddress()->str(false)<<endl;
+
+        if (virtip.compare(virtualRouterTable.at(i)->par("virtualIP").stringValue()) == 0){
+            EV<<par("deviceId").stdstringValue()<<" % Address "<<virtip<<" in group "<<(int)virtualRouterTable.at(i)->par("group")<<"."<<endl;
+            return false;
+        }
+    }
+
+    //check physical IP of actual interface
+    std::string InterfaceIP = ift->getInterfaceById(iid)->ipv4Data()->getIPAddress().str(false);
+//    EV_DEBUG<<"Compared physical Address: "<<InterfaceIP<<endl;
+    if (InterfaceIP.compare(virtip) == 0){
+        EV<<par("deviceId").stringValue()<<" % Address cannot equal interface IP address."<<endl;
+        return false;
+    }
+
+    //TODO: check overlapping ip with another interface
+    return true;
 }
 
 void HSRP::updateDisplayString()
