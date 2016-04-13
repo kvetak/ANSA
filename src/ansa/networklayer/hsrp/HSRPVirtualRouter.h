@@ -26,7 +26,7 @@ namespace inet {
 
 class HSRPVirtualRouter : public cSimpleModule{
     protected:
-//        std::string hostname;
+        std::string hostname;
 
         /*Variable needed for UDP*/
         UDPSocket *socket;      //UDP socket used for sending messages
@@ -76,6 +76,13 @@ class HSRPVirtualRouter : public cSimpleModule{
         void parseConfig(cXMLElement *config);
         void learnTimers(HSRPMessage *msg);
         bool isHigherPriorityThan(HSRPMessage *HSRPm);
+
+        //debug
+        void DebugStateMachine(int from, int to);
+        void DebugGetMessage(HSRPMessage *msg);
+        void DebugSendMessage(int op_code);
+        std::string intToHsrpState(int state);
+        std::string intToMessageType(int msg);
 
     public:
         virtual AnsaInterfaceEntry* getInterface() { return ie; };

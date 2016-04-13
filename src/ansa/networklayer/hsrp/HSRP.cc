@@ -52,7 +52,7 @@ void HSRP::handleMessage(cMessage *msg)
         {
             HSRPMessage *HSRPm = dynamic_cast<HSRPMessage*>(msg);
 
-            EV << "Recieved packet '" << HSRPm << "' from network layer, ";
+//            EV << "Recieved packet '" << HSRPm << "' from network layer, ";
 
             for (int i = 0; i < (int) virtualRouterTable.size(); i++){
 //                printf("group virtRouterGroup: %d, IID: %d", virtualRouterTable.at(i)->getGroup(), virtualRouterTable.at(i)->getInterface()->getInterfaceId());
@@ -62,7 +62,7 @@ void HSRP::handleMessage(cMessage *msg)
 //                                virtualRouterTable.at(i)->getInterface()->getInterfaceId()
 //                   )
                 {
-                    EV << "sending Advertisement to Virtual Router '" << virtualRouterTable.at(i) << "'" << endl;
+//                    EV << "sending Advertisement to Virtual Router '" << virtualRouterTable.at(i) << "'" << endl;
                     send(msg, "hsrpOut", i);
                     return;
                 }
@@ -74,7 +74,7 @@ void HSRP::handleMessage(cMessage *msg)
     }
     //get message from HSRP
     else if (msg->getArrivalGate()->isName("hsrpIn")){
-        EV << "Recieved advertisement '" << msg << "' from Virtual Router, sending to network layer." << endl;
+//        EV << "Recieved advertisement '" << msg << "' from Virtual Router, sending to network layer." << endl;
         send(msg, "udpOut");
     }
 } //end handleMessage

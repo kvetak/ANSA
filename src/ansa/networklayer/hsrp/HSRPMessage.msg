@@ -51,6 +51,7 @@ enum STATE
     SPEAK = 4;
     STANDBY = 8;
     ACTIVE = 16;
+    DISABLED = 32;
 }
 
 packet HSRPMessage {
