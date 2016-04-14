@@ -21,17 +21,12 @@ import inet.common.lifecycle.LifecycleController;
 import inet.common.scenario.ScenarioManager;
 import inet.node.ethernet.EtherSwitch;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
-//import inet.node.ethernet.EtherLink;
+import inet.node.ethernet.Eth100M;
 
 network Basics
 {
     @display("bgb=338,280");
 
-    types:
-        channel C extends ned.DatarateChannel
-        {
-            datarate = 100Mbps;
-        }
     submodules:
         R1: HSRPRouter {
             @display("p=111,46");
@@ -69,8 +64,8 @@ network Basics
             @display("p=36,69");
         }
     connections:
-        R1.ethg++ <--> C <--> SW1.ethg++;
-        R2.ethg++ <--> C <--> SW1.ethg++;
-        SW1.ethg++ <--> C <--> H1.ethg++;
-        SW1.ethg++ <--> C <--> H2.ethg++;
+        R1.ethg++ <--> Eth100M <--> SW1.ethg++;
+        R2.ethg++ <--> Eth100M <--> SW1.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H1.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H2.ethg++;
 }
