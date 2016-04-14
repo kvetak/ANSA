@@ -33,6 +33,7 @@ void HSRPVirtualRouter::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
         hostname = par("deviceId").stdstringValue();
+        containingModule = getContainingNode(this);
 
         //setup HSRP parameters
         hsrpUdpPort = HSRP_UDP_PORT;
@@ -67,6 +68,11 @@ void HSRPVirtualRouter::initialize(int stage)
         //get socket ready
         socket = new UDPSocket();
         socket->setOutputGate(gate("udpOut"));
+
+        //subscribe to notifications
+//        containingModule->subscribe(NF_INTERFACE_CREATED, this);
+//        containingModule->subscribe(NF_INTERFACE_DELETED, this);
+        containingModule->subscribe(NF_INTERFACE_STATE_CHANGED, this);
 
         //start HSRP
         scheduleAt(simTime() , initmessage);
@@ -160,8 +166,8 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                 }
                 break;
             default:
-                std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]default-;"<<std::endl;
-                fflush(stdout);
+//                std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<HSRPgroup<<"]"<<intToHsrpState(HsrpState)<<" default-;"<<std::endl;
+//                fflush(stdout);
                 break;
         }
     }
@@ -626,10 +632,77 @@ bool HSRPVirtualRouter::isHigherPriorityThan(HSRPMessage *HSRPm){
 }
 
 HSRPVirtualRouter::~HSRPVirtualRouter() {
+//    socket.close();
+
     cancelAndDelete(hellotimer);
     cancelAndDelete(standbytimer);
     cancelAndDelete(activetimer);
     cancelAndDelete(initmessage);
+
+    // unsubscribe to notifications
+//    containingModule->unsubscribe(NF_INTERFACE_CREATED, this);
+//    containingModule->unsubscribe(NF_INTERFACE_DELETED, this);
+    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
+}
+
+/***
+ * Signal Handler
+ */
+/**
+ * Listen on interface/route changes and update private data structures.
+ */
+void HSRPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG)
+{
+    Enter_Method_Silent("HSRPVirtualRouter::receiveChangeNotification(%s)", notificationCategoryName(signalID));
+
+    const AnsaInterfaceEntry *ief;
+    const InterfaceEntryChangeDetails *change;
+
+    if (signalID == NF_INTERFACE_STATE_CHANGED) {
+
+        change = check_and_cast<const InterfaceEntryChangeDetails *>(obj);
+        ief = check_and_cast<const AnsaInterfaceEntry *>(change->getInterfaceEntry());
+
+        //Is it my interface?
+        if (ief->getInterfaceId() == ie->getInterfaceId()){
+
+            //is it change to UP or to DOWN?
+            if (ie->isUp()){
+                //do Enable VF
+                EV<<hostname<<" # "<<ie->getName()<<" Interface up."<<endl;
+                interfaceUp();
+            }else{
+                //do disable VF
+                EV<<hostname<<" # "<<ie->getName()<<" Interface down."<<endl;
+                interfaceDown();
+            }
+
+        }
+    }
+    else
+        throw cRuntimeError("Unexpected signal: %s", getSignalName(signalID));
+}
+
+void HSRPVirtualRouter::interfaceDown(){
+    switch(HsrpState){
+        case ACTIVE://H
+            if (hellotimer->isScheduled())
+                cancelEvent(standbytimer);
+        default: //C,D
+            if (standbytimer->isScheduled())
+                cancelEvent(standbytimer);
+            if (hellotimer->isScheduled())
+                cancelEvent(standbytimer);
+            break;
+    }//switch
+
+    DebugStateMachine(HsrpState, INIT);
+    HsrpState = INIT;
+    vf->setDisable();
+}
+
+void HSRPVirtualRouter::interfaceUp(){
+    initState();
 }
 
 /***

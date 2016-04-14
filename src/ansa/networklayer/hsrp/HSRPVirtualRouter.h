@@ -24,22 +24,22 @@
 
 namespace inet {
 
-class HSRPVirtualRouter : public cSimpleModule{
+class HSRPVirtualRouter : public cSimpleModule, public cListener{
     protected:
         std::string hostname;
 
-        /*Variable needed for UDP*/
+        /* Variable needed for UDP */
         UDPSocket *socket;      //UDP socket used for sending messages
         int hsrpUdpPort;        //hsrp udp port (usually 1985)
 
-        /*Variables needed for  OMNET*/
+        /* Variables needed for  OMNET */
         IInterfaceTable *ift = nullptr;      //usable interfaces of this router
         ARP *arp = nullptr;                  //arp table for sending arp gratuious.
         AnsaInterfaceEntry *ie = nullptr;    //Interface which is running HSRP group
         VirtualForwarder *vf = nullptr;      //Particular HSRP group is represented by VF on each interface
         cModule *containingModule = nullptr; //helper for looking for particular module
 
-        /*HSRP specific variables*/
+        /* HSRP specific variables */
         int HsrpState;                      //state of hsrp virtual router
         int HSRPgroup;                      //group of hsrp virtual router
         L3Address *HsrpMulticast = nullptr; //multicast address of HSRP (224.0.0.2)
@@ -50,11 +50,14 @@ class HSRPVirtualRouter : public cSimpleModule{
         int helloTime;
         int holdTime;
 
-        /*HSRP timers*/
+        /* HSRP timers */
         cMessage *hellotimer = nullptr;
         cMessage *activetimer = nullptr;
         cMessage *standbytimer = nullptr;
         cMessage *initmessage = nullptr;
+
+        /* Signals */
+
 
     protected:
         virtual void initialize( int stage);
@@ -76,6 +79,8 @@ class HSRPVirtualRouter : public cSimpleModule{
         void parseConfig(cXMLElement *config);
         void learnTimers(HSRPMessage *msg);
         bool isHigherPriorityThan(HSRPMessage *HSRPm);
+        void interfaceDown();
+        void interfaceUp();
 
         //debug
         void DebugStateMachine(int from, int to);
@@ -83,6 +88,9 @@ class HSRPVirtualRouter : public cSimpleModule{
         void DebugSendMessage(int op_code);
         std::string intToHsrpState(int state);
         std::string intToMessageType(int msg);
+
+        //signal handler
+        virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
 
     public:
         virtual AnsaInterfaceEntry* getInterface() { return ie; };
