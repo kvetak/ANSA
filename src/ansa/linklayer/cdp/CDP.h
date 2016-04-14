@@ -38,6 +38,14 @@
 
 namespace inet {
 
+struct AddressTLV
+{
+    char protocolType;
+    char protocolLength;
+    char protocol;
+    uint16_t length;
+    uint32_t address;
+};
 
 struct ODRRoute : public cObject
 {
@@ -47,98 +55,123 @@ struct ODRRoute : public cObject
       int prefixLength = 0;    // prefix length of the destination
       L3Address nextHop;    // next hop of the route
       InterfaceEntry *ie = nullptr;    // outgoing interface of the route
-      L3Address from;    // only for RTE routes
-      int ad = 160;    // the metric of this route, or infinite (16) if invalid
-      uint16 tag = 0;    // route tag, only for REDISTRIBUTE routes
-      bool changed = false;    // true if the route has changed since the update
+      bool invalide = false;    // true if the route has changed since the update
+      bool noUpdates = false;    // true if the route has changed since the update
       simtime_t lastUpdateTime;    // time of the last change, only for RTE routes
+      CDPTimer *ODRInvalideTime;
+      CDPTimer *ODRHoldTime;
+      CDPTimer *ODRFlush;
 
     public:
-      ODRRoute(IRoute *route, uint16 tag);
+      ODRRoute(IRoute *route);
+      ODRRoute(L3Address des, int pre, L3Address nex, InterfaceEntry *i);
+      virtual std::string info() const override;
 
       IRoute *getRoute() const { return route; }
       L3Address getDestination() const { return dest; }
       int getPrefixLength() const { return prefixLength; }
       L3Address getNextHop() const { return nextHop; }
       InterfaceEntry *getInterface() const { return ie; }
-      L3Address getFrom() const { return from; }
-      bool isChanged() const { return changed; }
+      bool isInvalide() const { return invalide; }
+      bool isNoUpdates() const { return noUpdates; }
       simtime_t getLastUpdateTime() const { return lastUpdateTime; }
+      CDPTimer *getODRInvalideTime() const { return ODRInvalideTime; }
+      CDPTimer *getODRHoldTime() const { return ODRHoldTime; }
+      CDPTimer *getODRFlush() const { return ODRFlush; }
 
       void setRoute(IRoute *route) { this->route = route; }
       void setDestination(const L3Address& dest) { this->dest = dest; }
       void setPrefixLength(int prefixLength) { this->prefixLength = prefixLength; }
       void setNextHop(const L3Address& nextHop) { this->nextHop = nextHop; route->setNextHop(nextHop); }
       void setInterface(InterfaceEntry *ie) { this->ie = ie; route->setInterface(ie); }
-      void setRouteTag(uint16 routeTag) { this->tag = routeTag; }
-      void setFrom(const L3Address& from) { this->from = from; }
-      void setChanged(bool changed) { this->changed = changed; }
+      void setInvalide(bool invalide) { this->invalide = invalide; }
+      void setNoUpdates(bool noUpdates) { this->noUpdates = noUpdates; }
       void setLastUpdateTime(simtime_t time) { lastUpdateTime = time; }
+      void setODRInvalideTime(CDPTimer *time) { ODRInvalideTime = time; }
+      void setODRHoldTime(CDPTimer *time) { ODRHoldTime = time; }
+      void setODRFlush(CDPTimer *time) { ODRFlush = time; }
 };
 
-class CDP: public cSimpleModule, public ILifecycle, public cListener {
+class INET_API CDP: public cSimpleModule, public ILifecycle, public cListener {
 public:
     CDP();
     virtual ~CDP();
-    void scheduleALL();
-    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
-    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
-    void stop();
-    void deleteTimers();
 
 protected:
-    simtime_t updateTime;
-    int holdTime;
-    std::string hostName;
-    int version;
-    IInterfaceTable *ift;
+    std::string hostName;       // name of the module
+    int version;                // cdp version
+    IInterfaceTable *ift;       // interface table
     cModule *containingModule;
-    bool sendIpPrefixes;
 
-    bool isOperational = false;    // for lifecycle
-    std::vector<CDPTableEntry*> table;
-    std::map <int, CDPTimer *> interfaceUpdateTimer;      //interface update timer
+    bool isOperational = false;             // for lifecycle
+    typedef std::vector<CDPTableEntry *> CDPTableEntryVector;
+    CDPTableEntryVector neighbourTable;
     CDPInterfaceTable cdpInterfaceTable;
-    bool odr;
-    IPv4RoutingTable *rt4 = nullptr;
     char cap[4];
 
-    simtime_t routeFlushTime;    // time between regular updates
-    simtime_t routeHolddowndTime;    // learned routes becomes invalid if no update received in this period of time
-    simtime_t routeInvalidTime;    // invalid routes are deleted after this period of time is elapsed
-    //simtime_t shutdownTime;    // time of shutdown processing
+    simtime_t holdTime;             // cdp entry is deleted after this period of time is elapsed
+    simtime_t updateTime;           // time between regular updates
+    simtime_t routeFlushTime;       // routes are deleted after this period of time is elapsed
+    simtime_t routeHolddownTime;    // how long routes will not be updated
+    simtime_t routeInvalidTime;     // learned routes becomes invalid if no update received in this period of time
+    simtime_t defaultRouteInvalide; // default routes are deleted after this period of time is elapsed
 
     IRoutingTable *rt = nullptr;    // routing table from which routes are imported and to which learned routes are added
     typedef std::vector<ODRRoute *> RouteVector;
-    RouteVector odrRoutes;    // all advertised routes (imported or learned)*/
-
+    RouteVector odrRoutes;          // all learned routes
+    int maxDestinationPaths;        // max number of the same routes in routing table
+    bool sendIpPrefixes;            // capability of sending ip prefixes
+    bool odr;                       // odr routing
 
     virtual void initialize(int stage);
+    virtual void handleMessage(cMessage *msg);
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
+
+    virtual void startCDP();
+    virtual void stopCDP();
+
+    //handling with messages
+    virtual void handleTimer(CDPTimer *msg);
+    virtual void handleUpdate(CDPUpdate *msg);
+    virtual void sendUpdate(int interface, bool shutDown);
+    virtual void entryUpdate(CDPUpdate *msg, CDPTableEntry *entry);
+
+
+    virtual void addRoute(const L3Address& dest, int prefixLength, const InterfaceEntry *ie, const L3Address& nextHop);
+    virtual void purgeRoute(ODRRoute *route);
+    virtual void invalidateRoute(ODRRoute *odrRoute);
+    virtual void addDefaultRoute(InterfaceEntry *ie, const L3Address& nextHop);
+
+private:
     void getCapabilities(cProperty *property);
     int capabilitiesPosition(std::string capability);
     bool hasRoutingProtocol();
-    bool parseIPAddress(const char *text, unsigned char tobytes[]);
     bool ipInterfaceExist(int interfaceId);
-    uint16_t checksum(CDPUpdate *msg);
+    uint16_t countChecksum(CDPUpdate *msg);
+    bool isInterfaceSupported(const char *name);
+    int ipOnInterface(int interfaceId);
+    std::string capabilitiesConvert(const char *cap);
+    InterfaceEntry *getPortInterfaceEntry(unsigned int gateId);
+    void processPrefixes(CDPUpdate *msg, int tlvPosition, CDPTableEntry *entry);
+
     void activateInterface(InterfaceEntry *interface);
     void deactivateInterface(InterfaceEntry *interface);
-    bool isInterfaceSupported(const char *name);
 
-    InterfaceEntry *getPortInterfaceEntry(unsigned int gateId);
-
-    //handling with messages
-    virtual void handleMessage(cMessage *msg);
-    void handleTimer(CDPTimer *msg);
-    void handleUpdate(CDPUpdate *msg);
-    void sendUpdate(int interface);
+    void deleteTimers();
+    IRoute *addRouteToRT(const L3Address& dest, int prefixLength, const InterfaceEntry *ie, const L3Address& nextHop);
+    void rescheduleODRRouteTimer(ODRRoute *odrRoute);
+    ODRRoute *findRoute(const L3Address& destination, int prefixLength, const L3Address& ie);
+    int countDestinationPaths(const L3Address& destination, int prefixLength);
+    ODRRoute *findRoute(const IRoute *route);
+    ODRRoute *existOtherDefaultRoute(ODRRoute *odrRoute);
 
     //neighbour table
-    CDPTableEntry *newTableEntry(CDPUpdate *msg);
-    void updateTableEntry(CDPUpdate *msg, CDPTableEntry *entry);
     CDPTableEntry *findEntryInTable(std::string name, int port);
     void deleteEntryInTable(CDPTableEntry *entry);
 
     //TLV
+    CDPTLV *getTlv(CDPUpdate *msg, CDPTLVType type);
     uint16_t getTlvSize(CDPTLV *tlv);
     void createTlv(CDPUpdate *msg, int interface);
     void setTlvDeviceId(CDPUpdate *msg, int pos);
@@ -149,19 +182,7 @@ protected:
     void setTlvDuplex(CDPUpdate *msg, int pos, int interfaceId);
     void setTlvODR(CDPUpdate *msg, int pos, int interfaceId);
     void setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId);
-
-private:
-    IRoute *addRoute(const L3Address& dest, int prefixLength, const InterfaceEntry *ie, const L3Address& nextHop, int metric);
-    void deleteRoute(IRoute *route);
-    virtual void invalidateRoutes(const InterfaceEntry *ie);
-
-protected:
-    virtual void addRoute(const L3Address& dest, int prefixLength, const InterfaceEntry *ie, const L3Address& nextHop, int metric, uint16 routeTag, const L3Address& from);
-    //virtual void triggerUpdate();
-    virtual ODRRoute *checkRouteIsExpired(ODRRoute *route);
-    virtual void invalidateRoute(ODRRoute *route);
-    virtual void purgeRoute(ODRRoute *route);
-
+    void setTlvAddress(CDPUpdate *msg, int pos, int interfaceId);
 };
 
 } /* namespace inet */

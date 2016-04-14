@@ -17,14 +17,18 @@ namespace inet;
 
 enum CDPTimerType
 {
-    CDPUpdateTime = 0;
-    CDPHoldTime = 1;
-    CDPStartUp = 2;
+    UpdateTime = 0;
+    HoldTime = 1;
+    StartUp = 2;
+    ODRInvalideTime = 3;
+    ODRHoldTime = 4;
+    ODRFlush = 5;
+    ODRDefaultRouteInvalide = 6;
 }
 
 //CDP timers
 message CDPTimer
 {
-    char timerType enum(CDPTimerType) = CDPUpdateTime;
+    char timerType  @enum(CDPTimerType);//enum(CDPTimerType) = UpdateTime;
     int interfaceId;
 }

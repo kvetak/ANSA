@@ -33,8 +33,8 @@ class CDPInterface : public cObject {
             updateTimer(NULL),
             enabled(true){}
         CDPInterface(InterfaceEntry *iface, CDPTimer *update) :
-            updateTimer(update),
             interface(iface),
+            updateTimer(update),
             enabled(true){}
         virtual ~CDPInterface();
 

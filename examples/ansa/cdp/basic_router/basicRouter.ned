@@ -34,6 +34,11 @@ network basicRouter
     submodules:
         configurator: IPv4NetworkConfigurator {
             parameters:
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;
+                dumpRoutes = true;
                 config = xmldoc("./networkConfig.xml");
                 @display("p=48,181");
         }

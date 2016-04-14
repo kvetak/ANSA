@@ -26,6 +26,11 @@ simple CDP like INetworkLayerLower
     	int timer @unit(s) = default(60s);
     	int holdTime = default(180);
     	int version = default(2);
+    	int ODRRouteInvalidTime = default(180);
+    	int ODRRouteHolddownTime = default(30);
+    	int ODRRouteFlushTime = default(220);
+    	int maxDestinationPaths = default(4);
+        int defaultRouteInvalide = default(180);
     	bool odr = default(false);
         string routingTableModule = default("");
 	gates:

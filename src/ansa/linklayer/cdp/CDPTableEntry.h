@@ -18,13 +18,31 @@
 
 //#include <omnetpp.h>
 #include "CDPTimer_m.h"
+#include "inet/networklayer/common/InterfaceEntry.h"
 
 namespace inet {
 
-class CDPTableEntry {
+class CDPTableEntry : public cObject {
+
+private:
+    std::string name;
+    int portReceive;
+    std::string portSend;
+    simtime_t lastUpdate;
+    simtime_t ttl;
+    CDPTimer *holdTimeTimer = nullptr;
+    bool fullDuplex;
+    std::string capabilities;
+    std::string platform;
+    std::string version;
+    InterfaceEntry *interface = nullptr;
+    L3Address *address = nullptr;
+    L3Address *odrDefaultGateway = nullptr;
+
 public:
     CDPTableEntry();
     virtual ~CDPTableEntry();
+    virtual std::string info() const override;
 
     std::string getName(){return this->name;}
     void setName(std::string name){this->name = name;}
@@ -37,6 +55,9 @@ public:
 
     simtime_t getLastUpdate(){return this->lastUpdate;}
     void setLastUpdated(simtime_t lastUpdate){this->lastUpdate = lastUpdate;}
+
+    simtime_t getTtl(){return this->ttl;}
+    void setTtl(simtime_t ttl){this->ttl = ttl;}
 
     CDPTimer *getHoldTimeTimer(){return this->holdTimeTimer;}
     void setHoldTimeTimer(CDPTimer *holdTimeTimer){this->holdTimeTimer = holdTimeTimer;}
@@ -53,17 +74,11 @@ public:
     std::string getVersion(){return this->version;}
     void setVersion(std::string version){this->version = version;}
 
-private:
-    std::string name;
-    int portReceive;
-    std::string portSend;
-    simtime_t lastUpdate;
-    CDPTimer *holdTimeTimer;
-    bool fullDuplex;
-    std::string capabilities;
-    std::string platform;
-    std::string version;
+    InterfaceEntry *getInterface(){return this->interface;}
+    void setInterface(InterfaceEntry *interface){this->interface = interface;}
 
+    L3Address *getAddress(){return this->address;}
+    void setAddress(L3Address *address){this->address = address;}
 };
 
 } /* namespace inet */

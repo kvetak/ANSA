@@ -59,7 +59,6 @@ void CDPInterfaceTable::removeInterfaces()
 
     for (it = interfaces.begin(); it != interfaces.end();)
     {
-       // cancelAndDelete((*it)->getUpdateTimer());
         delete (*it);
         it = interfaces.erase(it);
     }

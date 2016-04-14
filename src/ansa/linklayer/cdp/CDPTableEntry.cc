@@ -26,4 +26,14 @@ CDPTableEntry::~CDPTableEntry() {
     // TODO Auto-generated destructor stub
 }
 
+std::string CDPTableEntry::info() const
+{
+    std::stringstream out;
+
+    out << name << ", local int: " << interface->getName();
+    out << ", holdtime: " << round(ttl.dbl()-(simTime()-lastUpdate).dbl()) << ", cap: " << capabilities;
+    out << ", send int: " << portSend;
+    return out.str();
+}
+
 } /* namespace inet */

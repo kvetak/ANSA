@@ -67,6 +67,10 @@ const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
 
         case BABEL:
             return "ba";
+#ifdef ANSAINET
+        case ODR:
+            return "o";
+#endif
 
         default:
             return "???";
