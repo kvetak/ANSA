@@ -93,7 +93,7 @@ class INET_API ARP : public cSimpleModule, public IARP, public ILifecycle
     ARP();
     virtual ~ARP();
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
-//    virtual sendARPGratuitous(InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode);
+
     /// IARP implementation  @{
     virtual MACAddress resolveL3Address(const L3Address& address, const InterfaceEntry *ie) override;
     virtual L3Address getL3AddressFor(const MACAddress& addr) const override;
