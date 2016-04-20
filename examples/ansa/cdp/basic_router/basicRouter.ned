@@ -15,10 +15,10 @@
 
 package inet.examples.ansa.cdp.basic_router;
 
-import ansa.node.ANSA_Host;
+import ansa.node.ANSA_CDPHost;
 import ansa.node.CDPRouter;
 import inet.common.lifecycle.LifecycleController;
-import ansa.node.ANSA_Router;
+//import ansa.node.ANSA_Router;
 import inet.node.ethernet.Eth100M;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
@@ -43,29 +43,29 @@ network basicRouter
                 @display("p=48,181");
         }
         
-        H: ANSA_Host {
+        H: ANSA_CDPHost {
             @display("p=58,288");
         }
 
-        R1: ANSA_Router {
+        R1: CDPRouter {
             parameters:
                 @display("p=153,289");
             gates:
                 ethg[3];
         }
-        R2: ANSA_Router {
+        R2: CDPRouter {
             parameters:
                 @display("p=324,289");
             gates:
                 ethg[3];
         }
-        R3: ANSA_Router {
+        R3: CDPRouter {
             parameters:
                 @display("p=324,142");
             gates:
                 ethg[3];
         }
-        R4: ANSA_Router {
+        R4: CDPRouter {
             parameters:
             	@display("p=421,167");
             gates:

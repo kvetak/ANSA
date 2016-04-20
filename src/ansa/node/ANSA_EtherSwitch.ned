@@ -19,6 +19,7 @@
 package ansa.node;
 
 import ansa.linklayer.cdp.CDP;
+import ansa.linklayer.lldp.LLDP;
 import inet.common.lifecycle.NodeStatus;
 import inet.linklayer.contract.IMACAddressTable;
 import ansa.linklayer.contract.ANSA_IMACRelayUnit;
@@ -41,14 +42,16 @@ module ANSA_EtherSwitch
 {
     parameters:
         @networkNode();
-        @capabilities("Repeater", "Router", "Source Route Bridge");
+        @capabilities("Repeater","Router","Source Route Bridge");
         @labels(node,ethernet-node);
         @display("i=device/switch");
         bool hasStatus = default(true);
         bool csmacdSupport = default(true);  // by default use CSMA/CD
+        bool hasCDP = default(false);
+        bool hasLLDP = default(false);
         string macType = default(csmacdSupport ? "EtherMAC" : "EtherMACFullDuplex"); // ~EtherMAC or ~EtherMACFullDuplex
-  
-        string relayUnitType = default("cdpRelay"); // type of the ~IMACRelayUnit;
+
+        string relayUnitType = default("relayUnit"); // type of the ~IMACRelayUnit;
         string macTableType = default("MACAddressTable"); // type of the ~IMACAddressTable
         eth[*].encapType = "EtherEncapDummy";
         eth[*].csmacdSupport = csmacdSupport;
@@ -75,25 +78,36 @@ module ANSA_EtherSwitch
                 ifOut[sizeof(ethg)];
                 cdpIn[sizeof(ethg)];
                 cdpOut[sizeof(ethg)];
+                lldpIn[sizeof(ethg)];
+                lldpOut[sizeof(ethg)];
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
                 mac.promiscuous = true;
                 @display("p=263,150,row;q=txQueue");
         }
-        cdp: CDP {
+        cdp: CDP if hasCDP {
             parameters:
-            	@display("p=168,111");
+                @display("p=168,111");
             gates:
                 ifIn[sizeof(ethg)];
                 ifOut[sizeof(ethg)];
         }
-    connections:
+        lldp: LLDP if hasLLDP {
+            parameters:
+                @display("p=168,50");
+            gates:
+                ifIn[sizeof(ethg)];
+                ifOut[sizeof(ethg)];
+        }
+    connections allowunconnected:
         for i=0..sizeof(ethg)-1 {
             eth[i].upperLayerIn <-- relayUnit.ifOut++;
             eth[i].upperLayerOut --> relayUnit.ifIn++;
-            cdp.ifIn[i] <-- relayUnit.cdpOut[i];
-            cdp.ifOut[i] --> relayUnit.cdpIn[i];
+            cdp.ifIn[i] <-- relayUnit.cdpOut[i] if hasCDP;
+            cdp.ifOut[i] --> relayUnit.cdpIn[i] if hasCDP;
+            lldp.ifIn[i] <-- relayUnit.lldpOut[i] if hasLLDP;
+            lldp.ifOut[i] --> relayUnit.lldpIn[i] if hasLLDP;
             eth[i].phys <--> ethg[i];
         }
 

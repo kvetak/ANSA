@@ -25,6 +25,10 @@ module CDPRouter extends ANSA_Router
 {
     parameters:
         string deviceId = default("");
-            
+        xml configFile = default(xmldoc("config.xml"));
+        string deviceType = default("Router"); 
+        **.deviceId = deviceId;
+        **.deviceType = deviceType;
+        **.configFile = default(xmldoc("config.xml"));
 }
 

@@ -16,10 +16,15 @@
 #include "ansa/networklayer/multi/ANSA_MultiNetworkLayerLowerMultiplexer.h"
 
 #define WITH_CDP
+#define WITH_LLDP
 
 #ifdef WITH_CDP
 #include "ansa/linklayer/cdp/CDPUpdate_m.h"
-#endif // ifdef WITH_IPv6
+#endif // ifdef WITH_CDP
+
+#ifdef WITH_LLDP
+#include "ansa/linklayer/lldp/LLDPUpdate_m.h"
+#endif // ifdef WITH_LLDP
 
 #ifdef WITH_IPv4
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
@@ -58,7 +63,7 @@ void ANSA_MultiNetworkLayerLowerMultiplexer::handleMessage(cMessage *message)
 
 int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolCount()
 {
-    return 4;
+    return 5;
 }
 
 int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolIndex(cMessage *message)
@@ -81,7 +86,11 @@ int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolIndex(cMessage *message)
 #ifdef WITH_CDP
     else if (dynamic_cast<CDPUpdate *>(message))
         return 3;
-#endif // ifdef WITH_GENERIC
+#endif // ifdef WITH_CDP
+#ifdef WITH_LLDP
+    else if (dynamic_cast<LLDPUpdate *>(message))
+        return 4;
+#endif // ifdef WITH_LLDP
     else
         throw cRuntimeError("Unknown message");
 }

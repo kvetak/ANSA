@@ -33,6 +33,10 @@ simple CDP like INetworkLayerLower
         int defaultRouteInvalide = default(180);
     	bool odr = default(false);
         string routingTableModule = default("");
+        
+        string deviceId = default("");
+        string deviceType = default("");
+        xml configFile = default(xmldoc("config.xml"));     
 	gates:
         input ifIn[] @labels(INetworkDatagram/up);
         output ifOut[] @labels(INetworkDatagram/down);

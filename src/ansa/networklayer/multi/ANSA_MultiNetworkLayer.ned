@@ -19,6 +19,7 @@
 package ansa.networklayer.multi;
 
 import ansa.linklayer.cdp.CDP;
+import ansa.linklayer.lldp.LLDP;
 import inet.networklayer.contract.INetworkLayerLower;
 import inet.networklayer.contract.INetworkLayer;
 import inet.networklayer.multi.MultiNetworkLayerUpperMultiplexer;
@@ -65,7 +66,8 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         bool enableCLNS = false;
         bool enableIPv6 = false;
         bool enableIPv4 = true;
-        bool enableCDP = default(true);
+        bool enableCDP = default(false);
+        bool enableLLDP = default(false);
         string interfaceTableModule;
         *.interfaceTableModule = default(absPath(interfaceTableModule));
         string routingTableModule;
@@ -73,6 +75,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         ipv6.routingTableModule = default(absPath(routingTableModule) + ".ipv6");
         clns.routingTableModule = default(absPath(routingTableModule) + ".clns");
         cdp.routingTableModule = default(absPath(routingTableModule) + ".ipv4");
+        lldp.routingTableModule = default(absPath(routingTableModule) + ".ipv4");
 
     gates:
         input ifIn[] @labels(INetworkDatagram);
@@ -103,11 +106,15 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         lowerMultiplexer: ANSA_MultiNetworkLayerLowerMultiplexer {
             @display("p=300,500");
             gates:
-                ifUpperOut[4*sizeof(ifIn)];
-                ifUpperIn[4*sizeof(ifOut)];
+                ifUpperOut[5*sizeof(ifIn)];
+                ifUpperIn[5*sizeof(ifOut)];
         }
 
         cdp: <"CDP"> like INetworkLayerLower if enableCDP {
+            @display("p=461,500");
+        }
+
+        lldp: <"LLDP"> like INetworkLayerLower if enableLLDP {
             @display("p=461,500");
         }
     connections allowunconnected:
@@ -141,17 +148,19 @@ module ANSA_MultiNetworkLayer like INetworkLayer
 
         // interface
         for i=0..sizeof(ifIn)-1 {
-            lowerMultiplexer.ifUpperOut[0+4*i] --> ipv4.ifIn++ if enableIPv4;
-            lowerMultiplexer.ifUpperOut[1+4*i] --> ipv6.ifIn++ if enableIPv6;
-            lowerMultiplexer.ifUpperOut[2+4*i] --> clns.ifIn++ if enableCLNS;
-            lowerMultiplexer.ifUpperOut[3+4*i] --> cdp.ifIn++ if enableCDP;
+            lowerMultiplexer.ifUpperOut[0+5*i] --> ipv4.ifIn++ if enableIPv4;
+            lowerMultiplexer.ifUpperOut[1+5*i] --> ipv6.ifIn++ if enableIPv6;
+            lowerMultiplexer.ifUpperOut[2+5*i] --> clns.ifIn++ if enableCLNS;
+            lowerMultiplexer.ifUpperOut[3+5*i] --> cdp.ifIn++ if enableCDP;
+            lowerMultiplexer.ifUpperOut[4+5*i] --> lldp.ifIn++ if enableLLDP;
             ifIn[i] --> { @display("m=s"); } --> lowerMultiplexer.ifLowerIn++;
         }
         for i=0..sizeof(ifOut)-1 {
-            ipv4.ifOut++ --> lowerMultiplexer.ifUpperIn[0+4*i] if enableIPv4;
-            ipv6.ifOut++ --> lowerMultiplexer.ifUpperIn[1+4*i] if enableIPv6;
-            clns.ifOut++ --> lowerMultiplexer.ifUpperIn[2+4*i] if enableCLNS;
-            cdp.ifOut++ --> lowerMultiplexer.ifUpperIn[3+4*i] if enableCDP;
+            ipv4.ifOut++ --> lowerMultiplexer.ifUpperIn[0+5*i] if enableIPv4;
+            ipv6.ifOut++ --> lowerMultiplexer.ifUpperIn[1+5*i] if enableIPv6;
+            clns.ifOut++ --> lowerMultiplexer.ifUpperIn[2+5*i] if enableCLNS;
+            cdp.ifOut++ --> lowerMultiplexer.ifUpperIn[3+5*i] if enableCDP;
+            lldp.ifOut++ --> lowerMultiplexer.ifUpperIn[4+5*i] if enableLLDP;
             lowerMultiplexer.ifLowerOut++ --> { @display("m=s"); } --> ifOut[i];
         }
 }

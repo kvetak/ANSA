@@ -17,27 +17,33 @@ namespace inet;
 
 enum CDPTLVType
 {
-	TLV_ADDRESS = 2;
-	TLV_CAPABILITIES = 4;
-	TLV_DEVICE_ID = 1;
-	TLV_DUPLEX = 11;
-	TLV_IP_PREFIX = 7;
-	TLV_LOCATION = 12;
-	TLV_LOCATION_SERVER = 13;
-	TLV_NATIVE_VLAN = 10;
-	TLV_PLATFORM = 6;
-	TLV_PORT_ID = 3;
-	TLV_VERSION = 5;
-	TLV_VTP = 9;
-	TLV_ODR = 99; //TODO:zjistit cislo
+	CDPTLV_ADDRESS = 2;
+	CDPTLV_CAP = 4;
+	CDPTLV_DEV_ID = 1;
+	CDPTLV_DUPLEX = 11;
+	CDPTLV_IP_PREF = 7;
+	CDPTLV_LOCATION = 12;
+	CDPTLV_LOC_SER = 13;
+	CDPTLV_NAT_VLAN = 10;
+	CDPTLV_PLATFORM = 6;
+	CDPTLV_PORT_ID = 3;
+	CDPTLV_VERSION = 5;
+	CDPTLV_VTP = 9;
+	CDPTLV_ODR = 99; //TODO:zjistit cislo
+	CDPTLVCOUNT = 13;
 }
 
 // TLV structure
 class CDPTLV
 {
-    uint16_t	type @enum(CDPTLVType); 
+    uint16_t	type @enum(CDPTLVType); 	
     uint16_t	length;
-    string		value;
+    string		value;		//TODO: void a pretypovat?
+}
+
+class CDPTLVString extends CDPTLV
+{
+    string value;
 }
 
 //CDP update packet

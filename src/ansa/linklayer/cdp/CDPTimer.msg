@@ -18,12 +18,11 @@ namespace inet;
 enum CDPTimerType
 {
     UpdateTime = 0;
-    HoldTime = 1;
-    StartUp = 2;
-    ODRInvalideTime = 3;
-    ODRHoldTime = 4;
-    ODRFlush = 5;
-    ODRDefaultRouteInvalide = 6;
+    Holdtime = 1;
+    ODRInvalideTime = 2;
+    ODRHolddown = 3;
+    ODRFlush = 4;
+    ODRDefaultRouteInvalide = 5;
 }
 
 //CDP timers
