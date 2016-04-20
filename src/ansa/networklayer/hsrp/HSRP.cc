@@ -33,7 +33,7 @@ void HSRP::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
-        HsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
+        hsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
         socket = new UDPSocket(); //UDP socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
         socket->bind(HSRP_UDP_PORT);
@@ -219,7 +219,7 @@ void HSRP::checkAndJoinMulticast(int InterfaceId){
     }
 
     if (!contain){
-        socket->joinMulticastGroup(*HsrpMulticast,InterfaceId);
+        socket->joinMulticastGroup(*hsrpMulticast,InterfaceId);
         multicastInterfaces.push_back(InterfaceId);
     }
 }

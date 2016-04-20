@@ -36,7 +36,7 @@ class HSRP : public cSimpleModule{
         const char* CONFIG_PAR = "configData";
         std::vector<HSRPVirtualRouter *> virtualRouterTable;
         std::vector<int> multicastInterfaces;
-        L3Address *HsrpMulticast = nullptr;
+        L3Address *hsrpMulticast = nullptr;
         UDPSocket *socket;    // bound to the HSRP port (see udpPort parameter)
 
         IInterfaceTable *ift = nullptr;
@@ -45,7 +45,7 @@ class HSRP : public cSimpleModule{
         virtual int numInitStages() const {return NUM_INIT_STAGES;};
         virtual void handleMessage(cMessage *msg);
         virtual void updateDisplayString();
-        void sendMessage(OP_CODE opCode);
+//        void sendMessage(OP_CODE opCode);
         void parseConfig(cXMLElement *config);
         void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt);
         void checkAndJoinMulticast(int InterfaceId);
