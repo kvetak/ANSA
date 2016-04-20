@@ -37,6 +37,7 @@ module ANSA_Router extends ANSA_NodeBaseWithVF
         bool hasBABEL = default(false);
         bool hasLISP = default(false);
         bool hasHSRP = default(false);
+        bool hasGLBP = default(false);
         string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
         string udpType = default("UDP");
 
@@ -65,12 +66,17 @@ module ANSA_Router extends ANSA_NodeBaseWithVF
                 @display("p=511,80");
         }
 
-        hsrp: <"HSRP"> like IUDPApp if hasHSRP{
+        hsrp: <"HSRP"> like IUDPApp if hasHSRP {
             parameters:
                 @display("p=590,80");
         }
 
-        udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP) {
+        glbp: <"GLBP"> like IUDPApp if hasGLBP {
+            parameters:
+                @display("p=669,80");
+        }
+
+        udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP) {
             @display("p=472,180");
         }
         pim: <"PIMRouting"> like IPIMRouting if hasPIM {
@@ -111,11 +117,19 @@ module ANSA_Router extends ANSA_NodeBaseWithVF
             pim.networkLayerOut --> networkLayer.transportIn++;
             pim.networkLayerIn <-- networkLayer.transportOut++;
         }
-        
-        if hasHSRP{
+
+        if hasHSRP {
             udp.appOut++ --> hsrp.udpIn;
             hsrp.udpOut --> udp.appIn++;
-            
+
+            udp.ipOut --> networkLayer.transportIn++;
+            udp.ipIn <-- networkLayer.transportOut++;
+        }
+
+        if hasGLBP {
+            udp.appOut++ --> glbp.udpIn;
+            glbp.udpOut --> udp.appIn++;
+
             udp.ipOut --> networkLayer.transportIn++;
             udp.ipIn <-- networkLayer.transportOut++;
         }
