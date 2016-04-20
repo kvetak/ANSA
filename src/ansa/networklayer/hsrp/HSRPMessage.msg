@@ -41,6 +41,9 @@ enum OP_CODE
     HELLO = 0;
     COUP = 1;
     RESIGN = 2;
+    //TODO ADVERTISE = 3;
+    //each change into ACTIVE or from the ACTIVE
+    //CISCO only.
 }
 
 enum STATE
@@ -51,11 +54,11 @@ enum STATE
     SPEAK = 4;
     STANDBY = 8;
     ACTIVE = 16;
-    DISABLED = 32;
+    DISABLED = 32; //Just local state- not sending in message
 }
 
 packet HSRPMessage {
-    unsigned char version;
+    unsigned char version = 1;
     unsigned char op_code = HELLO;
     unsigned char state = INIT;
 	unsigned char hellotime;
