@@ -15,9 +15,7 @@
 
 package ansa.networklayer.hsrp;
 import inet.applications.contract.IUDPApp;
-//
-// TODO auto-generated type
-//
+
 simple HSRPVirtualRouter like IUDPApp
 {
         parameters:

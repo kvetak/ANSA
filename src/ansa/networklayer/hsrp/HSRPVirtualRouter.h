@@ -2,7 +2,7 @@
  * HSRPVirtualRouter.h
  *
  *  Created on: 24. 3. 2016
- *      Author: Honza
+ *      Author: Jan Holusa
  */
 
 #ifndef HSRPVIRTUALROUTER_H_
@@ -10,6 +10,7 @@
 
 #include <omnetpp.h>
 #include "HSRPMessage_m.h"
+
 #include "ansa/networklayer/common/AnsaInterfaceEntry.h"
 
 #include "inet/transportlayer/contract/udp/UDPSocket.h"
@@ -40,9 +41,9 @@ class HSRPVirtualRouter : public cSimpleModule, public cListener{
         cModule *containingModule = nullptr; //helper for looking for particular module
 
         /* HSRP specific variables */
-        int HsrpState;                      //state of hsrp virtual router
-        int HSRPgroup;                      //group of hsrp virtual router
-        L3Address *HsrpMulticast = nullptr; //multicast address of HSRP (224.0.0.2)
+        int hsrpState;                      //state of hsrp virtual router
+        int hsrpGroup;                      //group of hsrp virtual router
+        L3Address *hsrpMulticast = nullptr; //multicast address of HSRP (224.0.0.2)
         IPv4Address *virtualIP = nullptr;   //Primary IP of the HSRP group
         MACAddress *virtualMAC = nullptr;   //MAC of the HSRP group
         bool preempt;                       //preemption flag
@@ -76,7 +77,7 @@ class HSRPVirtualRouter : public cSimpleModule, public cListener{
         void listenState();
         void learnState();
         void speakState();
-        void parseConfig(cXMLElement *config);
+//        void parseConfig(cXMLElement *config);
         void learnTimers(HSRPMessage *msg);
         bool isHigherPriorityThan(HSRPMessage *HSRPm);
         void interfaceDown();
@@ -94,7 +95,7 @@ class HSRPVirtualRouter : public cSimpleModule, public cListener{
 
     public:
         virtual AnsaInterfaceEntry* getInterface() { return ie; };
-        int getGroup() const { return HSRPgroup; };
+        int getGroup() const { return hsrpGroup; };
 
         HSRPVirtualRouter();
         virtual ~HSRPVirtualRouter();
