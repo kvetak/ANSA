@@ -22,10 +22,12 @@
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "inet/common/lifecycle/ILifecycle.h"
 
 namespace inet {
 
-class HSRPVirtualRouter : public cSimpleModule, public cListener{
+class HSRPVirtualRouter : public cSimpleModule, public ILifecycle, public cListener
+{
     protected:
         std::string hostname;
 
@@ -82,6 +84,7 @@ class HSRPVirtualRouter : public cSimpleModule, public cListener{
         bool isHigherPriorityThan(HSRPMessage *HSRPm);
         void interfaceDown();
         void interfaceUp();
+        void stopHSRP();
 
         //debug
         void DebugStateMachine(int from, int to);
@@ -92,6 +95,8 @@ class HSRPVirtualRouter : public cSimpleModule, public cListener{
 
         //signal handler
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
+//        virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
+
 
     public:
         virtual AnsaInterfaceEntry* getInterface() { return ie; };

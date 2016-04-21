@@ -54,14 +54,18 @@ network Basics
                             "</config>");
                 addStaticRoutes = true;
                 addDefaultRoutes = true;
-                @display("p=36,19");
+                @display("p=48,31");
         }
         H2: ANSA_Host {
             @display("p=268,245");
         }
 
         scenarioManager: ScenarioManager {
-            @display("p=36,69");
+            @display("p=48,73");
+        }
+
+        lifecycleController: LifecycleController {
+            @display("p=48,115");
         }
     connections:
         R1.ethg++ <--> Eth100M <--> SW1.ethg++;

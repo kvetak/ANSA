@@ -14,6 +14,11 @@
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 
+#include "inet/common/lifecycle/NodeOperations.h"
+#include "inet/common/lifecycle/NodeStatus.h"
+#include "inet/common/NotifierConsts.h"
+
+
 namespace inet {
 
 Define_Module(HSRPVirtualRouter);
@@ -686,6 +691,33 @@ void HSRPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, 
         throw cRuntimeError("Unexpected signal: %s", getSignalName(signalID));
 }
 
+//bool HSRPVirtualRouter::handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback)
+//{
+//    Enter_Method_Silent();
+//
+//    if (dynamic_cast<NodeStartOperation *>(operation)) {
+//        if ((NodeStartOperation::Stage)stage == NodeStartOperation::STAGE_APPLICATION_LAYER) {
+//            //start HSRP
+//            scheduleAt(simTime() , initmessage);
+//        }
+//    }
+//    else if (dynamic_cast<NodeShutdownOperation *>(operation)) {
+//        if ((NodeShutdownOperation::Stage)stage == NodeShutdownOperation::STAGE_APPLICATION_LAYER){
+//            stopHSRP();
+//        }
+//    }
+//    else if (dynamic_cast<NodeCrashOperation *>(operation)) {
+//        if ((NodeCrashOperation::Stage)stage == NodeCrashOperation::STAGE_CRASH){
+//            stopHSRP();
+//        }
+//
+//    }
+//    else
+//        throw cRuntimeError("Unsupported operation '%s'", operation->getClassName());
+//
+//    return true;
+//}
+
 void HSRPVirtualRouter::interfaceDown(){
     switch(hsrpState){
         case ACTIVE://H
@@ -706,6 +738,18 @@ void HSRPVirtualRouter::interfaceDown(){
 
 void HSRPVirtualRouter::interfaceUp(){
     initState();
+}
+
+void HSRPVirtualRouter::stopHSRP(){
+    if (standbytimer->isScheduled())
+        cancelEvent(standbytimer);
+    if (hellotimer->isScheduled())
+        cancelEvent(standbytimer);
+    if (activetimer->isScheduled())
+        cancelEvent(activetimer);
+    vf->setDisable();
+    DebugStateMachine(hsrpState, DISABLED);
+    hsrpState = DISABLED;
 }
 
 /***
