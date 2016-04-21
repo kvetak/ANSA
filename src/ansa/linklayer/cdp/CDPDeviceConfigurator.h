@@ -19,7 +19,7 @@
 #include <omnetpp.h>
 
 #include "ansa/linklayer/cdp/CDP.h"
-#include "ansa/linklayer/cdp/CDPInterfaceTable.h"
+#include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 
 namespace inet {
 

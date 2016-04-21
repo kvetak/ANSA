@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "ansa/linklayer/cdp/CDPNeighbourTable.h"
+#include "ansa/linklayer/cdp/tables/CDPNeighbourTable.h"
 
 namespace inet {
 

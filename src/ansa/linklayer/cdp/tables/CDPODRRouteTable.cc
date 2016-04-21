@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "ansa/linklayer/cdp/CDPODRRouteTable.h"
+#include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 
 namespace inet {
 

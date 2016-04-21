@@ -15,10 +15,9 @@
 
 //OTAZKA: kdy se ma simulace ukoncit, kdyz nastane nejake neocekavana udalost (napriklad spatny checksum)
 
-//TODO: zajistit maximalni casy
 //TODO: nejak poresit vypnuti linky na druhe strane. V gns3 zmizne okamzite z tabulky (TTL=0?)
 //TODO: pri vypnuti se posle paket s TTL0 a pouze device ID
-//TODO: kdyz se smaze ODR routa z rt z jineho modulu, tak vyvolat nejakou vyjimku a smazat ji i z odrroutes
+//TODO: kdyz se smaze ODR routa z rt z jineho modulu, tak vyvolat nejakou vyjimku a smazat ji i z odrroutes // overit
 //TODO: administrativni vzdalenosti
 //TODO: kdyz nespecifikuji nextHope (viz obrazek gns3), tak se automaticky v rt nastavi na directly connected
 //TODO: jak s address TLV, nelze zkopirovat kvuli 0 polozkam a ani prekopirovat pamet kvuli const

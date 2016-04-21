@@ -28,9 +28,9 @@
 
 #include "ansa/linklayer/cdp/CDPUpdate_m.h"
 #include "ansa/linklayer/cdp/CDPTimer_m.h"
-#include "ansa/linklayer/cdp/CDPNeighbourTable.h"
-#include "ansa/linklayer/cdp/CDPInterfaceTable.h"
-#include "ansa/linklayer/cdp/CDPODRRouteTable.h"
+#include "ansa/linklayer/cdp/tables/CDPNeighbourTable.h"
+#include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
+#include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 
 #include "inet/common/serializer/SerializerBase.h"
 #include "inet/common/serializer/Buffer.h"
