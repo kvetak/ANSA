@@ -99,12 +99,22 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
         switch(glbpState){
             case LISTEN:
                 //f,g
-                if (msg == activetimer || msg == standbytimer){
-                    DebugStateMachine(LISTEN, SPEAK);
-                    glbpState = SPEAK;
+                if (msg == activetimer){
                     scheduleTimer(activetimer);
                     scheduleTimer(standbytimer);
+                    DebugStateMachine(LISTEN, SPEAK);
+                    glbpState = SPEAK;
                     scheduleTimer(hellotimer);
+                    sendMessage(HELLO);
+                }else if ( msg == standbytimer ){
+                    scheduleTimer(standbytimer);
+                    DebugStateMachine(LISTEN, SPEAK);
+                    glbpState = SPEAK;
+                    scheduleTimer(hellotimer);
+                    sendMessage(HELLO);
+                }else if (msg == hellotimer){
+                    scheduleTimer(hellotimer);
+                    sendMessage(HELLO);
                 }
                 break;
             case SPEAK:
@@ -113,9 +123,16 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                         cancelEvent(standbytimer);
                     DebugStateMachine(SPEAK, STANDBY);
                     glbpState = STANDBY;
+                    sendMessage(HELLO);
+                    scheduleTimer(hellotimer);
                 }else
                 if (msg == activetimer){
-                    scheduleTimer(activetimer);
+                    if (activetimer->isScheduled())
+                        cancelEvent(activetimer);
+                    DebugStateMachine(SPEAK, ACTIVE);
+                    glbpState = ACTIVE;
+                    sendMessage(HELLO);//TODO
+                    scheduleTimer(hellotimer);
                 }else
                 if (msg == hellotimer){
                     sendMessage(HELLO);//TODO
@@ -128,10 +145,11 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                         cancelEvent(standbytimer);
                     if (activetimer->isScheduled())
                         cancelEvent(activetimer);
-                    sendMessage(HELLO);//TODO
                     DebugStateMachine(STANDBY, ACTIVE);
                     glbpState = ACTIVE;
                     vf->setEnable();
+                    sendMessage(HELLO);//TODO
+                    scheduleTimer(hellotimer);
                 }
                 if (msg == hellotimer){
                     sendMessage(HELLO);//TODO
@@ -142,6 +160,9 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                 if (msg == hellotimer){
                     sendMessage(HELLO); //TODO
                     scheduleTimer(hellotimer);
+                }
+                if (msg == standbytimer){
+                    DebugUnknown(STANDBY);
                 }
                 break;
         }
@@ -177,12 +198,20 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
 void GLBPVirtualRouter::handleMessageListen(GLBPHello *msg){
     //TODO resign receive
     switch(msg->getVgState()){
+    case SPEAK:
+        if (!isHigherPriorityThan(msg)){
+            scheduleTimer(standbytimer);//FIXME TODO mozna tady nema byt
+//        scheduleTimer(activetimer);//FIXME TODO mozna tady nema byt
+        }
+        break;
     case STANDBY://j
         //lower
         if (isHigherPriorityThan(msg)){
             DebugStateMachine(LISTEN,SPEAK);
             glbpState = SPEAK;
             scheduleTimer(standbytimer);
+            sendMessage(HELLO);
+            scheduleTimer(hellotimer);
         }
         break;
     case ACTIVE:
@@ -193,6 +222,10 @@ void GLBPVirtualRouter::handleMessageListen(GLBPHello *msg){
                 glbpState = SPEAK;
                 scheduleTimer(activetimer);
                 scheduleTimer(standbytimer);
+                sendMessage(HELLO);
+                scheduleTimer(hellotimer);
+            } else{//TODO KDYZ NENI PREEMPT TAK PREPLANUJ TIMER"":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                scheduleTimer(activetimer);
             }
         }
         else
@@ -210,19 +243,18 @@ void GLBPVirtualRouter::handleMessageSpeak(GLBPHello *msg){
         case SPEAK:
             //h
             if (!isHigherPriorityThan(msg)){
-                scheduleTimer(standbytimer);
-                if (hellotimer->isScheduled())
-                    cancelEvent(hellotimer);
+                scheduleTimer(standbytimer);//TODO mozna i activetimer
+                scheduleTimer(hellotimer);
                 DebugStateMachine(SPEAK, LISTEN);
                 glbpState = LISTEN;
+
             }
             break;
         case STANDBY:
             //i
             if (!isHigherPriorityThan(msg)){
                 scheduleTimer(standbytimer);
-                if (hellotimer->isScheduled())
-                    cancelEvent(hellotimer);
+                scheduleTimer(hellotimer);
                 DebugStateMachine(SPEAK, LISTEN);
                 glbpState = LISTEN;
             }
@@ -232,6 +264,8 @@ void GLBPVirtualRouter::handleMessageSpeak(GLBPHello *msg){
                     cancelEvent(standbytimer);
                 DebugStateMachine(SPEAK, STANDBY);
                 glbpState = STANDBY;
+                sendMessage(HELLO);
+                scheduleTimer(hellotimer);
             }
             break;
         case ACTIVE:
@@ -243,6 +277,10 @@ void GLBPVirtualRouter::handleMessageSpeak(GLBPHello *msg){
                         cancelEvent(standbytimer);
                     DebugStateMachine(SPEAK, ACTIVE);
                     glbpState = ACTIVE;
+                    sendMessage(HELLO);
+                    scheduleTimer(hellotimer);
+                }else{
+                    scheduleTimer(activetimer);
                 }
             }
             else
@@ -260,8 +298,7 @@ void GLBPVirtualRouter::handleMessageStandby(GLBPHello *msg){
         case SPEAK:
             if (!isHigherPriorityThan(msg)){
                 scheduleTimer(standbytimer);
-                if (hellotimer->isScheduled())
-                    cancelEvent(hellotimer);
+                scheduleTimer(hellotimer);
                 DebugStateMachine(STANDBY, LISTEN);
                 glbpState = LISTEN;
             }
@@ -282,6 +319,10 @@ void GLBPVirtualRouter::handleMessageStandby(GLBPHello *msg){
                     DebugStateMachine(STANDBY, ACTIVE);
                     glbpState = ACTIVE;
                     vf->setEnable();
+                    sendMessage(HELLO);
+                    scheduleTimer(hellotimer);
+                }else{
+                    scheduleTimer(activetimer);
                 }
             }
             break;
@@ -300,14 +341,44 @@ void GLBPVirtualRouter::handleMessageActive(GLBPHello *msg){
                 DebugStateMachine(ACTIVE, SPEAK);
                 vf->setDisable();
                 glbpState = SPEAK;
+                sendMessage(HELLO);
+                scheduleTimer(hellotimer);
             }
             break;
     }
 }
 
-void GLBPVirtualRouter::receiveSignal(cComponent*, int, cObject*){
+void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG)
+{
+    Enter_Method_Silent("GLBPVirtualRouter::receiveChangeNotification(%s)", notificationCategoryName(signalID));
 
-}
+     const AnsaInterfaceEntry *ief;
+     const InterfaceEntryChangeDetails *change;
+
+     if (signalID == NF_INTERFACE_STATE_CHANGED) {
+
+         change = check_and_cast<const InterfaceEntryChangeDetails *>(obj);
+         ief = check_and_cast<const AnsaInterfaceEntry *>(change->getInterfaceEntry());
+
+         //Is it my interface?
+         if (ief->getInterfaceId() == ie->getInterfaceId()){
+
+             //is it change to UP or to DOWN?
+             if (ie->isUp()){
+                 //do Enable VF
+                 EV<<hostname<<" # "<<ie->getName()<<" Interface up."<<endl;
+                 interfaceUp();
+             }else{
+                 //do disable VF
+                 EV<<hostname<<" # "<<ie->getName()<<" Interface down."<<endl;
+                 interfaceDown();
+             }
+
+         }
+     }
+     else
+         throw cRuntimeError("Unexpected signal: %s", getSignalName(signalID));
+ }
 
 void GLBPVirtualRouter::initState(){
     vf->setDisable();
@@ -329,6 +400,7 @@ void GLBPVirtualRouter::listenState(){
     glbpState = LISTEN;
 
 //    if ()
+    scheduleTimer(hellotimer);
     scheduleTimer(activetimer);
     scheduleTimer(standbytimer);
 }
@@ -368,15 +440,20 @@ GLBPHello *GLBPVirtualRouter::generateMessage(TYPE type)
 
 void GLBPVirtualRouter::scheduleTimer(cMessage *msg)
 {
+    float jitter = 0;
+    if (par("jittered").boolValue()){
+        jitter = (rand() % 100)*0.01;
+    }
+
     if (msg->isScheduled()){
         cancelEvent(msg);
     }
     if (msg == activetimer)
-        scheduleAt(simTime() + holdTime, activetimer);
+        scheduleAt(simTime() + holdTime+jitter, activetimer);
     if (msg == standbytimer)
-        scheduleAt(simTime() + holdTime, standbytimer);
+        scheduleAt(simTime() + holdTime+jitter, standbytimer);
     if (msg == hellotimer)
-        scheduleAt(simTime() + helloTime, hellotimer);
+        scheduleAt(simTime() + helloTime+jitter, hellotimer);
 }
 
 void GLBPVirtualRouter::setVirtualMAC(int n)
@@ -471,6 +548,11 @@ void GLBPVirtualRouter::DebugGetMessage(GLBPHello *msg){
     EV<<hostname<<" # "<<ie->getName()<<" Grp "<<(int)msg->getGroup()<<" "<<type<<" in "<< ipFrom <<" "<<state << " pri "<<(int)msg->getPriority()<<" vIP "<<msg->getAddress().str(false)<<endl;
 }
 
+void GLBPVirtualRouter::DebugUnknown(int who){
+    std::string type = intToGlbpState(who);
+    EV_DEBUG<<hostname<<" # "<<ie->getName()<<" "<<glbpGroup<<" "<<type<<" router is unknown"<<endl;//TODO was, <ip stareho>
+}
+
 std::string GLBPVirtualRouter::intToMessageType(int msg){
     std::string retval;
     switch(msg){
@@ -484,12 +566,36 @@ std::string GLBPVirtualRouter::intToMessageType(int msg){
     return retval;
 }
 
+void GLBPVirtualRouter::interfaceDown(){
+    switch(glbpState){
+        case ACTIVE:
+            //TODO SEND RESIGN
+        default:
+            if (hellotimer->isScheduled())
+                cancelEvent(standbytimer);
+            if (standbytimer->isScheduled())
+                cancelEvent(standbytimer);
+            if (hellotimer->isScheduled())
+                cancelEvent(standbytimer);
+            break;
+    }//switch
+
+    DebugStateMachine(glbpState, INIT);
+    glbpState = INIT;
+    vf->setDisable();
+}
+
+void GLBPVirtualRouter::interfaceUp(){
+    initState();
+}
+
+
 GLBPVirtualRouter::~GLBPVirtualRouter() {
     cancelAndDelete(hellotimer);
     cancelAndDelete(standbytimer);
     cancelAndDelete(activetimer);
     cancelAndDelete(initmessage);
-//    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
+    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
 }
 
 } /* namespace inet */

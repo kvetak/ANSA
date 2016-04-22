@@ -89,6 +89,9 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void activeState();
         void disabledState();
 
+        void interfaceUp();
+        void interfaceDown();
+
         void handleMessageListen(GLBPHello *msg);
         void handleMessageSpeak(GLBPHello *msg);
         void handleMessageStandby(GLBPHello *msg);
@@ -98,6 +101,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void DebugStateMachine(int from, int to);
         void DebugSendMessage(int t);
         void DebugGetMessage(GLBPHello *msg);
+        void DebugUnknown(int who);
 
         std::string intToGlbpState(int state);
         std::string intToMessageType(int msg);
