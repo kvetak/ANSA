@@ -28,6 +28,9 @@ simple GLBPVirtualRouter like IUDPApp
 		int interface;
 		int vrid;
 
+		//cisco jitter timers
+		bool jittered			= default(false);
+		
         int version				= default(1);	 	 //default version of HSRP is 1
     	int hellotime @unit(s)	= default(3s);	  	//hellotime of actual device
     	int holdtime @unit(s)	= default(10s);	  	//holdtime of actual device
