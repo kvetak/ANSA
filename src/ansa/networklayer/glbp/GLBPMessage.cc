@@ -12,36 +12,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-cplusplus {{
-#include "inet/networklayer/contract/ipv4/IPv4Address.h"
-#include "GLBP_m.h"
-const int GLBP_HELLO_SIZE = 40;
-const std::string GLBP_MULTICAST_ADDRESS = "224.0.0.102";
-const int GLBP_UDP_PORT = 3222; 
-}}
 
-class noncobject IPv4Address;
+#include "GLBPMessage.h"
 
-namespace inet;
+#include "inet/common/INETUtils.h"
 
-packet GLBPHello{
-    //glbp header
-	unsigned char version = 1;
-	uint16_t group;
-	uint64_t ownerId;	
-	
-	//REQ/RESP or Hello
-	unsigned char type = HELLO;
-	unsigned char length;
-	
-	//hello
-	unsigned char vgState;
-	unsigned char priority;
-	uint32_t helloint;
-	uint32_t holdint;
-	uint16_t redirect;
-	uint16_t timeout;
-	unsigned char addressType = IPv4;
-	unsigned char addresLength = 4;
-	IPv4Address address;	     
+namespace inet {
+
+Register_Class(GLBPMessage);
+
+TLVOptionBase *GLBPMessage::findOptionByType(short int optionType, int index)
+{
+    int i = TLV_var.findByType(optionType, index);
+    return i >= 0 ? &getTlvOption(i) : nullptr;
 }
+
+void GLBPMessage::addOption(TLVOptionBase *opt, int atPos)
+{
+    TLV_var.add(opt, atPos);
+}
+
+} /* namespace inet */

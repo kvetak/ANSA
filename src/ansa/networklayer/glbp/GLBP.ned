@@ -27,6 +27,9 @@ simple GLBP like IUDPApp
 //        bool jittered;     
         
         string interfaceTableModule = default(".interfaceTableModule");  
+            
+      	int glbpUdpPort			= default(3222);
+      	string glbpMulticastAddress = default("224.0.0.102");	
 
 	gates:
         input glbpIn[] @labels(UDPControlInfo/down);

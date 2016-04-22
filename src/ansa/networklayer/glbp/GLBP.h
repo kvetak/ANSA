@@ -23,8 +23,8 @@
 
 #include <omnetpp.h>
 
-#include "GLBPHello_m.h"
-#include "GLBPReqResp_m.h"
+//#include "GLBPHello_m.h"
+#include "GLBPMessage_m.h"
 #include "GLBPVirtualRouter.h"
 
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"

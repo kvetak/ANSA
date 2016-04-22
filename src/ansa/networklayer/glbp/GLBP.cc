@@ -34,10 +34,11 @@ void GLBP::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
-        glbpMulticastAddress = new L3Address(GLBP_MULTICAST_ADDRESS.c_str());
+        glbpMulticastAddress = new L3Address(par("glbpMulticastAddress"));
         socket = new UDPSocket(); //UDP socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
-        socket->bind(GLBP_UDP_PORT);
+        socket->setReuseAddress(true);
+        socket->bind((int) par("glbpUdpPort"));
         this->parseConfig(par(CONFIG_PAR));
     }
 }
@@ -46,9 +47,9 @@ void GLBP::handleMessage(cMessage *msg)
 {
     //get message from netwlayer
     if (msg->getArrivalGate()->isName("udpIn")){
-        if (dynamic_cast<GLBPHello*>(msg))
+        if (dynamic_cast<GLBPMessage*>(msg))
         {
-            GLBPHello *GLBPHm = dynamic_cast<GLBPHello*>(msg);
+            GLBPMessage *GLBPHm = dynamic_cast<GLBPMessage*>(msg);
             //TODO to same pro GLBPResponseRequest message
             for (int i = 0; i < (int) virtualRouterTable.size(); i++){
 
@@ -94,6 +95,7 @@ void GLBP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     module->par("virtualIP") = vip;
     module->par("priority") = priority;
     module->par("preempt") = preempt;
+    //TODO timery! hello, hold, redirect, timeout
     module->par("interfaceTableModule") = ift->getFullPath();
     cModule *containingModule = findContainingNode(this);
     module->par("arp") = containingModule->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp")->getFullPath();

@@ -34,10 +34,15 @@ simple GLBPVirtualRouter like IUDPApp
         int version				= default(1);	 	 //default version of HSRP is 1
     	int hellotime @unit(s)	= default(3s);	  	//hellotime of actual device
     	int holdtime @unit(s)	= default(10s);	  	//holdtime of actual device
+    	int redirect @unit(s)	= default(600s);	//time during which VG redirect clients to secondary vf
+    	int timeout @unit(s)	= default(14400s);	//after this time will be secondary vf unreacheable
     	int priority			= default(100);	 	 //priority of actual device
     	bool preempt			= default(false);	 //preemption flag
     	int group				= default(0);	    	//group number of actual device 	
-      	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device        	
+      	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device 
+      	
+      	int glbpUdpPort			= default(3222);
+      	string glbpMulticastAddress = default("224.0.0.102");		       	
       	
   	    gates:
         input udpIn @labels(UDPControlInfo/up);

@@ -43,8 +43,8 @@ void GLBPVirtualRouter::initialize(int stage)
 
         //setup HSRP parameters
         glbpState = INIT;
-        glbpUdpPort = GLBP_UDP_PORT;
-        glbpMulticast = new L3Address(GLBP_MULTICAST_ADDRESS.c_str());
+        glbpUdpPort = (int)par("glbpUdpPort");
+        glbpMulticast = new L3Address(par("glbpMulticastAddress"));
         glbpGroup = (int)par("vrid");
         virtualIP = new IPv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
@@ -58,6 +58,8 @@ void GLBPVirtualRouter::initialize(int stage)
         //setup Timers
         helloTime = par("hellotime");
         holdTime = par("holdtime");
+        redirect = par("redirect");
+        timeout = par("timeout");
         hellotimer = new cMessage("helloTimer");
         standbytimer = new cMessage("standbyTimer");
         activetimer = new cMessage("activeTimer");
@@ -77,6 +79,8 @@ void GLBPVirtualRouter::initialize(int stage)
         //get socket ready
         socket = new UDPSocket();
         socket->setOutputGate(gate("udpOut"));
+        socket->setReuseAddress(true);
+        socket->bind(glbpUdpPort);
 
         //subscribe to notifications
 //        containingModule->subscribe(NF_INTERFACE_CREATED, this);
@@ -169,10 +173,10 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
     }
     else
     {
-        GLBPHello *GLBPm = dynamic_cast<GLBPHello *>(msg);
-
+        GLBPMessage *GLBPm = dynamic_cast<GLBPMessage *>(msg);
         DebugGetMessage(GLBPm);
-
+        //TODO check jestli je tam hello
+        //VG Zpracovani ---> pocita s Hello casti
         switch(glbpState){
             case LISTEN:
                 handleMessageListen(GLBPm);
@@ -195,9 +199,11 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
  * Msg handlers
  */
 
-void GLBPVirtualRouter::handleMessageListen(GLBPHello *msg){
+void GLBPVirtualRouter::handleMessageListen(GLBPMessage *msg){
     //TODO resign receive
-    switch(msg->getVgState()){
+    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+
+    switch(hello->getVgState()){
     case SPEAK:
         if (!isHigherPriorityThan(msg)){
             scheduleTimer(standbytimer);//FIXME TODO mozna tady nema byt
@@ -237,9 +243,11 @@ void GLBPVirtualRouter::handleMessageListen(GLBPHello *msg){
     }
 }
 
-void GLBPVirtualRouter::handleMessageSpeak(GLBPHello *msg){
+void GLBPVirtualRouter::handleMessageSpeak(GLBPMessage *msg){
     //TODO RESIGN
-    switch(msg->getVgState()){
+    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+
+    switch(hello->getVgState()){//TODO msg->getVgState()){
         case SPEAK:
             //h
             if (!isHigherPriorityThan(msg)){
@@ -292,9 +300,11 @@ void GLBPVirtualRouter::handleMessageSpeak(GLBPHello *msg){
     }//switch
 }
 
-void GLBPVirtualRouter::handleMessageStandby(GLBPHello *msg){
+void GLBPVirtualRouter::handleMessageStandby(GLBPMessage *msg){
     //TODO RESIGN RECEIVE
-    switch(msg->getVgState()){
+    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+
+    switch(hello->getVgState()){// TODOmsg->getVgState()){
         case SPEAK:
             if (!isHigherPriorityThan(msg)){
                 scheduleTimer(standbytimer);
@@ -329,8 +339,11 @@ void GLBPVirtualRouter::handleMessageStandby(GLBPHello *msg){
     }//end switch
 }
 
-void GLBPVirtualRouter::handleMessageActive(GLBPHello *msg){
-    switch(msg->getVgState()){
+void GLBPVirtualRouter::handleMessageActive(GLBPMessage *msg)
+{
+    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+
+    switch(hello->getVgState()){//msg->getVgState()){
         case STANDBY:
             scheduleTimer(standbytimer);
             break;
@@ -405,11 +418,11 @@ void GLBPVirtualRouter::listenState(){
     scheduleTimer(standbytimer);
 }
 
-void GLBPVirtualRouter::sendMessage(TYPE type)
+void GLBPVirtualRouter::sendMessage(GLBPType type)
 {
     DebugSendMessage(type);
-    GLBPHello *packet = generateMessage(type);
-    packet->setBitLength(GLBP_HELLO_SIZE);
+    GLBPMessage *packet = generateMessage();
+    packet->setBitLength(GLBP_HEADER_BYTES*8);//TODO
 
     UDPSocket::SendOptions options;
     options.outInterfaceId = ie->getInterfaceId();
@@ -419,30 +432,49 @@ void GLBPVirtualRouter::sendMessage(TYPE type)
     socket->sendTo(packet, *glbpMulticast, glbpUdpPort, &options);
 }
 
-GLBPHello *GLBPVirtualRouter::generateMessage(TYPE type)
+GLBPMessage *GLBPVirtualRouter::generateMessage()
 { //todo udelat obecne ne jen pro hello
-    GLBPHello* msg = new GLBPHello("GLBPHello");
+    GLBPMessage *msg = new GLBPMessage("GLBPMessage");
+
+    //set glbp packet header
     msg->setGroup(glbpGroup);
-    //todo owner id
-    msg->setType(type);
-    msg->setLength(GLBP_HELLO_SIZE);
-    msg->setVgState(glbpState);
-    msg->setPriority(priority);
-    msg->setHelloint(par("hellotime"));
-    msg->setHoldint(par("holdtime"));
-    msg->setRedirect(600);//TODO
-    msg->setTimeout(700);//TODO
-    if (virtualIP != nullptr)
-        msg->setAddress(*(virtualIP));
+    msg->setOwnerId(ie->getMacAddress());
+
+    //set glbp HELLO TLV
+    GLBPHello *helloPacket = generateHelloTLV();
+    msg->addOption(helloPacket);
 
     return msg;
+}
+
+GLBPHello *GLBPVirtualRouter::generateHelloTLV(){
+    GLBPHello *packet = new GLBPHello();
+
+    //setup Hello TLV
+    packet->setVgState(glbpState);
+    packet->setPriority(priority);
+    packet->setHelloint(helloTime);
+    packet->setHoldint(holdTime);
+    packet->setRedirect(redirect);
+    packet->setTimeout(timeout);
+    //TODO: IPv6
+    packet->setAddressType(IPv4);
+    packet->setAddress(*virtualIP);
+
+    return packet;
+}
+
+GLBPRequestResponse *GLBPVirtualRouter::generateReqRespTLV(int forwarder){
+    GLBPRequestResponse *packet = new GLBPRequestResponse();
+    //TODO
+    return packet;
 }
 
 void GLBPVirtualRouter::scheduleTimer(cMessage *msg)
 {
     float jitter = 0;
     if (par("jittered").boolValue()){
-        jitter = (rand() % 100)*0.01;
+        jitter = (rand() % 100)*0.01; //TODO rand is not optimal
     }
 
     if (msg->isScheduled()){
@@ -486,11 +518,13 @@ void GLBPVirtualRouter::setVirtualMAC(int n)
     EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
 }
 
-bool GLBPVirtualRouter::isHigherPriorityThan(GLBPHello *GLBPm){
+bool GLBPVirtualRouter::isHigherPriorityThan(GLBPMessage *GLBPm){
     UDPDataIndication *udpInfo = check_and_cast<UDPDataIndication *>(GLBPm->getControlInfo());
-    if (GLBPm->getPriority() < priority){
+    GLBPHello *hello = check_and_cast<GLBPHello *>(GLBPm->findOptionByType(HELLO,0));
+
+    if (hello->getPriority() < priority){//TODO
         return true;
-    }else if (GLBPm->getPriority() > priority){
+    }else if (hello->getPriority() > priority){//TODO
         return false;
     }else{// ==
 //        std::cout<<"ie IP:"<<ie->ipv4Data()->getIPAddress().str(false)<<"recv mess IP:"<<ci->getSrcAddr().str()<<std::endl;
@@ -539,13 +573,14 @@ void GLBPVirtualRouter::DebugSendMessage(int t){
     EV<<hostname<<" # "<<ie->getName()<<" Grp "<<glbpGroup<<" "<<type<<" out "<< ie->ipv4Data()->getIPAddress().str(false) <<" "<<state << " pri "<<priority<<" vIP "<<virtualIP->str(false)<<endl;
 }
 
-void GLBPVirtualRouter::DebugGetMessage(GLBPHello *msg){
-    std::string type = intToMessageType(msg->getType());
-    std::string state = intToGlbpState(msg->getVgState());
+void GLBPVirtualRouter::DebugGetMessage(GLBPMessage *msg){
+    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO, 0));
+    std::string type = intToMessageType(HELLO);//TODO
+    std::string state = intToGlbpState(hello->getVgState());
     UDPDataIndication *udpInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
     std::string ipFrom =  udpInfo->getSrcAddr().toIPv4().str(false);
 
-    EV<<hostname<<" # "<<ie->getName()<<" Grp "<<(int)msg->getGroup()<<" "<<type<<" in "<< ipFrom <<" "<<state << " pri "<<(int)msg->getPriority()<<" vIP "<<msg->getAddress().str(false)<<endl;
+    EV<<hostname<<" # "<<ie->getName()<<" Grp "<<(int)msg->getGroup()<<" "<<type<<" in "<< ipFrom <<" "<<state << " pri "<<(int)hello->getPriority()<<" vIP "<<hello->getAddress().str(false)<<endl;
 }
 
 void GLBPVirtualRouter::DebugUnknown(int who){

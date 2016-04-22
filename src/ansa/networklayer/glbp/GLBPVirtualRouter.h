@@ -23,9 +23,10 @@
 
 #include <omnetpp.h>
 
-#include "GLBP_m.h"
-#include "GLBPHello_m.h"
-#include "GLBPReqResp_m.h"
+//#include "GLBP_m.h"
+//#include "GLBPHello_m.h"
+#include "GLBPMessage_m.h"
+#include "GLBPMessage.h"
 
 #include "ansa/networklayer/common/AnsaInterfaceEntry.h"
 
@@ -60,6 +61,8 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         int priority;                       //priority value of hsrp group
         int helloTime;
         int holdTime;
+        int redirect;
+        int timeout;
 
         /* HSRP timers */
         cMessage *hellotimer = nullptr;
@@ -74,12 +77,14 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
 //        void sendMessage(OP_CODE opCode);
         void setVirtualMAC(int n);
         void scheduleTimer(cMessage *msg);
-        bool isHigherPriorityThan(GLBPHello *msg);
+        bool isHigherPriorityThan(GLBPMessage *msg);
         //signal handler
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
 
-        GLBPHello *generateMessage(TYPE type);
-        void sendMessage(TYPE type);
+        GLBPMessage *generateMessage();
+        GLBPHello *generateHelloTLV();
+        GLBPRequestResponse *generateReqRespTLV(int forwarder);
+        void sendMessage(GLBPType type);
 
         //state machine
         void initState();
@@ -92,15 +97,15 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void interfaceUp();
         void interfaceDown();
 
-        void handleMessageListen(GLBPHello *msg);
-        void handleMessageSpeak(GLBPHello *msg);
-        void handleMessageStandby(GLBPHello *msg);
-        void handleMessageActive(GLBPHello *msg);
+        void handleMessageListen(GLBPMessage *msg);
+        void handleMessageSpeak(GLBPMessage *msg);
+        void handleMessageStandby(GLBPMessage *msg);
+        void handleMessageActive(GLBPMessage *msg);
 
         //debug
         void DebugStateMachine(int from, int to);
         void DebugSendMessage(int t);
-        void DebugGetMessage(GLBPHello *msg);
+        void DebugGetMessage(GLBPMessage *msg);
         void DebugUnknown(int who);
 
         std::string intToGlbpState(int state);
