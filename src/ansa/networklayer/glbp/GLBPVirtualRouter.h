@@ -29,6 +29,7 @@
 #include "GLBPMessage.h"
 
 #include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+#include "GLBPVirtualForwarder.h"
 
 #include "inet/networklayer/arp/ipv4/ARP.h"
 #include "inet/transportlayer/contract/udp/UDPSocket.h"
@@ -48,10 +49,10 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         IInterfaceTable *ift = nullptr;      //usable interfaces of this router
         ARP *arp = nullptr;                  //arp table for sending arp gratuious.
         AnsaInterfaceEntry *ie = nullptr;    //Interface which is running GLBP group
-        VirtualForwarder *vf = nullptr;      //Particular GLBP group is represented by VF on each interface
+        std::vector<GLBPVirtualForwarder *> vfVector;      //Particular GLBP group is represented by VF on each interface
         cModule *containingModule = nullptr; //helper for looking for particular module
 
-        /* HSRP specific variables */
+        /* GLBP specific variables */
         int glbpState;                      //state of hsrp virtual router
         int glbpGroup;                      //group of hsrp virtual router
         L3Address *glbpMulticast = nullptr; //multicast address of GLBP (224.0.0.102)
@@ -64,7 +65,14 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         int redirect;
         int timeout;
 
-        /* HSRP timers */
+        //VF specific
+//        int vfCount;
+//        std::vector<int> vfState;
+//        std::vector<int> vfPriority;
+//        std::vector<int> vfWeight;
+//        std::vector<MACAddress> vfMac;
+
+        /* GLBP timers */
         cMessage *hellotimer = nullptr;
         cMessage *activetimer = nullptr;
         cMessage *standbytimer = nullptr;
