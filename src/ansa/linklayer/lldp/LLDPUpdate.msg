@@ -13,7 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+cplusplus {{
+#include "inet/common/TLVOption.h"
+}}
+
 namespace inet;
+
+class noncobject TLVOptionBase;
+class noncobject TLVOptions;
 
 enum LLDPTLVType
 {
@@ -29,16 +36,112 @@ enum LLDPTLVType
 	LLDPTLV_ORG_SPEC = 127;		//basic organizationally specific
 }
 
-// TLV structure
-class LLDPTLV
+ 
+enum LLDPChassisIdSubtype	//lcis
 {
-    uint8_t	type @enum(LLDPTLVType); 	//TODO: melo by byt 7 bitu	
-    uint16_t	length;					//TODO: melo by byt 9 bitu
-    string		value;		//TODO: void a pretypovat?
+    lcisReserved = 0;
+    lcisChassComp = 1;
+    lcisIfaceAlias = 2;
+    lcisPortComp = 3;
+    lcisMacAdd = 4;
+    lcisNetAdd = 5;
+    lcisIfaceNam = 6;
+    lcisLocAss = 7;
 }
+
+ 
+enum LLDPPortIdSubtype	//pcis
+{
+    pcisReserved = 0;
+    pcisIfaceAlias = 1;
+    pcisPortComp = 2;
+    pcisMacAdd = 3;
+    pcisNetAdd = 4;
+    pcisIfaceNam = 5;
+    pcisAgentCirId = 6;
+    pcisLocAss = 7;
+}
+class LLDPOption extends TLVOptionBase
+{
+}
+
+class LLDPOptionChassisId extends LLDPOption
+{
+    type = LLDPTLV_CHASSIS_ID;
+    uint8_t	subtype;
+    string	value;
+}
+
+class LLDPOptionPortId extends LLDPOption
+{
+    type = LLDPTLV_PORT_ID;
+    uint8_t	subtype;
+    string	value;
+}
+
+class LLDPOptionTTL extends LLDPOption
+{
+    type = LLDPTLV_TTL;
+    uint16_t	ttl;
+}
+
+class LLDPOptionEndOf extends LLDPOption
+{
+    type = LLDPTLV_END_OF;
+    length = 1;				//TODO: should be 0
+}
+
+class LLDPOptionPortDes extends LLDPOption
+{
+    type = LLDPTLV_PORT_DES;
+    string	value;
+}
+
+class LLDPOptionSystemName extends LLDPOption
+{
+    type = LLDPTLV_SYSTEM_NAME;
+    string	value;
+}
+
+class LLDPOptionSystemDes extends LLDPOption
+{
+    type = LLDPTLV_SYSTEM_DES;
+    string	value;
+}
+
+class LLDPOptionCap extends LLDPOption
+{
+    type = LLDPTLV_SYSTEM_CAP;
+    uint8_t	chasId = 0;
+    char	sysCap[2];		// system capabilities
+    char	enCap[2];		// enabled capabilities
+}
+
+class LLDPOptionManAdd extends LLDPOption
+{
+    type = LLDPTLV_MAN_ADD;
+    uint8_t		addLength;			// length, in octets, of the (management addresssubtype + management address) fields
+    uint8_t		addSubtype = 6;		// type of address that is listed in the management address field
+    string		address;			// management address associated with this TLV
+    uint8_t		ifaceSubtype = 3;	// numbering method used for defining the interface number
+    uint32_t	ifaceNum;			// assigned number within the system that identifies the specific interface 
+    uint8_t		oidLength;			// object identifier length
+    string		oid;				// object identifier
+}
+
+class LLDPOptionOrgSpec extends LLDPOption
+{
+    type = LLDPTLV_ORG_SPEC;
+    uint32_t	oui;			// organizationally unique identifier
+    uint8_t		subtype;		// organizationally defined subtype
+    string		value;			// organizationally defined information string
+}
+
 
 //LLDP update packet
 packet LLDPUpdate
 {
-    LLDPTLV		tlv[];
+    @customize(true);
+    
+    TLVOptions		options;
 }

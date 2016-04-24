@@ -21,8 +21,9 @@
 #include "inet/linklayer/common/Ieee802Ctrl.h"
 #include "inet/common/ModuleAccess.h"
 
+//#include "ansa/linklayer/lldp/LLDP.h"
 #include "ansa/linklayer/lldp/LLDPTimer_m.h"
-#include "ansa/linklayer/lldp/LLDPUpdate_m.h"
+#include "ansa/linklayer/lldp/LLDPUpdate.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/linklayer/lldp/LLDPDef.h"
 
@@ -35,16 +36,21 @@
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 #include "inet/networklayer/contract/IRoutingTable.h"
 
-
 namespace inet {
 
-class INET_API LLDPAgent : public cObject
+class LLDP;
+
+class INET_API LLDPAgent: public cObject
 {
 protected:
     InterfaceEntry *interface;      // physical network interface
     LLDPTimer *txTTR;               // timer is used to determine the next LLDPDU transmission is due
     LLDPTimer *txShutdownWhile;     // remaining until LLDP re-initialization can occur
+    //LLDPSystemInfo *systemInfo;
     cModule *containingModule;
+    LLDP *core;
+    const char* msap = nullptr;     // MSAP (contatenation of chassis ID and port ID)
+
 
     uint16_t msgFastTx;     // ticks between transmission during fast transmission
     uint8_t msgTxHold;      // multiplier of msgTxInterval, to determine value of TTL
@@ -61,7 +67,7 @@ protected:
 public:
     LLDPAgent(
             InterfaceEntry *iface,
-            cModule *cm,
+            LLDP *c,
             uint8_t msgFastTxDef,
             uint8_t msgTxHoldDef,
             uint16_t msgTxIntervalDef,
@@ -79,6 +85,7 @@ public:
 
     int getInterfaceId() {return (interface) ? interface->getInterfaceId() : -1;}
     const char *getIfaceName() const {return (interface) ? interface->getName() : "-";}
+    const char *getMsap() {return msap;}
 
     InterfaceEntry *getInterface() {return interface;}
     void setInterface(InterfaceEntry *i) {interface = i;}
@@ -110,9 +117,17 @@ public:
     void txFastStart();
 
 
-    void setTlvChassisId(LLDPUpdate *update, int pos);
-    void setTlvPortId(LLDPUpdate *update, int pos);
-    void setTlvTtl(LLDPUpdate *update, int pos, int ttl);
+    void setTlvChassisId(LLDPUpdate *msg);
+    void setTlvPortId(LLDPUpdate *msg);
+    void setTlvTtl(LLDPUpdate *msg);
+    void setTlvEndOf(LLDPUpdate *msg);
+    void setTlvPortDes(LLDPUpdate *msg);
+    void setTlvSystemName(LLDPUpdate *msg);
+    void setTlvSystemDes(LLDPUpdate *msg);
+    void setTlvCap(LLDPUpdate *msg);
+    void setTlvManAdd(LLDPUpdate *msg);
+    void setTlvManAddSpec(LLDPUpdate *msg, std::string add);
+    void setTlvOrgSpec(LLDPUpdate *msg, LLDPOptionOrgSpec *tlv);
 
 };
 
@@ -126,6 +141,7 @@ class LLDPAgentTable
 
     std::vector<LLDPAgent *>& getAgents() {return agents;}
     LLDPAgent * findAgentById(const int ifaceId);
+    LLDPAgent * findAgentByMsap(const char* m);
     LLDPAgent * addAgent(LLDPAgent * agent);
     void removeAgent(LLDPAgent * agent);
     void removeAgent(int ifaceId);

@@ -43,6 +43,7 @@ module ANSA_EtherSwitch
     parameters:
         @networkNode();
         @capabilities("Switch");
+        @capabilitiesEnabled("Switch");
         @labels(node,ethernet-node);
         @display("i=device/switch");
         bool hasStatus = default(true);

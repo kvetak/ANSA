@@ -23,7 +23,7 @@
 #endif // ifdef WITH_CDP
 
 #ifdef WITH_LLDP
-#include "ansa/linklayer/lldp/LLDPUpdate_m.h"
+#include "ansa/linklayer/lldp/LLDPUpdate.h"
 #endif // ifdef WITH_LLDP
 
 #ifdef WITH_IPv4

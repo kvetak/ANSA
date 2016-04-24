@@ -24,6 +24,8 @@ import ansa.node.ANSA_Router;
 module ANSA_CDPRouter extends ANSA_Router
 {
     parameters:
+        @capabilities("Router");
+        
         string deviceId = default("");
         xml configFile = default(xmldoc("config.xml"));
         string deviceType = default("Router"); 

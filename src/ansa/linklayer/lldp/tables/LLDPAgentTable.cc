@@ -13,7 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "ansa/linklayer/lldp/LLDPAgentTable.h"
+#include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
+#include "ansa/linklayer/lldp/LLDP.h"
 
 namespace inet {
 
@@ -44,7 +45,7 @@ std::string LLDPAgent::info() const
 
 LLDPAgent::LLDPAgent(
         InterfaceEntry *iface,
-        cModule *cm,
+        LLDP *c,
         uint8_t msgFastTxDef,
         uint8_t msgTxHoldDef,
         uint16_t msgTxIntervalDef,
@@ -54,7 +55,7 @@ LLDPAgent::LLDPAgent(
         AS adminStatusDef)
 {
     interface = iface;
-    containingModule = cm;
+    core = c;
 
     txTTR = new LLDPTimer();
     txTTR->setTimerType(TTR);
@@ -74,6 +75,8 @@ LLDPAgent::LLDPAgent(
     adminStatus = adminStatusDef;
 
     txTTROwner = dynamic_cast<cSimpleModule *>(txTTR->getOwner());
+
+    //containingModule = core->getContainingModule();
 }
 
 LLDPAgent::~LLDPAgent()
@@ -156,15 +159,17 @@ LLDPUpdate *LLDPAgent::constrUpdateLLDPDU()
 LLDPUpdate *LLDPAgent::constrShutdownLLDPDU()
 {
     LLDPUpdate *update = new LLDPUpdate();
-    int txTTL = 0;
-    int count = 0;
-    update->setTlvArraySize(4);
 
-    setTlvChassisId(update, count++);      //chassis-id
-    setTlvPortId(update, count++);         //port-id
-    setTlvTtl(update, count++, txTTL);       //ttl
+    setTlvChassisId(update);      // chassis ID
+    setTlvPortId(update);         // port ID
+    setTlvTtl(update);            // TTL
+    setTlvPortDes(update);        // port description
+    setTlvSystemName(update);     // system name
+    setTlvSystemDes(update);      // system description
+    setTlvCap(update);            // system capabilites
+    setTlvManAdd(update);         // management address
 
-    //TODO:
+    setTlvEndOf(update);          // end of lldpdu - must be at the end
     return update;
 }
 
@@ -183,20 +188,18 @@ void LLDPAgent::txFrame(LLDPUpdate *update)
     }
 
 
-    if (!containingModule->gate(interface->getNodeOutputGateId())->isPathOK())
+    if (!interface->isUp())
     {
-        EV_ERROR << "Interface not connected, discarding packet\n";
+        EV_ERROR << "Interface " << interface->getFullName() << " is down, discarding packet" << endl;
         delete update;
         return;
     }
 
-    //TODO: send
     Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
     controlInfo->setDestinationAddress(MACAddress("01-80-c2-00-00-0e"));
     controlInfo->setInterfaceId(interface->getInterfaceId());
     update->setControlInfo(controlInfo);
 
-    EV << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
     txTTROwner->send(update, "ifOut", interface->getNetworkLayerGateIndex());
 }
 
@@ -244,31 +247,135 @@ void LLDPAgent::txFastStart()
 ///************************* START OF TLV *****************************///
 
 
-void LLDPAgent::setTlvChassisId(LLDPUpdate *update, int pos)
+void LLDPAgent::setTlvChassisId(LLDPUpdate *msg)
 {
-    LLDPTLV *tlv = new LLDPTLV();
-    tlv->setType(LLDPTLV_CHASSIS_ID);
-    tlv->setValue("chassis");
-    tlv->setLength(5);
-    update->setTlv(pos, tlv[0]);
+    LLDPOptionChassisId *tlv = new LLDPOptionChassisId();
+    tlv->setSubtype((uint8_t)lcisMacAdd);
+
+    std::string s = core->getChassisId();
+    if(s.size() > 255)
+        s.resize(255);
+
+    tlv->setValue(s.c_str());
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvPortId(LLDPUpdate *update, int pos)
+void LLDPAgent::setTlvPortId(LLDPUpdate *msg)
 {
-    LLDPTLV *tlv = new LLDPTLV();
-    tlv->setType(LLDPTLV_PORT_ID);
-    tlv->setValue("port");
-    tlv->setLength(4);
-    update->setTlv(pos, tlv[0]);
+    LLDPOptionPortId *tlv = new LLDPOptionPortId();
+    tlv->setSubtype((uint8_t)pcisIfaceNam);
+    tlv->setValue(interface->getFullName());
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvTtl(LLDPUpdate *update, int pos, int ttl)
+void LLDPAgent::setTlvTtl(LLDPUpdate *msg)
 {
-    LLDPTLV *tlv = new LLDPTLV();
-    tlv->setType(LLDPTLV_TTL);
-    tlv->setValue("0");
-    tlv->setLength(5);
-    update->setTlv(pos, tlv[0]);
+    LLDPOptionTTL *tlv = new LLDPOptionTTL();
+    tlv->setTtl(msgTxInterval * msgTxHold);
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvEndOf(LLDPUpdate *msg)
+{
+    LLDPOptionEndOf *tlv = new LLDPOptionEndOf();
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvPortDes(LLDPUpdate *msg)
+{
+    LLDPOptionPortDes *tlv = new LLDPOptionPortDes();
+
+    std::string s = interface->getFullPath();
+    if(s.size() > 255)
+        s.resize(255);
+
+    tlv->setValue(s.c_str());
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvSystemName(LLDPUpdate *msg)
+{
+    LLDPOptionSystemName *tlv = new LLDPOptionSystemName();
+    tlv->setValue(core->getContainingModule()->getFullName());
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvSystemDes(LLDPUpdate *msg)
+{
+    LLDPOptionSystemDes *tlv = new LLDPOptionSystemDes();
+    tlv->setValue(core->getContainingModule()->getComponentType()->getFullName());
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvCap(LLDPUpdate *msg)
+{
+    LLDPOptionCap *tlv = new LLDPOptionCap();
+
+    const char* sysCap = core->getSystemCapabilites();
+    const char* enCap = core->getEnabledCapabilites();
+
+    tlv->setSysCap(0, sysCap[0]);
+    tlv->setSysCap(1, sysCap[1]);
+    tlv->setEnCap(0, enCap[0]);
+    tlv->setEnCap(1, enCap[1]);
+    //tlv->setChasId();                 //TODO ?
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvManAdd(LLDPUpdate *msg)
+{
+    std::stringstream string;
+    bool l3Address = false;
+
+    if(interface->ipv4Data() != nullptr && !interface->ipv4Data()->getIPAddress().isUnspecified())
+    {
+        l3Address = true;
+        string << interface->ipv4Data()->getIPAddress().getInt();
+        setTlvManAddSpec(msg, string.str());
+    }
+    //if(interface->ipv6Data() != nullptr && !interface->ipv6Data()->getLinkLocalAddress().isUnspecified())
+    //{
+    //    l3Address = true;
+    //    setTlvManAddSpec(msg, interface->ipv6Data()->getLinkLocalAddress().str());
+    //}
+    if(!l3Address)
+    {
+        string << interface->getMacAddress().getInt();
+        setTlvManAddSpec(msg, string.str());
+    }
+}
+
+void LLDPAgent::setTlvManAddSpec(LLDPUpdate *msg, std::string add)
+{
+    LLDPOptionManAdd *tlv = new LLDPOptionManAdd();
+    tlv->setAddress(add.c_str());
+    tlv->setAddLength(sizeof(tlv->getAddSubtype())+strlen(tlv->getAddress()));
+    tlv->setIfaceNum(interface->getInterfaceId());
+    tlv->setOidLength(0);
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
+}
+
+void LLDPAgent::setTlvOrgSpec(LLDPUpdate *msg, LLDPOptionOrgSpec *tlv)
+{
+
+    std::string s = interface->getFullPath();
+    if(strlen(tlv->getValue()) > 507)
+    {
+        std::string s = tlv->getValue();
+        s.resize(507);
+        tlv->setValue(s.c_str());
+    }
+
+    msg->setOptionLength(tlv);
+    msg->addOption(tlv, -1);
 }
 
 ///************************** END OF TLV ******************************///
@@ -288,9 +395,26 @@ LLDPAgent * LLDPAgentTable::findAgentById(const int ifaceId)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
+LLDPAgent *LLDPAgentTable::findAgentByMsap(const char* m)
+{
+    std::vector<LLDPAgent *>::iterator it;
+
+    if(m == nullptr)
+        return nullptr;
+
+    for (it = agents.begin(); it != agents.end(); ++it)
+    {// through all agents search for same interfaceId
+        if((*it)->getMsap() != nullptr && strcmp((*it)->getMsap(), m) == 0)
+        {// found same
+            return (*it);
+        }
+    }
+
+    return nullptr;
+}
 
 void LLDPAgentTable::startAgents()
 {

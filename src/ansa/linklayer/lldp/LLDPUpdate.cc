@@ -1,0 +1,131 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+#include "ansa/linklayer/lldp/LLDPUpdate.h"
+
+#include "inet/common/INETUtils.h"
+
+
+namespace inet {
+
+Register_Class(LLDPUpdate);
+
+TLVOptionBase *LLDPUpdate::findOptionByType(short int optionType, int index)
+{
+    int i = options.findByType(optionType, index);
+    return i >= 0 ? &getOption(i) : nullptr;
+}
+
+void LLDPUpdate::addOption(TLVOptionBase *opt, int atPos)
+{
+    options.add(opt, atPos);
+}
+
+short LLDPUpdate::getOptionLength(TLVOptionBase *opt)
+{
+    short length = 0;
+    if(dynamic_cast<LLDPOptionEndOf *> (opt))
+    {
+        length = 1;         //can't be 0
+    }
+    else if(dynamic_cast<LLDPOptionChassisId *> (opt))
+    {
+        LLDPOptionChassisId *option = dynamic_cast<LLDPOptionChassisId *> (opt);
+        length = strlen(option->getValue()) + sizeof(option->getSubtype());
+    }
+    else if(dynamic_cast<LLDPOptionPortId *> (opt))
+    {
+        LLDPOptionPortId *option = dynamic_cast<LLDPOptionPortId *> (opt);
+        length = strlen(option->getValue()) + sizeof(option->getSubtype());
+    }
+    else if(dynamic_cast<LLDPOptionTTL *> (opt))
+    {
+        LLDPOptionTTL *option = dynamic_cast<LLDPOptionTTL *> (opt);
+        length = sizeof(option->getTtl());
+    }
+    else if(dynamic_cast<LLDPOptionPortDes *> (opt))
+    {
+        LLDPOptionPortDes *option = dynamic_cast<LLDPOptionPortDes *> (opt);
+        length = strlen(option->getValue());
+    }
+    else if(dynamic_cast<LLDPOptionSystemName *> (opt))
+    {
+        LLDPOptionSystemName *option = dynamic_cast<LLDPOptionSystemName *> (opt);
+        length = strlen(option->getValue());
+    }
+    else if(dynamic_cast<LLDPOptionSystemDes *> (opt))
+    {
+        LLDPOptionSystemDes *option = dynamic_cast<LLDPOptionSystemDes *> (opt);
+        length = strlen(option->getValue());
+    }
+    else if(dynamic_cast<LLDPOptionCap *> (opt))
+    {
+        LLDPOptionCap *option = dynamic_cast<LLDPOptionCap *> (opt);
+        length = option->getEnCapArraySize() + option->getSysCapArraySize() + sizeof(option->getChasId());
+    }
+    else if(dynamic_cast<LLDPOptionManAdd *> (opt))
+    {
+        LLDPOptionManAdd *option = dynamic_cast<LLDPOptionManAdd *> (opt);
+        length = sizeof(option->getAddLength()) + sizeof(option->getAddSubtype()) + strlen(option->getAddress());
+        length += sizeof(option->getIfaceSubtype()) + sizeof(option->getIfaceNum());
+        length += sizeof(option->getOidLength()) + strlen(option->getOid());
+    }
+    else if(dynamic_cast<LLDPOptionOrgSpec *> (opt))
+    {
+        LLDPOptionOrgSpec *option = dynamic_cast<LLDPOptionOrgSpec *> (opt);
+        length = sizeof(option->getOui()) + sizeof(option->getSubtype()) + strlen(option->getValue());
+    }
+
+    return length;
+}
+
+const char *LLDPUpdate::getMsap()
+{
+    std::string s;
+
+    LLDPOptionChassisId *chassisId = dynamic_cast<LLDPOptionChassisId *> (&getOption(0));
+    LLDPOptionPortId *portId = dynamic_cast<LLDPOptionPortId *> (&getOption(1));
+
+    // MSAP get from contatenation Chassis ID and Port ID
+    s = chassisId->getValue();
+    s += portId->getValue();
+
+    return s.c_str();
+}
+
+uint16_t LLDPUpdate::getTtl()
+{
+    LLDPOptionTTL *ttl = dynamic_cast<LLDPOptionTTL *> (&getOption(2));
+
+    return ttl->getTtl();
+}
+
+void LLDPUpdate::setOptionLength(TLVOptionBase *opt)
+{
+    opt->setLength(getOptionLength(opt));
+}
+
+int LLDPUpdate::countTlvOfType(uint8_t type)
+{
+    int count = 0;
+
+   /* for (auto opt: options)
+        if(opt->getType == type)
+            count++;*/
+
+    return count;
+}
+
+} /* namespace inet */

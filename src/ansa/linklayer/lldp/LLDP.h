@@ -17,19 +17,20 @@
 #define __LLDP_H_
 
 #include <omnetpp.h>
+
 #include "inet/common/INETDefs.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/ILifecycle.h"
-#include "ansa/linklayer/lldp/LLDPDef.h"
 
 #include "ansa/linklayer/lldp/LLDPTimer_m.h"
-#include "ansa/linklayer/lldp/LLDPAgentTable.h"
+#include "ansa/linklayer/lldp/LLDPDef.h"
+#include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 
 namespace inet {
 
 
-class INET_API LLDP : protected cListener, public ILifecycle, public cSimpleModule
+class INET_API LLDP: protected cListener, public ILifecycle, public cSimpleModule
 {
   protected:
     std::string hostName;       // name of the module
@@ -37,9 +38,10 @@ class INET_API LLDP : protected cListener, public ILifecycle, public cSimpleModu
     IInterfaceTable *ift;       // interface table
     cModule *containingModule;
     LLDPAgentTable lat;         // LLDP agent table
+    char enCap[2];              //system capabilities
+    char sysCap[2];             //enabled capabilities
 
     bool isOperational = false;             // for lifecycle
-    //IRoutingTable *rt = nullptr;    // routing table from which routes are imported and to which learned routes are added
 
     LLDPTimer *tickTimer;
 
@@ -51,7 +53,7 @@ class INET_API LLDP : protected cListener, public ILifecycle, public cSimpleModu
     uint8_t txCreditMaxDef;    // the maximum value of txCredit
     AS adminStatusDef;
 
-
+    std::string chassisId;
 
     void startLLDP();
     void startAgents();
@@ -61,20 +63,28 @@ class INET_API LLDP : protected cListener, public ILifecycle, public cSimpleModu
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
-    void handleTimer(LLDPTimer *msg);
+    virtual void processTimer(LLDPTimer *timer);
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
-    virtual void handleParameterChange(const char *name) override;
 
-
+    void handleUpdate(LLDPUpdate *msg);
+    bool frameValidation(LLDPUpdate *msg);
+    std::string getNameOfTlv(short type);
 
 
   private:
     bool isInterfaceSupported(const char *name);
     AS getAdminStatusFromString(std::string par);
     void createAgent(InterfaceEntry *interface);
+    std::string generateChassisId();
+    void getCapabilities(cProperty *propSysCap, cProperty *propEnCap);
+    int capabilitiesPosition(std::string capability);
 
   public:
-    LLDPAgentTable* getLat() {return &lat;};
+    LLDPAgentTable* getLat() {return &lat;}
+    std::string getChassisId() {return chassisId;}
+    cModule *getContainingModule() {return containingModule;}
+    const char *getSystemCapabilites() {return sysCap;}
+    const char *getEnabledCapabilites() {return enCap;}
 };
 
 } //namespace

@@ -26,7 +26,7 @@
 #include "inet/common/lifecycle/NodeStatus.h"
 
 #include "ansa/linklayer/cdp/CDPUpdate.h"
-#include "ansa/linklayer/lldp/LLDPUpdate_m.h"
+#include "ansa/linklayer/lldp/LLDPUpdate.h"
 
 namespace inet {
 
@@ -82,7 +82,7 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
     void dispatchCDPUpdate(CDPUpdate *cdpUpdate, int port);
     void deliverCDPUpdate(EtherFrame *frame);
 
-    void dispatchLLDPUpdate(LLDPUpdate *LLDPUpdate, int port);
+    void dispatchLLDPUpdate(LLDPUpdate *lldpUpdate, int port);
     void deliverLLDPUpdate(EtherFrame *frame);
 
     // For lifecycle

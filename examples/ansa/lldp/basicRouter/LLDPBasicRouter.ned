@@ -13,36 +13,62 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.lldp.basic_switch;
+package inet.examples.ansa.lldp.basicRouter;
 
-import ansa.node.ANSA_EtherSwitch;
+import ansa.node.ANSA_Host;
+import ansa.node.ANSA_LLDPRouter;
+import inet.common.lifecycle.LifecycleController;
 import inet.node.ethernet.Eth100M;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
-import inet.common.lifecycle.LifecycleController;
 
-network simpleSwitch
+network basicRouter
 {
     @display("bgb=521,431");
-    submodules:
+    types:
+        channel Unnamed
+        {
+        }
 
-        S1: ANSA_EtherSwitch {
+    submodules:
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;
+                dumpRoutes = true;
+                config = xmldoc("./networkConfig.xml");
+                @display("p=48,181");
+        }
+        
+        H: ANSA_Host {
+            @display("p=58,288");
+        }
+
+        R1: ANSA_LLDPRouter {
             parameters:
                 @display("p=153,289");
             gates:
                 ethg[3];
         }
-        S2: ANSA_EtherSwitch {
+        R2: ANSA_LLDPRouter {
             parameters:
                 @display("p=324,289");
             gates:
                 ethg[3];
         }
-        S3: ANSA_EtherSwitch {
+        R3: ANSA_LLDPRouter {
             parameters:
                 @display("p=324,142");
             gates:
                 ethg[3];
+        }
+        R4: ANSA_LLDPRouter {
+            parameters:
+            	@display("p=421,167");
+            gates:
+                pppg[1];
         }
         
         lifecycleController: LifecycleController {
@@ -52,10 +78,10 @@ network simpleSwitch
         scenarioManager: ScenarioManager {
             @display("p=48,123");
         }
-        
-
     connections allowunconnected:
-        //S1.ethg[0] <--> Eth100M <--> S2.ethg[0];
-        //S2.ethg[1] <--> Eth100M <--> S3.ethg[1];
-        //S3.ethg[0] <--> Eth100M <--> S1.ethg[1];
+        R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
+        R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
+        R3.ethg[0] <--> Eth100M <--> R1.ethg[1];
+        H.ethg++ <--> Eth100M <--> R1.ethg[2];
+        R4.pppg++ <--> Eth100M <--> R2.pppg++;
 }

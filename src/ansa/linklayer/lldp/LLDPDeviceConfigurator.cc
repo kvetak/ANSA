@@ -68,8 +68,6 @@ void LLDPDeviceConfigurator::loadLLDPInterfacesConfig(cXMLElement *device, LLDP 
 
         if (LLDPIfaceElem != nullptr && lAgent != nullptr)
         {// interface contains LLDP configuration
-
-            EV << iface->getFullName() << "1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             loadLLDPInterface(LLDPIfaceElem, lMain, lAgent);
         }
 

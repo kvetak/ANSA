@@ -26,5 +26,4 @@ enum LLDPTimerType
 message LLDPTimer
 {
     char timerType  @enum(LLDPTimerType);
-    int interfaceId;
 }

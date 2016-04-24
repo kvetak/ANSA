@@ -24,8 +24,8 @@ namespace inet {
 class INET_API LLDPNeighbour : public cObject
 {
 protected:
-    const char *chassisId;
-    const char *portId;
+    std::string chassisId;
+    int portId;
     const char *ttl;        //?
     const char *portDes;
     const char *systemName;
@@ -48,6 +48,11 @@ public:
         return os << i.info();
     }
 
+    std::string getChassisId() {return this->chassisId;}
+    int getPortId() {return this->portId;}
+
+    void setChassisId(std::string c) {this->chassisId = c;}
+    void setPortId(int p) {portId = p;}
 
 };
 
@@ -60,10 +65,10 @@ public:
     virtual ~LLDPNeighbourTable();
 
     std::vector<LLDPNeighbour *>& getAgents() {return neighbours;}
-    LLDPNeighbour *findAgentByMSAP(const char *chassisId, const char *portId);
-    LLDPNeighbour * addNeighbour(LLDPNeighbour * neighbour);
+    LLDPNeighbour *findAgentByMSAP(std::string chassisId, int portId);
+    void addNeighbour(LLDPNeighbour * neighbour);
     void removeNeighbour(LLDPNeighbour * neighbour);
-    void removeNeighbour(const char *chassisId, const char *portId);
+    void removeNeighbour(std::string chassisId, int portId);
     std::string printStats();
 };
 

@@ -206,17 +206,16 @@ void relayUnit::dispatchLLDPUpdate(LLDPUpdate *lldpUpdate, int port)
 
     frame->setKind(lldpUpdate->getKind());
     frame->setSrc(bridgeAddress);
-    frame->setEtherType(35020);
+    frame->setEtherType(35020);    // 0x88cc
     Ieee802Ctrl *controlInfo = check_and_cast<Ieee802Ctrl *>(lldpUpdate->getControlInfo());
     frame->setDest(controlInfo->getDest());
     frame->setByteLength(ETHER_MAC_FRAME_BYTES);
-    frame->setEtherType(-1);
     frame->encapsulate(lldpUpdate);
 
     if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
         frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
 
-    EV_INFO << "Sending BPDU frame " << frame << " with destination = " << frame->getDest() << ", port = " << port << endl;
+    EV_INFO << "Sending LLDP packet " << frame << " with destination = " << frame->getDest() << ", port = " << port << endl;
     numDispatchedUpdateFrames++;
     send(frame, "ifOut", port);
 }
@@ -234,13 +233,13 @@ void relayUnit::dispatchCDPUpdate(CDPUpdate *cdpUpdate, int port)
     Ieee802Ctrl *controlInfo = check_and_cast<Ieee802Ctrl *>(cdpUpdate->getControlInfo());
     frame->setDest(controlInfo->getDest());
     frame->setByteLength(ETHER_MAC_FRAME_BYTES);
-    frame->setEtherType(-1);
+    frame->setEtherType(8192);        // 0x2000
     frame->encapsulate(cdpUpdate);
 
     if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
         frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
 
-    EV_INFO << "Sending BPDU frame " << frame << " with destination = " << frame->getDest() << ", port = " << port << endl;
+    EV_INFO << "Sending CDP packet " << frame << " with destination = " << frame->getDest() << ", port = " << port << endl;
     numDispatchedUpdateFrames++;
     send(frame, "ifOut", port);
 }

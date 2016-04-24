@@ -16,16 +16,32 @@
 #ifndef LLDPDEF_H_
 #define LLDPDEF_H_
 
+#include <omnetpp.h>
+
 namespace inet {
 
 
 enum AS
 {
-    enabledRxTx = 0,         // int is enabled for reception and transmission of LLDPDUs
-    enabledTxOnly = 1,       // int is enabled for transmission of LLDPDUs only
-    enabledRxOnly = 2,       // int is enabled for reception of LLDPDUs only
-    disabled = 3             // int is disabled for both reception and transmission
+    enabledRxTx = 0,         // is enabled for reception and transmission of LLDPDUs
+    enabledTxOnly = 1,       // is enabled for transmission of LLDPDUs only
+    enabledRxOnly = 2,       // is enabled for reception of LLDPDUs only
+    disabled = 3             // is disabled for both reception and transmission
 };
+
+struct LLDPTlvOrgSpec
+{
+    uint32_t    oui;            // organizationally unique identifier
+    uint8_t     subtype;        // organizationally defined subtype
+    std::string value;          // organizationally defined information string
+};
+
 } /* namespace inet */
+/*
+class LLDPSystemInfo
+{
+    std::string chassisId;
+
+};*/
 
 #endif /* LLDPDEF_H_ */

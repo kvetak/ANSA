@@ -20,7 +20,7 @@
 #include <algorithm>
 
 #include "ansa/linklayer/lldp/LLDP.h"
-#include "ansa/linklayer/lldp/LLDPAgentTable.h"
+//#include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 
 namespace inet {
 class INET_API LLDPDeviceConfigurator

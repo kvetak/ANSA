@@ -24,6 +24,9 @@ import ansa.node.ANSA_Router;
 module ANSA_LLDPRouter extends ANSA_Router
 {
     parameters:
+        @capabilities("Router");
+        @capabilitiesEnabled("Router");
+        
         string deviceId = default("");  
         xml configFile = default(xmldoc("config.xml"));
         string deviceType = default("Router"); 

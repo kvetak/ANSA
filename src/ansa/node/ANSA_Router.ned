@@ -29,7 +29,6 @@ module ANSA_Router extends ANSA_NodeBase
 {
     parameters:
         @display("i=abstract/router");
-        @capabilities("Router");
         bool hasOSPF = default(false);
         bool hasRIP = default(false);
         bool hasBGP = default(false);
