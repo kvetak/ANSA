@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <scenario>
-
-    <at t="530">
+    <at t="150">
         <tell module="lifecycleController" target="S1" operation="NodeShutdownOperation"/>
     </at>
-	<at t="50">
+    <at t="190">
+        <tell module="lifecycleController" target="S1" operation="NodeStartOperation"/>
+    </at>
+	<at t="30">
         <disconnect src-module="S1" src-gate="ethg$o[0]" />
         <disconnect src-module="S2" src-gate="ethg$o[0]" />		
   	</at>
 
-  	<at t="150">
+  	<at t="100">
         <connect src-module="S1" src-gate="ethg[0]"
                  dest-module="S2" dest-gate="ethg[0]"
                  channel-type="inet.node.ethernet.Eth100M">

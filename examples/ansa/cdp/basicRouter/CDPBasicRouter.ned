@@ -13,17 +13,17 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.cdp.basic_router;
+package inet.examples.ansa.cdp.basicRouter;
 
 import ansa.node.ANSA_CDPHost;
-import ansa.node.CDPRouter;
+import ansa.node.ANSA_CDPRouter;
 import inet.common.lifecycle.LifecycleController;
 //import ansa.node.ANSA_Router;
 import inet.node.ethernet.Eth100M;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
 
-network basicRouter
+network CDPBasicRouter
 {
     @display("bgb=521,431");
     types:
@@ -47,25 +47,25 @@ network basicRouter
             @display("p=58,288");
         }
 
-        R1: CDPRouter {
+        R1: ANSA_CDPRouter {
             parameters:
                 @display("p=153,289");
             gates:
                 ethg[3];
         }
-        R2: CDPRouter {
+        R2: ANSA_CDPRouter {
             parameters:
                 @display("p=324,289");
             gates:
                 ethg[3];
         }
-        R3: CDPRouter {
+        R3: ANSA_CDPRouter {
             parameters:
                 @display("p=324,142");
             gates:
                 ethg[3];
         }
-        R4: CDPRouter {
+        R4: ANSA_CDPRouter {
             parameters:
             	@display("p=421,167");
             gates:

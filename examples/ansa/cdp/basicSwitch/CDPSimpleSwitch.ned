@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.cdp.basic_switch;
+package inet.examples.ansa.cdp.basicSwitch;
 
 import ansa.node.ANSA_EtherSwitch;
 import inet.node.ethernet.Eth100M;
@@ -21,7 +21,7 @@ import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
 import inet.common.lifecycle.LifecycleController;
 
-network simpleSwitch
+network CDPSimpleSwitch
 {
     @display("bgb=521,431");
     submodules:
