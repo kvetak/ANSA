@@ -32,6 +32,7 @@ class CDPODRRoute : public cObject
       int prefixLength = 0;    // prefix length of the destination
       L3Address nextHop;    // next hop of the route
       InterfaceEntry *ie = nullptr;    // outgoing interface of the route
+      int ifaceId;          // because of delete interface
       bool invalide = false;    // true if the route has changed since the update
       bool noUpdates = false;    // true if the route has changed since the update
       simtime_t lastUpdateTime;    // time of the last change, only for RTE routes
@@ -87,8 +88,7 @@ public:
   std::vector<CDPODRRoute *>& getRoutes() {return routes;}
   CDPODRRoute *findRoute(const L3Address& destination, int prefixLength, const L3Address& nextHope);
   CDPODRRoute *findRoute(const IRoute *route);
-  CDPODRRoute *existOtherDefaultRoute(CDPODRRoute *route);
-  int countDestinationPaths(const L3Address& destination, int prefixLength);
+  int countDestinationPaths(const L3Address& destination, uint8_t prefixLength);
   void addRoute(CDPODRRoute * route);
   void removeRoutes();
   void removeRoute(CDPODRRoute * route);

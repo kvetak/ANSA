@@ -19,7 +19,7 @@
 #define WITH_LLDP
 
 #ifdef WITH_CDP
-#include "ansa/linklayer/cdp/CDPUpdate_m.h"
+#include "ansa/linklayer/cdp/CDPUpdate.h"
 #endif // ifdef WITH_CDP
 
 #ifdef WITH_LLDP

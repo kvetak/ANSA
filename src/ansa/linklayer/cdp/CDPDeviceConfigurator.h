@@ -46,6 +46,8 @@ class CDPDeviceConfigurator
       static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, cXMLElement* configFile);
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);
 
+      static cXMLElement *GetODRProcess(cXMLElement *device);
+      void loadODRProcessConfig(cXMLElement *device, CDP *cMain);
       /////////////////////////////
       // configuration for CDP   //
       /////////////////////////////

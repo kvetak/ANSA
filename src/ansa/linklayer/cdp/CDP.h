@@ -21,32 +21,14 @@
 #include "inet/common/INETDefs.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
 #include "inet/common/ModuleAccess.h"
-#include "inet/common/lifecycle/ILifecycle.h"
-#include "inet/networklayer/ipv4/IPv4RoutingTable.h"
-#include "inet/networklayer/contract/IRoute.h"
-//#include "inet/common/serializer/TCPIPchecksum.h"
 
-#include "ansa/linklayer/cdp/CDPUpdate_m.h"
+#include "ansa/linklayer/cdp/CDPUpdate.h"
 #include "ansa/linklayer/cdp/CDPTimer_m.h"
 #include "ansa/linklayer/cdp/tables/CDPNeighbourTable.h"
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 #include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 
-#include "inet/common/serializer/SerializerBase.h"
-#include "inet/common/serializer/Buffer.h"
-
-
-
 namespace inet {
-
-struct AddressTLV
-{
-    char protocolType;
-    char protocolLength;
-    char protocol;
-    uint16_t length;
-    uint32_t address;
-};
 
 struct Statistics
 {
@@ -66,6 +48,9 @@ public:
     virtual ~CDP();
 
     CDPInterfaceTable *getCit() {return &cit;};
+    void setRouteInvalidTime(simtime_t t) {this->routeInvalidTime = t;}
+    void setRouteHolddownTime(simtime_t t) {this->routeHolddownTime = t;}
+    void setRouteFlushTime(simtime_t t) {this->routeFlushTime = t;}
 
 protected:
     int version;                // cdp version
@@ -120,10 +105,9 @@ private:
     int capabilitiesPosition(std::string capability);
     bool hasRoutingProtocol();
     bool ipInterfaceExist(int interfaceId);
-    uint16_t countChecksum(CDPUpdate *msg);
     bool isInterfaceSupported(const char *name);
     int ipOnInterface(int interfaceId);
-    std::string capabilitiesConvert(const char *cap);
+    std::string capabilitiesConvert(char cap1, char cap2, char cap3, char cap4);
     InterfaceEntry *getPortInterfaceEntry(unsigned int gateId);
     void processPrefixes(CDPUpdate *msg, int tlvPosition, CDPNeighbour *neighbour);
 
@@ -135,8 +119,6 @@ private:
     CDPODRRoute *existOtherDefaultRoute(CDPODRRoute *odrRoute);
 
     //TLV
-    CDPTLV *getTlv(CDPUpdate *msg, CDPTLVType type);
-    uint16_t getTlvSize(CDPTLV *tlv);
     void createTlv(CDPUpdate *msg, int interface);
     void setTlvDeviceId(CDPUpdate *msg, int pos);
     void setTlvPortId(CDPUpdate *msg, int pos, int interfaceId);
@@ -144,9 +126,10 @@ private:
     void setTlvVersion(CDPUpdate *msg, int pos);
     void setTlvCapabilities(CDPUpdate *msg, int pos);
     void setTlvDuplex(CDPUpdate *msg, int pos, int interfaceId);
-    void setTlvODR(CDPUpdate *msg, int pos, int interfaceId);
     void setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId);
     void setTlvAddress(CDPUpdate *msg, int pos, int interfaceId);
+    void setTlvNativeVlan(CDPUpdate *msg, int pos, int interfaceId);
+    void setTlvVtp(CDPUpdate *msg, int pos, int interfaceId);
 };
 
 } /* namespace inet */

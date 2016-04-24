@@ -25,7 +25,7 @@
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
-#include "ansa/linklayer/cdp/CDPUpdate_m.h"
+#include "ansa/linklayer/cdp/CDPUpdate.h"
 #include "ansa/linklayer/lldp/LLDPUpdate_m.h"
 
 namespace inet {

@@ -24,7 +24,7 @@ simple CDP like INetworkLayerLower
     	@display("i=block/network2");
     	
     	int timer @unit(s) = default(60s);
-    	int holdTime = default(180);
+    	int holdTime @unit(s) = default(180s);
     	int version = default(2);
     	int ODRRouteInvalidTime = default(180);
     	int ODRRouteHolddownTime = default(30);
@@ -36,7 +36,7 @@ simple CDP like INetworkLayerLower
         
         string deviceId = default("");
         string deviceType = default("");
-        xml configFile = default(xmldoc("config.xml"));     
+        xml configFile = default(xmldoc("config.xml"));   
 	gates:
         input ifIn[] @labels(INetworkDatagram/up);
         output ifOut[] @labels(INetworkDatagram/down);

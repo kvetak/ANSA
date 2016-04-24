@@ -14,6 +14,7 @@
 // 
 
 #include "ansa/linklayer/cdp/tables/CDPNeighbourTable.h"
+#include <algorithm>
 
 namespace inet {
 
@@ -33,7 +34,7 @@ CDPNeighbour::~CDPNeighbour() {
         if(owner != NULL)
         {// owner is cSimpleModule object -> can call his methods
             owner->cancelAndDelete(holdtimeTimer);
-            holdtimeTimer = NULL;
+            holdtimeTimer = nullptr;
         }
     }
 }
@@ -94,13 +95,11 @@ void CDPNeighbourTable::addNeighbour(CDPNeighbour * neighbour)
  */
 void CDPNeighbourTable::removeNeighbours()
 {
+    for (auto & neighbour : neighbours)
+        delete neighbour;
     std::vector<CDPNeighbour *>::iterator it;
 
-    for (it = neighbours.begin(); it != neighbours.end();)
-    {
-        delete (*it);
-        it = neighbours.erase(it);
-    }
+    neighbours.clear();
 }
 
 /**
@@ -111,25 +110,16 @@ void CDPNeighbourTable::removeNeighbours()
  */
 void CDPNeighbourTable::removeNeighbour(CDPNeighbour * neighbour)
 {
-    std::vector<CDPNeighbour *>::iterator it;
-
-    for (it = neighbours.begin(); it != neighbours.end();)
-    {// through all neighbours
-        if((*it) == neighbour)
-        {// found same
-            delete (*it);
-            it = neighbours.erase(it);
-            return;
-        }
-        else
-        {// do not delete -> get next
-            ++it;
-        }
+    auto n = find(neighbours.begin(), neighbours.end(), neighbour);
+    if (n != neighbours.end())
+    {
+        delete *n;
+        neighbours.erase(n);
     }
 }
 
 /**
- * Removes neighbours
+ * Remove neighbour
  *
  * @param   name    name of neighbour
  * @param   port    receive port number
@@ -153,15 +143,29 @@ void CDPNeighbourTable::removeNeighbour(std::string name, int port)
     }
 }
 
-CDPNeighbourTable::~CDPNeighbourTable()
+/**
+ * Count neighbour learned from specific port
+ *
+ * @param   portReceive
+ */
+int CDPNeighbourTable::countNeighboursOnPort(int portReceive)
 {
+    int count = 0;
     std::vector<CDPNeighbour *>::iterator it;
 
     for (it = neighbours.begin(); it != neighbours.end(); ++it)
     {// through all neighbours
-        delete (*it);
+        if((*it)->getPortReceive() == portReceive)
+            count++;
     }
-    neighbours.clear();
+
+    return count;
+}
+
+CDPNeighbourTable::~CDPNeighbourTable()
+{
+    for (auto & neighbour : neighbours)
+        delete neighbour;
 }
 
 } /* namespace inet */

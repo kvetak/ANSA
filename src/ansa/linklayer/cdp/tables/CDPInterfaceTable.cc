@@ -14,6 +14,7 @@
 // 
 
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
+#include <algorithm>
 
 namespace inet {
 
@@ -55,6 +56,13 @@ CDPInterface::~CDPInterface() {
     }
 }
 
+/**
+ * Get cdp interface from cdp interface table by interface ID
+ *
+ * @param   ifaceId    interface ID
+ *
+ * @return  cdp interface
+ */
 CDPInterface * CDPInterfaceTable::findInterfaceById(const int ifaceId)
 {
     std::vector<CDPInterface *>::iterator it;
@@ -70,7 +78,12 @@ CDPInterface * CDPInterfaceTable::findInterfaceById(const int ifaceId)
     return nullptr;
 }
 
-CDPInterface * CDPInterfaceTable::addInterface(CDPInterface * iface)
+/**
+ * add interface to cdp interface table
+ *
+ * @param   iface   interface to add
+ */
+void CDPInterfaceTable::addInterface(CDPInterface * iface)
 {
     if(findInterfaceById(iface->getInterfaceId()) != NULL)
     {// interface already in table
@@ -78,8 +91,6 @@ CDPInterface * CDPInterfaceTable::addInterface(CDPInterface * iface)
     }
 
     interfaces.push_back(iface);
-
-    return iface;
 }
 
 
@@ -89,9 +100,7 @@ CDPInterface * CDPInterfaceTable::addInterface(CDPInterface * iface)
  */
 void CDPInterfaceTable::removeInterfaces()
 {
-    std::vector<CDPInterface *>::iterator it;
-
-    for (it = interfaces.begin(); it != interfaces.end();)
+    for (auto it = interfaces.begin(); it != interfaces.end();)
     {
         delete (*it);
         it = interfaces.erase(it);
@@ -106,20 +115,11 @@ void CDPInterfaceTable::removeInterfaces()
  */
 void CDPInterfaceTable::removeInterface(CDPInterface * iface)
 {
-    std::vector<CDPInterface *>::iterator it;
-
-    for (it = interfaces.begin(); it != interfaces.end();)
-    {// through all interfaces
-        if((*it) == iface)
-        {// found same
-            delete (*it);
-            it = interfaces.erase(it);
-            return;
-        }
-        else
-        {// do not delete -> get next
-            ++it;
-        }
+    auto i = find(interfaces.begin(), interfaces.end(), iface);
+    if (i != interfaces.end())
+    {
+        delete *i;
+        interfaces.erase(i);
     }
 }
 
@@ -148,13 +148,8 @@ void CDPInterfaceTable::removeInterface(int ifaceId)
 
 CDPInterfaceTable::~CDPInterfaceTable()
 {
-    std::vector<CDPInterface *>::iterator it;
-
-    for (it = interfaces.begin(); it != interfaces.end(); ++it)
-    {// through all interfaces
-        delete (*it);
-    }
-    interfaces.clear();
+    for (auto & interface : interfaces)
+        delete interface;
 }
 
 } /* namespace inet */

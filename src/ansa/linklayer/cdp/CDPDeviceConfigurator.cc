@@ -40,8 +40,72 @@ void CDPDeviceConfigurator::loadCDPConfig(CDP *cMain)
                " id=" << deviceId << ")" << endl;
        return;
     }
+    loadODRProcessConfig(device, cMain);
 
     loadCDPInterfacesConfig(device, cMain);
+}
+
+void CDPDeviceConfigurator::loadODRProcessConfig(cXMLElement *device, CDP *cMain)
+{
+    ASSERT(cMain != nullptr);
+    ASSERT(device != nullptr);
+
+    cXMLElement *processElem = nullptr;
+
+    //Check if odr routing is enabled
+    processElem = GetODRProcess(device);
+    if (processElem == nullptr)
+    {// ODR is not enabled
+        return;
+    }
+
+    int tempNumber;
+    bool success;
+
+    cXMLElementList ifDetails = processElem->getChildren();
+    for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)
+    {
+        std::string nodeName = (*ifElemIt)->getTagName();
+
+        if (nodeName == "invalid")
+        {
+            success = Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 0 || tempNumber > 2147483)
+                throw cRuntimeError("Bad value for ODR invalid time (<0, 2147483>)");
+            cMain->setRouteInvalidTime(tempNumber);
+        }
+        else if (nodeName == "holddown")
+        {
+            success = Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 0 || tempNumber > 2147483)
+                throw cRuntimeError("Bad value for ODR holddown time (<0, 2147483>");
+            cMain->setRouteHolddownTime(tempNumber);
+        }
+        else if (nodeName == "flush")
+        {
+            success = Str2Int(&tempNumber, (*ifElemIt)->getNodeValue());
+            if (!success || tempNumber < 0 || tempNumber > 2147483)
+                throw cRuntimeError("Bad value for ODR flush time (<0, 2147483>)");
+            cMain->setRouteFlushTime(tempNumber);
+        }
+    }
+}
+
+cXMLElement *CDPDeviceConfigurator::GetODRProcess(cXMLElement *device)
+{
+
+    if (device == nullptr)
+    {
+        return nullptr;
+    }
+
+    cXMLElement *routing = device->getFirstChildWithTag("Routing");
+    if (routing == nullptr)
+    {
+        return nullptr;
+    }
+
+    return routing->getFirstChildWithTag("ODR");
 }
 
 void CDPDeviceConfigurator::loadCDPInterfacesConfig(cXMLElement *device, CDP *cMain)
@@ -96,7 +160,6 @@ CDPDeviceConfigurator::~CDPDeviceConfigurator() {
 void CDPDeviceConfigurator::loadCDPInterface(cXMLElement *ifaceElem, CDP *cMain, CDPInterface *cIface)
 {
     bool value;
-    bool success;
 
     cXMLElementList ifDetails = ifaceElem->getChildren();
     for (cXMLElementList::iterator ifElemIt = ifDetails.begin(); ifElemIt != ifDetails.end(); ifElemIt++)

@@ -16,7 +16,6 @@
 #ifndef CDPTABLEENTRY_H_
 #define CDPTABLEENTRY_H_
 
-//#include <omnetpp.h>
 #include "ansa/linklayer/cdp/CDPTimer_m.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 
@@ -34,51 +33,49 @@ private:
     bool fullDuplex;
     std::string capabilities;
     std::string platform;
-    int version;
+    std::string version;
     InterfaceEntry *interface;
     L3Address *address;
     L3Address *odrDefaultGateway;
+    uint16_t nativeVlan;
+    std::string vtpDomain;
 
 public:
     CDPNeighbour();
     virtual ~CDPNeighbour();
     virtual std::string info() const override;
 
+    // getters
     std::string getName(){return this->name;}
-    void setName(std::string name){this->name = name;}
-
     int getPortReceive(){return this->portReceive;}
-    void setPortReceive(int portReceive){this->portReceive = portReceive;}
-
     std::string getPortSend(){return this->portSend;}
-    void setPortSend(std::string portSend){this->portSend = portSend;}
-
     simtime_t getLastUpdate(){return this->lastUpdate;}
-    void setLastUpdated(simtime_t lastUpdate){this->lastUpdate = lastUpdate;}
-
     simtime_t getTtl(){return this->ttl;}
-    void setTtl(simtime_t ttl){this->ttl = ttl;}
-
     CDPTimer *getHoldtimeTimer(){return this->holdtimeTimer;}
-    void setHoldtimeTimer(CDPTimer *holdTimeTimer){this->holdtimeTimer = holdtimeTimer;}
-
     bool getFullDuplex(){return this->fullDuplex;}
-    void setFullDuplex(bool fullDuplex){this->fullDuplex = fullDuplex;}
-
     std::string getCapabilities(){return this->capabilities;}
-    void setCapabilities(std::string capabilities){this->capabilities = capabilities;}
-
     std::string getPlatform(){return this->platform;}
-    void setPlatform(std::string platform){this->platform = platform;}
-
-    int getVersion(){return this->version;}
-    void setVersion(int version){this->version = version;}
-
+    std::string getVersion(){return this->version;}
     InterfaceEntry *getInterface(){return this->interface;}
-    void setInterface(InterfaceEntry *interface){this->interface = interface;}
-
     L3Address *getAddress(){return this->address;}
+    uint16_t getNativeVlan(){return this->nativeVlan;}
+    std::string getVtpDomain(){return this->vtpDomain;}
+
+    // setters
+    void setName(std::string name){this->name = name;}
+    void setPortReceive(int portReceive){this->portReceive = portReceive;}
+    void setPortSend(std::string portSend){this->portSend = portSend;}
+    void setLastUpdated(simtime_t lastUpdate){this->lastUpdate = lastUpdate;}
+    void setTtl(simtime_t ttl){this->ttl = ttl;}
+    void setHoldtimeTimer(CDPTimer *holdTimeTimer){this->holdtimeTimer = holdtimeTimer;}
+    void setFullDuplex(bool fullDuplex){this->fullDuplex = fullDuplex;}
+    void setCapabilities(std::string capabilities){this->capabilities = capabilities;}
+    void setPlatform(std::string platform){this->platform = platform;}
+    void setVersion(std::string version){this->version = version;}
+    void setInterface(InterfaceEntry *interface){this->interface = interface;}
     void setAddress(L3Address *address){this->address = address;}
+    void setNativeVlan(uint16_t natVlan){this->nativeVlan = natVlan;}
+    void setVtpDomain(std::string domain){this->vtpDomain = domain;}
 };
 
 
@@ -96,6 +93,7 @@ class CDPNeighbourTable
     void removeNeighbours();
     void removeNeighbour(CDPNeighbour * neighbour);
     void removeNeighbour(std::string name, int port);
+    int countNeighboursOnPort(int portReceive);
 };
 
 } /* namespace inet */

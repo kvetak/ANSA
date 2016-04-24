@@ -14,6 +14,7 @@
 // 
 
 #include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
+#include <algorithm>
 
 namespace inet {
 
@@ -67,6 +68,9 @@ CDPODRRoute::~CDPODRRoute()
     deleteTimer(ODRFlush);
 }
 
+/**
+ * Create all timers for odr route
+ */
 void CDPODRRoute::createTimers()
 {
     ODRInvalideTime = new CDPTimer();
@@ -96,7 +100,7 @@ void CDPODRRoute::deleteTimer(CDPTimer *timer)
         if(owner != NULL)
         {// owner is cSimpleModule object -> can call his methods
             owner->cancelAndDelete(timer);
-            timer = NULL;
+            timer = nullptr;
         }
     }
 }
@@ -126,27 +130,6 @@ CDPODRRoute *CDPODRRouteTable::findRoute(const IRoute *route)
     return nullptr;
 }
 
-
-/**
- * return other default route than that in param. In case that no other default route exist
- * return null
- *
- * @param   odrRoute    not look for this route
- *
- * @return  other       default route or null
- */
-CDPODRRoute *CDPODRRouteTable::existOtherDefaultRoute(CDPODRRoute *route)
-{
-    for (auto it = routes.begin(); it != routes.end(); ++it)
-    {
-        if ((*it)->getRoute() != nullptr && route->getRoute() != nullptr &&
-                (*it)->getRoute()->getDestinationAsGeneric().isUnspecified() && (*it)->getRoute() != route->getRoute())
-            return *it;
-    }
-
-    return nullptr;
-}
-
 /**
  * count all paths to destination
  *
@@ -155,7 +138,7 @@ CDPODRRoute *CDPODRRouteTable::existOtherDefaultRoute(CDPODRRoute *route)
  *
  * @return  number of paths
  */
-int CDPODRRouteTable::countDestinationPaths(const L3Address& destination, int prefixLength)
+int CDPODRRouteTable::countDestinationPaths(const L3Address& destination, uint8_t prefixLength)
 {
     int destinationPaths = 0;
     for (auto it = routes.begin(); it != routes.end(); ++it)
@@ -167,14 +150,14 @@ int CDPODRRouteTable::countDestinationPaths(const L3Address& destination, int pr
 }
 
 /**
- * add neighbour to neighbour table
+ * add route to odr route table
  *
- * @param   neighbour   neighbour to add
+ * @param   route   route to add
  */
 void CDPODRRouteTable::addRoute(CDPODRRoute * route)
 {
     if(findRoute(route->getDestination(), route->getPrefixLength(), route->getNextHop()) != NULL)
-    {// neighbour already in table
+    {// route already in table
         throw cRuntimeError("Adding to CDPODRRoute route, which is already in it.");
     }
 
@@ -183,17 +166,15 @@ void CDPODRRouteTable::addRoute(CDPODRRoute * route)
 
 
 /**
- * Remove all neighbours
+ * Remove all routes
  *
  */
 void CDPODRRouteTable::removeRoutes()
 {
-    std::vector<CDPODRRoute *>::iterator it;
-
-    for (it = routes.begin(); it != routes.end();)
+    for (auto it = routes.begin(); it != routes.end();)
     {
-        delete (*it);
-        it = routes.erase(it);
+        delete *it;
+        routes.erase(it);
     }
 }
 
@@ -203,33 +184,19 @@ void CDPODRRouteTable::removeRoutes()
  * @param   route   route to delete
  *
  */
-void CDPODRRouteTable::removeRoute(CDPODRRoute * route)
+void CDPODRRouteTable::removeRoute(CDPODRRoute *route)
 {
-    std::vector<CDPODRRoute *>::iterator it;
-
-    for (it = routes.begin(); it != routes.end();)
-    {// through all routes
-        if((*it) == route)
-        {// found same
-            delete (*it);
-            it = routes.erase(it);
-            return;
-        }
-        else
-        {// do not delete -> get next
-            ++it;
-        }
+    auto r = find(routes.begin(), routes.end(), route);
+    if (r != routes.end())
+    {
+        delete *r;
+        routes.erase(r);
     }
 }
 
 CDPODRRouteTable::~CDPODRRouteTable()
 {
-    std::vector<CDPODRRoute *>::iterator it;
-
-    for (it = routes.begin(); it != routes.end(); ++it)
-    {// through all routes
-        delete (*it);
-    }
-    routes.clear();
+    for (auto & route : routes)
+        delete route;
 }
 } /* namespace inet */

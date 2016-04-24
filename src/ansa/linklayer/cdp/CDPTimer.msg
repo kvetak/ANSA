@@ -28,6 +28,5 @@ enum CDPTimerType
 //CDP timers
 message CDPTimer
 {
-    char timerType  @enum(CDPTimerType);//enum(CDPTimerType) = UpdateTime;
-    int interfaceId;
+    char timerType  @enum(CDPTimerType);
 }

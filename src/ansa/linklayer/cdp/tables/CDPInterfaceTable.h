@@ -23,7 +23,7 @@ namespace inet {
 
 class CDPInterface : public cObject {
     protected:
-        InterfaceEntry *interface;  ///< Physical network interface
+        InterfaceEntry *interface;  // Physical network interface
         CDPTimer *updateTimer;
         bool enabled;
         int fastStart;
@@ -60,7 +60,7 @@ class CDPInterfaceTable
 
     std::vector<CDPInterface *>& getInterfaces() {return interfaces;}
     CDPInterface * findInterfaceById(const int ifaceId);
-    CDPInterface * addInterface(CDPInterface * iface);
+    void addInterface(CDPInterface * iface);
     void removeInterfaces();
     void removeInterface(CDPInterface * iface);
     void removeInterface(int ifaceId);

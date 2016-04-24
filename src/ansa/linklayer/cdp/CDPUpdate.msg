@@ -13,44 +13,97 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+cplusplus {{
+#include "inet/common/TLVOption.h"
+}}
+
 namespace inet;
+
+class noncobject TLVOptionBase;
+class noncobject TLVOptions;
 
 enum CDPTLVType
 {
-	CDPTLV_ADDRESS = 2;
-	CDPTLV_CAP = 4;
 	CDPTLV_DEV_ID = 1;
-	CDPTLV_DUPLEX = 11;
+	CDPTLV_ADDRESS = 2;
+	CDPTLV_PORT_ID = 3;
+	CDPTLV_CAP = 4;
+	CDPTLV_VERSION = 5;
+	CDPTLV_PLATFORM = 6;
 	CDPTLV_IP_PREF = 7;
+	CDPTLV_VTP = 9;
+	CDPTLV_NAT_VLAN = 10;
+	CDPTLV_DUPLEX = 11;
 	CDPTLV_LOCATION = 12;
 	CDPTLV_LOC_SER = 13;
-	CDPTLV_NAT_VLAN = 10;
-	CDPTLV_PLATFORM = 6;
-	CDPTLV_PORT_ID = 3;
-	CDPTLV_VERSION = 5;
-	CDPTLV_VTP = 9;
-	CDPTLV_ODR = 99; //TODO:zjistit cislo
-	CDPTLVCOUNT = 13;
+	CDPTLV_POW_CON = 16;
+	CDPTLV_POW_REQ = 25;
+	CDPTLV_POW_AVA = 26;
 }
 
-// TLV structure
-class CDPTLV
+
+class CDPOption extends TLVOptionBase
 {
-    uint16_t	type @enum(CDPTLVType); 	
-    uint16_t	length;
-    string		value;		//TODO: void a pretypovat?
 }
 
-class CDPTLVString extends CDPTLV
+class CDPOptionBase extends CDPOption
 {
-    string value;
+    string	value;
 }
+
+class CDPOptionCapa extends CDPOption
+{
+    type = CDPTLV_CAP;
+    char	cap[4];
+}
+
+class CDPOptionDupl extends CDPOption
+{
+    type = CDPTLV_DUPLEX;
+    bool	fullDuplex;
+}
+
+class CDPOptionNumb extends CDPOption
+{
+    uint16_t	number;
+}
+
+class addressType
+{
+    uint8_t protocolType = 1;	// 1 - (NLPID format) or 2 (802.2 format)
+    uint8_t length;				// length of the protocol field. 1 byte for NLPID, or for 802.2 it is either 3 or 8 bytes
+    uint8_t protocol[];			// 0xCC (204) for IP
+    uint16_t addressLen = 4;	// length of the address field in bytes.
+    string address;			// address of the interface
+};
+
+class CDPOptionAddr extends CDPOption
+{
+    type = CDPTLV_ADDRESS;
+    addressType	addresses[];
+}
+
+class prefixType
+{
+    uint32_t	network;
+    uint8_t		mask;
+};
+
+class CDPOptionPref extends CDPOption
+{
+    type = CDPTLV_IP_PREF;
+    prefixType	prefixes[];
+}
+
+
 
 //CDP update packet
 packet CDPUpdate
 {
+    @customize(true);
+    
     char		version = 2;
     unsigned char		ttl;
     uint16_t	checksum;
-    CDPTLV		tlv[];
+    TLVOptions options;
 }
