@@ -21,7 +21,7 @@ package ansa.node;
 import ansa.node.ANSA_Router;
 
 
-module LLDPRouter extends ANSA_Router
+module ANSA_LLDPRouter extends ANSA_Router
 {
     parameters:
         string deviceId = default("");  

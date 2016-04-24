@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+
+<Devices>
+	<!-- R1 -->
+	<Router id="R1">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth2">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="ppp0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+        
+        <Routing>
+        	<ODR>
+        		<invalid>40</invalid>
+        		<holddown>10</holddown>
+        		<flush>55</flush>
+        	</ODR>
+        </Routing>
+    </Router>
+    
+    <!-- R2 -->
+    <Router id="R2">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth2">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+
+    </Router>
+    
+    <!-- R3 -->
+    <Router id="R3">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth2">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="ppp0">
+                <CDP>
+                	<status>disabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+    </Router>
+    
+    <!-- S1 -->
+    <Switch id="S1">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>disabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+    </Switch>
+    
+    <!-- S2 -->
+    <Switch id="S2">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>disabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth2">
+                <CDP>
+                	<status>disabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+    </Switch>
+</Devices>

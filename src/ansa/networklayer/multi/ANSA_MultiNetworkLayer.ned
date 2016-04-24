@@ -115,7 +115,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         }
 
         lldp: <"LLDP"> like INetworkLayerLower if enableLLDP {
-            @display("p=461,500");
+            @display("p=461,569");
         }
     connections allowunconnected:
         // transport

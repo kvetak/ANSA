@@ -42,7 +42,7 @@ module ANSA_EtherSwitch
 {
     parameters:
         @networkNode();
-        @capabilities("Repeater","Router","Source Route Bridge");
+        @capabilities("Switch");
         @labels(node,ethernet-node);
         @display("i=device/switch");
         bool hasStatus = default(true);
@@ -56,7 +56,6 @@ module ANSA_EtherSwitch
         eth[*].encapType = "EtherEncapDummy";
         eth[*].csmacdSupport = csmacdSupport;
         eth[*].macType = macType;
-        //string neco = default(".eth[0]");
         *.interfaceTableModule = default(absPath(".interfaceTable"));
     gates:
         inout ethg[] @labels(EtherFrame-conn);

@@ -18,15 +18,15 @@
 
 package ansa.node;
 
-import ansa.node.ANSA_Router;
+import ansa.node.ANSA_EtherSwitch;
 
 
-module CDPRouter extends ANSA_Router
+module ANSA_CDPEtherSwitch extends ANSA_EtherSwitch
 {
     parameters:
         string deviceId = default("");
         xml configFile = default(xmldoc("config.xml"));
-        string deviceType = default("Router"); 
+        string deviceType = default("Switch"); 
         **.deviceId = deviceId;
         **.deviceType = deviceType;
         **.configFile = default(xmldoc("config.xml"));
