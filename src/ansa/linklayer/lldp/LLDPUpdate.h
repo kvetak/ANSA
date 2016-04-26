@@ -42,6 +42,8 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     short getOptionLength(TLVOptionBase *opt);
     const char *getMsap();
     uint16_t getTtl();
+    const char *getChassisId();
+    const char *getPortId();
 
     /**
      * Returns option

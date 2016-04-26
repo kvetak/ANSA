@@ -15,6 +15,7 @@
 
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 #include "ansa/linklayer/lldp/LLDP.h"
+//#include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 
 namespace inet {
 
@@ -75,8 +76,7 @@ LLDPAgent::LLDPAgent(
     adminStatus = adminStatusDef;
 
     txTTROwner = dynamic_cast<cSimpleModule *>(txTTR->getOwner());
-
-    //containingModule = core->getContainingModule();
+    //lnt = core->getLnt();
 }
 
 LLDPAgent::~LLDPAgent()
@@ -138,6 +138,25 @@ void LLDPAgent::txSchedule()
     txTTROwner->scheduleAt(simTime() + delay, txTTR);
 }
 
+
+void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
+{
+   // LLDPNeighbour *neighbour = lnt->findNeighbourByMSAP(msg->getMsap());
+
+   // if(neighbour == nullptr)
+    //{// new neighbour
+        //neighbour = new LLDPNeighbour(msg->getChassisId(), msg->getPortId());
+        //neighbour = new LLDPNeighbour();
+     //   EV_INFO << "New neighbour " << neighbour->getChassisId() << " on interface " << neighbour->getPortId() << endl;
+
+
+  //  }
+  //  else
+  //  {
+
+  //  }
+}
+
 /**
  * Create update frame
  *
@@ -145,10 +164,19 @@ void LLDPAgent::txSchedule()
  */
 LLDPUpdate *LLDPAgent::constrUpdateLLDPDU()
 {
-    int txTTL = std::min(65535, (msgTxInterval * msgTxHold)+1);
+    LLDPUpdate *update = new LLDPUpdate();
 
-    //TODO:
-    return nullptr;
+    setTlvChassisId(update);      // chassis ID
+    setTlvPortId(update);         // port ID
+    setTlvTtl(update);            // TTL
+    setTlvPortDes(update);        // port description
+    setTlvSystemName(update);     // system name
+    setTlvSystemDes(update);      // system description
+    setTlvCap(update);            // system capabilites
+    setTlvManAdd(update);         // management address
+
+    setTlvEndOf(update);          // end of lldpdu - must be at the end
+    return update;
 }
 
 /**
@@ -163,11 +191,6 @@ LLDPUpdate *LLDPAgent::constrShutdownLLDPDU()
     setTlvChassisId(update);      // chassis ID
     setTlvPortId(update);         // port ID
     setTlvTtl(update);            // TTL
-    setTlvPortDes(update);        // port description
-    setTlvSystemName(update);     // system name
-    setTlvSystemDes(update);      // system description
-    setTlvCap(update);            // system capabilites
-    setTlvManAdd(update);         // management address
 
     setTlvEndOf(update);          // end of lldpdu - must be at the end
     return update;
@@ -211,7 +234,7 @@ void LLDPAgent::txInfoFrame()
     if(txCredit > 0)
     {
         //LLDPUpdate *update = mibConstrInfoLLDPDU();
-        LLDPUpdate *update = constrShutdownLLDPDU();
+        LLDPUpdate *update = constrUpdateLLDPDU();
         txFrame(update);
         dec(txCredit);
         dec(txFast);
@@ -390,24 +413,6 @@ LLDPAgent * LLDPAgentTable::findAgentById(const int ifaceId)
     for (it = agents.begin(); it != agents.end(); ++it)
     {// through all agents search for same interfaceId
         if((*it)->getInterfaceId() == ifaceId)
-        {// found same
-            return (*it);
-        }
-    }
-
-    return nullptr;
-}
-
-LLDPAgent *LLDPAgentTable::findAgentByMsap(const char* m)
-{
-    std::vector<LLDPAgent *>::iterator it;
-
-    if(m == nullptr)
-        return nullptr;
-
-    for (it = agents.begin(); it != agents.end(); ++it)
-    {// through all agents search for same interfaceId
-        if((*it)->getMsap() != nullptr && strcmp((*it)->getMsap(), m) == 0)
         {// found same
             return (*it);
         }

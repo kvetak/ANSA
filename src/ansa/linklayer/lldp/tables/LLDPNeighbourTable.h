@@ -21,24 +21,27 @@
 
 namespace inet {
 
-class INET_API LLDPNeighbour : public cObject
+class LLDPNeighbour
 {
+//    friend class LLDPNeighbourTable;
 protected:
-    std::string chassisId;
-    int portId;
-    const char *ttl;        //?
+    const char* chassisId;
+    const char* portId;
+    const char* msap;
+    /*  const char *ttl;
     const char *portDes;
     const char *systemName;
     const char *systemDes;
     const char *systemCap;
     const char *managementAdd;
-    const char *organizationallySpec;
+    const char *organizationallySpec;*/
 
 
 
 
 public:
     LLDPNeighbour();
+    //LLDPNeighbour(const char *cId, const char *pId);
     virtual ~LLDPNeighbour();
 
     virtual std::string info() const;
@@ -48,27 +51,30 @@ public:
         return os << i.info();
     }
 
-    std::string getChassisId() {return this->chassisId;}
-    int getPortId() {return this->portId;}
+    const char* getChassisId() {return this->chassisId;}
+    const char* getPortId() {return this->portId;}
 
-    void setChassisId(std::string c) {this->chassisId = c;}
-    void setPortId(int p) {portId = p;}
+    void setChassisId(const char* c) {this->chassisId = c;}
+    void setPortId(const char* p) {portId = p;}
+
+    const char *getMsap(){return msap;}
 
 };
 
-class LLDPNeighbourTable {
+
+class LLDPNeighbourTable
+{
 protected:
     std::vector<LLDPNeighbour *> neighbours;
-
 public:
     LLDPNeighbourTable();
     virtual ~LLDPNeighbourTable();
 
-    std::vector<LLDPNeighbour *>& getAgents() {return neighbours;}
-    LLDPNeighbour *findAgentByMSAP(std::string chassisId, int portId);
+    std::vector<LLDPNeighbour *>& getNeighbours() {return neighbours;}
+    LLDPNeighbour *findNeighbourByMSAP(const char* msap);
     void addNeighbour(LLDPNeighbour * neighbour);
     void removeNeighbour(LLDPNeighbour * neighbour);
-    void removeNeighbour(std::string chassisId, int portId);
+    void removeNeighbour(const char* msap);
     std::string printStats();
 };
 

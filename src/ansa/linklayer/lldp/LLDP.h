@@ -26,22 +26,22 @@
 #include "ansa/linklayer/lldp/LLDPTimer_m.h"
 #include "ansa/linklayer/lldp/LLDPDef.h"
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
+#include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 
 namespace inet {
-
 
 class INET_API LLDP: protected cListener, public ILifecycle, public cSimpleModule
 {
   protected:
     std::string hostName;       // name of the module
-    int version;                // cdp version
     IInterfaceTable *ift;       // interface table
     cModule *containingModule;
     LLDPAgentTable lat;         // LLDP agent table
-    char enCap[2];              //system capabilities
-    char sysCap[2];             //enabled capabilities
+    LLDPNeighbourTable lnt;     // LLDP neighbour table
+    char enCap[2];              // system capabilities
+    char sysCap[2];             // enabled capabilities
 
-    bool isOperational = false;             // for lifecycle
+    bool isOperational = false; // for lifecycle
 
     LLDPTimer *tickTimer;
 
@@ -81,6 +81,7 @@ class INET_API LLDP: protected cListener, public ILifecycle, public cSimpleModul
 
   public:
     LLDPAgentTable* getLat() {return &lat;}
+    LLDPNeighbourTable* getLnt() {return &lnt;}
     std::string getChassisId() {return chassisId;}
     cModule *getContainingModule() {return containingModule;}
     const char *getSystemCapabilites() {return sysCap;}

@@ -14,12 +14,8 @@
 // 
 
 #include "ansa/linklayer/lldp/LLDP.h"
-#include "inet/common/NotifierConsts.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
-#include "inet/common/NotifierConsts.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
-#include "inet/networklayer/contract/IRoutingTable.h"
 
 #include "ansa/linklayer/lldp/LLDPDeviceConfigurator.h"
 
@@ -282,23 +278,21 @@ void LLDP::handleUpdate(LLDPUpdate *msg)
     if(!frameValidation(msg))
         return;
 
-    LLDPAgent *agent = lat.findAgentByMsap(msg->getMsap());
-
     // shutdown packet
     if(msg->getTtl() == 0)
     {
-        //cnt.removeNeighbour(neighbour);
+        lnt.removeNeighbour(msg->getMsap());
         EV_INFO << "Neighbour " << " go down. Delete from table" << endl;
         return;
     }
 
-    //neighbourUpdate(msg, neighbour);
+    LLDPAgent *agent = lat.findAgentById(msg->getArrivalGateId());      //otestovat
+    agent->neighbourUpdate(msg);
 }
 
 
 bool LLDP::frameValidation(LLDPUpdate *msg)
 {
-    int countPortDes, countSystemName, countSystemDes, countCap;
     int count[128];
     short type;
     memset(count, 0, sizeof(count));
@@ -312,7 +306,7 @@ bool LLDP::frameValidation(LLDPUpdate *msg)
             case LLDPTLV_CHASSIS_ID: {
                 if(i != 0)
                 {
-                    EV_WARN << "An LLDPDU shall contain exactly one Chassis ID TLV and be the first TLV in LLDPDU. Frame dropped" << endl;
+                    EV_WARN << "An LLDPDU shall contain exactly one " << getNameOfTlv(type) << " TLV and be the first TLV in LLDPDU. Frame dropped" << endl;
                     return false;
                 }
                 break;
@@ -321,7 +315,7 @@ bool LLDP::frameValidation(LLDPUpdate *msg)
             case LLDPTLV_PORT_ID: {
                 if(i != 1)
                 {
-                    EV_WARN << "An LLDPDU shall contain exactly one Port ID TLV and be the second TLV in LLDPDU. Frame dropped" << endl;
+                    EV_WARN << "An LLDPDU shall contain exactly one " << getNameOfTlv(type) << " TLV and be the second TLV in LLDPDU. Frame dropped" << endl;
                     return false;
                 }
                 break;
@@ -330,20 +324,20 @@ bool LLDP::frameValidation(LLDPUpdate *msg)
             case LLDPTLV_TTL: {
                 if(i != 2)
                 {
-                    EV_WARN << "An LLDPDU shall contain exactly one TTL TLV and be the third TLV in LLDPDU. Frame dropped" << endl;
+                    EV_WARN << "An LLDPDU shall contain exactly one " << getNameOfTlv(type) << " TLV and be the third TLV in LLDPDU. Frame dropped" << endl;
                     return false;
                 }
                 break;
             }
 
             case LLDPTLV_PORT_DES: {
-                if(countPortDes > 0)
+                if(count[type] > 0)
                 {
-                    EV_WARN << "An LLDPDU should contain one Port Description TLV. TLV deleted" << endl;
+                    EV_WARN << "An LLDPDU should contain one " << getNameOfTlv(type) << " TLV. TLV deleted" << endl;
                     msg->getOptions().remove(option);
                     i--;
                 }
-                countPortDes++;
+                count[type]++;
                 break;
             }
 

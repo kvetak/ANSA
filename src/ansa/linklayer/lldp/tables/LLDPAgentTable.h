@@ -18,27 +18,19 @@
 
 #include <omnetpp.h>
 #include "inet/common/INETDefs.h"
-#include "inet/linklayer/common/Ieee802Ctrl.h"
-#include "inet/common/ModuleAccess.h"
 
 //#include "ansa/linklayer/lldp/LLDP.h"
 #include "ansa/linklayer/lldp/LLDPTimer_m.h"
 #include "ansa/linklayer/lldp/LLDPUpdate.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/linklayer/lldp/LLDPDef.h"
-
-
-#include "inet/networklayer/contract/IRoute.h"
-#include "inet/common/NotifierConsts.h"
-#include "inet/common/lifecycle/NodeOperations.h"
-#include "inet/common/lifecycle/NodeStatus.h"
-#include "inet/common/NotifierConsts.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
-#include "inet/networklayer/contract/IRoutingTable.h"
+
 
 namespace inet {
 
 class LLDP;
+//class LLDPNeighbourTable;
 
 class INET_API LLDPAgent: public cObject
 {
@@ -49,7 +41,7 @@ protected:
     //LLDPSystemInfo *systemInfo;
     cModule *containingModule;
     LLDP *core;
-    const char* msap = nullptr;     // MSAP (contatenation of chassis ID and port ID)
+   // LLDPNeighbourTable *lnt;
 
 
     uint16_t msgFastTx;     // ticks between transmission during fast transmission
@@ -83,9 +75,10 @@ public:
         return os << i.info();
     }
 
+    void neighbourUpdate(LLDPUpdate *msg);
+
     int getInterfaceId() {return (interface) ? interface->getInterfaceId() : -1;}
     const char *getIfaceName() const {return (interface) ? interface->getName() : "-";}
-    const char *getMsap() {return msap;}
 
     InterfaceEntry *getInterface() {return interface;}
     void setInterface(InterfaceEntry *i) {interface = i;}
@@ -141,7 +134,6 @@ class LLDPAgentTable
 
     std::vector<LLDPAgent *>& getAgents() {return agents;}
     LLDPAgent * findAgentById(const int ifaceId);
-    LLDPAgent * findAgentByMsap(const char* m);
     LLDPAgent * addAgent(LLDPAgent * agent);
     void removeAgent(LLDPAgent * agent);
     void removeAgent(int ifaceId);

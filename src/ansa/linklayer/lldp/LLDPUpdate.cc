@@ -112,6 +112,21 @@ uint16_t LLDPUpdate::getTtl()
     return ttl->getTtl();
 }
 
+const char *LLDPUpdate::getChassisId()
+{
+    LLDPOptionChassisId *chassisId = dynamic_cast<LLDPOptionChassisId *> (&getOption(0));
+
+    return chassisId->getValue();
+}
+
+const char *LLDPUpdate::getPortId()
+{
+    LLDPOptionPortId *portId = dynamic_cast<LLDPOptionPortId *> (&getOption(0));
+
+    return portId->getValue();
+}
+
+
 void LLDPUpdate::setOptionLength(TLVOptionBase *opt)
 {
     opt->setLength(getOptionLength(opt));

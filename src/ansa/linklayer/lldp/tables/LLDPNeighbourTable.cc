@@ -16,8 +16,27 @@
 #include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 #include <algorithm>
 
+
 namespace inet {
 
+
+/*LLDPNeighbour::LLDPNeighbour(const char *cId, const char *pId) {
+    chassisId = cId;
+    portId = pId;
+
+    std::string m;
+    m = c;
+    m += p;
+    msap = m.c_str();
+}*/
+LLDPNeighbour::LLDPNeighbour(){}
+/*
+LLDPNeighbour::LLDPNeighbour()
+{
+    chassisId = nullptr;
+    portId = nullptr;
+    msap = nullptr;
+}*/
 
 std::string LLDPNeighbour::info() const
 {
@@ -28,20 +47,21 @@ std::string LLDPNeighbour::info() const
 }
 
 
+
 ///************************ LLDP AGENT TABLE ****************************///
 
 
-LLDPNeighbour * LLDPNeighbourTable::findAgentByMSAP(std::string chassisId, int portId)
+LLDPNeighbour * LLDPNeighbourTable::findNeighbourByMSAP(const char* msap)
 {
     std::vector<LLDPNeighbour *>::iterator it;
 
+    if(msap == nullptr)
+        return nullptr;
+
+    // through all neighbours search for same MSAP
     for (it = neighbours.begin(); it != neighbours.end(); ++it)
-    {// through all neighbours search for same MSAP
-        if((*it)->getChassisId() == chassisId && (*it)->getPortId() == portId)
-        {// found same
+        if((*it)->getMsap() != nullptr && strcmp((*it)->getMsap(), msap) == 0)
             return (*it);
-        }
-    }
 
     return nullptr;
 }
@@ -49,7 +69,7 @@ LLDPNeighbour * LLDPNeighbourTable::findAgentByMSAP(std::string chassisId, int p
 
 void LLDPNeighbourTable::addNeighbour(LLDPNeighbour * neighbour)
 {
-    if(findAgentByMSAP(neighbour->getChassisId(), neighbour->getPortId()) != NULL)
+    if(findNeighbourByMSAP(neighbour->getMsap()) != NULL)
     {// neighbour already in table
         throw cRuntimeError("Adding to LLDPNeighbourTable neighbour, which is already in it - name %s, port %d", neighbour->getChassisId(), neighbour->getPortId());
     }
@@ -79,13 +99,16 @@ void LLDPNeighbourTable::removeNeighbour(LLDPNeighbour * neighbour)
  * @param   chassisId   chassis ID
  * @param   portId      port ID
  */
-void LLDPNeighbourTable::removeNeighbour(std::string chassisId, int portId)
+void LLDPNeighbourTable::removeNeighbour(const char* msap)
 {
     std::vector<LLDPNeighbour *>::iterator it;
 
+    if(msap == nullptr)
+        return;
+
     for (it = neighbours.begin(); it != neighbours.end();)
     {// through all neighbours
-        if((*it)->getChassisId() == chassisId && (*it)->getPortId() == portId)
+        if((*it)->getMsap() != nullptr && strcmp((*it)->getMsap(), msap) == 0)
         {// found same
             delete (*it);
             it = neighbours.erase(it);
@@ -96,13 +119,6 @@ void LLDPNeighbourTable::removeNeighbour(std::string chassisId, int portId)
         }
     }
 }
-
-LLDPNeighbourTable::~LLDPNeighbourTable()
-{
-    for (auto & neighbour : neighbours)
-        delete neighbour;
-}
-
 
 std::string LLDPNeighbourTable::printStats()
 {
@@ -125,4 +141,19 @@ std::string LLDPNeighbourTable::printStats()
     //}
     return string.str();
 }
+
+LLDPNeighbourTable::LLDPNeighbourTable() {
+
+}
+
+LLDPNeighbourTable::~LLDPNeighbourTable() {
+    std::vector<LLDPNeighbour *>::iterator it;
+
+    for (it = neighbours.begin(); it != neighbours.end(); ++it)
+    {// through all interfaces
+        delete (*it);
+    }
+    neighbours.clear();
+}
+
 } /* namespace inet */
