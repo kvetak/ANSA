@@ -23,6 +23,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include "GLBPVirtualForwarder.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 
 namespace inet {
@@ -49,13 +50,13 @@ void GLBPVirtualRouter::initialize(int stage)
         virtualIP = new IPv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
         preempt = (bool)par("preempt");
-        setVirtualMAC(1);
+//        setVirtualMAC(1);
 
         WATCH(glbpState);
 
         printf("PARAMS:\ngroup: %d; prio: %d, preempt: %d\n", glbpGroup, (int)priority, preempt);
 
-        //setup Timers
+        //init Timers
         helloTime = par("hellotime");
         holdTime = par("holdtime");
         redirect = par("redirect");
@@ -65,20 +66,37 @@ void GLBPVirtualRouter::initialize(int stage)
         activetimer = new cMessage("activeTimer");
         initmessage = new cMessage("startHSRP");
 
+        //init VF timers
+        activetimerVf.reserve(vfMax);
+        for (int i = 0; i < vfMax; i++){
+            cMessage * m = new cMessage("activeTimerVF",i);
+            activetimerVf.push_back(m);
+        }
+        redirecttimer.reserve(vfMax);
+        for (int i = 0; i < vfMax; i++){
+            cMessage *m = new cMessage("redirectTimer",i);
+            redirecttimer.push_back(m);
+        }
+        timeouttimer.reserve(vfMax);
+        for (int i = 0; i < vfMax; i++){
+            cMessage *m = new cMessage("timeoutTimer",i);
+            timeouttimer.push_back(m);
+        }
+
         //get neccessary OMNET parameters
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         arp = getModuleFromPar<ARP>(par("arp"), this);
         ie = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterfaceById((int) par("interface")));
 
         //max nuber of vf is 4
-        vfVector.reserve(4);
+        vfVector.reserve(vfMax);
 
-        //TODO Premistit
-        //add another VF to the interface
-        vfVector[0] = new GLBPVirtualForwarder();
-        vfVector[0]->addIPAddress(*virtualIP);
-        vfVector[0]->setMACAddress(*virtualMAC);
-        ie->addVirtualForwarder(vfVector[0]);
+        //add VF's
+        for (int i=1; i<=vfMax; i++){
+            GLBPVirtualForwarder *glbpVF = new GLBPVirtualForwarder();
+            //add VF's to vector
+            vfVector.push_back(glbpVF);
+        }
 
         //get socket ready
         socket = new UDPSocket();
@@ -104,6 +122,12 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
             initState();
             return;
         }
+
+        //Is it self message for VF part?
+        if (isVfSelfMessage(msg)<(vfMax+1)){
+            handleVfSelfMessage(msg);
+        }
+
         switch(glbpState){
             case LISTEN:
                 //f,g
@@ -113,16 +137,20 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                     DebugStateMachine(LISTEN, SPEAK);
                     glbpState = SPEAK;
                     scheduleTimer(hellotimer);
-                    sendMessage(HELLO);
+                    sendMessage(HELLOm);
                 }else if ( msg == standbytimer ){
                     scheduleTimer(standbytimer);
                     DebugStateMachine(LISTEN, SPEAK);
                     glbpState = SPEAK;
                     scheduleTimer(hellotimer);
-                    sendMessage(HELLO);
+                    sendMessage(HELLOm);
                 }else if (msg == hellotimer){
                     scheduleTimer(hellotimer);
-                    sendMessage(HELLO);
+                    if (isVfActive()){
+                        sendMessage(COMBINEDm);
+                    }else{
+                        sendMessage(HELLOm);
+                    }
                 }
                 break;
             case SPEAK:
@@ -131,7 +159,7 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                         cancelEvent(standbytimer);
                     DebugStateMachine(SPEAK, STANDBY);
                     glbpState = STANDBY;
-                    sendMessage(HELLO);
+                    sendMessage(HELLOm);
                     scheduleTimer(hellotimer);
                 }else
                 if (msg == activetimer){
@@ -139,11 +167,18 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                         cancelEvent(activetimer);
                     DebugStateMachine(SPEAK, ACTIVE);
                     glbpState = ACTIVE;
-                    sendMessage(HELLO);//TODO
+                    startVf(vfCount);
+                    vfIncrement();
+                    //TODO jestlize neni VF tak se stan VF1 a posli
+                    sendMessage(COMBINEDm);
                     scheduleTimer(hellotimer);
                 }else
                 if (msg == hellotimer){
-                    sendMessage(HELLO);//TODO
+                    if (isVfActive()){
+                        sendMessage(COMBINEDm);
+                    }else{
+                        sendMessage(HELLOm);
+                    }
                     scheduleTimer(hellotimer);
                 }
                 break;
@@ -156,17 +191,25 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                     DebugStateMachine(STANDBY, ACTIVE);
                     glbpState = ACTIVE;
 //                    vf->setEnable();//TODO
-                    sendMessage(HELLO);//TODO
+                    sendMessage(HELLOm);//TODO
                     scheduleTimer(hellotimer);
                 }
                 if (msg == hellotimer){
-                    sendMessage(HELLO);//TODO
+                    if (isVfActive()){
+                        sendMessage(COMBINEDm);
+                    }else{
+                        sendMessage(HELLOm);
+                    }
                     scheduleTimer(hellotimer);
                 }
                 break;
             case ACTIVE:
                 if (msg == hellotimer){
-                    sendMessage(HELLO); //TODO
+                    if (isVfActive()){
+                        sendMessage(COMBINEDm);
+                    }else{
+                        sendMessage(HELLOm);
+                    }
                     scheduleTimer(hellotimer);
                 }
                 if (msg == standbytimer){
@@ -179,8 +222,14 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
     {
         GLBPMessage *GLBPm = dynamic_cast<GLBPMessage *>(msg);
         DebugGetMessage(GLBPm);
-        //TODO check jestli je tam hello
-        //VG Zpracovani ---> pocita s Hello casti
+
+        //process VF messge part
+        if (dynamic_cast<GLBPRequestResponse *>(GLBPm->findOptionByType(REQRESP,1))){
+            handleMessageRequestResponse(GLBPm);
+        }
+
+        //VG Process ---> works with Hello part
+        //and VF starts
         switch(glbpState){
             case LISTEN:
                 handleMessageListen(GLBPm);
@@ -203,165 +252,290 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
  * Msg handlers
  */
 
+void GLBPVirtualRouter::handleMessageRequestResponse(GLBPMessage *msg){
+    GLBPRequestResponse *req;
+    for (int i=1; i< (int)msg->getOptionArraySize(); i++){
+        req = dynamic_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP,i));
+
+//        if (req->getForwarder() > vfCount){
+//            vfCount = req->getForwarder();
+//        }
+        if (req->getVfState() == ACTIVE){
+            switch (vfVector[req->getForwarder()-1]->getState()){
+                case LISTEN:
+                    //receive from active high prio
+                    if (!isHigherVfPriorityThan(msg, req->getForwarder(), i) ){
+                        //VF active timer update
+                        scheduleTimer(activetimerVf[req->getForwarder()-1]);
+                    }else{
+                        //receive from active lower
+                        if (activetimerVf[req->getForwarder()-1]->isScheduled())
+                            cancelEvent(activetimerVf[req->getForwarder()-1]);
+                        vfVector[req->getForwarder()-1]->setState(ACTIVE);
+                        EV<<hostname<<" # "<<req->getForwarder()<<" Grp "<<glbpGroup<<" LISTEN"<<" -> "<<"ACTIVE"<<endl;
+                        std::cout<<hostname<<" # "<<req->getForwarder()<<" Grp "<<glbpGroup<<" LISTEN"<<" -> "<<"ACTIVE"<<endl;
+                                    fflush(stdout);
+                        vfVector[req->getForwarder()-1]->setEnable();
+                        sendMessage(RESPONSEm, req->getForwarder());
+                    }
+                    break;
+                case ACTIVE:
+                    //receive from higher active
+                    if (!isHigherVfPriorityThan(msg, req->getForwarder(), i) ){
+                        scheduleTimer(activetimerVf[req->getForwarder()-1]);
+                        vfVector[req->getForwarder()-1]->setState(LISTEN);
+                        vfVector[req->getForwarder()-1]->setDisable();
+                        EV<<hostname<<" # "<<req->getForwarder()<<" Grp "<<glbpGroup<<" ACTIVE"<<" -> "<<"LISTEN"<<endl;
+                        std::cout<<hostname<<" # "<<req->getForwarder()<<" Grp "<<glbpGroup<<" ACTIVE"<<" -> "<<"LISTEN"<<endl;
+                        fflush(stdout);
+                        vfVector[req->getForwarder()-1]->setDisable();
+                    }
+                    break;
+            }//end switch
+        }
+    }//end for
+}
+
 void GLBPVirtualRouter::handleMessageListen(GLBPMessage *msg){
     //TODO resign receive
-    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+    if (dynamic_cast<GLBPHello *>(msg->findOptionByType(HELLO,0))){
+        GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+        UDPDataIndication *udpControll = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
+        IPv4Address IP = udpControll->getSrcAddr().toIPv4();
 
-    switch(hello->getVgState()){
-    case SPEAK:
-        if (!isHigherPriorityThan(msg)){
-            scheduleTimer(standbytimer);//FIXME TODO mozna tady nema byt
-//        scheduleTimer(activetimer);//FIXME TODO mozna tady nema byt
-        }
-        break;
-    case STANDBY://j
-        //lower
-        if (isHigherPriorityThan(msg)){
-            DebugStateMachine(LISTEN,SPEAK);
-            glbpState = SPEAK;
-            scheduleTimer(standbytimer);
-            sendMessage(HELLO);
-            scheduleTimer(hellotimer);
-        }
-        break;
-    case ACTIVE:
-        //lower
-        if (isHigherPriorityThan(msg)){//l
-            if (preempt){
-                DebugStateMachine(LISTEN, SPEAK);
+        switch(hello->getVgState()){
+        case SPEAK:
+            if (!isHigherPriorityThan(msg)){
+                scheduleTimer(standbytimer);//FIXME TODO mozna tady nema byt
+    //        scheduleTimer(activetimer);//FIXME TODO mozna tady nema byt
+            }
+            break;
+        case STANDBY://j
+            //lower
+            if (isHigherPriorityThan(msg)){
+                DebugStateMachine(LISTEN,SPEAK);
                 glbpState = SPEAK;
-                scheduleTimer(activetimer);
                 scheduleTimer(standbytimer);
-                sendMessage(HELLO);
+                sendMessage(HELLOm);
                 scheduleTimer(hellotimer);
-            } else{//TODO KDYZ NENI PREEMPT TAK PREPLANUJ TIMER"":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            }
+            break;
+        case ACTIVE:
+            //lower
+            if (isHigherPriorityThan(msg)){//l
+                if (preempt){
+                    DebugStateMachine(LISTEN, SPEAK);
+                    glbpState = SPEAK;
+                    scheduleTimer(activetimer);
+                    scheduleTimer(standbytimer);
+                    sendMessage(HELLOm);
+                    scheduleTimer(hellotimer);
+                } else{//TODO KDYZ NENI PREEMPT TAK PREPLANUJ TIMER"":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+                    //TODO JEstli nemam  VF tak pozadam
+                    if (!isVfActive()){
+                        sendMessageRequestResponse(REQUESTm, &IP);
+                    }
+                    scheduleTimer(activetimer);
+                }
+            }
+            else
+            {//higher - k
+                //TODO Learn params
+                //tODO pouze kdyz nemam VF tak pozadam
+                if (!isVfActive()){
+                    sendMessageRequestResponse(REQUESTm, &IP);
+                }
                 scheduleTimer(activetimer);
             }
+            break;
         }
-        else
-        {//higher - k
-            //TODO Learn params
-            scheduleTimer(activetimer);
-        }
-        break;
+    }else{
+        addOrStartVf(msg);
     }
 }
 
 void GLBPVirtualRouter::handleMessageSpeak(GLBPMessage *msg){
     //TODO RESIGN
-    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
 
-    switch(hello->getVgState()){//TODO msg->getVgState()){
-        case SPEAK:
-            //h
-            if (!isHigherPriorityThan(msg)){
-                scheduleTimer(standbytimer);//TODO mozna i activetimer
-                scheduleTimer(hellotimer);
-                DebugStateMachine(SPEAK, LISTEN);
-                glbpState = LISTEN;
+    if (dynamic_cast<GLBPHello *>(msg->findOptionByType(HELLO,0))){
+        GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
 
-            }
-            break;
-        case STANDBY:
-            //i
-            if (!isHigherPriorityThan(msg)){
-                scheduleTimer(standbytimer);
-                scheduleTimer(hellotimer);
-                DebugStateMachine(SPEAK, LISTEN);
-                glbpState = LISTEN;
-            }
-            else
-            {//j
-                if (standbytimer->isScheduled())
-                    cancelEvent(standbytimer);
-                DebugStateMachine(SPEAK, STANDBY);
-                glbpState = STANDBY;
-                sendMessage(HELLO);
-                scheduleTimer(hellotimer);
-            }
-            break;
-        case ACTIVE:
-            if (isHigherPriorityThan(msg)){
-                if (preempt){ //l
-                    if (activetimer->isScheduled())
-                        cancelEvent(activetimer);
+        UDPDataIndication *udpControll = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
+        IPv4Address IP = udpControll->getSrcAddr().toIPv4();
+
+        switch(hello->getVgState()){//TODO msg->getVgState()){
+            case SPEAK:
+                //h
+                if (!isHigherPriorityThan(msg)){
+                    scheduleTimer(standbytimer);//TODO mozna i activetimer
+                    scheduleTimer(hellotimer);
+                    DebugStateMachine(SPEAK, LISTEN);
+                    glbpState = LISTEN;
+
+                }
+                break;
+            case STANDBY:
+                //i
+                if (!isHigherPriorityThan(msg)){
+                    scheduleTimer(standbytimer);
+                    scheduleTimer(hellotimer);
+                    DebugStateMachine(SPEAK, LISTEN);
+                    glbpState = LISTEN;
+                }
+                else
+                {//j
                     if (standbytimer->isScheduled())
                         cancelEvent(standbytimer);
-                    DebugStateMachine(SPEAK, ACTIVE);
-                    glbpState = ACTIVE;
-                    sendMessage(HELLO);
+                    DebugStateMachine(SPEAK, STANDBY);
+                    glbpState = STANDBY;
+                    sendMessage(HELLOm);
                     scheduleTimer(hellotimer);
-                }else{
+                }
+                break;
+            case ACTIVE:
+                if (isHigherPriorityThan(msg)){
+                    if (preempt){ //l
+                        if (activetimer->isScheduled())
+                            cancelEvent(activetimer);
+                        if (standbytimer->isScheduled())
+                            cancelEvent(standbytimer);
+                        DebugStateMachine(SPEAK, ACTIVE);
+                        glbpState = ACTIVE;
+                        sendMessage(HELLOm);
+                        scheduleTimer(hellotimer);
+                    }else{
+                        //TODO jestli nemam VF
+                        if (!isVfActive()){
+                            sendMessageRequestResponse(REQUESTm, &IP);
+                        }
+                        scheduleTimer(activetimer);
+                    }
+                }
+                else
+                {//k
+                    //TODO LEARN PARAMS
+                    //TODO jestli nemam VF
+                    if (!isVfActive()){
+                        sendMessageRequestResponse(REQUESTm, &IP);
+                    }
                     scheduleTimer(activetimer);
                 }
-            }
-            else
-            {//k
-                //TODO LEARN PARAMS
-                scheduleTimer(activetimer);
-            }
-            break;
-    }//switch
+                break;
+        }//switch
+    }
+    else{
+        addOrStartVf(msg);
+    }
 }
 
 void GLBPVirtualRouter::handleMessageStandby(GLBPMessage *msg){
     //TODO RESIGN RECEIVE
-    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+    if (dynamic_cast<GLBPHello *>(msg->findOptionByType(HELLO,0))){
+        GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
 
-    switch(hello->getVgState()){// TODOmsg->getVgState()){
-        case SPEAK:
-            if (!isHigherPriorityThan(msg)){
-                scheduleTimer(standbytimer);
-                scheduleTimer(hellotimer);
-                DebugStateMachine(STANDBY, LISTEN);
-                glbpState = LISTEN;
-            }
-            break;
-        case ACTIVE:
-            //l
-            if (!isHigherPriorityThan(msg)){
-                //TODO Learn params
-                scheduleTimer(activetimer);
-            }
-            else
-            {//k
-                if (preempt){
-                    if (activetimer->isScheduled())
-                        cancelEvent(activetimer);
-                    if (standbytimer->isScheduled())
-                        cancelEvent(standbytimer);
-                    DebugStateMachine(STANDBY, ACTIVE);
-                    glbpState = ACTIVE;
-//                    vf->setEnable();//TODO
-                    sendMessage(HELLO);
+        UDPDataIndication *udpControll = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
+        IPv4Address IP = udpControll->getSrcAddr().toIPv4();
+
+        switch(hello->getVgState()){// TODOmsg->getVgState()){
+            case SPEAK:
+                if (!isHigherPriorityThan(msg)){
+                    scheduleTimer(standbytimer);
                     scheduleTimer(hellotimer);
-                }else{
+                    DebugStateMachine(STANDBY, LISTEN);
+                    glbpState = LISTEN;
+                }
+                break;
+            case ACTIVE:
+                //l
+                if (!isHigherPriorityThan(msg)){
+                    //TODO Learn params
+                    if (!isVfActive()){
+                        sendMessageRequestResponse(REQUESTm, &IP);
+                    }
                     scheduleTimer(activetimer);
                 }
-            }
-            break;
-    }//end switch
+                else
+                {//k
+                    if (preempt){
+                        if (activetimer->isScheduled())
+                            cancelEvent(activetimer);
+                        if (standbytimer->isScheduled())
+                            cancelEvent(standbytimer);
+                        DebugStateMachine(STANDBY, ACTIVE);
+                        glbpState = ACTIVE;
+    //                    vf->setEnable();//TODO
+                        sendMessage(HELLOm);
+                        scheduleTimer(hellotimer);
+                    }else{
+                        if (!isVfActive()){
+                            sendMessageRequestResponse(REQUESTm, &IP);
+                        }
+                        scheduleTimer(activetimer);
+                    }
+                }
+                break;
+        }//end switch
+    }else{
+        addOrStartVf(msg);
+    }
 }
 
 void GLBPVirtualRouter::handleMessageActive(GLBPMessage *msg)
 {
-    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
+    //Got Hello or ReqResp?
+    if (dynamic_cast<GLBPHello *>(msg->findOptionByType(HELLO,0))){
+        GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO,0));
 
-    switch(hello->getVgState()){//msg->getVgState()){
-        case STANDBY:
-            scheduleTimer(standbytimer);
-            break;
-        case ACTIVE:
-            if (!isHigherPriorityThan(msg)){//k
-                scheduleTimer(activetimer);
+        switch(hello->getVgState()){//msg->getVgState()){
+            case STANDBY:
                 scheduleTimer(standbytimer);
-                DebugStateMachine(ACTIVE, SPEAK);
-//                vf->setDisable();//TODO
-                glbpState = SPEAK;
-                sendMessage(HELLO);
-                scheduleTimer(hellotimer);
-            }
-            break;
+                break;
+            case ACTIVE:
+                if (!isHigherPriorityThan(msg)){//k
+                    scheduleTimer(activetimer);
+                    scheduleTimer(standbytimer);
+                    DebugStateMachine(ACTIVE, SPEAK);
+    //                vf->setDisable();//TODO
+                    glbpState = SPEAK;
+                    sendMessage(HELLOm);
+                    scheduleTimer(hellotimer);
+                }
+                break;
+        }
+    }else{//ReqResp
+        GLBPRequestResponse *req = check_and_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP,0));
+
+        //its request
+        if (req->getForwarder() == UNKNOWN){
+            //get IP requester IP
+            UDPDataIndication *udpControll = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
+            IPv4Address IP = udpControll->getSrcAddr().toIPv4();
+
+            //send Response
+            sendMessageRequestResponse(RESPONSEm, &IP);
+        }
+        else
+        {//its advertisment
+            addVf(req->getForwarder(), &(msg->getOwnerId()));
+        }
+
+    }
+}
+
+void GLBPVirtualRouter::addOrStartVf(GLBPMessage *msg){
+    GLBPRequestResponse *glbpM = check_and_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP,0));
+
+    if (glbpM->getForwarder() > vfCount)
+        vfCount = glbpM->getForwarder();
+
+    if (glbpM->getVfState() == UNKNOWN){
+        //LEARN VF params and start Vf as a primary
+        if (glbpM->getForwarder() <= vfMax){
+            startVf(glbpM->getForwarder());
+        }
+    }else if(vfVector[glbpM->getForwarder()-1]->getState() == DISABLED){
+        //add VF as a secondary
+        addVf(glbpM->getForwarder(), &(msg->getOwnerId()));
     }
 }
 
@@ -422,11 +596,74 @@ void GLBPVirtualRouter::listenState(){
     scheduleTimer(standbytimer);
 }
 
-void GLBPVirtualRouter::sendMessage(GLBPType type)
+/**
+ * VF State machine
+ */
+void GLBPVirtualRouter::startVf(int n)
 {
+    //TODO check if vfCount==vfMax neni!!
+
+    //setup parameters
+    vfVector[n-1]->addIPAddress(*virtualIP);
+    vfVector[n-1]->setMACAddress(*setVirtualMAC(n));
+    vfVector[n-1]->setPriority(167);
+    vfVector[n-1]->setState(LISTEN);
+    vfVector[n-1]->setWeight(weight);
+    vfVector[n-1]->setForwarder(n);
+    MACAddress *myMac = new MACAddress(ie->getMacAddress());
+    vfVector[n-1]->setPrimary(myMac);
+
+    //add vf to interface
+    ie->addVirtualForwarder(vfVector[n-1]);
+
+    //start timer
+    scheduleTimer(activetimerVf[n-1]);
+
+    std::cout<<hostname<<" # "<<n<<" Grp "<<glbpGroup<<"STARTUJEM -> "<<"LISTEN"<<endl;
+    fflush(stdout);
+}
+
+void GLBPVirtualRouter::addVf(int n, MACAddress *macOfPrimary)
+{
+    //If it is not already added
+    if (vfVector[n-1]->getForwarder() == 0){
+        //setup parameters
+        vfVector[n-1]->addIPAddress(*virtualIP);
+        vfVector[n-1]->setMACAddress(*setVirtualMAC(n));
+        vfVector[n-1]->setPriority(135);
+        vfVector[n-1]->setState(LISTEN);
+        vfVector[n-1]->setWeight(weight);
+        vfVector[n-1]->setForwarder(n);
+        vfVector[n-1]->setPrimary(macOfPrimary);
+
+        //add vf to interface
+        ie->addVirtualForwarder(vfVector[n-1]);
+
+        //start timer
+        scheduleTimer(activetimerVf[n-1]);
+
+        std::cout<<hostname<<" # "<<n<<" Grp "<<glbpGroup<<" INIT"<<" -> "<<"LISTEN"<<endl;
+    fflush(stdout);
+    }
+}
+
+void GLBPVirtualRouter::sendMessage(GLBPMessageType type, int forwarder){
+    //Toto je zprava oznamujici ze jsem active
+
+    //TODO zprava odpovedi na VF request
     DebugSendMessage(type);
-    GLBPMessage *packet = generateMessage();
-    packet->setBitLength(GLBP_HEADER_BYTES*8);//TODO
+    GLBPMessage *packet = new GLBPMessage();
+
+    packet->setName("GLBPRequest/Response");
+    packet->setByteLength(GLBP_HEADER_BYTES + GLBP_HELLO_BYTES);
+
+    //set glbp HELLO TLV
+    GLBPRequestResponse *helloPacket = generateReqRespTLV(forwarder);
+    packet->addOption(helloPacket);
+
+    //set glbp packet header
+    packet->setGroup(glbpGroup);
+    packet->setOwnerId(ie->getMacAddress());
 
     UDPSocket::SendOptions options;
     options.outInterfaceId = ie->getInterfaceId();
@@ -436,23 +673,116 @@ void GLBPVirtualRouter::sendMessage(GLBPType type)
     socket->sendTo(packet, *glbpMulticast, glbpUdpPort, &options);
 }
 
-GLBPMessage *GLBPVirtualRouter::generateMessage()
-{ //todo udelat obecne ne jen pro hello
-    GLBPMessage *msg = new GLBPMessage("GLBPMessage");
-
-    //set glbp packet header
-    msg->setGroup(glbpGroup);
-    msg->setOwnerId(ie->getMacAddress());
-
-    //set glbp HELLO TLV
-    GLBPHello *helloPacket = generateHelloTLV();
-    msg->addOption(helloPacket);
+void GLBPVirtualRouter::sendMessageRequestResponse(GLBPMessageType type, IPv4Address *IP)
+{
+    DebugSendMessage(type);
+    GLBPMessage *packet = new GLBPMessage();
+    packet->setName("GLBPRequest/Response");
 
     GLBPRequestResponse *reqrespPacket = generateReqRespTLV(0);
-    msg->addOption(reqrespPacket);
 
-    return msg;
+    switch (type){
+        case REQUESTm:
+            packet->addOption(reqrespPacket);
+            packet->setByteLength(GLBP_HEADER_BYTES + GLBP_REQRESP_BYTES);
+
+            packet->setName("GLBPRequest");
+            break;
+        case RESPONSEm:
+            reqrespPacket->setForwarder(vfCount);
+            reqrespPacket->setMacAddress(*setVirtualMAC(vfCount));
+
+            packet->setName("GLBPResponse");
+            packet->addOption(reqrespPacket);
+            packet->setByteLength(GLBP_HEADER_BYTES + GLBP_REQRESP_BYTES);
+            //TODO start dalsi VF? Do backup state...?
+            vfIncrement();
+            break;
+    }
+    //set glbp packet header
+    packet->setGroup(glbpGroup);
+    packet->setOwnerId(ie->getMacAddress());
+
+    UDPSocket::SendOptions options;
+    options.outInterfaceId = ie->getInterfaceId();
+    options.srcAddr = ie->ipv4Data()->getIPAddress();
+
+    socket->setTimeToLive(1);
+    socket->sendTo(packet, *IP, glbpUdpPort, &options);
 }
+
+void GLBPVirtualRouter::vfIncrement(){
+    if (vfCount <= vfMax)
+        vfCount++;
+}
+
+void GLBPVirtualRouter::sendMessage(GLBPMessageType type)
+{
+    DebugSendMessage(type);
+    GLBPMessage *packet = new GLBPMessage();
+    switch (type){//TODO
+        case HELLOm:
+        {
+            packet->setName("GLBPHello");
+            packet->setByteLength(GLBP_HEADER_BYTES + GLBP_REQRESP_BYTES);
+
+            //set glbp HELLO TLV
+            GLBPHello *helloPacket = generateHelloTLV();
+            packet->addOption(helloPacket);
+            break;
+        }
+        case COMBINEDm:
+        {
+            packet->setName("GLBPHello,Req/Resp");
+            //set glbp HELLO TLV
+            GLBPHello *helloPacket = generateHelloTLV();
+            packet->addOption(helloPacket);
+
+            //add active || listen primary forwarders to GLBP Hello, Req/resp
+            for (int i = 0; i < (int) vfVector.size(); i++){
+                if ((vfVector[i]->getPriority() == 167) || (vfVector[i]->getState() == ACTIVE)){
+                    //set glbp REQ/RESP TLV TODO
+                    GLBPRequestResponse *reqrespPacket = generateReqRespTLV(i+1);
+                    packet->addOption(reqrespPacket);
+                }
+            }
+            packet->setByteLength(GLBP_HEADER_BYTES + GLBP_HELLO_BYTES + GLBP_REQRESP_BYTES*(packet->getOptionArraySize()-1));
+            break;
+        }
+        case COUPm:
+            break;
+    }
+
+
+    //set glbp packet header
+    packet->setGroup(glbpGroup);
+    packet->setOwnerId(ie->getMacAddress());
+
+    UDPSocket::SendOptions options;
+    options.outInterfaceId = ie->getInterfaceId();
+    options.srcAddr = ie->ipv4Data()->getIPAddress();
+
+    socket->setTimeToLive(1);
+    socket->sendTo(packet, *glbpMulticast, glbpUdpPort, &options);
+}
+
+//GLBPMessage *GLBPVirtualRouter::generateMessage()
+//{ //todo udelat obecne ne jen pro hello
+//    GLBPMessage *msg = new GLBPMessage("GLBPMessage");
+//
+//    //set glbp packet header
+//    msg->setGroup(glbpGroup);
+//    msg->setOwnerId(ie->getMacAddress());
+
+//    //set glbp HELLO TLV
+//    GLBPHello *helloPacket = generateHelloTLV();
+//    msg->addOption(helloPacket);
+
+//    GLBPRequestResponse *reqrespPacket = generateReqRespTLV(1);
+//    msg->addOption(reqrespPacket);
+
+//    return msg;
+//}
 
 GLBPHello *GLBPVirtualRouter::generateHelloTLV(){
     GLBPHello *packet = new GLBPHello();
@@ -476,13 +806,23 @@ GLBPRequestResponse *GLBPVirtualRouter::generateReqRespTLV(int forwarder)
     //TODO Pozor! Na 1 IF muze byt forwarder (napr cislo 1) z vice skupin
     GLBPRequestResponse *packet = new GLBPRequestResponse();
 
-    //setup RequestResponse TLV
-    packet->setForwarder(forwarder+1);
-    packet->setVfState(vfVector[forwarder]->getState());
-    packet->setPriority(vfVector[forwarder]->getPriority());
-    packet->setWeight(vfVector[forwarder]->getWeight());
-    packet->setMacAddress(vfVector[forwarder]->getMacAddress());
+    if (forwarder > 0){
+        //setup RequestResponse TLV
+        packet->setForwarder(forwarder);
+        packet->setVfState(vfVector[forwarder-1]->getState());
+        packet->setPriority(vfVector[forwarder-1]->getPriority());
+        packet->setWeight(vfVector[forwarder-1]->getWeight());
+        packet->setMacAddress(vfVector[forwarder-1]->getMacAddress());
+    }else{
+        //VF request
+        MACAddress *unknownMAC = new MACAddress("00-00-00-00-00-00");
 
+        packet->setForwarder(forwarder);
+        packet->setVfState(0);
+        packet->setPriority(0);
+        packet->setWeight(0);
+        packet->setMacAddress(*unknownMAC);
+    }
     return packet;
 }
 
@@ -502,10 +842,16 @@ void GLBPVirtualRouter::scheduleTimer(cMessage *msg)
         scheduleAt(simTime() + holdTime+jitter, standbytimer);
     if (msg == hellotimer)
         scheduleAt(simTime() + helloTime+jitter, hellotimer);
+
+    for (int i = 0; i < (int) activetimerVf.size(); i++){
+        if (msg == activetimerVf[i])
+            scheduleAt(simTime() + holdTime+jitter, activetimerVf[i]);
+    }
 }
 
-void GLBPVirtualRouter::setVirtualMAC(int n)
+MACAddress *GLBPVirtualRouter::setVirtualMAC(int n)
 {
+    MACAddress * mac;
     //"00-07-b4-xx-xx-yy"
     //x's are 6bits of 0 followed by 10bits of group ID
     //y's reprezent number of virtual forwarder
@@ -513,25 +859,26 @@ void GLBPVirtualRouter::setVirtualMAC(int n)
     //set first two bits of group ID
     int minus = 0;
     if (glbpGroup < 256){
-        virtualMAC = new MACAddress("00-07-b4-00-00-00");
+        mac = new MACAddress("00-07-b4-00-00-00");
     }
     else if ( glbpGroup < 512 ){ // glbpGroup >= 256 &&
-        virtualMAC = new MACAddress("00-07-b4-01-00-00");
+        mac = new MACAddress("00-07-b4-01-00-00");
         minus = 256;
     }else if ( glbpGroup < 768 ){ // glbpGroup >= 512 &&
-        virtualMAC = new MACAddress("00-07-b4-02-00-00");
+        mac = new MACAddress("00-07-b4-02-00-00");
         minus = 512;
     }else{ //horni bity oba 11
-        virtualMAC = new MACAddress("00-07-b4-03-00-00");
+        mac = new MACAddress("00-07-b4-03-00-00");
         minus = 768;
     }
 
     //set another 8 bits of gid
-    virtualMAC->setAddressByte(4, glbpGroup-minus);
+    mac->setAddressByte(4, glbpGroup-minus);
 
     //set virtual forwarder number
-    virtualMAC->setAddressByte(5, n);
-    EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
+    mac->setAddressByte(5, n);
+//    EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
+    return mac;
 }
 
 bool GLBPVirtualRouter::isHigherPriorityThan(GLBPMessage *GLBPm){
@@ -552,6 +899,78 @@ bool GLBPVirtualRouter::isHigherPriorityThan(GLBPMessage *GLBPm){
         }
     }
 }
+
+bool GLBPVirtualRouter::isHigherVfPriorityThan(GLBPMessage *GLBPm, int forwarder, int pos){
+    UDPDataIndication *udpInfo = check_and_cast<UDPDataIndication *>(GLBPm->getControlInfo());
+    GLBPRequestResponse *req = check_and_cast<GLBPRequestResponse *>(GLBPm->findOptionByType(REQRESP,pos));
+
+    if (req->getPriority() < vfVector[forwarder-1]->getPriority()){//TODO
+        return true;
+    }else if (req->getPriority() > vfVector[forwarder-1]->getPriority()){//TODO
+        return false;
+    }else{// ==
+        if (ie->ipv4Data()->getIPAddress() > udpInfo->getSrcAddr().toIPv4() ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+/**
+ * VF Functions
+ */
+
+void GLBPVirtualRouter::handleVfSelfMessage(cMessage *msg){
+    int forwarder = isVfSelfMessage(msg);
+
+    if (msg == activetimerVf[forwarder-1]){
+        if (vfVector[forwarder-1]->getState() == LISTEN){
+            if (activetimerVf[forwarder-1]->isScheduled())
+                cancelEvent(activetimerVf[forwarder-1]);
+            vfVector[forwarder-1]->setState(ACTIVE);
+            EV<<hostname<<" # "<<forwarder<<" Grp "<<glbpGroup<<" LISTEN"<<" -> "<<"ACTIVE"<<endl;
+            std::cout<<hostname<<" # "<<forwarder<<" Grp "<<glbpGroup<<" LISTEN"<<" -> "<<"ACTIVE"<<endl;
+            fflush(stdout);
+            sendMessage(RESPONSEm, forwarder);
+            vfVector[forwarder-1]->setEnable();
+            scheduleTimer(redirecttimer[forwarder-1]);
+            scheduleTimer(timeouttimer[forwarder-1]);
+        }
+    }else if(msg == redirecttimer[forwarder-1]){
+        //TODO
+    }else{//==>timeouttimer
+        //TODO
+    }
+}
+
+int GLBPVirtualRouter::isVfSelfMessage(cMessage *msg){
+    for (int i = 0; i < (int) activetimerVf.size(); i++){
+        if (msg == activetimerVf[i])
+            return i+1;
+    }
+    for (int i = 0; i < (int) redirecttimer.size(); i++){
+            if (msg == redirecttimer[i])
+                return i+1;
+    }
+    for (int i = 0; i < (int) timeouttimer.size(); i++){
+            if (msg == timeouttimer[i])
+                return i+1;
+    }
+    return vfMax+1;
+}
+
+bool GLBPVirtualRouter::isVfActive(){
+    for (int i=0; i<vfMax; i++){
+        if (vfVector[i]->getPrimary() != nullptr){
+            if (vfVector[i]->getPriority() == 167){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 /**
  * Debug Messages
  */
@@ -582,7 +1001,7 @@ std::string GLBPVirtualRouter::intToGlbpState(int state){
     return retval;
 }
 
-void GLBPVirtualRouter::DebugSendMessage(int t){
+void GLBPVirtualRouter::DebugSendMessage(GLBPMessageType t){
     std::string type = intToMessageType(t);
     std::string state = intToGlbpState(glbpState);
 
@@ -590,13 +1009,22 @@ void GLBPVirtualRouter::DebugSendMessage(int t){
 }
 
 void GLBPVirtualRouter::DebugGetMessage(GLBPMessage *msg){
-    GLBPHello *hello = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO, 0));
-    std::string type = intToMessageType(HELLO);//TODO
-    std::string state = intToGlbpState(hello->getVgState());
     UDPDataIndication *udpInfo = check_and_cast<UDPDataIndication *>(msg->getControlInfo());
     std::string ipFrom =  udpInfo->getSrcAddr().toIPv4().str(false);
 
-    EV<<hostname<<" # "<<ie->getName()<<" Grp "<<(int)msg->getGroup()<<" "<<type<<" in "<< ipFrom <<" "<<state << " pri "<<(int)hello->getPriority()<<" vIP "<<hello->getAddress().str(false)<<endl;
+    for (int i=0; i < (int)msg->getOptionArraySize(); i++){
+        if (dynamic_cast<GLBPHello *>(msg->findOptionByType(HELLO, i))){
+            GLBPHello *glbpM = check_and_cast<GLBPHello *>(msg->findOptionByType(HELLO, i));
+            std::string type = intToMessageType(HELLOm);
+            std::string state = intToGlbpState(glbpM->getVgState());
+            EV<<hostname<<" # "<<ie->getName()<<" Grp "<<(int)msg->getGroup()<<" "<<type<<" in "<< ipFrom <<" "<<state << " pri "<<(int)glbpM->getPriority()<<" vIP "<<glbpM->getAddress().str(false)<<endl;
+        }else{
+            GLBPRequestResponse *glbpM = check_and_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP, i));
+            std::string type = intToMessageType(REQUESTm);//tODO
+            std::string state = intToGlbpState(glbpM->getVfState());
+            EV<<hostname<<" # "<<ie->getName()<<" Grp "<<(int)msg->getGroup()<<" "<<type<<" in "<< ipFrom <<" "<<state << " pri "<<(int)glbpM->getPriority()<<" vMAC "<<glbpM->getMacAddress().str()<<endl;
+        }
+    }
 }
 
 void GLBPVirtualRouter::DebugUnknown(int who){
@@ -604,15 +1032,18 @@ void GLBPVirtualRouter::DebugUnknown(int who){
     EV_DEBUG<<hostname<<" # "<<ie->getName()<<" "<<glbpGroup<<" "<<type<<" router is unknown"<<endl;//TODO was, <ip stareho>
 }
 
-std::string GLBPVirtualRouter::intToMessageType(int msg){
+std::string GLBPVirtualRouter::intToMessageType(GLBPMessageType msg){
     std::string retval;
     switch(msg){
-        case HELLO:
+        case HELLOm:
             retval = "Hello"; break;
-        case REQRESP:
+        case RESPONSEm:
+        case REQUESTm:
             retval = "Request/Response"; break;
-//        case RESIGN:
-//            retval = "Resign"; break;
+        case COMBINEDm:
+            retval = "Hello, Req/Resp"; break;
+        case COUPm:
+            retval = "Coup"; break;
     }
     return retval;
 }
@@ -634,10 +1065,41 @@ void GLBPVirtualRouter::interfaceDown(){
     DebugStateMachine(glbpState, INIT);
     glbpState = INIT;
 //    vf->setDisable();//tODO
+
+    stopVf();
+}
+
+void GLBPVirtualRouter::stopVf(){
+    for (int i = 0; i < vfMax; i++){
+        if (activetimerVf[i]->isScheduled())
+            cancelEvent(activetimerVf[i]);
+        if (redirecttimer[i]->isScheduled())
+            cancelEvent(redirecttimer[i]);
+        if (timeouttimer[i]->isScheduled())
+            cancelEvent(timeouttimer[i]);
+    }
+
+    for (int i=0; i<vfCount; i++){
+        vfVector[i]->setState(INIT);
+        if (!vfVector[i]->isDisable())
+            vfVector[i]->setDisable();
+        EV<<hostname<<" # "<<i+1<<" Grp "<<glbpGroup<<" NECO"<<" -> "<<"INIT"<<endl;
+        std::cout<<hostname<<" # "<<i+1<<" Grp "<<glbpGroup<<" NECO"<<" -> "<<"INIT"<<endl;
+        fflush(stdout);
+    }
 }
 
 void GLBPVirtualRouter::interfaceUp(){
     initState();
+    //TODO prepsat do funkce a osetrit ze nahodou dalsi vf nebyli zatraceni (coz by mohl obstarat teoreticky nejaky timer)
+    for (int i = 0; i < vfCount; i++){
+        //jestli existoval
+        if(vfVector[i]->getForwarder() != 0){
+            //tak ho obnov TODO:mozna rovnu do ACTIVE ty s prioritou 167
+            vfVector[i]->setState(LISTEN);
+            scheduleTimer(activetimerVf[i]);
+        }
+    }
 }
 
 
@@ -646,6 +1108,11 @@ GLBPVirtualRouter::~GLBPVirtualRouter() {
     cancelAndDelete(standbytimer);
     cancelAndDelete(activetimer);
     cancelAndDelete(initmessage);
+    for (int i = 0; i < vfMax; i++){
+        cancelAndDelete(activetimerVf[i]);
+        cancelAndDelete(redirecttimer[i]);
+        cancelAndDelete(timeouttimer[i]);
+    }
     containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
 }
 

@@ -39,6 +39,14 @@ namespace inet {
 
 class GLBPVirtualRouter: public cSimpleModule, public cListener{
     protected:
+        enum GLBPMessageType{
+            HELLOm = 1,
+            REQUESTm = 2,
+            RESPONSEm = 3,
+            COMBINEDm = 4,
+            COUPm = 5,
+        };
+
         std::string hostname;
 
         /* Variable needed for UDP */
@@ -49,7 +57,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         IInterfaceTable *ift = nullptr;      //usable interfaces of this router
         ARP *arp = nullptr;                  //arp table for sending arp gratuious.
         AnsaInterfaceEntry *ie = nullptr;    //Interface which is running GLBP group
-        std::vector<GLBPVirtualForwarder *> vfVector;      //Particular GLBP group is represented by VF on each interface
+        std::vector<GLBPVirtualForwarder *> vfVector; //Vector of VF's this Virtual Router is using (up to 4)
         cModule *containingModule = nullptr; //helper for looking for particular module
 
         /* GLBP specific variables */
@@ -66,41 +74,61 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         int timeout;
 
         //VF specific
-//        int vfCount;
-//        std::vector<int> vfState;
-//        std::vector<int> vfPriority;
-//        std::vector<int> vfWeight;
-//        std::vector<MACAddress> vfMac;
+        int vfCount = 1;
+        int vfMax = 4;
+        int weight = 100; //TODO Parametrem
 
-        /* GLBP timers */
+        /* GLBP VG timers */
         cMessage *hellotimer = nullptr;
         cMessage *activetimer = nullptr;
         cMessage *standbytimer = nullptr;
+
+        /* GLBP VF timers*/
+        std::vector <cMessage *> activetimerVf;// = nullptr;
+        std::vector <cMessage *> redirecttimer;// = nullptr;
+        std::vector <cMessage *> timeouttimer;// = nullptr;
+
         cMessage *initmessage = nullptr;
+
+
 
     protected:
         virtual void initialize( int stage);
         virtual int numInitStages() const {return NUM_INIT_STAGES;};
         void handleMessage(cMessage *msg);
 //        void sendMessage(OP_CODE opCode);
-        void setVirtualMAC(int n);
+        MACAddress *setVirtualMAC(int n);
         void scheduleTimer(cMessage *msg);
         bool isHigherPriorityThan(GLBPMessage *msg);
         //signal handler
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
 
-        GLBPMessage *generateMessage();
+//        GLBPMessage *generateMessage();
         GLBPHello *generateHelloTLV();
         GLBPRequestResponse *generateReqRespTLV(int forwarder);
-        void sendMessage(GLBPType type);
+        void sendMessage(GLBPMessageType type);
+        void sendMessage(GLBPMessageType type, int forwarder);
+        void sendMessageRequestResponse(GLBPMessageType type, IPv4Address *IP);
 
-        //state machine
+        //VG state machine
         void initState();
         void listenState();
         void speakState();
         void standbyState();
         void activeState();
         void disabledState();
+
+        //VF state machine
+        void startVf(int n);
+        void stopVf();
+        void addVf(int n, MACAddress *macOfPrimary);
+        int isVfSelfMessage(cMessage *msg);
+        void handleVfSelfMessage(cMessage *msg);
+        void vfIncrement();
+        bool isVfActive();
+        void addOrStartVf(GLBPMessage *msg);
+        void handleMessageRequestResponse(GLBPMessage *msg);
+        bool isHigherVfPriorityThan(GLBPMessage *GLBPm, int forwarder, int pos);
 
         void interfaceUp();
         void interfaceDown();
@@ -112,12 +140,12 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
 
         //debug
         void DebugStateMachine(int from, int to);
-        void DebugSendMessage(int t);
+        void DebugSendMessage(GLBPMessageType t);
         void DebugGetMessage(GLBPMessage *msg);
         void DebugUnknown(int who);
 
         std::string intToGlbpState(int state);
-        std::string intToMessageType(int msg);
+        std::string intToMessageType(GLBPMessageType msg);
     public:
         int getGroup() const { return glbpGroup; };
 

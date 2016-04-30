@@ -56,6 +56,7 @@ enum GLBPAddressType{
 // GLBP VG + VF State
 //
 enum GLBPState{
+    UNKNOWN = 0;
     DISABLED=1;
     INIT = 2;
     LISTEN = 4;

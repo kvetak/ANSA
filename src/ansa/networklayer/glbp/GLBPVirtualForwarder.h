@@ -36,27 +36,33 @@ public:
     };
 
     protected:
-        VFState state;
+        int state;
         int priority;
         int weight;
+        int forwarder;
+        MACAddress *primaryRouter = nullptr;
 
     public:
         //default cisco values;
-        GLBPVirtualForwarder() { state = DISABLED; priority = 167; weight = 100; };
-        GLBPVirtualForwarder(VFState s, int p, int w) { state = s; priority = p; weight = w;};
+        GLBPVirtualForwarder() { state = DISABLED; priority = 135; weight = 100; disable = true; forwarder = 0;};
+        GLBPVirtualForwarder(int s, int p, int w) { state = s; priority = p; weight = w; disable = true; forwarder = 0;};
         virtual ~GLBPVirtualForwarder() {};
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
         //@{
         int getState() { return state; };
         int getPriority() { return priority; };
         bool getWeight() { return weight; };
+        int getForwarder() { return forwarder; };
+        const MACAddress *getPrimary() {return primaryRouter; };
         //@}
 
         /** @name Field setters */
         //@{
-        virtual void setState(VFState s) { state = s; };
+        virtual void setState(int s) { state = s; };
         virtual void setPriority(int p) { priority = p; };
         virtual void setWeight(int w) { weight = w; };
+        virtual void setForwarder (int n) { forwarder = n; };
+        virtual void setPrimary (MACAddress *mac) {primaryRouter = mac; };
         //@}
 
 };
