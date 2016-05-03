@@ -37,6 +37,7 @@ class INET_API AnsaInterfaceEntry : public InterfaceEntry
         virtual const MACAddress& getMacAddressByIP(const IPv4Address& addr) const;
         virtual int getVirtualForwarderId(const IPv4Address& addr);
         virtual int getVirtualForwarderId(const MACAddress& addr);
+        virtual VirtualForwarder *getVirtualForwarderById(int id) { return vforwarder[id]; };
 
         /**
          * Adding Virtual Forwarder to this Interface
