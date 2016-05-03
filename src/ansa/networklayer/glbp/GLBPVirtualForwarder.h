@@ -41,13 +41,14 @@ public:
         int weight;
         int forwarder;
         bool AVG;
-        bool token;
+//        bool token;
+        bool available;
         MACAddress *primaryRouter = nullptr;
 
     public:
         //default cisco values;
-        GLBPVirtualForwarder() { state = DISABLED; priority = 135; weight = 100; disable = true; forwarder = 0; AVG = false; token = false;};
-        GLBPVirtualForwarder(int s, int p, int w) { state = s; priority = p; weight = w; disable = true; forwarder = 0; AVG = false; token = false;};
+        GLBPVirtualForwarder() { state = DISABLED; priority = 135; weight = 100; disable = true; forwarder = 0; AVG = false; available = false;};
+        GLBPVirtualForwarder(int s, int p, int w) { state = s; priority = p; weight = w; disable = true; forwarder = 0; AVG = false; available = false;};
         virtual ~GLBPVirtualForwarder() {};
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
         //@{
@@ -57,7 +58,7 @@ public:
         int getForwarder() { return forwarder; };
         const MACAddress *getPrimary() {return primaryRouter; };
         bool isAVG() { return AVG; };
-        bool isToken() { return token; };
+        bool isAvailable() { return available; };
         //@}
 
         /** @name Field setters */
@@ -69,8 +70,8 @@ public:
         virtual void setPrimary (MACAddress *mac) {primaryRouter = mac; };
         virtual void enableAVG() {AVG = true;};
         virtual void disableAVG() {AVG = false;};
-        virtual void enableToken() {token = true;};
-        virtual void disableToken() {token = false;};
+        virtual void setAvailable(bool val) {available = val;};
+//        virtual void disableToken() {token = false;};
         //@}
 
 };

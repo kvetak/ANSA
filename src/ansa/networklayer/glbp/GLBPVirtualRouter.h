@@ -47,6 +47,13 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
             COUPm = 5,
         };
 
+        enum GLBPLoadBalancingType{
+            ROUNDROBIN = 1,
+            //TODO
+//            WEIGHTED = 2,
+//            ENDSTATIONS = 3,
+        };
+
         std::string hostname;
 
         /* Variable needed for UDP */
@@ -73,6 +80,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         int holdTime;
         int redirect;
         int timeout;
+        GLBPLoadBalancingType loadBalancing;
 
         //VF specific
         int vfCount = 1;
@@ -111,6 +119,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void sendMessage(GLBPMessageType type);
         void sendMessage(GLBPMessageType type, int forwarder);
         void sendMessageRequestResponse(GLBPMessageType type, IPv4Address *IP);
+        void learnTimers(GLBPHello *msg);
 
         //VG state machine
         void initState();
@@ -122,6 +131,9 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void startAvg();
         void stopAvg();
         MACAddress *getNextActiveMac();
+
+        ////Load balancing mechanism
+        MACAddress *loadBalancingNext(GLBPLoadBalancingType type);
 
         //VF state machine
         void startVf(int n);
@@ -147,6 +159,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
 
         //debug
         void DebugStateMachine(int from, int to);
+        void DebugVfStateMachine(int from, int to, int forwarder);
         void DebugSendMessage(GLBPMessageType t);
         void DebugGetMessage(GLBPMessage *msg);
         void DebugUnknown(int who);

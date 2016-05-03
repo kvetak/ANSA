@@ -22,7 +22,7 @@ simple GLBP like IUDPApp
     parameters:
         @display("i=block/network2");
         xml configData = default(xml("<GLBP />"));
-        string deviceId; 
+//        string deviceId; 
         
 //        bool jittered;     
         

@@ -45,6 +45,8 @@ class GLBP : public cSimpleModule {
         /*GLBP multicast address*/
         L3Address *glbpMulticastAddress = nullptr;
         UDPSocket *socket;
+        std::string hostname;
+        cModule *containingModule;
 
         IInterfaceTable *ift = nullptr;
 
@@ -59,7 +61,7 @@ class GLBP : public cSimpleModule {
 //        void sendMessage(OP_CODE opCode);
         /**/
         void parseConfig(cXMLElement *config);
-        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt);
+        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt, int redirect, int timeout, int hellotime, int holdtime);
         void checkAndJoinMulticast(int InterfaceId);
 
     public:

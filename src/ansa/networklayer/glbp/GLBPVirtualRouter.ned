@@ -21,7 +21,7 @@ simple GLBPVirtualRouter like IUDPApp
         parameters:
      	@display("i=block/network2");
 //     	xml configData = default(xml("<GLBP />"));
-     	string deviceId;     	
+//     	string deviceId;     	
 		string interfaceTableModule;
 		string arp;
 //        string routingTableModule;// = default(".routingTableModule");
