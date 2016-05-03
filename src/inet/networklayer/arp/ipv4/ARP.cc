@@ -29,10 +29,18 @@
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
+#if defined(ANSAINET)
+#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
+#include "ansa/networklayer/glbp/GLBPVirtualForwarder.h"
+#endif
+
 namespace inet {
 
 simsignal_t ARP::sentReqSignal = registerSignal("sentReq");
 simsignal_t ARP::sentReplySignal = registerSignal("sentReply");
+#if defined(ANSAINET)
+simsignal_t ARP::recvReqSignal = registerSignal("recvRequest");
+#endif
 
 static std::ostream& operator<<(std::ostream& out, cMessage *msg)
 {
@@ -371,9 +379,40 @@ void ARP::processARPPacket(ARPPacket *arp)
         switch (arp->getOpcode()) {
             case ARP_REQUEST: {
                 EV_DETAIL << "Packet was ARP REQUEST, sending REPLY\n";
+                MACAddress myMACAddress;
+
+                #if defined(ANSAINET)
+                if ( dynamic_cast<AnsaInterfaceEntry *>(ie) != nullptr ) {
+                    AnsaInterfaceEntry *aie = dynamic_cast<AnsaInterfaceEntry *>(ie);
+                    int vfn = aie->getVirtualForwarderId(arp->getDestIPAddress());
+                    VirtualForwarder *vf = aie->getVirtualForwarderById(vfn);
+
+                    //is it GLBP protocol?
+                    if( (vfn != -1) && (dynamic_cast<GLBPVirtualForwarder *>(vf) != nullptr) ){
+                        GLBPVirtualForwarder *GLBPVf = dynamic_cast<GLBPVirtualForwarder *>(vf);
+
+                        //arp req to AVG?
+                        if (GLBPVf->isAVG()){
+                            emit(recvReqSignal,true);//FIXME DEBUG
+                            myMACAddress = GLBPVf->getMacAddress();
+                        }else if (!GLBPVf->isDisable()){
+//                            myMACAddress = ie->getMacAddress();
+                            delete arp;
+                            return; //FIXME
+                        }
+                    }else{
+                        myMACAddress = ie->getMacAddress();
+                    }
+                }
+                else{
+                #endif
 
                 // find our own IPv4 address and MAC address on the given interface
-                MACAddress myMACAddress = ie->getMacAddress();
+                myMACAddress = ie->getMacAddress();
+
+                #if defined(ANSAINET)
+                }
+                #endif
                 IPv4Address myIPAddress = ie->ipv4Data()->getIPAddress();
 
                 // "Swap hardware and protocol fields", etc.
@@ -483,6 +522,7 @@ L3Address ARP::getL3AddressFor(const MACAddress& macAddr) const
 }
 
 #if defined(ANSAINET)
+
 void ARP::sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode)
 {
     Enter_Method_Silent();
@@ -517,7 +557,7 @@ void ARP::sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Ad
     entry->timer = nullptr;
     entry->numRetries = 0;
 
-    updateARPCache(entry, srcAddr);
+//    updateARPCache(entry, srcAddr); //FIXME
     // send out
     send(arp, netwOutGate);
 //    sendPacketToNIC(arp, ie, srcAddr, ETHERTYPE_ARP);

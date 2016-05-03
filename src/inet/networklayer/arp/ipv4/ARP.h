@@ -46,9 +46,12 @@ class INET_API ARP : public cSimpleModule, public IARP, public ILifecycle
     class ARPCacheEntry;
     typedef std::map<IPv4Address, ARPCacheEntry *> ARPCache;
     typedef std::vector<cMessage *> MsgPtrVector;
-    void sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode);
     // IPv4Address -> MACAddress table
     // TBD should we key it on (IPv4Address, InterfaceEntry*)?
+#if defined(ANSAINET)
+    static simsignal_t recvReqSignal;
+#endif
+
     class ARPCacheEntry
     {
       public:
@@ -98,6 +101,9 @@ class INET_API ARP : public cSimpleModule, public IARP, public ILifecycle
     virtual MACAddress resolveL3Address(const L3Address& address, const InterfaceEntry *ie) override;
     virtual L3Address getL3AddressFor(const MACAddress& addr) const override;
     /// @}
+#if defined(ANSAINET)
+    void sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode);
+#endif
 
   protected:
     virtual void initialize(int stage) override;

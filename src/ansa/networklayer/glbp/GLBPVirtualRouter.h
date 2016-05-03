@@ -59,6 +59,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         AnsaInterfaceEntry *ie = nullptr;    //Interface which is running GLBP group
         std::vector<GLBPVirtualForwarder *> vfVector; //Vector of VF's this Virtual Router is using (up to 4)
         cModule *containingModule = nullptr; //helper for looking for particular module
+        GLBPVirtualForwarder *vf = nullptr;
 
         /* GLBP specific variables */
         int glbpState;                      //state of hsrp virtual router
@@ -102,6 +103,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         bool isHigherPriorityThan(GLBPMessage *msg);
         //signal handler
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
+        virtual void receiveSignal(cComponent *source, simsignal_t signalID, bool b) override;
 
 //        GLBPMessage *generateMessage();
         GLBPHello *generateHelloTLV();
@@ -117,6 +119,9 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void standbyState();
         void activeState();
         void disabledState();
+        void startAvg();
+        void stopAvg();
+        MACAddress *getNextActiveMac();
 
         //VF state machine
         void startVf(int n);
@@ -129,6 +134,8 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void addOrStartVf(GLBPMessage *msg);
         void handleMessageRequestResponse(GLBPMessage *msg);
         bool isHigherVfPriorityThan(GLBPMessage *GLBPm, int forwarder, int pos);
+        void deleteVf(int forwarder);
+        int getFreeVf();
 
         void interfaceUp();
         void interfaceDown();
