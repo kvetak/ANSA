@@ -19,6 +19,9 @@
 #include "inet/common/queue/IPassiveQueue.h"
 //#include "NotificationBoard.h"
 #include "inet/common/NotifierConsts.h"
+#include "ansa/networklayer/glbp/GLBPMessage.h"
+#include "inet/networklayer/ipv4/IPv4Datagram.h"
+#include "inet/transportlayer/udp/UDPPacket.h"
 
 // TODO: refactor using a statemachine that is present in a single function
 // TODO: this helps understanding what interactions are there and how they affect the state
@@ -144,9 +147,67 @@ void AnsaEtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
         return;
     }
 
+    //if glbp message - set glbp virtual MAC as a src MAC
+    //need to get GLBPMessage packet per partes
+    static int actualGlbp = 1;
+    bool deadlock = false;
+    if(dynamic_cast<EthernetIIFrame *>(frame)){
+        EthernetIIFrame *edf = dynamic_cast<EthernetIIFrame *>(frame);
+        if(dynamic_cast<IPv4Datagram *>(edf->getEncapsulatedPacket())){
+            IPv4Datagram *ipd = dynamic_cast<IPv4Datagram *>(edf->getEncapsulatedPacket());
+            if (dynamic_cast<UDPPacket *>(ipd->getEncapsulatedPacket())){
+                UDPPacket *udpp = dynamic_cast<UDPPacket *>(ipd->getEncapsulatedPacket());
+                if (dynamic_cast<GLBPMessage *>(udpp->getEncapsulatedPacket())){
+
+                    GLBPMessage *glbpm = dynamic_cast<GLBPMessage *>(udpp->getEncapsulatedPacket());
+                    // only 1 glbp option - set mas as a source
+                    // more glbp options? change it every time
+                    int arrsize = glbpm->getOptionArraySize();
+                    if (arrsize == 1){ //contain one glbp option
+                        if(dynamic_cast<GLBPRequestResponse *>(glbpm->findOptionByType(REQRESP,0))){
+                            GLBPRequestResponse *glbprr = dynamic_cast<GLBPRequestResponse *>(glbpm->findOptionByType(REQRESP,0));
+                            if (glbprr->getVfState() == ACTIVE)
+                                frame->setSrc(glbprr->getMacAddress());
+                            //else mac is normal mac of the Interface
+
+                        }
+                    }//contain hello plus one glbp option
+                    else if (arrsize == 2){
+                        if(dynamic_cast<GLBPRequestResponse *>(glbpm->findOptionByType(REQRESP,1))){
+                            GLBPRequestResponse *glbprr = dynamic_cast<GLBPRequestResponse *>(glbpm->findOptionByType(REQRESP,1));
+                            if (glbprr->getVfState() == ACTIVE)
+                                frame->setSrc(glbprr->getMacAddress());
+                            //else mac is normal mac of the Interface
+                        }
+                    }//its AVG-need to change srcMAC addr every time
+                    else if(arrsize > 2){
+                        //get next active
+                        while (actualGlbp < arrsize){
+                            if(dynamic_cast<GLBPRequestResponse *>(glbpm->findOptionByType(REQRESP,actualGlbp))){
+                                    GLBPRequestResponse *glbprr = dynamic_cast<GLBPRequestResponse *>(glbpm->findOptionByType(REQRESP,actualGlbp));
+                                    actualGlbp++;
+                                    if (actualGlbp == arrsize){
+                                        actualGlbp = 1;
+                                        if (deadlock)
+                                            break;
+                                        deadlock = true;
+                                    }
+                                    if (glbprr->getVfState() == ACTIVE){
+                                        frame->setSrc(glbprr->getMacAddress());
+                                        break;
+                                    }
+                            }
+                        }//while
+                    }
+                }// glbp Mess
+            }// UDP packet
+        }//IPv4Datagram
+    }//Ether killnig frame
+
     // fill in src address if not set
-    if (frame->getSrc().isUnspecified())
+    if (frame->getSrc().isUnspecified()){
         frame->setSrc(address);
+    }
 
     bool isPauseFrame = (dynamic_cast<EtherPauseFrame*>(frame) != NULL);
 
