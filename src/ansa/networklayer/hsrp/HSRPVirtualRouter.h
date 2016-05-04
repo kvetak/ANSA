@@ -26,7 +26,7 @@
 
 namespace inet {
 
-class HSRPVirtualRouter : public cSimpleModule, public ILifecycle, public cListener
+class HSRPVirtualRouter : public cSimpleModule, public cListener
 {
     protected:
         std::string hostname;

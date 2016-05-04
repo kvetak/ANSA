@@ -22,7 +22,7 @@ simple HSRP like IUDPApp
     parameters:
         @display("i=block/network2");
         xml configData = default(xml("<HSRP />"));
-        string deviceId;      
+//        string deviceId;      
         
         string interfaceTableModule = default(".interfaceTableModule");        
             

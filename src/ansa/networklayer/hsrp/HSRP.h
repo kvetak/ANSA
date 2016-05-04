@@ -38,6 +38,8 @@ class HSRP : public cSimpleModule{
         std::vector<int> multicastInterfaces;
         L3Address *hsrpMulticast = nullptr;
         UDPSocket *socket;    // bound to the HSRP port (see udpPort parameter)
+        std::string hostname;
+        cModule *containingModule;
 
         IInterfaceTable *ift = nullptr;
     protected:
@@ -47,7 +49,7 @@ class HSRP : public cSimpleModule{
         virtual void updateDisplayString();
 //        void sendMessage(OP_CODE opCode);
         void parseConfig(cXMLElement *config);
-        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt);
+        void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt, int hellotime, int holdtime);
         void checkAndJoinMulticast(int InterfaceId);
         bool is_unique(std::string virtip, int iid);
 

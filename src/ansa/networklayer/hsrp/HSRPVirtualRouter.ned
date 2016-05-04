@@ -21,12 +21,12 @@ simple HSRPVirtualRouter like IUDPApp
         parameters:
      	@display("i=block/network2");
      	xml configData = default(xml("<HSRP />"));
-     	string deviceId;     	
+//     	string deviceId;     	
 		string interfaceTableModule;
 		string arp;
 //        string routingTableModule;// = default(".routingTableModule");
 		int interface;
-		int vrid;
+//		int group;
 
         int version				= default(1);	 	 //default version of HSRP is 1
     	int hellotime @unit(s)	= default(3s);	  	//hellotime of actual device

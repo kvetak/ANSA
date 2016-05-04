@@ -37,13 +37,13 @@ void HSRPVirtualRouter::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
-        hostname = par("deviceId").stdstringValue();
+//        hostname = par("deviceId").stdstringValue();
         containingModule = getContainingNode(this);
-
+        hostname = std::string(containingModule->getName(), strlen(containingModule->getName()));
         //setup HSRP parameters
         hsrpUdpPort = HSRP_UDP_PORT;
         hsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
-        hsrpGroup = (int)par("vrid");
+        hsrpGroup = (int)par("group");
         virtualIP = new IPv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
         preempt = (bool)par("preempt");
@@ -184,7 +184,7 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
         HSRPMessage *HSRPm = dynamic_cast<HSRPMessage *>(msg);
 
         //FIXME Zkontroluj sli spada do moji skupiny a zajima me...?
-        if ((double)HSRPm->getGroup() != par("vrid").doubleValue()){
+        if ((double)HSRPm->getGroup() != par("group").doubleValue()){
             EV_DEBUG << "Wrong message with GID:" <<HSRPm->getGroup() << "\n";
             return;
         }
@@ -257,8 +257,8 @@ void HSRPVirtualRouter::initState(){
 void HSRPVirtualRouter::learnState()
 {
     hsrpState = LEARN;
-    std::cout<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"] LEARN state"<<std::endl;
-    fflush(stdout);
+//    std::cout<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"] LEARN state"<<std::endl;
+//    fflush(stdout);
     scheduleTimer(activetimer);
     scheduleTimer(standbytimer);
     //TODO v pripade vypnuti rozhrani -> prechod do INIT a vypnuti timeru... je mozne vypnuti rozhrani za behu?
@@ -301,8 +301,8 @@ void HSRPVirtualRouter::handleMessageLearn(HSRPMessage *msg)
     }else{
         //h,g - receipe Hello of any priority from ACTIVE router
         if (msg->getState() == ACTIVE){
-            std::cout<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"] got- "<<msg->getAddress().str(true)<<std::endl;
-            fflush(stdout);
+//            std::cout<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"] got- "<<msg->getAddress().str(true)<<std::endl;
+//            fflush(stdout);
 //            IPv4Address *a = new IPv4Address();
             virtualIP->set(msg->getAddress().str().c_str());
             DebugStateMachine(LEARN, LISTEN);
@@ -561,7 +561,7 @@ void HSRPVirtualRouter::setVirtualMAC()
 {
     virtualMAC = new MACAddress("00-00-0C-07-AC-00");
     virtualMAC->setAddressByte(5, hsrpGroup);
-    EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
+//    EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
 }
 
 void HSRPVirtualRouter::scheduleTimer(cMessage *msg)
@@ -612,13 +612,13 @@ void HSRPVirtualRouter::learnTimers(HSRPMessage *msg)
     //learn hello and holdhold timer from ACTIVE router HELLO message
     if (msg->getHellotime() != helloTime){
         helloTime = msg->getHellotime();
-        std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Changing helloTime;"<<std::endl;
-        fflush(stdout);
+//        std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Changing helloTime;"<<std::endl;
+//        fflush(stdout);
     }
     if (msg->getHoldtime() != holdTime){
         holdTime = msg->getHoldtime();
-        std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Changing holdTime;"<<std::endl;
-        fflush(stdout);
+//        std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Changing holdTime;"<<std::endl;
+//        fflush(stdout);
     }
 }
 

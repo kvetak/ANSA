@@ -32,12 +32,14 @@ void HSRP::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        containingModule = getContainingNode(this);
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
         hsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
         socket = new UDPSocket(); //UDP socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
         socket->bind(HSRP_UDP_PORT);
         this->parseConfig(par(CONFIG_PAR));
+        hostname = std::string(containingModule->getName(), strlen(containingModule->getName()));
     }
 }
 
@@ -79,7 +81,7 @@ void HSRP::handleMessage(cMessage *msg)
     }
 } //end handleMessage
 
-void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt){
+void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt, int hellotime, int holdtime){
     int gateSize = virtualRouterTable.size() + 1;
     this->setGateSize("hsrpIn",gateSize);
     this->setGateSize("hsrpOut", gateSize);
@@ -94,13 +96,15 @@ void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     cModule *module = moduleType->create(name.c_str(), this);
 
     // set up parameters
-    module->par("deviceId") = par("deviceId");
+//    module->par("deviceId") = par("deviceId");
     module->par("configData") = par("configData");
-    module->par("vrid") = vrid;
+    module->par("group") = vrid;
     module->par("interface") = interface;
     module->par("virtualIP") = vip;
     module->par("priority") = priority;
     module->par("preempt") = preempt;
+    module->par("hellotime") = hellotime;
+    module->par("holdtime") = holdtime;
     module->par("interfaceTableModule") = ift->getFullPath();
     cModule *containingModule = findContainingNode(this);
     module->par("arp") = containingModule->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp")->getFullPath();
@@ -134,6 +138,9 @@ void HSRP::parseConfig(cXMLElement *config){
         cXMLElement* m = *i;
         std::string ifname;
         ifname = m->getAttribute("name");
+
+        //get interface id
+        int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
 
         //Get through each group
         cXMLElementList gr = m->getElementsByTagName("Group");
@@ -182,8 +189,41 @@ void HSRP::parseConfig(cXMLElement *config){
                 EV_DEBUG << "Setting preemption:" <<preempt<< endl;
             }
 
-            //get interface id
-            int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
+            //get Hellotime
+            int hellotime;
+            std::stringstream strHellotime;
+            if (!group->getAttribute("hellotime")) {
+                EV << "Config XML file missing tag or attribute - Hellotime interval." << endl;
+                hellotime = 3; //def val
+            } else
+            {
+                strHellotime << group->getAttribute("hellotime");
+                strHellotime >> hellotime;
+                if ((hellotime<1) || (hellotime >254)){
+                    std::cerr<<hostname<<" Group "<<gid<<": Wrong value of HSRP Hellotime timer. Must be <1-254>. Setting default 3 seconds."<<endl;
+                    fflush(stderr);
+                    hellotime = 3;
+                }
+                EV_DEBUG << "Setting Hellotime:" <<hellotime<< endl;
+            }
+
+            //get Holdtime
+            int holdtime;
+            std::stringstream strHoldtime;
+            if (!group->getAttribute("holdtime")) {
+                EV << "Config XML file missing tag or attribute - Holdtime interval." << endl;
+                holdtime = 10; //def val
+            } else
+            {
+                strHoldtime << group->getAttribute("holdtime");
+                strHoldtime >> holdtime;
+                if ((holdtime< hellotime+1) || (holdtime > 255)){
+                    std::cerr<<hostname<<" Group "<<gid<<": Wrong value of HSRP Holdtime timer. Must be <(hellotime+1)-254>. Setting default 10 seconds."<<endl;
+                    fflush(stderr);
+                    holdtime = 10;
+                }
+                EV_DEBUG << "Setting Holdtime:" <<holdtime<< endl;
+            }
 
             //get virtual IP
             std::string virtip;
@@ -196,7 +236,7 @@ void HSRP::parseConfig(cXMLElement *config){
                 if (is_unique(virtip, iid)){
                     EV_DEBUG << "Setting virtip:" <<virtip<< endl;
                 }else{
-                    std::cerr<<par("deviceId").stringValue()<<" Group "<<gid<<": Wrong HSRP group IP in config file."<<endl;
+                    std::cerr<<hostname<<" Group "<<gid<<": Wrong HSRP group IP in config file."<<endl;
                     fflush(stderr);
                     continue;
                 }
@@ -204,7 +244,7 @@ void HSRP::parseConfig(cXMLElement *config){
 
 
             checkAndJoinMulticast(iid);
-            addVirtualRouter(iid , gid, ifname.c_str(), virtip, priority, preempt);
+            addVirtualRouter(iid , gid, ifname.c_str(), virtip, priority, preempt, hellotime, holdtime);
         }// end each group
     }//end each interface
 }//end parseConfig
@@ -235,7 +275,7 @@ bool HSRP::is_unique(std::string virtip, int iid){
 //        EV_DEBUG<<"Compared virtual Address:"<<virtualRouterTable.at(i)->getIPaddress()->str(false)<<endl;
 
         if (virtip.compare(virtualRouterTable.at(i)->par("virtualIP").stringValue()) == 0){
-            EV<<par("deviceId").stdstringValue()<<" % Address "<<virtip<<" in group "<<(int)virtualRouterTable.at(i)->par("group")<<"."<<endl;
+            EV<<hostname<<" % Address "<<virtip<<" in group "<<(int)virtualRouterTable.at(i)->par("group")<<"."<<endl;
             return false;
         }
     }
@@ -244,7 +284,7 @@ bool HSRP::is_unique(std::string virtip, int iid){
     std::string InterfaceIP = ift->getInterfaceById(iid)->ipv4Data()->getIPAddress().str(false);
 //    EV_DEBUG<<"Compared physical Address: "<<InterfaceIP<<endl;
     if (InterfaceIP.compare(virtip) == 0){
-        EV<<par("deviceId").stringValue()<<" % Address cannot equal interface IP address."<<endl;
+        EV<<hostname<<" % Address cannot equal interface IP address."<<endl;
         return false;
     }
 
