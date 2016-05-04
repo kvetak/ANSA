@@ -393,12 +393,15 @@ void ARP::processARPPacket(ARPPacket *arp)
 
                         //arp req to AVG?
                         if (GLBPVf->isAVG()){
-                            emit(recvReqSignal,true);//FIXME DEBUG
+                            emit(recvReqSignal,true);
                             myMACAddress = GLBPVf->getMacAddress();
+                            if (myMACAddress.compareTo(MACAddress("00-00-00-00-00-00")) == 0){
+                                delete arp;
+                                return;
+                            }
                         }else if (!GLBPVf->isDisable()){
-//                            myMACAddress = ie->getMacAddress();
                             delete arp;
-                            return; //FIXME
+                            return;
                         }
                     }else{
                         myMACAddress = ie->getMacAddress();
