@@ -26,7 +26,7 @@ simple GLBPVirtualRouter like IUDPApp
 		string arp;
 //        string routingTableModule;// = default(".routingTableModule");
 		int interface;
-		int vrid;
+//		int vrid;
 
 		//cisco jitter timers
 		bool jittered			= default(false);

@@ -40,14 +40,17 @@ public:
         int priority;
         int weight;
         int forwarder;
-        bool AVG;
+        bool AVG;   //need for ARP response
 //        bool token;
         bool available;
         MACAddress *primaryRouter = nullptr;
 
+//    protected:
+//        std::string intToVfState(int state);
+
     public:
         //default cisco values;
-        GLBPVirtualForwarder() { state = DISABLED; priority = 135; weight = 100; disable = true; forwarder = 0; AVG = false; available = false;};
+        GLBPVirtualForwarder() { state = DISABLED; priority = 135; weight = 100; disable = true; forwarder = 0; AVG = false;  available = false;};
         GLBPVirtualForwarder(int s, int p, int w) { state = s; priority = p; weight = w; disable = true; forwarder = 0; AVG = false; available = false;};
         virtual ~GLBPVirtualForwarder() {};
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
@@ -73,6 +76,9 @@ public:
         virtual void setAvailable(bool val) {available = val;};
 //        virtual void disableToken() {token = false;};
         //@}
+
+        //statistics
+        virtual std::string info() const;
 
 };
 

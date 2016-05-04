@@ -50,14 +50,12 @@ void GLBPVirtualRouter::initialize(int stage)
         glbpState = INIT;
         glbpUdpPort = (int)par("glbpUdpPort");
         glbpMulticast = new L3Address(par("glbpMulticastAddress"));
-        glbpGroup = (int)par("vrid");
+        glbpGroup = (int)par("group");
         virtualIP = new IPv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
         preempt = (bool)par("preempt");
-        loadBalancing = ROUNDROBIN; //TODO zatim default
+        loadBalancing = ROUNDROBIN; //TODO only default ROUND ROBIN for now
         hostname = std::string(containingModule->getName(), strlen(containingModule->getName()));
-
-        WATCH(glbpState);
 
         //init Timers
         helloTime = par("hellotime");
@@ -99,13 +97,14 @@ void GLBPVirtualRouter::initialize(int stage)
             GLBPVirtualForwarder *glbpVF = new GLBPVirtualForwarder();
             //add VF's to vector
             vfVector.push_back(glbpVF);
+            WATCH_PTR(vfVector[i-1]);
         }
 
         //add VG to the interface
         vf = new GLBPVirtualForwarder();
         vf->addIPAddress(*virtualIP);
         vf->setDisable();
-        vf->disableAVG();
+//        vf->disableAVG();
         ie->addVirtualForwarder(vf);
 
         //get socket ready
@@ -122,6 +121,15 @@ void GLBPVirtualRouter::initialize(int stage)
         containingModule->subscribe(NF_INTERFACE_STATE_CHANGED, this);
 //        containingModule->subscribe(NF_INTERFACE_CREATED, this);
 //        containingModule->subscribe(NF_INTERFACE_DELETED, this);
+
+        WATCH(glbpState);
+        WATCH(glbpGroup);
+        WATCH(priority);
+        WATCH(preempt);
+        WATCH(helloTime);
+        WATCH(holdTime);
+        WATCH(redirect);
+        WATCH(timeout);
 
         //start GLBP
         scheduleAt(simTime() , initmessage);
@@ -314,6 +322,10 @@ void GLBPVirtualRouter::handleMessageRequestResponse(GLBPMessage *msg){
 //                        fflush(stdout);
                         vfVector[req->getForwarder()-1]->setDisable();
 //                        vfVector[req->getForwarder()-1]->setAvailable(false);
+                    }
+                    else{ //let them know that you will be backup active
+                        sendMessage(COMBINEDm);
+                        scheduleTimer(hellotimer);
                     }
                     break;
             }//end switch
@@ -584,7 +596,12 @@ void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, 
 //            std::cout<<hostname<<" # "<<" Grp "<<glbpGroup<<" got SIGNAL.."<<endl;
 //            fflush(stdout);
             MACAddress *mac = loadBalancingNext(loadBalancing);
-            vf->setMACAddress(*mac);
+            if (mac == nullptr){
+                mac = new MACAddress("00-00-00-00-00-00");
+                vf->setMACAddress(*mac);
+            }else{
+                vf->setMACAddress(*mac);
+            }
         }
     }
 }
@@ -624,7 +641,7 @@ void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, 
 void GLBPVirtualRouter::initState(){
     if (!vf->isDisable())
         vf->setDisable();
-    vf->disableAVG();
+//    vf->disableAVG();
     // Check virtualIP
     if (strcmp(virtualIP->str(false).c_str(), "0.0.0.0") != 0)
     { //virtual ip is already set
@@ -693,7 +710,7 @@ void GLBPVirtualRouter::addVf(int n, MACAddress *macOfPrimary)
         //start timer
         scheduleTimer(activetimerVf[n-1]);
 
-        DebugVfStateMachine(INIT, LISTEN, n);
+        DebugVfStateMachine(DISABLED, LISTEN, n);
 //        std::cout<<hostname<<" # "<<n<<" Grp "<<glbpGroup<<" INIT"<<" -> "<<"LISTEN"<<endl;
 //    fflush(stdout);
     }
@@ -978,6 +995,7 @@ MACAddress *GLBPVirtualRouter::setVirtualMAC(int n)
 MACAddress *GLBPVirtualRouter::loadBalancingNext(GLBPLoadBalancingType type){
     static int forwarder = 1;
     MACAddress *retval = nullptr;
+    bool deadlock = false;
 
 
     if (type == ROUNDROBIN){
@@ -988,6 +1006,10 @@ MACAddress *GLBPVirtualRouter::loadBalancingNext(GLBPLoadBalancingType type){
             forwarder++;
             if ((forwarder-1) == (int)vfVector.size()){
                 forwarder = 1;
+                if (deadlock){
+                    break;
+                }
+                deadlock = true;
             }
             if (retval != nullptr)
                 break;

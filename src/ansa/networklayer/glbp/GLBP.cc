@@ -91,7 +91,7 @@ void GLBP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     cModule *module = moduleType->create(name.c_str(), this);
 
     // set up parameters
-    module->par("vrid") = vrid;
+    module->par("group") = vrid;
     module->par("interface") = interface;
     module->par("virtualIP") = vip;
     module->par("priority") = priority;
@@ -127,13 +127,15 @@ void GLBP::parseConfig(cXMLElement *config){
     if (!config)
         return;
 
-    //Go through all interfaces and look for HSRP section
+    //Go through all interfaces and look for GLBP section
     cXMLElementList msa = config->getChildrenByTagName("Interface");
     for (cXMLElementList::iterator i = msa.begin(); i != msa.end(); ++i) {
         cXMLElement* m = *i;
         std::string ifname;
         ifname = m->getAttribute("name");
 
+        //get interface id
+        int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
         //Get through each group
         cXMLElementList gr = m->getElementsByTagName("Group");
         for (cXMLElementList::iterator j = gr.begin(); j != gr.end(); ++j) {
@@ -143,7 +145,7 @@ void GLBP::parseConfig(cXMLElement *config){
             int gid;
             std::stringstream strGID;
             if (!group->getAttribute("id")) {
-                EV << "Config XML file missing tag or attribute - Group id" << endl;
+                EV << "Config XML file missing obligatory tag or attribute - Group id" << endl;
                 std::cerr<<hostname<<" Group ??"<<": Wrong GLBP group number or missing in config file."<<endl;
                 fflush(stderr);
                 continue;
@@ -182,9 +184,6 @@ void GLBP::parseConfig(cXMLElement *config){
                 }
                 EV_DEBUG << "Setting preemption:" <<preempt<< endl;
             }
-
-            //get interface id
-            int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
 
             //get virtual IP
             std::string virtip;

@@ -75,11 +75,11 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         IPv4Address *virtualIP = nullptr;   //Primary IP of the GLBP group
         MACAddress *virtualMAC = nullptr;   //MAC of the GLBP group
         bool preempt;                       //preemption flag
-        int priority;                       //priority value of hsrp group
-        int helloTime;
-        int holdTime;
-        int redirect;
-        int timeout;
+        unsigned int priority;                       //priority value of hsrp group
+        unsigned int helloTime;
+        unsigned int holdTime;
+        unsigned int redirect;
+        unsigned int timeout;
         GLBPLoadBalancingType loadBalancing;
 
         //VF specific
@@ -166,6 +166,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
 
         std::string intToGlbpState(int state);
         std::string intToMessageType(GLBPMessageType msg);
+
     public:
         int getGroup() const { return glbpGroup; };
 
