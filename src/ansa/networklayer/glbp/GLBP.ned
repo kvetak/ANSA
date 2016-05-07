@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+// Author: Jan Holusa
 
 package ansa.networklayer.glbp;
 
@@ -21,19 +22,15 @@ simple GLBP like IUDPApp
 {
     parameters:
         @display("i=block/network2");
-        xml configData = default(xml("<GLBP />"));
-//        string deviceId; 
-        
-//        bool jittered;     
-        
-        string interfaceTableModule = default(".interfaceTableModule");  
-            
+        xml configData = default(xml("<GLBP />"));       
+//        bool jittered;                    
+        string interfaceTableModule = default(".interfaceTableModule");              
       	int glbpUdpPort			= default(3222);
       	string glbpMulticastAddress = default("224.0.0.102");	
 
 	gates:
-        input glbpIn[] @labels(UDPControlInfo/down);
-        output glbpOut[] @labels(UDPControlInfo/up);       
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @lables(UDPControlInfo/down);	      
+        input glbpIn[];		/// from GLBPVR module to GLBP
+        output glbpOut[]; 	/// from GLBP module to GLBPVR	 
+        input udpIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
+        output udpOut @lables(UDPControlInfo/down);	///form GLBP module to UDP
 }
