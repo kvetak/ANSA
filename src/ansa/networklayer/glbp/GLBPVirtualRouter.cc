@@ -53,6 +53,7 @@ void GLBPVirtualRouter::initialize(int stage)
         glbpGroup = (int)par("group");
         virtualIP = new IPv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
+        weight = (int)par("weight");
         preempt = (bool)par("preempt");
         loadBalancing = ROUNDROBIN; //TODO only default ROUND ROBIN for now
         hostname = std::string(containingModule->getName(), strlen(containingModule->getName()));
@@ -249,7 +250,8 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
         DebugGetMessage(GLBPm);
 
         //process VF messge part
-        if (dynamic_cast<GLBPRequestResponse *>(GLBPm->findOptionByType(REQRESP,1))){
+        if ((dynamic_cast<GLBPRequestResponse *>(GLBPm->findOptionByType(REQRESP,0))) ||
+                dynamic_cast<GLBPRequestResponse *>(GLBPm->findOptionByType(REQRESP,1))){
             handleMessageRequestResponse(GLBPm);
         }
 
@@ -279,8 +281,14 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
 
 void GLBPVirtualRouter::handleMessageRequestResponse(GLBPMessage *msg){
     GLBPRequestResponse *req;
-    for (int i=1; i< (int)msg->getOptionArraySize(); i++){
-        req = dynamic_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP,i));
+    for (int i=0; i< (int)msg->getOptionArraySize(); i++){
+
+        //because of i==0, in case of "I am active VF" advertisement
+        if (dynamic_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP,i))){
+            req = dynamic_cast<GLBPRequestResponse *>(msg->findOptionByType(REQRESP,i));
+        }else{
+            continue;
+        }
 
         if (req->getVfState() == ACTIVE){
             vfVector[req->getForwarder()-1]->setAvailable(true);
@@ -312,7 +320,7 @@ void GLBPVirtualRouter::handleMessageRequestResponse(GLBPMessage *msg){
                     break;
                 case ACTIVE:
                     //receive from higher active
-                    if (!isHigherVfPriorityThan(msg, req->getForwarder(), i) ){
+                    if (!isHigherVfPriorityThan(msg, req->getForwarder(), i) ){ //TODO zde je nekde problem tykajici se prechodu zpet do passive VF
                         scheduleTimer(activetimerVf[req->getForwarder()-1]);
                         vfVector[req->getForwarder()-1]->setState(LISTEN);
                         vfVector[req->getForwarder()-1]->setDisable();
@@ -798,10 +806,10 @@ int GLBPVirtualRouter::getFreeVf(){
     return vfMax+1;
 }
 
-void GLBPVirtualRouter::vfIncrement(){
-    if (vfCount <= vfMax)
-        vfCount++;
-}
+//void GLBPVirtualRouter::vfIncrement(){
+//    if (vfCount <= vfMax)
+//        vfCount++;
+//}
 
 void GLBPVirtualRouter::sendMessage(GLBPMessageType type)
 {
@@ -829,7 +837,7 @@ void GLBPVirtualRouter::sendMessage(GLBPMessageType type)
             //add active || listen primary forwarders to GLBP Hello, Req/resp
             for (int i = 0; i < (int) vfVector.size(); i++){
                 if ((vfVector[i]->getPriority() == 167) || (vfVector[i]->getState() == ACTIVE)){
-                    //set glbp REQ/RESP TLV TODO
+                    //set glbp REQ/RESP TLV
                     GLBPRequestResponse *reqrespPacket = generateReqRespTLV(i+1);
                     packet->addOption(reqrespPacket);
 
@@ -841,20 +849,12 @@ void GLBPVirtualRouter::sendMessage(GLBPMessageType type)
                     }
                 }
             }
-//            if (active){
-//                ie->setMACAddress(*getNextActiveMac());
-//                UDPControlInfo *controlInfo =
-//                IPv4ControlInfo *controlInfo  = dynamic_cast<IPv4ControlInfo *>(packet->getControlInfo());
-////                controlInfo->setDest(*getNextActiveMac());
-//                controlInfo->setDestinationAddress(*getNextActiveMac());
-//                Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
-//                controlInfo->setSrc(getNextActiveMac());
-//                packet->setControlInfo(controlInfo);
-//            }
+
             packet->setByteLength(GLBP_HEADER_BYTES + GLBP_HELLO_BYTES + GLBP_REQRESP_BYTES*(packet->getOptionArraySize()-1));
             break;
         }
         case COUPm:
+            //TODO
             break;
     }
 
