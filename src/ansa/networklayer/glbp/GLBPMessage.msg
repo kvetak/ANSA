@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+// Author: Jan Holusa
 
 cplusplus {{
 #include "inet/common/TLVOption.h"
@@ -35,26 +36,26 @@ class noncobject TLVOptions;
 class noncobject IPv4Address;
 class noncobject MACAddress;
 
-//
-// GLBP TLV type
-//
+///
+/// GLBP TLV type
+///
 enum GLBPType{
 	HELLO = 1;
 	REQRESP = 2;
 	//AUTH = 3;
 }
 
-//
-// GLBP Hello Address Type
-//
+///
+/// GLBP Hello Address Type
+///
 enum GLBPAddressType{
 	IPv4 = 1;
 //	IPv6 = 2;
 }
 
-//
-// GLBP VG + VF State
-//
+///
+/// GLBP VG + VF State
+///
 enum GLBPState{
     UNKNOWN = 0;
     DISABLED=1;
@@ -69,41 +70,48 @@ class GLBPOption extends TLVOptionBase
 {
 }
 
+///
+/// GLBP Hello TLV
+///
 class GLBPHello extends GLBPOption
 {
     type = HELLO;
     length = GLBP_HELLO_BYTES;
 	
-	short vgState;
-	short priority;
-	uint32_t helloint;
-	uint32_t holdint;
-	uint16_t redirect;
-	uint16_t timeout;
-	short addressType = IPv4;
-	short addresLength = 4;
-	IPv4Address address;	   
+	short vgState;			///VG state
+	short priority;			///Priority of this router
+	uint32_t helloint;		///hellotimer
+	uint32_t holdint;		///holdtimer
+	uint16_t redirect;		///redirecttimer
+	uint16_t timeout;		///timeout timer
+	short addressType = IPv4;///address type (IPv4 or IPv6)
+	short addresLength = 4;	///address length; 4 for IPv4
+	IPv4Address address;	///IPv4 address of glbp group
 }
 
+///
+/// GLBP RequestResponse LV
+///
 class GLBPRequestResponse extends GLBPOption{
     type = REQRESP;
 	length = GLBP_REQRESP_BYTES;
 	
-	short forwarder;
-	short vfState;
-	short priority;
-	short weight;
-	MACAddress macAddress;		   
+	short forwarder;	///Number of forwarder
+	short vfState;		///VF state of this forwarder
+	short priority;		///priority of this VF (167 for primary, 135 for secondary)
+	short weight;		///Weight of this VF
+	MACAddress macAddress; ///MAC address of this VF 
 }
 
+///
+/// GLBP Packet Structure
+///
 packet GLBPMessage {
     @customize(true);
     
-    short version = 1;	//version is always 1
-	uint16_t group;		//group id
-	MACAddress ownerId;	//owner id which is MAC of interface
+    short version = 1;	///version is always 1
+	uint16_t group;		///group id
+	MACAddress ownerId;	///owner id which is MAC of interface
 	  
-	TLVOptions TLV; //array of tlvs
-	
-//	int totalLengthField = -1;       // -1 means: getTotalLengthField() uses getByteLength()
+	TLVOptions TLV; 	///array of tlvs	
 }

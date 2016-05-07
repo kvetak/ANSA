@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+// Author: Jan Holusa
 
 package ansa.networklayer.glbp;
 import inet.applications.contract.IUDPApp;
@@ -37,14 +38,15 @@ simple GLBPVirtualRouter like IUDPApp
     	int redirect @unit(s)	= default(600s);	//time during which VG redirect clients to secondary vf
     	int timeout @unit(s)	= default(14400s);	//after this time will be secondary vf unreacheable
     	int priority			= default(100);	 	 //priority of actual device
+    	int weight				= default(100);		//weight of actual device
     	bool preempt			= default(false);	 //preemption flag
     	int group				= default(0);	    	//group number of actual device 	
-      	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device 
+      	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device       	
       	
       	int glbpUdpPort			= default(3222);
       	string glbpMulticastAddress = default("224.0.0.102");		       	
       	
   	    gates:
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);
+        input udpIn;	///from GLBP module
+        output udpOut;  ///to GLBP module
 }
