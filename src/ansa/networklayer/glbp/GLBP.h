@@ -1,9 +1,3 @@
-/*
- * GLBP.h
- *
- *  Created on: 18.4. 2016
- *      Author: Jan Holusa
- */
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -33,35 +27,67 @@
 //#include "inet/transportlayer/contract/udp/UDPSocket.h"
 
 namespace inet {
-
+/**
+* @file GLBP.h
+* @author Jan Holusa
+* @brief GLBP module taking care of adding particular groups and parsing config file.
+*/
 class GLBP : public cSimpleModule {
     protected:
-        /*Path to config file with GLBP section specified in onmet.ini file*/
-        const char* CONFIG_PAR = "configData";
-        /*GLBP groups on this router*/
-        std::vector<GLBPVirtualRouter *> virtualRouterTable;
-        /*Joined multicast interfaces for GLBP listening*/
-        std::vector<int> multicastInterfaces;
-        /*GLBP multicast address*/
-        L3Address *glbpMulticastAddress = nullptr;
-        UDPSocket *socket;
-        std::string hostname;
-        cModule *containingModule;
+        const char* CONFIG_PAR = "configData";                  //!< Path to config file with GLBP section specified in onmet.ini file
+        std::vector<GLBPVirtualRouter *> virtualRouterTable;    //!< GLBP groups on this router
+        std::vector<int> multicastInterfaces;                   //!< Joined multicast interfaces for GLBP listening
+        L3Address *glbpMulticastAddress = nullptr;              //!< GLBP multicast address
+        UDPSocket *socket;                                      //!< udp socket at port 3222
+        std::string hostname;                                   //!< hostname of the device
+        cModule *containingModule;                              //!< Pointer to router which contain GLBP module
 
         IInterfaceTable *ift = nullptr;
 
     protected:
-        /*Startup initializacion of GLBP*/
+        /**
+         * Startup initializacion of GLBP
+         */
+        //@{
         virtual void initialize( int stage);
         virtual int numInitStages() const {return NUM_INIT_STAGES;};
-        /*OMNET++ function for handeling incoming messages*/
+        //@}
+
+        /**
+         * OMNET++ function for handeling incoming messages
+         * @param msg incoming (or self) message
+         */
         virtual void handleMessage(cMessage *msg);
         virtual void updateDisplayString();
-        /*Sending messages to UDP or to GLBPVirtualRouter module*/
-//        void sendMessage(OP_CODE opCode);
-        /**/
+
+        /**
+         * Config file parser
+         * @param config part of XML file containing configuration of interface
+         * @see addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt, int redirect, int timeout, int hellotime, int holdtime)
+         */
         void parseConfig(cXMLElement *config);
+
+        /**
+         * Dynamicly add GLBPVirtualRouter module
+         * @param interface id of the interface containing this GLBPVirtualRouter module
+         * @param vrid group id
+         * @param ifnam name of the interface
+         * @param vip string of virtual ip
+         * @param priority priority of VG
+         * @param preempt boolean value saying that preemption is set
+         * @param redirect redirect timer value
+         * @param timeout timeout timer value
+         * @param hellotime hellotime timer value
+         * @param holdtime holdtime timer value
+         */
         void addVirtualRouter(int interface, int vrid, const char* ifnam, std::string vip, int priority, bool preempt, int redirect, int timeout, int hellotime, int holdtime);
+
+        /**
+         * Check if interface is not yet joined multicast group
+         * and if not, join it.
+         * @param InterfaceId id of the interface to be joined to multicast group
+         * @see glbpMulticastAddress
+         */
         void checkAndJoinMulticast(int InterfaceId);
 
     public:

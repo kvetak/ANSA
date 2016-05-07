@@ -53,13 +53,9 @@ void GLBP::handleMessage(cMessage *msg)
         if (dynamic_cast<GLBPMessage*>(msg))
         {
             GLBPMessage *GLBPHm = dynamic_cast<GLBPMessage*>(msg);
-            //TODO to same pro GLBPResponseRequest message
             for (int i = 0; i < (int) virtualRouterTable.size(); i++){
 
-                if (virtualRouterTable.at(i)->getGroup() == GLBPHm->getGroup()) //&&
-//                        ((IPv4ControlInfo *)msg->getControlInfo())->getInterfaceId() ==
-//                                virtualRouterTable.at(i)->getInterface()->getInterfaceId()
-//                   )
+                if (virtualRouterTable.at(i)->getGroup() == GLBPHm->getGroup())
                 {
                     send(msg, "glbpOut", i);
                     return;
@@ -134,8 +130,15 @@ void GLBP::parseConfig(cXMLElement *config){
         std::string ifname;
         ifname = m->getAttribute("name");
 
-        //get interface id
-        int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
+        int iid;
+        //is interface configured with IP?
+        if (ift->getInterfaceByName(ifname.c_str()) != nullptr){
+            //get interface id
+            iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
+        }else{
+            continue;
+        }
+
         //Get through each group
         cXMLElementList gr = m->getElementsByTagName("Group");
         for (cXMLElementList::iterator j = gr.begin(); j != gr.end(); ++j) {
@@ -153,6 +156,11 @@ void GLBP::parseConfig(cXMLElement *config){
             {
                 strGID << group->getAttribute("id");
                 strGID >> gid;
+                if ((gid < 0) || (gid > 1023)){
+                    std::cerr<<hostname<<" : Wrong value of GLBP Group number. Must be <0-1023>. Skiping configuration of this section!!!"<<endl;
+                    fflush(stderr);
+                    continue;
+                }
                 EV_DEBUG << "Setting GID:" <<gid<< endl;
             }
 
@@ -166,6 +174,11 @@ void GLBP::parseConfig(cXMLElement *config){
             {
                 strValue2 << group->getAttribute("priority");
                 strValue2 >> priority;
+                if ((priority < 1) || (priority > 255)){
+                    std::cerr<<hostname<<" Group "<<gid<<" : Wrong value of GLBP priority value. Must be <1-255>. Setting default priority 100."<<endl;
+                    fflush(stderr);
+                    priority = 100;
+                }
                 EV_DEBUG << "Setting priority:" <<priority<< endl;
             }
 
@@ -176,11 +189,11 @@ void GLBP::parseConfig(cXMLElement *config){
                 preempt = false; //def val
             } else
             {
-                if (strcmp("false",group->getAttribute("preempt"))){
-                    preempt = false;
+                if (strcmp("true",group->getAttribute("preempt"))){
+                    preempt = true;
                 }else
                 {
-                    preempt = true;
+                    preempt = false;
                 }
                 EV_DEBUG << "Setting preemption:" <<preempt<< endl;
             }
@@ -267,6 +280,9 @@ void GLBP::parseConfig(cXMLElement *config){
                 }
                 EV_DEBUG << "Setting holdtime:" <<holdtime<< endl;
             }
+
+            //TODO Weight
+            //TODO Load-Balancing algorithm
 
             checkAndJoinMulticast(iid);
             addVirtualRouter(iid , gid, ifname.c_str(), virtip, priority, preempt, redirect, timeout, hellotime, holdtime);
