@@ -15,20 +15,17 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 package ansa.node;
 
 import ansa.node.ANSA_Router;
 
-
+//
+// Author: Jan Holusa
+//
 module GLBPRouter extends ANSA_Router
 {
     parameters:
-        hasGLBP = true;
-        string deviceId = default("");  
-//        xml configFile = default(xmldoc("config.xml"));
-//        **.deviceId = deviceId;
-//        **.configFile = default(xmldoc("config.xml"));
+        hasGLBP = true;    
                
 }
 

@@ -20,15 +20,14 @@ package ansa.node;
 
 import ansa.node.ANSA_Router;
 
-
+//
+// Author: Jan Holusa
+//
 module HSRPRouter extends ANSA_Router
 {
     parameters:
         hasHSRP = true;
         string deviceId = default("");  
-//        xml configFile = default(xmldoc("config.xml"));
-//        **.deviceId = deviceId;
-//        **.configFile = default(xmldoc("config.xml"));
                
 }
 
