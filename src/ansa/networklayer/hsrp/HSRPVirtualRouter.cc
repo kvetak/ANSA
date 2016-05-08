@@ -50,7 +50,7 @@ void HSRPVirtualRouter::initialize(int stage)
         hsrpState = DISABLED;
         setVirtualMAC();
 
-        printf("PARAMS:\ngroup: %d; prio: %d, preempt: %d\n", hsrpGroup, (int)priority, preempt);
+//        printf("PARAMS:\ngroup: %d; prio: %d, preempt: %d\n", hsrpGroup, (int)priority, preempt);
 
         //setup Timers
         helloTime = par("hellotime");
@@ -113,7 +113,8 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
 //                    fflush(stdout);
                     DebugStateMachine(LISTEN, SPEAK);
                     scheduleTimer(standbytimer);
-                    scheduleTimer(hellotimer);
+//                    scheduleTimer(hellotimer);
+                    sendMessage(HELLO);
                 }
                 else if (msg == activetimer){
                     hsrpState = SPEAK;
@@ -122,7 +123,8 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                     DebugStateMachine(LISTEN, SPEAK);
                     scheduleTimer(standbytimer);
                     scheduleTimer(activetimer);
-                    scheduleTimer(hellotimer);
+//                    scheduleTimer(hellotimer);
+                    sendMessage(HELLO);
                 }
                 break;
 
@@ -134,11 +136,11 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                     DebugStateMachine(SPEAK, STANDBY);
 //                    std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Standby state;"<<std::endl;
 //                    fflush(stdout);
+                    sendMessage(HELLO);
                 }
                 else if(msg == hellotimer)
                 {
-                    sendMessage(HELLO);//FIXME- je to good?
-                    scheduleTimer(hellotimer);
+                    sendMessage(HELLO);
                 }else if (msg == activetimer){
                     scheduleTimer(activetimer);
                 }
@@ -163,14 +165,14 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
                 }
                 else if (msg == hellotimer){
                     sendMessage(HELLO);
-                    scheduleTimer(hellotimer);
+//                    scheduleTimer(hellotimer);
                 }
                 break;
 
             case ACTIVE:
                 if (msg == hellotimer){
                     sendMessage(HELLO);
-                    scheduleTimer(hellotimer);
+//                    scheduleTimer(hellotimer);
                 }
                 break;
             default:
@@ -183,7 +185,6 @@ void HSRPVirtualRouter::handleMessage(cMessage *msg)
     {//got message from another router
         HSRPMessage *HSRPm = dynamic_cast<HSRPMessage *>(msg);
 
-        //FIXME Zkontroluj sli spada do moji skupiny a zajima me...?
         if ((double)HSRPm->getGroup() != par("group").doubleValue()){
             EV_DEBUG << "Wrong message with GID:" <<HSRPm->getGroup() << "\n";
             return;
@@ -261,7 +262,7 @@ void HSRPVirtualRouter::learnState()
 //    fflush(stdout);
     scheduleTimer(activetimer);
     scheduleTimer(standbytimer);
-    //TODO v pripade vypnuti rozhrani -> prechod do INIT a vypnuti timeru... je mozne vypnuti rozhrani za behu?
+    //TODO v pripade vypnuti rozhrani -> prechod do INIT a vypnuti timeru...
 }
 
 /*
@@ -397,6 +398,8 @@ void HSRPVirtualRouter::handleMessageSpeak(HSRPMessage *msg)
 //                std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Listen state;"<<std::endl;
 //                fflush(stdout);
                 scheduleTimer(standbytimer);
+                if (activetimer->isScheduled())
+                    cancelEvent(activetimer);
             }
             break;
         case STANDBY:
@@ -406,6 +409,7 @@ void HSRPVirtualRouter::handleMessageSpeak(HSRPMessage *msg)
                 DebugStateMachine(SPEAK, STANDBY);
 //                std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Standby state;"<<std::endl;
 //                fflush(stdout);
+                sendMessage(HELLO);
                 if (standbytimer->isScheduled())
                     cancelEvent(standbytimer);
             }
@@ -456,6 +460,7 @@ void HSRPVirtualRouter::handleMessageActive(HSRPMessage *msg)
             if (!isHigherPriorityThan(msg)){
                 hsrpState = SPEAK;
                 DebugStateMachine(ACTIVE, SPEAK);
+                sendMessage(HELLO);
                 vf->setDisable();
                 scheduleTimer(activetimer);
                 scheduleTimer(standbytimer);
@@ -497,12 +502,12 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
             if (msg->getOp_code() == RESIGN){
                 hsrpState = SPEAK;
                 DebugStateMachine(LISTEN, SPEAK);
-                sendMessage(HELLO);//TODO-fakt ji posila rovnou?
+                sendMessage(HELLO);
 //                std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Speak state;"<<std::endl;
 //                fflush(stdout);
                 scheduleTimer(activetimer);
                 scheduleTimer(standbytimer);
-                scheduleTimer(hellotimer);
+//                scheduleTimer(hellotimer);
             }
             //h - lower prio from Active
             if (isHigherPriorityThan(msg)){
@@ -518,7 +523,7 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
                     sendMessage(COUP);
                     sendMessage(HELLO);
                     arp->sendARPGratuitous(ie,*(virtualMAC), *(virtualIP), ARP_REPLY);
-                    scheduleTimer(hellotimer);
+//                    scheduleTimer(hellotimer);
                 }else{
                     scheduleTimer(activetimer);
                 }
@@ -534,6 +539,7 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
             if (isHigherPriorityThan(msg)){
                 hsrpState = SPEAK;//TODO poslat rovnou HELLO?
                 DebugStateMachine(LISTEN, SPEAK);
+                sendMessage(HELLO);
 //                std::cout<<"\n"<<par("deviceId").stringValue()<<"]"<<hsrpGroup<<"]Speak state;"<<std::endl;
 //                fflush(stdout);
                 scheduleTimer(standbytimer);
@@ -579,7 +585,19 @@ void HSRPVirtualRouter::scheduleTimer(cMessage *msg)
 
 HSRPMessage *HSRPVirtualRouter::generateMessage(OP_CODE opCode)
 {
-    HSRPMessage* msg = new HSRPMessage("HSRPMessage");
+    std::string msgName;
+    switch (opCode){
+        case HELLO:
+            msgName = "HSRPHello ("+intToHsrpState(hsrpState)+")";
+            break;
+        case COUP:
+            msgName= "HSRPCoup";
+            break;
+        case RESIGN:
+            msgName = "HSRPResign";
+            break;
+    }
+    HSRPMessage* msg = new HSRPMessage(msgName.c_str());
     msg->setVersion(par("version"));
     msg->setOp_code(opCode);
     msg->setState(hsrpState);
@@ -605,6 +623,8 @@ void HSRPVirtualRouter::sendMessage(OP_CODE opCode)
 
     socket->setTimeToLive(1);
     socket->sendTo(packet, *hsrpMulticast, hsrpUdpPort, &options);
+
+    scheduleTimer(hellotimer);
 }
 
 void HSRPVirtualRouter::learnTimers(HSRPMessage *msg)
