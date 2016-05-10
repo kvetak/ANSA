@@ -1,0 +1,60 @@
+<Devices>
+	<!-- 	R1		-->
+	<Router id="R1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.1</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<HSRP>
+					<Group ip="192.168.1.254" ></Group>												
+				</HSRP>				
+			</Interface>			
+		</Interfaces>
+	</Router>
+	
+	<!-- 	R2		-->
+	<Router id="R2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.2</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<HSRP>
+					<Group ip="192.168.1.254" ></Group>	
+				</HSRP>				
+			</Interface>					
+		</Interfaces>
+	</Router>
+	
+	<!-- 	R3		-->
+	<Router id="R3">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.3</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<HSRP>
+					<Group ip="192.168.1.254"></Group>	
+				</HSRP>				
+			</Interface>					
+		</Interfaces>
+	</Router>	
+	
+	<!-- 	PC1		-->
+	<Host id="PC1">
+		<Interfaces>
+			<Interface name="eth0">			
+				<IPAddress>192.168.1.10</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>	
+
+	<!-- 	PC2		-->
+	<Host id="PC2">
+		<Interfaces>
+			<Interface name="eth0">				
+				<IPAddress>192.168.1.11</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>
+</Devices>
