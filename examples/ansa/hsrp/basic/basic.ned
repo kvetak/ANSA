@@ -61,7 +61,6 @@ network basic
         }
 
         scenarioManager: ScenarioManager {
-            script = xmldoc("scenario.xml");
             @display("p=36,69");
         }
     connections:
