@@ -35,15 +35,15 @@ network testVgChoose
         R3: GLBPRouter {
             @display("p=299,46");
         }
-        H1: ANSA_Host {
+        PC1: ANSA_Host {
             @display("p=131,246");
         }
-        H2: ANSA_Host {
+        PC2: ANSA_Host {
             @display("p=285,246");
-        }        
+        }
         SW1: EtherSwitch {
             @display("p=205,169");
-        }        
+        }
         configurator: IPv4NetworkConfigurator {
             parameters:
                 config = xml("<config>"+
@@ -51,8 +51,8 @@ network testVgChoose
                             "<interface hosts='R2' towards='SW1 H1' address='192.168.1.2' netmask='255.255.255.0' />"+
                             "<interface hosts='R3' towards='SW1 H1' address='192.168.1.3' netmask='255.255.255.0' />"+
 
-       						"<interface hosts='H1' address='192.168.1.10' netmask='255.255.255.0' />"+
-       						"<interface hosts='H2' address='192.168.1.11' netmask='255.255.255.0' />"+
+       						"<interface hosts='PC1' address='192.168.1.10' netmask='255.255.255.0' />"+
+       						"<interface hosts='PC2' address='192.168.1.11' netmask='255.255.255.0' />"+
                             "</config>");
                 addStaticRoutes = true;
                 addDefaultRoutes = true;
@@ -63,6 +63,6 @@ network testVgChoose
         R1.ethg++ <--> Eth100M <--> SW1.ethg++;
         R2.ethg++ <--> Eth100M <--> SW1.ethg++;
         R3.ethg++ <--> Eth100M <--> SW1.ethg++;
-        SW1.ethg++ <--> Eth100M <--> H1.ethg++;
-        SW1.ethg++ <--> Eth100M <--> H2.ethg++;
+        SW1.ethg++ <--> Eth100M <--> PC1.ethg++;
+        SW1.ethg++ <--> Eth100M <--> PC2.ethg++;
 }

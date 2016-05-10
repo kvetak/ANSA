@@ -39,8 +39,8 @@
 		</Interfaces>
 	</Router>		
 	
-	<!-- 	H1		-->
-	<Host id="H1">
+	<!-- 	PC1		-->
+	<Host id="PC1">
 		<Interfaces>
 			<Interface name="eth0">			
 				<IPAddress>192.168.1.10</IPAddress>
@@ -49,8 +49,8 @@
 		</Interfaces>
 	</Host>	
 
-	<!-- 	H2		-->
-	<Host id="H2">
+	<!-- 	PC2		-->
+	<Host id="PC2">
 		<Interfaces>
 			<Interface name="eth0">				
 				<IPAddress>192.168.1.11</IPAddress>
