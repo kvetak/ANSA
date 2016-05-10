@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+// Author: Jan Holusa
 
 package ansa.networklayer.hsrp;
 
@@ -21,14 +22,13 @@ simple HSRP like IUDPApp
 {
     parameters:
         @display("i=block/network2");
-        xml configData = default(xml("<HSRP />"));
-//        string deviceId;      
+        xml configData = default(xml("<HSRP />"));      
         
         string interfaceTableModule = default(".interfaceTableModule");        
             
     gates:
-        input hsrpIn[] @labels(UDPControlInfo/down);
-        output hsrpOut[] @labels(UDPControlInfo/up);       
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @lables(UDPControlInfo/down);
+        input hsrpIn[];					///from HSRPVR to GLBP
+        output hsrpOut[];    			///from GLBP module to HSRPVR
+        input udpIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
+        output udpOut @lables(UDPControlInfo/down);	///from GLBP module to UDP
 }

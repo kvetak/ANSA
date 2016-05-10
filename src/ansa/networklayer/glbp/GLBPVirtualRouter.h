@@ -105,8 +105,14 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
 
 
     protected:
+        /**
+         * Startup initializacion of GLBP
+         */
+        //@{
         virtual void initialize( int stage);
         virtual int numInitStages() const {return NUM_INIT_STAGES;};
+        //@}
+
         /**
          * Function is handeling incomming messages
          * and calling different methods depending on the
@@ -228,7 +234,6 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void addVf(int n, MACAddress *macOfPrimary);
         int isVfSelfMessage(cMessage *msg);
         void handleVfSelfMessage(cMessage *msg);
-//        void vfIncrement();
         bool isVfActive();
         void addOrStartVf(GLBPMessage *msg);
         void handleMessageRequestResponse(GLBPMessage *msg);
@@ -237,8 +242,13 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         int getFreeVf();
         //@}
 
+        /**
+         * Reaction to interface state change
+         */
+        //@{
         void interfaceUp();
         void interfaceDown();
+        //@}
 
         /**
          * Message hendler for router in LISTEN state
@@ -265,7 +275,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         void handleMessageActive(GLBPMessage *msg);
 
         /**
-         * Methods for debugging outputs
+         * Methods for debugging. Using outputs into simulation log window.
          */
         //@{
         void DebugStateMachine(int from, int to);

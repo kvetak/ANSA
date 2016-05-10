@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+// Author: Jan Holusa
 
 package ansa.networklayer.hsrp;
 import inet.applications.contract.IUDPApp;
@@ -20,15 +21,13 @@ simple HSRPVirtualRouter like IUDPApp
 {
         parameters:
      	@display("i=block/network2");
-     	xml configData = default(xml("<HSRP />"));
-//     	string deviceId;     	
-		string interfaceTableModule;
-		string arp;
-//        string routingTableModule;// = default(".routingTableModule");
-		int interface;
-//		int group;
+     	
+     	xml configData = default(xml("<HSRP />"));	///config data given in omnetpp.ini
+		string interfaceTableModule;	///interface table
+		string arp;				///arp module of this router
+		int interface;			///interface on which is HSRP running
 
-        int version				= default(1);	 	 //default version of HSRP is 1
+        int version				= default(0);	 	 //default version of HSRP is 0
     	int hellotime @unit(s)	= default(3s);	  	//hellotime of actual device
     	int holdtime @unit(s)	= default(10s);	  	//holdtime of actual device
     	int priority			= default(100);	 	 //priority of actual device
@@ -37,6 +36,6 @@ simple HSRPVirtualRouter like IUDPApp
       	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device        	
       	
   	    gates:
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);
+        input udpIn; 	///to HSRP module
+        output udpOut;	///from HSRP module
 }

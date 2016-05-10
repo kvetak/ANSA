@@ -24,6 +24,8 @@
 //   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //   |                      Virtual IP Address                       |
 //   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+// 
+// Author: Jan Holusa
 
 cplusplus {{
 #include "inet/networklayer/contract/ipv4/IPv4Address.h"
@@ -36,6 +38,9 @@ class noncobject IPv4Address;
 
 namespace inet;
 
+///
+/// HSRP message opcodes
+///
 enum OP_CODE
 {
     HELLO = 0;
@@ -46,6 +51,9 @@ enum OP_CODE
     //CISCO only.
 }
 
+///
+/// HSRP states
+///
 enum STATE
 {
     INIT = 0;
@@ -58,12 +66,12 @@ enum STATE
 }
 
 packet HSRPMessage {
-    unsigned char version = 1;
-    unsigned char op_code = HELLO;
-    unsigned char state = INIT;
-	unsigned char hellotime;
-	unsigned char holdtime;
-	unsigned char priority;
-	unsigned char group;
-	IPv4Address address;
+    unsigned char version = 0;	///version, RFC 2281 declares 0.
+    unsigned char op_code;		///opcode of message
+    unsigned char state;		///HSRP state
+	unsigned char hellotime;	///hellotime value
+	unsigned char holdtime;		///holdtime value
+	unsigned char priority;		///priority value
+	unsigned char group;		///group number value
+	IPv4Address address;		///IPv4 address of this message
 }

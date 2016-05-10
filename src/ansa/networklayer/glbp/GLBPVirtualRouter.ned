@@ -47,6 +47,6 @@ simple GLBPVirtualRouter like IUDPApp
       	string glbpMulticastAddress = default("224.0.0.102");		       	
       	
   	    gates:
-        input udpIn;	///from GLBP module
-        output udpOut;  ///to GLBP module
+        input udpIn;	///to GLBP module
+        output udpOut;  ///from GLBP module
 }

@@ -194,8 +194,7 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                     int vf = getFreeVf();
                     if (vf <= vfMax)
                         startVf(vf);
-//                    vfIncrement();
-                    //TODO jestlize neni VF tak se stan VF1 a posli
+
                     sendMessage(COMBINEDm);
                     scheduleTimer(hellotimer);
                 }else
@@ -217,7 +216,7 @@ void GLBPVirtualRouter::handleMessage(cMessage *msg)
                     DebugStateMachine(STANDBY, ACTIVE);
                     glbpState = ACTIVE;
                     startAvg();
-                    sendMessage(COMBINEDm);//TODO
+                    sendMessage(COMBINEDm);
                     scheduleTimer(hellotimer);
                 }
                 if (msg == hellotimer){
@@ -307,7 +306,7 @@ void GLBPVirtualRouter::handleMessageRequestResponse(GLBPMessage *msg){
                         if (activetimerVf[req->getForwarder()-1]->isScheduled())
                             cancelEvent(activetimerVf[req->getForwarder()-1]);
                         vfVector[req->getForwarder()-1]->setState(ACTIVE);
-                        vf->setMACAddress(vfVector[req->getForwarder()-1]->getMacAddress());//FIXME
+                        vf->setMACAddress(vfVector[req->getForwarder()-1]->getMacAddress());
 //                        arp->sendARPGratuitous(ie, ie->getMacAddress(), *(virtualIP), ARP_REPLY);
                         DebugVfStateMachine(LISTEN, ACTIVE, req->getForwarder());
 //                        EV<<hostname<<" # Fwd"<<req->getForwarder()<<" Grp "<<glbpGroup<<" LISTEN"<<" -> "<<"ACTIVE"<<endl;
@@ -320,7 +319,7 @@ void GLBPVirtualRouter::handleMessageRequestResponse(GLBPMessage *msg){
                     break;
                 case ACTIVE:
                     //receive from higher active
-                    if (!isHigherVfPriorityThan(msg, req->getForwarder(), i) ){ //TODO zde je nekde problem tykajici se prechodu zpet do passive VF
+                    if (!isHigherVfPriorityThan(msg, req->getForwarder(), i) ){
                         scheduleTimer(activetimerVf[req->getForwarder()-1]);
                         vfVector[req->getForwarder()-1]->setState(LISTEN);
                         vfVector[req->getForwarder()-1]->setDisable();
@@ -353,8 +352,7 @@ void GLBPVirtualRouter::handleMessageListen(GLBPMessage *msg){
         switch(hello->getVgState()){
         case SPEAK:
             if (!isHigherPriorityThan(msg)){
-                scheduleTimer(standbytimer);//FIXME TODO mozna tady nema byt
-    //        scheduleTimer(activetimer);//FIXME TODO mozna tady nema byt
+                scheduleTimer(standbytimer);
             }
             break;
         case STANDBY://j
@@ -413,7 +411,7 @@ void GLBPVirtualRouter::handleMessageSpeak(GLBPMessage *msg){
             case SPEAK:
                 //h
                 if (!isHigherPriorityThan(msg)){
-                    scheduleTimer(standbytimer);//TODO mozna i activetimer
+                    scheduleTimer(standbytimer);
                     scheduleTimer(hellotimer);
                     DebugStateMachine(SPEAK, LISTEN);
                     glbpState = LISTEN;
@@ -823,7 +821,7 @@ void GLBPVirtualRouter::sendMessage(GLBPMessageType type)
 {
     DebugSendMessage(type);
     GLBPMessage *packet = new GLBPMessage();
-    switch (type){//TODO
+    switch (type){
         case HELLOm:
         {
             packet->setName("GLBPHello");
@@ -1207,7 +1205,7 @@ void GLBPVirtualRouter::DebugGetMessage(GLBPMessage *msg){
 
 void GLBPVirtualRouter::DebugUnknown(int who){
     std::string type = intToGlbpState(who);
-    EV_DEBUG<<hostname<<" # "<<ie->getName()<<" "<<glbpGroup<<" "<<type<<" router is unknown"<<endl;//TODO was, <ip stareho>
+    EV_DEBUG<<hostname<<" # "<<ie->getName()<<" "<<glbpGroup<<" "<<type<<" router is unknown"<<endl;
 }
 
 std::string GLBPVirtualRouter::intToMessageType(GLBPMessageType msg){
@@ -1306,6 +1304,8 @@ GLBPVirtualRouter::~GLBPVirtualRouter() {
     }
     containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
     arp->unsubscribe(ARP::recvReqSignal,this);
+//    This is the end
+//    My only friend, the end ...
 }
 
 } /* namespace inet */

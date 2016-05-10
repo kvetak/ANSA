@@ -30,7 +30,7 @@ namespace inet {
 /**
 * @file GLBP.h
 * @author Jan Holusa
-* @brief GLBP module taking care of adding particular groups and parsing config file.
+* @brief The GLBP module taking care of adding particular groups and parsing config file.
 */
 class GLBP : public cSimpleModule {
     protected:
@@ -42,7 +42,7 @@ class GLBP : public cSimpleModule {
         std::string hostname;                                   //!< hostname of the device
         cModule *containingModule;                              //!< Pointer to router which contain GLBP module
 
-        IInterfaceTable *ift = nullptr;
+        IInterfaceTable *ift = nullptr;                         //!< Pointer to interface table
 
     protected:
         /**
@@ -68,7 +68,7 @@ class GLBP : public cSimpleModule {
         void parseConfig(cXMLElement *config);
 
         /**
-         * Dynamicly add GLBPVirtualRouter module
+         * Dynamically add GLBPVirtualRouter module
          * @param interface id of the interface containing this GLBPVirtualRouter module
          * @param vrid group id
          * @param ifnam name of the interface

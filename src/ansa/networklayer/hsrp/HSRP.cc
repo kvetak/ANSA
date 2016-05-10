@@ -53,16 +53,9 @@ void HSRP::handleMessage(cMessage *msg)
         if (dynamic_cast<HSRPMessage*>(msg))
         {
             HSRPMessage *HSRPm = dynamic_cast<HSRPMessage*>(msg);
-
 //            EV << "Recieved packet '" << HSRPm << "' from network layer, ";
-
             for (int i = 0; i < (int) virtualRouterTable.size(); i++){
-//                printf("group virtRouterGroup: %d, IID: %d", virtualRouterTable.at(i)->getGroup(), virtualRouterTable.at(i)->getInterface()->getInterfaceId());
-
                 if (virtualRouterTable.at(i)->getGroup() == HSRPm->getGroup()) //&&
-//                        ((IPv4ControlInfo *)msg->getControlInfo())->getInterfaceId() ==
-//                                virtualRouterTable.at(i)->getInterface()->getInterfaceId()
-//                   )
                 {
 //                    EV << "sending Advertisement to Virtual Router '" << virtualRouterTable.at(i) << "'" << endl;
                     send(msg, "hsrpOut", i);
@@ -70,7 +63,6 @@ void HSRP::handleMessage(cMessage *msg)
                 }
             }
             EV << "unknown Virtual Router ID" << HSRPm->getGroup() << ", discard it." << endl;
-//            printf("group HSRPm: %d, HSRPm IID: %d", HSRPm->getGroup(), ((IPv4ControlInfo *)msg->getControlInfo())->getInterfaceId());
             delete msg;
         }
     }
@@ -96,7 +88,6 @@ void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     cModule *module = moduleType->create(name.c_str(), this);
 
     // set up parameters
-//    module->par("deviceId") = par("deviceId");
     module->par("configData") = par("configData");
     module->par("group") = vrid;
     module->par("interface") = interface;
@@ -109,7 +100,6 @@ void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     cModule *containingModule = findContainingNode(this);
     module->par("arp") = containingModule->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp")->getFullPath();
 
-    std::cout<< "full path:"<<ift->getFullPath()<<std::endl;
     module->finalizeParameters();
 
     // set up gate
@@ -126,8 +116,6 @@ void HSRP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
 }
 
 void HSRP::parseConfig(cXMLElement *config){
-    //naparsuje config - >>> a rovnou zaklada HSRPVirtRoutery
-
     //Config element is empty
     if (!config)
         return;
@@ -139,8 +127,14 @@ void HSRP::parseConfig(cXMLElement *config){
         std::string ifname;
         ifname = m->getAttribute("name");
 
-        //get interface id
-        int iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
+        int iid;
+        //is interface configured with IP?
+        if (ift->getInterfaceByName(ifname.c_str()) != nullptr){
+            //get interface id
+            iid = ift->getInterfaceByName(ifname.c_str())->getInterfaceId();
+        }else{
+            continue;
+        }
 
         //Get through each group
         cXMLElementList gr = m->getElementsByTagName("Group");
@@ -265,15 +259,9 @@ void HSRP::checkAndJoinMulticast(int InterfaceId){
 }
 
 
-//check if virtual IP is unique in this router
 bool HSRP::is_unique(std::string virtip, int iid){
-
-//    IPv4Address *adr = new IPv4Address(virtip.c_str());
-
     //check local virtual IPs
     for (int i = 0; i < (int) virtualRouterTable.size(); i++){
-//        EV_DEBUG<<"Compared virtual Address:"<<virtualRouterTable.at(i)->getIPaddress()->str(false)<<endl;
-
         if (virtip.compare(virtualRouterTable.at(i)->par("virtualIP").stringValue()) == 0){
             EV<<hostname<<" % Address "<<virtip<<" in group "<<(int)virtualRouterTable.at(i)->par("group")<<"."<<endl;
             return false;
@@ -282,7 +270,6 @@ bool HSRP::is_unique(std::string virtip, int iid){
 
     //check physical IP of actual interface
     std::string InterfaceIP = ift->getInterfaceById(iid)->ipv4Data()->getIPAddress().str(false);
-//    EV_DEBUG<<"Compared physical Address: "<<InterfaceIP<<endl;
     if (InterfaceIP.compare(virtip) == 0){
         EV<<hostname<<" % Address cannot equal interface IP address."<<endl;
         return false;
@@ -308,7 +295,7 @@ void HSRP::updateDisplayString()
 
 
 HSRP::~HSRP() {
-    printf("destrukce HSRP\n");
+//    printf("destrukce HSRP\n");
 }
 
 } /* namespace inet */
