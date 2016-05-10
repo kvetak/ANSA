@@ -27,7 +27,6 @@ module HSRPRouter extends ANSA_Router
 {
     parameters:
         hasHSRP = true;
-        string deviceId = default("");  
                
 }
 
