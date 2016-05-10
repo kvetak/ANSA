@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.hsrp.basics_scenario;
+package inet.examples.ansa.hsrp.basic;
 
 import ansa.node.HSRPRouter;
 import ansa.node.ANSA_Host;
@@ -21,29 +21,27 @@ import inet.common.lifecycle.LifecycleController;
 import inet.common.scenario.ScenarioManager;
 import inet.node.ethernet.EtherSwitch;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
-//import inet.node.ethernet.EtherLink;
+import inet.node.ethernet.Eth100M;
 
-network Basics_scenario
+network basic
 {
-    @display("bgb=529,442");
+    @display("bgb=356,319");
 
-    types:
-        channel C extends ned.DatarateChannel
-        {
-            datarate = 100Mbps;
-        }
     submodules:
         R1: HSRPRouter {
-            @display("p=75,176");
+            @display("p=117,103");
         }
         R2: HSRPRouter {
-            @display("p=258,176");
+            @display("p=213,103");
+        }
+        R3: HSRPRouter {
+            @display("p=291,103");
         }
         H1: ANSA_Host {
-            @display("p=236,374");
+            @display("p=117,195");
         }
         SW1: EtherSwitch {
-            @display("p=236,299");
+            @display("p=213,194");
         }
         configurator: IPv4NetworkConfigurator {
             parameters:
@@ -66,12 +64,9 @@ network Basics_scenario
             script = xmldoc("scenario.xml");
             @display("p=36,69");
         }
-        R3: HSRPRouter {
-            @display("p=410,176");
-        }
     connections:
-        R1.ethg++ <--> C <--> SW1.ethg++;
-        R2.ethg++ <--> C <--> SW1.ethg++;
-        SW1.ethg++ <--> C <--> R3.ethg++;
-        SW1.ethg++ <--> C <--> H1.ethg++;        
+        R1.ethg++ <--> Eth100M <--> SW1.ethg++;
+        R2.ethg++ <--> Eth100M <--> SW1.ethg++;
+        SW1.ethg++ <--> Eth100M <--> R3.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H1.ethg++;
 }
