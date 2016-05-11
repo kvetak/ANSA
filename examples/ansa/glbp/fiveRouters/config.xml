@@ -85,3 +85,36 @@
 		</Interfaces>
 	</Host>
 </Devices>
+
+	<!-- 	H3		-->
+	<Host id="H3">
+		<Interfaces>
+			<Interface name="eth0">				
+				<IPAddress>192.168.1.12</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>
+</Devices>
+
+	<!-- 	H4		-->
+	<Host id="H4">
+		<Interfaces>
+			<Interface name="eth0">				
+				<IPAddress>192.168.1.13</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>
+</Devices>
+
+	<!-- 	H5		-->
+	<Host id="H5">
+		<Interfaces>
+			<Interface name="eth0">				
+				<IPAddress>192.168.1.14</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>
+</Devices>
