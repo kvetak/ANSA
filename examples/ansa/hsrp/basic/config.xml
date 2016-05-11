@@ -7,7 +7,7 @@
 				<Mask>255.255.255.0</Mask>
 				<HSRP>
 					<Group ip="192.168.1.254" priority = "100"></Group>	
-					<Group ip="192.168.1.253" priority = "105" id="1"></Group>												
+				<!--	<Group ip="192.168.1.253" priority = "105" id="1"></Group>				-->								
 				</HSRP>				
 			</Interface>	
 		  </Interfaces>	
@@ -21,7 +21,7 @@
 				<Mask>255.255.255.0</Mask>
 				<HSRP>
 					<Group ip="192.168.1.254" priority = "100"></Group>
-					<Group ip="192.168.1.253" id="1"></Group>		
+			<!--		<Group ip="192.168.1.253" id="1"></Group>	-->	
 				</HSRP>				
 			</Interface>
 	     </Interfaces>		
@@ -35,7 +35,7 @@
 				<Mask>255.255.255.0</Mask>
 				<HSRP>
 					<Group ip="192.168.1.254" priority = "100"></Group>	
-					<Group ip="192.168.1.253" id="1"></Group>												
+			<!--		<Group ip="192.168.1.253" id="1"></Group>		-->										
 				</HSRP>				
 			</Interface>	
 		</Interfaces>	
