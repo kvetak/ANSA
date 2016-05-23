@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPNeighbourTable.h
+* @author Tomas Rajca
+*/
 
 #ifndef CDPTABLEENTRY_H_
 #define CDPTABLEENTRY_H_
@@ -21,7 +25,13 @@
 
 namespace inet {
 
-class CDPNeighbour : public cObject {
+/**
+ * Class holding information about a neighbouring device.
+ * Device are identified by the name and port which they
+ * are connected
+ */
+class INET_API CDPNeighbour : public cObject {
+    friend class CDPNeighbourTable;
 
 private:
     std::string name;
@@ -29,21 +39,25 @@ private:
     std::string portSend;
     simtime_t lastUpdate;
     simtime_t ttl;
-    CDPTimer *holdtimeTimer;
     bool fullDuplex;
     std::string capabilities;
     std::string platform;
     std::string version;
     InterfaceEntry *interface;
     L3Address *address;
-    L3Address *odrDefaultGateway;
     uint16_t nativeVlan;
     std::string vtpDomain;
+
+    CDPTimer *holdtimeTimer;
 
 public:
     CDPNeighbour();
     virtual ~CDPNeighbour();
     virtual std::string info() const override;
+    friend std::ostream& operator<<(std::ostream& os, const CDPNeighbour& e)
+    {
+        return os << e.info();
+    }
 
     // getters
     std::string getName(){return this->name;}
@@ -79,20 +93,70 @@ public:
 };
 
 
-class CDPNeighbourTable
+/**
+ * Class holding informatation about neighbouring devices.
+ * Devices are identified by the name and port which they
+ * are connected
+ */
+class INET_API CDPNeighbourTable : public cSimpleModule
 {
   protected:
     std::vector<CDPNeighbour *> neighbours;
 
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *) override;
   public:
     virtual ~CDPNeighbourTable();
 
     std::vector<CDPNeighbour *>& getNeighbours() {return neighbours;}
+
+    /**
+     * Get cdp neighbour from neighbour table by name and receive port
+     *
+     * @param   name    name of neighbour
+     * @param   port    receive port number
+     *
+     * @return  cdp neighbour
+     */
     CDPNeighbour * findNeighbour(std::string name, int port);
+
+    /**
+     * Adds the a neighbor to the table. The operation might fail
+     * if there is a neighbour with the same (ie,address) in the table.
+     *
+     * @param   neighbour   neighbour to add
+     */
     void addNeighbour(CDPNeighbour * neighbour);
+
+    /**
+     * Remove all neighbours from the table.
+     */
     void removeNeighbours();
+
+    /**
+     * Remove a neighbour from the table.
+     * If the neighbour was not found in the table then it is untouched,
+     * otherwise deleted.
+     *
+     * @param   neighbour   neighbour to delete
+     */
     void removeNeighbour(CDPNeighbour * neighbour);
+
+    /**
+     * Remove a neighbour identified by name and port from the table.
+     * If the neighbour was not found in the table then it is untouched,
+     * otherwise deleted.
+     *
+     * @param   name    name of neighbour
+     * @param   port    receive port number
+     */
     void removeNeighbour(std::string name, int port);
+
+    /**
+     * Count neighbours learned from specified port
+     *
+     * @param   portReceive
+     */
     int countNeighboursOnPort(int portReceive);
 };
 

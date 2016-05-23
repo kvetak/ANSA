@@ -15,8 +15,8 @@
 
 package inet.examples.ansa.cdp.mixedNetwork;
 
-import ansa.node.ANSA_CDPEtherSwitch;
-import ansa.node.ANSA_CDPRouter;
+import ansa.node.ANSA_EtherSwitch;
+import ansa.node.ANSA_LLDPCDPRouter;
 import ansa.node.ANSA_Host;
 import inet.common.lifecycle.LifecycleController;
 import inet.node.ethernet.Eth100M;
@@ -25,7 +25,7 @@ import inet.common.scenario.ScenarioManager;
 
 network CDPMixedNetwork
 {
-    @display("bgb=521,431;bgl=3");
+    @display("bgb=457,371;bgl=3");
     types:
         channel Unnamed
         {
@@ -43,21 +43,21 @@ network CDPMixedNetwork
                 @display("p=48,181");
         }
 
-        R1: ANSA_CDPRouter {
+        R1: ANSA_LLDPCDPRouter {
             parameters:
                 @display("p=282,66");
             gates:
                 ethg[3];
         }
-        R2: ANSA_CDPRouter {
+        R2: ANSA_LLDPCDPRouter {
             parameters:
-                @display("p=186,208");
+                @display("p=186,185");
             gates:
                 ethg[3];
         }
-        R3: ANSA_CDPRouter {
+        R3: ANSA_LLDPCDPRouter {
             parameters:
-                @display("p=354,208");
+                @display("p=355,181");
             gates:
                 ethg[3];
         }
@@ -69,27 +69,18 @@ network CDPMixedNetwork
             @display("p=48,123");
         }
         Host1: ANSA_Host {
-            @display("p=186,393");
+            @display("p=186,291");
         }
         Host2: ANSA_Host {
-            @display("p=312,393");
+            @display("p=355,287");
         }
-        S1: ANSA_CDPEtherSwitch {
-            @display("p=186,303");
-        }
-        S2: ANSA_CDPEtherSwitch {
-            @display("p=354,303");
-        }
-        Host3: ANSA_Host {
-            @display("p=397,393");
+        S1: ANSA_EtherSwitch {
+            @display("p=150,65");
         }
     connections allowunconnected:
         R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
-        R2.ethg[1] <--> Eth100M <--> R3.ethg[1];
-        R3.pppg++ <--> Eth100M <--> R1.pppg++;
-        R2.ethg[2] <--> Eth100M <--> S1.ethg++;
-        R3.ethg[2] <--> Eth100M <--> S2.ethg++;
-        Host1.ethg++ <--> Eth100M <--> S1.ethg++;
-        Host2.ethg++ <--> Eth100M <--> S2.ethg++;
-        Host3.ethg++ <--> Eth100M <--> S2.ethg++;
+        R1.ethg[1] <--> Eth100M <--> R3.ethg[1];
+        R1.ethg[2] <--> Eth100M <--> S1.ethg++;
+        R2.ethg[2] <--> Eth100M <--> Host1.ethg++;
+        R3.ethg[2] <--> Eth100M <--> Host2.ethg++;
 }

@@ -13,23 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 //
-// @file CDPTimer.msg
+// @file LLDPNeighbourTable.ned
 // @author Tomas Rajca
 //
 
-namespace inet;
+package ansa.linklayer.lldp.tables;
 
-enum CDPTimerType
+simple LLDPNeighbourTable
 {
-    CDPUpdateTime = 0;
-    CDPHoldtime = 1;
-    CDPODRInvalideTime = 2;
-    CDPODRHolddown = 3;
-    CDPODRFlush = 4;
-}
-
-//CDP timers
-message CDPTimer
-{
-    char timerType  @enum(CDPTimerType);
+      @display("i=block/table");
 }

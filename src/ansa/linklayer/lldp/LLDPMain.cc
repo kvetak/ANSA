@@ -12,28 +12,37 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPMain.cc
+* @author Tomas Rajca
+*/
 
-#include "ansa/linklayer/lldp/LLDP.h"
+#include "ansa/linklayer/lldp/LLDPMain.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
 #include "ansa/linklayer/lldp/LLDPDeviceConfigurator.h"
 
-//DOTAZ: jde nejak zrusit upozornovani na nejake udalosti? (Tick zpravy)
-
 namespace inet {
 
-Define_Module(LLDP);
+Define_Module(LLDPMain);
 
-void LLDP::initialize(int stage)
+LLDPMain::~LLDPMain()
+{
+    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
+    containingModule->unsubscribe(NF_INTERFACE_CREATED, this);
+    containingModule->unsubscribe(NF_INTERFACE_DELETED, this);
+
+    cancelAndDelete(tickTimer);
+}
+
+void LLDPMain::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
-
     if (stage == INITSTAGE_LOCAL) {
         containingModule = findContainingNode(this);
         if (!containingModule)
-            throw cRuntimeError("Containing @networkNode module not found");
-        ift = check_and_cast<IInterfaceTable *>(containingModule->getSubmodule("interfaceTable"));
+            throw cRuntimeError("Containing module not found");
 
         getCapabilities(containingModule->getProperties()->get("capabilities"), containingModule->getProperties()->get("capabilitiesEnabled"));
 
@@ -45,10 +54,21 @@ void LLDP::initialize(int stage)
         txFastInitDef = par("txFastInit");
         adminStatusDef = getAdminStatusFromString(par("adminStatus"));
 
+        tickTimer = new LLDPTimer();
+        tickTimer->setTimerType(Tick);
 
-        WATCH_PTRVECTOR(lat.getAgents());
+        ift = check_and_cast<IInterfaceTable *>(containingModule->getSubmodule("interfaceTable"));
+        lat = getModuleFromPar<LLDPAgentTable>(par("lldpAgentTableModule"), this);
+        lnt = getModuleFromPar<LLDPNeighbourTable>(par("lldpNeighbourTableModule"), this);
+
+        WATCH_PTRVECTOR(lat->getAgents());
+        WATCH_PTRVECTOR(lnt->getNeighbours());
     }
     if (stage == INITSTAGE_LAST) {
+        containingModule->subscribe(NF_INTERFACE_STATE_CHANGED, this);
+        containingModule->subscribe(NF_INTERFACE_CREATED, this);
+        containingModule->subscribe(NF_INTERFACE_DELETED, this);
+
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(containingModule->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
 
@@ -58,36 +78,28 @@ void LLDP::initialize(int stage)
         LLDPDeviceConfigurator *conf = new LLDPDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
         conf->loadLLDPConfig(this);
 
-        lat.startAgents();
+        for (auto & agent : lat->getAgents())
+            if(agent->getAdminStatus() == disabled || agent->getAdminStatus() == enabledRxOnly)
+                cancelEvent(agent->getTxTTRTimer());
     }
 }
 
-/**
- * Return mac address from first interface in ift with set mac address
- *
- * @return  chassis ID
- */
-std::string LLDP::generateChassisId()
+std::string LLDPMain::generateChassisId()
 {
    for(int i=0; i < ift->getNumInterfaces(); i++)
         if(ift->getInterface(i)->getMacAddress().getInt() != 0)
             return ift->getInterface(i)->getMacAddress().str();
 
-    std::string s;
-    return s;       //TODO co udelat
+    std::string s = containingModule->getFullName();
+    return s;
 }
 
-/**
- * Set capability vector
- *
- * @param   property    module capability
- */
-void LLDP::getCapabilities(cProperty *propSysCap, cProperty *propEnCap)
+void LLDPMain::getCapabilities(cProperty *propSysCap, cProperty *propEnCap)
 {
     int capabilityPos;
     enCap[0]=enCap[1]=sysCap[2]=sysCap[3]=0;
 
-    if(propSysCap != NULL)
+    if(propSysCap != nullptr)
     {
         for(int i=0; i < propSysCap->getNumValues(""); i++)
         {
@@ -97,7 +109,7 @@ void LLDP::getCapabilities(cProperty *propSysCap, cProperty *propEnCap)
         }
     }
 
-    if(propEnCap != NULL)
+    if(propEnCap != nullptr)
     {
         for(int i=0; i < propEnCap->getNumValues(""); i++)
         {
@@ -108,14 +120,7 @@ void LLDP::getCapabilities(cProperty *propSysCap, cProperty *propEnCap)
     }
 }
 
-/**
- * Get position of capability in vector
- *
- * @param   capability  name of capability
- *
- * @return  position
- */
-int LLDP::capabilitiesPosition(std::string capability)
+int LLDPMain::capabilitiesPosition(std::string capability)
 {
     if(capability.compare("Other") == 0)
         return 0;
@@ -144,24 +149,53 @@ int LLDP::capabilitiesPosition(std::string capability)
 }
 
 
-bool LLDP::handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback)
+void LLDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG)
+{
+    Enter_Method_Silent();
+
+    InterfaceEntry *interface;
+    LLDPAgent *agent;
+
+    if(signalID == NF_INTERFACE_CREATED)
+    {
+        //new interface created
+        interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
+        createAgent(interface);
+    }
+    else if(signalID == NF_INTERFACE_DELETED)
+    {
+        //interface deleted
+        interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
+        agent = lat->findAgentById(interface->getInterfaceId());
+        agent->txShutdownFrame();
+        delete agent;
+    }
+    else if(signalID == NF_INTERFACE_STATE_CHANGED)
+    {
+        //interface state changed
+        interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
+        agent = lat->findAgentById(interface->getInterfaceId());
+
+        if(interface->isUp())
+            agent->startAgent();
+        else
+            agent->stopAgent();
+    }
+}
+
+bool LLDPMain::handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback)
 {
    Enter_Method_Silent();
 
     if (dynamic_cast<NodeStartOperation *>(operation)) {
-        if ((NodeStartOperation::Stage)stage == NodeStartOperation::STAGE_LINK_LAYER) {
+        if ((NodeStartOperation::Stage)stage == NodeStartOperation::STAGE_LAST) {
             startLLDP();
         }
     }
     else if (dynamic_cast<NodeShutdownOperation *>(operation)) {
         if ((NodeShutdownOperation::Stage)stage == NodeShutdownOperation::STAGE_LINK_LAYER){
-            //TODO: jak udelat odeslani TTL=0 pred vypnutim
-            /*for (auto it = odrRoutes.begin(); it != odrRoutes.end(); ++it)
-                invalidateRoute(*it);*/
-            // send updates to neighbors
-            /*for (auto it = cdpInterfaceTable.getInterfaces().begin(); it != cdpInterfaceTable.getInterfaces().end(); ++it)
-                sendUpdate((*it)->getInterfaceId(), true);*/
-
+            //TODO: interface already down so shutdown packet are dropped
+            // send shutdown updates to neighbors
             stopLLDP();
         }
     }
@@ -175,39 +209,49 @@ bool LLDP::handleOperationStage(LifecycleOperation *operation, int stage, IDoneC
     return true;
 }
 
-void LLDP::startLLDP()
+void LLDPMain::startLLDP()
 {
     for(int i=0; i < ift->getNumInterfaces(); i++)
-    {
         if(isInterfaceSupported(ift->getInterface(i)->getInterfaceModule()->getName()))
-        {
             createAgent(ift->getInterface(i));
-        }
-    }
 
-    tickTimer = new LLDPTimer();
-    tickTimer->setTimerType(Tick);
+    for (auto & agent : lat->getAgents())
+        if(!agent->getTxTTRTimer()->isScheduled())
+            agent->startAgent();
+
+#ifdef CREDIT
     scheduleAt(simTime() + 1, tickTimer);
+#endif
 }
 
-void LLDP::stopLLDP()
+void LLDPMain::stopLLDP()
 {
-    cancelAndDelete(tickTimer);
+#ifdef CREDIT
+    cancelEvent(tickTimer);
+#endif
+
+    for (auto & agent : lat->getAgents())
+    {
+        agent->txShutdownFrame();
+        agent->setReinitDelaySet(true);
+        scheduleAt(simTime() + agent->getReinitDelay(), agent->getTxShutdownWhile());
+        agent->stopAgent();
+    }
 }
 
-void LLDP::createAgent(InterfaceEntry *interface)
+void LLDPMain::createAgent(InterfaceEntry *interface)
 {
-    LLDPAgent *agent = new LLDPAgent(interface, this, msgFastTxDef, msgTxHoldDef, msgTxIntervalDef,
-                                reinitDelayDef, txFastInitDef, txCreditMaxDef, adminStatusDef);
+    LLDPAgent *agent = lat->findAgentById(interface->getInterfaceId());
+    if(agent == nullptr)
+    {
+        LLDPAgent *agent = new LLDPAgent(interface, this, msgFastTxDef, msgTxHoldDef, msgTxIntervalDef,
+                reinitDelayDef, txFastInitDef, txCreditMaxDef, adminStatusDef);
 
-    lat.addAgent(agent);
+        lat->addAgent(agent);
+    }
 }
 
-
-/**
- * Check if interface is supported. Only ethernet and ppp.
- */
-bool LLDP::isInterfaceSupported(const char *name)
+bool LLDPMain::isInterfaceSupported(const char *name)
 {
     if(strcmp(name, "eth") == 0 || strcmp(name, "ppp") == 0)
         return true;
@@ -215,39 +259,45 @@ bool LLDP::isInterfaceSupported(const char *name)
         return false;
 }
 
-/**
- * Handle timers (self-messages)
- *
- * @param   msg     message
- */
-void LLDP::processTimer(LLDPTimer *msg)
+void LLDPMain::processTimer(LLDPTimer *msg)
 {
     std::vector<LLDPAgent *>::iterator it;
     LLDPAgent *agent;
 
     switch(msg->getTimerType())
     {
-        case LLDPTimerType::Tick:
-            EV << "TICK!!!!!!!!!!!!!!!!!!!!!!! \n";
-            for (it = lat.getAgents().begin(); it != lat.getAgents().end(); ++it)
-            {// through all agents
+        case LLDPTimerType::Tick: {
+            EV_DETAIL << "TICK message \n";
+            for (it = lat->getAgents().begin(); it != lat->getAgents().end(); ++it)
                 (*it)->txAddCredit();
-            }
             scheduleAt(simTime() + 1, msg);
             break;
-        case LLDPTimerType::TTR:
-            EV << "TTR!!!!!!!!!!!!!!!!!!!!!!! \n";
+        }
+
+        case LLDPTimerType::TTR: {
             agent = check_and_cast<LLDPAgent *>(static_cast<cObject *>(msg->getContextPointer()));
+            EV_DETAIL << "Update time on interface " << agent->getInterface()->getFullName() << endl;
             agent->txInfoFrame();
             break;
-        default:
-            EV << "UNKNOWN TIMER!!!!!!!!!!!!!!!!!!!!!!! \n";
+        }
+
+        case LLDPTimerType::ShutdownWhile: {
+            agent = check_and_cast<LLDPAgent *>(static_cast<cObject *>(msg->getContextPointer()));
+            EV_DETAIL << "Shutdown while time on interface " << agent->getInterface()->getFullName() << endl;
+            agent->setReinitDelaySet(false);
+            lnt->removeNeighboursByAgent(agent);
+            break;
+        }
+
+        default: {
+            EV_WARN << "Self-message with unexpected message kind " << msg->getTimerType() << endl;
             delete msg;
             break;
+        }
     }
 }
 
-void LLDP::handleMessage(cMessage *msg)
+void LLDPMain::handleMessage(cMessage *msg)
 {
     if (!isOperational) {
         EV << "Message '" << msg << "' arrived when module status is down, dropped it\n";
@@ -264,45 +314,61 @@ void LLDP::handleMessage(cMessage *msg)
     }
     else
     {
-        //error("Unrecognized message (%s)%s", msg->getClassName(), msg->getName());
+        EV_WARN << "Unrecognized message " << msg->getClassName() << ", " << msg->getName() << endl;
     }
 }
 
-/**
- * Handle received update
- *
- * @param   msg     message
- */
-void LLDP::handleUpdate(LLDPUpdate *msg)
+void LLDPMain::handleUpdate(LLDPUpdate *msg)
 {
-    if(!frameValidation(msg))
-        return;
-
-    // shutdown packet
-    if(msg->getTtl() == 0)
+    // get agent
+    int ifaceId = ift->getInterfaceByNetworkLayerGateIndex(msg->getArrivalGate()->getIndex())->getInterfaceId();
+    LLDPAgent *agent = lat->findAgentById(ifaceId);
+    if(agent == nullptr)
     {
-        lnt.removeNeighbour(msg->getMsap());
-        EV_INFO << "Neighbour " << " go down. Delete from table" << endl;
+        EV_ERROR << "Agent don't exist on interface " << ifaceId << endl;
         return;
     }
 
-    LLDPAgent *agent = lat.findAgentById(msg->getArrivalGateId());      //otestovat
+    LLDPStatistics *st = agent->getSt();
+    st->framesInTotal++;
+
+    // check if agent is enabled to receive
+    if(agent->getAdminStatus() == enabledTxOnly || agent->getAdminStatus() == disabled)
+        return;
+
+    // validation
+    if(!frameValidation(msg, agent))
+    {
+        st->framesDiscardedTotal++;
+        return;
+    }
+
+    // update
     agent->neighbourUpdate(msg);
 }
 
-
-bool LLDP::frameValidation(LLDPUpdate *msg)
+bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
 {
     int count[128];
     short type;
     memset(count, 0, sizeof(count));
+    LLDPStatistics *st = agent->getSt();
+    unsigned int i;
+    bool endOf = false;
 
-    for(unsigned int i=0; i < msg->getOptionArraySize(); i++)
+    for(i=0; i < msg->getOptionArraySize(); i++)
     {
         TLVOptionBase *option = &msg->getOption(i);
         type = msg->getOption(i).getType();
+
+        // validation of option position/occurrence
         switch(type)
         {
+            case LLDPTLV_END_OF: {
+                endOf = true;
+                break;
+            }
+
             case LLDPTLV_CHASSIS_ID: {
                 if(i != 0)
                 {
@@ -336,6 +402,7 @@ bool LLDP::frameValidation(LLDPUpdate *msg)
                     EV_WARN << "An LLDPDU should contain one " << getNameOfTlv(type) << " TLV. TLV deleted" << endl;
                     msg->getOptions().remove(option);
                     i--;
+                    st->tlvsDiscardedTotal++;
                 }
                 count[type]++;
                 break;
@@ -353,7 +420,16 @@ bool LLDP::frameValidation(LLDPUpdate *msg)
                 count[type]++;
                 break;
             }
+
+            case LLDPTLV_ORG_SPEC: {
+                break;
+            }
+
+            default: {
+                st->tlvsUnrecognizedTotal++;
+            }
         }
+        // validation of option length
         if(msg->getOptionLength(option) != option->getLength())
         {
             if(type == LLDPTLV_CHASSIS_ID || type == LLDPTLV_PORT_ID || type == LLDPTLV_TTL)
@@ -366,14 +442,27 @@ bool LLDP::frameValidation(LLDPUpdate *msg)
                 EV_WARN << "TLV length of " << getNameOfTlv(type) << " TLV is different than actually length. TLV deleted" << endl;
                 msg->getOptions().remove(option);
                 i--;
+                st->tlvsDiscardedTotal++;
             }
+            st->lldpduLengthErrors++;
         }
+
+        if(endOf)       // LLDPTLV_END_OF
+            break;
+    }
+
+    // remove options after End Of TLV
+    for(; i < msg->getOptionArraySize(); i++)
+    {
+        TLVOptionBase *option = &msg->getOption(i);
+        msg->getOptions().remove(option);
+        st->tlvsDiscardedTotal++;
     }
 
     return true;
 }
 
-std::string LLDP::getNameOfTlv(short type)
+std::string LLDPMain::getNameOfTlv(short type)
 {
     std::string s;
 
@@ -401,7 +490,7 @@ std::string LLDP::getNameOfTlv(short type)
     return s;
 }
 
-AS LLDP::getAdminStatusFromString(std::string par)
+AS LLDPMain::getAdminStatusFromString(std::string par)
 {
     if(par == "enabledRxTx")
         return enabledRxTx;
@@ -413,6 +502,11 @@ AS LLDP::getAdminStatusFromString(std::string par)
         return disabled;
     else
         return enabledRxTx;
+}
+
+void LLDPMain::finish()
+{
+    EV_INFO << lat->printStats();
 }
 
 } //namespace

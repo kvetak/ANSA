@@ -12,9 +12,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPMain.h
+* @author Tomas Rajca
+*/
 
-#ifndef __LLDP_H_
-#define __LLDP_H_
+#ifndef __LLDPMAIN_H_
+#define __LLDPMAIN_H_
 
 #include <omnetpp.h>
 
@@ -24,25 +28,25 @@
 #include "inet/common/lifecycle/ILifecycle.h"
 
 #include "ansa/linklayer/lldp/LLDPTimer_m.h"
-#include "ansa/linklayer/lldp/LLDPDef.h"
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 #include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 
+//#define CREDIT            // uncomment to enable credit system
+
 namespace inet {
 
-class INET_API LLDP: protected cListener, public ILifecycle, public cSimpleModule
+class INET_API LLDPMain: public cSimpleModule, protected cListener, public ILifecycle
 {
   protected:
     std::string hostName;       // name of the module
-    IInterfaceTable *ift;       // interface table
     cModule *containingModule;
-    LLDPAgentTable lat;         // LLDP agent table
-    LLDPNeighbourTable lnt;     // LLDP neighbour table
+    IInterfaceTable *ift;        // interface table
+    LLDPAgentTable *lat;         // LLDP agent table
+    LLDPNeighbourTable *lnt;     // LLDP neighbour table
+
     char enCap[2];              // system capabilities
     char sysCap[2];             // enabled capabilities
-
     bool isOperational = false; // for lifecycle
-
     LLDPTimer *tickTimer;
 
     uint16_t msgFastTxDef;     // ticks between transmission during fast transmission
@@ -53,35 +57,81 @@ class INET_API LLDP: protected cListener, public ILifecycle, public cSimpleModul
     uint8_t txCreditMaxDef;    // the maximum value of txCredit
     AS adminStatusDef;
 
-    std::string chassisId;
+    std::string chassisId;      // device chassis id
 
-    void startLLDP();
-    void startAgents();
-    void stopLLDP();
-
-
+    virtual ~LLDPMain();
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
-    virtual void processTimer(LLDPTimer *timer);
+    virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void finish() override;
 
+    /*
+     * Start LLDP process on device
+     */
+    void startLLDP();
+    /*
+     * Stop LLDP process on device
+     */
+    void stopLLDP();
+
+    /**
+     * Handle timers (self-messages)
+     *
+     * @param   msg     message
+     */
+    void processTimer(LLDPTimer *timer);
+    /**
+     * Handle received update
+     * Frame is validated and send to appropriate agent
+     *
+     * @param   msg     message
+     */
     void handleUpdate(LLDPUpdate *msg);
-    bool frameValidation(LLDPUpdate *msg);
+
+    /*
+     * Validate LLDP frame. Returns false if frame is invalid
+     */
+    bool frameValidation(LLDPUpdate *msg, LLDPAgent *agent);
+
+    /*
+     * Return string name of TLV type
+     */
     std::string getNameOfTlv(short type);
 
 
   private:
+    /**
+     * Check if interface is supported. Only ethernet and ppp.
+     */
     bool isInterfaceSupported(const char *name);
     AS getAdminStatusFromString(std::string par);
     void createAgent(InterfaceEntry *interface);
+    /**
+     * Return mac address from first interface in ift with set mac address
+     *
+     * @return  chassis ID
+     */
     std::string generateChassisId();
+    /**
+     * Set capability vector
+     *
+     * @param   property    module capability
+     */
     void getCapabilities(cProperty *propSysCap, cProperty *propEnCap);
+    /**
+     * Get position of capability in vector
+     *
+     * @param   capability  name of capability
+     * @return  position
+     */
     int capabilitiesPosition(std::string capability);
 
   public:
-    LLDPAgentTable* getLat() {return &lat;}
-    LLDPNeighbourTable* getLnt() {return &lnt;}
+    //getters
+    LLDPAgentTable* getLat() {return lat;}
+    LLDPNeighbourTable* getLnt() {return lnt;}
     std::string getChassisId() {return chassisId;}
     cModule *getContainingModule() {return containingModule;}
     const char *getSystemCapabilites() {return sysCap;}

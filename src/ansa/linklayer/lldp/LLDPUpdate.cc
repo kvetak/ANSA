@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPUpdate.cc
+* @author Tomas Rajca
+*/
 
 #include "ansa/linklayer/lldp/LLDPUpdate.h"
 
@@ -91,18 +95,15 @@ short LLDPUpdate::getOptionLength(TLVOptionBase *opt)
     return length;
 }
 
-const char *LLDPUpdate::getMsap()
+std::string LLDPUpdate::getMsap()
 {
     std::string s;
 
-    LLDPOptionChassisId *chassisId = dynamic_cast<LLDPOptionChassisId *> (&getOption(0));
-    LLDPOptionPortId *portId = dynamic_cast<LLDPOptionPortId *> (&getOption(1));
-
     // MSAP get from contatenation Chassis ID and Port ID
-    s = chassisId->getValue();
-    s += portId->getValue();
+    s = getChassisId();
+    s += getPortId();
 
-    return s.c_str();
+    return s;
 }
 
 uint16_t LLDPUpdate::getTtl()
@@ -121,7 +122,7 @@ const char *LLDPUpdate::getChassisId()
 
 const char *LLDPUpdate::getPortId()
 {
-    LLDPOptionPortId *portId = dynamic_cast<LLDPOptionPortId *> (&getOption(0));
+    LLDPOptionPortId *portId = dynamic_cast<LLDPOptionPortId *> (&getOption(1));
 
     return portId->getValue();
 }
@@ -132,15 +133,5 @@ void LLDPUpdate::setOptionLength(TLVOptionBase *opt)
     opt->setLength(getOptionLength(opt));
 }
 
-int LLDPUpdate::countTlvOfType(uint8_t type)
-{
-    int count = 0;
-
-   /* for (auto opt: options)
-        if(opt->getType == type)
-            count++;*/
-
-    return count;
-}
 
 } /* namespace inet */

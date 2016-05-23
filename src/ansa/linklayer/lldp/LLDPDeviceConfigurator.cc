@@ -24,7 +24,7 @@ using namespace std;
 // - LLDP configuration
 //
 
-void LLDPDeviceConfigurator::loadLLDPConfig(LLDP *lMain)
+void LLDPDeviceConfigurator::loadLLDPConfig(LLDPMain *lMain)
 {
     ASSERT(lMain != nullptr);
 
@@ -45,7 +45,7 @@ void LLDPDeviceConfigurator::loadLLDPConfig(LLDP *lMain)
     loadLLDPInterfacesConfig(device, lMain);
 }
 
-void LLDPDeviceConfigurator::loadLLDPInterfacesConfig(cXMLElement *device, LLDP *lMain)
+void LLDPDeviceConfigurator::loadLLDPInterfacesConfig(cXMLElement *device, LLDPMain *lMain)
 {
     cXMLElement *ifaceElem = nullptr;
     cXMLElement *LLDPIfaceElem = nullptr;
@@ -93,7 +93,7 @@ LLDPDeviceConfigurator::~LLDPDeviceConfigurator() {
     configFile = nullptr;
 }
 
-void LLDPDeviceConfigurator::loadLLDPInterface(cXMLElement *ifaceElem, LLDP *lMain, LLDPAgent *lIface)
+void LLDPDeviceConfigurator::loadLLDPInterface(cXMLElement *ifaceElem, LLDPMain *lMain, LLDPAgent *lIface)
 {
     int tempNumber;
     bool success;
@@ -148,7 +148,6 @@ void LLDPDeviceConfigurator::loadLLDPInterface(cXMLElement *ifaceElem, LLDP *lMa
         else if (nodeName == "AdminStatus")
         {
             string afstr = (*ifElemIt)->getNodeValue();
-            EV << "|"<< afstr << "|" << afstr.compare("enabledRxTx") << "|enabledRxTx| !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
             //trim string
             afstr.erase(afstr.find_last_not_of(" \t\n\r\f\v") + 1);
             afstr.erase(0, afstr.find_first_not_of(" \t\n\r\f\v"));

@@ -12,19 +12,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPInterfaceTable.cc
+* @author Tomas Rajca
+*/
 
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 #include <algorithm>
 
 namespace inet {
 
+Register_Abstract_Class(CDPInterface);
+Define_Module(CDPInterfaceTable);
 
 std::string CDPInterface::info() const
 {
     std::stringstream out;
 
     out << "CDP on interface " << interface->getFullName() << " is ";
-    if (enabled)
+    if (CDPEnabled)
         out << "enabled";
     else
         out << "disabled";
@@ -32,14 +38,13 @@ std::string CDPInterface::info() const
     return out.str();
 }
 
-
 CDPInterface::CDPInterface(InterfaceEntry *iface) :
     interface(iface),
-    enabled(true),
+    CDPEnabled(true),
     fastStart(2)
 {
     updateTimer = new CDPTimer();
-    updateTimer->setTimerType(UpdateTime);
+    updateTimer->setTimerType(CDPUpdateTime);
     updateTimer->setContextPointer(this);
 }
 
@@ -56,14 +61,22 @@ CDPInterface::~CDPInterface() {
     }
 }
 
-/**
- * Get cdp interface from cdp interface table by interface ID
- *
- * @param   ifaceId    interface ID
- *
- * @return  cdp interface
- */
-CDPInterface * CDPInterfaceTable::findInterfaceById(const int ifaceId)
+
+void CDPInterfaceTable::initialize(int stage)
+{
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        WATCH_PTRVECTOR(interfaces);
+    }
+}
+
+void CDPInterfaceTable::handleMessage(cMessage *)
+{
+
+}
+
+CDPInterface * CDPInterfaceTable::findInterfaceById(int ifaceId)
 {
     std::vector<CDPInterface *>::iterator it;
 
@@ -78,14 +91,9 @@ CDPInterface * CDPInterfaceTable::findInterfaceById(const int ifaceId)
     return nullptr;
 }
 
-/**
- * add interface to cdp interface table
- *
- * @param   iface   interface to add
- */
 void CDPInterfaceTable::addInterface(CDPInterface * iface)
 {
-    if(findInterfaceById(iface->getInterfaceId()) != NULL)
+    if(findInterfaceById(iface->getInterfaceId()) != nullptr)
     {// interface already in table
         throw cRuntimeError("Adding to CDPInterfaceTable interface, which is already in it - id %d", iface);
     }
@@ -93,11 +101,6 @@ void CDPInterfaceTable::addInterface(CDPInterface * iface)
     interfaces.push_back(iface);
 }
 
-
-/**
- * Remove all interfaces
- *
- */
 void CDPInterfaceTable::removeInterfaces()
 {
     for (auto it = interfaces.begin(); it != interfaces.end();)
@@ -107,12 +110,6 @@ void CDPInterfaceTable::removeInterfaces()
     }
 }
 
-/**
- * Remove interface
- *
- * @param   iface   Interface to delete
- *
- */
 void CDPInterfaceTable::removeInterface(CDPInterface * iface)
 {
     auto i = find(interfaces.begin(), interfaces.end(), iface);
@@ -123,11 +120,6 @@ void CDPInterfaceTable::removeInterface(CDPInterface * iface)
     }
 }
 
-/**
- * Removes interface
- *
- * @param   ifaceId ID of interface to delete
- */
 void CDPInterfaceTable::removeInterface(int ifaceId)
 {
     std::vector<CDPInterface *>::iterator it;

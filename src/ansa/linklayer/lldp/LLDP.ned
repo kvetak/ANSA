@@ -12,32 +12,75 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+//
+// @file LLDP.ned
+// @author Tomas Rajca
+//
 
 package ansa.linklayer.lldp;
 
 import inet.networklayer.contract.INetworkLayerLower;
-//
-// TODO auto-generated module
-//
-simple LLDP like INetworkLayerLower
+import ansa.linklayer.lldp.tables.LLDPNeighbourTable;
+import ansa.linklayer.lldp.tables.LLDPAgentTable;
+import ansa.linklayer.lldp.LLDPMain;
+
+module LLDP like INetworkLayerLower
 {
     parameters:
-    	@display("i=block/network2");
+        @display("i=block/network2");
 
-		int txCreditMax = default(5);
-        int txFastInit = default(4);
-        string adminStatus @enum("enabledRxTx", "enabledTxOnly", "enabledRxOnly", "disabled") = default("enabledRxTx");
+        string deviceId = default("");
+        string deviceType = default("Router");
+        xml configFile = default(xmldoc("config.xml"));
+
+        **.deviceId = deviceId;
+        **.deviceType = deviceType;
+        **.configFile = default(xmldoc("config.xml"));
+
+        int txCreditMax = default(5);
+        int txFastInit = default(3);
+        string adminStatus @enum("enabledRxTx","enabledTxOnly","enabledRxOnly","disabled") = default("enabledRxTx");
         int msgFastTx = default(1);
         int msgTxHold = default(4);
         int msgTxInterval = default(30);
-        int  reinitDelay = default(2);
-        
-        string routingTableModule = default("");		//?
-        
-        string deviceId = default("");
-        string deviceType = default("Router");
-        xml configFile = default(xmldoc("config.xml"));     
-	gates:
+        int reinitDelay = default(2);
+
+        *.txCreditMax = txCreditMax;
+        *.txFastInit = txFastInit;
+        *.adminStatus = adminStatus;
+        *.msgFastTx = msgFastTx;
+        *.msgTxHold = msgTxHold;
+        *.msgTxInterval = msgTxInterval;
+        *.reinitDelay = reinitDelay;
+        *.lldpNeighbourTableModule = default("^.lldpNeighbourTable");
+        *.lldpAgentTableModule = default("^.lldpAgentTable");
+    gates:
         input ifIn[] @labels(INetworkDatagram/up);
         output ifOut[] @labels(INetworkDatagram/down);
+
+
+    submodules:
+        lldpAgentTable: LLDPAgentTable {
+            parameters:
+                @display("p=202,76");
+        }
+
+        lldpNeighbourTable: LLDPNeighbourTable {
+            parameters:
+                @display("p=321,76");
+        }
+
+        lldpMain: LLDPMain {
+            parameters:
+                @display("p=88,76");
+        }
+
+    connections:
+        for i=0..sizeof(ifIn)-1 {
+            ifIn[i] --> { @display("m=w"); } --> lldpMain.ifIn++;
+        }
+
+        for i=0..sizeof(ifOut)-1 {
+            lldpMain.ifOut++ --> { @display("m=w"); } --> ifOut[i];
+        }
 }

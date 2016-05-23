@@ -42,14 +42,17 @@ module ANSA_EtherSwitch
 {
     parameters:
         @networkNode();
-        @capabilities("Switch");
-        @capabilitiesEnabled("Switch");
+        
+        @capabilities("Repeater", "MAC Bridge", "Switch");
+        @capabilitiesEnabled("Repeater", "MAC Bridge", "Switch");
+        
         @labels(node,ethernet-node);
         @display("i=device/switch");
         bool hasStatus = default(true);
         bool csmacdSupport = default(true);  // by default use CSMA/CD
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
+        bool hasSTP= default(false);
         string macType = default(csmacdSupport ? "EtherMAC" : "EtherMACFullDuplex"); // ~EtherMAC or ~EtherMACFullDuplex
 
         string relayUnitType = default("relayUnit"); // type of the ~IMACRelayUnit;
@@ -58,6 +61,13 @@ module ANSA_EtherSwitch
         eth[*].csmacdSupport = csmacdSupport;
         eth[*].macType = macType;
         *.interfaceTableModule = default(absPath(".interfaceTable"));
+        
+        string deviceId = default("");
+        xml configFile = default(xmldoc("config.xml"));
+        string deviceType = default("Switch"); 
+        **.deviceId = deviceId;
+        **.deviceType = deviceType;
+        **.configFile = default(xmldoc("config.xml"));
     gates:
         inout ethg[] @labels(EtherFrame-conn);
     submodules:

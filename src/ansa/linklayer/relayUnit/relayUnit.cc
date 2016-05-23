@@ -206,10 +206,11 @@ void relayUnit::dispatchLLDPUpdate(LLDPUpdate *lldpUpdate, int port)
 
     frame->setKind(lldpUpdate->getKind());
     frame->setSrc(bridgeAddress);
-    frame->setEtherType(35020);    // 0x88cc
     Ieee802Ctrl *controlInfo = check_and_cast<Ieee802Ctrl *>(lldpUpdate->getControlInfo());
     frame->setDest(controlInfo->getDest());
-    frame->setByteLength(ETHER_MAC_FRAME_BYTES);
+    frame->setEtherType(controlInfo->getEtherType());
+    frame->setByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
+    frame->setFrameByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
     frame->encapsulate(lldpUpdate);
 
     if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)

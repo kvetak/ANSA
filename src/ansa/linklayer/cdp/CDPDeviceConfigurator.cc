@@ -12,6 +12,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPDeviceConfigurator.cc
+*/
 
 #include "ansa/linklayer/cdp/CDPDeviceConfigurator.h"
 #include <errno.h>
@@ -23,7 +26,7 @@ using namespace std;
 // - CDP configuration
 //
 
-void CDPDeviceConfigurator::loadCDPConfig(CDP *cMain)
+void CDPDeviceConfigurator::loadCDPConfig(CDPMain *cMain)
 {
     ASSERT(cMain != nullptr);
 
@@ -45,7 +48,7 @@ void CDPDeviceConfigurator::loadCDPConfig(CDP *cMain)
     loadCDPInterfacesConfig(device, cMain);
 }
 
-void CDPDeviceConfigurator::loadODRProcessConfig(cXMLElement *device, CDP *cMain)
+void CDPDeviceConfigurator::loadODRProcessConfig(cXMLElement *device, CDPMain *cMain)
 {
     ASSERT(cMain != nullptr);
     ASSERT(device != nullptr);
@@ -108,7 +111,7 @@ cXMLElement *CDPDeviceConfigurator::GetODRProcess(cXMLElement *device)
     return routing->getFirstChildWithTag("ODR");
 }
 
-void CDPDeviceConfigurator::loadCDPInterfacesConfig(cXMLElement *device, CDP *cMain)
+void CDPDeviceConfigurator::loadCDPInterfacesConfig(cXMLElement *device, CDPMain *cMain)
 {
     cXMLElement *ifaceElem = nullptr;
     cXMLElement *CDPIfaceElem = nullptr;
@@ -157,7 +160,7 @@ CDPDeviceConfigurator::~CDPDeviceConfigurator() {
     configFile = nullptr;
 }
 
-void CDPDeviceConfigurator::loadCDPInterface(cXMLElement *ifaceElem, CDP *cMain, CDPInterface *cIface)
+void CDPDeviceConfigurator::loadCDPInterface(cXMLElement *ifaceElem, CDPMain *cMain, CDPInterface *cIface)
 {
     bool value;
 
@@ -170,7 +173,7 @@ void CDPDeviceConfigurator::loadCDPInterface(cXMLElement *ifaceElem, CDP *cMain,
         {
             if (!Str2Bool(&value, (*ifElemIt)->getNodeValue()))
                 throw cRuntimeError("Invalid CDP status value on interface %s", cIface->getInterface()->getName());
-            cIface->setEnabled(value);
+            cIface->setCDPEnabled(value);
         }
     }
 }

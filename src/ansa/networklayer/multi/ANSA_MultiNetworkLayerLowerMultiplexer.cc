@@ -48,9 +48,7 @@ void ANSA_MultiNetworkLayerLowerMultiplexer::handleMessage(cMessage *message)
     cGate *arrivalGate = message->getArrivalGate();
     const char *arrivalGateName = arrivalGate->getBaseName();
     if (!strcmp(arrivalGateName, "ifUpperIn"))
-        //send(message, "ifLowerOut", arrivalGate->getIndex() / getProtocolCount());
     {
-        //EV << arrivalGate->getIndex() << ", proto:" << getProtocolCount() << ", vys:" << arrivalGate->getIndex() / getProtocolCount();
         send(message, "ifLowerOut", arrivalGate->getIndex() / getProtocolCount());
     }
     else if (!strcmp(arrivalGateName, "ifLowerIn"))

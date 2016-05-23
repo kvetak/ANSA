@@ -12,24 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-//
-// @file CDPTimer.msg
-// @author Tomas Rajca
-//
 
-namespace inet;
+package ansa.linklayer.cdp.tables;
 
-enum CDPTimerType
+simple CDPODRRouteTable
 {
-    CDPUpdateTime = 0;
-    CDPHoldtime = 1;
-    CDPODRInvalideTime = 2;
-    CDPODRHolddown = 3;
-    CDPODRFlush = 4;
-}
-
-//CDP timers
-message CDPTimer
-{
-    char timerType  @enum(CDPTimerType);
+      @display("i=block/table");
 }

@@ -12,17 +12,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPNeighbourTable.cc
+* @author Tomas Rajca
+*/
 
 #include "ansa/linklayer/cdp/tables/CDPNeighbourTable.h"
 #include <algorithm>
 
 namespace inet {
 
+Register_Abstract_Class(CDPNeighbour);
+Define_Module(CDPNeighbourTable);
+
+
 CDPNeighbour::CDPNeighbour():
-        interface(nullptr), address(nullptr), odrDefaultGateway(nullptr)
+        interface(nullptr), address(nullptr)
 {
     holdtimeTimer = new CDPTimer();
-    holdtimeTimer->setTimerType(Holdtime);
+    holdtimeTimer->setTimerType(CDPHoldtime);
     holdtimeTimer->setContextPointer(this);
 }
 
@@ -31,7 +39,7 @@ CDPNeighbour::~CDPNeighbour() {
     {
         //if is scheduled, get his sender module, otherwise get owner module
         cSimpleModule *owner = dynamic_cast<cSimpleModule *>((holdtimeTimer->isScheduled()) ? holdtimeTimer->getSenderModule() : holdtimeTimer->getOwner());
-        if(owner != NULL)
+        if(owner != nullptr)
         {// owner is cSimpleModule object -> can call his methods
             owner->cancelAndDelete(holdtimeTimer);
             holdtimeTimer = nullptr;
@@ -49,14 +57,20 @@ std::string CDPNeighbour::info() const
     return out.str();
 }
 
-/**
- * Get cdp neighbour from neighbour table by name and receive port
- *
- * @param   name    name of neighbour
- * @param   port    receive port number
- *
- * @return  cdp neighbour
- */
+void CDPNeighbourTable::initialize(int stage)
+{
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        WATCH_PTRVECTOR(neighbours);
+    }
+}
+
+void CDPNeighbourTable::handleMessage(cMessage *)
+{
+
+}
+
 CDPNeighbour * CDPNeighbourTable::findNeighbour(std::string name, int port)
 {
     std::vector<CDPNeighbour *>::iterator it;
@@ -72,14 +86,9 @@ CDPNeighbour * CDPNeighbourTable::findNeighbour(std::string name, int port)
     return nullptr;
 }
 
-/**
- * add neighbour to neighbour table
- *
- * @param   neighbour   neighbour to add
- */
 void CDPNeighbourTable::addNeighbour(CDPNeighbour * neighbour)
 {
-    if(findNeighbour(neighbour->getName(), neighbour->getPortReceive()) != NULL)
+    if(findNeighbour(neighbour->getName(), neighbour->getPortReceive()) != nullptr)
     {// neighbour already in table
         throw cRuntimeError("Adding to CDPNeighbourTable neighbour, which is already in it - name %s, port %d", neighbour->getName(), neighbour->getPortReceive());
     }
@@ -87,26 +96,14 @@ void CDPNeighbourTable::addNeighbour(CDPNeighbour * neighbour)
     neighbours.push_back(neighbour);
 }
 
-
-/**
- * Remove all neighbours
- *
- */
 void CDPNeighbourTable::removeNeighbours()
 {
     for (auto & neighbour : neighbours)
         delete neighbour;
-    std::vector<CDPNeighbour *>::iterator it;
 
     neighbours.clear();
 }
 
-/**
- * Remove neighbour
- *
- * @param   neighbour   neighbour to delete
- *
- */
 void CDPNeighbourTable::removeNeighbour(CDPNeighbour * neighbour)
 {
     auto n = find(neighbours.begin(), neighbours.end(), neighbour);
@@ -117,12 +114,6 @@ void CDPNeighbourTable::removeNeighbour(CDPNeighbour * neighbour)
     }
 }
 
-/**
- * Remove neighbour
- *
- * @param   name    name of neighbour
- * @param   port    receive port number
- */
 void CDPNeighbourTable::removeNeighbour(std::string name, int port)
 {
     std::vector<CDPNeighbour *>::iterator it;
@@ -142,11 +133,6 @@ void CDPNeighbourTable::removeNeighbour(std::string name, int port)
     }
 }
 
-/**
- * Count neighbour learned from specific port
- *
- * @param   portReceive
- */
 int CDPNeighbourTable::countNeighboursOnPort(int portReceive)
 {
     int count = 0;

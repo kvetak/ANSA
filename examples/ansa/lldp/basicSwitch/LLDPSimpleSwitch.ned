@@ -21,7 +21,7 @@ import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
 import inet.common.lifecycle.LifecycleController;
 
-network simpleSwitch
+network LLDPSimpleSwitch
 {
     @display("bgb=521,431");
     submodules:

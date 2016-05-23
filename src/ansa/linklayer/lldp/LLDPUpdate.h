@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPUpdate.h
+* @author Tomas Rajca
+*/
 
 #ifndef LLDPUPDATE_H_
 #define LLDPUPDATE_H_
@@ -34,16 +38,25 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     LLDPUpdate& operator=(const LLDPUpdate& other) {if (this==&other) return *this; LLDPUpdate_Base::operator=(other); copy(other); return *this;}
     virtual LLDPUpdate *dup() const {return new LLDPUpdate(*this);}
 
-
-    //virtual uint16_t countChecksum();
+    /**
+     * Returns number of TLV in message.
+     */
     virtual unsigned int getOptionArraySize() const { return options.size(); }
-    //virtual std::string getOptionStr(TLVOptionBase *opt);
-    virtual void setOptionLength(TLVOptionBase *opt);
+    /**
+     * Get length of the specified option.
+     */
     short getOptionLength(TLVOptionBase *opt);
-    const char *getMsap();
+
+    // getters
+    std::string getMsap();
     uint16_t getTtl();
     const char *getChassisId();
     const char *getPortId();
+
+    /**
+     * Set length of the specified option.
+     */
+    virtual void setOptionLength(TLVOptionBase *opt);
 
     /**
      * Returns option
@@ -63,8 +76,6 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
      * default atPos means add to the end.
      */
     virtual void addOption(TLVOptionBase *opt, int atPos = -1);
-
-    virtual int countTlvOfType(uint8_t type);
 
 };
 } /* namespace inet */

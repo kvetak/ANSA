@@ -12,104 +12,142 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPNeighbourTable.cc
+* @author Tomas Rajca
+*/
 
 #include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 #include <algorithm>
 
 
 namespace inet {
+Register_Abstract_Class(LLDPNeighbour);
+Define_Module(LLDPNeighbourTable);
 
-
-/*LLDPNeighbour::LLDPNeighbour(const char *cId, const char *pId) {
+LLDPNeighbour::LLDPNeighbour(LLDPAgent *a, const char *cId, const char *pId) {
     chassisId = cId;
     portId = pId;
 
-    std::string m;
-    m = c;
-    m += p;
-    msap = m.c_str();
-}*/
-LLDPNeighbour::LLDPNeighbour(){}
-/*
-LLDPNeighbour::LLDPNeighbour()
+    msap = cId;
+    msap += pId;
+
+    rxInfoTtl = new cMessage("NeighbourTtlTimer", LLDPNeighbourTable::ttl);
+    rxInfoTtl->setContextPointer(this);
+
+    agent = a;
+}
+
+LLDPNeighbour::~LLDPNeighbour()
 {
-    chassisId = nullptr;
-    portId = nullptr;
-    msap = nullptr;
-}*/
+    //if is scheduled, get his sender module, otherwise get owner module
+    cSimpleModule *owner = dynamic_cast<cSimpleModule *>((rxInfoTtl->isScheduled()) ? rxInfoTtl->getSenderModule() : rxInfoTtl->getOwner());
+    if(owner != nullptr)
+    {// owner is cSimpleModule object -> can call his methods
+        owner->cancelAndDelete(rxInfoTtl);
+        rxInfoTtl = nullptr;
+    }
+}
 
 std::string LLDPNeighbour::info() const
 {
     std::stringstream string;
 
-    string << chassisId;
+    string << "DevID: " << systemName << ", LocInt: " << agent->getIfaceName() << ", holdTime: " << ttl-round((simTime()-lastUpdate).dbl()) <<  ", enCap: " << enabledCap << ", Port ID: " << portId;
+
     return string.str();
 }
-
 
 
 ///************************ LLDP AGENT TABLE ****************************///
 
 
-LLDPNeighbour * LLDPNeighbourTable::findNeighbourByMSAP(const char* msap)
+void LLDPNeighbourTable::restartRxInfoTtl(LLDPNeighbour *neighbour, uint16_t holdTime)
+{
+    Enter_Method_Silent();
+    cancelEvent(neighbour->rxInfoTtl);
+    scheduleAt(simTime() + holdTime, neighbour->rxInfoTtl);
+}
+
+void LLDPNeighbourTable::initialize(int stage)
+{
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        WATCH_PTRVECTOR(neighbours);
+    }
+}
+
+void LLDPNeighbourTable::handleMessage(cMessage *msg)
+{
+    // self message (timer)
+    if (msg->isSelfMessage()) {
+        if (msg->getKind() == ttl) {
+            EV_INFO << "LLDP delete neighbour" << endl;
+            LLDPNeighbour *neighbour = check_and_cast<LLDPNeighbour *>((cObject *)msg->getContextPointer());
+            removeNeighbour(neighbour);
+        }
+        else
+        {
+            EV_WARN << "Unknown type of self message" << endl;
+        }
+    }
+    else
+        throw cRuntimeError("LLDPNeighborTable received a message although it does not have gates.");
+}
+
+
+LLDPNeighbour * LLDPNeighbourTable::findNeighbourByMSAP(std::string msap)
 {
     std::vector<LLDPNeighbour *>::iterator it;
 
-    if(msap == nullptr)
-        return nullptr;
-
     // through all neighbours search for same MSAP
     for (it = neighbours.begin(); it != neighbours.end(); ++it)
-        if((*it)->getMsap() != nullptr && strcmp((*it)->getMsap(), msap) == 0)
+        if(msap.compare((*it)->getMsap()) == 0)
             return (*it);
 
     return nullptr;
 }
 
 
-void LLDPNeighbourTable::addNeighbour(LLDPNeighbour * neighbour)
+LLDPNeighbour *LLDPNeighbourTable::addNeighbour(LLDPAgent *agent, std::string chassisId, std::string portId)
 {
-    if(findNeighbourByMSAP(neighbour->getMsap()) != NULL)
+    std::string msap = chassisId + portId;
+    if(findNeighbourByMSAP(msap) != nullptr)
     {// neighbour already in table
-        throw cRuntimeError("Adding to LLDPNeighbourTable neighbour, which is already in it - name %s, port %d", neighbour->getChassisId(), neighbour->getPortId());
+        EV_WARN << "Adding to LLDPNeighbourTable neighbour, which is already in it - name " << chassisId << ", port " << portId << endl;
     }
 
+    LLDPNeighbour *neighbour = new LLDPNeighbour(agent, chassisId.c_str(), portId.c_str());
+    take(neighbour->rxInfoTtl);
     neighbours.push_back(neighbour);
+
+    return neighbour;
 }
 
-/**
- * Remove neighbour
- *
- * @param   neighbour   neighbour to delete
- *
- */
 void LLDPNeighbourTable::removeNeighbour(LLDPNeighbour * neighbour)
 {
+    if(neighbour == nullptr)
+        return;
+
     auto n = find(neighbours.begin(), neighbours.end(), neighbour);
     if (n != neighbours.end())
     {
+        neighbour->agent->getSt()->ageoutsTotal++;
         delete *n;
         neighbours.erase(n);
     }
 }
 
-/**
- * Removes neighbour
- *
- * @param   chassisId   chassis ID
- * @param   portId      port ID
- */
-void LLDPNeighbourTable::removeNeighbour(const char* msap)
+void LLDPNeighbourTable::removeNeighbour(std::string msap)
 {
     std::vector<LLDPNeighbour *>::iterator it;
 
-    if(msap == nullptr)
-        return;
-
     for (it = neighbours.begin(); it != neighbours.end();)
     {// through all neighbours
-        if((*it)->getMsap() != nullptr && strcmp((*it)->getMsap(), msap) == 0)
+        if( msap.compare((*it)->getMsap()) == 0 )
         {// found same
+            (*it)->agent->getSt()->ageoutsTotal++;
             delete (*it);
             it = neighbours.erase(it);
             return;
@@ -120,26 +158,22 @@ void LLDPNeighbourTable::removeNeighbour(const char* msap)
     }
 }
 
-std::string LLDPNeighbourTable::printStats()
+void LLDPNeighbourTable::removeNeighboursByAgent(LLDPAgent *ag)
 {
-    std::stringstream string;
-    std::vector<LLDPNeighbour *>::iterator it;
+    std::vector<LLDPNeighbour *>::iterator it, lIt;
 
-    //for (it = neighbours.begin(); it != neighbours.end(); ++it)
-    //{// through all neighbours
-        //if((*it)->getAdminStatus() != AS::disabled)
-        //{
-            //string << (*it)->getIfaceName() << " interface statistics:" << endl;
-/*
-            string << "Received " << (*it)->rxStat.str();
-            if((*it)->rxStat.tlv[tlvT::UPDATE].getCount() > 0) string << "Update avg. size: " << ((*it)->rxStat.tlv[tlvT::ROUTERID].getSum() + (*it)->rxStat.tlv[tlvT::NEXTHOP].getSum() + (*it)->rxStat.tlv[tlvT::UPDATE].getSum()) / static_cast<double>((*it)->rxStat.tlv[tlvT::UPDATE].getCount()) << " B/TLV" << endl;
-
-            string << endl << "Transmitted " << (*it)->txStat.str();
-            if((*it)->txStat.tlv[tlvT::UPDATE].getCount() > 0) string << "Update avg. size: " << ((*it)->txStat.tlv[tlvT::ROUTERID].getSum() + (*it)->txStat.tlv[tlvT::NEXTHOP].getSum() + (*it)->txStat.tlv[tlvT::UPDATE].getSum()) / static_cast<double>((*it)->txStat.tlv[tlvT::UPDATE].getCount()) << " B/TLV" << endl;
-            */
-      //  }
-    //}
-    return string.str();
+    lIt = it = neighbours.begin();
+    for (it = neighbours.begin(); it != neighbours.end(); )
+    {// through all manAddresses
+        if((*it)->getAgent() == ag)
+        {
+            lIt = it;
+            delete (*it);
+            it = neighbours.erase(it);
+        }
+        else
+            ++it;
+    }
 }
 
 LLDPNeighbourTable::LLDPNeighbourTable() {
@@ -147,11 +181,9 @@ LLDPNeighbourTable::LLDPNeighbourTable() {
 }
 
 LLDPNeighbourTable::~LLDPNeighbourTable() {
-    std::vector<LLDPNeighbour *>::iterator it;
-
-    for (it = neighbours.begin(); it != neighbours.end(); ++it)
-    {// through all interfaces
-        delete (*it);
+    for (auto & elem : neighbours) {
+        cancelEvent(elem->getRxInfoTtl());
+        delete (elem);
     }
     neighbours.clear();
 }

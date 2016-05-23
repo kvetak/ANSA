@@ -19,7 +19,7 @@
 #include <omnetpp.h>
 #include <algorithm>
 
-#include "ansa/linklayer/lldp/LLDP.h"
+#include "ansa/linklayer/lldp/LLDPMain.h"
 //#include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 
 namespace inet {
@@ -49,9 +49,9 @@ class INET_API LLDPDeviceConfigurator
       /////////////////////////////
       // configuration for LLDP  //
       /////////////////////////////
-      void loadLLDPConfig(LLDP *lMain);
-      void loadLLDPInterfacesConfig(cXMLElement *device, LLDP *lMain);
-      void loadLLDPInterface(cXMLElement *ifaceElem, LLDP *lMain, LLDPAgent *lIface);
+      void loadLLDPConfig(LLDPMain *lMain);
+      void loadLLDPInterfacesConfig(cXMLElement *device, LLDPMain *lMain);
+      void loadLLDPInterface(cXMLElement *ifaceElem, LLDPMain *lMain, LLDPAgent *lIface);
 };
 
 

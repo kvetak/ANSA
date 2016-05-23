@@ -53,5 +53,12 @@
                 </CDP>
             </Interface>
         </Interfaces>
+        <Routing>
+        	<ODR>
+        		<invalid>100</invalid>
+        		<holddown>30</holddown>
+        		<flush>200</flush>
+        	</ODR>
+        </Routing>
     </Router>
 </Devices>

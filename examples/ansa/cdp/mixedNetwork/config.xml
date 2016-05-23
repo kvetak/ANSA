@@ -19,18 +19,13 @@
                 	<status>enabled</status>
                 </CDP>
             </Interface>
-            <Interface name="ppp0">
-                <CDP>
-                	<status>enabled</status>
-                </CDP>
-            </Interface>
         </Interfaces>
         
         <Routing>
         	<ODR>
-        		<invalid>40</invalid>
-        		<holddown>10</holddown>
-        		<flush>55</flush>
+        		<invalid>180</invalid>
+        		<holddown>0</holddown>
+        		<flush>240</flush>
         	</ODR>
         </Routing>
     </Router>
@@ -50,7 +45,7 @@
             </Interface>
             <Interface name="eth2">
                 <CDP>
-                	<status>enabled</status>
+                	<status>disabled</status>
                 </CDP>
             </Interface>
         </Interfaces>
@@ -72,11 +67,6 @@
             </Interface>
             <Interface name="eth2">
                 <CDP>
-                	<status>enabled</status>
-                </CDP>
-            </Interface>
-            <Interface name="ppp0">
-                <CDP>
                 	<status>disabled</status>
                 </CDP>
             </Interface>
@@ -89,32 +79,6 @@
             <Interface name="eth0">
                 <CDP>
                 	<status>enabled</status>
-                </CDP>
-            </Interface>
-            <Interface name="eth1">
-                <CDP>
-                	<status>disabled</status>
-                </CDP>
-            </Interface>
-        </Interfaces>
-    </Switch>
-    
-    <!-- S2 -->
-    <Switch id="S2">
-        <Interfaces>
-            <Interface name="eth0">
-                <CDP>
-                	<status>enabled</status>
-                </CDP>
-            </Interface>
-            <Interface name="eth1">
-                <CDP>
-                	<status>disabled</status>
-                </CDP>
-            </Interface>
-            <Interface name="eth2">
-                <CDP>
-                	<status>disabled</status>
                 </CDP>
             </Interface>
         </Interfaces>

@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPUpdate.h
+* @author Tomas Rajca
+*/
 
 #ifndef CDPUPDATE_H_
 #define CDPUPDATE_H_
@@ -34,11 +38,25 @@ class INET_API CDPUpdate : public CDPUpdate_Base
     CDPUpdate& operator=(const CDPUpdate& other) {if (this==&other) return *this; CDPUpdate_Base::operator=(other); copy(other); return *this;}
     virtual CDPUpdate *dup() const {return new CDPUpdate(*this);}
 
+    /**
+     * Count the standard IP checksum for message.
+     */
+    uint16_t countChecksum();
 
-    virtual uint16_t countChecksum();
-    virtual unsigned int getOptionArraySize() const { return options.size(); }
-    virtual std::string getOptionStr(TLVOptionBase *opt);
-    virtual void setOptionLength(TLVOptionBase *opt);
+    /**
+     * Returns number of TLV in message.
+     */
+    unsigned int getOptionArraySize() const { return options.size(); }
+
+    /**
+     * Get length of the specified option.
+     */
+    short getOptionLength(TLVOptionBase *opt);
+
+    /**
+     * Set length of the specified option.
+     */
+    void setOptionLength(TLVOptionBase *opt);
 
     /**
      * Returns option

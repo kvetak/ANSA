@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+//
+// @file LLDPUpdate.ned
+// @author Tomas Rajca
+//
 
 cplusplus {{
 #include "inet/common/TLVOption.h"
@@ -61,55 +65,52 @@ enum LLDPPortIdSubtype	//pcis
     pcisAgentCirId = 6;
     pcisLocAss = 7;
 }
-class LLDPOption extends TLVOptionBase
-{
-}
 
-class LLDPOptionChassisId extends LLDPOption
+class LLDPOptionChassisId extends TLVOptionBase
 {
     type = LLDPTLV_CHASSIS_ID;
     uint8_t	subtype;
     string	value;
 }
 
-class LLDPOptionPortId extends LLDPOption
+class LLDPOptionPortId extends TLVOptionBase
 {
     type = LLDPTLV_PORT_ID;
     uint8_t	subtype;
     string	value;
 }
 
-class LLDPOptionTTL extends LLDPOption
+class LLDPOptionTTL extends TLVOptionBase
 {
     type = LLDPTLV_TTL;
     uint16_t	ttl;
 }
 
-class LLDPOptionEndOf extends LLDPOption
+class LLDPOptionEndOf extends TLVOptionBase
 {
     type = LLDPTLV_END_OF;
     length = 1;				//TODO: should be 0
 }
 
-class LLDPOptionPortDes extends LLDPOption
+class LLDPOptionPortDes extends TLVOptionBase
 {
     type = LLDPTLV_PORT_DES;
     string	value;
 }
 
-class LLDPOptionSystemName extends LLDPOption
+class LLDPOptionSystemName extends TLVOptionBase
 {
     type = LLDPTLV_SYSTEM_NAME;
     string	value;
 }
 
-class LLDPOptionSystemDes extends LLDPOption
+class LLDPOptionSystemDes extends TLVOptionBase
 {
     type = LLDPTLV_SYSTEM_DES;
     string	value;
 }
 
-class LLDPOptionCap extends LLDPOption
+class LLDPOptionCap extends TLVOptionBase
 {
     type = LLDPTLV_SYSTEM_CAP;
     uint8_t	chasId = 0;
@@ -117,7 +118,7 @@ class LLDPOptionCap extends LLDPOption
     char	enCap[2];		// enabled capabilities
 }
 
-class LLDPOptionManAdd extends LLDPOption
+class LLDPOptionManAdd extends TLVOptionBase
 {
     type = LLDPTLV_MAN_ADD;
     uint8_t		addLength;			// length, in octets, of the (management addresssubtype + management address) fields
@@ -129,7 +130,7 @@ class LLDPOptionManAdd extends LLDPOption
     string		oid;				// object identifier
 }
 
-class LLDPOptionOrgSpec extends LLDPOption
+class LLDPOptionOrgSpec extends TLVOptionBase
 {
     type = LLDPTLV_ORG_SPEC;
     uint32_t	oui;			// organizationally unique identifier

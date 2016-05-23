@@ -12,70 +12,133 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPNeighbourTable.h
+* @author Tomas Rajca
+*/
 
 #ifndef LLDPNEIGHBOURTABLE_H_
 #define LLDPNEIGHBOURTABLE_H_
 
 #include <omnetpp.h>
 #include "inet/common/INETDefs.h"
+#include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 
 namespace inet {
 
-class LLDPNeighbour
+/**
+ * Class holding information about a LLDP neighbour.
+ */
+class INET_API LLDPNeighbour: public cObject
 {
-//    friend class LLDPNeighbourTable;
+    friend class LLDPNeighbourTable;
 protected:
-    const char* chassisId;
-    const char* portId;
-    const char* msap;
-    /*  const char *ttl;
-    const char *portDes;
-    const char *systemName;
-    const char *systemDes;
-    const char *systemCap;
-    const char *managementAdd;
-    const char *organizationallySpec;*/
+    cMessage *rxInfoTtl;
+    LLDPAgent *agent;
 
+    std::string chassisId;
+    std::string portId;
+    std::string msap;
 
-
+    simtime_t lastUpdate;
+    uint16_t ttl;
+    std::string portDes;
+    std::string systemName;
+    std::string systemDes;
+    std::string systemCap;      // system capabilities
+    std::string enabledCap;       // enabled capabilities
+    LLDPManAddTab managementAdd;
+    int mtu;
 
 public:
-    LLDPNeighbour();
-    //LLDPNeighbour(const char *cId, const char *pId);
+    LLDPNeighbour(LLDPAgent *agent, const char *cId, const char *pId);
     virtual ~LLDPNeighbour();
 
-    virtual std::string info() const;
-    virtual std::string detailedInfo() const {return info();}
+    virtual std::string info() const override;
+    virtual std::string detailedInfo() const override {return info();}
     friend std::ostream& operator<<(std::ostream& os, const LLDPNeighbour& i)
     {
         return os << i.info();
     }
 
-    const char* getChassisId() {return this->chassisId;}
-    const char* getPortId() {return this->portId;}
+    // getters
+    std::string getChassisId() {return this->chassisId;}
+    std::string getPortId() {return this->portId;}
+    cMessage *getRxInfoTtl() {return this->rxInfoTtl;}
+    simtime_t getLastUpdate() {return this->lastUpdate;}
+    std::string getSystemName() {return this->systemName;}
+    uint16_t getTtl() {return this->ttl;}
+    LLDPAgent *getAgent() {return this->agent;}
+    LLDPManAddTab getManagementAdd() {return managementAdd;}
+    int getMtu() {return mtu;}
+    std::string getMsap(){return msap;}
 
-    void setChassisId(const char* c) {this->chassisId = c;}
-    void setPortId(const char* p) {portId = p;}
-
-    const char *getMsap(){return msap;}
-
+    // setters
+    void setChassisId(const char *c) {this->chassisId = c;}
+    void setPortId(const char *p) {this->portId = p;}
+    void setLastUpdate(simtime_t l) {this->lastUpdate = l;}
+    void setTtl(uint16_t t) {this->ttl = t;}
+    void setPortDes(std::string p) {this->portDes = p;}
+    void setSystemName(std::string s) {this->systemName = s;}
+    void setSystemDes(std::string s) {this->systemDes = s;}
+    void setSystemCap(std::string s) {this->systemCap = s;}
+    void setEnabledCap(std::string e) {this->enabledCap = e;}
+    void setMtu(int m) {this->mtu = m;}
 };
 
 
-class LLDPNeighbourTable
+/**
+ * Class holding information about a LLDP neighbours.
+ * Expired entries are automatically deleted.
+ */
+class INET_API LLDPNeighbourTable : public cSimpleModule
 {
 protected:
     std::vector<LLDPNeighbour *> neighbours;
+
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *) override;
+
 public:
+    enum TimerKind {
+        ttl = 1
+    };
     LLDPNeighbourTable();
     virtual ~LLDPNeighbourTable();
-
     std::vector<LLDPNeighbour *>& getNeighbours() {return neighbours;}
-    LLDPNeighbour *findNeighbourByMSAP(const char* msap);
-    void addNeighbour(LLDPNeighbour * neighbour);
+
+    /**
+     * Returns the neighbour with the specified MSAP (chassis ID + port ID).
+     */
+    LLDPNeighbour *findNeighbourByMSAP(std::string msap);
+
+    /**
+     * Created and adds the a neighbour to the table. The operation might fail
+     * if in the table is already neighbour with the same MSAP
+     */
+    LLDPNeighbour *addNeighbour(LLDPAgent *agent, std::string chassisId, std::string portId);
+
+    /**
+     * Removes a neighbour from the table. If the neighbour was
+     * not found in the table then it is untouched, otherwise deleted.
+     */
     void removeNeighbour(LLDPNeighbour * neighbour);
-    void removeNeighbour(const char* msap);
-    std::string printStats();
+
+    /**
+     * Removes a neighbour specified with MSAP from the table. If the neighbour was
+     * not found in the table then it is untouched, otherwise deleted.
+     */
+    void removeNeighbour(std::string msap);
+
+    /**
+     * Removes all neighbours which where learned with specified agent.
+     */
+    void removeNeighboursByAgent(LLDPAgent *ag);
+
+    /*
+     * Restarts neighbour TTL timer to specified holdtime
+     */
+    void restartRxInfoTtl(LLDPNeighbour *neighbour, uint16_t holdTime);
 };
 
 } /* namespace inet */

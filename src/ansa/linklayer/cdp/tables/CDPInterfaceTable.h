@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPInterfaceTable.h
+* @author Tomas Rajca
+*/
 
 #ifndef CDPINTERFACE_H_
 #define CDPINTERFACE_H_
@@ -21,17 +25,26 @@
 
 namespace inet {
 
-class CDPInterface : public cObject {
+/**
+ * Class holding informatation about interface that are capable
+ * to run CDP.
+ */
+class INET_API CDPInterface : public cObject {
+        friend class CDPInterfaceTable;
     protected:
         InterfaceEntry *interface;  // Physical network interface
         CDPTimer *updateTimer;
-        bool enabled;
+        bool CDPEnabled;
         int fastStart;
 
     public:
         CDPInterface(InterfaceEntry *iface);
         virtual ~CDPInterface();
         virtual std::string info() const override;
+        friend std::ostream& operator<<(std::ostream& os, const CDPInterface& e)
+        {
+            return os << e.info();
+        }
 
         int getInterfaceId() {return (interface) ? interface->getInterfaceId() : -1;}
         void decFastStart() {fastStart--;}
@@ -39,30 +52,70 @@ class CDPInterface : public cObject {
         // getters
         InterfaceEntry *getInterface() {return interface;}
         CDPTimer* getUpdateTimer() {return updateTimer;}
-        bool getEnabled() {return enabled;}
+        bool isCDPEnabled() {return CDPEnabled;}
         int getFastStart() {return fastStart;}
 
         // setters
         void setInterface(InterfaceEntry *i) {interface = i;}
         void setUpdateTimer(CDPTimer* u) {updateTimer = u;}
-        void setEnabled(bool e) {enabled = e;}
+        void setCDPEnabled(bool e) {CDPEnabled = e;}
         void setFastStart() {fastStart = 2;}
 };
 
-
-class CDPInterfaceTable
+/**
+ * Class holding informatation about interfaces that are capable
+ * to run CDP.
+ */
+class INET_API CDPInterfaceTable : public cSimpleModule
 {
   protected:
     std::vector<CDPInterface *> interfaces;
+
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *) override;
 
   public:
     virtual ~CDPInterfaceTable();
 
     std::vector<CDPInterface *>& getInterfaces() {return interfaces;}
-    CDPInterface * findInterfaceById(const int ifaceId);
+
+    /**
+     * Returns the interface with specified interface ID.
+     *
+     * @param   ifaceId    interface ID
+     * @return  cdp interface
+     */
+    CDPInterface * findInterfaceById(int ifaceId);
+
+    /**
+     * Adds the a interface to the table. The operation might fail
+     * if the interface is already in the table.
+     *
+     * @param   iface   interface to add
+     */
     void addInterface(CDPInterface * iface);
+
+    /**
+     * Remove all interfaces from the table.
+     */
     void removeInterfaces();
+
+    /**
+     * Remove a interface from the table.
+     * If the interface was not found in the table then it is untouched,
+     * otherwise deleted.
+     *
+     * @param   iface   Interface to delete
+     */
     void removeInterface(CDPInterface * iface);
+
+    /**
+     * Remove a interface identified by interface ID from the table.
+     * If the interface was not found in the table then it is untouched,
+     * otherwise deleted.
+     *
+     * @param   ifaceId ID of interface to delete
+     */
     void removeInterface(int ifaceId);
 };
 } /* namespace inet */

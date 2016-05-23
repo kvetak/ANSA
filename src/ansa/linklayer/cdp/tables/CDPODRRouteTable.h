@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPODRRouteTable.h
+* @author Tomas Rajca
+*/
 
 #ifndef CDPODRROUTETABLE_H_
 #define CDPODRROUTETABLE_H_
@@ -23,19 +27,23 @@
 
 namespace inet {
 
-
-class CDPODRRoute : public cObject
+/**
+ * Class holding information about a ODR route.
+ */
+class INET_API CDPODRRoute : public cObject
 {
+    friend class CDPODRRouteTable;
+
     private:
-      IRoute *route = nullptr;    // the route in the host routing table that is associated with this route, may be nullptr if deleted
-      L3Address dest;    // destination of the route
-      int prefixLength = 0;    // prefix length of the destination
-      L3Address nextHop;    // next hop of the route
       InterfaceEntry *ie = nullptr;    // outgoing interface of the route
-      int ifaceId;          // because of delete interface
-      bool invalide = false;    // true if the route has changed since the update
-      bool noUpdates = false;    // true if the route has changed since the update
-      simtime_t lastUpdateTime;    // time of the last change, only for RTE routes
+      IRoute *route = nullptr;         // the route in the host routing table that is associated with this route, may be nullptr if deleted
+      L3Address dest;                  // destination of the route
+      int prefixLength = 0;            // prefix length of the destination
+      L3Address nextHop;               // next hop of the route
+
+      bool invalide = false;
+      bool noUpdates = false;
+      simtime_t lastUpdateTime;    // time of the last change
       CDPTimer *ODRInvalideTime;
       CDPTimer *ODRHolddown;
       CDPTimer *ODRFlush;
@@ -47,9 +55,15 @@ class CDPODRRoute : public cObject
       CDPODRRoute(L3Address des, int pre, L3Address nex, InterfaceEntry *i);
       virtual ~CDPODRRoute();
       virtual std::string info() const override;
+      friend std::ostream& operator<<(std::ostream& os, const CDPODRRoute& e)
+      {
+          return os << e.info();
+      }
 
+      /**
+       * delete all route timers
+       */
       void deleteTimer(CDPTimer *timer);
-      void removeODRRoutes();
 
       // getters
       IRoute *getRoute() const { return route; }
@@ -78,20 +92,63 @@ class CDPODRRoute : public cObject
       void setODRFlush(CDPTimer *time) { ODRFlush = time; }
 };
 
-class CDPODRRouteTable {
+/**
+ * Class holding informatation about learned ODR routes.
+ */
+class INET_API CDPODRRouteTable : public cSimpleModule
+{
 protected:
   std::vector<CDPODRRoute *> routes;
+
+  virtual void initialize(int stage) override;
+  virtual void handleMessage(cMessage *) override;
 
 public:
   virtual ~CDPODRRouteTable();
 
   std::vector<CDPODRRoute *>& getRoutes() {return routes;}
+
+  /**
+   * Returns the ODR route with specified destination network and next hope.
+   */
   CDPODRRoute *findRoute(const L3Address& destination, int prefixLength, const L3Address& nextHope);
+
+  /**
+   * Returns the ODR route that is identified by route
+   */
   CDPODRRoute *findRoute(const IRoute *route);
-  int countDestinationPaths(const L3Address& destination, uint8_t prefixLength);
+
+  /**
+   * Adds the a ODR route to the table. The operation might fail
+   * if route is already in the table.
+   *
+   * @param   route   route to add
+   */
   void addRoute(CDPODRRoute * route);
+
+  /**
+   * Remove all ODR routes from the table.
+   */
   void removeRoutes();
+
+  /**
+   * Remove a ODR route from the ODR table.
+   * If the route was not found in the table then it is untouched,
+   * otherwise deleted.
+   *
+   * @param   route   route to delete
+   */
   void removeRoute(CDPODRRoute * route);
+
+  /**
+   * Count routes to specified network
+   *
+   * @param   destination
+   * @param   prefixLength
+   * @return  number of paths
+   */
+  int countDestinationPaths(const L3Address& destination, uint8_t prefixLength);
+
 };
 
 } /* namespace inet */

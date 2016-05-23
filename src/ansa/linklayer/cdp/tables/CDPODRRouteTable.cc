@@ -12,11 +12,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPODRRouteTable.cc
+* @author Tomas Rajca
+*/
+
 
 #include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 #include <algorithm>
+#include <math.h>
 
 namespace inet {
+
+Register_Abstract_Class(CDPODRRoute);
+Define_Module(CDPODRRouteTable);
 
 std::string CDPODRRoute::info() const
 {
@@ -34,6 +43,11 @@ std::string CDPODRRoute::info() const
     else
         out << nextHop;
     out << ", " <<  ie->getName();
+
+    if(invalide)
+        out << ", invalid route (flush in " << round((ODRFlush->getArrivalTime()-simTime()).dbl()) <<  "s)";
+    else
+        out << ", " << round((simTime() - lastUpdateTime).dbl()) << "s";
 
     return out.str();
 }
@@ -68,36 +82,28 @@ CDPODRRoute::~CDPODRRoute()
     deleteTimer(ODRFlush);
 }
 
-/**
- * Create all timers for odr route
- */
 void CDPODRRoute::createTimers()
 {
     ODRInvalideTime = new CDPTimer();
-    ODRInvalideTime->setTimerType(CDPTimerType::ODRInvalideTime);
+    ODRInvalideTime->setTimerType(CDPTimerType::CDPODRInvalideTime);
     ODRInvalideTime->setContextPointer(this);
 
     ODRHolddown = new CDPTimer();
-    ODRHolddown->setTimerType(CDPTimerType::ODRHolddown);
+    ODRHolddown->setTimerType(CDPTimerType::CDPODRHolddown);
     ODRHolddown->setContextPointer(this);
 
     ODRFlush = new CDPTimer();
-    ODRFlush->setTimerType(CDPTimerType::ODRFlush);
+    ODRFlush->setTimerType(CDPTimerType::CDPODRFlush);
     ODRFlush->setContextPointer(this);
 }
 
-/**
- * Cancel and delete event
- *
- * @param   timer   event to delete
- */
 void CDPODRRoute::deleteTimer(CDPTimer *timer)
 {
     if(timer != nullptr)
     {
         //if is scheduled, get his sender module, otherwise get owner module
         cSimpleModule *owner = dynamic_cast<cSimpleModule *>((timer->isScheduled()) ? timer->getSenderModule() : timer->getOwner());
-        if(owner != NULL)
+        if(owner != nullptr)
         {// owner is cSimpleModule object -> can call his methods
             owner->cancelAndDelete(timer);
             timer = nullptr;
@@ -105,9 +111,20 @@ void CDPODRRoute::deleteTimer(CDPTimer *timer)
     }
 }
 
-/**
- * find odr route by destination, prefix length and next hope
- */
+void CDPODRRouteTable::initialize(int stage)
+{
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        WATCH_PTRVECTOR(routes);
+    }
+}
+
+void CDPODRRouteTable::handleMessage(cMessage *)
+{
+
+}
+
 CDPODRRoute *CDPODRRouteTable::findRoute(const L3Address& destination, int prefixLength, const L3Address& nextHope)
 {
     for (auto it = routes.begin(); it != routes.end(); ++it){
@@ -118,9 +135,6 @@ CDPODRRoute *CDPODRRouteTable::findRoute(const L3Address& destination, int prefi
     return nullptr;
 }
 
-/**
- * find odr route by route
- */
 CDPODRRoute *CDPODRRouteTable::findRoute(const IRoute *route)
 {
     for (auto it = routes.begin(); it != routes.end(); ++it)
@@ -130,14 +144,6 @@ CDPODRRoute *CDPODRRouteTable::findRoute(const IRoute *route)
     return nullptr;
 }
 
-/**
- * count all paths to destination
- *
- * @param   destination
- * @param   prefixLength
- *
- * @return  number of paths
- */
 int CDPODRRouteTable::countDestinationPaths(const L3Address& destination, uint8_t prefixLength)
 {
     int destinationPaths = 0;
@@ -149,14 +155,9 @@ int CDPODRRouteTable::countDestinationPaths(const L3Address& destination, uint8_
     return destinationPaths;
 }
 
-/**
- * add route to odr route table
- *
- * @param   route   route to add
- */
 void CDPODRRouteTable::addRoute(CDPODRRoute * route)
 {
-    if(findRoute(route->getDestination(), route->getPrefixLength(), route->getNextHop()) != NULL)
+    if(findRoute(route->getDestination(), route->getPrefixLength(), route->getNextHop()) != nullptr)
     {// route already in table
         throw cRuntimeError("Adding to CDPODRRoute route, which is already in it.");
     }
@@ -164,11 +165,6 @@ void CDPODRRouteTable::addRoute(CDPODRRoute * route)
     routes.push_back(route);
 }
 
-
-/**
- * Remove all routes
- *
- */
 void CDPODRRouteTable::removeRoutes()
 {
     for (auto it = routes.begin(); it != routes.end();)
@@ -178,12 +174,6 @@ void CDPODRRouteTable::removeRoutes()
     }
 }
 
-/**
- * Remove route
- *
- * @param   route   route to delete
- *
- */
 void CDPODRRouteTable::removeRoute(CDPODRRoute *route)
 {
     auto r = find(routes.begin(), routes.end(), route);

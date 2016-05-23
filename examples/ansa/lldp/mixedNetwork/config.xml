@@ -6,18 +6,17 @@
         <Interfaces>
             <Interface name="eth0">
                 <LLDP>
-                	<AdminStatus>enabledRxTx</AdminStatus>
+                	<AdminStatus>enabledrxtx</AdminStatus>
                 </LLDP>
             </Interface>
             <Interface name="eth1">
                 <LLDP>
-                	<AdminStatus>enabledRxTx</AdminStatus>
-                	<msgTxInterval>20</msgTxInterval>
+                	<AdminStatus>enabledrxtx</AdminStatus>
                 </LLDP>
             </Interface>
             <Interface name="eth2">
                 <LLDP>
-                	<AdminStatus>enabledRxOnly</AdminStatus>
+                	<AdminStatus>enabledrxtx</AdminStatus>
                 </LLDP>
             </Interface>
         </Interfaces>
@@ -28,12 +27,17 @@
         <Interfaces>
             <Interface name="eth0">
                 <LLDP>
-                	<AdminStatus>enabledRxTx</AdminStatus>
+                	<AdminStatus>enabledrxtx</AdminStatus>
                 </LLDP>
             </Interface>
             <Interface name="eth1">
                 <LLDP>
-                	<AdminStatus>enabledRxTx</AdminStatus>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth2">
+                <LLDP>
+                	<AdminStatus>disabled</AdminStatus>
                 </LLDP>
             </Interface>
         </Interfaces>
@@ -45,14 +49,30 @@
         <Interfaces>
             <Interface name="eth0">
                 <LLDP>
-                	<AdminStatus>enabledRxTx</AdminStatus>
+                	<AdminStatus>enabledrxtx</AdminStatus>
                 </LLDP>
             </Interface>
             <Interface name="eth1">
                 <LLDP>
-                	<AdminStatus>enabledRxTx</AdminStatus>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth2">
+                <LLDP>
+                	<AdminStatus>disabled</AdminStatus>
                 </LLDP>
             </Interface>
         </Interfaces>
     </Router>
+    
+    <!-- S1 -->
+    <Switch id="S1">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+    </Switch>
 </Devices>

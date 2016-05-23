@@ -12,9 +12,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+//
+// @file LLDPAgentTable.ned
+// @author Tomas Rajca
+//
 
-#include "ansa/linklayer/lldp/LLDPDef.h"
+package ansa.linklayer.lldp.tables;
 
-namespace inet {
-
-} /* namespace inet */
+simple LLDPAgentTable
+{
+      @display("i=block/table");
+}

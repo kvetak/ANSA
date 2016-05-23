@@ -12,21 +12,37 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+//
+// @file CDPMain.ned
+// @author Tomas Rajca
+//
 
-package ansa.linklayer.ethernet.switch;
+package ansa.linklayer.cdp;
 
-import ansa.linklayer.contract.ANSA_IMACRelayUnit;
-
-simple ANSA_MACRelayUnit like ANSA_IMACRelayUnit
+simple CDPMain
 {
     parameters:
-        @display("i=block/switch");
-        string macTablePath = default("^.macTable"); // The path to the MACAddressTable module
-    gates:
-        input ifIn[] @labels(EtherFrame);
-        output ifOut[] @labels(EtherFrame);
-        input cdpIn[] @loose;
-        output cdpOut[] @loose;
-        input lldpIn[] @loose;
-        output lldpOut[] @loose;
+    	@display("i=block/network2");
+    	
+    	int timer @unit(s);
+    	int holdTime @unit(s);
+    	int version;
+    	int ODRRouteInvalidTime;
+    	int ODRRouteHolddownTime;
+    	int ODRRouteFlushTime;
+    	int maxDestinationPaths;
+        int defaultRouteInvalide;
+    	bool odr;
+        string routingTableModule;
+        
+        string deviceId;
+        string deviceType;
+        xml configFile;
+        
+        string cdpNeighbourTableModule; 
+        string cdpInterfaceTableModule; 
+        string cdpODRRouteTableModule; 
+	gates:
+        input ifIn[];
+        output ifOut[];
 }

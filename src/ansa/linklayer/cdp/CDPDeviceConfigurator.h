@@ -12,13 +12,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file CDPDeviceConfigurator.h
+*/
 
 #ifndef CDPDEVICECONFIGURATOR_H_
 #define CDPDEVICECONFIGURATOR_H_
 
 #include <omnetpp.h>
 
-#include "ansa/linklayer/cdp/CDP.h"
+#include "ansa/linklayer/cdp/CDPMain.h"
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 
 namespace inet {
@@ -47,13 +50,14 @@ class CDPDeviceConfigurator
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);
 
       static cXMLElement *GetODRProcess(cXMLElement *device);
-      void loadODRProcessConfig(cXMLElement *device, CDP *cMain);
+      void loadODRProcessConfig(cXMLElement *device, CDPMain *cMain);
+
       /////////////////////////////
       // configuration for CDP   //
       /////////////////////////////
-      void loadCDPConfig(CDP *cMain);
-      void loadCDPInterfacesConfig(cXMLElement *device, CDP *lMain);
-      void loadCDPInterface(cXMLElement *ifaceElem, CDP *lMain, CDPInterface *lIface);
+      void loadCDPConfig(CDPMain *cMain);
+      void loadCDPInterfacesConfig(cXMLElement *device, CDPMain *lMain);
+      void loadCDPInterface(cXMLElement *ifaceElem, CDPMain *lMain, CDPInterface *lIface);
 };
 
 } /* namespace inet */

@@ -12,12 +12,30 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @file LLDPAgentTable.cc
+* @author Tomas Rajca
+*/
 
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
-#include "ansa/linklayer/lldp/LLDP.h"
-//#include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
+#include "ansa/linklayer/lldp/LLDPMain.h"
+
+#include <string>
 
 namespace inet {
+Register_Abstract_Class(LLDPAgent);
+Define_Module(LLDPAgentTable);
+
+std::string LLDPStatistics::info() const
+{
+    std::stringstream string;
+    string << "ageouts total:" << ageoutsTotal << ", frames discarded total:" << framesDiscardedTotal;
+    string << ", frames in errors total:" << framesInErrorsTotal << ", frames in total:" << framesInTotal;
+    string << ", frames out total: " << framesInTotal << ", frames out total: " << framesOutTotal;
+    string << ", tlvs discarded total: " << tlvsDiscardedTotal << ", tlvs unrecognized total" << tlvsUnrecognizedTotal;
+    string << ", lldpdu length errors: " << lldpduLengthErrors << endl;
+    return string.str();
+}
 
 std::string LLDPAgent::info() const
 {
@@ -33,20 +51,20 @@ std::string LLDPAgent::info() const
         string << "Tx";
     else if(adminStatus == disabled)
         string << "dis";
-    string << " txCredit:" << (uint32_t)txCredit;
-    string << " txFast:" << (uint32_t)txFast;
-    string << " msgFastTx:" << msgFastTx;
-    string << " msgTxHold:" << (uint32_t)msgTxHold;
-    string << " msgTxInterval:" << msgTxInterval;
-    string << " reinitDelay:" << reinitDelay;
-    string << " txFastInit:" << txFastInit;
-    string << " txCreditMax:" << (uint32_t)txCreditMax;
+    string << ", txCredit:" << (uint32_t)txCredit;
+    string << ", txFast:" << (uint32_t)txFast;
+    string << ", msgFastTx:" << msgFastTx;
+    string << ", msgTxHold:" << (uint32_t)msgTxHold << "," << endl;
+    string << "msgTxInterval:" << msgTxInterval;
+    string << ", reinitDelay:" << reinitDelay;
+    string << ", txFastInit:" << txFastInit;
+    string << ", txCreditMax:" << (uint32_t)txCreditMax;
     return string.str();
 }
 
 LLDPAgent::LLDPAgent(
         InterfaceEntry *iface,
-        LLDP *c,
+        LLDPMain *c,
         uint8_t msgFastTxDef,
         uint8_t msgTxHoldDef,
         uint16_t msgTxIntervalDef,
@@ -76,143 +94,254 @@ LLDPAgent::LLDPAgent(
     adminStatus = adminStatusDef;
 
     txTTROwner = dynamic_cast<cSimpleModule *>(txTTR->getOwner());
-    //lnt = core->getLnt();
+    lnt = core->getLnt();
+    reinitDelaySet = false;
 }
 
 LLDPAgent::~LLDPAgent()
 {
-    //if is scheduled, get his sender module, otherwise get owner module
-    cSimpleModule *owner = dynamic_cast<cSimpleModule *>((txTTR->isScheduled()) ? txTTR->getSenderModule() : txTTR->getOwner());
-    if(owner != NULL)
-    {// owner is cSimpleModule object -> can call his methods
-        owner->cancelAndDelete(txTTR);
-        txTTR = NULL;
+    if(txTTROwner != nullptr)
+    {
+        txTTROwner->cancelAndDelete(txTTR);
+        txTTROwner = nullptr;
     }
     //if is scheduled, get his sender module, otherwise get owner module
-    owner = dynamic_cast<cSimpleModule *>((txShutdownWhile->isScheduled()) ? txShutdownWhile->getSenderModule() : txShutdownWhile->getOwner());
-    if(owner != NULL)
+    cSimpleModule *owner = dynamic_cast<cSimpleModule *>((txShutdownWhile->isScheduled()) ? txShutdownWhile->getSenderModule() : txShutdownWhile->getOwner());
+    if(owner != nullptr)
     {// owner is cSimpleModule object -> can call his methods
         owner->cancelAndDelete(txShutdownWhile);
-        txShutdownWhile = NULL;
+        txShutdownWhile = nullptr;
     }
 }
 
-/**
- * increment credit value, up to the maximum value specified by the txCreditMax
- * tx_tick state in transmit timer state machine
- */
 void LLDPAgent::txAddCredit()
 {
     if(txCredit < txCreditMax)
         txCredit++;
 }
 
-/**
- * decrement by 1 value specified in parameter
- *
- * @param   var     variable
- */
-void LLDPAgent::dec(uint16_t var)
+void LLDPAgent::dec(uint8_t *var)
 {
-    if(var > 0)
-        var--;
+    if((*var) > 0)
+        (*var)--;
 }
 
 void LLDPAgent::startAgent()
 {
+    if(reinitDelaySet)
+        return;
+
     if(adminStatus == enabledRxTx || adminStatus == enabledTxOnly)
-        txSchedule();
+        txSchedule(true);
 }
 
-void LLDPAgent::txSchedule()
+void LLDPAgent::stopAgent()
+{
+    txTTROwner->cancelEvent(txTTR);
+    txShutdownFrame();
+}
+
+void LLDPAgent::txSchedule(bool noDelay)
 {
     if(adminStatus != enabledRxTx && adminStatus != enabledTxOnly)
         return;
 
-    uint8_t delay;
-    if(txFast > 0)
-        delay = msgFastTx;
-    else
-        delay = msgTxInterval;
+    uint16_t delay = 0;
+    if(!noDelay)
+    {
+        if(txFast > 0)
+            delay = msgFastTx;
+        else
+            delay = msgTxInterval;
+    }
 
     txTTROwner->scheduleAt(simTime() + delay, txTTR);
 }
 
-
 void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
 {
-   // LLDPNeighbour *neighbour = lnt->findNeighbourByMSAP(msg->getMsap());
+    LLDPNeighbour *neighbour = lnt->findNeighbourByMSAP(msg->getMsap());
 
-   // if(neighbour == nullptr)
-    //{// new neighbour
-        //neighbour = new LLDPNeighbour(msg->getChassisId(), msg->getPortId());
-        //neighbour = new LLDPNeighbour();
-     //   EV_INFO << "New neighbour " << neighbour->getChassisId() << " on interface " << neighbour->getPortId() << endl;
+    // shutdown packet
+    if(msg->getTtl() == 0)
+    {
+        lnt->removeNeighbour(msg->getMsap());
+        if(neighbour != nullptr)
+            EV_INFO << "Neighbour " << neighbour->getSystemName() << " go down. Delete from table" << endl;
+        return;
+    }
 
+    std::string chassisId = msg->getChassisId();
+    std::string portId = msg->getPortId();
+    if(neighbour == nullptr)
+    {// new neighbour
+        neighbour = lnt->addNeighbour(this, chassisId, portId);
+        EV_INFO << "New neighbour " << neighbour->getSystemName() << ". Chassis ID: " << neighbour->getChassisId() << ", Port ID: " << neighbour->getPortId() << endl;
 
-  //  }
-  //  else
-  //  {
+        // fast start
+        txFastStart();
+    }
+    else
+    {
+        EV_INFO << "Update neighbour " << neighbour->getSystemName() << ". Chassis ID: " << neighbour->getChassisId() << ", Port ID: " << neighbour->getPortId() << endl;
+    }
 
-  //  }
+    // mark all neighbour information as unchanged
+    bool updatedTlv[128];
+    memset(&updatedTlv, 0, 128 * sizeof(bool));
+    bool mtu = false;
+    neighbour->getManagementAdd().setAllUnchanged();
+
+    lnt->restartRxInfoTtl(neighbour, msg->getTtl());
+    neighbour->setLastUpdate(simTime());
+    neighbour->setTtl(msg->getTtl());
+
+    for(unsigned int i=3; i < msg->getOptionArraySize(); i++)
+    {
+        const TLVOptionBase *option = &msg->getOption(i);
+        switch(msg->getOption(i).getType())
+        {
+            case LLDPTLV_PORT_DES: {
+                const LLDPOptionPortDes *opt = check_and_cast<const LLDPOptionPortDes *> (option);
+                neighbour->setPortDes(opt->getValue());
+                updatedTlv[LLDPTLV_PORT_DES] = true;
+                break;
+            }
+
+            case LLDPTLV_SYSTEM_NAME: {
+                const LLDPOptionSystemName *opt = check_and_cast<const LLDPOptionSystemName *> (option);
+                neighbour->setSystemName(opt->getValue());
+                updatedTlv[LLDPTLV_SYSTEM_NAME] = true;
+                break;
+            }
+
+            case LLDPTLV_SYSTEM_DES: {
+                const LLDPOptionSystemDes *opt = check_and_cast<const LLDPOptionSystemDes *> (option);
+                neighbour->setSystemDes(opt->getValue());
+                updatedTlv[LLDPTLV_SYSTEM_DES] = true;
+                break;
+            }
+
+            case LLDPTLV_SYSTEM_CAP: {
+                const LLDPOptionCap *opt = check_and_cast<const LLDPOptionCap *> (option);
+                neighbour->setSystemCap(capabilitiesConvert(opt->getSysCap(0), opt->getSysCap(1)));
+                neighbour->setEnabledCap(capabilitiesConvert(opt->getEnCap(0), opt->getEnCap(1)));
+                updatedTlv[LLDPTLV_SYSTEM_CAP] = true;
+                break;
+            }
+
+            case LLDPTLV_MAN_ADD: {
+                const LLDPOptionManAdd *opt = check_and_cast<const LLDPOptionManAdd *> (option);
+                LLDPManAdd *manAdd = neighbour->getManagementAdd().findManAdd(opt->getAddSubtype());
+
+                if(manAdd == nullptr)
+                { // add new
+                    manAdd = new LLDPManAdd();
+                    neighbour->getManagementAdd().addManAdd(manAdd);
+                }
+                manAdd->setAddLength(opt->getAddLength());
+                manAdd->setAddSubtype(opt->getAddSubtype());
+                manAdd->setAddress(opt->getAddress());
+                manAdd->setIfaceSubtype(opt->getIfaceSubtype());
+                manAdd->setIfaceNum(opt->getIfaceNum());
+                manAdd->setOidLength(opt->getOidLength());
+                manAdd->setOid(opt->getOid());
+
+                manAdd->setUpdated(true);
+
+                updatedTlv[LLDPTLV_SYSTEM_CAP] = true;
+                break;
+            }
+
+            case LLDPTLV_ORG_SPEC: {
+                const LLDPOptionOrgSpec *opt = check_and_cast<const LLDPOptionOrgSpec *> (option);
+                neighbour->setMtu(std::stoi(opt->getValue()));
+                mtu = true;
+                break;
+            }
+
+            default: {
+                EV_INFO << "Unknown type of TLV " << msg->getOption(i).getType() << endl;
+            }
+        }
+    }
+
+    // remove neighbour informations that was not changed
+    for(int i = 0; i < 128; i++)
+    {
+        if(!updatedTlv[i])
+        {
+            switch(i)
+            {
+                case LLDPTLV_PORT_DES:
+                    neighbour->setPortDes(nullptr);
+                    break;
+                case LLDPTLV_SYSTEM_NAME:
+                    neighbour->setSystemName(nullptr);
+                    break;
+                case LLDPTLV_SYSTEM_DES:
+                    neighbour->setSystemDes(nullptr);
+                    break;
+                case LLDPTLV_SYSTEM_CAP:
+                    neighbour->setSystemCap(nullptr);
+                    neighbour->setEnabledCap(nullptr);
+                    break;
+            }
+        }
+    }
+    if(!mtu)
+        neighbour->setMtu(0);
+    neighbour->getManagementAdd().removeNotUpdated();
 }
 
-/**
- * Create update frame
- *
- * @return  created update frame
- */
 LLDPUpdate *LLDPAgent::constrUpdateLLDPDU()
 {
     LLDPUpdate *update = new LLDPUpdate();
 
+    // mandatory
     setTlvChassisId(update);      // chassis ID
     setTlvPortId(update);         // port ID
-    setTlvTtl(update);            // TTL
+    setTlvTtl(update, false);     // TTL
+
+    // additional optional
     setTlvPortDes(update);        // port description
     setTlvSystemName(update);     // system name
     setTlvSystemDes(update);      // system description
     setTlvCap(update);            // system capabilites
     setTlvManAdd(update);         // management address
 
+    // organizationally specific
+    setTlvMtu(update);         // maximum frame size
+
+    // optional (IEEE Std 802.1AB-2009)
     setTlvEndOf(update);          // end of lldpdu - must be at the end
+
     return update;
 }
 
-/**
- * Create update frame
- *
- * @return  created update frame
- */
 LLDPUpdate *LLDPAgent::constrShutdownLLDPDU()
 {
     LLDPUpdate *update = new LLDPUpdate();
 
     setTlvChassisId(update);      // chassis ID
     setTlvPortId(update);         // port ID
-    setTlvTtl(update);            // TTL
+    setTlvTtl(update, true);      // TTL
 
-    setTlvEndOf(update);          // end of lldpdu - must be at the end
+    setTlvEndOf(update);          // end of LLDPDU - must be at the end
     return update;
 }
 
-/**
- * Send update
- *
- * @param   update  update frame to be send
- */
 void LLDPAgent::txFrame(LLDPUpdate *update)
 {
-    if(!interface->isUp() || adminStatus == disabled)
-    {// trying send message on DOWN iface -> cancel
-        EV_ERROR << "Trying send message on DOWN or PASSIVE interface - sending canceled" << endl;
+    if(adminStatus != enabledRxTx && adminStatus != enabledTxOnly)
+    {
+        EV_ERROR << "Trying send message with not transmitting agent - sending canceled" << endl;
         delete update;
         return;
     }
 
-
     if (!interface->isUp())
-    {
+    {// trying send message on DOWN iface -> cancel
         EV_ERROR << "Interface " << interface->getFullName() << " is down, discarding packet" << endl;
         delete update;
         return;
@@ -221,46 +350,54 @@ void LLDPAgent::txFrame(LLDPUpdate *update)
     Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
     controlInfo->setDestinationAddress(MACAddress("01-80-c2-00-00-0e"));
     controlInfo->setInterfaceId(interface->getInterfaceId());
+    controlInfo->setEtherType(35020);       // 88-cc
     update->setControlInfo(controlInfo);
 
+    st.framesOutTotal++;
+    short length = 0;
+    for(unsigned int i = 0; i < update->getOptionArraySize(); i++)
+        length += update->getOptionLength(&update->getOption(i));
+    length += sizeof(length)*update->getOptionArraySize();
+    update->setByteLength(length);
     txTTROwner->send(update, "ifOut", interface->getNetworkLayerGateIndex());
 }
 
-/**
- * Create update frame, send it and decrement credit
- */
 void LLDPAgent::txInfoFrame()
 {
     if(txCredit > 0)
     {
-        //LLDPUpdate *update = mibConstrInfoLLDPDU();
         LLDPUpdate *update = constrUpdateLLDPDU();
         txFrame(update);
-        dec(txCredit);
-        dec(txFast);
+#ifdef CREDIT
+        dec(&txCredit);
+#endif
+        dec(&txFast);
 
-        txSchedule();
+        txSchedule(false);
     }
     else
     {
-        //TODO: jakove zpozdeni?
+        txTTROwner->scheduleAt(simTime() + 1, txTTR);
     }
 }
 
-/**
- * Create shutdown frame and send it
- */
 void LLDPAgent::txShutdownFrame()
 {
+    if(adminStatus != enabledRxTx && adminStatus != enabledTxOnly)
+        return;
+
     LLDPUpdate *update = constrUpdateLLDPDU();
     txFrame(update);
-    //TODO: reinit
 }
 
 void LLDPAgent::txFastStart()
 {
-    if(txFast == 0)
-        txFast = txFastInit;
+    if(adminStatus != enabledRxTx && adminStatus != enabledTxOnly)
+        return;
+
+    txTTROwner->cancelEvent(txTTR);
+
+    txFast = txFastInit;
 
     txInfoFrame();
 }
@@ -288,15 +425,23 @@ void LLDPAgent::setTlvPortId(LLDPUpdate *msg)
 {
     LLDPOptionPortId *tlv = new LLDPOptionPortId();
     tlv->setSubtype((uint8_t)pcisIfaceNam);
-    tlv->setValue(interface->getFullName());
+
+    std::string s = interface->getFullName();
+    if(s.size() > 255)
+        s.resize(255);
+
+    tlv->setValue(s.c_str());
     msg->setOptionLength(tlv);
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvTtl(LLDPUpdate *msg)
+void LLDPAgent::setTlvTtl(LLDPUpdate *msg, bool shutDown)
 {
     LLDPOptionTTL *tlv = new LLDPOptionTTL();
-    tlv->setTtl(msgTxInterval * msgTxHold);
+    if(!shutDown)
+        tlv->setTtl(msgTxInterval * msgTxHold);
+    else
+        tlv->setTtl(0);
     msg->setOptionLength(tlv);
     msg->addOption(tlv, -1);
 }
@@ -323,7 +468,12 @@ void LLDPAgent::setTlvPortDes(LLDPUpdate *msg)
 void LLDPAgent::setTlvSystemName(LLDPUpdate *msg)
 {
     LLDPOptionSystemName *tlv = new LLDPOptionSystemName();
-    tlv->setValue(core->getContainingModule()->getFullName());
+
+    std::string s = core->getContainingModule()->getFullName();
+    if(s.size() > 255)
+        s.resize(255);
+
+    tlv->setValue(s.c_str());
     msg->setOptionLength(tlv);
     msg->addOption(tlv, -1);
 }
@@ -331,7 +481,12 @@ void LLDPAgent::setTlvSystemName(LLDPUpdate *msg)
 void LLDPAgent::setTlvSystemDes(LLDPUpdate *msg)
 {
     LLDPOptionSystemDes *tlv = new LLDPOptionSystemDes();
-    tlv->setValue(core->getContainingModule()->getComponentType()->getFullName());
+
+    std::string s = core->getContainingModule()->getComponentType()->getFullName();
+    if(s.size() > 255)
+        s.resize(255);
+
+    tlv->setValue(s.c_str());
     msg->setOptionLength(tlv);
     msg->addOption(tlv, -1);
 }
@@ -347,7 +502,7 @@ void LLDPAgent::setTlvCap(LLDPUpdate *msg)
     tlv->setSysCap(1, sysCap[1]);
     tlv->setEnCap(0, enCap[0]);
     tlv->setEnCap(1, enCap[1]);
-    //tlv->setChasId();                 //TODO ?
+    tlv->setChasId((uint8_t)lcisMacAdd);
     msg->setOptionLength(tlv);
     msg->addOption(tlv, -1);
 }
@@ -386,19 +541,51 @@ void LLDPAgent::setTlvManAddSpec(LLDPUpdate *msg, std::string add)
     msg->addOption(tlv, -1);
 }
 
+void LLDPAgent::setTlvMtu(LLDPUpdate *msg)
+{
+    LLDPOptionOrgSpec *tlv = new LLDPOptionOrgSpec();
+    std::stringstream string;
+    string << interface->getMTU();
+
+    tlv->setOui(OUI_IEEE_802_3);            // IEEE 802.3
+    tlv->setSubtype(4);                     // subtype to MTU
+    tlv->setValue(string.str().c_str());    // set MTU
+
+    setTlvOrgSpec(msg, tlv);
+}
+
 void LLDPAgent::setTlvOrgSpec(LLDPUpdate *msg, LLDPOptionOrgSpec *tlv)
 {
-
-    std::string s = interface->getFullPath();
+    std::string s = tlv->getValue();
     if(strlen(tlv->getValue()) > 507)
     {
-        std::string s = tlv->getValue();
-        s.resize(507);
-        tlv->setValue(s.c_str());
+        EV_INFO << "Organizationally specific TLV is too long. TLV discarded." << endl;
+        delete tlv;
+        return;
     }
 
     msg->setOptionLength(tlv);
     msg->addOption(tlv, -1);
+}
+
+std::string LLDPAgent::capabilitiesConvert(char cap1, char cap2)
+{
+    std::string out;
+    std::stringstream s;
+    // O - Other, P - repeater, B - MAC Bridge, W - WLAN Access Point, R - Router, T - Telephone
+    // C - DOCSIS cable device, S - Station Only, c - C-VLAN Component of a VLAN Bridge
+    // s - S-VLAN Component of a VLAN Bridge, t - Two-port MAC Relay (TPMR)
+    char capLabel[11] = {'O', 'P', 'B', 'W', 'R', 'T', 'C', 'S', 'c', 's', 't'};
+    char capGet[2] = {cap1, cap2};
+
+    for(int i=0; i < 8; i++)
+        if(capGet[1-i/8] & (1 << i%8))
+            s << " " << capLabel[i];
+
+    out = s.str();
+    if(out.length() > 0)    //delete first space
+        out.erase(0, 1);
+    return out;
 }
 
 ///************************** END OF TLV ******************************///
@@ -406,50 +593,48 @@ void LLDPAgent::setTlvOrgSpec(LLDPUpdate *msg, LLDPOptionOrgSpec *tlv)
 
 ///************************ LLDP AGENT TABLE ****************************///
 
+void LLDPAgentTable::initialize(int stage)
+{
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_LOCAL) {
+        WATCH_PTRVECTOR(agents);
+    }
+}
+
+void LLDPAgentTable::handleMessage(cMessage *)
+{
+
+}
+
 LLDPAgent * LLDPAgentTable::findAgentById(const int ifaceId)
 {
-    std::vector<LLDPAgent *>::iterator it;
-
-    for (it = agents.begin(); it != agents.end(); ++it)
-    {// through all agents search for same interfaceId
-        if((*it)->getInterfaceId() == ifaceId)
-        {// found same
-            return (*it);
-        }
-    }
+    for (auto & agent : agents)
+        if(agent->getInterfaceId() == ifaceId)
+            return agent;
 
     return nullptr;
 }
 
 void LLDPAgentTable::startAgents()
 {
-    std::vector<LLDPAgent *>::iterator it;
-
-    for (it = agents.begin(); it != agents.end(); ++it)
-    {// through all agents
-        (*it)->startAgent();
-    }
+    for (auto agent : agents)
+        agent->startAgent();
 }
 
 
-LLDPAgent * LLDPAgentTable::addAgent(LLDPAgent * iface)
+LLDPAgent * LLDPAgentTable::addAgent(LLDPAgent * agent)
 {
-    if(findAgentById(iface->getInterfaceId()) != NULL)
+    if(findAgentById(agent->getInterfaceId()) != nullptr)
     {// agent already in table
-        throw cRuntimeError("Adding to LLDPAgentTable interface, which is already in it - id %d", iface);
+        throw cRuntimeError("Adding to LLDPAgentTable agent, which is already in it - iface id %d", agent->getInterfaceId());
     }
 
-    agents.push_back(iface);
+    agents.push_back(agent);
 
-    return iface;
+    return agent;
 }
 
-/**
- * Remove agent
- *
- * @param   agent   agent to delete
- *
- */
 void LLDPAgentTable::removeAgent(LLDPAgent * agent)
 {
     std::vector<LLDPAgent *>::iterator it;
@@ -469,11 +654,6 @@ void LLDPAgentTable::removeAgent(LLDPAgent * agent)
     }
 }
 
-/**
- * Removes agent
- *
- * @param   ifaceId interface ID of agent to delete
- */
 void LLDPAgentTable::removeAgent(int ifaceId)
 {
     std::vector<LLDPAgent *>::iterator it;
@@ -503,28 +683,96 @@ LLDPAgentTable::~LLDPAgentTable()
     agents.clear();
 }
 
-
 std::string LLDPAgentTable::printStats()
 {
     std::stringstream string;
     std::vector<LLDPAgent *>::iterator it;
+    LLDPStatistics *st;
 
     for (it = agents.begin(); it != agents.end(); ++it)
     {// through all agents
         if((*it)->getAdminStatus() != AS::disabled)
         {
-            string << (*it)->getIfaceName() << " interface statistics:" << endl;
-/*
-            string << "Received " << (*it)->rxStat.str();
-            if((*it)->rxStat.tlv[tlvT::UPDATE].getCount() > 0) string << "Update avg. size: " << ((*it)->rxStat.tlv[tlvT::ROUTERID].getSum() + (*it)->rxStat.tlv[tlvT::NEXTHOP].getSum() + (*it)->rxStat.tlv[tlvT::UPDATE].getSum()) / static_cast<double>((*it)->rxStat.tlv[tlvT::UPDATE].getCount()) << " B/TLV" << endl;
+            st = (*it)->getSt();
+            string << "Agent on intereface " << (*it)->getIfaceName() << " statistics:" << endl;
 
-            string << endl << "Transmitted " << (*it)->txStat.str();
-            if((*it)->txStat.tlv[tlvT::UPDATE].getCount() > 0) string << "Update avg. size: " << ((*it)->txStat.tlv[tlvT::ROUTERID].getSum() + (*it)->txStat.tlv[tlvT::NEXTHOP].getSum() + (*it)->txStat.tlv[tlvT::UPDATE].getSum()) / static_cast<double>((*it)->txStat.tlv[tlvT::UPDATE].getCount()) << " B/TLV" << endl;
-            */
+            string << "Ageouts total:" << st->ageoutsTotal << ", Frames discarded total:" << st->framesDiscardedTotal << endl;
+            string << "Frames in errors total:" << st->framesInErrorsTotal << ", Frames in total:" << st->framesInTotal << endl;
+            string << "Frames out total: " << st->framesInTotal << ", Frames out total: " << st->framesOutTotal << endl;
+            string << "Tlvs discarded total: " << st->tlvsDiscardedTotal << ", Tlvs unrecognized total" << st->tlvsUnrecognizedTotal << endl;
+            string << "Lldpdu length errors: " << st->lldpduLengthErrors << endl;
         }
     }
     return string.str();
 }
 
+LLDPManAdd *LLDPManAddTab::findManAdd(uint8_t type)
+{
+    std::vector<LLDPManAdd *>::iterator it;
+
+    for (it = manAddresses.begin(); it != manAddresses.end(); ++it)
+    {// through all management addresses search for same type
+        if((*it)->getAddSubtype() == type)
+        {// found same
+            return (*it);
+        }
+    }
+
+    return nullptr;
+}
+
+void LLDPManAddTab::addManAdd(LLDPManAdd *manAdd)
+{
+    if(findManAdd(manAdd->getAddSubtype()) == nullptr)
+        manAddresses.push_back(manAdd);
+}
+
+void LLDPManAddTab::removeManAdd(LLDPManAdd *manAdd)
+{
+    std::vector<LLDPManAdd *>::iterator it;
+
+    for (it = manAddresses.begin(); it != manAddresses.end();)
+    {// through all interfaces
+        if((*it) == manAdd)
+        {// found same
+            delete (*it);
+            it = manAddresses.erase(it);
+            return;
+        }
+        else
+        {// do not delete -> get next
+            ++it;
+        }
+    }
+}
+
+void LLDPManAddTab::setAllUnchanged()
+{
+    std::vector<LLDPManAdd *>::iterator it;
+
+    for (it = manAddresses.begin(); it != manAddresses.end(); ++it)
+    {// through all managements addresses
+        (*it)->setUpdated(false);
+    }
+}
+
+void LLDPManAddTab::removeNotUpdated()
+{
+    std::vector<LLDPManAdd *>::iterator it, lIt;
+
+    lIt = it = manAddresses.begin();
+    for (it = manAddresses.begin(); it != manAddresses.end(); )
+    {// through all manAddresses
+        if(!(*it)->getUpdated())
+        {
+            lIt = ++it;
+            delete (*it);
+            it = manAddresses.erase(it);
+            it = lIt;
+        }
+        else
+            ++it;
+    }
+}
 
 } /* namespace inet */

@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+//
+// @file CDPUpdate.msg
+// @author Tomas Rajca
+//
 
 cplusplus {{
 #include "inet/common/TLVOption.h"
@@ -41,29 +45,44 @@ enum CDPTLVType
 	CDPTLV_POW_AVA = 26;
 }
 
-
-class CDPOption extends TLVOptionBase
-{
-}
-
-class CDPOptionBase extends CDPOption
+class CDPOptionDevId extends TLVOptionBase
 {
     string	value;
 }
 
-class CDPOptionCapa extends CDPOption
+class CDPOptionPortId extends TLVOptionBase
+{
+    string	value;
+}
+
+class CDPOptionVersion extends TLVOptionBase
+{
+    string	value;
+}
+
+class CDPOptionPlatform extends TLVOptionBase
+{
+    string	value;
+}
+
+class CDPOptionVtp extends TLVOptionBase
+{
+    string	value;
+}
+
+class CDPOptionCapa extends TLVOptionBase
 {
     type = CDPTLV_CAP;
     char	cap[4];
 }
 
-class CDPOptionDupl extends CDPOption
+class CDPOptionDupl extends TLVOptionBase
 {
     type = CDPTLV_DUPLEX;
     bool	fullDuplex;
 }
 
-class CDPOptionNumb extends CDPOption
+class CDPOptionNumb extends TLVOptionBase
 {
     uint16_t	number;
 }
@@ -77,7 +96,7 @@ class addressType
     string address;			// address of the interface
 };
 
-class CDPOptionAddr extends CDPOption
+class CDPOptionAddr extends TLVOptionBase
 {
     type = CDPTLV_ADDRESS;
     addressType	addresses[];
@@ -85,25 +104,29 @@ class CDPOptionAddr extends CDPOption
 
 class prefixType
 {
-    uint32_t	network;
+    string	network;
     uint8_t		mask;
 };
 
-class CDPOptionPref extends CDPOption
+class CDPOptionPref extends TLVOptionBase
 {
     type = CDPTLV_IP_PREF;
     prefixType	prefixes[];
 }
 
-
+class CDPOptionODRDef extends TLVOptionBase
+{
+    type = CDPTLV_IP_PREF;
+    string defaultRoute;
+}
 
 //CDP update packet
 packet CDPUpdate
 {
     @customize(true);
     
-    char		version = 2;
-    unsigned char		ttl;
-    uint16_t	checksum;
-    TLVOptions options;
+    uint8_t			version = 2;
+    uint8_t			ttl;
+    uint16_t		checksum;
+    TLVOptions 		options;
 }
