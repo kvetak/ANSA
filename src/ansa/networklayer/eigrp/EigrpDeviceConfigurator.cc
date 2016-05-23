@@ -18,27 +18,23 @@
 #include "IPv6Address.h"
 #include "IPv6InterfaceData.h"
 #include "IPv4Address.h"
-
 #include <errno.h>
 
 
-Define_Module(EigrpDeviceConfigurator);
+//Define_Module(EigrpDeviceConfigurator);
 
 using namespace std;
-
+/*
 void EigrpDeviceConfigurator::initialize(int stage){
 
     if (stage == 0)
     {
 
-        /* these variables needs to be set only once */
+        // these variables needs to be set only once
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /*
-         * doesn't need to be performed anywhere else,
-         * if it's NULL then behaviour depends on device type
-         */
+
         device = GetDevice(deviceType, deviceId, configFile);
         if (device == NULL)
         {
@@ -186,13 +182,13 @@ void EigrpDeviceConfigurator::initialize(int stage){
         addIPv6MulticastGroups(iface);
     }
 }
-
-
+*/
+/*
 void EigrpDeviceConfigurator::handleMessage(cMessage *msg){
    throw cRuntimeError("This module does not receive messages");
    delete msg;
-}
-
+}*/
+/*
 void EigrpDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
@@ -255,8 +251,8 @@ void EigrpDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // get next static route
       route = GetStaticRoute6(route, NULL);
    }
-}
-
+}*/
+/*
 void EigrpDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
@@ -338,7 +334,29 @@ void EigrpDeviceConfigurator::loadStaticRouting(cXMLElement* route)
         route = GetStaticRoute(route, NULL);
     }
 }
+*/
 
+
+
+EigrpDeviceConfigurator::EigrpDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+EigrpDeviceConfigurator::EigrpDeviceConfigurator(const char* devId,
+        const char* devType, const char* confFile, IInterfaceTable* intf)
+: deviceType(devType), deviceId(devId), configFile(confFile), ift(intf)
+{
+}
+
+EigrpDeviceConfigurator::~EigrpDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+/*
 void EigrpDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
@@ -472,8 +490,8 @@ void EigrpDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       iface = GetInterface(iface, NULL);
    }
 }
-
-
+*/
+/*
 void EigrpDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
@@ -492,8 +510,8 @@ void EigrpDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
    // add default static route
    rt6->addStaticRoute(IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterfaceId(), nextHop, 1);
 }
-
-
+*/
+/*
 void EigrpDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 {
     // for each interface node
@@ -564,8 +582,8 @@ void EigrpDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 }
-
-
+*/
+/*
 void EigrpDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 {
     if (gateway == NULL)
@@ -609,7 +627,8 @@ void EigrpDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
         rt->addRoute(defaultRoute);
     }
 }
-
+*/
+/*
 void EigrpDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
@@ -638,9 +657,9 @@ void EigrpDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
-void EigrpDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
+/*void EigrpDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -668,9 +687,9 @@ void EigrpDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
-
+/*
 void EigrpDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
@@ -758,9 +777,9 @@ void EigrpDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
         iface = GetInterface(iface, NULL);
     }
 }
+*/
 
-
-void EigrpDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
+/*void EigrpDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
 {
     int gateId = interface->getNodeOutputGateId();
     cModule *host = findContainingNode(interface->getInterfaceModule());
@@ -780,10 +799,10 @@ void EigrpDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
         interface->setBandwidth(bwPar.doubleValue() / 1000);
         interface->setDelay(getDefaultDelay(linkType));
     }
-}
+}*/
 
 
-double EigrpDeviceConfigurator::getDefaultDelay(const char *linkType)
+/*double EigrpDeviceConfigurator::getDefaultDelay(const char *linkType)
 {
     if (!strcmp(linkType, "Eth10M"))
         return 1000;
@@ -799,7 +818,7 @@ double EigrpDeviceConfigurator::getDefaultDelay(const char *linkType)
         return 10;
 
     return 1000;    // ethernet 10M
-}
+}*/
 
 
 
@@ -866,7 +885,7 @@ cXMLElement * EigrpDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLEle
    return addr;
 }
 
-cXMLElement * EigrpDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
+/*cXMLElement * EigrpDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
    // initial call of the method - get first "NdpAdvPrefix" child node
    if (iface != NULL){
@@ -880,9 +899,9 @@ cXMLElement * EigrpDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLEle
    }
 
    return prefix;
-}
+}*/
 
-cXMLElement * EigrpDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * EigrpDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
@@ -906,9 +925,9 @@ cXMLElement * EigrpDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLE
    }
 
    return route;
-}
+}*/
 
-cXMLElement * EigrpDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * EigrpDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing6> -> <Static>
    // and then get first "Route" child node
@@ -932,7 +951,7 @@ cXMLElement * EigrpDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLEl
    }
 
    return route;
-}
+}*/
 
 
 
@@ -996,7 +1015,7 @@ bool EigrpDeviceConfigurator::Str2Bool(bool *ret, const char *str){
 }
 
 
-bool EigrpDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
+/*bool EigrpDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element
     cXMLElement* routingNode = device->getElementByPath("Routing");
@@ -1015,7 +1034,7 @@ bool EigrpDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
         return false;
 
     return true;
-}
+}*/
 
 bool EigrpDeviceConfigurator::wildcardToMask(const char *wildcard, IPv4Address& result)
 {
@@ -1130,9 +1149,9 @@ void EigrpDeviceConfigurator::loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eig
     ASSERT(eigrpModule != NULL);
 
     // get access to device node from XML
-    const char *deviceType = par("deviceType");
-    const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
+    //const char *deviceType = par("deviceType");
+    //const char *deviceId = par("deviceId");
+    //const char *configFile = par("configFile");
     cXMLElement *device = GetDevice(deviceType, deviceId, configFile);
 
     if (device == NULL)
@@ -1344,9 +1363,9 @@ void EigrpDeviceConfigurator::loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eig
     ASSERT(eigrpModule != NULL);
 
     // get access to device node from XML
-    const char *deviceType = par("deviceType");
-    const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
+    //const char *deviceType = par("deviceType");
+    //const char *deviceId = par("deviceId");
+    //const char *configFile = par("configFile");
     cXMLElement *device = GetDevice(deviceType, deviceId, configFile);
 
     if (device == NULL)

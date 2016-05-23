@@ -22,23 +22,20 @@
 #include <errno.h>
 
 
-Define_Module(PIMDeviceConfigurator);
+//Define_Module(PIMDeviceConfigurator);
 
 using namespace std;
 
-void PIMDeviceConfigurator::initialize(int stage){
+/*void PIMDeviceConfigurator::initialize(int stage){
 
     if (stage == 0)
     {
 
-        /* these variables needs to be set only once */
+        // these variables needs to be set only once
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /*
-         * doesn't need to be performed anywhere else,
-         * if it's NULL then behaviour depends on device type
-         */
+
         device = GetDevice(deviceType, deviceId, configFile);
         if (device == NULL)
         {
@@ -185,15 +182,15 @@ void PIMDeviceConfigurator::initialize(int stage){
         addIPv4MulticastGroups(iface);
         addIPv6MulticastGroups(iface);
     }
-}
+}*/
 
 
-void PIMDeviceConfigurator::handleMessage(cMessage *msg){
+/*void PIMDeviceConfigurator::handleMessage(cMessage *msg){
    throw cRuntimeError("This module does not receive messages");
    delete msg;
-}
+}*/
 
-void PIMDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
+/*void PIMDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
    while (route != NULL){
@@ -255,9 +252,27 @@ void PIMDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // get next static route
       route = GetStaticRoute6(route, NULL);
    }
+}*/
+
+PIMDeviceConfigurator::PIMDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
 }
 
-void PIMDeviceConfigurator::loadStaticRouting(cXMLElement* route)
+PIMDeviceConfigurator::PIMDeviceConfigurator(const char* devId,
+        const char* devType, const char* confFile, IInterfaceTable* intf)
+: deviceType(devType), deviceId(devId), configFile(confFile), ift(intf)
+{
+}
+
+PIMDeviceConfigurator::~PIMDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+/*void PIMDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
@@ -337,9 +352,9 @@ void PIMDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
         route = GetStaticRoute(route, NULL);
     }
-}
+}*/
 
-void PIMDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
+/*void PIMDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
    while (iface != NULL){
@@ -471,10 +486,10 @@ void PIMDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       // get next interface
       iface = GetInterface(iface, NULL);
    }
-}
+}*/
 
 
-void PIMDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
+/*void PIMDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
       return;
@@ -491,10 +506,10 @@ void PIMDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    // add default static route
    rt6->addStaticRoute(IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterfaceId(), nextHop, 1);
-}
+}*/
 
 
-void PIMDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
+/*void PIMDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 {
     // for each interface node
     while (iface != NULL)
@@ -563,10 +578,10 @@ void PIMDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get next interface
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
 
-void PIMDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
+/*void PIMDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 {
     if (gateway == NULL)
       return;
@@ -608,9 +623,9 @@ void PIMDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 
         rt->addRoute(defaultRoute);
     }
-}
+}*/
 
-void PIMDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
+/*void PIMDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -638,9 +653,9 @@ void PIMDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
-void PIMDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
+/*void PIMDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -668,10 +683,10 @@ void PIMDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
 
-void PIMDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
+/*void PIMDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
@@ -757,10 +772,10 @@ void PIMDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
 
-void PIMDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
+/*void PIMDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
 {
     int gateId = interface->getNodeOutputGateId();
     cModule *host = findContainingNode(interface->getInterfaceModule());
@@ -780,10 +795,10 @@ void PIMDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
         interface->setBandwidth(bwPar.doubleValue() / 1000);
         interface->setDelay(getDefaultDelay(linkType));
     }
-}
+}*/
 
 
-double PIMDeviceConfigurator::getDefaultDelay(const char *linkType)
+/*double PIMDeviceConfigurator::getDefaultDelay(const char *linkType)
 {
     if (!strcmp(linkType, "Eth10M"))
         return 1000;
@@ -799,7 +814,7 @@ double PIMDeviceConfigurator::getDefaultDelay(const char *linkType)
         return 10;
 
     return 1000;    // ethernet 10M
-}
+}*/
 
 
 
@@ -850,7 +865,7 @@ cXMLElement * PIMDeviceConfigurator::GetInterface(cXMLElement *iface, cXMLElemen
    return iface;
 }
 
-cXMLElement * PIMDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
+/*cXMLElement * PIMDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
 
    // initial call of the method - get first "IPv6Address" child node
    if (iface != NULL){
@@ -864,9 +879,9 @@ cXMLElement * PIMDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLEleme
    }
 
    return addr;
-}
+}*/
 
-cXMLElement * PIMDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
+/*cXMLElement * PIMDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
    // initial call of the method - get first "NdpAdvPrefix" child node
    if (iface != NULL){
@@ -880,9 +895,9 @@ cXMLElement * PIMDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLEleme
    }
 
    return prefix;
-}
+}*/
 
-cXMLElement * PIMDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * PIMDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
@@ -906,9 +921,9 @@ cXMLElement * PIMDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLEle
    }
 
    return route;
-}
+}*/
 
-cXMLElement * PIMDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * PIMDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing6> -> <Static>
    // and then get first "Route" child node
@@ -932,14 +947,14 @@ cXMLElement * PIMDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElem
    }
 
    return route;
-}
+}*/
 
 
 
 /*
  * A utility method for proper str -> int conversion with error checking.
  */
-bool PIMDeviceConfigurator::Str2Int(int *retValue, const char *str){
+/*bool PIMDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
    if (retValue == NULL || str == NULL){
       return false;
@@ -957,9 +972,9 @@ bool PIMDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
    *retValue = (int) value;
    return true;
-}
+}*/
 
-bool PIMDeviceConfigurator::Str2Bool(bool *ret, const char *str){
+/*bool PIMDeviceConfigurator::Str2Bool(bool *ret, const char *str){
 
    if (  (strcmp(str, "yes") == 0)
       || (strcmp(str, "enabled") == 0)
@@ -993,10 +1008,10 @@ bool PIMDeviceConfigurator::Str2Bool(bool *ret, const char *str){
    }
 
    return false;
-}
+}*/
 
 
-bool PIMDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
+/*bool PIMDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element
     cXMLElement* routingNode = device->getElementByPath("Routing");
@@ -1015,7 +1030,7 @@ bool PIMDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
         return false;
 
     return true;
-}
+}*/
 
 
 void PIMDeviceConfigurator::loadPimGlobalConfig(pimSM *pimSMModule)
@@ -1023,9 +1038,9 @@ void PIMDeviceConfigurator::loadPimGlobalConfig(pimSM *pimSMModule)
     ASSERT(pimSMModule != NULL);
 
     // get access to device node from XML
-    const char *deviceType = par("deviceType");
-    const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
+    //const char *deviceType = par("deviceType");
+    //const char *deviceId = par("deviceId");
+    //const char *configFile = par("configFile");
     cXMLElement *device = GetDevice(deviceType, deviceId, configFile);
 
     // get global pim element

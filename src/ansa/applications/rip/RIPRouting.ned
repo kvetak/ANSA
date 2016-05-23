@@ -40,9 +40,9 @@ simple RIPRouting
         
         int timeToLive = default(255);                     // if not -1 set Hop Limit field of sent packets to this value
                 
-        string configFile;                                 // file name of the XML file which contains configuration for RIPng process
-        string deviceId;                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPRouting)
-        string deviceType;
+        string configFile = default("config.xml");                                 // file name of the XML file which contains configuration for RIPng process
+        string deviceId = default("");                                   // needed for proper load of RIPng process XML configuration (deviceId which contains RIPRouting)
+        string deviceType = default("Router");
         
         bool enabled = default(true);
         

@@ -1075,7 +1075,8 @@ void RIPRouting::initialize(int stage)
     deviceId = par("deviceId");
 
     // read the RIP process configuration
-    RIPDeviceConfigurator *devConf = ModuleAccess<RIPDeviceConfigurator>("RIPDeviceConfigurator").get();
+    //RIPDeviceConfigurator *devConf = ModuleAccess<RIPDeviceConfigurator>("RIPDeviceConfigurator").get();
+    RIPDeviceConfigurator *devConf = new RIPDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
     devConf->loadRIPConfig(this);
 
     //Multicast must be enabled on every interface because of globalSocket.joinMulticastGroup(RIPAddress, -1);

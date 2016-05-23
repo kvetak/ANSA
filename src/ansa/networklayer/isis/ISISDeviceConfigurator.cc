@@ -22,23 +22,20 @@
 #include <errno.h>
 
 
-Define_Module(ISISDeviceConfigurator);
+//Define_Module(ISISDeviceConfigurator);
 
 using namespace std;
-
+/*
 void ISISDeviceConfigurator::initialize(int stage){
 
     if (stage == 0)
     {
 
-        /* these variables needs to be set only once */
+        // these variables needs to be set only once
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /*
-         * doesn't need to be performed anywhere else,
-         * if it's NULL then behaviour depends on device type
-         */
+
         device = GetDevice(deviceType, deviceId, configFile);
         if (device == NULL)
         {
@@ -185,15 +182,15 @@ void ISISDeviceConfigurator::initialize(int stage){
         addIPv4MulticastGroups(iface);
         addIPv6MulticastGroups(iface);
     }
-}
+}*/
 
 
-void ISISDeviceConfigurator::handleMessage(cMessage *msg){
+/*void ISISDeviceConfigurator::handleMessage(cMessage *msg){
    throw cRuntimeError("This module does not receive messages");
    delete msg;
-}
+}*/
 
-void ISISDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
+/*void ISISDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
    while (route != NULL){
@@ -255,9 +252,27 @@ void ISISDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // get next static route
       route = GetStaticRoute6(route, NULL);
    }
+}*/
+
+ISISDeviceConfigurator::ISISDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
 }
 
-void ISISDeviceConfigurator::loadStaticRouting(cXMLElement* route)
+ISISDeviceConfigurator::ISISDeviceConfigurator(const char* devId,
+        const char* devType, const char* confFile, IInterfaceTable* intf)
+: deviceType(devType), deviceId(devId), configFile(confFile), ift(intf)
+{
+}
+
+ISISDeviceConfigurator::~ISISDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+/*void ISISDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
@@ -337,9 +352,9 @@ void ISISDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
         route = GetStaticRoute(route, NULL);
     }
-}
+}*/
 
-void ISISDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
+/*void ISISDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
    while (iface != NULL){
@@ -471,10 +486,10 @@ void ISISDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       // get next interface
       iface = GetInterface(iface, NULL);
    }
-}
+}*/
 
 
-void ISISDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
+/*void ISISDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
       return;
@@ -491,10 +506,10 @@ void ISISDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    // add default static route
    rt6->addStaticRoute(IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterfaceId(), nextHop, 1);
-}
+}*/
 
 
-void ISISDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
+/*void ISISDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 {
     // for each interface node
     while (iface != NULL)
@@ -563,10 +578,10 @@ void ISISDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get next interface
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
 
-void ISISDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
+/*void ISISDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 {
     if (gateway == NULL)
       return;
@@ -608,9 +623,9 @@ void ISISDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 
         rt->addRoute(defaultRoute);
     }
-}
+}*/
 
-void ISISDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
+/*void ISISDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -638,9 +653,9 @@ void ISISDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
-void ISISDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
+/*void ISISDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -668,10 +683,10 @@ void ISISDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
 
-void ISISDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
+/*void ISISDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
@@ -757,10 +772,10 @@ void ISISDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
 
-void ISISDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
+/*void ISISDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
 {
     int gateId = interface->getNodeOutputGateId();
     cModule *host = findContainingNode(interface->getInterfaceModule());
@@ -780,10 +795,10 @@ void ISISDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
         interface->setBandwidth(bwPar.doubleValue() / 1000);
         interface->setDelay(getDefaultDelay(linkType));
     }
-}
+}*/
 
 
-double ISISDeviceConfigurator::getDefaultDelay(const char *linkType)
+/*double ISISDeviceConfigurator::getDefaultDelay(const char *linkType)
 {
     if (!strcmp(linkType, "Eth10M"))
         return 1000;
@@ -799,7 +814,7 @@ double ISISDeviceConfigurator::getDefaultDelay(const char *linkType)
         return 10;
 
     return 1000;    // ethernet 10M
-}
+}*/
 
 
 
@@ -850,7 +865,7 @@ cXMLElement * ISISDeviceConfigurator::GetInterface(cXMLElement *iface, cXMLEleme
    return iface;
 }
 
-cXMLElement * ISISDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
+/*cXMLElement * ISISDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
 
    // initial call of the method - get first "IPv6Address" child node
    if (iface != NULL){
@@ -864,9 +879,9 @@ cXMLElement * ISISDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElem
    }
 
    return addr;
-}
+}*/
 
-cXMLElement * ISISDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
+/*cXMLElement * ISISDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
    // initial call of the method - get first "NdpAdvPrefix" child node
    if (iface != NULL){
@@ -880,9 +895,9 @@ cXMLElement * ISISDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElem
    }
 
    return prefix;
-}
+}*/
 
-cXMLElement * ISISDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * ISISDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
@@ -906,9 +921,9 @@ cXMLElement * ISISDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLEl
    }
 
    return route;
-}
+}*/
 
-cXMLElement * ISISDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * ISISDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing6> -> <Static>
    // and then get first "Route" child node
@@ -932,14 +947,14 @@ cXMLElement * ISISDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLEle
    }
 
    return route;
-}
+}*/
 
 
 
 /*
  * A utility method for proper str -> int conversion with error checking.
  */
-bool ISISDeviceConfigurator::Str2Int(int *retValue, const char *str){
+/*bool ISISDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
    if (retValue == NULL || str == NULL){
       return false;
@@ -957,9 +972,9 @@ bool ISISDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
    *retValue = (int) value;
    return true;
-}
+}*/
 
-bool ISISDeviceConfigurator::Str2Bool(bool *ret, const char *str){
+/*bool ISISDeviceConfigurator::Str2Bool(bool *ret, const char *str){
 
    if (  (strcmp(str, "yes") == 0)
       || (strcmp(str, "enabled") == 0)
@@ -993,10 +1008,10 @@ bool ISISDeviceConfigurator::Str2Bool(bool *ret, const char *str){
    }
 
    return false;
-}
+}*/
 
 
-bool ISISDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
+/*bool ISISDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element
     cXMLElement* routingNode = device->getElementByPath("Routing");
@@ -1015,7 +1030,7 @@ bool ISISDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
         return false;
 
     return true;
-}
+}*/
 
 
 

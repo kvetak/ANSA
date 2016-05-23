@@ -17,7 +17,7 @@ package inet.examples.ansa.vrrpv2.router;
 
 import inet.ansa.networklayer.vrrpv2.VRRPv2;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
-import inet.ansa.networklayer.vrrpv2.VRRPv2DeviceConfigurator;
+//import inet.ansa.networklayer.vrrpv2.VRRPv2DeviceConfigurator;
 import inet.base.NotificationBoard;
 import inet.linklayer.loopback.LoopbackInterface;
 import inet.networklayer.common.InterfaceTable;
@@ -57,13 +57,13 @@ module VRRPv2SimpleRouter
                 @display("p=250,222;q=queue");
         }
 
-        VRRPv2DeviceConfigurator: VRRPv2DeviceConfigurator {
-            parameters:
-                @display("p=80,40");
-                deviceId = deviceId;
-                deviceType = "Router";
-                configFile = configFile;
-        }
+        //VRRPv2DeviceConfigurator: VRRPv2DeviceConfigurator {
+        //    parameters:
+        //        @display("p=80,40");
+        //        deviceId = deviceId;
+        //        deviceType = "Router";
+        //        configFile = configFile;
+        //}
 
         notificationBoard: NotificationBoard {
             parameters:

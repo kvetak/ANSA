@@ -22,7 +22,7 @@ package inet.ansa.applications.ripng;
 
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 import inet.ansa.applications.ripng.RIPngRouting;
-import inet.ansa.applications.ripng.RIPngDeviceConfigurator;
+//import inet.ansa.applications.ripng.RIPngDeviceConfigurator;
 import inet.nodes.ipv6.NetworkLayer6;
 import inet.networklayer.common.InterfaceTable;
 import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
@@ -47,12 +47,12 @@ module RIPngRouter
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
 
-        RIPngDeviceConfigurator: RIPngDeviceConfigurator {
-            @display("p=184,32");
-            deviceId = deviceId;
-            deviceType = "Router";
-            configFile = configFile;
-        }
+        //RIPngDeviceConfigurator: RIPngDeviceConfigurator {
+        //    @display("p=184,32");
+        //    deviceId = deviceId;
+        //    deviceType = "Router";
+        //    configFile = configFile;
+        //}
 
         interfaceStateManager: InterfaceStateManager {
             @display("p=64,32");

@@ -6,29 +6,25 @@
  */
 
 #include "RIPDeviceConfigurator.h"
-#include "IPv6Address.h"
-#include "IPv6InterfaceData.h"
-#include "IPv4Address.h"
+//#include "IPv6Address.h"
+//#include "IPv6InterfaceData.h"
+//#include "IPv4Address.h"
+#include "IPv4InterfaceData.h"
 #include <errno.h>
 
-
-Define_Module(RIPDeviceConfigurator);
+//Define_Module(RIPDeviceConfigurator);
 
 using namespace std;
-
+/*
 void RIPDeviceConfigurator::initialize(int stage){
 
     if (stage == 0)
     {
 
-        /* these variables needs to be set only once */
+        // these variables needs to be set only once
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /*
-         * doesn't need to be performed anywhere else,
-         * if it's NULL then behaviour depends on device type
-         */
         device = GetDevice(deviceType, deviceId, configFile);
         if (device == NULL)
         {
@@ -176,13 +172,13 @@ void RIPDeviceConfigurator::initialize(int stage){
         addIPv6MulticastGroups(iface);
     }
 }
-
-
+*/
+/*
 void RIPDeviceConfigurator::handleMessage(cMessage *msg){
    throw cRuntimeError("This module does not receive messages");
    delete msg;
-}
-
+}*/
+/*
 void RIPDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
@@ -245,8 +241,8 @@ void RIPDeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // get next static route
       route = GetStaticRoute6(route, NULL);
    }
-}
-
+}*/
+/*
 void RIPDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
@@ -327,7 +323,7 @@ void RIPDeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
         route = GetStaticRoute(route, NULL);
     }
-}
+}*/
 
 
 void RIPDeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
@@ -335,9 +331,9 @@ void RIPDeviceConfigurator::loadRIPConfig(RIPRouting *RIPModule)
     ASSERT(RIPModule != NULL);
 
     // get access to device node from XML
-    const char *deviceType = par("deviceType");
+    /*const char *deviceType = par("deviceType");
     const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
+    const char *configFile = par("configFile");*/
     cXMLElement *device = GetDevice(deviceType, deviceId, configFile);
 
     if (device == NULL){
@@ -449,6 +445,25 @@ void RIPDeviceConfigurator::loadNetworksFromInterfaceToRIPRT(RIPRouting *RIPModu
 }
 
 
+RIPDeviceConfigurator::RIPDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+RIPDeviceConfigurator::RIPDeviceConfigurator(const char* devId,
+        const char* devType, const char* confFile, IInterfaceTable* intf)
+: deviceType(devType), deviceId(devId), configFile(confFile), ift(intf)
+{
+}
+
+RIPDeviceConfigurator::~RIPDeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+/*
 void RIPDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
@@ -582,8 +597,8 @@ void RIPDeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       iface = GetInterface(iface, NULL);
    }
 }
-
-
+*/
+/*
 void RIPDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
@@ -601,9 +616,9 @@ void RIPDeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    // add default static route
    rt6->addStaticRoute(IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterfaceId(), nextHop, 1);
-}
+}*/
 
-
+/*
 void RIPDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 {
     // for each interface node
@@ -673,9 +688,9 @@ void RIPDeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get next interface
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
-
+/*
 void RIPDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 {
     if (gateway == NULL)
@@ -718,8 +733,8 @@ void RIPDeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 
         rt->addRoute(defaultRoute);
     }
-}
-
+}*/
+/*
 void RIPDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
@@ -748,8 +763,8 @@ void RIPDeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
-
+}*/
+/*
 void RIPDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
@@ -778,9 +793,9 @@ void RIPDeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
-
+/*
 void RIPDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
@@ -868,8 +883,8 @@ void RIPDeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
         iface = GetInterface(iface, NULL);
     }
 }
-
-
+*/
+/*
 void RIPDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
 {
     int gateId = interface->getNodeOutputGateId();
@@ -890,9 +905,9 @@ void RIPDeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
         interface->setBandwidth(bwPar.doubleValue() / 1000);
         interface->setDelay(getDefaultDelay(linkType));
     }
-}
+}*/
 
-
+/*
 double RIPDeviceConfigurator::getDefaultDelay(const char *linkType)
 {
     if (!strcmp(linkType, "Eth10M"))
@@ -910,7 +925,7 @@ double RIPDeviceConfigurator::getDefaultDelay(const char *linkType)
 
     return 1000;    // ethernet 10M
 }
-
+*/
 
 cXMLElement * RIPDeviceConfigurator::GetDevice(const char *deviceType, const char *deviceId, const char *configFile){
 
@@ -958,7 +973,7 @@ cXMLElement * RIPDeviceConfigurator::GetInterface(cXMLElement *iface, cXMLElemen
 
    return iface;
 }
-
+/*
 cXMLElement * RIPDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
 
    // initial call of the method - get first "IPv6Address" child node
@@ -974,7 +989,8 @@ cXMLElement * RIPDeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLEleme
 
    return addr;
 }
-
+*/
+/*
 cXMLElement * RIPDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
    // initial call of the method - get first "NdpAdvPrefix" child node
@@ -989,8 +1005,8 @@ cXMLElement * RIPDeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLEleme
    }
 
    return prefix;
-}
-
+}*/
+/*
 cXMLElement * RIPDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing> -> <Static>
@@ -1015,8 +1031,8 @@ cXMLElement * RIPDeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLEle
    }
 
    return route;
-}
-
+}*/
+/*
 cXMLElement * RIPDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing6> -> <Static>
@@ -1041,7 +1057,7 @@ cXMLElement * RIPDeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElem
    }
 
    return route;
-}
+}*/
 
 
 const char *RIPDeviceConfigurator::GetNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue)
@@ -1063,7 +1079,7 @@ const char *RIPDeviceConfigurator::GetNodeParamConfig(cXMLElement *node, const c
 /*
  * A utility method for proper str -> int conversion with error checking.
  */
-bool RIPDeviceConfigurator::Str2Int(int *retValue, const char *str){
+/*bool RIPDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
    if (retValue == NULL || str == NULL){
       return false;
@@ -1081,10 +1097,10 @@ bool RIPDeviceConfigurator::Str2Int(int *retValue, const char *str){
 
    *retValue = (int) value;
    return true;
-}
+}*/
 
 
-bool RIPDeviceConfigurator::Str2Bool(bool *ret, const char *str){
+/*bool RIPDeviceConfigurator::Str2Bool(bool *ret, const char *str){
 
    if (  (strcmp(str, "yes") == 0)
       || (strcmp(str, "enabled") == 0)
@@ -1118,9 +1134,9 @@ bool RIPDeviceConfigurator::Str2Bool(bool *ret, const char *str){
    }
 
    return false;
-}
+}*/
 
-
+/*
 bool RIPDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element
@@ -1140,7 +1156,7 @@ bool RIPDeviceConfigurator::isMulticastEnabled(cXMLElement *device)
         return false;
 
     return true;
-}
+}*/
 
 cXMLElement *RIPDeviceConfigurator::GetRIPNetwork(cXMLElement *network, cXMLElement *device)
 {

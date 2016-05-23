@@ -25,8 +25,8 @@ import inet.ansa.networklayer.ipv6.ANSARoutingTable6;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
 //import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
-import inet.ansa.applications.rip.RIPDeviceConfigurator;
-import inet.ansa.applications.ripng.RIPngDeviceConfigurator;
+//import inet.ansa.applications.rip.RIPDeviceConfigurator;
+//import inet.ansa.applications.ripng.RIPngDeviceConfigurator;
 import inet.transport.IUDP;
 import inet.util.PcapRecorder;
 import inet.networklayer.common.InterfaceTable;
@@ -64,7 +64,7 @@ module ANSA_RouterRIPDual
         int IGMPVersion = default(2);
 
         string configFile = default("config.xml");           // file name of the XML file which contains configuration for the router
-        string deviceId;
+        string deviceId = default("");
         xml routingTable = default(xml("<routingTable/>"));  // Routing table is filled by deviceConfigurator
 
     gates:
@@ -138,21 +138,13 @@ module ANSA_RouterRIPDual
                 @display("p=75,125");
         }
 
-        RIPngDeviceConfigurator: RIPngDeviceConfigurator {
-            parameters:
-                @display("p=75,208");
-                deviceId = deviceId;
-                deviceType = "Router";
-                configFile = configFile;
-        }
-
-        RIPDeviceConfigurator: RIPDeviceConfigurator {
-            parameters:
-                @display("p=75,272");
-                deviceId = deviceId;
-                deviceType = "Router";
-                configFile = configFile;
-        }
+        //RIPngDeviceConfigurator: RIPngDeviceConfigurator {
+        //    parameters:
+        //        @display("p=75,208");
+        //        deviceId = deviceId;
+        //        deviceType = "Router";
+        //        configFile = configFile;
+        //}
 
         ipSplitter: IpSplitter {
             parameters:

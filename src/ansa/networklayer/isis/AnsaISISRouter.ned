@@ -20,7 +20,7 @@ package inet.ansa.networklayer.isis;
 
 import inet.ansa.networklayer.clns.CLNSTable;
 //import inet.ansa.acl.acl;
-import inet.ansa.networklayer.isis.ISISDeviceConfigurator;
+//import inet.ansa.networklayer.isis.ISISDeviceConfigurator;
 //import inet.ansa.ethernet.AnsaEthernetInterface;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.IWiredNic;
@@ -70,13 +70,13 @@ module AnsaISISRouter
                 @display("p=356,115");
 
         }
-        ISISDeviceConfigurator: ISISDeviceConfigurator {
-            parameters:
-                deviceId = deviceId;
-                deviceType = "Router";
-                configFile = configFile;
-                @display("p=362,42");
-        }
+        //ISISDeviceConfigurator: ISISDeviceConfigurator {
+        //    parameters:
+        //        deviceId = deviceId;
+        //        deviceType = "Router";
+        //        configFile = configFile;
+        //        @display("p=362,42");
+        //}
         notificationBoard: NotificationBoard {
             parameters:
                 @display("p=66,42");

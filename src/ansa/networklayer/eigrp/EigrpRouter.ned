@@ -22,7 +22,7 @@ package inet.ansa.networklayer.eigrp;
 import inet.ansa.networklayer.ipv4.AnsaRoutingTable;
 import inet.ansa.nodes.inet.ansaNetworkLayer;
 import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
-import inet.ansa.networklayer.eigrp.EigrpDeviceConfigurator;
+//import inet.ansa.networklayer.eigrp.EigrpDeviceConfigurator;
 import inet.base.NotificationBoard;
 import inet.linklayer.IWiredNic;
 import inet.networklayer.common.InterfaceTable;
@@ -38,17 +38,18 @@ module EigrpRouter
         bool IPForward = default(true);
         string configFile = default("config.xml");           // file name of the XML file which contains configuration for the router
         string deviceId;                                     // needed for proper load of the device XML configuration
+        string deviceType = default("Router");
     gates:
         inout pppg[] @labels(PPPFrame-conn);
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
 
-        eigrpDeviceConfigurator: EigrpDeviceConfigurator {
-            @display("p=71,113");
-            deviceId = deviceId;
-            deviceType = "Router";
-            configFile = configFile;
-        }
+        //eigrpDeviceConfigurator: EigrpDeviceConfigurator {
+        //    @display("p=71,113");
+        //    deviceId = deviceId;
+        //    deviceType = "Router";
+        //    configFile = configFile;
+        //}
 
         interfaceStateManager: InterfaceStateManager {
             @display("p=71,188");

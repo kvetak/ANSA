@@ -19,77 +19,81 @@
 
 #include <omnetpp.h>
 
-#include "RoutingTable6Access.h"
+/*#include "RoutingTable6Access.h"
 #include "InterfaceTableAccess.h"
 #include "AnsaRoutingTableAccess.h"
 #include "PimInterfaceTable.h"
 #include "IPv4InterfaceData.h"
-#include "RoutingTableAccess.h"
+#include "RoutingTableAccess.h"*/
 
 #include "RIPngRouting.h"
 
 /**
  * TODO - Generated class
  */
-class RIPngDeviceConfigurator : public cSimpleModule
+class RIPngDeviceConfigurator
 {
    private:
-      const char *deviceType;
-      const char *deviceId;
-      const char *configFile;
-      cXMLElement *device;
+      const char *deviceType = NULL;
+      const char *deviceId = NULL;
+      const char *configFile = NULL;
+      cXMLElement *device = NULL;
 
    protected:
-      IInterfaceTable *ift;
-      RoutingTable6 *rt6;
-      IRoutingTable *rt;
-      PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
+      IInterfaceTable *ift = NULL;
+      //RoutingTable6 *rt6;
+      //IRoutingTable *rt;
+      //PimInterfaceTable *pimIft;        /**< Link to table of PIM interfaces. */
 
-      virtual int numInitStages() const {return 11;}
-      virtual void initialize(int stage);
-      virtual void handleMessage(cMessage *msg);
+      //virtual int numInitStages() const {return 11;}
+      //virtual void initialize(int stage);
+      //virtual void handleMessage(cMessage *msg);
 
       //////////////////////////
       /// IPv4 Configuration ///
       //////////////////////////
-      void loadDefaultRouter(cXMLElement *gateway);
-      void loadInterfaceConfig(cXMLElement* iface);
-      void loadStaticRouting(cXMLElement* route);
+      //void loadDefaultRouter(cXMLElement *gateway);
+      //void loadInterfaceConfig(cXMLElement* iface);
+      //void loadStaticRouting(cXMLElement* route);
 
       //////////////////////////
       /// IPv6 Configuration ///
       //////////////////////////
-      void loadDefaultRouter6(cXMLElement *gateway);
-      void loadInterfaceConfig6(cXMLElement *iface);
-      void loadStaticRouting6(cXMLElement *route);
+      //void loadDefaultRouter6(cXMLElement *gateway);
+      //void loadInterfaceConfig6(cXMLElement *iface);
+      //void loadStaticRouting6(cXMLElement *route);
 
       /**< Sets default bandwidth and delay */
-      void setInterfaceParamters(InterfaceEntry *interface);
+      //void setInterfaceParamters(InterfaceEntry *interface);
       /**< Returns default delay of interface by link type */
-      double getDefaultDelay(const char *linkType);
+      //double getDefaultDelay(const char *linkType);
 
 
       ///////////////////////////
       // configuration for PIM //
       ///////////////////////////
-      void loadPimInterfaceConfig(cXMLElement *iface);
+      //void loadPimInterfaceConfig(cXMLElement *iface);
 
    public:
+      RIPngDeviceConfigurator();
+      RIPngDeviceConfigurator(const char* devId, const char* devType, const char* confFile, IInterfaceTable* intf);
+      virtual ~RIPngDeviceConfigurator();
+
       static bool Str2Int(int *retValue, const char *str);
       static bool Str2Bool(bool *ret, const char *str);
 
       static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, const char *configFile);
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);
-      static cXMLElement * GetStaticRoute(cXMLElement *route, cXMLElement *device);
-      static cXMLElement * GetStaticRoute6(cXMLElement *route, cXMLElement *device);
+      //static cXMLElement * GetStaticRoute(cXMLElement *route, cXMLElement *device);
+      //static cXMLElement * GetStaticRoute6(cXMLElement *route, cXMLElement *device);
 
       static const char *GetNodeParamConfig(cXMLElement *node, const char *paramName, const char *defaultValue);
 
 
-      static cXMLElement *GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface);
+      //static cXMLElement *GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface);
       static cXMLElement *GetIPv6Address(cXMLElement *addr, cXMLElement *iface);
 
-      static bool isMulticastEnabled(cXMLElement *device);
+      //static bool isMulticastEnabled(cXMLElement *device);
 
 
       // configuration for RIPng
@@ -124,8 +128,8 @@ class RIPngDeviceConfigurator : public cSimpleModule
       //    IGMP Related    //
       ////////////////////////
 
-      void addIPv4MulticastGroups(cXMLElement *iface);
-      void addIPv6MulticastGroups(cXMLElement *iface);
+      //void addIPv4MulticastGroups(cXMLElement *iface);
+      //void addIPv6MulticastGroups(cXMLElement *iface);
 
 };
 

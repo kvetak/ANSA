@@ -20,23 +20,20 @@
 #include <errno.h>
 
 
-Define_Module(VRRPv2DeviceConfigurator);
+//Define_Module(VRRPv2DeviceConfigurator);
 
 using namespace std;
 
-void VRRPv2DeviceConfigurator::initialize(int stage){
+/*void VRRPv2DeviceConfigurator::initialize(int stage){
 
     if (stage == 0)
     {
 
-        /* these variables needs to be set only once */
+        // these variables needs to be set only once
         deviceType = par("deviceType");
         deviceId = par("deviceId");
         configFile = par("configFile");
-        /*
-         * doesn't need to be performed anywhere else,
-         * if it's NULL then behaviour depends on device type
-         */
+
         device = GetDevice(deviceType, deviceId, configFile);
         if (device == NULL)
         {
@@ -183,15 +180,15 @@ void VRRPv2DeviceConfigurator::initialize(int stage){
         addIPv4MulticastGroups(iface);
         addIPv6MulticastGroups(iface);
     }
-}
+}*/
 
 
-void VRRPv2DeviceConfigurator::handleMessage(cMessage *msg){
+/*void VRRPv2DeviceConfigurator::handleMessage(cMessage *msg){
    throw cRuntimeError("This module does not receive messages");
    delete msg;
-}
+}*/
 
-void VRRPv2DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
+/*void VRRPv2DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
 
    // for each static route
    while (route != NULL){
@@ -253,9 +250,28 @@ void VRRPv2DeviceConfigurator::loadStaticRouting6(cXMLElement *route){
       // get next static route
       route = GetStaticRoute6(route, NULL);
    }
+}*/
+
+
+VRRPv2DeviceConfigurator::VRRPv2DeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
 }
 
-void VRRPv2DeviceConfigurator::loadStaticRouting(cXMLElement* route)
+VRRPv2DeviceConfigurator::VRRPv2DeviceConfigurator(const char* devId,
+        const char* devType, const char* confFile, IInterfaceTable* intf)
+: deviceType(devType), deviceId(devId), configFile(confFile), ift(intf)
+{
+}
+
+VRRPv2DeviceConfigurator::~VRRPv2DeviceConfigurator() {
+    deviceId = NULL;
+    deviceType = NULL;
+    configFile = NULL;
+}
+
+/*void VRRPv2DeviceConfigurator::loadStaticRouting(cXMLElement* route)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
@@ -335,9 +351,9 @@ void VRRPv2DeviceConfigurator::loadStaticRouting(cXMLElement* route)
 
         route = GetStaticRoute(route, NULL);
     }
-}
+}*/
 
-void VRRPv2DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
+/*void VRRPv2DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
 
    // for each interface node
    while (iface != NULL){
@@ -469,10 +485,10 @@ void VRRPv2DeviceConfigurator::loadInterfaceConfig6(cXMLElement *iface){
       // get next interface
       iface = GetInterface(iface, NULL);
    }
-}
+}*/
 
 
-void VRRPv2DeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
+/*void VRRPv2DeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    if (gateway == NULL)
       return;
@@ -489,10 +505,10 @@ void VRRPv2DeviceConfigurator::loadDefaultRouter6(cXMLElement *gateway){
 
    // add default static route
    rt6->addStaticRoute(IPv6Address::UNSPECIFIED_ADDRESS, 0, route->getInterfaceId(), nextHop, 1);
-}
+}*/
 
 
-void VRRPv2DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
+/*void VRRPv2DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
 {
     // for each interface node
     while (iface != NULL)
@@ -561,10 +577,10 @@ void VRRPv2DeviceConfigurator::loadPimInterfaceConfig(cXMLElement *iface)
         // get next interface
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
 
-void VRRPv2DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
+/*void VRRPv2DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 {
     if (gateway == NULL)
       return;
@@ -606,9 +622,9 @@ void VRRPv2DeviceConfigurator::loadDefaultRouter(cXMLElement *gateway)
 
         rt->addRoute(defaultRoute);
     }
-}
+}*/
 
-void VRRPv2DeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
+/*void VRRPv2DeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -636,9 +652,9 @@ void VRRPv2DeviceConfigurator::addIPv4MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
-void VRRPv2DeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
+/*void VRRPv2DeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
 {
     while (iface != NULL)
     {
@@ -666,10 +682,10 @@ void VRRPv2DeviceConfigurator::addIPv6MulticastGroups(cXMLElement *iface)
         iface = GetInterface(iface, NULL);
     }
 
-}
+}*/
 
 
-void VRRPv2DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
+/*void VRRPv2DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 {
     AnsaRoutingTable *ANSArt = dynamic_cast<AnsaRoutingTable *>(rt);
 
@@ -755,10 +771,10 @@ void VRRPv2DeviceConfigurator::loadInterfaceConfig(cXMLElement* iface)
 
         iface = GetInterface(iface, NULL);
     }
-}
+}*/
 
 
-void VRRPv2DeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
+/*void VRRPv2DeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
 {
     int gateId = interface->getNodeOutputGateId();
     cModule *host = findContainingNode(interface->getInterfaceModule());
@@ -778,10 +794,10 @@ void VRRPv2DeviceConfigurator::setInterfaceParamters(InterfaceEntry *interface)
         interface->setBandwidth(bwPar.doubleValue() / 1000);
         interface->setDelay(getDefaultDelay(linkType));
     }
-}
+}*/
 
 
-double VRRPv2DeviceConfigurator::getDefaultDelay(const char *linkType)
+/*double VRRPv2DeviceConfigurator::getDefaultDelay(const char *linkType)
 {
     if (!strcmp(linkType, "Eth10M"))
         return 1000;
@@ -797,7 +813,7 @@ double VRRPv2DeviceConfigurator::getDefaultDelay(const char *linkType)
         return 10;
 
     return 1000;    // ethernet 10M
-}
+}*/
 
 
 
@@ -848,7 +864,7 @@ cXMLElement * VRRPv2DeviceConfigurator::GetInterface(cXMLElement *iface, cXMLEle
    return iface;
 }
 
-cXMLElement * VRRPv2DeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
+/*cXMLElement * VRRPv2DeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLElement *iface){
 
    // initial call of the method - get first "IPv6Address" child node
    if (iface != NULL){
@@ -862,9 +878,9 @@ cXMLElement * VRRPv2DeviceConfigurator::GetIPv6Address(cXMLElement *addr, cXMLEl
    }
 
    return addr;
-}
+}*/
 
-cXMLElement * VRRPv2DeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
+/*cXMLElement * VRRPv2DeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface){
 
    // initial call of the method - get first "NdpAdvPrefix" child node
    if (iface != NULL){
@@ -878,9 +894,9 @@ cXMLElement * VRRPv2DeviceConfigurator::GetAdvPrefix(cXMLElement *prefix, cXMLEl
    }
 
    return prefix;
-}
+}*/
 
-cXMLElement * VRRPv2DeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * VRRPv2DeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing> -> <Static>
    // and then get first "Route" child node
@@ -904,9 +920,9 @@ cXMLElement * VRRPv2DeviceConfigurator::GetStaticRoute6(cXMLElement *route, cXML
    }
 
    return route;
-}
+}*/
 
-cXMLElement * VRRPv2DeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
+/*cXMLElement * VRRPv2DeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLElement *device){
 
    // initial call of the method - find <Routing6> -> <Static>
    // and then get first "Route" child node
@@ -930,7 +946,7 @@ cXMLElement * VRRPv2DeviceConfigurator::GetStaticRoute(cXMLElement *route, cXMLE
    }
 
    return route;
-}
+}*/
 
 
 
@@ -994,7 +1010,7 @@ bool VRRPv2DeviceConfigurator::Str2Bool(bool *ret, const char *str){
 }
 
 
-bool VRRPv2DeviceConfigurator::isMulticastEnabled(cXMLElement *device)
+/*bool VRRPv2DeviceConfigurator::isMulticastEnabled(cXMLElement *device)
 {
     // Routing element
     cXMLElement* routingNode = device->getElementByPath("Routing");
@@ -1013,7 +1029,7 @@ bool VRRPv2DeviceConfigurator::isMulticastEnabled(cXMLElement *device)
         return false;
 
     return true;
-}
+}*/
 
 
 void VRRPv2DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
@@ -1021,9 +1037,9 @@ void VRRPv2DeviceConfigurator::loadVRRPv2Config(VRRPv2* VRRPModule) {
     ASSERT(VRRPModule != NULL);
 
     // get access to device node from XML
-    const char *deviceType = par("deviceType");
-    const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
+    //const char *deviceType = par("deviceType");
+    //const char *deviceId = par("deviceId");
+    //const char *configFile = par("configFile");
     cXMLElement *device = GetDevice(deviceType, deviceId, configFile);
 
     if (device == NULL){
@@ -1066,9 +1082,9 @@ void VRRPv2DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter
     ASSERT(VRRPModule != NULL);
 
     // get access to device node from XML
-    const char *deviceType = par("deviceType");
-    const char *deviceId = par("deviceId");
-    const char *configFile = par("configFile");
+    //const char *deviceType = par("deviceType");
+    //const char *deviceId = par("deviceId");
+    //const char *configFile = par("configFile");
     cXMLElement *device = GetDevice(deviceType, deviceId, configFile);
 
     if (device == NULL){
