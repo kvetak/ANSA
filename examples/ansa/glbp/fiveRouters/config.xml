@@ -84,7 +84,6 @@
 			</Interface>					
 		</Interfaces>
 	</Host>
-</Devices>
 
 	<!-- 	H3		-->
 	<Host id="H3">
@@ -95,7 +94,6 @@
 			</Interface>					
 		</Interfaces>
 	</Host>
-</Devices>
 
 	<!-- 	H4		-->
 	<Host id="H4">
@@ -106,7 +104,6 @@
 			</Interface>					
 		</Interfaces>
 	</Host>
-</Devices>
 
 	<!-- 	H5		-->
 	<Host id="H5">

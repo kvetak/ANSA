@@ -47,12 +47,12 @@ network testVgChoose
         configurator: IPv4NetworkConfigurator {
             parameters:
                 config = xml("<config>"+
-                            "<interface hosts='R1' towards='SW1 H1' address='192.168.1.1' netmask='255.255.255.0' />"+
-                            "<interface hosts='R2' towards='SW1 H1' address='192.168.1.2' netmask='255.255.255.0' />"+
-                            "<interface hosts='R3' towards='SW1 H1' address='192.168.1.3' netmask='255.255.255.0' />"+
+                            "<interface hosts='R1' towards='SW1 PC1' address='192.168.1.1' netmask='255.255.255.0' />"+
+                            "<interface hosts='R2' towards='SW1 PC1' address='192.168.1.2' netmask='255.255.255.0' />"+
+                            "<interface hosts='R3' towards='SW1 PC1' address='192.168.1.3' netmask='255.255.255.0' />"+
 
-       						"<interface hosts='PC1' address='192.168.1.10' netmask='255.255.255.0' />"+
-       						"<interface hosts='PC2' address='192.168.1.11' netmask='255.255.255.0' />"+
+       						"<interface hosts='H1' address='192.168.1.10' netmask='255.255.255.0' />"+
+       						"<interface hosts='H2' address='192.168.1.11' netmask='255.255.255.0' />"+
                             "</config>");
                 addStaticRoutes = true;
                 addDefaultRoutes = true;
