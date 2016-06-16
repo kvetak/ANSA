@@ -113,6 +113,7 @@ class INET_API GPSR : public cSimpleModule, public ILifecycle, public cListener,
 
     // returns nullptr if not found
     GPSROption *findGpsrOptionInNetworkDatagram(INetworkDatagram *datagram);
+    //XXX: Vesely - Remove hovnokod
     const GPSROption *findGpsrOptionFromNetworkDatagram(INetworkDatagram *datagram) const { return const_cast<GPSR *>(this)->findGpsrOptionFromNetworkDatagram(datagram); }
 
     // throws an error when not found

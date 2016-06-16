@@ -90,7 +90,7 @@ void CDPNeighbourTable::addNeighbour(CDPNeighbour * neighbour)
 {
     if(findNeighbour(neighbour->getName(), neighbour->getPortReceive()) != nullptr)
     {// neighbour already in table
-        throw cRuntimeError("Adding to CDPNeighbourTable neighbour, which is already in it - name %s, port %d", neighbour->getName(), neighbour->getPortReceive());
+        EV << "Adding to CDPNeighbourTable neighbour, which is already in it - name " << neighbour->getName() << ", port " << neighbour->getPortReceive();
     }
 
     neighbours.push_back(neighbour);

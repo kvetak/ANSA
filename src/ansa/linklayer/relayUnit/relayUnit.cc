@@ -210,7 +210,7 @@ void relayUnit::dispatchLLDPUpdate(LLDPUpdate *lldpUpdate, int port)
     frame->setDest(controlInfo->getDest());
     frame->setEtherType(controlInfo->getEtherType());
     frame->setByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
-    frame->setFrameByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
+    //frame->setFrameByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
     frame->encapsulate(lldpUpdate);
 
     if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
