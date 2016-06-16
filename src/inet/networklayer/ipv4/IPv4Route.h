@@ -102,6 +102,9 @@ class INET_API IPv4Route : public cObject, public IRoute
     virtual void setGateway(IPv4Address _gateway) { if (gateway != _gateway) { gateway = _gateway; changed(F_NEXTHOP); } }
     virtual void setInterface(InterfaceEntry *_interfacePtr) override { if (interfacePtr != _interfacePtr) { interfacePtr = _interfacePtr; changed(F_IFACE); } }
     virtual void setSourceType(SourceType _source) override { if (sourceType != _source) { sourceType = _source; changed(F_SOURCE); } }
+#ifdef ANSAINET
+    const char* getSourceTypeAbbreviation() const;
+#endif
     virtual void setAdminDist(unsigned int _adminDist) { if (adminDist != _adminDist) { adminDist = _adminDist; changed(F_ADMINDIST); } }
     virtual void setMetric(int _metric) override { if (metric != _metric) { metric = _metric; changed(F_METRIC); } }
 
@@ -122,9 +125,7 @@ class INET_API IPv4Route : public cObject, public IRoute
 
     /** Source of route. MANUAL (read from file), from routing protocol, etc */
     SourceType getSourceType() const override { return sourceType; }
-#ifdef ANSAINET
-    const char* getSourceTypeAbbreviation() const;
-#endif
+
     /** Route source specific preference value */
     unsigned int getAdminDist() const { return adminDist; }
 

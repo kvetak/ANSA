@@ -10,10 +10,14 @@ src/Makefile.vc
 /doc/neddoc/
 /doc/src/manual/figures/*.pdf
 /doc/src/manual/inet-manual.pdf
+/doc/inet-manual-draft.pdf
 /examples/*/results/
 /examples/*/*/results/
 /examples/*/*/*/results/
-/examples/*/cache/*
+/examples/*/cache/
+/examples/*/*/cache/
+/tutorials/*/cache/
+/tutorials/*/data/
 /tests/*/work/
 /tests/*/*/work/
 /tests/*/results*/
@@ -25,6 +29,10 @@ src/Makefile.vc
 *.vec
 *.vci
 .buildlog*
+# local files not to be committed
+.oppfeaturestate
+.nedexclusions
+src/inet/features.h
 # ignore binary files
 out/
 *.so
@@ -39,17 +47,18 @@ out/
 *.idb
 *.manifest
 .qtenv.ini
+.qtenvrc
 .tkenvrc
 .tkenvlog
 .cmdenv-log
 netanim-trace.txt
 *.out
 gcc-debug
-/src/.tmp*
 
 # ignore backup and temp files
 *.UPDATED
 *.FAILED
+*.ERROR
 *.bak
 backups
 *~

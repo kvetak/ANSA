@@ -70,16 +70,16 @@ network VerTest3
         }
 
         LAN1: ANSA_Host {
-            @display("p=50,357;i=cloud_s");
+            @display("p=50,357;i=misc/cloud");
         }
         LAN2: ANSA_Host {
-            @display("p=250,57;i=cloud_s");
+            @display("p=250,57;i=misc/cloud");
         }
         LAN3: ANSA_Host {
-            @display("p=450,57;i=cloud_s");
+            @display("p=450,57;i=misc/cloud");
         }
         LAN4: ANSA_Host {
-            @display("p=50,57;i=cloud_s");
+            @display("p=50,57;i=misc/cloud");
         }
         scenarioManager: ScenarioManager {
             @display("p=450,357");

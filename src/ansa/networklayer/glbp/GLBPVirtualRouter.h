@@ -149,7 +149,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
          */
         //@{
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
-        virtual void receiveSignal(cComponent *source, simsignal_t signalID, bool b) override;
+        virtual void receiveSignal(cComponent *source, simsignal_t signalID, bool b);
         //@}
 
         /**

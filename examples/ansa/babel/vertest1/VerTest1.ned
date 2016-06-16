@@ -30,6 +30,12 @@ network VerTest1
         configurator: IPv4NetworkConfigurator {
             parameters:
                 config = xmldoc("networkConfig.xml");
+                assignAddresses = false;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;                
                 @display("p=450,290");
         }
 
@@ -48,10 +54,10 @@ network VerTest1
         
        
         LAN1: ANSA_Host {
-            @display("p=50,357;i=cloud_s");
+            @display("p=50,357;i=misc/cloud");
         }
         LAN2: ANSA_Host {
-            @display("p=250,57;i=cloud_s");
+            @display("p=250,57;i=misc/cloud");
         }
 
         scenarioManager: ScenarioManager {

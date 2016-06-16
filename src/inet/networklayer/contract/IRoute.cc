@@ -61,6 +61,7 @@ const char *IRoute::sourceTypeName(SourceType sourceType)
         case AODV:
             return "AODV";
 #ifdef ANSAINET
+        //XXX: Vesely - Find more elegant solution
         case EIGRP:
             return "EIGRP";
         case LISP:
@@ -91,3 +92,4 @@ const char *IMulticastRoute::sourceTypeName(SourceType sourceType)
 }
 
 } // namespace inet
+

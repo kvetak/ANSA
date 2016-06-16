@@ -42,7 +42,15 @@ struct int_symbol platform_symbols_table[] = {
     { IPPROTO_IP,                       "IPPROTO_IP"                      },
     { IPPROTO_UDP,                      "IPPROTO_UDP"                     },
     { IPPROTO_TCP,                      "IPPROTO_TCP"                     },
+    { IPPROTO_SCTP,                     "IPPROTO_SCTP"                    },
 
+    /* /usr/include/netinet/sctp.h */
+    { SCTP_RTOINFO,                     "SCTP_RTOINFO"                    },
+    { SCTP_INITMSG,                     "SCTP_INITMSG"                    },
+    { SCTP_NODELAY,                     "SCTP_NODELAY"                    },
+    { SCTP_MAXSEG,                      "SCTP_MAXSEG"                     },
+    { SCTP_DELAYED_SACK,                "SCTP_DELAYED_SACK"               },
+    { SCTP_MAX_BURST,                   "SCTP_MAX_BURST"                  },
     /* Sentinel marking the end of the table. */
     { 0, NULL },
 };
@@ -64,13 +72,19 @@ PacketDrillConfig::~PacketDrillConfig()
 {
 }
 
+void PacketDrillConfig::parseScriptOptions(cQueue *options)
+{
+}
+
 PacketDrillPacket::PacketDrillPacket()
 {
+   inetPacket = nullptr;
 }
 
 PacketDrillPacket::~PacketDrillPacket()
 {
-    delete inetPacket;
+    if (inetPacket)
+        delete inetPacket;
 }
 
 PacketDrillExpression::PacketDrillExpression(enum expression_t type_)
@@ -184,6 +198,8 @@ PacketDrillEvent::PacketDrillEvent(enum event_t type_)
     type = type_;
     eventTimeEnd = NO_TIME_RANGE;
     eventOffset = NO_TIME_RANGE;
+    eventKind.packet = nullptr;
+    eventKind.syscall = nullptr;
 }
 
 PacketDrillEvent::~PacketDrillEvent()
@@ -193,14 +209,16 @@ PacketDrillEvent::~PacketDrillEvent()
 PacketDrillScript::PacketDrillScript(const char *scriptFile)
 {
     eventList = new cQueue("eventList");
+    optionList = new cQueue("optionList");
     buffer = NULL;
     assert(scriptFile != NULL);
-    scriptPath = strdup(scriptFile);
+    scriptPath = scriptFile;
 }
 
 PacketDrillScript::~PacketDrillScript()
 {
-    delete eventList;
+    for (cQueue::Iterator iter(*eventList); !iter.end(); iter++)
+        delete (PacketDrillEvent *)(iter());
 }
 
 void PacketDrillScript::readScript()
@@ -250,7 +268,7 @@ void PacketDrillScript::readScript()
 
 int PacketDrillScript::parseScriptAndSetConfig(PacketDrillConfig *config, const char *script_buffer)
 {
-    int res;
+    int res = 0;
     struct invocation invocation = {
         .config = config,
         .script = this,
@@ -277,9 +295,66 @@ PacketDrillStruct::PacketDrillStruct(uint32 v1, uint32 v2)
     value2 = v2;
 }
 
+PacketDrillOption::PacketDrillOption(char *v1, char *v2)
+{
+    name = strdup(v1);
+    value = strdup(v2);
+}
+
 PacketDrillTcpOption::PacketDrillTcpOption(uint16 kind_, uint16 length_)
 {
     kind = kind_;
     length = length_;
     blockCount = 0;
+}
+
+PacketDrillSctpChunk::PacketDrillSctpChunk(uint8 type_, SCTPChunk *sctpChunk)
+{
+    type = type_;
+    chunk = sctpChunk->dup();
+    delete sctpChunk;
+};
+
+PacketDrillBytes::PacketDrillBytes()
+{
+    listLength = 0;
+}
+
+PacketDrillBytes::PacketDrillBytes(uint8 byte)
+{
+    listLength = 0;
+    byteList.setDataArraySize(listLength + 1);
+    byteList.setData(listLength, byte);
+    listLength++;
+}
+
+void PacketDrillBytes::appendByte(uint8 byte)
+{
+    byteList.setData(listLength, byte);
+    listLength++;
+}
+
+
+PacketDrillSctpParameter::PacketDrillSctpParameter(uint16 type_, int16 len, void* content_)
+{
+    uint32 flgs = 0;
+    type = type_;
+    if (len == -1)
+        flgs |= FLAG_CHUNK_LENGTH_NOCHECK;
+    parameterLength = len;
+
+    if (!content_) {
+        flgs |= FLAG_CHUNK_VALUE_NOCHECK;
+        parameterList = nullptr;
+    } else {
+        if (type == SUPPORTED_EXTENSIONS) {
+            PacketDrillBytes *pdb = (PacketDrillBytes *)content_;
+            this->setByteArrayPointer(pdb->getByteList());
+        } else {
+           // parameterList = content_->getList();
+        }
+    }
+
+
+    flags = flgs;
 }

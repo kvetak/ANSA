@@ -31,12 +31,12 @@ class AnsaInterfaceEntry;
 class AnsaEtherMACBaseVF: public EtherMACBase {
 public:
     AnsaEtherMACBaseVF() {};
-    virtual ~AnsaEtherMACBaseVF() {};
+    virtual ~AnsaEtherMACBaseVF();
 
     protected:
         virtual void initialize(int stage);
         virtual void registerInterface();
-        virtual bool dropFrameNotForUs(EtherFrame *frame);
+
 
 };
 }//namespace inet

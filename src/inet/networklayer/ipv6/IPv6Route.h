@@ -53,6 +53,10 @@ class INET_API IPv6Route : public cObject, public IRoute
         dEIGRPExternal = 170,
         dBGPInternal = 200,
         dDHCPlearned = 254,
+#ifdef ANSAINET
+        dBABEL = 125,
+        dLISP = 210,
+#endif
         dUnknown = 255
     };
 

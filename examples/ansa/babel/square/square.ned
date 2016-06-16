@@ -29,6 +29,12 @@ network square
         configurator: IPv4NetworkConfigurator {
             parameters:
                 config = xmldoc("networkConfig.xml");
+                assignAddresses = true;
+                assignDisjunctSubnetAddresses = false;
+                addStaticRoutes = false;
+                addDefaultRoutes = false;
+                addSubnetRoutes = false;
+                optimizeRoutes = false;                
                 @display("p=450,290");
         }
 
@@ -58,16 +64,16 @@ network square
         }
 
         LAN1: ANSA_Host {
-            @display("p=153,357;i=cloud_s");
+            @display("p=153,357;i=misc/cloud");
         }
         LAN2: ANSA_Host {
-            @display("p=324,357;i=cloud_s");
+            @display("p=324,357;i=misc/cloud");
         }
         LAN3: ANSA_Host {
-            @display("p=324,69;i=cloud_s");
+            @display("p=324,69;i=misc/cloud");
         }
         LAN4: ANSA_Host {
-            @display("p=153,69;i=cloud_s");
+            @display("p=153,69;i=misc/cloud");
         }
         scenarioManager: ScenarioManager {
             @display("p=450,357");

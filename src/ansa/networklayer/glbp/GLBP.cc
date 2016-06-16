@@ -307,7 +307,7 @@ void GLBP::checkAndJoinMulticast(int InterfaceId){
 
 void GLBP::updateDisplayString()
 {
-    if (!ev.isGUI())
+    if (!hasGUI())
         return;
 
     char buf[80];

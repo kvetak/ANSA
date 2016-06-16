@@ -2548,6 +2548,14 @@ void BabelMain::addToRT(BabelRoute *route)
     ro->setInterface(route->getNeighbour()->getInterface()->getInterface());
     ro->setNextHop(route->getNextHop());
     ro->setMetric(route->metric());
+
+    if (check_and_cast<IRoutingTable*>(rt)) {
+        ((IPv4Route*)ro)->setAdminDist(IPv4Route::dBABEL);
+    }
+    else {
+        ((IPv6Route*)ro)->setAdminDist(IPv6Route::dBABEL);
+    }
+
     rt->addRoute(ro);
 }
 

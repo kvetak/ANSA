@@ -24,26 +24,23 @@
 namespace inet{
 void AnsaEtherMACBaseVF::initialize(int stage)
 {
+    connectionColoring = par("connectionColoring");
+
     MACBase::initialize(stage);
-    if (stage == 0)    {
+
+    if (stage == INITSTAGE_LOCAL) {
         physInGate = gate("phys$i");
         physOutGate = gate("phys$o");
         upperLayerInGate = gate("upperLayerIn");
-        transmissionChannel = NULL;
-        interfaceEntry = NULL;
-        curTxFrame = NULL;
+        transmissionChannel = nullptr;
+        curTxFrame = nullptr;
 
         initializeFlags();
 
         initializeMACAddress();
-        initializeQueueModule();
         initializeStatistics();
 
-        registerInterface(); // needs MAC address
-
-        readChannelParameters(true);
-
-        lastTxFinishTime = -1.0; // not equals with current simtime.
+        lastTxFinishTime = -1.0;    // not equals with current simtime.
 
         // initialize self messages
         endTxMsg = new cMessage("EndTransmission", ENDTRANSMISSION);
@@ -62,8 +59,20 @@ void AnsaEtherMACBaseVF::initialize(int stage)
 
         subscribe(POST_MODEL_CHANGE, this);
     }
+    else if (stage == INITSTAGE_LINK_LAYER) {
+        registerInterface();    // needs MAC address    //FIXME why not called in MACBase::initialize()?
+        initializeQueueModule();
+        readChannelParameters(true);
+    }
 }
 
+AnsaEtherMACBaseVF::~AnsaEtherMACBaseVF() {
+    delete curTxFrame;
+
+    cancelAndDelete(endTxMsg);
+    cancelAndDelete(endIFGMsg);
+    cancelAndDelete(endPauseMsg);
+}
 
 void AnsaEtherMACBaseVF::registerInterface()
 {
@@ -94,43 +103,5 @@ void AnsaEtherMACBaseVF::registerInterface()
         ift->addInterface(interfaceEntry);
 }
 
-bool AnsaEtherMACBaseVF::dropFrameNotForUs(EtherFrame *frame)
-{
-    // Current ethernet mac implementation does not support the configuration of multicast
-    // ethernet address groups. We rather accept all multicast frames (just like they were
-    // broadcasts) and pass it up to the higher layer where they will be dropped
-    // if not needed.
-    //
-    // PAUSE frames must be handled a bit differently because they are processed at
-    // this level. Multicast PAUSE frames should not be processed unless they have a
-    // destination of MULTICAST_PAUSE_ADDRESS. We drop all PAUSE frames that have a
-    // different muticast destination. (Note: Would the multicast ethernet addressing
-    // implemented, we could also process the PAUSE frames destined to any of our
-    // multicast adresses)
-    // All NON-PAUSE frames must be passed to the upper layer if the interface is
-    // in promiscuous mode.
 
-    if (frame->getDest().equals(address))
-        return false;
-
-    if (frame->getDest().isBroadcast())
-        return false;
-
-    bool isPause = (dynamic_cast<EtherPauseFrame *>(frame) != NULL);
-
-    if (!isPause && (promiscuous || frame->getDest().isMulticast()))
-        return false;
-
-    if (isPause && frame->getDest().equals(MACAddress::MULTICAST_PAUSE_ADDRESS))
-        return false;
-
-    if ((dynamic_cast<AnsaInterfaceEntry *>(interfaceEntry))->hasMacAddress(frame->getDest()))
-        return false;
-
-    EV << "Frame `" << frame->getName() <<"' not destined to us, discarding\n";
-    numDroppedNotForUs++;
-    emit(dropPkNotForUsSignal, frame);
-    delete frame;
-    return true;
-}
 }//namespace inet

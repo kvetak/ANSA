@@ -14,7 +14,7 @@
 // 
 
 package inet.examples.ansa.Basics.SimpleRelay;
-import inet.common.misc.ThruputMeteringChannel;
+import ned.DatarateChannel;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 
@@ -27,11 +27,11 @@ network SimpleRelay
 {
     @display("bgb=358,329");
     types:
-        channel Channel extends ThruputMeteringChannel
+        channel Channel extends DatarateChannel
         {
             delay = 0.1us;
             datarate = 100Mbps;
-            thruputDisplayFormat = "#N";
+
         }
     submodules:
         ClientA: ANSA_Host {

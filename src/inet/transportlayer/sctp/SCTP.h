@@ -29,6 +29,7 @@
 
 #include "inet/networklayer/common/L3Address.h"
 #include "inet/transportlayer/contract/udp/UDPSocket.h"
+#include "inet/transportlayer/contract/sctp/SCTPSocket.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/networklayer/ipv4/IIPv4RoutingTable.h"
 #include "inet/transportlayer/sctp/SCTPMessage_m.h"
@@ -180,6 +181,8 @@ class INET_API SCTP : public cSimpleModule
 
     UDPSocket udpSocket;
 
+    SocketOptions* socketOptions;
+
   protected:
     IRoutingTable *rt;
     IInterfaceTable *ift;
@@ -190,6 +193,7 @@ class INET_API SCTP : public cSimpleModule
 
     SCTPAssociation *findAssocForMessage(L3Address srcAddr, L3Address destAddr, uint32 srcPort, uint32 destPort, bool findListen);
     SCTPAssociation *findAssocForApp(int32 appGateIndex, int32 assocId);
+    int32 findAssocForFd(int32 fd);
     void sendAbortFromMain(SCTPMessage *sctpmsg, L3Address fromAddr, L3Address toAddr);
     void sendShutdownCompleteFromMain(SCTPMessage *sctpmsg, L3Address fromAddr, L3Address toAddr);
     void updateDisplayString();
@@ -255,6 +259,21 @@ class INET_API SCTP : public cSimpleModule
     SctpVTagMap getVTagMap() { return sctpVTagMap; };
 
     void bindPortForUDP();
+
+    /** Getter and Setter for the socket options **/
+    SocketOptions *collectSocketOptions();
+
+    void setSocketOptions(SocketOptions* options) { socketOptions = options; };
+    int getMaxInitRetrans() { return socketOptions->maxInitRetrans; };
+    int getMaxInitRetransTimeout() { return socketOptions->maxInitRetransTimeout; };
+    double getRtoInitial() { return socketOptions->rtoInitial; };
+    double getRtoMin() { return socketOptions->rtoMin; };
+    double getRtoMax() { return socketOptions->rtoMax; };
+    int getSackFrequency() { return socketOptions->sackFrequency; };
+    double getSackPeriod() { return socketOptions->sackPeriod; };
+    int getMaxBurst() { return socketOptions->maxBurst; };
+    int getFragPoint() { return socketOptions->fragPoint; };
+    int getNoDelay() { return socketOptions->noDelay; };
 };
 
 } // namespace sctp

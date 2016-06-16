@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <featurestates>
     <feature enabled="true" id="TCP_common"/>
     <feature enabled="true" id="TCP_INET"/>
@@ -40,7 +40,6 @@
     <feature enabled="true" id="GPSR"/>
     <feature enabled="true" id="RIP"/>
     <feature enabled="true" id="RIP_examples"/>
-    <feature enabled="false" id="MANET"/>
     <feature enabled="false" id="MANET_examples"/>
     <feature enabled="true" id="mobility"/>
     <feature enabled="true" id="mobility_examples"/>

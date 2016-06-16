@@ -16,23 +16,25 @@
 #ifndef ANSAETHERMACFULLDUPLEX_H_
 #define ANSAETHERMACFULLDUPLEX_H_
 
-#include "AnsaEtherMACBaseVF.h"
+#include "inet/common/INETDefs.h"
+#include "ansa/linklayer/ethernet/AnsaEtherMACBaseVF.h"
 #include "inet/linklayer/ethernet/EtherMACBase.h"
 
 namespace inet{
 class INET_API AnsaEtherMACFullDuplex : public AnsaEtherMACBaseVF
 {
   public:
-    AnsaEtherMACFullDuplex();
+    AnsaEtherMACFullDuplex() {};
 
   protected:
-    virtual void initialize(int stage);
-    virtual void initializeStatistics();
-    virtual void initializeFlags();
-    virtual void handleMessage(cMessage *msg);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void initializeStatistics() override;
+    virtual void initializeFlags() override;
+    virtual void handleMessage(cMessage *msg) override;
 
     // finish
-    virtual void finish();
+    virtual void finish() override;
 
     // event handlers
     virtual void handleEndIFGPeriod();
@@ -43,7 +45,7 @@ class INET_API AnsaEtherMACFullDuplex : public AnsaEtherMACBaseVF
     // helpers
     virtual void startFrameTransmission();
     virtual void processFrameFromUpperLayer(EtherFrame *frame);
-    virtual void processMsgFromNetwork(EtherTraffic *msg);
+    virtual void processMsgFromNetwork(cPacket *pk);
     virtual void processReceivedDataFrame(EtherFrame *frame);
     virtual void processPauseCommand(int pauseUnits);
     virtual void scheduleEndIFGPeriod();

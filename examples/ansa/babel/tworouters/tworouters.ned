@@ -54,10 +54,10 @@ network tworouters
         
        
         LAN1: ANSA_Host {
-            @display("p=50,357;i=cloud_s");
+            @display("p=50,357;i=misc/cloud");
         }
         LAN2: ANSA_Host {
-            @display("p=250,57;i=cloud_s");
+            @display("p=250,57;i=misc/cloud");
         }
 
         scenarioManager: ScenarioManager {

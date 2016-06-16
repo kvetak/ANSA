@@ -40,12 +40,12 @@ class GLBPMessage : public GLBPMessage_Base
       /**
        * Returns the number of extension headers in this datagram
        */
-      virtual unsigned int getOptionArraySize() const { return TLV_var.size(); }
+      virtual unsigned int getOptionArraySize() const { return getTLV().size(); }
 
       /**
        * Returns the kth extension header in this datagram
        */
-      virtual TLVOptionBase& getTlvOption(unsigned int k) { return *check_and_cast<TLVOptionBase *>(&(TLV_var.at(k))); }
+      virtual TLVOptionBase& getTlvOption(unsigned int k) { return *check_and_cast<TLVOptionBase *>(&(getTLV().at(k))); }
       virtual const TLVOptionBase& getTlvOption(unsigned int k) const { return const_cast<GLBPMessage*>(this)->getTlvOption(k); }
 
       /**

@@ -18,6 +18,12 @@
 #ifndef __INET_INETDEFS_H
 #define __INET_INETDEFS_H
 
+//XXX: ANSAINET macro
+#define ANSAINET
+
+// feature defines generated based on the actual feature enablement
+#include "inet/features.h"
+
 //
 // General definitions.
 //
@@ -41,8 +47,8 @@ using namespace omnetpp;
 #  endif
 #endif
 
-#define INET_VERSION  0x0302
-#define INET_PATCH_LEVEL 0x01
+#define INET_VERSION  0x0303
+#define INET_PATCH_LEVEL 0x00
 
 #if defined(INET_EXPORT)
 #  define INET_API    OPP_DLLEXPORT
@@ -102,9 +108,6 @@ inline void printElapsedTime(const char *name, long startTime)
 }
 
 #define TIME(CODE)    { long startTime = clock(); CODE; printElapsedTime( #CODE, startTime); }
-
-//XXX: ANSAINET macro
-#define ANSAINET
 
 } // namespace inet
 

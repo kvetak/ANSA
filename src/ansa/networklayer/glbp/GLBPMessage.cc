@@ -23,13 +23,13 @@ Register_Class(GLBPMessage);
 
 TLVOptionBase *GLBPMessage::findOptionByType(short int optionType, int index)
 {
-    int i = TLV_var.findByType(optionType, index);
+    int i = getTLV().findByType(optionType, index);
     return i >= 0 ? &getTlvOption(i) : nullptr;
 }
 
 void GLBPMessage::addOption(TLVOptionBase *opt, int atPos)
 {
-    TLV_var.add(opt, atPos);
+    getTLV().add(opt, atPos);
 }
 
 } /* namespace inet */

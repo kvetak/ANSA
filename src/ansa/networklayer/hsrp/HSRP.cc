@@ -281,7 +281,7 @@ bool HSRP::is_unique(std::string virtip, int iid){
 
 void HSRP::updateDisplayString()
 {
-    if (!ev.isGUI())
+    if (!hasGUI())
         return;
 
     char buf[80];

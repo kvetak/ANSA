@@ -39,41 +39,6 @@ IPv4Route::~IPv4Route()
     delete protocolData;
 }
 
-#ifdef ANSAINET
-const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
-    switch (sourceType) {
-        case MANUAL:
-            return "L";
-        case IFACENETMASK:
-            return (getGateway().isUnspecified()) ? "C" : "S";
-
-        case ROUTER_ADVERTISEMENT:
-            return "ra";
-
-        case RIP:
-            return "R";
-
-        case OSPF:
-            return "O";
-
-        case BGP:
-            return "B";
-
-        case EIGRP:
-            return getAdminDist() < IPv4Route::dEIGRPExternal ? "D" : "D EX";
-
-        case LISP:
-            return "l";
-
-        case BABEL:
-            return "ba";
-
-        default:
-            return "???";
-    }
-}
-#endif
-
 std::string IPv4Route::info() const
 {
     std::stringstream out;
@@ -84,13 +49,11 @@ std::string IPv4Route::info() const
         out << "0.0.0.0";
     else
         out << getDestination();
-
     out << "/";
     if (getNetmask().isUnspecified())
         out << "0";
     else
         out << getNetmask().getNetmaskLength();
-
     if (getGateway().isUnspecified())
     {
         out << " is directly connected";
@@ -101,7 +64,6 @@ std::string IPv4Route::info() const
         out << " via ";
         out << getGateway();
     }
-
     out << ", " << getInterfaceName();
 #else
     out << "dest:";
@@ -137,7 +99,7 @@ std::string IPv4Route::info() const
         out << data;
     }
 #endif // ifdef WITH_AODV
-#endif
+#endif // ANSAINET
     return out.str();
 }
 
@@ -175,6 +137,33 @@ IPv4MulticastRoute::~IPv4MulticastRoute()
         delete elem;
     outInterfaces.clear();
 }
+
+#ifdef ANSAINET
+const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
+    switch (sourceType) {
+        case MANUAL:
+            return "L";
+        case IFACENETMASK:
+            return (getGateway().isUnspecified()) ? "C" : "S";
+        case ROUTER_ADVERTISEMENT:
+            return "ra";
+        case RIP:
+            return "R";
+        case OSPF:
+            return "O";
+        case BGP:
+            return "B";
+        case EIGRP:
+            return getAdminDist() < IPv4Route::dEIGRPExternal ? "D" : "D EX";
+        case LISP:
+            return "l";
+        case BABEL:
+            return "ba";
+        default:
+            return "???";
+    }
+}
+#endif
 
 std::string IPv4MulticastRoute::info() const
 {
