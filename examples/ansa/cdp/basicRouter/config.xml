@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<Devices>
+	<!-- R1 -->
+	<Router id="R1">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth2">
+                <CDP>
+                	<status>disabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+    </Router>
+    
+    <!-- R2 -->
+    <Router id="R2">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+
+    </Router>
+    
+    <!-- R3 -->
+    <Router id="R3">
+        <Interfaces>
+            <Interface name="eth0">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+            <Interface name="eth1">
+                <CDP>
+                	<status>enabled</status>
+                </CDP>
+            </Interface>
+        </Interfaces>
+        <Routing>
+        	<ODR>
+        		<invalid>100</invalid>
+        		<holddown>30</holddown>
+        		<flush>200</flush>
+        	</ODR>
+        </Routing>
+    </Router>
+</Devices>

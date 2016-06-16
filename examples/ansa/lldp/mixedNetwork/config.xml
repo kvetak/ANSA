@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<Devices>
+	<!-- R1 -->
+	<Router id="R1">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth1">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth2">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+    </Router>
+    
+    <!-- R2 -->
+    <Router id="R2">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth1">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth2">
+                <LLDP>
+                	<AdminStatus>disabled</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+
+    </Router>
+    
+    <!-- R3 -->
+    <Router id="R3">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth1">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth2">
+                <LLDP>
+                	<AdminStatus>disabled</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+    </Router>
+    
+    <!-- S1 -->
+    <Switch id="S1">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledrxtx</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+    </Switch>
+</Devices>
