@@ -81,8 +81,8 @@ protected:
 
     Statistics stat;
 
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }

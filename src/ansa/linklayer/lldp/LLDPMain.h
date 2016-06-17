@@ -52,7 +52,7 @@ class INET_API LLDPMain: public cSimpleModule, protected cListener, public ILife
     uint16_t msgFastTxDef;     // ticks between transmission during fast transmission
     uint8_t msgTxHoldDef;      // multiplier of msgTxInterval, to determine value of TTL
     uint16_t msgTxIntervalDef; // ticks between transmission during normal transmission periods
-    uint16_t reinitDelayDef;   // delay from when adminStatus becomes ‘disabled’ until reinitialization is attempted
+    uint16_t reinitDelayDef;   // delay from when adminStatus becomes disabled until reinitialization is attempted
     uint16_t txFastInitDef;    // determines the number of LLDPDUs that are transmitted during a fast transmission period
     uint8_t txCreditMaxDef;    // the maximum value of txCredit
     AS adminStatusDef;
@@ -60,8 +60,8 @@ class INET_API LLDPMain: public cSimpleModule, protected cListener, public ILife
     std::string chassisId;      // device chassis id
 
     virtual ~LLDPMain();
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }

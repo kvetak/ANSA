@@ -81,7 +81,7 @@ public:
     void setPortSend(std::string portSend){this->portSend = portSend;}
     void setLastUpdated(simtime_t lastUpdate){this->lastUpdate = lastUpdate;}
     void setTtl(simtime_t ttl){this->ttl = ttl;}
-    void setHoldtimeTimer(CDPTimer *holdTimeTimer){this->holdtimeTimer = holdtimeTimer;}
+    void setHoldtimeTimer(CDPTimer *holdTimeTimer){this->holdtimeTimer = holdTimeTimer;}
     void setFullDuplex(bool fullDuplex){this->fullDuplex = fullDuplex;}
     void setCapabilities(std::string capabilities){this->capabilities = capabilities;}
     void setPlatform(std::string platform){this->platform = platform;}
