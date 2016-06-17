@@ -182,7 +182,7 @@ LLDPNeighbourTable::LLDPNeighbourTable() {
 
 LLDPNeighbourTable::~LLDPNeighbourTable() {
     for (auto & elem : neighbours) {
-        cancelEvent(elem->getRxInfoTtl());
+        cancelAndDelete(elem->getRxInfoTtl());
         delete (elem);
     }
     neighbours.clear();
