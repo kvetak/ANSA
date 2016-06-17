@@ -23,9 +23,9 @@ import inet.routing.contract.IPIMRouting;
 import inet.transportlayer.contract.ITCP;
 import inet.transportlayer.contract.IUDP;
 
-import ansa.node.ANSA_NodeBaseWithVF;
+import ansa.node.ANSA_NodeBase;
 
-module ANSA_Router extends ANSA_NodeBaseWithVF
+module ANSA_Router extends ANSA_NodeBase
 {
     parameters:
         @display("i=abstract/router");
@@ -39,9 +39,9 @@ module ANSA_Router extends ANSA_NodeBaseWithVF
         bool hasHSRP = default(false);
         bool hasGLBP = default(false);
         string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
-        string udpType = default("UDP");
-
+        string udpType = default("UDP");        
         forwarding = true;
+        ethernetType = "ANSA_EthernetInterface";         
     submodules:
         ospf: <"OSPFRouting"> like IIPRouting if hasOSPF {
             parameters:

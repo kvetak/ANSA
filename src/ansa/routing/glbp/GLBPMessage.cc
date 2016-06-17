@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "GLBPMessage.h"
+#include "ansa/routing/glbp/GLBPMessage.h"
 
 #include "inet/common/INETUtils.h"
 

@@ -14,7 +14,7 @@
 // 
 // Author: Jan Holusa
 
-package ansa.networklayer.hsrp;
+package ansa.routing.hsrp;
 import inet.applications.contract.IUDPApp;
 
 simple HSRPVirtualRouter like IUDPApp

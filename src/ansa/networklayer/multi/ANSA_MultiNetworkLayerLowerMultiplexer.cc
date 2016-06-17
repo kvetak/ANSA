@@ -53,7 +53,13 @@ void ANSA_MultiNetworkLayerLowerMultiplexer::handleMessage(cMessage *message)
     }
     else if (!strcmp(arrivalGateName, "ifLowerIn"))
     {
-        send(message, "ifUpperOut", getProtocolCount() * arrivalGate->getIndex() + getProtocolIndex(message));
+        int res = getProtocolIndex(message);
+        if (res > -1) {
+            send(message, "ifUpperOut", getProtocolCount() * arrivalGate->getIndex() + res); }
+        else {
+            EV << "Message dropped because appropriate L3 layer is not present!" << endl;
+            delete message;
+        }
     }
     else
         throw cRuntimeError("Unknown arrival gate");
@@ -64,31 +70,31 @@ int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolCount()
     return 5;
 }
 
+void ANSA_MultiNetworkLayerLowerMultiplexer::initialize() {
+
+}
+
 int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolIndex(cMessage *message)
 {
-    // TODO: handle the case when some network protocols are disabled
+    //Vesely - Resolved: handle the case when some network protocols are disabled
     if (false)
         ;
 #ifdef WITH_IPv4
     else if (dynamic_cast<IPv4Datagram *>(message) || dynamic_cast<ARPPacket *>(message))
-        return 0;
+        return (getParentModule()->par("enableIPv4")) ? 0 : -1;
 #endif // ifdef WITH_IPv4
 #ifdef WITH_IPv6
     else if (dynamic_cast<IPv6Datagram *>(message))
-        return 1;
+        return (getParentModule()->par("enableIPv6")) ? 1 : -1;
 #endif // ifdef WITH_IPv6
 #ifdef WITH_GENERIC
     else if (dynamic_cast<GenericDatagram *>(message))
-        return 2;
+        return (getParentModule()->par("enableCLNS")) ? 2 : -1;
 #endif // ifdef WITH_GENERIC
-#ifdef WITH_CDP
     else if (dynamic_cast<CDPUpdate *>(message))
-        return 3;
-#endif // ifdef WITH_CDP
-#ifdef WITH_LLDP
+        return (getParentModule()->par("enableCDP")) ? 3 : -1;
     else if (dynamic_cast<LLDPUpdate *>(message))
-        return 4;
-#endif // ifdef WITH_LLDP
+        return (getParentModule()->par("enableLLDP")) ? 4 : -1;
     else
         throw cRuntimeError("Unknown message");
 }

@@ -77,12 +77,14 @@ module ANSA_Host extends ANSA_NodeBase
         forwarding = default(false);
         multicastForwarding = default(false);
         networkLayer.proxyARP = default(false);
+		networkLayer.enableCDP = false;
+		networkLayer.enableLLDP = false;        
         routingTable.forwarding = forwarding;
         routingTable.multicastForwarding = multicastForwarding;
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
         *.energySourceModule = default(energyStorageType != "" ? absPath(".energyStorage") : "");
-        *.mobilityModule = default(mobilityType != "" ? absPath(".mobility") : "");
+        *.mobilityModule = default(mobilityType != "" ? absPath(".mobility") : "");                
 
         @display("i=device/pc;bgb=,-");
     submodules:

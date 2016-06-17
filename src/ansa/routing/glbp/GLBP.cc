@@ -18,7 +18,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "GLBP.h"
+#include "ansa/routing/glbp/GLBP.h"
 
 namespace inet {
 
@@ -83,7 +83,7 @@ void GLBP::addVirtualRouter(int interface, int vrid, const char* ifnam, std::str
     std::string name = tmp.str();
 
     // create
-    cModuleType *moduleType = cModuleType::get("ansa.networklayer.glbp.GLBPVirtualRouter");
+    cModuleType *moduleType = cModuleType::get("ansa.routing.glbp.GLBPVirtualRouter");
     cModule *module = moduleType->create(name.c_str(), this);
 
     // set up parameters

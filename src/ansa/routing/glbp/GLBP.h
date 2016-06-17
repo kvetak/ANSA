@@ -18,8 +18,8 @@
 #include <omnetpp.h>
 
 //#include "GLBPHello_m.h"
-#include "GLBPMessage_m.h"
-#include "GLBPVirtualRouter.h"
+#include "ansa/routing/glbp/GLBPMessage_m.h"
+#include "ansa/routing/glbp/GLBPVirtualRouter.h"
 
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"

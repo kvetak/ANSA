@@ -15,7 +15,7 @@
 
 package inet.examples.ansa.glbp.pingedVfDown;
 
-import ansa.node.GLBPRouter;
+import ansa.node.ANSA_GLBPRouter;
 import ansa.node.ANSA_Host;
 import inet.common.lifecycle.LifecycleController;
 import inet.common.scenario.ScenarioManager;
@@ -28,13 +28,13 @@ network pingedVfDown
     @display("bgb=410,282");
 
     submodules:
-        R1: GLBPRouter {
+        R1: ANSA_GLBPRouter {
             @display("p=122,46");
         }
-        R2: GLBPRouter {
+        R2: ANSA_GLBPRouter {
             @display("p=222,46");
         }
-        R3: GLBPRouter {
+        R3: ANSA_GLBPRouter {
             @display("p=316,46");
         }
 

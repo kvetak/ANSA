@@ -29,15 +29,27 @@ import inet.networklayer.multi.MultiNetworkLayerLowerMultiplexer;
 // This module provides network protocol specific multiplexing.
 // It's part of MultiNetworkLayer and it's meant to be used there.
 //
-simple MultiNetworkLayerUpperMultiplexer extends MultiNetworkLayerUpperMultiplexer
+simple ANSA_MultiNetworkLayerUpperMultiplexer 
 {
+    parameters:
+        @display("i=block/fork");
+
+    gates:
+        input transportUpperIn[];
+        output transportUpperOut[];
+        input transportLowerIn[];
+        output transportLowerOut[];
+        input pingUpperIn[];
+        output pingUpperOut[];
+        input pingLowerIn[];
+        output pingLowerOut[];    
 }
 
 //
 // This module provides network protocol specific multiplexing.
 // It's part of MultiNetworkLayer and it's meant to be used there.
 //
-simple ANSA_MultiNetworkLayerLowerMultiplexer
+simple ANSA_MultiNetworkLayerLowerMultiplexer 
 {
     parameters:
         @display("i=block/fork");
@@ -46,7 +58,7 @@ simple ANSA_MultiNetworkLayerLowerMultiplexer
         input ifUpperIn[] @labels(INetworkDatagram);
         output ifUpperOut[] @labels(INetworkDatagram);
         input ifLowerIn[] @labels(INetworkDatagram);
-        output ifLowerOut[] @labels(INetworkDatagram);
+        output ifLowerOut[] @labels(INetworkDatagram);    
 }
 
 //
@@ -60,12 +72,9 @@ module ANSA_MultiNetworkLayer like INetworkLayer
 {
     parameters:
         @display("i=block/fork");
-        //bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
-        //bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
-        //bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
-        bool enableCLNS = false;
-        bool enableIPv6 = false;
-        bool enableIPv4 = true;
+        bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
+        bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
+        bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
         bool enableCDP = default(false);
         bool enableLLDP = default(false);
         string interfaceTableModule;
@@ -95,7 +104,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         clns: <"GenericNetworkLayer"> like INetworkLayer if enableCLNS {
             @display("p=500,300");
         }
-        upperMultiplexer: MultiNetworkLayerUpperMultiplexer {
+        upperMultiplexer: ANSA_MultiNetworkLayerUpperMultiplexer {
             @display("p=300,100");
             gates:
                 transportLowerIn[3*sizeof(transportOut)];

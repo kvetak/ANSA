@@ -17,11 +17,11 @@
 
 #include <omnetpp.h>
 
-#include "GLBPMessage_m.h"
-#include "GLBPMessage.h"
+#include "ansa/routing/glbp/GLBPMessage_m.h"
+#include "ansa/routing/glbp/GLBPMessage.h"
 
-#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
-#include "GLBPVirtualForwarder.h"
+#include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
+#include "ansa/routing/glbp/GLBPVirtualForwarder.h"
 
 #include "inet/networklayer/arp/ipv4/ARP.h"
 #include "inet/transportlayer/contract/udp/UDPSocket.h"
@@ -66,14 +66,14 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         /* Variables needed for  OMNET */
         IInterfaceTable *ift = nullptr;                 //!< usable interfaces of this router
         ARP *arp = nullptr;                             //!< arp table for sending arp gratuious.
-        AnsaInterfaceEntry *ie = nullptr;               //!< Interface which is running GLBP group
+        ANSA_InterfaceEntry *ie = nullptr;               //!< Interface which is running GLBP group
         std::vector<GLBPVirtualForwarder *> vfVector;   //!< Vector of VF's this Virtual Router is using (up to 4)
         cModule *containingModule = nullptr;            //!< helper for looking for particular module
         GLBPVirtualForwarder *vf = nullptr;
 
         /* GLBP specific variables */
-        int glbpState;                      //!< state of hsrp virtual router
-        int glbpGroup;                      //!< group of hsrp virtual router
+        int glbpState;                      //!< state of glbp virtual router
+        int glbpGroup;                      //!< group of glbp virtual router
         L3Address *glbpMulticast = nullptr; //!< multicast address of GLBP (224.0.0.102)
         IPv4Address *virtualIP = nullptr;   //!< Primary IP of the GLBP group
         MACAddress *virtualMAC = nullptr;   //!< MAC of the GLBP group
@@ -109,8 +109,8 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
          * Startup initializacion of GLBP
          */
         //@{
-        virtual void initialize( int stage);
-        virtual int numInitStages() const {return NUM_INIT_STAGES;};
+        virtual void initialize( int stage) override;
+        virtual int numInitStages() const override {return NUM_INIT_STAGES;} ;
         //@}
 
         /**
@@ -118,7 +118,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
          * and calling different methods depending on the
          * VG state.
          */
-        void handleMessage(cMessage *msg);
+        void handleMessage(cMessage *msg) override;
 
         /**
          * Generate MAC address of VF according to GLBP specification.
@@ -149,7 +149,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
          */
         //@{
         virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
-        virtual void receiveSignal(cComponent *source, simsignal_t signalID, bool b);
+        virtual void receiveSignal(cComponent *source, simsignal_t signalID, bool b, cObject *details) override;
         //@}
 
         /**

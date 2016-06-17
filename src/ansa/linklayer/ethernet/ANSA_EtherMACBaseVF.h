@@ -13,26 +13,30 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
-#define ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_
+#ifndef ANSAETHERMACBASEVF_H_
+#define ANSAETHERMACBASEVF_H_
 
-#include "inet/common/INETDefs.h"
+#include "inet/linklayer/ethernet/EtherMACBase.h"
+#include "inet/networklayer/contract/IInterfaceTable.h"
 
-namespace inet {
+namespace inet{
+// Forward declarations:
+class EtherFrame;
+class EtherTraffic;
+class InterfaceEntry;
+class ANSA_InterfaceEntry;
 
-class INET_API ANSA_MultiNetworkLayerLowerMultiplexer : public cSimpleModule
-{
-  public:
-    ANSA_MultiNetworkLayerLowerMultiplexer(){};
-    virtual ~ANSA_MultiNetworkLayerLowerMultiplexer(){};
 
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *message);
-    int getProtocolCount();
-    int getProtocolIndex(cMessage *message);
+class ANSA_EtherMACBaseVF: public EtherMACBase {
+public:
+    ANSA_EtherMACBaseVF() {};
+    virtual ~ANSA_EtherMACBaseVF();
+
+    protected:
+        virtual void initialize(int stage);
+        virtual void registerInterface();
+
+
 };
-
-} /* namespace inet */
-
-#endif /* ANSA_MULTINETWORKLAYERLOWERMULTIPLEXER_H_ */
+}//namespace inet
+#endif /* ANSAETHERMACBASEVF_H_ */

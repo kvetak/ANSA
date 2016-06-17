@@ -15,7 +15,7 @@
 
 package inet.examples.ansa.glbp.fiveRouters;
 
-import ansa.node.GLBPRouter;
+import ansa.node.ANSA_GLBPRouter;
 import ansa.node.ANSA_Host;
 import inet.common.lifecycle.LifecycleController;
 import inet.common.scenario.ScenarioManager;
@@ -28,19 +28,19 @@ network fiveRouters
     @display("bgb=434,327");
 
     submodules:
-        R1: GLBPRouter {
+        R1: ANSA_GLBPRouter {
             @display("p=111,46");
         }
-        R2: GLBPRouter {
+        R2: ANSA_GLBPRouter {
             @display("p=225,46");
         }
-        R3: GLBPRouter {
+        R3: ANSA_GLBPRouter {
             @display("p=315,69");
         }
-        R4: GLBPRouter {
+        R4: ANSA_GLBPRouter {
             @display("p=341,131");
         }
-        R5: GLBPRouter {
+        R5: ANSA_GLBPRouter {
             @display("p=322,212");
         }
         H1: ANSA_Host {

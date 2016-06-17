@@ -18,9 +18,6 @@
 #ifndef __INET_INETDEFS_H
 #define __INET_INETDEFS_H
 
-//XXX: ANSAINET macro
-#define ANSAINET
-
 // feature defines generated based on the actual feature enablement
 #include "inet/features.h"
 

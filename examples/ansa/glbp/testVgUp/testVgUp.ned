@@ -15,7 +15,7 @@
 
 package inet.examples.ansa.glbp.testVgUp;
 
-import ansa.node.GLBPRouter;
+import ansa.node.ANSA_GLBPRouter;
 import ansa.node.ANSA_Host;
 import inet.node.ethernet.EtherSwitch;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
@@ -27,13 +27,13 @@ network testVgUp
     @display("bgb=434,281");
 
     submodules:
-        R1: GLBPRouter {
+        R1: ANSA_GLBPRouter {
             @display("p=111,46");
         }
-        R2: GLBPRouter {
+        R2: ANSA_GLBPRouter {
             @display("p=205,46");
         }
-        R3: GLBPRouter {
+        R3: ANSA_GLBPRouter {
             @display("p=299,46");
         }
         PC1: ANSA_Host {

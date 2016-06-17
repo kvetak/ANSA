@@ -18,12 +18,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "GLBPVirtualRouter.h"
+#include "ansa/routing/glbp/GLBPVirtualRouter.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 
-#include "GLBPVirtualForwarder.h"
+#include "ansa/routing/glbp/GLBPVirtualForwarder.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
 
@@ -88,7 +88,7 @@ void GLBPVirtualRouter::initialize(int stage)
         //get neccessary OMNET parameters
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
         arp = getModuleFromPar<ARP>(par("arp"), this);
-        ie = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterfaceById((int) par("interface")));
+        ie = dynamic_cast<ANSA_InterfaceEntry *>(ift->getInterfaceById((int) par("interface")));
 
         //max nuber of vf is 4
         vfVector.reserve(vfMax);
@@ -124,13 +124,6 @@ void GLBPVirtualRouter::initialize(int stage)
 //        containingModule->subscribe(NF_INTERFACE_DELETED, this);
 
         WATCH(glbpState);
-        WATCH(glbpGroup);
-        WATCH(priority);
-        WATCH(preempt);
-        WATCH(helloTime);
-        WATCH(holdTime);
-        WATCH(redirect);
-        WATCH(timeout);
 
         //start GLBP
         scheduleAt(simTime() , initmessage);
@@ -596,7 +589,7 @@ void GLBPVirtualRouter::addOrStartVf(GLBPMessage *msg){
     }
 }
 
-void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, bool b){
+void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, bool b, cObject *details){
     Enter_Method_Silent("GLBPVirtualRouter::receiveChangeNotification(%s)", notificationCategoryName(signalID));
     if (signalID == ARP::recvReqSignal){
         //iff Iam active
@@ -618,13 +611,13 @@ void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, 
 {
     Enter_Method_Silent("GLBPVirtualRouter::receiveChangeNotification(%s)", notificationCategoryName(signalID));
 
-     const AnsaInterfaceEntry *ief;
+     const ANSA_InterfaceEntry *ief;
      const InterfaceEntryChangeDetails *change;
 
      if (signalID == NF_INTERFACE_STATE_CHANGED) {
 
          change = check_and_cast<const InterfaceEntryChangeDetails *>(obj);
-         ief = check_and_cast<const AnsaInterfaceEntry *>(change->getInterfaceEntry());
+         ief = check_and_cast<const ANSA_InterfaceEntry *>(change->getInterfaceEntry());
 
          //Is it my interface?
          if (ief->getInterfaceId() == ie->getInterfaceId()){

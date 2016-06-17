@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2005 Andras Babos
+// Copyright (C) 2016 Jan Holusa
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -15,27 +15,17 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-
 package ansa.node;
 
 import ansa.node.ANSA_Router;
 
-
-module ANSA_LLDPCDPRouter extends ANSA_Router
+//
+// Author: Jan Holusa
+//
+module ANSA_GLBPRouter extends ANSA_Router
 {
     parameters:
-        @capabilities("Router");
-        @capabilitiesEnabled("Router");
-                       
-        string deviceId = default("");  
-        xml configFile = default(xmldoc("config.xml"));
-        string deviceType = default("Router"); 
-        **.deviceId = deviceId;
-        **.deviceType = deviceType;
-        **.configFile = default(xmldoc("config.xml"));
-        
-        networkLayer.enableCDP = true;
-        networkLayer.enableLLDP = true;
+        hasGLBP = true;    
                
 }
 

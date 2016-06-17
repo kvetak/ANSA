@@ -15,7 +15,7 @@
 
 package inet.examples.ansa.hsrp.testActiveChoose;
 
-import ansa.node.HSRPRouter;
+import ansa.node.ANSA_HSRPRouter;
 import ansa.node.ANSA_Host;
 import inet.node.ethernet.EtherSwitch;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
@@ -26,13 +26,13 @@ network testActiveChoose
     @display("bgb=338,280");
 
     submodules:
-        R1: HSRPRouter {
+        R1: ANSA_HSRPRouter {
             @display("p=111,46");
         }
-        R2: HSRPRouter {
+        R2: ANSA_HSRPRouter {
             @display("p=205,46");
         }
-        R3: HSRPRouter {
+        R3: ANSA_HSRPRouter {
             @display("p=288,46");
         }
         PC1: ANSA_Host {

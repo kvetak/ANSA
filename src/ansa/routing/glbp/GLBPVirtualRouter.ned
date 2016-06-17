@@ -14,7 +14,7 @@
 // 
 // Author: Jan Holusa
 
-package ansa.networklayer.glbp;
+package ansa.routing.glbp;
 import inet.applications.contract.IUDPApp;
 
 simple GLBPVirtualRouter like IUDPApp

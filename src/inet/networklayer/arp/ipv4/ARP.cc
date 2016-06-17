@@ -29,16 +29,16 @@
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
-#if defined(ANSAINET)
-#include "ansa/networklayer/common/AnsaInterfaceEntry.h"
-#include "ansa/networklayer/glbp/GLBPVirtualForwarder.h"
+#ifdef ANSAINET
+#include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
+#include "ansa/routing/glbp/GLBPVirtualForwarder.h"
 #endif
 
 namespace inet {
 
 simsignal_t ARP::sentReqSignal = registerSignal("sentReq");
 simsignal_t ARP::sentReplySignal = registerSignal("sentReply");
-#if defined(ANSAINET)
+#ifdef ANSAINET
 simsignal_t ARP::recvReqSignal = registerSignal("recvRequest");
 #endif
 
@@ -382,8 +382,8 @@ void ARP::processARPPacket(ARPPacket *arp)
                 MACAddress myMACAddress;
 
                 #if defined(ANSAINET)
-                if ( dynamic_cast<AnsaInterfaceEntry *>(ie) != nullptr ) {
-                    AnsaInterfaceEntry *aie = dynamic_cast<AnsaInterfaceEntry *>(ie);
+                if ( dynamic_cast<ANSA_InterfaceEntry *>(ie) != nullptr ) {
+                    ANSA_InterfaceEntry *aie = dynamic_cast<ANSA_InterfaceEntry *>(ie);
                     int vfn = aie->getVirtualForwarderId(arp->getDestIPAddress());
                     VirtualForwarder *vf = aie->getVirtualForwarderById(vfn);
 

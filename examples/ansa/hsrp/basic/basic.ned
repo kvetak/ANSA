@@ -15,7 +15,7 @@
 
 package inet.examples.ansa.hsrp.basic;
 
-import ansa.node.HSRPRouter;
+import ansa.node.ANSA_HSRPRouter;
 import ansa.node.ANSA_Host;
 import inet.common.lifecycle.LifecycleController;
 import inet.common.scenario.ScenarioManager;
@@ -28,13 +28,13 @@ network basic
     @display("bgb=356,319");
 
     submodules:
-        R1: HSRPRouter {
+        R1: ANSA_HSRPRouter {
             @display("p=117,103");
         }
-        R2: HSRPRouter {
+        R2: ANSA_HSRPRouter {
             @display("p=213,103");
         }
-        R3: HSRPRouter {
+        R3: ANSA_HSRPRouter {
             @display("p=291,103");
         }
         H1: ANSA_Host {

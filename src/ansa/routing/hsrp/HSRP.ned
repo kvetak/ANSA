@@ -14,23 +14,21 @@
 // 
 // Author: Jan Holusa
 
-package ansa.networklayer.glbp;
+package ansa.routing.hsrp;
 
 import inet.applications.contract.IUDPApp;
 
-simple GLBP like IUDPApp
+simple HSRP like IUDPApp
 {
     parameters:
         @display("i=block/network2");
-        xml configData = default(xml("<GLBP />"));       
-//        bool jittered;                    
-        string interfaceTableModule = default(".interfaceTableModule");              
-      	int glbpUdpPort			= default(3222);
-      	string glbpMulticastAddress = default("224.0.0.102");	
-
-	gates:
-        input glbpIn[];		/// from GLBPVR module to GLBP
-        output glbpOut[]; 	/// from GLBP module to GLBPVR	 
+        xml configData = default(xml("<HSRP />"));      
+        
+        string interfaceTableModule = default(".interfaceTableModule");        
+            
+    gates:
+        input hsrpIn[];					///from HSRPVR to GLBP
+        output hsrpOut[];    			///from GLBP module to HSRPVR
         input udpIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
-        output udpOut @lables(UDPControlInfo/down);	///form GLBP module to UDP
+        output udpOut @lables(UDPControlInfo/down);	///from GLBP module to UDP
 }

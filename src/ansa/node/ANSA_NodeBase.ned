@@ -30,6 +30,7 @@ import inet.power.contract.IEnergyStorage;
 import inet.power.contract.IEnergyGenerator;
 
 import ansa.networklayer.multi.ANSA_MultiNetworkLayer;
+import ansa.linklayer.ethernet.ANSA_EthernetInterface;
 
 module ANSA_NodeBase
 {
@@ -39,7 +40,7 @@ module ANSA_NodeBase
         @labels(node,ethernet-node,wireless-node);
         bool hasStatus = default(false);
         int numExtInterfaces = default(0);
-        int numRadios = default(0);               // the number of radios in the router. by default no wireless
+        int numRadios = default(0);        // the number of radios in the router. by default no wireless
         int numPcapRecorders = default(0); // no of PcapRecorders.
         int numTunInterfaces = default(0);
         int numLoopbacks = default(1);
@@ -47,6 +48,7 @@ module ANSA_NodeBase
         
         string networkLayerType = default("ANSA_MultiNetworkLayer");
         string routingTableType = default("ANSA_MultiRoutingTable");
+        string ethernetType = default(firstAvailableOrEmpty("EthernetInterface","AnsaEthernetInterface")); 
         
         bool forwarding = default(true);
         bool multicastForwarding = default(false);
@@ -108,7 +110,7 @@ module ANSA_NodeBase
             parameters:
                 @display("p=316,419,row,60;q=queue");
         }
-        eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
+        eth[sizeof(ethg)]: <ethernetType> like IWiredNic {
             parameters:
                 @display("p=427,419,row,60;q=txQueue");
         }
