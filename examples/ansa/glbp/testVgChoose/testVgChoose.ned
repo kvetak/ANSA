@@ -51,8 +51,8 @@ network testVgChoose
                             "<interface hosts='R2' towards='SW1 PC1' address='192.168.1.2' netmask='255.255.255.0' />"+
                             "<interface hosts='R3' towards='SW1 PC1' address='192.168.1.3' netmask='255.255.255.0' />"+
 
-       						"<interface hosts='H1' address='192.168.1.10' netmask='255.255.255.0' />"+
-       						"<interface hosts='H2' address='192.168.1.11' netmask='255.255.255.0' />"+
+       						"<interface hosts='PC1' address='192.168.1.10' netmask='255.255.255.0' />"+
+       						"<interface hosts='PC2' address='192.168.1.11' netmask='255.255.255.0' />"+
                             "</config>");
                 addStaticRoutes = true;
                 addDefaultRoutes = true;
