@@ -38,10 +38,17 @@ module ANSA_Router extends ANSA_NodeBase
         bool hasLISP = default(false);
         bool hasHSRP = default(false);
         bool hasGLBP = default(false);
+        bool hasCDP = default(false);
+        bool hasLLDP = default(false);
+        
         string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
         string udpType = default("UDP");        
         forwarding = true;
-        ethernetType = "ANSA_EthernetInterface";         
+        ethernetType = default("ANSA_EthernetInterface");
+        
+        networkLayer.enableCDP = hasCDP;
+        networkLayer.enableLLDP = hasLLDP;  
+               
     submodules:
         ospf: <"OSPFRouting"> like IIPRouting if hasOSPF {
             parameters:

@@ -1296,7 +1296,7 @@ GLBPVirtualRouter::~GLBPVirtualRouter() {
         cancelAndDelete(timeouttimer[i]);
     }
     containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
-    arp->unsubscribe(ARP::recvReqSignal,this);
+    //arp->unsubscribe(ARP::recvReqSignal,this);
 //    This is the end
 //    My only friend, the end ...
 }

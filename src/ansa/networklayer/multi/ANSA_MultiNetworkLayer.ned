@@ -76,7 +76,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
         bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
         bool enableCDP = default(false);
-        bool enableLLDP = default(false);
+        bool enableLLDP = default(false);        
         string interfaceTableModule;
         *.interfaceTableModule = default(absPath(interfaceTableModule));
         string routingTableModule;

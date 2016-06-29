@@ -65,14 +65,6 @@ void ANSA_EtherMACBaseVF::initialize(int stage)
     }
 }
 
-ANSA_EtherMACBaseVF::~ANSA_EtherMACBaseVF() {
-    delete curTxFrame;
-
-    cancelAndDelete(endTxMsg);
-    cancelAndDelete(endIFGMsg);
-    cancelAndDelete(endPauseMsg);
-}
-
 void ANSA_EtherMACBaseVF::registerInterface()
 {
     interfaceEntry = new ANSA_InterfaceEntry(this);

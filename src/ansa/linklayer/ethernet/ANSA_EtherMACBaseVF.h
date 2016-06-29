@@ -30,7 +30,6 @@ class ANSA_InterfaceEntry;
 class ANSA_EtherMACBaseVF: public EtherMACBase {
 public:
     ANSA_EtherMACBaseVF() {};
-    virtual ~ANSA_EtherMACBaseVF();
 
     protected:
         virtual void initialize(int stage);

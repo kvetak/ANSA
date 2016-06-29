@@ -34,8 +34,11 @@ module ANSA_LLDPCDPRouter extends ANSA_Router
         **.deviceType = deviceType;
         **.configFile = default(xmldoc("config.xml"));  
         
-        networkLayer.enableCDP = default(true);
-        networkLayer.enableLLDP = default(true);      
+        enableIPv6 = false;
+        enableCLNS = false;
+        
+        hasCDP = true;
+        hasLLDP = true;   
               
 }
 

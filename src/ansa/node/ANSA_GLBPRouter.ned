@@ -26,6 +26,8 @@ module ANSA_GLBPRouter extends ANSA_Router
 {
     parameters:
         hasGLBP = true;    
-               
+
+        enableIPv6 = false;
+        enableCLNS = false;               
 }
 

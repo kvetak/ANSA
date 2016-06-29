@@ -27,7 +27,8 @@ module ANSA_HSRPRouter extends ANSA_Router
 {
     parameters:
         hasHSRP = true;
-        **.enableIPv6 = false;
-        **.enableCLNS = false;
+        
+        enableIPv6 = false;
+        enableCLNS = false;
 }
 

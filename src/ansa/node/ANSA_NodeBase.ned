@@ -39,6 +39,15 @@ module ANSA_NodeBase
         @networkNode;
         @labels(node,ethernet-node,wireless-node);
         bool hasStatus = default(false);
+        
+        bool enableIPv4 = default(true);
+        bool enableIPv6 = default(true);
+        bool enableCLNS = default(true);
+        
+        *.enableIPv4 = enableIPv4;
+        *.enableIPv6 = enableIPv6;
+        *.enableCLNS = enableCLNS; 
+        
         int numExtInterfaces = default(0);
         int numRadios = default(0);        // the number of radios in the router. by default no wireless
         int numPcapRecorders = default(0); // no of PcapRecorders.
@@ -62,6 +71,8 @@ module ANSA_NodeBase
         *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
         *.energySourceModule = default(energyStorageType != "" ? absPath(".energyStorage") : "");
         *.mobilityModule = default(mobilityType != "" ? absPath(".mobility") : "");
+        
+        
 
     gates:
         input radioIn[numRadios] @directIn;
