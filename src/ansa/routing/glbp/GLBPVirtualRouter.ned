@@ -19,7 +19,7 @@ import inet.applications.contract.IUDPApp;
 
 simple GLBPVirtualRouter like IUDPApp
 {
-        parameters:
+    parameters:
      	@display("i=block/network2");
 //     	xml configData = default(xml("<GLBP />"));
 //     	string deviceId;     	
@@ -46,7 +46,7 @@ simple GLBPVirtualRouter like IUDPApp
       	int glbpUdpPort			= default(3222);
       	string glbpMulticastAddress = default("224.0.0.102");		       	
       	
-  	    gates:
+	gates:
         input udpIn;	///to GLBP module
         output udpOut;  ///from GLBP module
 }
