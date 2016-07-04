@@ -25,16 +25,67 @@ namespace inet {
 
 Register_Abstract_Class(IPv6Route);
 
+#ifdef ANSAINET
+const char* inet::IPv6Route::getSourceTypeAbbreviation() const {
+    switch (_sourceType) {
+        case IFACENETMASK:
+            return "C";
+        case MANUAL:
+            return (getDestPrefix().isUnspecified() ? "S*": "S");
+        case ROUTER_ADVERTISEMENT:
+            return "ra";
+        case RIP:
+            return "R";
+        case OSPF:
+            return "O";
+        case BGP:
+            return "B";
+        case EIGRP:
+            return getAdminDist() < IPv6Route::dEIGRPExternal ? "D" : "D EX";
+        case LISP:
+            return "l";
+        case BABEL:
+            return "ba";
+        case ODR:
+            return "o";
+        default:
+            return "???";
+    }
+}
+#endif
+
 std::string IPv6Route::info() const
 {
     std::stringstream out;
+#ifdef ANSAINET
+    out << getSourceTypeAbbreviation();
+    out << " ";
+    if (getDestPrefix().isUnspecified())
+        out << "::";
+    else
+        out << getDestPrefix();
+    out << "/" << getPrefixLength();
+    if (getNextHop().isUnspecified())
+    {
+        out << " is directly connected";
+    }
+    else
+    {
+        out << " [" << getAdminDist() << "/" << getMetric() << "]";
+        out << " via ";
+        out << getNextHop();
+    }
+    out << ", " << getInterface()->getName();
+#else
     out << getDestPrefix() << "/" << getPrefixLength() << " --> ";
     out << "if:" << (_interfacePtr ? _interfacePtr->getName() : "*  ");
     out << " next hop:" << getNextHop();
     out << " " << IRoute::sourceTypeName(getSourceType());
     if (getExpiryTime() > 0)
         out << " exp:" << getExpiryTime();
+#endif
     return out.str();
+
 }
 
 std::string IPv6Route::detailedInfo() const

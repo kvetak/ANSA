@@ -30,9 +30,7 @@ module BabelRouting like IUDPApp
     parameters:
         @display("i=block/network2;bgb=205,215,white");
         int udpPort = default(6696);
-        string deviceId = default("");
-        string deviceType = default("Router");        
-        xml configFile = default(xmldoc("config.xml"));
+		xml configData = default(xmldoc("config.xml"));      
         
        	string interfaceTableModule;   // The path to the InterfaceTable module
         string routingTableModule;
@@ -46,9 +44,7 @@ module BabelRouting like IUDPApp
             @display("p=50,50;i=block/circle");
             interfaceTableModule = interfaceTableModule;
             routingTableModule = routingTableModule;
-            deviceId = deviceId;
-            deviceType = deviceType;
-            configFile = configFile;
+            configData = configData;
         }
         cost2outof3: CostKoutofj {
             @display("p=50,150;");

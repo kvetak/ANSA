@@ -385,7 +385,7 @@ void ARP::processARPPacket(ARPPacket *arp)
                 if ( dynamic_cast<ANSA_InterfaceEntry *>(ie) != nullptr ) {
                     ANSA_InterfaceEntry *aie = dynamic_cast<ANSA_InterfaceEntry *>(ie);
                     int vfn = aie->getVirtualForwarderId(arp->getDestIPAddress());
-                    VirtualForwarder *vf = aie->getVirtualForwarderById(vfn);
+                    VirtualForwarder *vf = (vfn == -1 ? nullptr : aie->getVirtualForwarderById(vfn) );
 
                     //is it GLBP protocol?
                     if( (vfn != -1) && (dynamic_cast<GLBPVirtualForwarder *>(vf) != nullptr) ){

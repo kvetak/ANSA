@@ -72,8 +72,8 @@ module ANSA_NodeBase
         *.energySourceModule = default(energyStorageType != "" ? absPath(".energyStorage") : "");
         *.mobilityModule = default(mobilityType != "" ? absPath(".mobility") : "");
         
-        
-
+        xml configData = default(xmldoc("config.xml"));        
+        networkLayer.configurator.configData = configData;
     gates:
         input radioIn[numRadios] @directIn;
         inout pppg[] @labels(PPPFrame-conn);

@@ -23,6 +23,7 @@ simple MultiNetworkNodeConfigurator
         bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
         bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
     	bool enableANSAConfig = default(false);
+    	bool replaceIPv6Addresses = default(false);
     	xml configData = default(xml("<Interfaces />"));
     	
     	

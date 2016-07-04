@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <featurestates>
-    <feature enabled="true" id="TCP_common"/>
+    <feature enabled="true" id="ANSAINET"/>
+	<feature enabled="true" id="TCP_common"/>
     <feature enabled="true" id="TCP_INET"/>
     <feature enabled="false" id="TCP_lwIP"/>
     <feature enabled="false" id="TCP_NSC"/>

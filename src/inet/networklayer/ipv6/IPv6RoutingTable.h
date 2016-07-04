@@ -84,10 +84,15 @@ class INET_API IPv6RoutingTable : public cSimpleModule, public IRoutingTable, pr
   protected:
     // creates a new empty route, factory method overriden in subclasses that use custom routes
     virtual IPv6Route *createNewRoute(IPv6Address destPrefix, int prefixLength, IRoute::SourceType src);
-
+#ifdef ANSAINET
+  public:
+#endif
     // internal: routes of different type can only be added via well-defined functions
     virtual void addRoute(IPv6Route *route);
 
+#ifdef ANSAINET
+  protected:
+#endif
     // helper for addRoute()
     class RouteLessThan
     {

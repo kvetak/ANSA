@@ -42,10 +42,10 @@ IPv4Route::~IPv4Route()
 #ifdef ANSAINET
 const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
     switch (sourceType) {
-        case MANUAL:
-            return "L";
         case IFACENETMASK:
-            return (getGateway().isUnspecified()) ? "C" : "S";
+            return "C";
+        case MANUAL:
+            return (getDestination().isUnspecified() ? "S*": "S");
         case ROUTER_ADVERTISEMENT:
             return "ra";
         case RIP:

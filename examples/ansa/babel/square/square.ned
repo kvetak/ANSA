@@ -29,7 +29,7 @@ network square
         configurator: IPv4NetworkConfigurator {
             parameters:
                 config = xmldoc("networkConfig.xml");
-                assignAddresses = true;
+                assignAddresses = false;
                 assignDisjunctSubnetAddresses = false;
                 addStaticRoutes = false;
                 addDefaultRoutes = false;

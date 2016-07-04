@@ -15,6 +15,8 @@
 
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
+#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/ipv6/IPv6InterfaceData.h"
 
 namespace inet{
 
@@ -101,4 +103,51 @@ bool ANSA_InterfaceEntry::hasMacAddress(const MACAddress& addr) const
 
     return false;
 }
+
+std::string ANSA_InterfaceEntry::info() const {
+    std::stringstream out;
+    out << (getName()[0] ? getName() : "*");
+    out << " id=" << getInterfaceId();
+    if (getNetworkLayerGateIndex() == -1)
+        out << " ifOut[-]";
+    else
+        out << "  ifOut[" << getNetworkLayerGateIndex() << "]";
+    out << " MTU:" << getMTU();
+    if (!isUp())
+        out << " DOWN";
+    if (isBroadcast())
+        out << " BROADCAST";
+    if (isMulticast())
+        out << " MULTICAST";
+    if (isPointToPoint())
+        out << " POINTTOPOINT";
+    if (isLoopback())
+        out << " LOOPBACK";
+    out << "\nMAC:\t\t";
+    if (getMacAddress().isUnspecified())
+        out << "n/a";
+    else
+        out << getMacAddress();
+    //IPv4
+    out << "\nIPv4 ucast:\t" << ipv4data->getIPAddress() << "/" << ipv4data->getNetmask().getNetmaskLength();
+    out << "\nIPv4 mcast:\t";
+    for (int i = 0; i < ipv4data->getNumOfJoinedMulticastGroups(); i++) {
+        out << (i > 0 ? ", " : "") << ipv4data->getJoinedMulticastGroup(i);
+    }
+    //IPv6
+    out << "\nIPv6 ucast:\t";
+    for (int i = 0; i < ipv6data->getNumAddresses(); i++) {
+        out << (i > 0 ? ", " : "") << ipv6data->getAddress(i);
+    }
+    out << "\nIPv6 mcast:\t";
+    bool comma = false;
+    for (auto j : ipv6data->getJoinedMulticastGroups()) {
+        out << (comma ? ", " : "") << j;
+        comma = true;
+    }
+    return out.str();
 }
+
+}
+
+

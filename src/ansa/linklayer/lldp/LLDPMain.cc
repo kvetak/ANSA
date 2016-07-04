@@ -97,7 +97,10 @@ std::string LLDPMain::generateChassisId()
 void LLDPMain::getCapabilities(cProperty *propSysCap, cProperty *propEnCap)
 {
     int capabilityPos;
-    enCap[0]=enCap[1]=sysCap[2]=sysCap[3]=0;
+    enCap[0] = 0;
+    enCap[1] = 0;
+    sysCap[0] = 0;
+    sysCap[1] = 0;
 
     if(propSysCap != nullptr)
     {

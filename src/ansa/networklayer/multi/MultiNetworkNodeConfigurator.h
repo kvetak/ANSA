@@ -36,6 +36,18 @@ class INET_API MultiNetworkNodeConfigurator : public cSimpleModule, public ILife
     const char* PAR_CONFIG = "configData";
     const char* PAR_ENAIP4 = "enableIPv4";
     const char* PAR_ENAIP6 = "enableIPv6";
+    const char* PAR_REPLACEADDR = "replaceIPv6Addresses";
+
+    const char* XML_IFACES = "Interfaces";
+    const char* XML_IFACE = "Interface";
+    const char* XML_NAME = "name";
+    const char* XML_DEFROUTER = "DefaultRouter";
+    const char* XML_DEFROUTER6 = "DefaultRouter6";
+    const char* XML_IPADDR = "IPAddress";
+    const char* XML_IPADDR6 = "IPv6Address";
+    const char* XML_MASK = "Mask";
+    const char* XML_MTU = "MTU";
+    const char* XML_METRIC = "Metric";
 
     NodeStatus *nodeStatus;
     IInterfaceTable *interfaceTable;
@@ -49,6 +61,10 @@ class INET_API MultiNetworkNodeConfigurator : public cSimpleModule, public ILife
     virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
 
     void parseConfig(cXMLElement *config);
+
+    void parseInterfaces(cXMLElement *config);
+    void parseDefaultRoutes(cXMLElement *config);
+
 };
 
 } //namespace

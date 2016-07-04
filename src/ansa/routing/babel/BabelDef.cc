@@ -36,26 +36,19 @@ Register_Class(BabelMessage);
  */
 void BabelMessage::copy(const BabelMessage& other)
 {
-
-//    this->magic_var = other.magic_var;
-//    this->version_var = other.version_var;
-//    this->length_var = other.length_var;
-//    delete [] this->body_var;
-//    this->body_var = (other.body_arraysize==0) ? NULL : new char[other.body_arraysize];
+//    this->magic = other.magic;
+//    this->version = other.version;
+//    this->length = other.length;
+//    delete [] this->body;
+//    this->body = (other.body_arraysize==0) ? NULL : new char[other.body_arraysize];
 //    body_arraysize = other.body_arraysize;
 //    for (unsigned int i=0; i<body_arraysize; i++)
-//        this->body_var[i] = other.body_var[i];
-
+//        this->body[i] = other.body[i];
     this->setMagic(other.getMagic());
     this->setVersion(other.getVersion());
     this->setLength(other.getLength());
-    //delete [] this->getBody();
-    const char * bch = (other.getBodyArraySize()==0) ? NULL : new char[other.getBodyArraySize()];
-    unsigned int bl = other.getBodyArraySize();
-    this->setBody(bch, bl);
-    //this->setBodyArraySize(other.getBodyArraySize());
-//    for (unsigned int i=0; i<this->getBodyArraySize(); i++)
-//        this->getBody()[i] = other.getBody()[i];
+    this->setBodyArraySize(other.getBodyArraySize());
+    this->setBody(other.getBody(),other.getBodyArraySize());
 }
 
 /**
@@ -66,13 +59,28 @@ void BabelMessage::copy(const BabelMessage& other)
  */
 void BabelMessage::setBodyArraySize(unsigned int size)
 {
+//    char *body_var2 = (size==0) ? NULL : new char[size];
+//    unsigned int sz = body_arraysize < size ? body_arraysize : size;
+//    for (unsigned int i=0; i<sz; i++)
+//        body_var2[i] = this->body[i];
+//    for (unsigned int i=sz; i<size; i++)
+//        body_var2[i] = 0;
+//    body_arraysize = size;
+//    delete [] this->body;
+//    this->body = body_var2;
+//
+//    // change length of body in header
+//    this->length = body_arraysize;
+//
+//    // change length of packet in control info
+//    this->setByteLength(body_arraysize + sizeof(magic) + sizeof(version) + sizeof(length));
     BabelMessage_Base::setBodyArraySize(size);
 
     // change length of body in header
-    this->setLength(getBodyArraySize());
+    this->setLength(this->getBodyArraySize());
 
     // change length of packet in control info
-    this->setByteLength(getBodyArraySize() + sizeof(getMagic()) + sizeof(getVersion()) + sizeof(getLength()));
+    this->setByteLength(this->getBodyArraySize() + sizeof(getMagic()) + sizeof(getVersion()) + sizeof(getLength()));
 }
 
 /**
@@ -83,11 +91,15 @@ void BabelMessage::setBodyArraySize(unsigned int size)
  */
 void BabelMessage::setBody(const char *data, unsigned int size)
 {
+//    setBodyArraySize(size);
+//    for(unsigned int i=0; i<size; ++i)
+//    {
+//        body[i] = data[i];
+//    }
     setBodyArraySize(size);
     for(unsigned int i=0; i<size; ++i)
     {
-        //body_var[i] = data[i];
-        this->BabelMessage_Base::setBody(i, data[i]);
+        this->getBody()[i] = data[i];
     }
 }
 
@@ -100,13 +112,19 @@ void BabelMessage::setBody(const char *data, unsigned int size)
  */
 void BabelMessage::addToBody(const char *data, unsigned int datasize)
 {
+//    unsigned int oldsize = getBodyArraySize();
+//
+//    setBodyArraySize(oldsize + datasize);
+//    for(unsigned int i=0; i<datasize; ++i)
+//    {
+//        body[oldsize + i] = data[i];
+//    }
     unsigned int oldsize = getBodyArraySize();
 
     setBodyArraySize(oldsize + datasize);
     for(unsigned int i=0; i<datasize; ++i)
     {
-        //body_var[oldsize + i] = data[i];
-        this->BabelMessage_Base::setBody((oldsize + i), data[i]);
+        this->getBody()[oldsize + i] = data[i];
     }
 }
 
@@ -171,11 +189,7 @@ int BabelMessage::getNextTlv(int offset) const
 
 char *BabelMessage::getBody() const
 {
-    char* bvar = new char[getBodyArraySize()];
-    for (unsigned i=0; i<getBodyArraySize(); i++) {
-        bvar[i] = this->BabelMessage_Base::getBody(i);
-    }
-    return bvar;
+    return body;
 }
 
 /**

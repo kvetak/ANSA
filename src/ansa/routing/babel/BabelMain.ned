@@ -25,9 +25,7 @@ simple BabelMain
 		@display("i=block/network2;bgb=578,280");
 		string interfaceTableModule;   // The path to the InterfaceTable module
         string routingTableModule;
-        string deviceId = default("");
-        string deviceType = default("Router");
-        xml configFile = default(xmldoc("config.xml"));        
+		xml configData = default(xmldoc("config.xml"));
     
     gates:
         input udpIn;

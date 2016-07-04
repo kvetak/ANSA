@@ -31,6 +31,8 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
         ANSA_InterfaceEntry(cModule *interfaceModule);
         virtual ~ANSA_InterfaceEntry() {};
 
+        virtual std::string info() const override;
+
         virtual bool hasMacAddress(const MACAddress& addr) const;
         virtual bool hasIPAddress(const IPv4Address& addr) const;
         virtual const MACAddress& getMacVirtualForwarderById(int vforwarderId) const;

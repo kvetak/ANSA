@@ -164,6 +164,7 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
     bool isFeasible(const Babel::netPrefix<L3Address>& prefix, const Babel::rid& orig, const Babel::routeDistance& dist);
     void selectRoutes();
 
+    bool prepareToAdd(IRoutingTable* rt, IRoute* ro);
     void addToRT(BabelRoute *route);
     void removeFromRT(BabelRoute *route);
     void updateRT(BabelRoute *route);

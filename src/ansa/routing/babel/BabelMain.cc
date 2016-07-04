@@ -86,7 +86,7 @@ void BabelMain::initialize(int stage)
         //bsend = BabelSenderAccess().get();
 
         //BabelDeviceConfigurator *conf = ModuleAccess<BabelDeviceConfigurator>("babelDeviceConfigurator").get();
-        BabelDeviceConfigurator *conf = new BabelDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
+        BabelDeviceConfigurator *conf = new BabelDeviceConfigurator(par("configData"), ift);
         conf->loadBabelConfig(this);
 
         WATCH(routerId);
@@ -816,9 +816,6 @@ void BabelMain::processRSResendTimer(BabelPenSR *request)
     }
 }
 
-
-
-
 BabelMain::~BabelMain()
 {
     deleteBuffers();
@@ -1091,7 +1088,6 @@ void BabelMain::activateInterface(BabelInterface *iface)
     }
 }
 
-
 /**
  * Deactivate interface for babel routing
  *
@@ -1147,7 +1143,6 @@ void BabelMain::deactivateInterface(BabelInterface *iface)
         EV << "Interface " << iface->getIfaceName() << " deactivated for Babel routing" << endl;
 #endif
 }
-
 
 void BabelMain::sendMessage(L3Address dst, BabelInterface *outIface, BabelMessage *msg)
 {
@@ -1954,7 +1949,6 @@ void BabelMain::deleteBuffer(BabelBuffer *todel)
     }
 }
 
-
 /**
  * Deletes unused buffers
  */
@@ -2188,6 +2182,7 @@ void BabelMain::flushBuffer(BabelBuffer *buff)
 
         /// COPY BODY TO MESSAGE
         msg->addToBody(tmpdata, tmpend);
+
 
         /// IF REQUIRED ADD TO TOACK-TABLE
         if(containackreq)
@@ -2549,14 +2544,27 @@ void BabelMain::addToRT(BabelRoute *route)
     ro->setNextHop(route->getNextHop());
     ro->setMetric(route->metric());
 
-    if (check_and_cast<IRoutingTable*>(rt)) {
+    if (rt == rt4) {
         ((IPv4Route*)ro)->setAdminDist(IPv4Route::dBABEL);
     }
     else {
         ((IPv6Route*)ro)->setAdminDist(IPv6Route::dBABEL);
+        //EV << "!!!!!!!!!!!" << ((IPv6Route*)ro)->info() << endl;
     }
 
-    rt->addRoute(ro);
+    //If no better entry exist
+    if (prepareToAdd(rt, ro)) {
+        rt->addRoute(ro);
+        if (rt == rt4) {
+            route->setRTEntry(dynamic_cast<IPv4Route*>(ro));
+        }
+        else {
+            route->setRTEntry(dynamic_cast<IPv6Route*>(ro));
+        }
+    }
+    else {
+        delete ro;
+    }
 }
 
 /**
@@ -2772,6 +2780,30 @@ bool BabelMain::removeNeighboursOnIface(BabelInterface *iface)
 
 int BabelMain::getIntuniform() {
     return intuniform(0,UINT16_MAX);
+}
+
+bool BabelMain::prepareToAdd(IRoutingTable* rt, IRoute* ro) {
+    IRoute* old = nullptr;
+    for (int i = 0; i < rt->getNumRoutes(); i++) {
+        IRoute* tmp = rt->getRoute(i);
+        if (tmp->getDestinationAsGeneric() == ro->getDestinationAsGeneric()
+                && tmp->getPrefixLength() == ro->getPrefixLength()) {
+            old = tmp;
+            break;
+        }
+    }
+
+    if (old) {
+        unsigned int newad = (rt == rt4 ? ((IPv4Route*)ro)->getAdminDist() : ((IPv6Route*)ro)->getAdminDist());
+        unsigned int oldad = (rt == rt4 ? ((IPv4Route*)old)->getAdminDist() : ((IPv6Route*)old)->getAdminDist());
+
+        if (oldad < newad) return false;
+        if (oldad == newad && old->getMetric() < ro->getMetric()) return false;
+        //remove
+        rt->deleteRoute(old);
+    }
+
+    return true;
 }
 
 /**
