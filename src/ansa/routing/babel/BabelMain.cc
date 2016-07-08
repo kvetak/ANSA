@@ -48,12 +48,15 @@ void BabelMain::initialize(int stage)
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
         mt = new cMersenneTwister();
+        mt->initialize(intuniform(0,INT16_MAX,(getEnvir()->getNumRNGs() > 1 ? 1 : 0)),0,1,0,0,getEnvir()->getConfig());
+        //EV << "$$$$$$$$$$" << mt->intRand(1000) << endl;
         /*EV << "--------------" << this->getRNG(0)->getNumbersDrawn() << endl;
         //for (int i = this->getRNG(0)->getNumbersDrawn(); i < 50; ++i) {getIntuniform(0,1);}
         EV << "--------------" << this->getRNG(0)->getNumbersDrawn() << endl;
         for (int i=0; i<10; i++) {
             EV << getIntuniform(0, 1000) << endl;
         }*/
+        //EV << "$$$$$$$$$$" << mt->intRand(1000) << endl;
         //generate random seqno
 #ifdef BABEL_DEBUG
     EV << "BabelMain starting initialization..." << endl;
@@ -116,6 +119,7 @@ void BabelMain::initialize(int stage)
 
         //nb = NotificationBoardAccess().get();
         host->subscribe(NF_INTERFACE_STATE_CHANGED, this);
+        //EV << "--------------" << this->mt->getNumbersDrawn()<< endl;
     }
 
 }
@@ -1607,6 +1611,7 @@ bool BabelMain::processUpdateTlv(char *tlv, BabelInterface *iniface, const L3Add
         {
             if((*it)->getNeighbour() == neigh)
             {
+                //EV << "11111111";
                 changed = addOrUpdateRoute((*it)->getPrefix(), neigh, (*it)->getOriginator(), routeDistance((*it)->getRDistance().getSeqno(), 0xFFFF), (*it)->getNextHop(), interval) || changed;
             }
         }
@@ -1623,6 +1628,7 @@ bool BabelMain::processUpdateTlv(char *tlv, BabelInterface *iniface, const L3Add
         {// route is selected and update is not feasible
             if(intable->getOriginator() != originator)
             {// router-ids are different -> update is retraction
+                //EV << "22222222";
                 changed = addOrUpdateRoute(prefix, neigh, originator, routeDistance(dist.getSeqno(), 0xFFFF), nh, interval);
             }
 
@@ -1636,6 +1642,7 @@ bool BabelMain::processUpdateTlv(char *tlv, BabelInterface *iniface, const L3Add
         {
             if(isFeasible(prefix, originator, dist))
             {
+                //EV << "33333333";
                 changed = addOrUpdateRoute(prefix, neigh, originator, dist, nh, interval);
             }// else ignore
         }
@@ -1651,6 +1658,7 @@ bool BabelMain::processUpdateTlv(char *tlv, BabelInterface *iniface, const L3Add
         {
             return changed;
         }
+        //EV << "44444444";
         changed = addOrUpdateRoute(prefix, neigh, originator, dist, nh, interval);
     }
 
@@ -2264,6 +2272,7 @@ void BabelMain::flushAllBuffers()
 bool BabelMain::addOrUpdateRoute(const Babel::netPrefix<L3Address>& prefix, BabelNeighbour *neigh, const rid& orig, const routeDistance& dist, const L3Address& nh, uint16_t interval)
 {
     ASSERT(interval != 0);
+    //EV << prefix.getAddr() << "-" << neigh->getAddress() << "-" << orig << "-" << dist << "-" << nh << endl;
     bool changed = false;
     bool resetet = true;
     BabelRoute *route = btt.findRoute(prefix, neigh);
