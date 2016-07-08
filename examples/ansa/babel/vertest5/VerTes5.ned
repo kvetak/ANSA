@@ -13,17 +13,19 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.babel.vertest1;
+package inet.examples.ansa.babel.vertest5;
 
 import ansa.node.ANSA_BabelRouter;
 import ansa.node.ANSA_Host;
+import inet.node.ethernet.Eth1G;
 import inet.node.ethernet.Eth100M;
+import inet.node.ethernet.Eth10M;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 import inet.common.scenario.ScenarioManager;
 
 
-network VerTest1
+network VerTest5
 {
     @display("bgb=521,431");
     submodules:
@@ -35,40 +37,53 @@ network VerTest1
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
                 addSubnetRoutes = false;
-                optimizeRoutes = false;                
+                optimizeRoutes = false;
                 @display("p=450,290");
         }
 
-        R1: ANSA_BabelRouter {
-            parameters:
-                @display("p=250,357");
-            gates:
-                ethg[3];
-        }
+//        channelControl: ChannelControl {
+//            parameters:
+//                @display("p=60,50");
+//        }
+
         R2: ANSA_BabelRouter {
             parameters:
                 @display("p=250,207");
             gates:
                 ethg[4];
         }
-        
-       
-        LAN1: ANSA_Host {
-            @display("p=50,357;i=misc/cloud");
+        R3: ANSA_BabelRouter {
+            parameters:
+                @display("p=450,207");
+            gates:
+                ethg[3];
         }
+        R4: ANSA_BabelRouter {
+            parameters:
+                @display("p=50,207");
+            gates:
+                ethg[3];
+        }
+
         LAN2: ANSA_Host {
             @display("p=250,57;i=misc/cloud");
         }
-
+        LAN3: ANSA_Host {
+            @display("p=450,57;i=misc/cloud");
+        }
+        LAN4: ANSA_Host {
+            @display("p=50,57;i=misc/cloud");
+        }
         scenarioManager: ScenarioManager {
             @display("p=450,357");
         }
 
     connections allowunconnected:
-        R1.ethg[0] <--> Eth100M <--> R2.ethg[0];
+        R2.ethg[1] <--> {  datarate = 10Gbps; delay = 100ms; } <--> R3.ethg[1];
+        R2.ethg[2] <--> {  datarate = 100Gbps; } <--> R4.ethg[0];
 
-        R1.ethg[2] <--> Eth100M <--> LAN1.ethg++;
         R2.ethg[3] <--> Eth100M <--> LAN2.ethg++;
-
+        R3.ethg[2] <--> Eth100M <--> LAN3.ethg++;
+        R4.ethg[1] <--> Eth100M <--> LAN4.ethg++;
 }
 

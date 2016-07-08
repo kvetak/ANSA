@@ -78,9 +78,9 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
     BabelSourceTable bst;
     BabelPenSRTable bpsrt;
 
-    int getIntuniform();
-
-
+    int getIntuniform(int a, int b);
+    double getUniform(double a, double b);
+    cMersenneTwister* mt = nullptr;
 
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
@@ -192,7 +192,7 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
     {
         ASSERT(variance > 0.0 && variance <= 1.0);
 
-        return value * uniform(1.0 - variance, 1.0 + variance);
+        return value * getUniform(1.0 - variance, 1.0 + variance);
     }
 };
 }

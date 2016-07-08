@@ -132,7 +132,7 @@ void BabelDeviceConfigurator::loadBabelInterfacesConfig(cXMLElement *device, Bab
         if (babelIfaceElem != nullptr)
         {// interface contains babel configuration
 
-            BabelInterface *bIface = new BabelInterface(iface,bMain->getIntuniform());
+            BabelInterface *bIface = new BabelInterface(iface,bMain->getIntuniform(0,UINT16_MAX));
 
             //remember local prefixes
             cXMLElement *ipv4AddrElem = ifaceElem->getFirstChildWithTag("IPAddress");

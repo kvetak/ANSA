@@ -239,8 +239,8 @@ bool BabelTopologyTable::containShorterCovRoute(const Babel::netPrefix<L3Address
 
     for (it = routes.begin(); it != routes.end(); ++it)
     {// through all routes search for shorter prefix that covering prefix p
-        if( ( ((*it)->getPrefix().getAddr().getType()==L3Address::IPv6) == (p.getAddr().getType()==L3Address::IPv6)) &&
-            (*it)->getPrefix().getLen() < p.getLen()
+        if( ( ((*it)->getPrefix().getAddr().getType() == p.getAddr().getType() )) &&
+            ((*it)->getPrefix().getLen() < p.getLen())
           )
         {// same AF and shorter
             if((*it)->getPrefix().getAddr().getType()==L3Address::IPv6)

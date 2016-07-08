@@ -76,6 +76,7 @@ public:
             }
         }
     virtual ~BabelRoute();
+    virtual std::string info() const {return str();};
     virtual std::string str() const;
     virtual std::string detailedInfo() const {return str();}
     friend std::ostream& operator<<(std::ostream& os, const BabelRoute& br);

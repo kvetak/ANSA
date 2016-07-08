@@ -44,25 +44,25 @@ Define_Module(BabelMain);
 
 void BabelMain::initialize(int stage)
 {
-    /*
-    if(stage != 3)
-    {
-        return;
-    }
-    */
     cSimpleModule::initialize(stage);
 
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        mt = new cMersenneTwister();
+        /*EV << "--------------" << this->getRNG(0)->getNumbersDrawn() << endl;
+        //for (int i = this->getRNG(0)->getNumbersDrawn(); i < 50; ++i) {getIntuniform(0,1);}
+        EV << "--------------" << this->getRNG(0)->getNumbersDrawn() << endl;
+        for (int i=0; i<10; i++) {
+            EV << getIntuniform(0, 1000) << endl;
+        }*/
+        //generate random seqno
 #ifdef BABEL_DEBUG
     EV << "BabelMain starting initialization..." << endl;
 #endif
-
-    //generate random seqno
-    seqno = intuniform(0,UINT16_MAX);
+        seqno = getIntuniform(0,UINT16_MAX);
 #ifdef BABEL_DEBUG
     EV << "Generated sequence number: " << seqno << endl;
 #endif
 
-    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
         host = getParentModule()->getParentModule();
         //set main interface
         //ift = InterfaceTableAccess().get();
@@ -98,7 +98,6 @@ void BabelMain::initialize(int stage)
         WATCH_PTRVECTOR(btt.getRoutes());
         WATCH_PTRVECTOR(bst.getSources());
         WATCH_PTRVECTOR(bpsrt.getRequests());
-
 
         for (auto k = bit.getInterfaces().begin(); k != bit.getInterfaces().end(); ++k) {
                 InterfaceEntry *ie = (*k)->getInterface();
@@ -677,6 +676,7 @@ void BabelMain::sendFullDump(BabelInterface *iface)
     {
        if((*it)->getSelected())
        {// route is selected -> send update
+           EV << "-----------------" << (*it)->info() << endl;
            sendUpdate(iface, (*it));
 
        }
@@ -882,7 +882,7 @@ void BabelMain::generateRouterId()
     }
     else
     {// no main interface -> generate random number
-        routerId.setRid(uniform(0,UINT32_MAX),uniform(0,UINT32_MAX));
+        routerId.setRid(getUniform(0,UINT32_MAX),getUniform(0,UINT32_MAX));
     }
 
 #ifdef BABEL_DEBUG
@@ -1034,13 +1034,13 @@ void BabelMain::activateInterface(BabelInterface *iface)
         {
             iface->setHTimer(createTimer(timerT::HELLO, iface, iface->getIfaceName(), false));
         }
-        iface->resetHTimer(uniform(SEND_URGENT, CStoS(iface->getHInterval())));     //randomly
+        iface->resetHTimer(getUniform(SEND_URGENT, CStoS(iface->getHInterval())));     //randomly
 
         if(iface->getUTimer() == NULL)
         {
             iface->setUTimer(createTimer(timerT::UPDATE, iface, iface->getIfaceName(), false));
         }
-        iface->resetUTimer(uniform(SEND_URGENT, CStoS(iface->getUInterval())));     //randomly
+        iface->resetUTimer(getUniform(SEND_URGENT, CStoS(iface->getUInterval())));     //randomly
     }
 
 
@@ -1081,7 +1081,7 @@ void BabelMain::activateInterface(BabelInterface *iface)
     if(iface->getAfSend() != AF::NONE)
     {
         // say hi to others
-        sendTLV(iface, new BabelHelloFtlv(iface->getIncHSeqno(), iface->getHInterval()), uniform(0.0, SEND_URGENT));
+        sendTLV(iface, new BabelHelloFtlv(iface->getIncHSeqno(), iface->getHInterval()), getUniform(0.0, SEND_URGENT));
 
         // request for routes
         sendTLV(iface, new BabelRouteReqFtlv());
@@ -1651,7 +1651,6 @@ bool BabelMain::processUpdateTlv(char *tlv, BabelInterface *iniface, const L3Add
         {
             return changed;
         }
-
         changed = addOrUpdateRoute(prefix, neigh, originator, dist, nh, interval);
     }
 
@@ -2265,7 +2264,6 @@ void BabelMain::flushAllBuffers()
 bool BabelMain::addOrUpdateRoute(const Babel::netPrefix<L3Address>& prefix, BabelNeighbour *neigh, const rid& orig, const routeDistance& dist, const L3Address& nh, uint16_t interval)
 {
     ASSERT(interval != 0);
-
     bool changed = false;
     bool resetet = true;
     BabelRoute *route = btt.findRoute(prefix, neigh);
@@ -2742,7 +2740,7 @@ uint16_t BabelMain::generateNonce()
 
     do
     {// find unused nonce
-        nonce = intuniform(0,UINT16_MAX);
+        nonce = getIntuniform(0,UINT16_MAX);
     } while(findToAck(nonce) != NULL);
 
     return nonce;
@@ -2778,8 +2776,9 @@ bool BabelMain::removeNeighboursOnIface(BabelInterface *iface)
     return changed;
 }
 
-int BabelMain::getIntuniform() {
-    return intuniform(0,UINT16_MAX);
+int BabelMain::getIntuniform(int a, int b) {
+    //return intuniform(a, b);
+    return a+mt->intRand(b-a);
 }
 
 bool BabelMain::prepareToAdd(IRoutingTable* rt, IRoute* ro) {
@@ -2804,6 +2803,12 @@ bool BabelMain::prepareToAdd(IRoutingTable* rt, IRoute* ro) {
     }
 
     return true;
+}
+
+double BabelMain::getUniform(double a, double b) {
+    //double f = mt->doubleRand() / b;
+    //return a+f*(b-a);
+    return uniform(a, b);
 }
 
 /**

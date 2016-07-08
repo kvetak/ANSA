@@ -10,6 +10,9 @@ cleanall: checkmakefiles
 	@cd src && $(MAKE) MODE=release clean
 	@cd src && $(MAKE) MODE=debug clean
 	@rm -f src/Makefile src/inet/features.h
+	
+cleantmp:
+	cd src && rm -f .tmp* sta*	
 
 MAKEMAKE_OPTIONS := -f --deep -o INET -O out --no-deep-includes -I.
 
