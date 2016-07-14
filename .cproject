@@ -20,7 +20,7 @@
 					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.1590007136." name="/" resourcePath="">
 						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.561565264" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.MachO64;org.eclipse.cdt.core.PE" id="org.omnetpp.cdt.targetPlatform.442367031" isAbstract="false" name="Windows, Linux, Mac" osList="win32,linux,macosx" superClass="org.omnetpp.cdt.targetPlatform"/>
-							<builder autoBuildTarget="all" buildPath="${ProjDirPath}" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="org.omnetpp.cdt.gnu.builder.debug.1373225503" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="OMNeT++ Make Builder (opp_makemake)" parallelBuildOn="false" stopOnErr="false" superClass="org.omnetpp.cdt.gnu.builder.debug">
+							<builder autoBuildTarget="all" buildPath="${ProjDirPath}" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="org.omnetpp.cdt.gnu.builder.debug.1373225503" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="OMNeT++ Make Builder (opp_makemake)" parallelBuildOn="true" parallelizationNumber="optimal" stopOnErr="false" superClass="org.omnetpp.cdt.gnu.builder.debug">
 								<outputEntries>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
 									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
@@ -135,22 +135,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.148623617" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.423181083"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.base.1457288082" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.1249982740">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1411025438" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="org.omnetpp.cdt.gnu.config.debug.1590007136.1094360975" name="/" resourcePath="src/transport/tcp_common">
-						<toolChain id="org.omnetpp.cdt.gnu.toolchain.debug.1313619298" name="GCC for OMNeT++" superClass="org.omnetpp.cdt.gnu.toolchain.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1470084128" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.966631206"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.669555214" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base.2043257036">
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1807543249" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.49576508" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.1946472760">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.448477538" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.365975159" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base.1402469929"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.146056853" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base.148623617"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.base.723779710" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base.1457288082">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.565925343" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
@@ -522,4 +506,16 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="makefiles" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments>MODE=debug CONFIGNAME=${ConfigName} -k -j8</buildArguments>
+				<buildTarget>makefiles</buildTarget>
+				<stopOnError>false</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
 </cproject>
