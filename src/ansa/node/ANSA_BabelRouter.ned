@@ -20,7 +20,6 @@ package ansa.node;
 
 import ansa.node.ANSA_Router;
 
-
 module ANSA_BabelRouter extends ANSA_Router
 {
     parameters:

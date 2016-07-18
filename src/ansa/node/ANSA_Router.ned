@@ -16,6 +16,8 @@
 package ansa.node;
 
 import ansa.routing.babel.BabelRouting;
+import ansa.routing.eigrp.eigrpProcessDS;
+
 import inet.applications.contract.IUDPApp;
 import inet.routing.contract.IBGPRouting;
 import inet.routing.contract.IIPRouting;
@@ -40,19 +42,19 @@ module ANSA_Router extends ANSA_NodeBase
         bool hasGLBP = default(false);
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
-        
+
         string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
-        string udpType = default("UDP");        
+        string udpType = default("UDP");
         forwarding = true;
         ethernetType = default("ANSA_EthernetInterface");
-        
+
         networkLayer.enableCDP = hasCDP;
-        networkLayer.enableLLDP = hasLLDP;  
-               
+        networkLayer.enableLLDP = hasLLDP;
+
     submodules:
         ospf: <"OSPFRouting"> like IIPRouting if hasOSPF {
             parameters:
-                @display("p=573,281,row");
+                @display("p=573,300,row");
         }
         bgp: <"BGPRouting"> like IBGPRouting if hasBGP {
             parameters:
@@ -86,8 +88,14 @@ module ANSA_Router extends ANSA_NodeBase
         udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP) {
             @display("p=472,180");
         }
+
         pim: <"PIMRouting"> like IPIMRouting if hasPIM {
             @display("p=277,281");
+        }
+
+        eigrp: eigrpProcessDS if hasEIGRP {
+
+            @display("p=573,242");
         }
 
     connections allowunconnected:
@@ -139,5 +147,12 @@ module ANSA_Router extends ANSA_NodeBase
 
             udp.ipOut --> networkLayer.transportIn++;
             udp.ipIn <-- networkLayer.transportOut++;
+        }
+        
+		if hasEIGRP {
+            eigrp.splitterOut --> networkLayer.transportIn++;
+            eigrp.splitterIn <-- networkLayer.transportOut++;            
+            eigrp.splitter6Out --> networkLayer.transportIn++;
+            eigrp.splitter6In <-- networkLayer.transportOut++;
         }
 }

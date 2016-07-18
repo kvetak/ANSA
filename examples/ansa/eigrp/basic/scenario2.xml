@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<scenario>
+
+  	<at t="13">
+		<interfacedown module="R2.interfaceStateManager" int="eth1" />
+  	</at>
+  
+</scenario>

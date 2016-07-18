@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<scenario>
+  	<!-- Change of delay on R3 to LAN3 -->
+  	<at t="10">
+		<interfaceconfig delay="1000" module="R3.interfaceStateManager" int="eth2"/>
+  	</at>
+  	
+  
+</scenario>

@@ -27,6 +27,12 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
     protected:
         VirtualForwarderVector vforwarder;
 
+        uint64_t bandwidth;   ///< Configured bandwidth in Kbps
+        uint64_t delay;       ///< Configured delay in microseconds
+        int reliability;    ///< Reliability (<1-255>), in percent (x/255)
+        int recvLoad;       ///< Load for outgoing traffic (<1-255>), in percent (x/255)
+        int transLoad;      ///< Load for incoming traffic (<1-255>), in percent (x/255)
+
     public:
         ANSA_InterfaceEntry(cModule *interfaceModule);
         virtual ~ANSA_InterfaceEntry() {};
@@ -52,6 +58,18 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
          * @param addr
          */
         virtual void removeVirtualForwarder(VirtualForwarder* vforw);
+
+        uint64_t getBandwidth() const     { return bandwidth; }
+        uint64_t getDelay() const         { return delay; }
+        int getReliability() const      { return reliability; }
+        int getRecvLoad() const         { return recvLoad; }
+        int getTransLoad() const        { return transLoad; }
+
+        void setBandwidth(uint64_t bandwidth){ if (this->bandwidth != bandwidth) { this->bandwidth = bandwidth; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
+        void setDelay(uint64_t delay)        { if (this->delay != delay) { this->delay = delay; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
+        void setReliability(int reliability) { if (this->reliability != reliability) { this->reliability = reliability; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
+        void setRecvLoad(int recvLoad)       { if (this->recvLoad != recvLoad) { this->recvLoad = recvLoad; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
+        void setTransLoad(int transLoad)     { if (this->transLoad != transLoad) { this->transLoad = transLoad; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
 };
 }
 #endif /* ANSAINTERFACEENTRY_H_ */

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<scenario>
+  	<!-- Scenarios for stub -->
+  	<at t="4.634">
+		<interfacedown module="R1.interfaceStateManager" int="eth1" />
+  	</at>
+  	
+  	<!-- <at t="11">
+		<interfacedown module="R1.interfaceStateManager" int="eth2" />
+  	</at> -->
+  
+</scenario>

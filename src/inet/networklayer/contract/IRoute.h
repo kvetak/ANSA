@@ -52,7 +52,7 @@ class INET_API IRoute
         AODV,    ///< managed by AODV routing
         //XXX: Vesely - Inherit IRoute
 #ifdef ANSAINET
-        EIGRP, LISP, BABEL, ODR
+        EIGRP, LISP, BABEL, ODR, UNKNOWN
 #endif
     };
 
