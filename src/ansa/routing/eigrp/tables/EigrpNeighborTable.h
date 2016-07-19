@@ -44,10 +44,7 @@ class EigrpNeighborTable : public cSimpleModule
     virtual void handleMessage(cMessage *msg) override;
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
-    /**
-     * Stops Hold timer.
-     */
-    virtual void cancelHoldTimer(EigrpNeighbor<IPAddress> *neigh);
+
 
   public:
     EigrpNeighborTable() { neighborCounter = 1; stubCount = 0; }

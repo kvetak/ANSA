@@ -73,27 +73,16 @@ template<typename IPAddress>
 void EigrpNeighborTable<IPAddress>::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
-    WATCH_PTRVECTOR(neighborVec);
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS)
+    {
+        WATCH_PTRVECTOR(neighborVec);
+    }
 }
 
 template<typename IPAddress>
 void EigrpNeighborTable<IPAddress>::handleMessage(cMessage *msg)
 {
     throw cRuntimeError("This module does not process messages");
-}
-
-// Must be there (EigrpNeighborTable has no method cancelEvent)
-template<typename IPAddress>
-void EigrpNeighborTable<IPAddress>::cancelHoldTimer(EigrpNeighbor<IPAddress> *neigh)
-{
-    EigrpTimer *timer;
-
-    if ((timer = neigh->getHoldTimer()) != NULL)
-    {
-        if (timer->isScheduled()) {
-            cancelEvent(timer);
-        }
-    }
 }
 
 template<typename IPAddress>
@@ -146,8 +135,6 @@ template<typename IPAddress>
 EigrpNeighbor<IPAddress> *EigrpNeighborTable<IPAddress>::removeNeighbor(EigrpNeighbor<IPAddress> *neighbor)
 {
     typename NeighborVector::iterator it;
-
-    cancelHoldTimer(neighbor);
 
     for (it = neighborVec.begin(); it != neighborVec.end(); ++it)
     {

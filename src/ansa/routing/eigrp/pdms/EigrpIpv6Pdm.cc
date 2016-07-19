@@ -146,12 +146,13 @@ void EigrpIpv6Pdm::receiveSignal(cComponent* source, simsignal_t signalID, cObje
 
     if (signalID == NF_INTERFACE_STATE_CHANGED)
     {
-        ANSA_InterfaceEntry *iface = check_and_cast<ANSA_InterfaceEntry*>(details);
-        processIfaceStateChange(iface);
+        InterfaceEntryChangeDetails *ifcecd = check_and_cast<InterfaceEntryChangeDetails*>(obj);
+        processIfaceStateChange(check_and_cast<ANSA_InterfaceEntry*>(ifcecd->getInterfaceEntry()));
     }
     else if (signalID == NF_INTERFACE_CONFIG_CHANGED)
     {
-        ANSA_InterfaceEntry *iface = check_and_cast<ANSA_InterfaceEntry*>(details);
+        InterfaceEntryChangeDetails *ifcecd = check_and_cast<InterfaceEntryChangeDetails*>(obj);
+        ANSA_InterfaceEntry *iface = check_and_cast<ANSA_InterfaceEntry*>(ifcecd->getInterfaceEntry());
         EigrpInterface *eigrpIface = getInterfaceById(iface->getInterfaceId());
         double ifParam;
 
@@ -176,7 +177,7 @@ void EigrpIpv6Pdm::receiveSignal(cComponent* source, simsignal_t signalID, cObje
     }
     else if (signalID == NF_ROUTE_DELETED)
     { //
-        processRTRouteDel(details);
+        processRTRouteDel(obj);
     }
 }
 
@@ -1131,6 +1132,20 @@ EigrpNeighbor<IPv6Address> *EigrpIpv6Pdm::createNeighbor(EigrpInterface *eigrpIf
     return neigh;
 }
 
+// Must be there (EigrpNeighborTable has no method cancelEvent)
+void EigrpIpv6Pdm::cancelHoldTimer(EigrpNeighbor<IPv6Address> *neigh)
+{
+    EigrpTimer *timer;
+
+    if ((timer = neigh->getHoldTimer()) != NULL)
+    {
+        if (timer->isScheduled()) {
+            timer->getOwner();
+            cancelEvent(timer);
+        }
+    }
+}
+
 void EigrpIpv6Pdm::removeNeighbor(EigrpNeighbor<IPv6Address> *neigh)
 {
     EigrpRouteSource<IPv6Address> *source = NULL;
@@ -1143,6 +1158,7 @@ void EigrpIpv6Pdm::removeNeighbor(EigrpNeighbor<IPv6Address> *neigh)
     const char *ifaceName = neigh->getIfaceName();
     int routeId;
 
+    cancelHoldTimer(neigh);
     // Remove neighbor from NT
     this->eigrpNt->removeNeighbor(neigh);
     eigrpIface->decNumOfNeighbors();

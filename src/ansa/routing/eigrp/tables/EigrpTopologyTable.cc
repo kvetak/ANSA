@@ -72,11 +72,14 @@ template<typename IPAddress>
 void EigrpTopologyTable<IPAddress>::initialize(int stage)
 {
     cSimpleModule::initialize(stage);
-    WATCH(routerID);
-    WATCH_PTRVECTOR(routeVec);
-#ifdef EIGRP_TT_DEBUG
-    WATCH_PTRVECTOR(routeInfoVec);
-#endif
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS)
+    {
+        WATCH(routerID);
+        WATCH_PTRVECTOR(routeVec);
+    #ifdef EIGRP_TT_DEBUG
+        WATCH_PTRVECTOR(routeInfoVec);
+    #endif
+    }
 }
 
 template<typename IPAddress>

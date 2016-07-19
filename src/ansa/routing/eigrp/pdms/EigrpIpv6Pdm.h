@@ -129,6 +129,10 @@ class EigrpIpv6Pdm : public cSimpleModule, public IEigrpModule<IPv6Address>, pub
      * Schedule hello timer to the specified interval.
      */
     void startHelloTimer(EigrpInterface *eigrpIface, simtime_t interval);
+    /**
+     * Stops Hold timer.
+     */
+    void cancelHoldTimer(EigrpNeighbor<IPv6Address> *neigh);
 
 
     //-- METHODS FOR CREATING MESSAGES  //TODO

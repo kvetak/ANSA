@@ -1135,6 +1135,19 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4Pdm::createNeighbor(EigrpInterface *eigrpIf
 
     return neigh;
 }
+// Must be there (EigrpNeighborTable has no method cancelEvent)
+void EigrpIpv4Pdm::cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh)
+{
+    EigrpTimer *timer;
+
+    if ((timer = neigh->getHoldTimer()) != NULL)
+    {
+        if (timer->isScheduled()) {
+            timer->getOwner();
+            cancelEvent(timer);
+        }
+    }
+}
 
 void EigrpIpv4Pdm::removeNeighbor(EigrpNeighbor<IPv4Address> *neigh)
 {
@@ -1148,6 +1161,7 @@ void EigrpIpv4Pdm::removeNeighbor(EigrpNeighbor<IPv4Address> *neigh)
     const char *ifaceName = neigh->getIfaceName();
     int routeId;
 
+    cancelHoldTimer(neigh);
     // Remove neighbor from NT
     this->eigrpNt->removeNeighbor(neigh);
     eigrpIface->decNumOfNeighbors();

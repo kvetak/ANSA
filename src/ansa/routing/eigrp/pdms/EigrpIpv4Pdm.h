@@ -115,7 +115,10 @@ class EigrpIpv4Pdm : public cSimpleModule, public IEigrpModule<IPv4Address>, pub
      * Schedule hello timer to the specified interval.
      */
     void startHelloTimer(EigrpInterface *eigrpIface, simtime_t interval);
-
+    /**
+     * Stops Hold timer.
+     */
+    void cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh);
 
     //-- METHODS FOR CREATING MESSAGES
     EigrpIpv4Hello *createHelloMsg(int holdInt, EigrpKValues kValues, IPv4Address& destAddress, EigrpMsgReq *msgReq);
