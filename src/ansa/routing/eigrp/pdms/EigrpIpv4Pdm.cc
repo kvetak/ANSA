@@ -178,12 +178,13 @@ void EigrpIpv4Pdm::receiveSignal(cComponent* source, simsignal_t signalID, cObje
 
     if (signalID == NF_INTERFACE_STATE_CHANGED)
     {
-        ANSA_InterfaceEntry *iface = check_and_cast<ANSA_InterfaceEntry*>(details);
-        processIfaceStateChange(iface);
+        InterfaceEntryChangeDetails *ifcecd = check_and_cast<InterfaceEntryChangeDetails*>(obj);
+        processIfaceStateChange(check_and_cast<ANSA_InterfaceEntry*>(ifcecd->getInterfaceEntry()));
     }
     else if (signalID == NF_INTERFACE_CONFIG_CHANGED)
     {
-        ANSA_InterfaceEntry *iface = check_and_cast<ANSA_InterfaceEntry*>(details);
+        InterfaceEntryChangeDetails *ifcecd = check_and_cast<InterfaceEntryChangeDetails*>(obj);
+        ANSA_InterfaceEntry *iface = check_and_cast<ANSA_InterfaceEntry*>(ifcecd->getInterfaceEntry());
         EigrpInterface *eigrpIface = getInterfaceById(iface->getInterfaceId());
         double ifParam;
 
@@ -208,7 +209,7 @@ void EigrpIpv4Pdm::receiveSignal(cComponent* source, simsignal_t signalID, cObje
     }
     else if (signalID == NF_ROUTE_DELETED)
     { //
-        processRTRouteDel(details);
+        processRTRouteDel(obj);
     }
 }
 
@@ -367,7 +368,7 @@ void EigrpIpv4Pdm::processMsgFromNetwork(cMessage *msg)
 #endif
 
     // Find neighbor if exists
-    EigrpNeighbor<IPv4Address> *neigh;
+    EigrpNeighbor<IPv4Address> *neigh = nullptr;
     if ((neigh = eigrpNt->findNeighbor(srcAddr)) != NULL)
     { // Reset hold timer
         resetTimer(neigh->getHoldTimer(), neigh->getHoldInt());
@@ -493,7 +494,7 @@ void EigrpIpv4Pdm::processMsgFromRtp(cMessage *msg)
 
 bool EigrpIpv4Pdm::getDestIpAddress(int destNeigh, IPv4Address *resultAddress)
 {
-    EigrpNeighbor<IPv4Address> *neigh = NULL;
+    EigrpNeighbor<IPv4Address> *neigh = nullptr;
 
     if (destNeigh == EigrpNeighbor<IPv4Address>::UNSPEC_ID)
         resultAddress->set(EIGRP_IPV4_MULT.getInt());
@@ -556,10 +557,10 @@ void EigrpIpv4Pdm::printRecvMsg(EigrpMessage *msg, IPv4Address& addr, int ifaceI
 void EigrpIpv4Pdm::processTimer(cMessage *msg)
 {
     EigrpTimer *timer = check_and_cast<EigrpTimer*>(msg);
-    EigrpInterface *eigrpIface = NULL;
-    EigrpNeighbor<IPv4Address> *neigh = NULL;
-    cObject *contextBasePtr = NULL;
-    EigrpMsgReq *msgReq = NULL;
+    EigrpInterface *eigrpIface = nullptr;
+    EigrpNeighbor<IPv4Address> *neigh = nullptr;
+    cObject *contextBasePtr = nullptr;
+    EigrpMsgReq *msgReq = nullptr;
     int ifaceId = -1;
 
     switch (timer->getTimerKind())
@@ -1038,8 +1039,8 @@ void EigrpIpv4Pdm::sendAllEigrpPaths(EigrpInterface *eigrpIface, EigrpNeighbor<I
 
 void EigrpIpv4Pdm::processNewNeighbor(int ifaceId, IPv4Address &srcAddress, EigrpIpv4Hello *rcvMsg)
 {
-    EigrpMsgReq *msgReqUpdate = NULL, *msgReqHello = NULL;
-    EigrpNeighbor<IPv4Address> *neigh;
+    EigrpMsgReq *msgReqUpdate = nullptr, *msgReqHello = nullptr;
+    EigrpNeighbor<IPv4Address> *neigh = nullptr;
     EigrpInterface *iface = eigrpIft->findInterfaceById(ifaceId);
     EigrpTlvParameter paramTlv = rcvMsg->getParameterTlv();
     EigrpStub stubConf = rcvMsg->getStubTlv().stub;
@@ -1126,6 +1127,7 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4Pdm::createNeighbor(EigrpInterface *eigrpIf
     neigh->setHoldTimer(holdt);
     neigh->setHoldInt(holdInt);
     eigrpNt->addNeighbor(neigh);
+    EV << "!!!!!!New neigh> " << neigh << " timer " << holdt << endl;
     // Start Hold timer
     scheduleAt(simTime() + holdInt, holdt);
 
@@ -1443,9 +1445,9 @@ EigrpInterface *EigrpIpv4Pdm::getInterfaceById(int ifaceId)
 
 void EigrpIpv4Pdm::disableInterface(ANSA_InterfaceEntry *iface, EigrpInterface *eigrpIface, IPv4Address& ifAddress, IPv4Address& ifMask)
 {
-    EigrpTimer* hellot;
-    EigrpNeighbor<IPv4Address> *neigh;
-    EigrpRouteSource<IPv4Address> *source;
+    EigrpTimer* hellot = nullptr;
+    EigrpNeighbor<IPv4Address> *neigh = nullptr;
+    EigrpRouteSource<IPv4Address> *source = nullptr;
     int neighCount;
     int ifaceId = eigrpIface->getInterfaceId();
 
@@ -1883,8 +1885,8 @@ bool EigrpIpv4Pdm::installRouteToRT(EigrpRoute<IPv4Address> *route, EigrpRouteSo
 bool EigrpIpv4Pdm::setReplyStatusTable(EigrpRoute<IPv4Address> *route, EigrpRouteSource<IPv4Address> *source, bool forcePoisonRev, int *neighCount, int *stubCount)
 {
     int neighTotalCount = eigrpNt->getNumNeighbors();
-    EigrpNeighbor<IPv4Address> *neigh;
-    EigrpInterface *eigrpIface = NULL;
+    EigrpNeighbor<IPv4Address> *neigh = nullptr;
+    EigrpInterface *eigrpIface = nullptr;
 
     for (int i = 0; i < neighTotalCount; i++)
     {

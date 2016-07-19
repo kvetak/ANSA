@@ -96,7 +96,7 @@ EigrpInterfaceTable::~EigrpInterfaceTable()
         iface = eigrpInterfaces[i];
 
         // Must be there
-        cancelHelloTimer(iface);
+        //cancelHelloTimer(iface);
 
         eigrpInterfaces[i] = NULL;
         delete iface;
@@ -125,7 +125,7 @@ void EigrpInterfaceTable::cancelHelloTimer(EigrpInterface *iface)
     if ((timer = iface->getHelloTimer()) != NULL)
     {
         if (timer->isScheduled()) {
-            //cancelEvent(timer);
+            cancelEvent(timer);
         }
     }
 }

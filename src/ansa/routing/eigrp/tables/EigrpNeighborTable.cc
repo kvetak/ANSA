@@ -63,7 +63,7 @@ EigrpNeighborTable<IPAddress>::~EigrpNeighborTable()
     for (int i = 0; i < cnt; i++)
     {
         neigh = neighborVec[i];
-        cancelHoldTimer(neigh);
+        //cancelHoldTimer(neigh);
         delete neigh;
     }
     neighborVec.clear();
@@ -91,7 +91,7 @@ void EigrpNeighborTable<IPAddress>::cancelHoldTimer(EigrpNeighbor<IPAddress> *ne
     if ((timer = neigh->getHoldTimer()) != NULL)
     {
         if (timer->isScheduled()) {
-            //cancelEvent(timer);
+            cancelEvent(timer);
         }
     }
 }

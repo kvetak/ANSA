@@ -65,16 +65,16 @@ network EigrpTestNetwork
                 ethg[4];
         }
         LAN1: ANSA_Host {
-            @display("p=24,38;i=cloud_s");
+            @display("p=24,38;i=misc/cloud");
         }
         LAN2: ANSA_Host {
-            @display("p=120,246;i=cloud_s");
+            @display("p=120,246;i=misc/cloud");
         }
         LAN3: ANSA_Host {
-            @display("p=425,38;i=cloud_s");
+            @display("p=425,38;i=misc/cloud");
         }
         LAN4: ANSA_Host {
-            @display("p=353,245;i=cloud_s;is=vs");
+            @display("p=353,245;i=misc/cloud;");
         }
         scenarioManager: ScenarioManager {
             @display("p=35,246");

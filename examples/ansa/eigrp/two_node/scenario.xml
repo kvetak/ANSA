@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <scenario>
-  	<!-- <at t="15">
-    	<disconnect src-module="router2" src-gate="ethg[0]"/>
+
+  	<at t="15">
+    	<disconnect src-module="R2" src-gate="ethg[0]"/>    	
   	</at>
   	<at t="30">
-    	<connect src-module="router2" src-gate="ethg[0]" 
-             dest-module="router1" dest-gate="ethg[0]"
+    	<connect src-module="R2" src-gate="ethg[0]" dest-module="R1" dest-gate="ethg[0]"
              channel-type="inet.nodes.ethernet.Eth100M"/>
-  	</at> -->
-  	
+  	</at>
+
+
   	<!-- <at t="15">
 		<interfaceconfig delay="20000" module="R3.interfaceStateManager" int="eth2" />
   	</at> -->
