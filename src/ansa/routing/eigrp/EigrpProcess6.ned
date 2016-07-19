@@ -24,7 +24,7 @@ import ansa.routing.eigrp.pdms.EigrpIpv6Pdm;
 import ansa.routing.eigrp.tables.EigrpIpv6NeighborTable;
 import ansa.routing.eigrp.tables.EigrpIpv6TopologyTable;
 
-module eigrpProcess6
+module EigrpProcess6
 {
     parameters:
 

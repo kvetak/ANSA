@@ -124,7 +124,7 @@ class EigrpRtpT : public cSimpleModule
   protected:
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
-    virtual int numInitStages() const { return 4; }
+    virtual int numInitStages() const { return NUM_INIT_STAGES; }
 
   public:
     EigrpRtpT();

@@ -20,7 +20,12 @@
 
 namespace inet{
 
-ANSA_InterfaceEntry::ANSA_InterfaceEntry(cModule *interfaceModule) : InterfaceEntry(interfaceModule) {}
+ANSA_InterfaceEntry::ANSA_InterfaceEntry(cModule *interfaceModule) : InterfaceEntry(interfaceModule)
+{
+    reliability = 255;
+    recvLoad = 1;
+    transLoad = 1;
+}
 
 void ANSA_InterfaceEntry::addVirtualForwarder(VirtualForwarder* vforw)
 {
@@ -123,29 +128,68 @@ std::string ANSA_InterfaceEntry::info() const {
         out << " POINTTOPOINT";
     if (isLoopback())
         out << " LOOPBACK";
+    out << "\nBW: " << bandwidth << "bit/s"
+            << ", DLY: " << delay << " us"
+            << ", rely:" << reliability << "/255"
+            << ", rload: " << recvLoad << "/255"
+            << ", tload:" << transLoad << "/255";
     out << "\nMAC:\t\t";
     if (getMacAddress().isUnspecified())
         out << "n/a";
     else
         out << getMacAddress();
     //IPv4
-    out << "\nIPv4 ucast:\t" << ipv4data->getIPAddress() << "/" << ipv4data->getNetmask().getNetmaskLength();
-    out << "\nIPv4 mcast:\t";
-    for (int i = 0; i < ipv4data->getNumOfJoinedMulticastGroups(); i++) {
-        out << (i > 0 ? ", " : "") << ipv4data->getJoinedMulticastGroup(i);
+    if (ipv4data != nullptr) {
+        out << "\nIPv4 ucast:\t" << ipv4data->getIPAddress() << "/" << ipv4data->getNetmask().getNetmaskLength();
+        out << "\nIPv4 mcast:\t";
+        for (int i = 0; i < ipv4data->getNumOfJoinedMulticastGroups(); i++) {
+            out << (i > 0 ? ", " : "") << ipv4data->getJoinedMulticastGroup(i);
+        }
     }
-    //IPv6
-    out << "\nIPv6 ucast:\t";
-    for (int i = 0; i < ipv6data->getNumAddresses(); i++) {
-        out << (i > 0 ? ", " : "") << ipv6data->getAddress(i);
-    }
-    out << "\nIPv6 mcast:\t";
-    bool comma = false;
-    for (auto j : ipv6data->getJoinedMulticastGroups()) {
-        out << (comma ? ", " : "") << j;
-        comma = true;
+
+    if (ipv6data != nullptr) {
+        //IPv6
+        out << "\nIPv6 ucast:\t";
+        for (int i = 0; i < ipv6data->getNumAddresses(); i++) {
+            out << (i > 0 ? ", " : "") << ipv6data->getAddress(i);
+        }
+        out << "\nIPv6 mcast:\t";
+        bool comma = false;
+        for (auto j : ipv6data->getJoinedMulticastGroups()) {
+            out << (comma ? ", " : "") << j;
+            comma = true;
+        }
     }
     return out.str();
+}
+
+void ANSA_InterfaceEntry::setDatarate(double d) {
+    if (datarate != d) {
+        datarate = d;
+        switch ((long)datarate) {
+            case 64000: //56k modem
+                bandwidth = 64;
+                delay = 20000;
+                break;
+            case 56000: //56k modem
+                bandwidth = 56;
+                delay = 20000;
+                break;
+            case 1544000: //T1
+                bandwidth = 1544;
+                delay = 20000;
+                break;
+            case 10000000: //Eth10
+                bandwidth = 10000;
+                delay = 1000;
+                break;
+            default: //>Eth10
+                bandwidth = 100000;
+                delay = 100;
+                break;
+        }
+        configChanged(F_DATARATE);
+    }
 }
 
 }

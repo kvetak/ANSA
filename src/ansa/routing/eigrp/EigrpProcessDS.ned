@@ -24,11 +24,16 @@ import ansa.routing.eigrp.pdms.EigrpIpv6Pdm;
 import ansa.routing.eigrp.tables.EigrpIpv6NeighborTable;
 import ansa.routing.eigrp.tables.EigrpIpv6TopologyTable;
 
-module eigrpProcessDS
+module EigrpProcessDS
 {
     parameters:
+        @display("bgb=494,229,white;i=block/network2");
+        bool enableIPv4 = default(true);
+        bool enableIPv6 = default(true);
+        xml configData = default(xmldoc("config.xml"));
+        string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;
 
-        @display("bgb=494,229,white");
     gates:
         input splitterIn;
         input splitter6In;
@@ -37,47 +42,53 @@ module eigrpProcessDS
 
     submodules:
         // vlevo nazev, vpravo typ
-        eigrpIpv4Pdm: EigrpIpv4Pdm {
+        eigrpIpv4Pdm: EigrpIpv4Pdm if enableIPv4 {
             @display("p=64,66;i=block/circle");
+            configData = configData;
+            routingTableModule = routingTableModule;
+            interfaceTableModule = interfaceTableModule;
         }
-        eigrpInterfaceTable: EigrpInterfaceTable {
+        eigrpInterfaceTable: EigrpInterfaceTable if enableIPv4 {
             @display("p=185,180");
         }
-        eigrpIpv4NeighborTable: EigrpIpv4NeighborTable {
+        eigrpIpv4NeighborTable: EigrpIpv4NeighborTable if enableIPv4 {
             @display("p=185,45");
         }
-        eigrpIpv4TopologyTable: EigrpIpv4TopologyTable {
+        eigrpIpv4TopologyTable: EigrpIpv4TopologyTable if enableIPv4 {
             @display("p=185,112");
         }
-        eigrpRtp: EigrpRtp {
+        eigrpRtp: EigrpRtp if enableIPv4 {
             @display("p=64,157;i=block/dispatch");
         }
-		
-		eigrpInterfaceTable6: EigrpInterfaceTable {
+
+        eigrpInterfaceTable6: EigrpInterfaceTable if enableIPv6 {
             @display("p=320,180");
         }
-        eigrpIpv6Pdm: EigrpIpv6Pdm {
+        eigrpIpv6Pdm: EigrpIpv6Pdm if enableIPv6 {
             @display("p=433,66;i=block/circle");
+            configData = configData;
+            routingTableModule = routingTableModule;
+            interfaceTableModule = interfaceTableModule;
         }
-        eigrpIpv6NeighborTable: EigrpIpv6NeighborTable {
+        eigrpIpv6NeighborTable: EigrpIpv6NeighborTable if enableIPv6 {
             @display("p=320,45");
         }
-        eigrpIpv6TopologyTable: EigrpIpv6TopologyTable {
+        eigrpIpv6TopologyTable: EigrpIpv6TopologyTable if enableIPv6 {
             @display("p=320,112");
         }
-        eigrpRtp6: EigrpRtp6 {
+        eigrpRtp6: EigrpRtp6 if enableIPv6 {
             @display("p=433,157;i=block/dispatch");
         }
-    connections:
-        splitterIn --> eigrpIpv4Pdm.splitterIn;
-        splitterOut <-- eigrpIpv4Pdm.splitterOut;
+    connections allowunconnected:
+        splitterIn --> eigrpIpv4Pdm.splitterIn if enableIPv4;
+        splitterOut <-- eigrpIpv4Pdm.splitterOut if enableIPv4;
 
-        eigrpIpv4Pdm.rtpOut --> eigrpRtp.pdmIn;
-        eigrpIpv4Pdm.rtpIn <-- eigrpRtp.pdmOut;
+        eigrpIpv4Pdm.rtpOut --> eigrpRtp.pdmIn if enableIPv4;
+        eigrpIpv4Pdm.rtpIn <-- eigrpRtp.pdmOut if enableIPv4;
 
-        splitter6In --> eigrpIpv6Pdm.splitterIn;
-        splitter6Out <-- eigrpIpv6Pdm.splitterOut;
+        splitter6In --> eigrpIpv6Pdm.splitterIn if enableIPv6;
+        splitter6Out <-- eigrpIpv6Pdm.splitterOut if enableIPv6;
 
-        eigrpIpv6Pdm.rtpOut --> eigrpRtp6.pdmIn;
-        eigrpIpv6Pdm.rtpIn <-- eigrpRtp6.pdmOut;
+        eigrpIpv6Pdm.rtpOut --> eigrpRtp6.pdmIn if enableIPv6;
+        eigrpIpv6Pdm.rtpIn <-- eigrpRtp6.pdmOut if enableIPv6;
 }

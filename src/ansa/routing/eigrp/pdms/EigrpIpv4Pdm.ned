@@ -19,6 +19,8 @@ simple EigrpIpv4Pdm
 {
     parameters:
         xml configData = default(xmldoc("config.xml"));
+       	string interfaceTableModule;
+        string routingTableModule;        
     gates:
         input splitterIn;
         input rtpIn;

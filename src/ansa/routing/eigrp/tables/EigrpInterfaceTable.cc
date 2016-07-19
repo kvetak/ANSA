@@ -106,7 +106,8 @@ EigrpInterfaceTable::~EigrpInterfaceTable()
 
 void EigrpInterfaceTable::initialize(int stage)
 {
-    if (stage == 3)
+    cSimpleModule::initialize(stage);
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS)
     {
         WATCH_PTRVECTOR(eigrpInterfaces);
     }

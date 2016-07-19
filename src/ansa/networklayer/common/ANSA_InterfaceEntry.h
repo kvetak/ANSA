@@ -65,6 +65,7 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
         int getRecvLoad() const         { return recvLoad; }
         int getTransLoad() const        { return transLoad; }
 
+        virtual void setDatarate(double d) override;
         void setBandwidth(uint64_t bandwidth){ if (this->bandwidth != bandwidth) { this->bandwidth = bandwidth; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
         void setDelay(uint64_t delay)        { if (this->delay != delay) { this->delay = delay; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
         void setReliability(int reliability) { if (this->reliability != reliability) { this->reliability = reliability; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }

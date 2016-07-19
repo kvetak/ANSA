@@ -56,10 +56,10 @@ EigrpIpv4Pdm::EigrpIpv4Pdm() : EIGRP_IPV4_MULT(IPv4Address(224, 0, 0, 10))
 
 EigrpIpv4Pdm::~EigrpIpv4Pdm()
 {
-    delete this->routingForNetworks;
-    delete this->eigrpIftDisabled;
-    delete this->eigrpDual;
-    delete this->eigrpMetric;
+    //delete this->routingForNetworks;
+    //delete this->eigrpIftDisabled;
+    //delete this->eigrpDual;
+    //delete this->eigrpMetric;
 }
 
 void EigrpIpv4Pdm::initialize(int stage)
@@ -67,15 +67,16 @@ void EigrpIpv4Pdm::initialize(int stage)
     // in stage 0 interfaces are registrated
     // in stage 2 interfaces and routing table
     // in stage 3
-    if (stage == 3)
+    cSimpleModule::initialize(stage);
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS)
     {
         //this->eigrpIft = EigrpIfTableAccess().get();
         //this->eigrpNt = Eigrpv4NeighTableAccess().get();
         //this->eigrpTt = Eigrpv4TopolTableAccess().get();
         //this->rt = AnsaRoutingTableAccess().get();
-        eigrpIft = check_and_cast<EigrpInterfaceTable*>(getModuleByPath("^.eigrpInterfaceTable4"));
+        eigrpIft = check_and_cast<EigrpInterfaceTable*>(getModuleByPath("^.eigrpInterfaceTable"));
         eigrpNt = check_and_cast<EigrpIpv4NeighborTable*>(getModuleByPath("^.eigrpIpv4NeighborTable"));
-        eigrpTt = check_and_cast<EigrpIpv4TopologyTable*>(getModuleByPath("^.eigrpIpv4NeighborTable"));
+        eigrpTt = check_and_cast<EigrpIpv4TopologyTable*>(getModuleByPath("^.eigrpIpv4TopologyTable"));
         rt = check_and_cast<IPv4RoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("ipv4"));
 
         //this->eigrpDual = ModuleAccess<EigrpDual>("eigrpDual").get();
@@ -99,10 +100,20 @@ void EigrpIpv4Pdm::initialize(int stage)
 
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
         WATCH(asNum);
-        //FIXME: Vesely - WATCH(kValues);
+        WATCH(kValues.K1);
+        WATCH(kValues.K2);
+        WATCH(kValues.K3);
+        WATCH(kValues.K4);
+        WATCH(kValues.K5);
+        WATCH(kValues.K6);
         WATCH(maximumPath);
         WATCH(variance);
-        //FIXME: Vesely - WATCH(eigrpStub);
+        WATCH(eigrpStub.connectedRt);
+        WATCH(eigrpStub.leakMapRt);
+        WATCH(eigrpStub.recvOnlyRt);
+        WATCH(eigrpStub.redistributedRt);
+        WATCH(eigrpStub.staticRt);
+        WATCH(eigrpStub.summaryRt);
 
         // Subscribe for changes in the device
         //nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);

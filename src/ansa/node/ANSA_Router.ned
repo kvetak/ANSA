@@ -16,7 +16,7 @@
 package ansa.node;
 
 import ansa.routing.babel.BabelRouting;
-import ansa.routing.eigrp.eigrpProcessDS;
+import ansa.routing.eigrp.EigrpProcessDS;
 
 import inet.applications.contract.IUDPApp;
 import inet.routing.contract.IBGPRouting;
@@ -93,7 +93,7 @@ module ANSA_Router extends ANSA_NodeBase
             @display("p=277,281");
         }
 
-        eigrp: eigrpProcessDS if hasEIGRP {
+        eigrp: EigrpProcessDS if hasEIGRP {
 
             @display("p=573,242");
         }
@@ -150,9 +150,9 @@ module ANSA_Router extends ANSA_NodeBase
         }
         
 		if hasEIGRP {
-            eigrp.splitterOut --> networkLayer.transportIn++;
-            eigrp.splitterIn <-- networkLayer.transportOut++;            
-            eigrp.splitter6Out --> networkLayer.transportIn++;
-            eigrp.splitter6In <-- networkLayer.transportOut++;
+            eigrp.splitterOut --> networkLayer.transportIn++ if enableIPv4;
+            eigrp.splitterIn <-- networkLayer.transportOut++ if enableIPv4;            
+            eigrp.splitter6Out --> networkLayer.transportIn++ if enableIPv6;
+            eigrp.splitter6In <-- networkLayer.transportOut++ if enableIPv6;
         }
 }

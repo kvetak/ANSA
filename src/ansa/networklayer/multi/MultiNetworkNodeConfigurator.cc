@@ -102,6 +102,13 @@ void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
         InterfaceEntry* ie = interfaceTable->getInterfaceByName(ifname.c_str());
         //EV << "!!!!!!!!!!!!!!!!" << interfaceTable->getInterfaceByName(ifname.c_str())->info();
 
+        //Setup BW and DLY
+        ANSA_InterfaceEntry* aie = dynamic_cast<ANSA_InterfaceEntry*>(ie);
+        if (aie) {
+            //aie->setBandwidth(bwPar.doubleValue() / 1000);
+            //aie->setDelay(getDefaultDelay(linkType));
+        }
+
         cXMLElementList ifDetails = m->getChildren();
         bool ipv6DataCleaned = !(par(PAR_REPLACEADDR).boolValue());
 
@@ -165,21 +172,27 @@ void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
                 ie->set(atoi((*ifElemIt)->getNodeValue()));
             }
             */
-/* FIXME: Vesely - EIGRP support
+
             if (nodeName=="Bandwidth")
             { // Bandwidth in kbps
-                if (!xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue()))
-                    throw cRuntimeError("Bad value for bandwidth on interface %s", ifaceName);
-                ie->setBandwidth(tempNumber);
+                int tempNumber = 0;
+                if (!Str2Int(&tempNumber, (*ifElemIt)->getNodeValue())) {
+                    throw cRuntimeError("Bad value for bandwidth on interface!");
+                }
+                ANSA_InterfaceEntry* aie = dynamic_cast<ANSA_InterfaceEntry*>(ie);
+                if (aie) { aie->setBandwidth(tempNumber); }
 
             }
             if (nodeName=="Delay")
             { // Delay in tens of microseconds
-                if (!xmlParser::Str2Int(&tempNumber, (*ifElemIt)->getNodeValue()))
-                    throw cRuntimeError("Bad value for delay on interface %s", ifaceName);
-                ie->setDelay(tempNumber * 10);
+                int tempNumber = 0;
+                if (!Str2Int(&tempNumber, (*ifElemIt)->getNodeValue())) {
+                    throw cRuntimeError("Bad value for delay on interface!");
+                }
+                ANSA_InterfaceEntry* aie = dynamic_cast<ANSA_InterfaceEntry*>(ie);
+                if (aie) { aie->setDelay(tempNumber); }
             }
-*/
+
         }
 
         //EV << "\n\n@@@@@@@@@@@@\n" << interfaceTable->getInterfaceByName(ifname.c_str())->info();
@@ -259,6 +272,60 @@ void MultiNetworkNodeConfigurator::parseDefaultRoutes(cXMLElement* config) {
         }
     }
     else { EV << "Node configuration does not contain IPv6 default route configuration!" << endl;}
+}
+
+bool MultiNetworkNodeConfigurator::Str2Int(int* retValue, const char* str) {
+    if (retValue == NULL || str == NULL){
+       return false;
+    }
+
+    char *tail = NULL;
+    long value = 0;
+    errno = 0;
+
+    value = strtol(str, &tail, 0);
+
+    if (*tail != '\0' || errno == ERANGE || errno == EINVAL || value < INT_MIN || value > INT_MAX){
+       return false;
+    }
+
+    *retValue = (int) value;
+    return true;
+}
+
+bool MultiNetworkNodeConfigurator::Str2Bool(bool* ret, const char* str) {
+    if (  (strcmp(str, "yes") == 0)
+       || (strcmp(str, "enabled") == 0)
+       || (strcmp(str, "on") == 0)
+       || (strcmp(str, "true") == 0)){
+
+       *ret = true;
+       return true;
+    }
+
+    if (  (strcmp(str, "no") == 0)
+       || (strcmp(str, "disabled") == 0)
+       || (strcmp(str, "off") == 0)
+       || (strcmp(str, "false") == 0)){
+
+       *ret = false;
+       return true;
+    }
+
+    int value;
+    if (Str2Int(&value, str)){
+       if (value == 1){
+          *ret = true;
+          return true;
+       }
+
+       if (value == 0){
+          *ret = false;
+          return true;
+       }
+    }
+
+    return false;
 }
 
 } //namespace
