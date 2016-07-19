@@ -40,8 +40,9 @@ class EigrpNeighborTable : public cSimpleModule
     int neighborCounter;            /**< For unique ID of neighbor */
     int stubCount;                  /**< Number of stub neighbors for optimization */
 
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
     /**
      * Stops Hold timer.

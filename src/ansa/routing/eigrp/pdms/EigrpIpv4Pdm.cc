@@ -98,6 +98,9 @@ void EigrpIpv4Pdm::initialize(int stage)
         EigrpDeviceConfigurator *conf = new EigrpDeviceConfigurator(par("configData"), ift);
         conf->loadEigrpIPv4Config(this);
 
+        IPSocket ipSocket(gate(SPLITTER_OUTGW));
+        ipSocket.registerProtocol(IP_PROT_EIGRP);
+
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
         WATCH(asNum);
         WATCH(kValues.K1);
@@ -1197,6 +1200,7 @@ IPv4Route *EigrpIpv4Pdm::createRTRoute(EigrpRouteSource<IPv4Address> *successor)
     IPv4Route* rtEntry = new IPv4Route();
     rtEntry->setDestination(route->getRouteAddress());
     rtEntry->setNetmask(route->getRouteMask());
+    rtEntry->setSourceType(IRoute::EIGRP);
     rtEntry->setInterface(ift->getInterfaceById(successor->getIfaceId()));
     rtEntry->setGateway(successor->getNextHop());
     setRTRouteMetric(rtEntry, successor->getMetric());

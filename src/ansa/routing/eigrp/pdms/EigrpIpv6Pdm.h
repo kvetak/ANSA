@@ -51,6 +51,8 @@ topology table.
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
 
+#include "inet/networklayer/common/IPSocket.h"
+
 //#include "EigrpDualStack.h"
 //#include "ANSARoutingTable6.h"
 //#include "IPv6InterfaceData.h"

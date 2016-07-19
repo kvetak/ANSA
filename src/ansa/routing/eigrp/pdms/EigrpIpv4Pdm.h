@@ -49,6 +49,8 @@ topology table.
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 
+#include "inet/networklayer/common/IPSocket.h"
+
 namespace inet {
 /**
  * Class represents EIGRP Protocol Dependent Module for IPv4. It contains IPv4 specific things.

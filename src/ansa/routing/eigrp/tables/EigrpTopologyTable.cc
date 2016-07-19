@@ -69,8 +69,9 @@ std::ostream& operator<<(std::ostream& os, const EigrpRoute<IPAddress>& route)
 }
 
 template<typename IPAddress>
-void EigrpTopologyTable<IPAddress>::initialize()
+void EigrpTopologyTable<IPAddress>::initialize(int stage)
 {
+    cSimpleModule::initialize(stage);
     WATCH(routerID);
     WATCH_PTRVECTOR(routeVec);
 #ifdef EIGRP_TT_DEBUG

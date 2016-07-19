@@ -43,7 +43,7 @@ std::ostream& operator<<(std::ostream& out, const EigrpInterface& iface)
 
 EigrpInterface::~EigrpInterface()
 {
-    delete hellot;
+    hellot = nullptr;
 }
 
 EigrpInterface::EigrpInterface(ANSA_InterfaceEntry *iface, int networkId, bool enabled) :
@@ -124,8 +124,9 @@ void EigrpInterfaceTable::cancelHelloTimer(EigrpInterface *iface)
 
     if ((timer = iface->getHelloTimer()) != NULL)
     {
-        if (timer->isScheduled())
-            cancelEvent(timer);
+        if (timer->isScheduled()) {
+            //cancelEvent(timer);
+        }
     }
 }
 

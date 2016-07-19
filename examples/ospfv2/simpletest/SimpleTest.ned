@@ -73,7 +73,7 @@ network SimpleTest
                 @display("p=75,43");
         }
         scenarioManager: ScenarioManager {
-            @display("p=75,43");
+            @display("p=353,43");
         }
         lifecycleController: LifecycleController {
             @display("p=208,43");

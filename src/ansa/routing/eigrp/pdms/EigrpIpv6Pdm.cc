@@ -99,6 +99,9 @@ void EigrpIpv6Pdm::initialize(int stage)
         EigrpDeviceConfigurator *conf = new EigrpDeviceConfigurator(par("configData"), ift);
         conf->loadEigrpIPv6Config(this);
 
+        IPSocket ipSocket(gate(SPLITTER_OUTGW));
+        ipSocket.registerProtocol(IP_PROT_EIGRP);
+
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
         WATCH(asNum);
         WATCH(kValues.K1);

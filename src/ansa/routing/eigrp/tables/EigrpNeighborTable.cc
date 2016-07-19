@@ -70,8 +70,9 @@ EigrpNeighborTable<IPAddress>::~EigrpNeighborTable()
 }
 
 template<typename IPAddress>
-void EigrpNeighborTable<IPAddress>::initialize()
+void EigrpNeighborTable<IPAddress>::initialize(int stage)
 {
+    cSimpleModule::initialize(stage);
     WATCH_PTRVECTOR(neighborVec);
 }
 
@@ -89,8 +90,9 @@ void EigrpNeighborTable<IPAddress>::cancelHoldTimer(EigrpNeighbor<IPAddress> *ne
 
     if ((timer = neigh->getHoldTimer()) != NULL)
     {
-        if (timer->isScheduled())
-            cancelEvent(timer);
+        if (timer->isScheduled()) {
+            //cancelEvent(timer);
+        }
     }
 }
 

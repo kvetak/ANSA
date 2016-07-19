@@ -47,8 +47,9 @@ class EigrpTopologyTable : public cSimpleModule
     typename RouteVector::iterator removeRoute(typename RouteVector::iterator routeIt);
 
   protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
   public:
     EigrpTopologyTable() { routeIdCounter = 1; sourceIdCounter = 1; }

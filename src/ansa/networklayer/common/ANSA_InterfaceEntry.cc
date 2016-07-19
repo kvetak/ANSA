@@ -22,6 +22,8 @@ namespace inet{
 
 ANSA_InterfaceEntry::ANSA_InterfaceEntry(cModule *interfaceModule) : InterfaceEntry(interfaceModule)
 {
+    bandwidth = 0;
+    delay = 0;
     reliability = 255;
     recvLoad = 1;
     transLoad = 1;
