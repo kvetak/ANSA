@@ -80,7 +80,7 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
 
     int getIntuniform(int a, int b);
     double getUniform(double a, double b);
-    cMersenneTwister* mt = nullptr;
+    //cMersenneTwister* mt = nullptr;
 
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }

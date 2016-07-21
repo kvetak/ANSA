@@ -47,8 +47,8 @@ void BabelMain::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
-        mt = new cMersenneTwister();
-        mt->initialize(intuniform(0,INT16_MAX,(getEnvir()->getNumRNGs() > 1 ? 1 : 0)),0,1,0,0,getEnvir()->getConfig());
+        //mt = new cMersenneTwister();
+        //mt->initialize(intuniform(0,INT16_MAX,(getEnvir()->getNumRNGs() > 1 ? 1 : 0)),0,1,0,0,getEnvir()->getConfig());
         //EV << "$$$$$$$$$$" << mt->intRand(1000) << endl;
         /*EV << "--------------" << this->getRNG(0)->getNumbersDrawn() << endl;
         //for (int i = this->getRNG(0)->getNumbersDrawn(); i < 50; ++i) {getIntuniform(0,1);}
@@ -2786,8 +2786,8 @@ bool BabelMain::removeNeighboursOnIface(BabelInterface *iface)
 }
 
 int BabelMain::getIntuniform(int a, int b) {
-    //return intuniform(a, b);
-    return a+mt->intRand(b-a);
+    return intuniform(a, b);
+    //return a+mt->intRand(b-a);
 }
 
 bool BabelMain::prepareToAdd(IRoutingTable* rt, IRoute* ro) {

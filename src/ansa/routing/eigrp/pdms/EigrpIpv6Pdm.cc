@@ -102,6 +102,12 @@ void EigrpIpv6Pdm::initialize(int stage)
         IPSocket ipSocket(gate(SPLITTER_OUTGW));
         ipSocket.registerProtocol(IP_PROT_EIGRP);
 
+        /* Rand check
+        for (int i = 0; i < 10; i++) {
+            EV << intuniform(0,1000) << endl;
+        }
+        */
+
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
         WATCH(asNum);
         WATCH(kValues.K1);
