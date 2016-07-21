@@ -62,10 +62,10 @@ EigrpIpv6Pdm::EigrpIpv6Pdm() : EIGRP_IPV6_MULT(IPv6Address("FF02::A"))
 
 EigrpIpv6Pdm::~EigrpIpv6Pdm()
 {
-    //delete this->routingForNetworks;
-    //delete this->eigrpIftDisabled;
-    //delete this->eigrpDual;
-    //delete this->eigrpMetric;
+    delete this->routingForNetworks;
+    delete this->eigrpIftDisabled;
+    delete this->eigrpDual;
+    delete this->eigrpMetric;
 }
 
 void EigrpIpv6Pdm::initialize(int stage)

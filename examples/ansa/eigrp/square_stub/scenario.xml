@@ -1,12 +1,20 @@
 <?xml version="1.0"?>
 <scenario>
-  	<!-- Scenarios for stub -->
+  	<!-- Scenarios for stub --> 	
+  	<!--
   	<at t="4.634">
 		<interfacedown module="R1.interfaceStateManager" int="eth1" />
-  	</at>
-  	
-  	<!-- <at t="11">
+  	</at>  	
+  	<at t="11">
 		<interfacedown module="R1.interfaceStateManager" int="eth2" />
-  	</at> -->
+  	</at> 
+  	-->
+  	
+  	<at t="4.634">    	
+    	<disconnect src-module="R1" src-gate="ethg[1]"/>    	
+  	</at>
+  	<at t="11">    	
+    	<disconnect src-module="R1" src-gate="ethg[2]"/>    	
+  	</at>
   
 </scenario>

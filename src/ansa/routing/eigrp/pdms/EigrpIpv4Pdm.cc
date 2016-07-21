@@ -56,10 +56,31 @@ EigrpIpv4Pdm::EigrpIpv4Pdm() : EIGRP_IPV4_MULT(IPv4Address(224, 0, 0, 10))
 
 EigrpIpv4Pdm::~EigrpIpv4Pdm()
 {
-    //delete this->routingForNetworks;
-    //delete this->eigrpIftDisabled;
-    //delete this->eigrpDual;
-    //delete this->eigrpMetric;
+    delete this->routingForNetworks;
+    delete this->eigrpIftDisabled;
+    delete this->eigrpDual;
+    delete this->eigrpMetric;
+/*
+    EigrpTimer *timer;
+    int cnt = eigrpNt->getNumNeighbors();
+    EigrpNeighbor<IPv4Address> *neigh;
+    for (int i = 0; i < cnt; i++) {
+        neigh = eigrpNt->getNeighbor(i);
+        if ((timer = neigh->getHoldTimer()) != NULL) {
+            cancelAndDelete(timer);
+        }
+    }
+
+    cnt = eigrpIft->getNumInterfaces();
+    EigrpInterface* iface;
+    for (int i = 0; i < cnt; i++) {
+        iface = eigrpIft->getInterface(i);
+        if ((timer = iface->getHelloTimer()) != NULL) {
+            cancelAndDelete(timer);
+        }
+    }
+
+*/
 }
 
 void EigrpIpv4Pdm::initialize(int stage)
@@ -101,11 +122,12 @@ void EigrpIpv4Pdm::initialize(int stage)
         IPSocket ipSocket(gate(SPLITTER_OUTGW));
         ipSocket.registerProtocol(IP_PROT_EIGRP);
 
-        /* Rand check
+        /*//Rand check
         for (int i = 0; i < 10; i++) {
             EV << intuniform(0,1000) << endl;
         }
         */
+
 
         WATCH_PTRVECTOR(*routingForNetworks->getAllNetworks());
         WATCH(asNum);
@@ -1133,7 +1155,7 @@ EigrpNeighbor<IPv4Address> *EigrpIpv4Pdm::createNeighbor(EigrpInterface *eigrpIf
     neigh->setHoldTimer(holdt);
     neigh->setHoldInt(holdInt);
     eigrpNt->addNeighbor(neigh);
-    EV << "!!!!!!New neigh> " << neigh << " timer " << holdt << endl;
+    //EV << "!!!!!!New neigh> " << neigh << " timer " << holdt << endl;
     // Start Hold timer
     scheduleAt(simTime() + holdInt, holdt);
 
@@ -1149,7 +1171,6 @@ void EigrpIpv4Pdm::cancelHoldTimer(EigrpNeighbor<IPv4Address> *neigh)
     if ((timer = neigh->getHoldTimer()) != NULL)
     {
         if (timer->isScheduled()) {
-            timer->getOwner();
             cancelEvent(timer);
         }
     }

@@ -3,12 +3,14 @@
   	<!-- Change of delay on R3 to PC3 
   	<at t="15">
 		<interfaceconfig delay="1000" module="R3.interfaceStateManager" int="eth2" />
-  	</at> -->
+  	</at> 
+  	-->
   	
   	<!-- Change of delay on R2 to R3 
   	<at t="15">
 		<interfaceconfig delay="1000" module="R2.interfaceStateManager" int="eth1" />
-  	</at> -->
+  	</at> 
+  	-->
   	
   	<!-- TODO: Low change of delay on R2 to R3 
   	<at t="15">
@@ -18,7 +20,8 @@
   	<!-- Change of delay on R4 to R2 
   	<at t="15">
 		<interfaceconfig delay="1000" module="R4.interfaceStateManager" int="eth0" />
-  	</at> -->
+  	</at> 
+  	-->
   	
   
   	
@@ -28,7 +31,8 @@
   	</at>
   	<at t="40">
 		<interfaceup module="R4.interfaceStateManager" int="eth0" />
-  	</at> -->
+  	</at> 
+  	-->
   	
   	<!-- Fall of interface between R2 and R3 
   	<at t="10">
@@ -36,15 +40,22 @@
   	</at>
   	<at t="40">
 		<interfaceup module="R2.interfaceStateManager" int="eth1" />
-  	</at> -->
+  	</at> 
+  	-->
   	
   	
   	<!-- Scenario for stub -->
-  	<!-- <at t="10">
+  	<!-- 
+  	<at t="10">
 		<interfacedown module="R1.interfaceStateManager" int="eth2" />
-  	</at> -->
+  	</at>
   	<at t="10">
 		<interfacedown module="R1.interfaceStateManager" int="eth1" />
+  	</at> 	 
+  	-->
+  	<at t="10">    	
+    	<disconnect src-module="R1" src-gate="ethg[1]"/>    	
   	</at>
+  	
   
 </scenario>

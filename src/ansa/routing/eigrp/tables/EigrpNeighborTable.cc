@@ -57,6 +57,7 @@ std::ostream& operator<<(std::ostream& os, const EigrpNeighbor<IPAddress>& neigh
 template<typename IPAddress>
 EigrpNeighborTable<IPAddress>::~EigrpNeighborTable()
 {
+/*
     int cnt = neighborVec.size();
     EigrpNeighbor<IPAddress> *neigh;
 
@@ -67,6 +68,7 @@ EigrpNeighborTable<IPAddress>::~EigrpNeighborTable()
         delete neigh;
     }
     neighborVec.clear();
+*/
 }
 
 template<typename IPAddress>

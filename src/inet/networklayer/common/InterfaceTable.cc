@@ -388,10 +388,10 @@ void InterfaceTable::updateLinkDisplayString(InterfaceEntry *entry)
         }
         if (entry->ipv6Data() && entry->ipv6Data()->getNumAddresses() > 0) {
             for (int i = 0; i < entry->ipv6Data()->getNumAddresses(); i++) {
-                if (entry->ipv6Data()->getAddress(i).isLinkLocal()
-                        || entry->ipv6Data()->getAddress(i).isSolicitedNodeMulticastAddress()
+                if (entry->ipv6Data()->getAddress(i).isSolicitedNodeMulticastAddress()
+                        //|| (entry->ipv6Data()->getAddress(i).isLinkLocal() && entry->ipv6Data()->getAddress(i).)
                         || entry->ipv6Data()->getAddress(i).isMulticast()) continue;
-                buf << entry->ipv6Data()->getAddress(i).str() << "/" << "\n";
+                buf << entry->ipv6Data()->getAddress(i).str() << "/64" << "\n";
             }
         }
         displayString.setTagArg("t", 0, buf.str().c_str());
