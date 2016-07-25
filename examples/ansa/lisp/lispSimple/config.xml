@@ -1,0 +1,228 @@
+<Devices>
+	<!--				 ROUTER xTR_A 					-->
+	<Router id="xTR_A">
+	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::1/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>10.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <IPv6Address>2001:db8:AC::2/64</IPv6Address>
+                <RIPng name="RIPng1">
+                	<PassiveInterface>enable</PassiveInterface>
+                </RIPng>
+            </Interface>            
+        </Interfaces>
+        
+        <Routing6>    
+        	<RIPng name="RIPng1"/>
+        </Routing6>
+                        
+        <Routing>
+        	<RIP>
+        		<Network>10.0.0.0</Network>
+				<Passive-interface>eth1</Passive-interface>        		
+        	</RIP>
+        	<LISP>
+        		<EtrMapServer address="10.0.0.10" key="HesloA" proxy="enabled" />
+        		<ItrMapResolver address="10.0.0.10" />        	
+        		<MapCache>
+
+        		</MapCache>
+        		<EtrMapping>
+        			<EID address="192.168.1.0/24">
+        		     	<RLOC address="10.0.0.2" priority="1" weight="100" />
+        		     	<RLOC address="10.0.0.3" priority="50" weight="50" local="enabled" />
+        		     	<RLOC address="10.0.0.4" priority="50" weight="50" />
+        		    </EID>
+        			<EID address="2001:db8:a::/64">
+        		     	<RLOC address="10.0.0.2" priority="1" weight ="100" />
+        		    </EID>        		    
+        		    
+        		</EtrMapping>     	
+        	</LISP>
+        </Routing>
+        
+    </Router>
+
+	<!--				 ROUTER Core 					-->
+	<Router id="Core">
+	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>10.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <IPv6Address>2001:db8:AC::1/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>10.0.0.5</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <IPv6Address>2001:db8:BC::1/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>10.0.0.9</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <IPv6Address>2001:db8:c0e::1/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>            
+        </Interfaces>
+        
+        <Routing6>    
+        	<RIPng name="RIPng1"/>
+        </Routing6> 
+                                
+        <Routing>
+        	<RIP>
+        		<Network>0.0.0.0</Network>
+        	</RIP>
+        </Routing>
+        
+    </Router>
+    
+    <!--				 ROUTER MRMS 					-->
+    <Router id="MRMS">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>10.0.0.10</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <IPv6Address>2001:db8:c0e::2/64</IPv6Address>
+                <RIPng name="RIPng1"/>
+            </Interface>
+        </Interfaces>
+
+        <Routing6>    
+        	<RIPng name="RIPng1"/>
+        </Routing6>
+        
+        <Routing>        
+        	<RIP>
+        		<Network>10.0.0.0</Network>
+        	</RIP>
+        	<LISP>        	
+        		<MapServer ipv4="enabled" ipv6="enabled">
+        			<Site name="Site A" key="HesloA">
+	        			<EID address="192.168.1.0/24" />
+						<EID address="2001:db8:a::/64" />
+        			</Site>
+        			<Site name="Site B" key="HesloB">
+	        		    <EID address="192.168.2.0/24" />	        		     		        		    
+						<EID address="2001:db8:b::/64" />
+	       			</Site>
+        		</MapServer>
+        		<MapResolver ipv4="enabled" ipv6="disabled" />
+        		<MapCache />
+        	</LISP>
+        </Routing>
+        
+    </Router>
+    
+    <!--				 ROUTER xTR_B 					-->
+    <Router id="xTR_B">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:B::1/64</IPv6Address>  
+                <RIPng name="RIPng1"/>              
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>10.0.0.6</IPAddress>
+                <Mask>255.255.255.252</Mask>
+                <IPv6Address>2001:db8:BC::2/64</IPv6Address>
+                <RIPng name="RIPng1">
+                	<PassiveInterface>enable</PassiveInterface>
+                </RIPng>                
+            </Interface>                        
+        </Interfaces>    
+            
+        <Routing6>    
+        	<RIPng name="RIPng1"/>
+        </Routing6>   
+             
+        <Routing>
+        	<RIP>
+        		<Network>10.0.0.0</Network>
+				<Passive-interface>eth1</Passive-interface>        		
+        	</RIP>
+        	<LISP>
+        		<EtrMapServer address="10.0.0.10" key="HesloB" proxy="enabled" want-map-notify="enabled" quick-registration="enabled" />
+        		<ItrMapResolver address="10.0.0.10" />   
+        		<MapCache>
+       		
+        		</MapCache>
+        		<EtrMapping>
+        			<EID address="192.168.2.0/24">
+        		     	<RLOC address="10.0.0.6" priority="1" weight ="100" />
+        		    </EID>
+        			<EID address="2001:db8:b::/64">
+        		     	<RLOC address="10.0.0.6" priority="1" weight ="100" />
+        		    </EID>        		    
+        		</EtrMapping>     	
+        	</LISP>        	
+        </Routing>
+        
+    </Router>        
+    
+    <!--				 HOST Hv4_A 					-->
+    <Host id="Hv4_A">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.99</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>192.168.1.1</DefaultRouter>
+		
+	</Host>	
+	
+    <!--				 HOST Hv6_A 					-->
+    <Host id="Hv6_A">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:db8:a::99/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter6>2001:db8:a::1</DefaultRouter6>
+		
+	</Host>
+		
+    <!--				 HOST Hv4_B 					-->
+    <Host id="Hv4_B">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.2.99</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>192.168.2.1</DefaultRouter>
+		
+	</Host>	
+	
+    <!--				 HOST Hv3_3 					-->
+    <Host id="Hv6_B">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPv6Address>2001:db8:B::99/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter6>2001:db8:B::1</DefaultRouter6>
+		
+	</Host>	
+</Devices>

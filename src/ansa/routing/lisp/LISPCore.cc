@@ -327,64 +327,66 @@ void LISPCore::initSockets() {
 
 void LISPCore::initialize(int stage)
 {
-    if (stage < numInitStages() - 1)
-        return;
+    cSimpleModule::initialize(stage);
 
-    //LISP configuration parsing
-    parseConfig( par(CONFIG_PAR) );
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        //LISP configuration parsing
+        parseConfig( par(CONFIG_PAR) );
 
-    //Set parameters for MapCache behavior
-    acceptMapRequestMapping = par(ACCEPTREQMAPPING_PAR).boolValue();
+        //Set parameters for MapCache behavior
+        acceptMapRequestMapping = par(ACCEPTREQMAPPING_PAR).boolValue();
 
-    //Set EchoNonceAlgorithm
-    echoNonceAlgo = par(ECHONONCEALGO_PAR).boolValue();
+        //Set EchoNonceAlgorithm
+        echoNonceAlgo = par(ECHONONCEALGO_PAR).boolValue();
 
-    //Set CiscoStartupDelay for registration and probing
-    ciscoStartupDelays = par(CISCOSTARTUPDELAY_PAR).boolValue();
+        //Set CiscoStartupDelay for registration and probing
+        ciscoStartupDelays = par(CISCOSTARTUPDELAY_PAR).boolValue();
 
-    if (par(MAPCACHETTL_PAR).longValue() <= 0) {
-        mapCacheTtl = DEFAULT_TTL_VAL;
-        par(MAPCACHETTL_PAR).setLongValue(DEFAULT_TTL_VAL);
+        if (par(MAPCACHETTL_PAR).longValue() <= 0) {
+            mapCacheTtl = DEFAULT_TTL_VAL;
+            par(MAPCACHETTL_PAR).setLongValue(DEFAULT_TTL_VAL);
+        }
+        else
+            mapCacheTtl = (unsigned short) ( par(MAPCACHETTL_PAR).longValue() );
+
+        //Set RLOC Probing algorithm
+        if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_CISCO_PARVAL) )
+            rlocProbingAlgo = PROBE_CISCO;
+        else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDRR_PARVAL) )
+            rlocProbingAlgo = PROBE_SIMPLE;
+        else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
+                rlocProbingAlgo = PROBE_SOPHIS;
+        else
+            rlocProbingAlgo = PROBE_CISCO;
+
+        //Init pointers to other subcomponents
+        initPointers();
+
+        //Acts as ETR register for LISP sites and schedule registration for each MS
+        if ( MapServers.empty() && !MapDb->getMappingStorage().empty() ) {
+            EV << "EtrMappings are present but no MapServer is configured!" << endl;
+        }
+        else
+            scheduleRegistration();
+
+        //TODO: Vesely - What about local locators? How should check the reachibility?
+        //Schedule MapETR RLOC probing where each non-local locator is tested for its EID every 60 seconds
+        scheduleRlocProbing();
+
+        //Register UDP port 4342
+        initSockets();
+
+        packetfrwd = 0;
+        packetdrop= 0;
+        updateDisplayString();
+        initSignals();
+
+        //Watchers
+        WATCH_LIST(MapResolvers);
+        WATCH_LIST(MapServers);
+        WATCH_LIST(ProbingSet.getProbes());
     }
-    else
-        mapCacheTtl = (unsigned short) ( par(MAPCACHETTL_PAR).longValue() );
 
-    //Set RLOC Probing algorithm
-    if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_CISCO_PARVAL) )
-        rlocProbingAlgo = PROBE_CISCO;
-    else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDRR_PARVAL) )
-        rlocProbingAlgo = PROBE_SIMPLE;
-    else if ( !strcmp(par(RLOCPROBINGALGO_PAR).stringValue(), ALGO_EIDGROUPED_PARVAL) )
-            rlocProbingAlgo = PROBE_SOPHIS;
-    else
-        rlocProbingAlgo = PROBE_CISCO;
-
-    //Init pointers to other subcomponents
-    initPointers();
-
-    //Acts as ETR register for LISP sites and schedule registration for each MS
-    if ( MapServers.empty() && !MapDb->getMappingStorage().empty() ) {
-        EV << "EtrMappings are present but no MapServer is configured!" << endl;
-    }
-    else
-        scheduleRegistration();
-
-    //TODO: Vesely - What about local locators? How should check the reachibility?
-    //Schedule MapETR RLOC probing where each non-local locator is tested for its EID every 60 seconds
-    scheduleRlocProbing();
-
-    //Register UDP port 4342
-    initSockets();
-
-    packetfrwd = 0;
-    packetdrop= 0;
-    updateDisplayString();
-    initSignals();
-
-    //Watchers
-    WATCH_LIST(MapResolvers);
-    WATCH_LIST(MapServers);
-    WATCH_LIST(ProbingSet.getProbes());
 }
 
 void LISPCore::expireRegisterTimer(LISPRegisterTimer* regtim) {

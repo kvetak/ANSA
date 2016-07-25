@@ -68,7 +68,6 @@ std::ostream& operator <<(std::ostream& os, const LISPServerEntry& entry) {
     return os << entry.info();
 }
 
-
 bool LISPServerEntry::operator <(const LISPServerEntry& other) const {
     if (!(address.getType() == L3Address::IPv6) && other.address.getType() == L3Address::IPv6)
         return true;

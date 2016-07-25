@@ -62,34 +62,34 @@ void LISPMapCache::parseConfig(cXMLElement* config) {
 
 void LISPMapCache::initialize(int stage)
 {
-    if (stage < numInitStages() - 1)
-        return;
+    cSimpleModule::initialize(stage);
 
-    initPointers();
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        initPointers();
 
-    restartMapCache();
+        restartMapCache();
 
+        //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+        //parseConfig( par("configData").xmlValue() );
 
-    //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    //parseConfig( par("configData").xmlValue() );
+        //Create default record
+        //LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
+        //m1.setAction(LISPCommon::SEND_MAP_REQUEST);
+        //this->addMapEntry(m1);
 
-    //Create default record
-    //LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));
-    //m1.setAction(LISPCommon::SEND_MAP_REQUEST);
-    //this->addMapEntry(m1);
+        //updateDisplayString();
 
-    //updateDisplayString();
+        //Init signals
+        initSignals();
 
-    //Init signals
-    initSignals();
+        //Watchers
+        WATCH_LIST(MappingStorage);
+        WATCH(syncType);
 
-    //Watchers
-    WATCH_LIST(MappingStorage);
-    WATCH(syncType);
-
-    if (syncType != SYNC_NONE) {
-        WATCH_LIST(SyncSet);
-        WATCH(syncKey);
+        if (syncType != SYNC_NONE) {
+            WATCH_LIST(SyncSet);
+            WATCH(syncKey);
+        }
     }
 }
 

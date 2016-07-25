@@ -32,9 +32,9 @@ namespace inet {
 class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
 {
   public:
-    virtual int numInitStages() const { return 4; }
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
 
     bool isOneOfMyEids(L3Address addr);
 

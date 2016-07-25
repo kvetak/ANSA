@@ -154,17 +154,18 @@ class LISPCore : public LISPCoreBase
     LISPDownLis* DownListener;
     LISPUpLis* UpListener;
 
-    virtual int numInitStages() const { return 5; }
     void initPointers();
     void initSockets();
     void initSignals();
-    virtual void initialize(int stage);
+
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
 
     void handleTimer(cMessage *msg);
     void handleCotrol(cMessage *msg);
     void handleDataEncaps(cMessage *msg);
     void handleDataDecaps(cMessage *msg);
-    virtual void handleMessage(cMessage *msg);
 
     void parseConfig(cXMLElement* config);
         LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, L3Address& addr);
@@ -205,7 +206,7 @@ class LISPCore : public LISPCoreBase
     void scheduleRegistration();
     void scheduleRlocProbing();
     void scheduleCacheSync(const LISPEidPrefix& eidPref);
-    void scheduleWholeCacheSync(L3Address& ssmember);
+    virtual void scheduleWholeCacheSync(L3Address& ssmember) override;
 
     void cacheMapping(const TRecord& record);
 

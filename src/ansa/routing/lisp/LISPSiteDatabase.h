@@ -49,9 +49,9 @@ class LISPSiteDatabase : public cSimpleModule
 
     void parseConfig(cXMLElement* config);
 
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 4; }
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     void updateDisplayString();
 };
 }

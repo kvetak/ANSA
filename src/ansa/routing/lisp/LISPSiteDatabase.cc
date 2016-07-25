@@ -21,16 +21,17 @@ Define_Module(LISPSiteDatabase);
 
 void LISPSiteDatabase::initialize(int stage)
 {
-    if (stage < numInitStages() - 1)
-        return;
+    cSimpleModule::initialize(stage);
 
-    //Import site database
-    parseConfig( par(CONFIG_PAR).xmlValue() );
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        //Import site database
+        parseConfig( par(CONFIG_PAR).xmlValue() );
 
-    updateDisplayString();
+        updateDisplayString();
 
-    //Display in simulation
-    WATCH_LIST(SiteDatabase);
+        //Display in simulation
+        WATCH_LIST(SiteDatabase);
+    }
 }
 
 void LISPSiteDatabase::updateEtrEntries(LISPSiteRecord* siteRec, const TRecord& trec, std::string name) {

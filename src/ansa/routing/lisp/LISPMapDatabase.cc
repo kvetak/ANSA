@@ -29,20 +29,22 @@ Define_Module(LISPMapDatabase);
 
 void LISPMapDatabase::initialize(int stage)
 {
-    if (stage < numInitStages() - 1)
-        return;
+    cSimpleModule::initialize(stage);
 
-    Ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        Ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
 
-    //Parse settings
-    advertonlyowneids = par(ADVERTONLYOWNEID_PAR).boolValue();
+        //Parse settings
+        advertonlyowneids = par(ADVERTONLYOWNEID_PAR).boolValue();
 
-    //EtrMappings
-    parseEtrMappings( par(CONFIG_PAR).xmlValue() );
+        //EtrMappings
+        parseEtrMappings( par(CONFIG_PAR).xmlValue() );
 
-    updateDisplayString();
+        updateDisplayString();
 
-    WATCH_LIST(MappingStorage);
+        WATCH_LIST(MappingStorage);
+    }
+
 }
 
 void LISPMapDatabase::handleMessage(cMessage *msg)

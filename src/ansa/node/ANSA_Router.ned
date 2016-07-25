@@ -17,7 +17,7 @@ package ansa.node;
 
 import ansa.routing.babel.BabelRouting;
 import ansa.routing.eigrp.EigrpProcessDS;
-
+import ansa.routing.lisp.LISPRouting;
 import inet.applications.contract.IUDPApp;
 import inet.routing.contract.IBGPRouting;
 import inet.routing.contract.IIPRouting;
@@ -67,26 +67,26 @@ module ANSA_Router extends ANSA_NodeBase
         }
         rip: <"RIPRouting"> like IUDPApp if hasRIP {
             parameters:
-                @display("p=418,80");
+                @display("p=495,80");
         }
 
         babel: <"BabelRouting"> like IUDPApp if hasBABEL {
             parameters:
-                @display("p=511,80");
+                @display("p=564,80");
         }
 
         hsrp: <"HSRP"> like IUDPApp if hasHSRP {
             parameters:
-                @display("p=590,80");
+                @display("p=630,80");
         }
 
         glbp: <"GLBP"> like IUDPApp if hasGLBP {
             parameters:
-                @display("p=669,80");
+                @display("p=698,80");
         }
 
         udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP) {
-            @display("p=472,180");
+            @display("p=534,180");
         }
 
         pim: <"PIMRouting"> like IPIMRouting if hasPIM {
@@ -94,8 +94,12 @@ module ANSA_Router extends ANSA_NodeBase
         }
 
         eigrp: EigrpProcessDS if hasEIGRP {
-
             @display("p=573,242");
+        }
+
+        lisp: LISPRouting if hasLISP {
+
+            @display("p=427,80");
         }
 
     connections allowunconnected:
@@ -148,11 +152,22 @@ module ANSA_Router extends ANSA_NodeBase
             udp.ipOut --> networkLayer.transportIn++;
             udp.ipIn <-- networkLayer.transportOut++;
         }
-        
-		if hasEIGRP {
+
+        if hasEIGRP {
             eigrp.splitterOut --> networkLayer.transportIn++ if enableIPv4;
-            eigrp.splitterIn <-- networkLayer.transportOut++ if enableIPv4;            
+            eigrp.splitterIn <-- networkLayer.transportOut++ if enableIPv4;
             eigrp.splitter6Out --> networkLayer.transportIn++ if enableIPv6;
             eigrp.splitter6In <-- networkLayer.transportOut++ if enableIPv6;
+        }
+
+        if hasLISP {
+            udp.appOut++ --> lisp.udpContrIn;
+            udp.appIn++ <-- lisp.udpContrOut;
+            udp.appOut++ --> lisp.udpDataIn;
+            udp.appIn++ <-- lisp.udpDataOut;
+            networkLayer.transportOut++ --> lisp.ipv4In if enableIPv4;
+            networkLayer.transportIn++ <-- lisp.ipv4Out if enableIPv4;
+            networkLayer.transportOut++ --> lisp.ipv6In if enableIPv6;
+            networkLayer.transportIn++ <-- lisp.ipv6Out if enableIPv6;
         }
 }
