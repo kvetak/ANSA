@@ -18,10 +18,12 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include <LISPRLocator.h>
+#include "ansa/routing/lisp/LISPRLocator.h"
+
+namespace inet {
 
 LISPRLocator::LISPRLocator() :
-    //FIXME: Create IPvXAddress:: unspecified address const
+    //FIXME: Create L3Address:: unspecified address const
     rloc (IPv4Address::UNSPECIFIED_ADDRESS),
     state(DOWN),
     priority(DEFAULT_PRIORITY_VAL), weight(DEFAULT_WEIGHT_VAL),
@@ -40,7 +42,7 @@ LISPRLocator::LISPRLocator(const char* addr) :
 }
 
 LISPRLocator::LISPRLocator(const char* addr, const char* prio, const char* wei, bool loca) :
-    rloc( IPvXAddress(addr) ),
+    rloc( L3Address(addr) ),
     state(DOWN),
     priority((unsigned char)atoi(prio)), weight((unsigned char)atoi(wei)),
     mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL),
@@ -64,11 +66,11 @@ void LISPRLocator::setPriority(unsigned char priority) {
     this->priority = priority;
 }
 
-const IPvXAddress& LISPRLocator::getRlocAddr() const {
+const L3Address& LISPRLocator::getRlocAddr() const {
     return rloc;
 }
 
-void LISPRLocator::setRlocAddr(const IPvXAddress& rloc) {
+void LISPRLocator::setRlocAddr(const L3Address& rloc) {
     this->rloc = rloc;
 }
 
@@ -168,9 +170,9 @@ void LISPRLocator::updateRlocator(const LISPRLocator& rloc) {
 }
 
 bool LISPRLocator::operator< (const LISPRLocator& other) const {
-    if (!rloc.isIPv6() && other.rloc.isIPv6())
+    if ( !(rloc.getType() == L3Address::IPv6) && (other.rloc.getType() == L3Address::IPv6) )
         return true;
-    else if (rloc.isIPv6() && !other.rloc.isIPv6())
+    else if ( (rloc.getType() == L3Address::IPv6) && !(other.rloc.getType() == L3Address::IPv6) )
         return false;
 
     if (rloc < other.rloc) return true;
@@ -189,5 +191,7 @@ bool LISPRLocator::operator< (const LISPRLocator& other) const {
 }
 
 LISPCommon::Afi LISPRLocator::getRlocAfi() const {
-    return rloc.isIPv6() ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+    return rloc.getType() == L3Address::IPv6 ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+}
+
 }

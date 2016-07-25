@@ -22,11 +22,12 @@
 #define __INET_LISPMAPDATABASE_H_
 
 #include <omnetpp.h>
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
+#include "inet/networklayer/contract/IInterfaceTable.h"
+#include "inet/common/ModuleAccess.h"
+#include "ansa/routing/lisp/LISPCommon.h"
+#include "ansa/routing/lisp/LISPMapStorageBase.h"
 
-#include "LISPCommon.h"
-#include "LISPMapStorageBase.h"
+namespace inet {
 
 class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
 {
@@ -35,7 +36,7 @@ class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
 
-    bool isOneOfMyEids(IPvXAddress addr);
+    bool isOneOfMyEids(L3Address addr);
 
   protected:
     IInterfaceTable*    Ift;                ///< Provides access to the interface table.
@@ -44,5 +45,7 @@ class LISPMapDatabase : public cSimpleModule, public LISPMapStorageBase
     void parseEtrMappings(cXMLElement* config);
     void updateDisplayString();
 };
+
+}
 
 #endif

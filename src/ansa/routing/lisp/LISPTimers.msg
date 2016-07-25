@@ -18,35 +18,37 @@
 // @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/ 
 
 cplusplus {{
-    #include "INETDefs.h"
-    #include "IPvXAddress.h"
-    #include "LISPEidPrefix.h"
-}}  
+    #include "inet/common/INETDefs.h"
+    #include "inet/networklayer/common/L3Address.h"
+    #include "ansa/routing/lisp/LISPEidPrefix.h"  
+}}
 
-class noncobject IPvXAddress;
+namespace inet;  
+
+class noncobject L3Address;
 class noncobject LISPEidPrefix;
 
 message LISPRegisterTimer {
-    IPvXAddress serverAddress;
+    L3Address serverAddress;
     unsigned short quickRegCycles;
 }
 
 message LISPRequestTimer {
-    IPvXAddress srcEid;
-    IPvXAddress dstEid;       
+    L3Address srcEid;
+    L3Address dstEid;       
     unsigned long previousNonce; 
     unsigned char retryCount;
 }
 
 message LISPRlocProbeTimer {
-    IPvXAddress rlocAddr;    
+    L3Address rlocAddr;    
     LISPEidPrefix eidPref;
     unsigned long previousNonce;
     unsigned char retryCount;    
 }
 
 message LISPSyncTimer {
-    IPvXAddress setMember;
+    L3Address setMember;
     LISPEidPrefix eidPref;
     unsigned long previousNonce;
     unsigned char retryCount;      
@@ -58,5 +60,6 @@ message LISPMapEntryTimer {
 
 message LISPEtrTimer {
     string siteName;
-    IPvXAddress etrAddr;
+    L3Address etrAddr;
 }
+  

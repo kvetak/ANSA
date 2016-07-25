@@ -22,10 +22,12 @@
 #ifndef LISPMAPSTORAGEBASE_H_
 #define LISPMAPSTORAGEBASE_H_
 
-#include "LISPEidPrefix.h"
-#include "LISPMapEntry.h"
-#include "LISPTStructs.h"
-#include "LISPCommon.h"
+#include "ansa/routing/lisp/LISPEidPrefix.h"
+#include "ansa/routing/lisp/LISPMapEntry.h"
+#include "ansa/routing/lisp/LISPTStructs.h"
+#include "ansa/routing/lisp/LISPCommon.h"
+
+namespace inet {
 
 typedef std::list<LISPMapEntry> MapStorage;
 typedef MapStorage::iterator MapStorageItem;
@@ -49,10 +51,10 @@ class LISPMapStorageBase
     void removeMapEntry(const LISPMapEntry& entry);
 
     LISPMapEntry* findMapEntryByEidPrefix(const LISPEidPrefix& eidpref);
-    LISPMapEntry* findMapEntryFromByLocator(const IPvXAddress& rloc, const LISPEidPrefix& eidPref);
-    MapStorage findMapEntriesByLocator(const IPvXAddress& rloc);
+    LISPMapEntry* findMapEntryFromByLocator(const L3Address& rloc, const LISPEidPrefix& eidPref);
+    MapStorage findMapEntriesByLocator(const L3Address& rloc);
 
-    LISPMapEntry* lookupMapEntry(IPvXAddress address);
+    LISPMapEntry* lookupMapEntry(L3Address address);
 
   protected:
     /**
@@ -64,5 +66,7 @@ class LISPMapStorageBase
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPMapStorageBase& msb);
 std::ostream& operator<< (std::ostream& os, const MapStorage& mapstor);
+
+}
 
 #endif /* LISPMAPSTORAGEBASE_H_ */

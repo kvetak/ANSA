@@ -22,7 +22,9 @@
 #ifndef LISPPROBESET_H_
 #define LISPPROBESET_H_
 
-#include "LISPProbeEntry.h"
+#include "ansa/routing/lisp/LISPProbeEntry.h"
+
+namespace inet {
 
 typedef std::list<LISPProbeEntry> ProbeEntries;
 typedef ProbeEntries::const_iterator ProbeCItem;
@@ -35,11 +37,11 @@ class LISPProbeSet {
 
     std::string info() const;
 
-    bool hasProbeEntry(IPvXAddress& rloc, LISPEidPrefix& eidPref);
-    LISPProbeEntry* findProbeEntryByRlocAndEid(IPvXAddress& rloc, const LISPEidPrefix& eidPref);
-    LISPProbeEntry* findFirstProbeEntryByRloc(const IPvXAddress& rloc);
+    bool hasProbeEntry(L3Address& rloc, LISPEidPrefix& eidPref);
+    LISPProbeEntry* findProbeEntryByRlocAndEid(L3Address& rloc, const LISPEidPrefix& eidPref);
+    LISPProbeEntry* findFirstProbeEntryByRloc(const L3Address& rloc);
     void addProbeEntry(LISPProbeEntry& probe);
-    void removeProbeEntry(IPvXAddress& rloc, LISPEidPrefix& eidPref);
+    void removeProbeEntry(L3Address& rloc, LISPEidPrefix& eidPref);
     ProbeEntries& getProbes();
 
   private:
@@ -48,5 +50,7 @@ class LISPProbeSet {
 
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPProbeSet& prs);
+
+}
 
 #endif /* LISPPROBESET_H_ */

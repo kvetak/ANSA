@@ -17,7 +17,7 @@
 //
 // @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/ 
 
-package inet.ansa.networklayer.lisp;
+package ansa.routing.lisp;
 
 
 module LISPRouting

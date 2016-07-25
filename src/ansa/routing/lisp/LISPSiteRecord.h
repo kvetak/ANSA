@@ -22,10 +22,11 @@
 #ifndef LISPSITERECORD_H_
 #define LISPSITERECORD_H_
 
-#include <sstream>
-#include <string>
-#include "LISPServerEntry.h"
-#include "LISPMapStorageBase.h"
+#include "inet/common/INETDefs.h"
+#include "ansa/routing/lisp/LISPServerEntry.h"
+#include "ansa/routing/lisp/LISPMapStorageBase.h"
+
+namespace inet {
 
 class LISPSiteRecord : public LISPMapStorageBase {
   public:
@@ -55,5 +56,5 @@ typedef EtrPs::const_iterator EtrPCItem;
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPSiteRecord& sr);
 
-
+}
 #endif /* LISPSITERECORD_H_ */

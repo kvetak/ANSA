@@ -18,9 +18,11 @@
 // @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/ 
 
 cplusplus {{
-    #include "INETDefs.h"    
-    #include "LISPTStructs.h"                       		            
+    #include "inet/common/INETDefs.h"
+    #include "ansa/routing/lisp/LISPTStructs.h"                       		            
 }}
+
+namespace inet;
 
 class noncobject TRecord;
 class noncobject TRecords;

@@ -27,7 +27,9 @@
 #include "LISPRLocator.h"
 #include "LISPEidPrefix.h"
 
-#define LISP_DEFAULT_MAPSTATE INCOMPLETE
+namespace inet {
+using namespace inet;
+//#define LISP_DEFAULT_MAPSTATE INCOMPLETE
 
 typedef std::list<LISPRLocator> Locators;
 typedef Locators::iterator LocatorItem;
@@ -62,10 +64,10 @@ class LISPMapEntry {
 
     std::string info() const;
 
-    virtual bool isLocatorExisting(const IPvXAddress& address) const;
+    virtual bool isLocatorExisting(const L3Address& address) const;
     virtual void addLocator(LISPRLocator& entry);
-    virtual LISPRLocator* getLocator(const IPvXAddress& address);
-    virtual void removeLocator(IPvXAddress& address);
+    virtual LISPRLocator* getLocator(const L3Address& address);
+    virtual void removeLocator(L3Address& address);
 
     LISPRLocator* getBestUnicastLocator();
 
@@ -86,4 +88,5 @@ class LISPMapEntry {
 std::ostream& operator<< (std::ostream& os, const LISPMapEntry& me);
 std::ostream& operator<< (std::ostream& os, const Locators& rlocs);
 
+}
 #endif /* LISPMAPENTRY_H_ */

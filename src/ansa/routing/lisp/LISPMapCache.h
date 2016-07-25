@@ -22,12 +22,14 @@
 #define __INET_LISPMAPCACHE_H_
 
 #include <omnetpp.h>
-#include "LISPMapStorageBase.h"
-#include "LISPTimers_m.h"
-#include "LISPServerEntry.h"
-#include "IInterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "LISPMapDatabase.h"
+#include "ansa/routing/lisp/LISPMapStorageBase.h"
+#include "ansa/routing/lisp/LISPTimers_m.h"
+#include "ansa/routing/lisp/LISPServerEntry.h"
+#include "inet/networklayer/contract/IInterfaceTable.h"
+#include "inet/common/ModuleAccess.h"
+#include "ansa/routing/lisp/LISPMapDatabase.h"
+
+namespace inet {
 
 typedef std::list <LISPMapEntryTimer*> CacheEntriesTimeouts;
 typedef CacheEntriesTimeouts::const_iterator TimeoutCItem;
@@ -56,13 +58,13 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
     const std::string& getSyncKey() const;
     const ServerAddresses& getSyncSet() const;
     LISPMapCache::EMapSync getSyncType() const;
-    bool isInSyncSet(IPvXAddress ssmember) const;
+    bool isInSyncSet(L3Address ssmember) const;
     bool isSyncAck() const;
 
     LISPMapEntryTimer* findExpirationTimer(const LISPEidPrefix& eidPref);
     void updateTimeout(const LISPEidPrefix& eidPref, simtime_t time);
 
-    LISPMapEntry* lookupMapEntry(IPvXAddress address);
+    LISPMapEntry* lookupMapEntry(L3Address address);
 
     void updateCacheEntry(const TRecord& record);
     void syncCacheEntry(LISPMapEntry& entry);
@@ -104,4 +106,5 @@ class LISPMapCache : public cSimpleModule, public LISPMapStorageBase
 
 };
 
+}
 #endif

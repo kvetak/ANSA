@@ -21,8 +21,11 @@
 #ifndef LISPRLOCATOR_H_
 #define LISPRLOCATOR_H_
 
-#include "IPvXAddress.h"
-#include "LISPCommon.h"
+#include "inet/networklayer/common/L3Address.h"
+#include "ansa/routing/lisp/LISPCommon.h"
+
+namespace inet {
+using namespace inet;
 
 class LISPRLocator {
   public:
@@ -39,8 +42,8 @@ class LISPRLocator {
 
     std::string info() const;
 
-    const IPvXAddress& getRlocAddr() const;
-    void setRlocAddr(const IPvXAddress& rloc);
+    const L3Address& getRlocAddr() const;
+    void setRlocAddr(const L3Address& rloc);
     LocatorState getState() const;
     std::string getStateString() const;
     void setState(LocatorState state);
@@ -59,7 +62,7 @@ class LISPRLocator {
     void updateRlocator(const LISPRLocator& rloc);
 
   private:
-    IPvXAddress rloc;
+    L3Address rloc;
     LocatorState state;
     unsigned char priority;
     unsigned char weight;
@@ -72,4 +75,5 @@ class LISPRLocator {
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPRLocator& locator);
 
+}
 #endif /* LISPRLOCATOR_H_ */

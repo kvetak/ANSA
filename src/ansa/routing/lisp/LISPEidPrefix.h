@@ -21,16 +21,18 @@
 #ifndef LISPEIDPREFIX_H_
 #define LISPEIDPREFIX_H_
 
-#include "IPvXAddress.h"
-#include "LISPCommon.h"
+#include "inet/networklayer/common/L3Address.h"
+#include "ansa/routing/lisp/LISPCommon.h"
 
+namespace inet {
+using namespace inet;
 class LISPEidPrefix {
 
   public:
 
     LISPEidPrefix();
     LISPEidPrefix(const char* address, const char* length);
-    LISPEidPrefix(IPvXAddress address, unsigned char length);
+    LISPEidPrefix(L3Address address, unsigned char length);
     virtual ~LISPEidPrefix();
 
     bool operator== (const LISPEidPrefix& other) const;
@@ -38,8 +40,8 @@ class LISPEidPrefix {
 
     std::string info() const;
 
-    const IPvXAddress& getEidAddr() const;
-    void setEidAddr(const IPvXAddress& eid);
+    const L3Address& getEidAddr() const;
+    void setEidAddr(const L3Address& eid);
     unsigned char getEidLength() const;
     void setEidLength(unsigned char eidLen);
     LISPCommon::Afi getEidAfi() const;
@@ -47,8 +49,8 @@ class LISPEidPrefix {
     bool isComponentOf(const LISPEidPrefix& coarserEid) const;
 
   private:
-    IPvXAddress eidAddr;
-    IPvXAddress eidNetwork;
+    L3Address eidAddr;
+    L3Address eidNetwork;
     unsigned char eidLen;
 };
 
@@ -56,6 +58,6 @@ class LISPEidPrefix {
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPEidPrefix& ep);
 
-
+}
 
 #endif /* LISPEIDPREFIX_H_ */

@@ -190,7 +190,6 @@ void EigrpIpv4Pdm::initialize(int stage)
     }
 }
 
-
 //void EigrpIpv4Pdm::receiveChangeNotification(int category, const cObject *details)
 void EigrpIpv4Pdm::receiveSignal(cComponent* source, simsignal_t signalID, cObject* obj DETAILS_ARG)
 {

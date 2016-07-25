@@ -18,10 +18,12 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include "LISPMapCache.h"
+#include "ansa/routing/lisp/LISPMapCache.h"
 //Forward declaration
-#include "IPv4InterfaceData.h"
-#include "IPv6InterfaceData.h"
+#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/ipv6/IPv6InterfaceData.h"
+
+namespace inet {
 
 Define_Module(LISPMapCache);
 
@@ -180,13 +182,13 @@ void LISPMapCache::parseSyncSetup(cXMLElement* config) {
         std::string addr = m->getAttribute(ADDRESS_ATTR);
 
         //Create a new member record
-        if (!isInSyncSet(IPvXAddress(addr.c_str())))
+        if (!isInSyncSet(L3Address(addr.c_str())))
             SyncSet.push_back(LISPServerEntry(addr));
     }
 
 }
 
-LISPMapEntry* LISPMapCache::lookupMapEntry(IPvXAddress address) {
+LISPMapEntry* LISPMapCache::lookupMapEntry(L3Address address) {
     LISPMapEntry* me = LISPMapStorageBase::lookupMapEntry(address);
     if (!me || me->getEidPrefix().getEidAddr().isUnspecified()) {
         emit(sigMiss, true);
@@ -197,8 +199,8 @@ LISPMapEntry* LISPMapCache::lookupMapEntry(IPvXAddress address) {
 }
 
 void LISPMapCache::initPointers() {
-    Ift = InterfaceTableAccess().get();
-    MapDb = ModuleAccess<LISPMapDatabase>(MAPDB_MOD).get();
+    Ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+    MapDb = check_and_cast<LISPMapDatabase*>(getModuleByPath(MAPDB_MOD));
 }
 
 void LISPMapCache::handleMessage(cMessage *msg)
@@ -249,7 +251,7 @@ void LISPMapCache::initSignals() {
 }
 
 void LISPMapCache::updateDisplayString() {
-    if (!ev.isGUI())
+    if (!getEnvir()->isGUI())
         return;
     std::ostringstream description;
     description << MappingStorage.size() - 1 << " entries";
@@ -272,10 +274,11 @@ void LISPMapCache::restartMapCache() {
     updateDisplayString();
 }
 
-bool LISPMapCache::isInSyncSet(IPvXAddress ssmember) const {
+bool LISPMapCache::isInSyncSet(L3Address ssmember) const {
     for (ServerCItem it = SyncSet.begin(); it != SyncSet.end(); ++it) {
-        if (it->getAddress().equals(ssmember))
+        if ( it->getAddress() == ssmember ) {
             return true;
+        }
     }
     return false;
 }
@@ -333,9 +336,8 @@ void LISPMapCache::notifySyncset(cComponent* src) {
                                 (int4Data) ?
                                         int4Data->getIPAddress() :
                                         IPv4Address::UNSPECIFIED_ADDRESS;
-                        if (it->getEidPrefix().getEidAddr().equals(
-                                LISPCommon::getNetworkAddress(nadr4, it->getEidPrefix().getEidLength())
-                                )
+                        if (
+                                it->getEidPrefix().getEidAddr() == LISPCommon::getNetworkAddress(nadr4, it->getEidPrefix().getEidLength())
                            ) {
                             //EV << "!!!!!!!!!!!!" << nadr4 << endl;
                             emit(sigPeerUp, nadr4.str().c_str());
@@ -362,9 +364,8 @@ void LISPMapCache::notifySyncset(cComponent* src) {
                                 (int6Data) ?
                                         int6Data->getPreferredAddress() :
                                         IPv6Address::UNSPECIFIED_ADDRESS;
-                        if (it->getEidPrefix().getEidAddr().equals(
-                                LISPCommon::getNetworkAddress(nadr6, it->getEidPrefix().getEidLength())
-                                )
+                        if (
+                                it->getEidPrefix().getEidAddr() == LISPCommon::getNetworkAddress(nadr6, it->getEidPrefix().getEidLength())
                            ) {
                             //EV << "!!!!!!!!!!!!" << nadr6 << endl;
                             emit(sigPeerUp, nadr6.str().c_str());
@@ -374,5 +375,7 @@ void LISPMapCache::notifySyncset(cComponent* src) {
             }
         }
     }
+
+}
 
 }

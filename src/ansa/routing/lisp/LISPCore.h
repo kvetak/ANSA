@@ -23,24 +23,25 @@
 
 #include <omnetpp.h>
 
-#include "IPv6Datagram.h"
-#include "IPv4Datagram.h"
-#include "IPProtocolId_m.h"
-#include "UDP.h"
-#include "UDPPacket.h"
-#include "UDPSocket.h"
-#include "UDPControlInfo.h"
+#include "inet/networklayer/ipv6/IPv6Datagram.h"
+#include "inet/networklayer/ipv4/IPv4Datagram.h"
+#include "inet/networklayer/common/IPProtocolId_m.h"
+#include "inet/transportlayer/udp/UDP.h"
+#include "inet/transportlayer/udp/UDPPacket.h"
+#include "inet/transportlayer/contract/udp/UDPSocket.h"
+#include "inet/transportlayer/contract/udp/UDPControlInfo.h"
 
-#include "LISPServerEntry.h"
-#include "LISPMapCache.h"
-#include "LISPMapDatabase.h"
-#include "LISPSiteDatabase.h"
-#include "LISPMessages_m.h"
-#include "LISPTimers_m.h"
-#include "LISPCommon.h"
-#include "LISPMsgLogger.h"
-#include "LISPProbeSet.h"
+#include "ansa/routing/lisp/LISPServerEntry.h"
+#include "ansa/routing/lisp/LISPMapCache.h"
+#include "ansa/routing/lisp/LISPMapDatabase.h"
+#include "ansa/routing/lisp/LISPSiteDatabase.h"
+#include "ansa/routing/lisp/LISPMessages_m.h"
+#include "ansa/routing/lisp/LISPTimers_m.h"
+#include "ansa/routing/lisp/LISPCommon.h"
+#include "ansa/routing/lisp/LISPMsgLogger.h"
+#include "ansa/routing/lisp/LISPProbeSet.h"
 
+namespace inet {
 
 class LISPCoreBase : public cSimpleModule
 {
@@ -49,7 +50,7 @@ class LISPCoreBase : public cSimpleModule
     virtual void initialize(int stage) = 0;
     virtual void handleMessage(cMessage *msg) = 0;
 
-    virtual void scheduleWholeCacheSync(IPvXAddress& ssmember) = 0;
+    virtual void scheduleWholeCacheSync(L3Address& ssmember) = 0;
 };
 
 class LISPDownLis : public cListener {
@@ -77,7 +78,7 @@ class LISPUpLis : public cListener {
 
      virtual void receiveSignal(cComponent *src, simsignal_t id, const char* c) {
          EV << "Signal SS-PEER-UP initiated by " << src->getFullPath() << " with addr " << c << endl;
-         IPvXAddress addr = IPvXAddress(c);
+         L3Address addr = L3Address(c);
          //EV << "||||||||||||||||" << addr << endl;
          if (MapCache->isInSyncSet(addr))
              Core->scheduleWholeCacheSync(addr);
@@ -113,7 +114,7 @@ class LISPCore : public LISPCoreBase
     bool isMapServerV6() const;
     void setMapServerV6(bool mapServerV6);
 
-    bool isOneOfMyEids(IPvXAddress addr);
+    bool isOneOfMyEids(L3Address addr);
 
   protected:
     LISPMapCache*       MapCache;
@@ -166,23 +167,23 @@ class LISPCore : public LISPCoreBase
     virtual void handleMessage(cMessage *msg);
 
     void parseConfig(cXMLElement* config);
-        LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, IPvXAddress& addr);
+        LISPServerEntry* findServerEntryByAddress(ServerAddresses& list, L3Address& addr);
 
     void sendMapRegister(LISPServerEntry& se);
     void receiveMapRegister(LISPMapRegister* lmreg);
     void sendMapNotify(LISPMapRegister* lmreg);
     void receiveMapNotify(LISPMapNotify* lmnot);
 
-    unsigned long sendEncapsulatedMapRequest(IPvXAddress& srcEid, IPvXAddress& dstEid);
+    unsigned long sendEncapsulatedMapRequest(L3Address& srcEid, L3Address& dstEid);
     void receiveMapRequest(LISPMapRequest* lmreq);
     void delegateMapRequest(LISPMapRequest* lmreq, Etrs& etrs);
 
     void sendMapReplyFromMs(LISPMapRequest* lmreq, Etrs& etrs);
-    void sendMapReplyFromEtr(LISPMapRequest* lmreq, const IPvXAddress& eidAddress);
+    void sendMapReplyFromEtr(LISPMapRequest* lmreq, const L3Address& eidAddress);
     void sendNegativeMapReply(LISPMapRequest* lmreq, const LISPEidPrefix& eidPref, bool hasSite);
     void receiveMapReply(LISPMapReply* lmrep);
 
-    unsigned long sendRlocProbe(IPvXAddress& dstLoc, LISPEidPrefix& eid);
+    unsigned long sendRlocProbe(L3Address& dstLoc, LISPEidPrefix& eid);
     void receiveRlocProbe(LISPMapRequest* lmreq);
     void sendRlocProbeReply(LISPMapRequest* lmreq, long bitmask);
     void receiveRlocProbeReply(LISPMapReply* lmrep);
@@ -193,7 +194,7 @@ class LISPCore : public LISPCoreBase
     void expireRlocProbeTimer(LISPRlocProbeTimer* probetim);
     void expireSyncTimer(LISPSyncTimer* synctim);
 
-    unsigned long sendCacheSync(IPvXAddress& setmember, LISPEidPrefix& eidPref);
+    unsigned long sendCacheSync(L3Address& setmember, LISPEidPrefix& eidPref);
     void receiveCacheSync(LISPCacheSync* lcs);
     void sendCacheSyncAck(LISPCacheSync* lcs);
     void receiveCacheSyncAck(LISPCacheSyncAck* lcsa);
@@ -204,11 +205,11 @@ class LISPCore : public LISPCoreBase
     void scheduleRegistration();
     void scheduleRlocProbing();
     void scheduleCacheSync(const LISPEidPrefix& eidPref);
-    void scheduleWholeCacheSync(IPvXAddress& ssmember);
+    void scheduleWholeCacheSync(L3Address& ssmember);
 
     void cacheMapping(const TRecord& record);
 
-    unsigned long sendEncapsulatedDataMessage(IPvXAddress srcaddr, IPvXAddress dstaddr, LISPMapEntry* mapentry, cPacket* packet);
+    unsigned long sendEncapsulatedDataMessage(L3Address srcaddr, L3Address dstaddr, LISPMapEntry* mapentry, cPacket* packet);
 
     unsigned int getItrRlocSize(TAfiAddrs& Itrs);
     unsigned int getRecsSize(TRecs& Recs);
@@ -217,5 +218,7 @@ class LISPCore : public LISPCoreBase
     unsigned int getLispMapEntrySize(TMapEntries& MapEntries);
     int64 countPacketSize(LISPMessage* lispmsg);
 };
+
+}
 
 #endif

@@ -19,9 +19,11 @@
  */
 
 
-#include "LISPProbeEntry.h"
+#include "ansa/routing/lisp/LISPProbeEntry.h"
 
-LISPProbeEntry::LISPProbeEntry(IPvXAddress nrloc) :
+namespace inet {
+
+LISPProbeEntry::LISPProbeEntry(L3Address nrloc) :
     rlocAddr(nrloc), lastTimeProbed(SIMTIME_ZERO), curInit(true)
 {
 }
@@ -82,7 +84,7 @@ LISPEidPrefix LISPProbeEntry::getNextEid() {
     return tmp;
 }
 
-const IPvXAddress& LISPProbeEntry::getRlocAddr() const {
+const L3Address& LISPProbeEntry::getRlocAddr() const {
     return rlocAddr;
 }
 
@@ -126,4 +128,6 @@ void LISPProbeEntry::setRlocStatusForAllEids(LISPRLocator::LocatorState stat) {
 
 const EidsStats& LISPProbeEntry::getEids() const {
     return eids;
+}
+
 }

@@ -13,7 +13,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "LISPSiteDatabase.h"
+#include "ansa/routing/lisp/LISPSiteDatabase.h"
+
+namespace inet {
 
 Define_Module(LISPSiteDatabase);
 
@@ -43,7 +45,7 @@ void LISPSiteDatabase::updateEtrEntries(LISPSiteRecord* siteRec, const TRecord& 
     updateDisplayString();
 }
 
-void LISPSiteDatabase::updateTimeout(IPvXAddress addr, std::string name) {
+void LISPSiteDatabase::updateTimeout(L3Address addr, std::string name) {
     LISPEtrTimer* etrtim = findExpirationTimer(addr, name);
     //If ME did not existed
     if (!etrtim) {
@@ -68,10 +70,13 @@ LISPSite* LISPSiteDatabase::findSiteInfoBySiteName(std::string& siteName) {
     return NULL;
 }
 
-LISPEtrTimer* LISPSiteDatabase::findExpirationTimer(IPvXAddress addr, std::string name) {
+LISPEtrTimer* LISPSiteDatabase::findExpirationTimer(L3Address addr, std::string name) {
     for (SiteTimeoutItem it = SiteTimeouts.begin(); it != SiteTimeouts.end(); ++it) {
-        if ( (*it)->getEtrAddr().equals(addr) && !name.compare((*it)->getSiteName())  )
+        if (  ( (*it)->getEtrAddr() == addr )
+           && !name.compare((*it)->getSiteName())
+           ) {
             return *it;
+        }
     }
     return NULL;
 }
@@ -106,7 +111,7 @@ LISPSite* LISPSiteDatabase::findSiteInfoByKey(std::string& siteKey) {
     return NULL;
 }
 
-LISPSite* LISPSiteDatabase::findSiteByAggregate(const IPvXAddress& addr) {
+LISPSite* LISPSiteDatabase::findSiteByAggregate(const L3Address& addr) {
     LISPSite* res = NULL;
     int tmplen = 0;
     for (SiteStorageItem it = SiteDatabase.begin(); it != SiteDatabase.end(); ++it) {
@@ -165,7 +170,7 @@ void LISPSiteDatabase::addSite(LISPSite& si)
     SiteDatabase.push_back(si);
 }
 
-LISPSiteRecord* LISPSiteDatabase::updateSiteEtr(LISPSite* si, IPvXAddress src, bool proxy) {
+LISPSiteRecord* LISPSiteDatabase::updateSiteEtr(LISPSite* si, L3Address src, bool proxy) {
     Enter_Method_Silent();
     LISPSiteRecord* srec;
     LISPServerEntry* se;
@@ -192,4 +197,6 @@ void LISPSiteDatabase::updateDisplayString() {
                 << SiteTimeouts.size() << " ETRs";
     this->getDisplayString().setTagArg("t", 0, description.str().c_str());
     this->getDisplayString().setTagArg("t", 1, "t");
+}
+
 }

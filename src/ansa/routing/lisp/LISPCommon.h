@@ -22,8 +22,8 @@
 #define LISPCOMMON_H_
 
 #include <string>
-#include "IPvXAddress.h"
-
+#include "inet/networklayer/common/L3Address.h"
+namespace inet {
 extern const char* ENABLED_VAL;
 extern const char* EMPTY_STRING_VAL;
 extern const unsigned char DEFAULT_EIDLENGTH_VAL;
@@ -168,12 +168,12 @@ class LISPCommon {
 
     static void parseIpAddress(const char* str, std::string &address, std::string &length);
 
-    static int doPrefixMatch(IPvXAddress addr1, IPvXAddress addr2);
+    static int doPrefixMatch(L3Address addr1, L3Address addr2);
     static int getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2);
     static int getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2);
 
-    static IPvXAddress getNetworkAddress(IPvXAddress address, int length);
+    static L3Address getNetworkAddress(L3Address address, int length);
 
 };
-
+}
 #endif /* LISPCOMMON_H_ */

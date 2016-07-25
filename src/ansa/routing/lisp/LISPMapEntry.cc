@@ -19,7 +19,9 @@
  */
 
 
-#include <LISPMapEntry.h>
+#include "ansa/routing/lisp/LISPMapEntry.h"
+
+namespace inet {
 
 LISPMapEntry::LISPMapEntry() : ttl(0), expiry(SIMTIME_ZERO), Action(LISPCommon::NO_ACTION)
 {
@@ -74,7 +76,7 @@ void LISPMapEntry::setAction(const LISPCommon::EAct& action) {
     Action = action;
 }
 
-bool LISPMapEntry::isLocatorExisting(const IPvXAddress& address) const
+bool LISPMapEntry::isLocatorExisting(const L3Address& address) const
 {
     for (LocatorCItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
     {
@@ -85,7 +87,7 @@ bool LISPMapEntry::isLocatorExisting(const IPvXAddress& address) const
     //return mcentry->rloc.find(address) != mcentry->rloc.end() ? true : false;
 }
 
-LISPRLocator* LISPMapEntry::getLocator(const IPvXAddress& address)
+LISPRLocator* LISPMapEntry::getLocator(const L3Address& address)
 {
     for (LocatorItem it = RLOCs.begin(); it != RLOCs.end(); ++it)
     {
@@ -153,7 +155,7 @@ bool LISPMapEntry::operator <(const LISPMapEntry& other) const {
     return false;
 }
 
-void LISPMapEntry::removeLocator(IPvXAddress& address) {
+void LISPMapEntry::removeLocator(L3Address& address) {
     LISPRLocator* rloc = getLocator(address);
     if (rloc) {
         RLOCs.remove(*rloc);
@@ -217,7 +219,7 @@ LISPRLocator* LISPMapEntry::getBestUnicastLocator() {
     }
     //EV << "Vyber z>" << endl << rlocList;
     //Nondeterministic version
-    double throwdice = (double) ev.getRNG(0)->doubleRandIncl1();
+    double throwdice = (double) getEnvir()->getRNG(0)->doubleRandIncl1();
     //EV << "Hod kostkou " << throwdice << endl;
     double tmpwei = 0;
     for (LocatorItem it = rlocList.begin(); it != rlocList.end(); ++it) {
@@ -238,4 +240,6 @@ unsigned int LISPMapEntry::getTtl() const {
 
 void LISPMapEntry::setTtl(unsigned int ttl) {
     this->ttl = ttl;
+}
+
 }

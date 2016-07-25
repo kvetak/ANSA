@@ -19,7 +19,9 @@
  */
 
 
-#include <LISPSiteRecord.h>
+#include "ansa/routing/lisp/LISPSiteRecord.h"
+
+namespace inet {
 
 LISPSiteRecord::LISPSiteRecord() {
 
@@ -61,4 +63,6 @@ bool LISPSiteRecord::operator <(const LISPSiteRecord& other) const {
         return true;
 
     return false;
+}
+
 }

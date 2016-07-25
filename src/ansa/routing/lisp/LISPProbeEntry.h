@@ -22,9 +22,11 @@
 #ifndef LISPPROBEENTRY_H_
 #define LISPPROBEENTRY_H_
 
-#include "LISPRLocator.h"
-#include "LISPEidPrefix.h"
-#include "LISPTStructs.h"
+#include "ansa/routing/lisp/LISPRLocator.h"
+#include "ansa/routing/lisp/LISPEidPrefix.h"
+#include "ansa/routing/lisp/LISPTStructs.h"
+
+namespace inet {
 
 typedef std::pair<LISPEidPrefix, LISPRLocator*> EidStat;
 typedef std::list<EidStat> EidsStats;
@@ -33,12 +35,12 @@ typedef EidsStats::iterator EidItem;
 
 class LISPProbeEntry {
   public:
-    LISPProbeEntry(IPvXAddress nrloc);
+    LISPProbeEntry(L3Address nrloc);
     virtual ~LISPProbeEntry();
 
     bool operator== (const LISPProbeEntry& other) const;
 
-    const IPvXAddress& getRlocAddr() const;
+    const L3Address& getRlocAddr() const;
     const simtime_t& getLastTimeProbed() const;
     void setLastTimeProbed(const simtime_t lastTimeProbed);
     const EidsStats& getEids() const;
@@ -53,7 +55,7 @@ class LISPProbeEntry {
     void setRlocStatusForAllEids(LISPRLocator::LocatorState stat);
 
   private:
-    IPvXAddress rlocAddr;
+    L3Address rlocAddr;
     EidsStats eids;
     simtime_t lastTimeProbed;
     bool curInit;
@@ -64,5 +66,7 @@ class LISPProbeEntry {
 std::ostream& operator<< (std::ostream& os, const LISPProbeEntry& entry);
 std::ostream& operator<< (std::ostream& os, const EidStat& es);
 std::ostream& operator<< (std::ostream& os, const EidsStats& eids);
+
+}
 
 #endif /* LISPPROBEENTRY_H_ */

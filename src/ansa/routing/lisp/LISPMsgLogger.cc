@@ -19,8 +19,9 @@
  */
 
 
-#include <LISPMsgLogger.h>
+#include "ansa/routing/lisp/LISPMsgLogger.h"
 
+namespace inet {
 Define_Module(LISPMsgLogger);
 
 LISPMsgLogger::LISPMsgLogger() :
@@ -37,7 +38,7 @@ LISPMsgLogger::~LISPMsgLogger() {
     MsgLogger.clear();
 }
 
-void LISPMsgLogger::addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, IPvXAddress addr, bool flag) {
+void LISPMsgLogger::addMsg(LISPMessage* lispmsg, LISPMsgEntry::EMsgType msgtype, L3Address addr, bool flag) {
     MsgLogger.push_back(
             LISPMsgEntry(msgtype,
                          lispmsg->getNonce(),
@@ -90,7 +91,7 @@ void LISPMsgLogger::handleMessage(cMessage* msg) {
 }
 
 void LISPMsgLogger::updateDisplayString() {
-    if (!ev.isGUI())
+    if (!getEnvir()->isGUI())
         return;
     std::ostringstream description;
     description << msgsent << " sent" << endl
@@ -116,4 +117,4 @@ void LISPMsgLogger::recordStatistics(LISPMessage* lispmsg, int msgtype, bool fla
     emit(sigMsg, msgtype);
 }
 
-
+}

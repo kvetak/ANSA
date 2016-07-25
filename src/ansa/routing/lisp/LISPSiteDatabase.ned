@@ -13,11 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.ansa.networklayer.lisp;
+package ansa.routing.lisp;
 
-//
-// TODO auto-generated module
-//
 simple LISPSiteDatabase
 {
     parameters:

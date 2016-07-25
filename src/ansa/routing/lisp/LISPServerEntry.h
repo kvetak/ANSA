@@ -22,9 +22,11 @@
 #ifndef LISPSERVERENTRY_H_
 #define LISPSERVERENTRY_H_
 
-#include <omnetpp.h>
-#include "IPvXAddress.h"
-#include "LISPCommon.h"
+#include "inet/common/INETDefs.h"
+#include "inet/networklayer/common/L3Address.h"
+#include "ansa/routing/lisp/LISPCommon.h"
+
+namespace inet {
 
 class LISPServerEntry {
   public:
@@ -47,13 +49,13 @@ class LISPServerEntry {
     void setProxyReply(bool proxyReply);
     bool isQuickRegistration() const;
     void setQuickRegistration(bool quickRegistration);
-    const IPvXAddress& getAddress() const;
-    void setAddress(const IPvXAddress& address);
+    const L3Address& getAddress() const;
+    void setAddress(const L3Address& address);
     simtime_t getLastTime() const;
     void setLastTime(simtime_t lastTime);
 
   private:
-    IPvXAddress address;
+    L3Address address;
     std::string key;
     bool proxyReply;
     bool mapNotify;
@@ -68,5 +70,5 @@ typedef ServerAddresses::const_iterator ServerCItem;
 //Free function
 std::ostream& operator<< (std::ostream& os, const LISPServerEntry& entry);
 
-
+}
 #endif /* LISPSERVERENTRY_H_ */

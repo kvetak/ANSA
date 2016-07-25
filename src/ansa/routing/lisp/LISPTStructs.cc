@@ -18,7 +18,9 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include <LISPTStructs.h>
+#include "ansa/routing/lisp/LISPTStructs.h"
+
+namespace inet {
 
 std::ostream& operator <<(std::ostream& os, const TAfiAddrs& tas) {
     for (TAfiAddrCItem it = tas.begin(); it != tas.end(); ++it)
@@ -109,4 +111,6 @@ std::ostream& operator <<(std::ostream& os, const TMapEntries& tmes) {
     for (TMECItem it = tmes.begin(); it != tmes.end(); ++it )
         os << *it << endl << endl;
     return os;
+}
+
 }

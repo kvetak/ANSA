@@ -19,10 +19,12 @@
  */
 
 
-#include <LISPServerEntry.h>
+#include "ansa/routing/lisp/LISPServerEntry.h"
+
+namespace inet {
 
 LISPServerEntry::LISPServerEntry() {
-    address = IPvXAddress();
+    address = L3Address();
     key = "";
     proxyReply = false;
     mapNotify  = false;
@@ -31,7 +33,7 @@ LISPServerEntry::LISPServerEntry() {
 }
 
 LISPServerEntry::LISPServerEntry(std::string nipv) {
-    address = !nipv.empty() ? IPvXAddress(nipv.c_str()) : IPvXAddress();
+    address = !nipv.empty() ? L3Address(nipv.c_str()) : L3Address();
     key = EMPTY_STRING_VAL;
     proxyReply = false;
     mapNotify  = false;
@@ -41,7 +43,7 @@ LISPServerEntry::LISPServerEntry(std::string nipv) {
 
 LISPServerEntry::LISPServerEntry(std::string nipv, std::string nkey,
                                  bool proxy, bool notify, bool quick) {
-    address = !nipv.empty() ? IPvXAddress(nipv.c_str()) : IPvXAddress();
+    address = !nipv.empty() ? L3Address(nipv.c_str()) : L3Address();
     key = nkey;
     proxyReply = proxy;
     mapNotify  = notify;
@@ -50,7 +52,7 @@ LISPServerEntry::LISPServerEntry(std::string nipv, std::string nkey,
 }
 
 LISPServerEntry::~LISPServerEntry() {
-    address = IPvXAddress();
+    address = L3Address();
     key = EMPTY_STRING_VAL;
     proxyReply = false;
     mapNotify = false;
@@ -68,9 +70,9 @@ std::ostream& operator <<(std::ostream& os, const LISPServerEntry& entry) {
 
 
 bool LISPServerEntry::operator <(const LISPServerEntry& other) const {
-    if (!address.isIPv6() && other.address.isIPv6())
+    if (!(address.getType() == L3Address::IPv6) && other.address.getType() == L3Address::IPv6)
         return true;
-    else if (address.isIPv6() && !other.address.isIPv6())
+    else if (address.getType() == L3Address::IPv6 && !(other.address.getType() == L3Address::IPv6) )
         return false;
     if (address < other.address)
         return true;
@@ -78,7 +80,6 @@ bool LISPServerEntry::operator <(const LISPServerEntry& other) const {
         return true;
     return false;
 }
-
 
 bool LISPServerEntry::operator ==(const LISPServerEntry& other) const {
     return address == other.address &&
@@ -133,11 +134,11 @@ void LISPServerEntry::setQuickRegistration(bool quickRegistration) {
     this->quickRegistration = quickRegistration;
 }
 
-const IPvXAddress& LISPServerEntry::getAddress() const {
+const L3Address& LISPServerEntry::getAddress() const {
     return address;
 }
 
-void LISPServerEntry::setAddress(const IPvXAddress& address) {
+void LISPServerEntry::setAddress(const L3Address& address) {
     this->address = address;
 }
 
@@ -149,3 +150,4 @@ void LISPServerEntry::setLastTime(simtime_t lastTime) {
     this->lastTime = lastTime;
 }
 
+}

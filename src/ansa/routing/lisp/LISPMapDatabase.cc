@@ -18,10 +18,12 @@
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
  */
 
-#include "LISPMapDatabase.h"
+#include "ansa/routing/lisp/LISPMapDatabase.h"
 //Forward declaration
-#include "IPv4InterfaceData.h"
-#include "IPv6InterfaceData.h"
+#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/ipv6/IPv6InterfaceData.h"
+
+namespace inet {
 
 Define_Module(LISPMapDatabase);
 
@@ -30,7 +32,7 @@ void LISPMapDatabase::initialize(int stage)
     if (stage < numInitStages() - 1)
         return;
 
-    Ift = InterfaceTableAccess().get();
+    Ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
 
     //Parse settings
     advertonlyowneids = par(ADVERTONLYOWNEID_PAR).boolValue();
@@ -76,8 +78,9 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
                         (int6Data) ?
                                 int6Data->getPreferredAddress() :
                                 IPv6Address::UNSPECIFIED_ADDRESS;
-                if (it->getEidPrefix().getEidAddr().equals(LISPCommon::getNetworkAddress(adr4, it->getEidPrefix().getEidLength()))
-                    || it->getEidPrefix().getEidAddr().equals(LISPCommon::getNetworkAddress(adr6, it->getEidPrefix().getEidLength()))
+
+                if (   ( it->getEidPrefix().getEidAddr() == LISPCommon::getNetworkAddress(adr4, it->getEidPrefix().getEidLength()) )
+                    || ( it->getEidPrefix().getEidAddr() == LISPCommon::getNetworkAddress(adr6, it->getEidPrefix().getEidLength()) )
                    ) {
                     mstmp.push_back(*it);
                     break;
@@ -105,19 +108,22 @@ void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
             for (LocatorItem jt = it->getRlocs().begin();
                     jt != it->getRlocs().end(); ++jt) {
                 //IF locator is local THEN mark it...
-                if (jt->getRlocAddr().equals(adr4) || jt->getRlocAddr().equals(adr6))
+                if (  ( jt->getRlocAddr() == adr4 )
+                   || ( jt->getRlocAddr() == adr6 )
+                   ) {
                     jt->setLocal(true);
+                }
             }
         }
     }
 }
 
-bool LISPMapDatabase::isOneOfMyEids(IPvXAddress addr) {
+bool LISPMapDatabase::isOneOfMyEids(L3Address addr) {
     return (lookupMapEntry(addr) ? true : false);
 }
 
 void LISPMapDatabase::updateDisplayString() {
-    if (!ev.isGUI())
+    if (!getEnvir()->isGUI())
         return;
     std::ostringstream description;
     description << MappingStorage.size() << " EIDs";
@@ -125,3 +131,4 @@ void LISPMapDatabase::updateDisplayString() {
     this->getDisplayString().setTagArg("t", 1, "t");
 }
 
+}
