@@ -18,7 +18,6 @@
 #include "inet/common/lifecycle/NodeStatus.h"
 #include "inet/common/NotifierConsts.h"
 
-
 namespace inet {
 
 Define_Module(HSRPVirtualRouter);

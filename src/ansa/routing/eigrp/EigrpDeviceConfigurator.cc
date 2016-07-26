@@ -43,31 +43,6 @@ EigrpDeviceConfigurator::~EigrpDeviceConfigurator() {
     configFile = NULL;
 }
 
-cXMLElement * EigrpDeviceConfigurator::GetDevice(const char *deviceType, const char *deviceId, cXMLElement* configFile){
-
-   // get access to the XML file (if exists)
-   cXMLElement *config = configFile;
-   if (config == NULL)
-      return NULL;
-
-
-   string type = deviceType;
-   string id = deviceId;
-   if (type.empty() || id.empty())
-      return NULL;
-
-   // create string that describes device node, such as <Router id="10.0.0.1">
-   string deviceNodePath = type;
-   deviceNodePath += "[@id='";
-   deviceNodePath += id;
-   deviceNodePath += "']";
-
-   // get access to the device node
-   cXMLElement *device = config->getElementByPath(deviceNodePath.c_str());
-
-   return device;
-}
-
 cXMLElement * EigrpDeviceConfigurator::GetInterface(cXMLElement *iface, cXMLElement *device){
 
    // initial call of the method - find <Interfaces> and get first "Interface" node

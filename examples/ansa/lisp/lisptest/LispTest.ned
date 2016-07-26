@@ -15,15 +15,12 @@
 
 package inet.examples.ansa.lisp.lisptest;
 
-import inet.ansa.ANSASwitch;
-import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.ansa.nodes.lisp.ANSA_xTR;
-import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import ansa.node.ANSA_Host;
+import ansa.node.*;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.ethernet.Eth100M;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network LispTest
 {
@@ -55,16 +52,16 @@ network LispTest
         S2: EtherSwitch {
             @display("p=558,135");
         }
-        Hv4_1: ANSA_DualStackHost {
+        Hv4_1: ANSA_Host {
             @display("p=59,214");
         }
-        Hv6_1: ANSA_DualStackHost {
+        Hv6_1: ANSA_Host {
             @display("p=182,214");
         }
-        Hv4_3: ANSA_DualStackHost {
+        Hv4_3: ANSA_Host {
             @display("p=502,214");
         }
-        Hv6_3: ANSA_DualStackHost {
+        Hv6_3: ANSA_Host {
             @display("p=605,214");
         }
     connections:

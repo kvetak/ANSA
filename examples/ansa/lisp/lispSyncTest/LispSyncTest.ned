@@ -15,14 +15,12 @@
 
 package inet.examples.ansa.lisp.lispSyncTest;
 
-import inet.ansa.applications.rip.RIPRouter;
-import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.ansa.nodes.lisp.*;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.ethernet.Eth100M;
-import inet.world.scenario.ScenarioManager;
-
+import ansa.node.ANSA_Host;
+import ansa.node.*;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.ethernet.Eth100M;
 
 network LispSyncTest
 {
@@ -31,10 +29,10 @@ network LispSyncTest
         SW: EtherSwitch {
             @display("p=132,136");
         }
-        Host1: ANSA_DualStackHost {
+        Host1: ANSA_Host {
             @display("p=132,52");
         }
-        Host2: ANSA_DualStackHost {
+        Host2: ANSA_Host {
             @display("p=132,226");
         }
         xTR1: ANSA_xTR_HA {
@@ -46,7 +44,7 @@ network LispSyncTest
         MRMS: ANSA_MRMS {
             @display("p=360,43");
         }
-        Core: RIPRouter {
+        Core: ANSA_Router {
             @display("p=360,137");
         }
         xTR_Responder: ANSA_xTR_Responder {

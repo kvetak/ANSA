@@ -19,8 +19,8 @@ import ansa.node.ANSA_HSRPRouter;
 import ansa.node.ANSA_Host;
 import inet.common.lifecycle.LifecycleController;
 import inet.common.scenario.ScenarioManager;
-import inet.node.ethernet.EtherSwitch;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.EtherSwitch;
 import inet.node.ethernet.Eth100M;
 
 network basic

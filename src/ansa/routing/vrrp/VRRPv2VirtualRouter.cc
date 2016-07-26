@@ -18,13 +18,15 @@
 * @brief
 * @detail
 */
-#include "VRRPv2VirtualRouter.h"
+#include "ansa/routing/vrrp/VRRPv2VirtualRouter.h"
+#include "ansa/routing/vrrp/VRRPv2DeviceConfigurator.h"
 
+#include "inet/common/ModuleAccess.h"
+//#include "InterfaceTableAccess.h"
+#include "inet/common/serializer/TCPIPchecksum.h"
+#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 
-#include "InterfaceTableAccess.h"
-#include "deviceConfigurator.h"
-#include "TCPIPchecksum.h"
-#include "IPv4ControlInfo.h"
+namespace inet {
 
 Define_Module(VRRPv2VirtualRouter);
 
@@ -56,46 +58,47 @@ VRRPv2VirtualRouter::~VRRPv2VirtualRouter()
 
 void VRRPv2VirtualRouter::initialize(int stage)
 {
-    if (stage != 4)
-        return;
+    cSimpleModule::initialize(stage);
 
-    vrStateSignal = registerSignal("vrState");
-    sentARPSignal = registerSignal("sentARP");
-    sentAdverSignal = registerSignal("sentAdvert");
-    recvAdverSignal = registerSignal("recvAdvert");
+    if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
+        vrStateSignal = registerSignal("vrState");
+        sentARPSignal = registerSignal("sentARP");
+        sentAdverSignal = registerSignal("sentAdvert");
+        recvAdverSignal = registerSignal("recvAdvert");
 
-    WATCH(state);
-    WATCH_PTR(vf);
-    WATCH(advertisementInterval);
-    WATCH(advertisementIntervalActual);
-    WATCH(priority);
-    WATCH(preemtion);
+        WATCH(state);
+        WATCH_PTR(vf);
+        WATCH(advertisementInterval);
+        WATCH(advertisementIntervalActual);
+        WATCH(priority);
+        WATCH(preemtion);
 
-    ift = InterfaceTableAccess().get();
-    arp = AnsaArpAccess().get();
-    ie = dynamic_cast<AnsaInterfaceEntry *>(ift->getInterfaceById((int) par("interface")));
+        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+        arp = getModuleFromPar<ARP>(par("arp"), this);
+        ie = dynamic_cast<ANSA_InterfaceEntry*>(ift->getInterfaceById((int) par("interface")));
 
-    //set default configuration
-    loadDefaultConfig();
+        //set default configuration
+        loadDefaultConfig();
 
-    //load the Virtual Router process configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    devConf->loadVRRPv2VirtualRouterConfig(this);
-    EV << hostname << "(vrrp-configuration)# " << showConfig() << endl;
+        //load the Virtual Router process configuration
+        VRRPv2DeviceConfigurator* devConf = new VRRPv2DeviceConfigurator();
+        devConf->loadVRRPv2VirtualRouterConfig(this);
+        EV << hostname << "(vrrp-configuration)# " << showConfig() << endl;
 
-    //join multicast goup
-    ie->ipv4Data()->joinMulticastGroup(multicastIP);
+        //join multicast goup
+        ie->ipv4Data()->joinMulticastGroup(multicastIP);
 
-    //virtual mac
-    createVirtualMAC();
+        //virtual mac
+        createVirtualMAC();
 
-    vf = new VirtualForwarder();
-    vf->addIPAddress(IPprimary);
-    vf->setMACAddress(virtualMAC);
-    ie->addVirtualForwarder(vf);
+        vf = new VirtualForwarder();
+        vf->addIPAddress(IPprimary);
+        vf->setMACAddress(virtualMAC);
+        ie->addVirtualForwarder(vf);
 
-    setOwn();
-    stateInitialize();
+        setOwn();
+        stateInitialize();
+    }
 }
 
 /***
@@ -450,7 +453,8 @@ void VRRPv2VirtualRouter::handleAdvertisementMaster(VRRPv2Advertisement* msg)
 void VRRPv2VirtualRouter::sendAdvertisement() {
 
     IPv4ControlInfo* controlInfo = new IPv4ControlInfo();
-    controlInfo->setMacSrc(virtualMAC);
+    //TODO: Vesely - Is it correct to comment?
+    //controlInfo->setMacSrc(virtualMAC);
     controlInfo->setSrcAddr(ie->ipv4Data()->getIPAddress());
     controlInfo->setDestAddr(multicastIP);
     controlInfo->setProtocol(protocol);
@@ -566,7 +570,7 @@ uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, in
     for (int i = 0; i < (int) address.size(); i++)
         data.push_back(address.at(i).getInt());
 
-    return TCPIPchecksum::checksum(data.data(), data.size() * 4);
+    return serializer::TCPIPchecksum::checksum(data.data(), data.size() * 4);
 }
 /***
  *   PRINT
@@ -654,4 +658,6 @@ void VRRPv2VirtualRouter::scheduleInitCheck() {
     if (initCheckTimer == NULL)
         initCheckTimer = new cMessage("InitCheck", INITCHECK);
     scheduleAt(simTime() + (double)advertisementInterval/4, initCheckTimer);
+}
+
 }

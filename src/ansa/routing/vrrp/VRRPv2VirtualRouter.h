@@ -23,14 +23,17 @@
 
 #include <omnetpp.h>
 
-#include "AnsaARP.h"
-#include "NotificationBoard.h"
-#include "IInterfaceTable.h"
-#include "AnsaInterfaceEntry.h"
-#include "IPv4Address.h"
-#include "MACAddress.h"
-#include "VRRPv2Advertisement_m.h"
+#include "inet/networklayer/arp/ipv4/ARP.h"
+//#include "NotificationBoard.h"
+#include "inet/networklayer/contract/IInterfaceTable.h"
+#include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
+#include "inet/networklayer/contract/ipv4/IPv4Address.h"
+#include "inet/linklayer/common/MACAddress.h"
+#include "ansa/routing/vrrp/VRRPv2Advertisement_m.h"
+#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 
+
+namespace inet {
 
 class VRRPv2VirtualRouter : public cSimpleModule
 {
@@ -79,10 +82,10 @@ class VRRPv2VirtualRouter : public cSimpleModule
         VRRPState   state;
 
         const char*         hostname;
-        IInterfaceTable     *ift;
-        AnsaInterfaceEntry  *ie;
-        AnsaARP             *arp;
-        VirtualForwarder    *vf;
+        IInterfaceTable     *ift = nullptr;
+        ANSA_InterfaceEntry *ie = nullptr;
+        ARP                 *arp = nullptr;
+        VirtualForwarder    *vf = nullptr;
 
         IPv4Address multicastIP;
         MACAddress  virtualMAC;
@@ -137,7 +140,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
 
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
         //@{
-        virtual AnsaInterfaceEntry* getInterface() { return ie; };
+        virtual ANSA_InterfaceEntry* getInterface() { return ie; };
         IPv4Address getPrimaryIP() { return IPprimary; };
         MACAddress getVirtualMAC() { return virtualMAC; }
         int getVrid() const { return vrid; };
@@ -152,8 +155,8 @@ class VRRPv2VirtualRouter : public cSimpleModule
 
         /** @name Field debug messages  */
         //@{
-        virtual std::string info() const;
-        virtual std::string detailedInfo() const;
+        virtual std::string info() const override;
+        virtual std::string detailedInfo() const override;
         virtual std::string showBrief() const;
         virtual std::string showConfig() const;
         //@}
@@ -250,7 +253,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
          * Processing of received messages.
          * @param msg
          */
-        virtual void handleMessage(cMessage *msg);
+        virtual void handleMessage(cMessage *msg) override;
 
         /**
          * Check the values ​​received ADVERTISEMENT. If everything is okay returns true.
@@ -271,8 +274,8 @@ class VRRPv2VirtualRouter : public cSimpleModule
          */
         virtual void handleAdvertisementMaster(VRRPv2Advertisement* msg);
 
-        virtual int numInitStages() const { return 5; };
-        virtual void initialize(int stage);
+        virtual int numInitStages() const override {return NUM_INIT_STAGES;}
+        virtual void initialize(int stage) override;
 
         /**
          * The default configuration.
@@ -293,4 +296,5 @@ class VRRPv2VirtualRouter : public cSimpleModule
         //@}
 };
 
+}
 #endif /* VRRPV2VIRTUALROUTER_H_ */

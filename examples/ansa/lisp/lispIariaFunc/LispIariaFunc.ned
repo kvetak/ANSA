@@ -15,16 +15,12 @@
 
 package inet.examples.ansa.lisp.lispIariaFunc;
 
-import inet.ansa.ANSASwitch;
-import inet.ansa.applications.rip.RIPRouter;
-import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.ansa.nodes.lisp.*;
-import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import ansa.node.ANSA_Host;
+import ansa.node.*;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.Eth100M;
 
 
 network LispIariaFunc
@@ -61,13 +57,13 @@ network LispIariaFunc
         S2: EtherSwitch {
             @display("p=394,341");
         }
-        HostA: ANSA_DualStackHost {
+        HostA: ANSA_Host {
             @display("p=218,407");
         }
-        HostB: ANSA_DualStackHost {
+        HostB: ANSA_Host {
             @display("p=394,407");
         }
-        Core: RIPRouter {
+        Core: ANSA_Router {
             @display("p=306,145");
         }
         xTR_A2: ANSA_xTR {

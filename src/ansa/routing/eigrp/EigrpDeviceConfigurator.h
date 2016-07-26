@@ -77,10 +77,8 @@ class INET_API EigrpDeviceConfigurator
       static bool Str2Int(int *retValue, const char *str);
       static bool Str2Bool(bool *ret, const char *str);
 
-      static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, cXMLElement* configFile);
+      //static cXMLElement * GetDevice(const char *deviceType, const char *deviceId, cXMLElement* configFile);
       static cXMLElement * GetInterface(cXMLElement *iface, cXMLElement *device);
-      static cXMLElement * GetStaticRoute(cXMLElement *route, cXMLElement *device);
-      static cXMLElement * GetStaticRoute6(cXMLElement *route, cXMLElement *device);
 
       //static cXMLElement *GetAdvPrefix(cXMLElement *prefix, cXMLElement *iface);
       static cXMLElement *GetIPv6Address(cXMLElement *addr, cXMLElement *iface);

@@ -15,16 +15,13 @@
 
 package inet.examples.ansa.lisp.lispHA;
 
-import inet.ansa.ANSASwitch;
-import inet.ansa.applications.rip.RIPRouter;
-import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.ansa.nodes.lisp.*;
-import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.ansa.nodes.ipv6.ANSAStandardHost6;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.nodes.ethernet.Eth100M;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+
+import ansa.node.ANSA_Host;
+import ansa.node.*;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.Eth100M;
 
 network LispHA
 {
@@ -60,19 +57,19 @@ network LispHA
         S2: EtherSwitch {
             @display("p=546,140");
         }
-        Hv4_A: ANSA_DualStackHost {
+        Hv4_A: ANSA_Host {
             @display("p=27,277");
         }
-        Hv6_A: ANSA_DualStackHost {
+        Hv6_A: ANSA_Host {
             @display("p=150,277");
         }
-        Hv4_B: ANSA_DualStackHost {
+        Hv4_B: ANSA_Host {
             @display("p=490,267");
         }
-        Hv6_B: ANSA_DualStackHost {
+        Hv6_B: ANSA_Host {
             @display("p=589,267");
         }
-        Core: RIPRouter {
+        Core: ANSA_Router {
             @display("p=306,145");
         }
         xTR_A2: ANSA_xTR {

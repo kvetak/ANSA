@@ -19,11 +19,12 @@
 * @detail
 */
 
-#include "VRRPv2.h"
+#include "ansa/routing/vrrp/VRRPv2.h"
+#include "ansa/routing/vrrp/VRRPv2DeviceConfigurator.h"
+#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 
-#include "VirtualForwarder.h"
-#include "deviceConfigurator.h"
-#include "VRRPv2VirtualRouter.h"
+
+namespace inet {
 
 Define_Module(VRRPv2);
 
@@ -39,7 +40,9 @@ VRRPv2::VRRPv2()
 
 void VRRPv2::initialize(int stage)
 {
-    if (stage == 0)
+    cSimpleModule::initialize(stage);
+
+    if (stage == INITSTAGE_PHYSICAL_ENVIRONMENT)
     {
         // get the hostname
         cModule *containingMod = findContainingNode(this);
@@ -49,18 +52,14 @@ void VRRPv2::initialize(int stage)
             hostname = "";
     }
 
-    if (stage != 3)
-        return;
+    if (stage == INITSTAGE_NETWORK_LAYER_3) {
+        WATCH_PTRVECTOR(virtualRouterTable);
+        updateDisplayString();
 
-    WATCH_PTRVECTOR(virtualRouterTable);
-    updateDisplayString();
-
-    // read the VRRP groups configuration
-    DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    devConf->loadVRRPv2Config(this);
-
-
-
+        // read the VRRP groups configuration
+        VRRPv2DeviceConfigurator *devConf = new VRRPv2DeviceConfigurator();
+        devConf->loadVRRPv2Config(this);
+    }
 }
 
 void VRRPv2::addVirtualRouter(int interface, int vrid, const char* ifnam)
@@ -75,7 +74,7 @@ void VRRPv2::addVirtualRouter(int interface, int vrid, const char* ifnam)
     std::string name = tmp.str();
 
     // create
-    cModuleType *moduleType = cModuleType::get("inet.ansa.networklayer.vrrpv2.VRRPv2VirtualRouter");
+    cModuleType *moduleType = cModuleType::get("ansa.routing.vrrp.VRRPv2VirtualRouter");
     cModule *module = moduleType->create(name.c_str(), this);
 
     // set up parameters
@@ -98,7 +97,6 @@ void VRRPv2::addVirtualRouter(int interface, int vrid, const char* ifnam)
 
     updateDisplayString();
 }
-
 
 void VRRPv2::handleMessage(cMessage *msg)
 {
@@ -135,7 +133,7 @@ void VRRPv2::handleMessage(cMessage *msg)
 
 void VRRPv2::updateDisplayString()
 {
-    if (!ev.isGUI())
+    if (!getEnvir()->isGUI())
         return;
 
     char buf[80];
@@ -145,4 +143,6 @@ void VRRPv2::updateDisplayString()
         sprintf(buf, "%d groups", virtualRouterTable.size());
 
     getDisplayString().setTagArg("t", 0, buf);
+}
+
 }

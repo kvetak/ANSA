@@ -15,19 +15,18 @@
 
 package inet.examples.ansa.lisp.lispProbeTest;
 
-import inet.ansa.applications.rip.RIPRouter;
-import inet.ansa.nodes.ANSA_DualStackHost;
-import inet.ansa.nodes.lisp.*;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.ethernet.Eth100M;
-import inet.world.scenario.ScenarioManager;
+import ansa.node.ANSA_Host;
+import ansa.node.*;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.ethernet.Eth100M;
 
 network LispProbeTest
 {
     @display("bgb=536,279,white");
     submodules:
-        Host1: ANSA_DualStackHost {
+        Host1: ANSA_Host {
             @display("p=74,168");
         }
         xTR1: ANSA_xTR {
@@ -36,7 +35,7 @@ network LispProbeTest
         MRMS: ANSA_MRMS {
             @display("p=326,43");
         }
-        Core: RIPRouter {
+        Core: ANSA_Router {
             @display("p=326,168");
         }
         xTR_Responder1: ANSA_xTR_Responder {

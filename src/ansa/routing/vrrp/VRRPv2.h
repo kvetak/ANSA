@@ -22,7 +22,9 @@
 #define __ANSA_VRRPV2_H_
 
 #include <omnetpp.h>
-#include "VRRPv2VirtualRouter.h"
+#include "ansa/routing/vrrp/VRRPv2VirtualRouter.h"
+
+namespace inet {
 
 /**
  * The VRRPv2 class represents a communication gateway with VRRPv2modules modules.
@@ -36,9 +38,9 @@ class VRRPv2 : public cSimpleModule
         std::vector<VRRPv2VirtualRouter *> virtualRouterTable;
 
     protected:
-        virtual int numInitStages() const { return 4; };
-        virtual void initialize(int stage);
-        virtual void handleMessage(cMessage *msg);
+        virtual int numInitStages() const override { return 4; };
+        virtual void initialize( int stage) override;
+        virtual void handleMessage(cMessage *msg) override;
         virtual void updateDisplayString();
 
         std::string getHostname() { return hostname; };
@@ -54,5 +56,5 @@ class VRRPv2 : public cSimpleModule
         virtual void addVirtualRouter(int interface, int vrid, const char* ifnam);
 
 };
-
+}
 #endif

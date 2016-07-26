@@ -13,11 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.ansa.networklayer.vrrpv2;
+package ansa.routing.vrrp;
 
-//
-// TODO auto-generated module
-//
 simple VRRPv2
 {
     parameters:
