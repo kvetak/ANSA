@@ -19,7 +19,7 @@ import inet.applications.contract.IUDPApp;
 
 simple HSRPVirtualRouter like IUDPApp
 {
-        parameters:
+    parameters:
      	@display("i=block/network2");
      	
      	xml configData = default(xml("<HSRP />"));	///config data given in omnetpp.ini
@@ -35,7 +35,7 @@ simple HSRPVirtualRouter like IUDPApp
     	int group				= default(0);	    	//group number of actual device 	
       	string virtualIP		= default("0.0.0.0");	//virtual IP address of actual HSRP device        	
       	
-  	    gates:
+	gates:
         input udpIn; 	///to HSRP module
         output udpOut;	///from HSRP module
 }

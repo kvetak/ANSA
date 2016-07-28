@@ -15,28 +15,28 @@
 
 package inet.examples.ansa.vrrpv2.StaticRoutingLoadSharing;
 
-import inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter;
-import inet.nodes.ethernet.Eth100M;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import ansa.node.ANSA_Host;
+import ansa.node.ANSA_VRRP_Router;
+import inet.node.ethernet.Eth100M;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network Network
 {
     @display("bgb=300,415;bgl=2");
     submodules:
-        ISP: VRRPv2SimpleRouter {
+        ISP: ANSA_VRRP_Router {
             @display("p=150,50");
             gates:
                 ethg[2];
         }
-        GW1: VRRPv2SimpleRouter {
+        GW1: ANSA_VRRP_Router {
             @display("p=50,150");
             gates:
                 ethg[2];
         }
-        GW2: VRRPv2SimpleRouter {
+        GW2: ANSA_VRRP_Router {
             @display("p=250,150");
             gates:
                 ethg[2];
@@ -46,12 +46,12 @@ network Network
             gates:
                 ethg[4];
         }
-        Host1: ANSAStandardHost {
+        Host1: ANSA_Host {
             @display("p=50,350");
             gates:
                 ethg[1];
         }
-        Host2: ANSAStandardHost {
+        Host2: ANSA_Host {
             @display("p=250,350");
             gates:
                 ethg[1];

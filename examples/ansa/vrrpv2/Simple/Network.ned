@@ -15,24 +15,24 @@
 
 package inet.examples.ansa.vrrpv2.Simple;
 
-import inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.nodes.ethernet.Eth100M;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.ansa.nodes.inet.ANSAStandardHost;
+import ansa.node.ANSA_Host;
+import ansa.node.ANSA_VRRP_Router;
+import inet.node.ethernet.Eth100M;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network Network
 {
     @display("bgb=300,326;bgl=2");
     submodules:
-        GW1: VRRPv2SimpleRouter {
+        GW1: ANSA_VRRP_Router {
             //@display("p=75,75");
             @display("p=50,50");
             gates:
                 ethg[1];
         }
-        GW2: VRRPv2SimpleRouter {
+        GW2: ANSA_VRRP_Router {
             //@display("p=325,75");
             @display("p=250,50");
             gates:
@@ -44,7 +44,7 @@ network Network
             gates:
                 ethg[3];
         }
-        Host: ANSAStandardHost {
+        Host: ANSA_Host {
             //@display("p=200,350");
             @display("p=150,250");
             gates:

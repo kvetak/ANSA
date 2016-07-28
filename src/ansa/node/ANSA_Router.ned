@@ -15,7 +15,6 @@
 
 package ansa.node;
 
-import ansa.routing.babel.BabelRouting;
 import ansa.routing.eigrp.EigrpProcessDS;
 import ansa.routing.lisp.LISPRouting;
 import inet.applications.contract.IUDPApp;
@@ -30,7 +29,7 @@ import ansa.node.ANSA_NodeBase;
 module ANSA_Router extends ANSA_NodeBase
 {
     parameters:
-        @display("i=abstract/router");
+        @display("i=abstract/router;bgb=868,562");
         bool hasOSPF = default(false);
         bool hasRIP = default(false);
         bool hasBGP = default(false);
@@ -40,6 +39,7 @@ module ANSA_Router extends ANSA_NodeBase
         bool hasLISP = default(false);
         bool hasHSRP = default(false);
         bool hasGLBP = default(false);
+        bool hasVRRP = default(false);
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
 
@@ -54,7 +54,7 @@ module ANSA_Router extends ANSA_NodeBase
     submodules:
         ospf: <"OSPFRouting"> like IIPRouting if hasOSPF {
             parameters:
-                @display("p=573,300,row");
+                @display("p=611,269,row");
         }
         bgp: <"BGPRouting"> like IBGPRouting if hasBGP {
             parameters:
@@ -85,21 +85,29 @@ module ANSA_Router extends ANSA_NodeBase
                 @display("p=698,80");
         }
 
+        vrrp: <"VRRPv2"> like IIPRouting if hasVRRP {
+            parameters:
+                @display("p=225,269");
+        }
+
         udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP) {
-            @display("p=534,180");
+            parameters:
+            	@display("p=534,180");
         }
 
         pim: <"PIMRouting"> like IPIMRouting if hasPIM {
-            @display("p=277,281");
+            parameters:
+                @display("p=307,269");
         }
 
         eigrp: EigrpProcessDS if hasEIGRP {
-            @display("p=573,242");
+            parameters:
+	            @display("p=534,269");
         }
 
         lisp: LISPRouting if hasLISP {
-
-            @display("p=427,80");
+            parameters:
+	            @display("p=427,80");
         }
 
     connections allowunconnected:
@@ -158,6 +166,11 @@ module ANSA_Router extends ANSA_NodeBase
             eigrp.splitterIn <-- networkLayer.transportOut++ if enableIPv4;
             eigrp.splitter6Out --> networkLayer.transportIn++ if enableIPv6;
             eigrp.splitter6In <-- networkLayer.transportOut++ if enableIPv6;
+        }
+        
+        if hasVRRP {
+			vrrp.ipOut --> networkLayer.transportIn++ if enableIPv4;
+            vrrp.ipIn <-- networkLayer.transportOut++ if enableIPv4;
         }
 
         if hasLISP {

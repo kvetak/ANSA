@@ -13,20 +13,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ansa.routing.vrrp;
+package ansa.node;
 
-import inet.routing.contract.IIPRouting;
+import ansa.node.ANSA_Router;
 
-simple VRRPv2 like IIPRouting
+module ANSA_VRRP_Router extends ANSA_Router
 {
     parameters:
-        @display("i=block/network2");
-        xml configData = default(xml("<VRRP />"));              
-        string interfaceTableModule = default(".interfaceTableModule");        
-           
-    gates:
-        input vrIn[] @labels(IPv4Datagram);
-        output vrOut[] @labels(IPv4Datagram);       
-        input ipIn @labels(IPv4ControlInfo/up);
-        output ipOut @labels(IPv4ControlInfo/down);
+    	hasVRRP = true;
+        enableIPv6 = false;
+        enableCLNS = false;   
+        vrrp.configData = configData;  
 }

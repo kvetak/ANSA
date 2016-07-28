@@ -15,30 +15,30 @@
 
 package inet.examples.ansa.vrrpv2.Advanced;
 
-import inet.examples.ansa.vrrpv2.router.VRRPv2SimpleRouter;
-import inet.nodes.ethernet.Eth100M;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.world.scenario.ScenarioManager;
-import inet.ansa.nodes.inet.ANSAStandardHost;
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
+import ansa.node.ANSA_Host;
+import ansa.node.ANSA_VRRP_Router;
+import inet.node.ethernet.Eth100M;
+import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 
 network Network
 {
     @display("bgb=500,326;bgl=2");
     submodules:
-        GW1: VRRPv2SimpleRouter {
+        GW1: ANSA_VRRP_Router {
             //@display("p=75,75");
             @display("p=50,50");
             gates:
                 ethg[1];
         }
-        GW2: VRRPv2SimpleRouter {
+        GW2: ANSA_VRRP_Router {
             //@display("p=325,75");
             @display("p=250,50");
             gates:
                 ethg[2];
         }
-        GW3: VRRPv2SimpleRouter {
+        GW3: ANSA_VRRP_Router {
             //@display("p=325,75");
             @display("p=450,50");
             gates:
@@ -56,39 +56,39 @@ network Network
             gates:
                 ethg[3];
         }
-        Host1: ANSAStandardHost {
+        Host1: ANSA_Host {
             //@display("p=200,350");
             @display("p=150,250");
             gates:
                 ethg[1];
         }
-        Host2: ANSAStandardHost {
+        Host2: ANSA_Host {
             //@display("p=200,350");
             @display("p=350,250");
             gates:
                 ethg[1];
-        }        
+        }
         Manager: ScenarioManager {
             //@display("p=75,350");
             @display("p=50,250");
         }
         configurator: IPv4NetworkConfigurator {
             parameters:
-				config = xml("<config></config>");
+                config = xml("<config></config>");
                 assignAddresses = false;
                 assignDisjunctSubnetAddresses = false;
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
                 addSubnetRoutes = false;
-                optimizeRoutes = false;            
-            	@display("p=50,50");
-        }        
+                optimizeRoutes = false;
+                @display("p=50,195");
+        }
     connections:
-        GW1.ethg[0]   <--> Eth100M <--> SW1.ethg[0];
-        GW2.ethg[0]   <--> Eth100M <--> SW1.ethg[1];
+        GW1.ethg[0] <--> Eth100M <--> SW1.ethg[0];
+        GW2.ethg[0] <--> Eth100M <--> SW1.ethg[1];
         Host1.ethg[0] <--> Eth100M <--> SW1.ethg[2];
-        
-        GW2.ethg[1]   <--> Eth100M <--> SW2.ethg[0];
-        GW3.ethg[0]   <--> Eth100M <--> SW2.ethg[1];
-        Host2.ethg[0] <--> Eth100M <--> SW2.ethg[2];        
+
+        GW2.ethg[1] <--> Eth100M <--> SW2.ethg[0];
+        GW3.ethg[0] <--> Eth100M <--> SW2.ethg[1];
+        Host2.ethg[0] <--> Eth100M <--> SW2.ethg[2];
 }

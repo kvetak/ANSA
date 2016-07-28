@@ -22,7 +22,7 @@
 #include "ansa/routing/vrrp/VRRPv2.h"
 #include "ansa/routing/vrrp/VRRPv2DeviceConfigurator.h"
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
-
+#include "inet/common/ModuleAccess.h"
 
 namespace inet {
 
@@ -53,20 +53,19 @@ void VRRPv2::initialize(int stage)
     }
 
     if (stage == INITSTAGE_NETWORK_LAYER_3) {
+        // read the VRRP groups configuration
+        VRRPv2DeviceConfigurator *devConf = new VRRPv2DeviceConfigurator(par(CONFIG_PAR), getModuleFromPar<IInterfaceTable>(par(IFT_PAR), this) );
+        devConf->loadVRRPv2Config(this);
         WATCH_PTRVECTOR(virtualRouterTable);
         updateDisplayString();
-
-        // read the VRRP groups configuration
-        VRRPv2DeviceConfigurator *devConf = new VRRPv2DeviceConfigurator();
-        devConf->loadVRRPv2Config(this);
     }
 }
 
 void VRRPv2::addVirtualRouter(int interface, int vrid, const char* ifnam)
 {
     int gateSize = virtualRouterTable.size() + 1;
-    this->setGateSize("vrIn",gateSize);
-    this->setGateSize("vrOut", gateSize);
+    this->setGateSize(VRIN_GATE,gateSize);
+    this->setGateSize(VROUT_GATE, gateSize);
 
     // name
     std::stringstream tmp;
@@ -74,20 +73,21 @@ void VRRPv2::addVirtualRouter(int interface, int vrid, const char* ifnam)
     std::string name = tmp.str();
 
     // create
-    cModuleType *moduleType = cModuleType::get("ansa.routing.vrrp.VRRPv2VirtualRouter");
+    cModuleType *moduleType = cModuleType::get(VR_MOD);
     cModule *module = moduleType->create(name.c_str(), this);
 
     // set up parameters
-    module->par("hostname") = this->getHostname();
-    module->par("deviceId") = par("deviceId");
-    module->par("configFile") = par("configFile");
-    module->par("vrid") = vrid;
-    module->par("interface") = interface;
+    module->par(HOSTNAME_PAR) = this->getHostname();
+    module->par(CONFIG_PAR) = par(CONFIG_PAR);
+    module->par(IFT_PAR) = par(IFT_PAR);
+    module->par(VRID_PAR) = vrid;
+    module->par(INTERFACE_PAR) = interface;
+    module->par("arp") = getContainingNode(this)->getSubmodule("networkLayer")->getSubmodule("ipv4")->getSubmodule("arp")->getFullPath();
     module->finalizeParameters();
 
     // set up gate
-    this->gate("vrOut", virtualRouterTable.size())->connectTo(module->gate("ipIn"));
-    module->gate("ipOut")->connectTo(this->gate("vrIn", virtualRouterTable.size()));
+    this->gate(VROUT_GATE, virtualRouterTable.size())->connectTo(module->gate(IPIN_GATE));
+    module->gate(IPOUT_GATE)->connectTo(this->gate(VRIN_GATE, virtualRouterTable.size()));
     module->buildInside();
 
     // load

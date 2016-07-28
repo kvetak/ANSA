@@ -35,44 +35,44 @@ import ansa.linklayer.ethernet.ANSA_EthernetInterface;
 module ANSA_NodeBase
 {
     parameters:
-        @display("i=abstract/server");
+        @display("i=abstract/server;bgb=868,545");
         @networkNode;
         @labels(node,ethernet-node,wireless-node);
         bool hasStatus = default(false);
-        
+
         bool enableIPv4 = default(true);
         bool enableIPv6 = default(true);
         bool enableCLNS = default(true);
-        
+
         *.enableIPv4 = enableIPv4;
         *.enableIPv6 = enableIPv6;
-        *.enableCLNS = enableCLNS; 
-        
+        *.enableCLNS = enableCLNS;
+
         int numExtInterfaces = default(0);
         int numRadios = default(0);        // the number of radios in the router. by default no wireless
         int numPcapRecorders = default(0); // no of PcapRecorders.
         int numTunInterfaces = default(0);
         int numLoopbacks = default(1);
         string mobilityType = default(numRadios > 0 ? "StationaryMobility" : "");
-        
+
         string networkLayerType = default("ANSA_MultiNetworkLayer");
         string routingTableType = default("ANSA_MultiRoutingTable");
-        string ethernetType = default(firstAvailableOrEmpty("EthernetInterface","AnsaEthernetInterface")); 
-        
+        string ethernetType = default(firstAvailableOrEmpty("EthernetInterface","AnsaEthernetInterface"));
+
         bool forwarding = default(true);
         bool multicastForwarding = default(false);
         string energyStorageType = default("");
         string energyGeneratorType = default("");
-        
-        routingTable.forwarding = forwarding;        
+
+        routingTable.forwarding = forwarding;
         routingTable.multicastForwarding = multicastForwarding;   // for IPv4, IPv6, Generic
-        
+
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
         *.energySourceModule = default(energyStorageType != "" ? absPath(".energyStorage") : "");
         *.mobilityModule = default(mobilityType != "" ? absPath(".mobility") : "");
-        
-        xml configData = default(xmldoc("config.xml"));        
+
+        xml configData = default(xmldoc("config.xml"));
         networkLayer.configurator.configData = configData;
     gates:
         input radioIn[numRadios] @directIn;
@@ -99,7 +99,7 @@ module ANSA_NodeBase
         // network layer
         networkLayer: ANSA_MultiNetworkLayer {
             parameters:
-                @display("p=427,281;q=queue");
+                @display("p=424,358;q=queue");
         }
         // routing table
         routingTable: <routingTableType> like IRoutingTable if routingTableType != "" {
@@ -115,27 +115,27 @@ module ANSA_NodeBase
             @display("p=53,350,r,10");
         }
         lo[numLoopbacks]: LoopbackInterface {
-            @display("p=195,419");
+            @display("p=192,496");
         }
         wlan[numRadios]: <default("Ieee80211Nic")> like IWirelessNic {
             parameters:
-                @display("p=316,419,row,60;q=queue");
+                @display("p=313,496,row,60;q=queue");
         }
         eth[sizeof(ethg)]: <ethernetType> like IWiredNic {
             parameters:
-                @display("p=427,419,row,60;q=txQueue");
+                @display("p=424,496,row,60;q=txQueue");
         }
         ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
             parameters:
-                @display("p=534,419,row,60;q=txQueue");
+                @display("p=531,496,row,60;q=txQueue");
         }
         ext[numExtInterfaces]: <default("ExtInterface")> like IExternalNic {
             parameters:
-                @display("p=669,419,row,10;q=txQueue;i=block/ifcard");
+                @display("p=666,496,row,10;q=txQueue;i=block/ifcard");
         }
         tun[numTunInterfaces]: <default("TunInterface")> like ITunNic {
             parameters:
-                @display("p=805,419,row,10;q=txQueue;i=block/ifcard");
+                @display("p=802,496,row,10;q=txQueue;i=block/ifcard");
         }
 
     connections allowunconnected:

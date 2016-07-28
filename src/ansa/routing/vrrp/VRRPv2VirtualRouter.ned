@@ -20,17 +20,23 @@ simple VRRPv2VirtualRouter
     parameters:
         @display("i=block/network2");
         @signal[vrState](type=long);  // enum
+        @signal[sentARP](type=long);  // enum
+        @signal[sentAdvert](type=long);  // enum
+        @signal[recvAdvert](type=long);  // enum
         @statistic[vrState](title="State ID";source=state;record=count,vector);
         @statistic[sentARP](title="ARP Gratuitous";source=sentARP;record=count,vector);
         @statistic[sentAdvert](title="Advertisement sent";source=sentAdvert;record=count,vector);
         @statistic[recvAdvert](title="Received Advertisement";source=recvAdvert;record=count,vector);
+
+        xml configData = default(xml("<VRRP />"));              
+        string interfaceTableModule = default(".interfaceTableModule"); 
+               
+		string arp;				///arp module of this router
         string hostname; 
-        string deviceId;           
-    	string configFile;
 		int vrid;
 		int interface;
 
-		int arp					= default(2);			// 1 = ARP Request (RFC) 2 = ARP Response (Cisco)
+		int arpType				= default(2);			// 1 = ARP Request (RFC) 2 = ARP Response (Cisco)
 		string multicastIPv4	= default("224.0.0.18");
 		string virtualMAC		= default("00-00-5E-00-01-00"); // + {VRID}
 		int version 			= default(2);			// current version

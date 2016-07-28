@@ -38,6 +38,32 @@ namespace inet {
 class VRRPv2VirtualRouter : public cSimpleModule
 {
     protected:
+        const   char*   VRSTATE_SIG      = "vrState";
+        const   char*   SENTARP_SIG      = "sentARP";
+        const   char*   SENTADV_SIG      = "sentAdvert";
+        const   char*   RECVADV_SIG      = "recvAdvert";
+
+        const   char*   CONFIG_PAR      = "configData";
+        const   char*   ARP_PAR         = "arp";
+        const   char*   IFT_PAR         = "interfaceTableModule";
+        const   char*   INTERFACE_PAR   = "interface";
+        const   char*   PRIOOWN_PAR     = "priorityOwner";
+        const   char*   HOSTNAME_PAR    = "hostname";
+        const   char*   VRID_PAR        = "vrid";
+
+        const   char*   PREEMPTDLY_MSG   = "PreemtionDelay";
+        const   char*   BCASTDLY_MSG     = "BroadcastDelay";
+        const   char*   ADVTIMER_MSG     = "AdverTimer";
+        const   char*   MASTTIMER_MSG    = "MasterDownTimer";
+        const   char*   VRRPADV_MSG      = "VRRPv2Advertisement";
+        const   char*   INITCHCK_MSG     = "InitCheck";
+
+        const   char*   VRIN_GATE       = "vrIn";
+        const   char*   VROUT_GATE      = "vrOut";
+        const   char*   IPIN_GATE       = "ipIn";
+        const   char*   IPOUT_GATE      = "ipOut";
+
+
         /**
          * statistic signal
          */

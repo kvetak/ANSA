@@ -187,7 +187,7 @@ void VRRPv2DeviceConfigurator::loadVRRPv2VirtualRouterConfig(VRRPv2VirtualRouter
 
     cXMLElement *group = GetVRRPGroup(device, VRRPModule->getInterface()->getFullName(), groupId.str().c_str());
     if (group == NULL) {
-        EV << "No configuration found for group " << groupId.str() << endl;
+        EV << "No configuration found for VRRP group " << groupId.str() << endl;
         return;
     }
 

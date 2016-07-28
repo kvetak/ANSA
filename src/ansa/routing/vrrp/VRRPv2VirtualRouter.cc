@@ -61,10 +61,10 @@ void VRRPv2VirtualRouter::initialize(int stage)
     cSimpleModule::initialize(stage);
 
     if (stage == INITSTAGE_ROUTING_PROTOCOLS) {
-        vrStateSignal = registerSignal("vrState");
-        sentARPSignal = registerSignal("sentARP");
-        sentAdverSignal = registerSignal("sentAdvert");
-        recvAdverSignal = registerSignal("recvAdvert");
+        vrStateSignal = registerSignal(VRSTATE_SIG);
+        sentARPSignal = registerSignal(SENTARP_SIG);
+        sentAdverSignal = registerSignal(SENTADV_SIG);
+        recvAdverSignal = registerSignal(RECVADV_SIG);
 
         WATCH(state);
         WATCH_PTR(vf);
@@ -73,15 +73,15 @@ void VRRPv2VirtualRouter::initialize(int stage)
         WATCH(priority);
         WATCH(preemtion);
 
-        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
-        arp = getModuleFromPar<ARP>(par("arp"), this);
-        ie = dynamic_cast<ANSA_InterfaceEntry*>(ift->getInterfaceById((int) par("interface")));
+        ift = getModuleFromPar<IInterfaceTable>(par(IFT_PAR), this);
+        arp = getModuleFromPar<ARP>(par(ARP_PAR), this);
+        ie = dynamic_cast<ANSA_InterfaceEntry*>(ift->getInterfaceById((int) par(INTERFACE_PAR)));
 
         //set default configuration
         loadDefaultConfig();
 
         //load the Virtual Router process configuration
-        VRRPv2DeviceConfigurator* devConf = new VRRPv2DeviceConfigurator();
+        VRRPv2DeviceConfigurator* devConf = new VRRPv2DeviceConfigurator(par(CONFIG_PAR).xmlValue(),ift);
         devConf->loadVRRPv2VirtualRouterConfig(this);
         EV << hostname << "(vrrp-configuration)# " << showConfig() << endl;
 
@@ -114,7 +114,7 @@ void VRRPv2VirtualRouter::stateInitialize()
 
     emit(vrStateSignal, INITIALIZE);
 
-    if (priority == ((int) par("priorityOwner")))
+    if (priority == ((int) par(PRIOOWN_PAR)))
     {
         sendAdvertisement();
         scheduleBroadcastTimer();
@@ -238,7 +238,7 @@ void VRRPv2VirtualRouter::schedulePreemDelayTimer()
 {
     if (preemtionTimer == NULL)
     {
-        preemtionTimer = new cMessage("PreemtionDelay", PREEMTION);
+        preemtionTimer = new cMessage(PREEMPTDLY_MSG, PREEMTION);
         scheduleAt(simTime() + preemTimerInit, preemtionTimer);
     }
 }
@@ -246,21 +246,21 @@ void VRRPv2VirtualRouter::schedulePreemDelayTimer()
 void VRRPv2VirtualRouter::scheduleBroadcastTimer()
 {
     cancelBroadcastTimer();
-    broadcastTimer = new cMessage("BroadcastDelay", BROADCAST);
+    broadcastTimer = new cMessage(BCASTDLY_MSG, BROADCAST);
     scheduleAt(simTime() + 0.0000001, broadcastTimer);
 }
 
 void VRRPv2VirtualRouter::scheduleAdverTimer()
 {
     cancelAdverTimer();
-    adverTimer = new cMessage("AdverTimer", ADVERTISE);
+    adverTimer = new cMessage(ADVTIMER_MSG, ADVERTISE);
     scheduleAt(simTime() + adverTimerInit, adverTimer);
 }
 
 void VRRPv2VirtualRouter::scheduleMasterDownTimer()
 {
     cancelMasterDownTimer();
-    masterDownTimer = new cMessage("MasterDownTimer", MASTERDOWN);
+    masterDownTimer = new cMessage(MASTTIMER_MSG, MASTERDOWN);
     scheduleAt(simTime() + masterDownTimerInit, masterDownTimer);
 }
 
@@ -461,7 +461,7 @@ void VRRPv2VirtualRouter::sendAdvertisement() {
     controlInfo->setTimeToLive(ttl + 1);
     controlInfo->setInterfaceId(ie->getInterfaceId());
 
-    VRRPv2Advertisement* msg = new VRRPv2Advertisement("VRRPv2Advertisement");
+    VRRPv2Advertisement* msg = new VRRPv2Advertisement(VRRPADV_MSG);
     msg->setControlInfo(controlInfo);
     msg->setVersion(version);
     msg->setVrid(vrid);
@@ -475,7 +475,7 @@ void VRRPv2VirtualRouter::sendAdvertisement() {
         msg->setAddresses(i, IPsecondary.at(i));
 
     EV << hostname << "# " << debugPacketMaster(msg->getChecksum()) << endl;
-    send(msg, "ipOut");
+    send(msg, IPOUT_GATE);
     emit(sentAdverSignal, 1L);
 };
 
@@ -494,8 +494,8 @@ void VRRPv2VirtualRouter::loadDefaultConfig()
 {
     own = false;
     preemtionDelay = false;
-    hostname = par("hostname");
-    vrid = par("vrid");
+    hostname = par(HOSTNAME_PAR);
+    vrid = par(VRID_PAR);
     version = par("version");
     priority = par("priorityDefault");
     ttl = par("timeToLive");
@@ -506,7 +506,7 @@ void VRRPv2VirtualRouter::loadDefaultConfig()
     advertisementIntervalActual = par("adverDefault");
     const char * ip = par("multicastIPv4");
     multicastIP.set(ip);
-    setArp((int) par("arp"));
+    setArp((int) par("arpType"));
     arpDelay = par("arpDelay");
 }
 
@@ -514,7 +514,7 @@ void VRRPv2VirtualRouter::setOwn() {
     if (IPprimary == ie->ipv4Data()->getIPAddress())
     {
         own = true;
-        priority = (int) par("priorityOwner");
+        priority = (int) par(PRIOOWN_PAR);
     }
     else
     {
@@ -656,7 +656,7 @@ std::string VRRPv2VirtualRouter::debugEvent() const
 
 void VRRPv2VirtualRouter::scheduleInitCheck() {
     if (initCheckTimer == NULL)
-        initCheckTimer = new cMessage("InitCheck", INITCHECK);
+        initCheckTimer = new cMessage(INITCHCK_MSG, INITCHECK);
     scheduleAt(simTime() + (double)advertisementInterval/4, initCheckTimer);
 }
 

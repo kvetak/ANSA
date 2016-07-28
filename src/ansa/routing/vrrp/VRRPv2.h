@@ -34,11 +34,24 @@ namespace inet {
 class VRRPv2 : public cSimpleModule
 {
     protected:
+        const   char*   CONFIG_PAR      = "configData";
+        const   char*   IFT_PAR         = "interfaceTableModule";
+        const   char*   HOSTNAME_PAR    = "hostname";
+        const   char*   VRID_PAR        = "vrid";
+        const   char*   INTERFACE_PAR   = "interface";
+
+        const   char*   VRIN_GATE       = "vrIn";
+        const   char*   VROUT_GATE      = "vrOut";
+        const   char*   IPIN_GATE       = "ipIn";
+        const   char*   IPOUT_GATE      = "ipOut";
+
+        const   char*   VR_MOD          = "ansa.routing.vrrp.VRRPv2VirtualRouter";
+
         std::string hostname;
         std::vector<VRRPv2VirtualRouter *> virtualRouterTable;
 
     protected:
-        virtual int numInitStages() const override { return 4; };
+        virtual int numInitStages() const override  {return NUM_INIT_STAGES;}
         virtual void initialize( int stage) override;
         virtual void handleMessage(cMessage *msg) override;
         virtual void updateDisplayString();
