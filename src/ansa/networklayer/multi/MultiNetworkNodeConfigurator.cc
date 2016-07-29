@@ -80,7 +80,8 @@ void MultiNetworkNodeConfigurator::parseConfig(cXMLElement* config) {
     //Configure default routes
     parseDefaultRoutes(config);
     //Configure static routes
-    //TODO: Vesely - Add missing functionality
+    parseStaticRoutes(config);
+
 }
 
 void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
@@ -216,7 +217,7 @@ void MultiNetworkNodeConfigurator::parseDefaultRoutes(cXMLElement* config) {
             }
         }
         if (ie) {
-            EV << "!!!!!!!!!!" << ie->getName() << endl;
+            //EV << "!!!!!!!!!!" << ie->getName() << endl;
             //Prepare default route
             IPv4Route* ipv4rou = new IPv4Route();
             ipv4rou->setDestination(IPv4Address::UNSPECIFIED_ADDRESS);
@@ -291,6 +292,9 @@ bool MultiNetworkNodeConfigurator::Str2Int(int* retValue, const char* str) {
 
     *retValue = (int) value;
     return true;
+}
+
+void MultiNetworkNodeConfigurator::parseStaticRoutes(cXMLElement* config) {
 }
 
 bool MultiNetworkNodeConfigurator::Str2Bool(bool* ret, const char* str) {

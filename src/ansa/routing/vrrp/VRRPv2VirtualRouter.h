@@ -31,6 +31,7 @@
 #include "inet/linklayer/common/MACAddress.h"
 #include "ansa/routing/vrrp/VRRPv2Advertisement_m.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/common/IPSocket.h"
 
 
 namespace inet {

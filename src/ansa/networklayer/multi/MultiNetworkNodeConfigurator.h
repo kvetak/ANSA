@@ -65,6 +65,7 @@ class INET_API MultiNetworkNodeConfigurator : public cSimpleModule, public ILife
 
     void parseInterfaces(cXMLElement *config);
     void parseDefaultRoutes(cXMLElement *config);
+    void parseStaticRoutes(cXMLElement *config);
 
     static bool Str2Int(int *retValue, const char *str);
     static bool Str2Bool(bool *ret, const char *str);

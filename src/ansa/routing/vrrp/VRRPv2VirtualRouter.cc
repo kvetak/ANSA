@@ -98,6 +98,9 @@ void VRRPv2VirtualRouter::initialize(int stage)
 
         setOwn();
         stateInitialize();
+
+        IPSocket ipSocket(gate(IPOUT_GATE));
+        ipSocket.registerProtocol(IP_PROT_VRRP);
     }
 }
 
