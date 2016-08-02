@@ -1,4 +1,6 @@
 //
+// Copyright (C) 2009 - today Brno University of Technology, Czech Republic
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -13,11 +15,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 /**
-* @file VirtualForwarder.h
-* @author Petr Vitek
-* @brief
-* @detail
-*/
+ * @file VirtualForwarder.h
+ * @author Petr Vitek
+ * @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+ * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+ */
 
 #ifndef VIRTUALFORWARDER_H_
 #define VIRTUALFORWARDER_H_

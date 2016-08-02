@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2013, 2014 Brno University of Technology
+// Copyright (C) 2009 - today Brno University of Technology
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 //
-// @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/ 
+// @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
+// @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 
 cplusplus {{
     #include "inet/common/INETDefs.h"

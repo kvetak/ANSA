@@ -1,9 +1,9 @@
-/*
- * HSRPVirtualRouter.cc
- *
- *  Created on: 24. 3. 2016
- *      Author: Jan Holusa
- */
+/**
+* @author Jan Holusa
+* @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+* @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+*/
+
 
 #include "HSRPVirtualRouter.h"
 #include <iostream>

@@ -12,6 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+ * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
+ * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+ */
 
 #ifndef __ANSA_LISPSITEDATABASE_H_
 #define __ANSA_LISPSITEDATABASE_H_

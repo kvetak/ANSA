@@ -1,9 +1,5 @@
-/*
- * GLBP.cc
- *
- *  Created on: 18.4. 2016
- *      Author: Jan Holusa
- */
+//
+// Copyright (C) 2009 - today, Brno University of Technology, Czech Republic
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -17,6 +13,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
+/**
+* @author Jan Holusa
+* @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+* @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+*/
 
 #include "ansa/routing/glbp/GLBP.h"
 

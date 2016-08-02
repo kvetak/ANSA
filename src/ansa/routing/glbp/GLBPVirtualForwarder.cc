@@ -1,3 +1,9 @@
+/**
+* @author Jan Holusa
+* @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+* @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+*/
+
 #include "ansa/routing/glbp/GLBPVirtualForwarder.h"
 
 namespace inet {

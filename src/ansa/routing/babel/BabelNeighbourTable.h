@@ -1,4 +1,6 @@
 //
+// Copyright (C) 2009 - today Brno University of Technology, Czech Republic
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +16,9 @@
 //
 /**
 * @file BabelNeighbourTable.h
-* @author Vit Rek (mailto:xrekvi00@stud.fit.vutbr.cz)
+* @author Vit Rek (rek@kn.vutbr.cz)
+* @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+* @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 * @brief Babel Neighbour Table header file
 * @detail Represents data structure of Babel routing neighbour
 */

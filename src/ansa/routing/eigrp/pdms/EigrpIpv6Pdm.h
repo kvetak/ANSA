@@ -1,4 +1,6 @@
 //
+// Copyright (C) 2009 - today Brno University of Technology, Czech Republic
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +16,9 @@
 //
 /**
 * @file EigrpIpv6Pdm.h
-* @author Vit Rek, xrekvi00@stud.fit.vutbr.cz
+* @author Vit Rek (rek@kn.vutbr.cz)
+* @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+* @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 * @date 6. 11. 2014
 * @brief EIGRP IPv6 Protocol Dependent Module header file
 * @detail Main module, it mediates control exchange between DUAL, routing table and

@@ -1,4 +1,6 @@
 //
+// Copyright (C) 2009 - today Brno University of Technology, Czech Republic
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -110,7 +112,7 @@ protected:
     uint16_t msgFastTx;     // ticks between transmission during fast transmission
     uint8_t msgTxHold;      // multiplier of msgTxInterval, to determine value of TTL
     uint16_t msgTxInterval; // ticks between transmission during normal transmission periods
-    uint16_t reinitDelay;   // delay from when adminStatus becomes ‘disabled’ until reinitialization is attempted
+    uint16_t reinitDelay;   // delay from when adminStatus becomes disabled until reinitialization is attempted
     uint8_t txFast;         // down counter of transmissions to be made during a fast transmission period
     uint16_t txFastInit;    // determines the number of LLDPDUs that are transmitted during a fast transmission period
     uint8_t txCreditMax;    // the maximum value of txCredit

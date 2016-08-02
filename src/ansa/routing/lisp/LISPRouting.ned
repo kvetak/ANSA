@@ -15,7 +15,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 //
-// @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/ 
+// @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
+// @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+ 
 
 package ansa.routing.lisp;
 

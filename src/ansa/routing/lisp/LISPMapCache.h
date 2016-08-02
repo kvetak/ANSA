@@ -16,6 +16,7 @@
 //
 /**
  * @author Vladimir Vesely / ivesely@fit.vutbr.cz / http://www.fit.vutbr.cz/~ivesely/
+ * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
  */
 
 #ifndef __INET_LISPMAPCACHE_H_

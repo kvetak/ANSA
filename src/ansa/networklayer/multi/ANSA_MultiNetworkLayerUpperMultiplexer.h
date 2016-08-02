@@ -1,4 +1,5 @@
 //
+// Copyright (C) 2009 - today Brno University of Technology, Czech Republic
 // Copyright (C) 2013 Opensim Ltd.
 // Author: Levente Meszaros
 //
@@ -15,6 +16,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
+/**
+ * @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+ * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+ */
 
 #ifndef __INET_ANSAMULTINETWORKLAYERUPPERMULTIPLEXER_H
 #define __INET_ANSAMULTINETWORKLAYERUPPERMULTIPLEXER_H

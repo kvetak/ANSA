@@ -1,4 +1,6 @@
 //
+// Copyright (C) 2009 - today, Brno University of Technology, Czech Republic
+//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -25,7 +27,10 @@
 //   |                      Virtual IP Address                       |
 //   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 // 
-// Author: Jan Holusa
+// @author Jan Holusa
+// @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+// @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
+
 
 cplusplus {{
 #include "inet/networklayer/contract/ipv4/IPv4Address.h"
