@@ -32,7 +32,6 @@ class INET_API ANSA_EtherMACFullDuplex : public ANSA_EtherMACBaseVF
     virtual void initializeStatistics() override;
     virtual void initializeFlags() override;
     virtual void handleMessage(cMessage *msg) override;
-
     // finish
     virtual void finish() override;
 
@@ -51,7 +50,6 @@ class INET_API ANSA_EtherMACFullDuplex : public ANSA_EtherMACBaseVF
     virtual void scheduleEndIFGPeriod();
     virtual void scheduleEndPausePeriod(int pauseUnits);
     virtual void beginSendFrames();
-
 
     // statistics
     simtime_t totalSuccessfulRxTime; // total duration of successful transmissions on channel

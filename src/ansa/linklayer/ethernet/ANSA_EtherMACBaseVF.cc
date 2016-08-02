@@ -20,7 +20,9 @@
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/INETUtils.h"
+
 namespace inet{
+
 void ANSA_EtherMACBaseVF::initialize(int stage)
 {
     connectionColoring = par("connectionColoring");
@@ -94,5 +96,14 @@ void ANSA_EtherMACBaseVF::registerInterface()
         ift->addInterface(interfaceEntry);
 }
 
+bool ANSA_EtherMACBaseVF::dropFrameNotForUs(EtherFrame* frame) {
+    ANSA_InterfaceEntry* aie = dynamic_cast<ANSA_InterfaceEntry*>(interfaceEntry);
+    if (aie && aie->hasMacAddress(frame->getDest())) {
+       return false;
+    }
+    return EtherMACBase::dropFrameNotForUs(frame);
+}
 
-}//namespace inet
+}    //namespace inet
+
+

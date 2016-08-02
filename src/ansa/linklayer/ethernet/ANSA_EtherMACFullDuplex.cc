@@ -447,5 +447,7 @@ void ANSA_EtherMACFullDuplex::beginSendFrames()
         }
     }
 }
-}//namespace inet
+
+
+}            //namespace inet
 

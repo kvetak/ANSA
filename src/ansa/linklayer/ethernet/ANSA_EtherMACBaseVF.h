@@ -28,13 +28,16 @@ class ANSA_InterfaceEntry;
 
 
 class ANSA_EtherMACBaseVF: public EtherMACBase {
-public:
+  public:
     ANSA_EtherMACBaseVF() {};
 
-    protected:
-        virtual void initialize(int stage);
-        virtual void registerInterface();
+  protected:
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void registerInterface();
 
+    /** Checks destination address and drops the frame when frame is not for us; returns true if frame is dropped */
+    virtual bool dropFrameNotForUs(EtherFrame *frame) override;
 
 };
 }//namespace inet

@@ -5,7 +5,7 @@
 	</at>
   	<at t="30">
   	    <connect src-module="GW2" src-gate="ethg[0]" 
-             dest-module="SW" dest-gate="ethg[1]"
+             dest-module="SW1" dest-gate="ethg[1]"
              channel-type="inet.node.ethernet.Eth100M"/>
 	</at>	
 </scenario>
