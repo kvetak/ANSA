@@ -1,4 +1,5 @@
 //
+// Copyright (C) 2005 Andras Babos
 // Copyright (C) 2003 Andras Varga; CTIE, Monash University, Australia
 //               2010 Zoltan Bojthe
 //
@@ -15,6 +16,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
+// @author Tomas Rajca
+// @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+// @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 
 package ansa.node;
 

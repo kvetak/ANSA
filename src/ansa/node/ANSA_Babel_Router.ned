@@ -1,4 +1,5 @@
 //
+// Copyright (C) 2009 - today, Brno University of Technology, Czech Republic
 // Copyright (C) 2005 Andras Babos
 //
 // This program is free software; you can redistribute it and/or
@@ -14,31 +15,19 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
+// @author Vit Rek
+// @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+// @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 
 
 package ansa.node;
 
 import ansa.node.ANSA_Router;
 
-
-module ANSA_LLDPCDPRouter extends ANSA_Router
+module ANSA_BabelRouter extends ANSA_Router
 {
     parameters:
-        @capabilities("Router");
-        @capabilitiesEnabled("Router");
-                       
-        string deviceId = default("");  
-        xml configFile = default(xmldoc("config.xml"));
-        string deviceType = default("Router"); 
-        **.deviceId = deviceId;
-        **.deviceType = deviceType;
-        **.configFile = default(xmldoc("config.xml"));  
-        
-        enableIPv6 = false;
-        enableCLNS = false;
-        
-        hasCDP = true;
-        hasLLDP = true;   
-              
+        hasBABEL = true;
+		babel.configData = configData;               
 }
 
