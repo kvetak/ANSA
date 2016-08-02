@@ -26,9 +26,6 @@ package ansa.node;
 
 import ansa.node.ANSA_Router;
 
-//
-// Author: Jan Holusa
-//
 module ANSA_HSRPRouter extends ANSA_Router
 {
     parameters:

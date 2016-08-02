@@ -35,10 +35,10 @@ network LispSyncTest
         Host2: ANSA_Host {
             @display("p=132,226");
         }
-        xTR1: ANSA_xTR_HA {
+        xTR1: ANSA_LISP_VRRP {
             @display("p=244,87");
         }
-        xTR2: ANSA_xTR_HA {
+        xTR2: ANSA_LISP_VRRP {
             @display("p=244,191");
         }
         MRMS: ANSA_MRMS {
