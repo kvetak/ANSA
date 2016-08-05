@@ -13,19 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-package inet.examples.ansa.ISIS1;
+package inet.examples.ansa.isis.ISIS1;
 
-import inet.nodes.ethernet.Eth100M;
+import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.ansa.networklayer.isis.AnsaISISRouter;
+import inet.node.ethernet.EtherSwitch;
+import ansa.networklayer.isis.AnsaISISRouter;
+import ansa.node.ANSA_ISISRouter;
 //import inet.ansa.ANSARouter;
 //import inet.networklayer.autorouting.FlatNetworkConfigurator;
-import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
+import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
 //import inet.networklayer.autorouting.FlatNetworkConfigurator6;
-import inet.networklayer.autorouting.ipv6.FlatNetworkConfigurator6;
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.mpls.LDP_LSR;
+import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.mpls.LDP_LSR;
 import ned.DatarateChannel;
 
 network ISIStest1
@@ -37,20 +38,20 @@ network ISIStest1
             delay = 0.1us;
         }
     submodules:
-        router1: AnsaISISRouter {
+        router1: ANSA_ISISRouter {
             parameters:
                 @display("p=57,191");
 
             gates:
                 ethg[1];
         }
-        router2: AnsaISISRouter {
+        router2: ANSA_ISISRouter {
             parameters:
                 @display("p=269,293");
             gates:
                 ethg[3];
         }
-        router3: AnsaISISRouter {
+        router3: ANSA_ISISRouter {
             parameters:
                 @display("p=44,347");
             gates:
@@ -62,25 +63,25 @@ network ISIStest1
             gates:
                 ethg[3];
         }
-        router4: AnsaISISRouter {
+        router4: ANSA_ISISRouter {
             parameters:
                 @display("p=409,293");
             gates:
                 ethg[3];
         }
-        router5: AnsaISISRouter {
+        router5: ANSA_ISISRouter {
             parameters:
                 @display("p=338,214");
             gates:
                 ethg[3];
         }
-        router6: AnsaISISRouter {
+        router6: ANSA_ISISRouter {
             parameters:
                 @display("p=530,293");
             gates:
                 ethg[2];
         }
-        router7: AnsaISISRouter {
+        router7: ANSA_ISISRouter {
             parameters:
                 @display("p=657,293");
             gates:
@@ -92,13 +93,13 @@ network ISIStest1
             gates:
                 ethg[3];
         }
-        router8: AnsaISISRouter {
+        router8: ANSA_ISISRouter {
             parameters:
                 @display("p=268,29");
             gates:
                 ethg[1];
         }
-        router9: AnsaISISRouter {
+        router9: ANSA_ISISRouter {
             parameters:
                 @display("p=401,27");
             gates:

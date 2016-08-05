@@ -16,25 +16,25 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-package inet.ansa.networklayer.isis;
+package ansa.networklayer.isis;
 
-import inet.ansa.networklayer.clns.CLNSTable;
+import ansa.networklayer.clns.CLNSTable;
 //import inet.ansa.acl.acl;
-import inet.ansa.util.deviceConfigurator.DeviceConfigurator;
+//import ansa.util.deviceConfigurator.DeviceConfigurator;
 //import inet.ansa.ethernet.AnsaEthernetInterface;
 import inet.linklayer.ethernet.EthernetInterface;
-import inet.linklayer.IWiredNic;
-import inet.ansa.util.InterfaceStateManager.InterfaceStateManager;
-//import inet.ansa.IPGen.AnsaIPTrafGen;
-//import inet.ansa.ipv6.AnsaRoutingTable6;
-import inet.ansa.networklayer.ipSplitter.IpSplitter;
+import inet.linklayer.contract.IWiredNic;
+//import ansa.util.InterfaceStateManager.InterfaceStateManager;
 
-//import inet.ansa.ppp.PPPInterface;
+//import inet.ansa.networklayer.ipSplitter.IpSplitter;
+
+
 import inet.linklayer.ppp.PPPInterface;
-//import inet.ansa.routingTable.AnsaInterfaceTable;
+
 import inet.networklayer.common.InterfaceTable;
-//import inet.ansa.routingTable.AnsaRoutingTable; //it has configFile parameter
-import inet.networklayer.ipv4.RoutingTable;
+
+//import inet.networklayer.ipv4.RoutingTable;
+import inet.networklayer.contract.IRoutingTable;
 
 //import inet.ansa.AnsaNetworkLayer;
 
@@ -42,10 +42,10 @@ import inet.networklayer.ipv4.RoutingTable;
 //import inet.ansa.networklayer.isis.ISIS;
 
 import inet.applications.pingapp.PingApp;
-import inet.base.NotificationBoard;
-import inet.networklayer.ipv6.RoutingTable6;
-import inet.nodes.inet.NetworkLayer;
-import inet.nodes.ipv6.NetworkLayer6;
+//import inet.base.NotificationBoard;
+//import inet.networklayer.ipv6.RoutingTable6;
+//import inet.node.inet.NetworkLayer;
+//import inet.nodes.ipv6.NetworkLayer6;
 
 module AnsaISISRouter
 {
@@ -54,11 +54,11 @@ module AnsaISISRouter
 
         string hostname = default("");
         string deviceId;
-        string configFile;
+        xml configFile = default(xmldoc("config.xml"));
         xml routingTable = default(xml("<routingTable/>"));  // Routing table is filled by deviceConfigurator
         bool IPForward = default(true);
 //        xml table = default(xml("<clnsTable/>"));
-
+	*.interfaceTableModule = default(absPath(".interfaceTable"));
 
         @display("i=srouter;bgb=437,396,white");
     gates:
@@ -70,21 +70,21 @@ module AnsaISISRouter
                 @display("p=356,115");
 
         }
-        deviceConfigurator: DeviceConfigurator {
-            parameters:
-                deviceId = deviceId;
-                deviceType = "Router";
-                configFile = configFile;
-                @display("p=362,42");
-        }
-        notificationBoard: NotificationBoard {
-            parameters:
-                @display("p=66,42");
-        }
-        interfaceStateManager: InterfaceStateManager {
-            parameters:
-                @display("p=211,42");
-        }
+//        deviceConfigurator: DeviceConfigurator {
+//            parameters:
+//                deviceId = deviceId;
+//                deviceType = "Router";
+//                configFile = configFile;
+//                @display("p=362,42");
+//        }
+//        notificationBoard: NotificationBoard {
+//            parameters:
+//                @display("p=66,42");
+//        }
+//        interfaceStateManager: InterfaceStateManager {
+//            parameters:
+//                @display("p=211,42");
+//        }
         //        interfaceTable: AnsaInterfaceTable {
         interfaceTable: InterfaceTable {
             parameters:
@@ -98,36 +98,36 @@ module AnsaISISRouter
         //                configFile = configFile;
         //                @display("p=323,42");
         //        }
-        routingTable: RoutingTable {
-            parameters:
-                @display("p=154,115");
-                IPForward = true;
-                routerId = deviceId;
-
-        }
+//        routingTable: RoutingTable {
+//            parameters:
+//                @display("p=154,115");
+//                IPForward = true;
+//                routerId = deviceId;
+//
+//        }
         //        routingTable6: AnsaRoutingTable6 {
         //            parameters:
         //                isRouter = true;
         //                @display("p=395,42");
         //        }
-        routingTable6: RoutingTable6 {
-            parameters:
-                @display("p=257,115");
-                isRouter = IPForward;
-        }
-        ipSplitter: IpSplitter {
-            parameters:
-                @display("p=211,286");
-            gates:
-                ifIn[sizeof(pppg)+sizeof(ethg)];
-                ifOut[sizeof(pppg)+sizeof(ethg)];
-                ipv4In[sizeof(pppg)+sizeof(ethg)];
-                ipv4Out[sizeof(pppg)+sizeof(ethg)];
-                ipv6In[sizeof(pppg)+sizeof(ethg)];
-                ipv6Out[sizeof(pppg)+sizeof(ethg)];
-                isisIn[sizeof(pppg)+sizeof(ethg)];
-                isisOut[sizeof(pppg)+sizeof(ethg)];
-        }
+//        routingTable6: RoutingTable6 {
+//            parameters:
+//                @display("p=257,115");
+//                isRouter = IPForward;
+//        }
+//        ipSplitter: IpSplitter {
+//            parameters:
+//                @display("p=211,286");
+//            gates:
+//                ifIn[sizeof(pppg)+sizeof(ethg)];
+//                ifOut[sizeof(pppg)+sizeof(ethg)];
+//                ipv4In[sizeof(pppg)+sizeof(ethg)];
+//                ipv4Out[sizeof(pppg)+sizeof(ethg)];
+//                ipv6In[sizeof(pppg)+sizeof(ethg)];
+//                ipv6Out[sizeof(pppg)+sizeof(ethg)];
+//                isisIn[sizeof(pppg)+sizeof(ethg)];
+//                isisOut[sizeof(pppg)+sizeof(ethg)];
+//        }
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
                 @display("p=143,342,row,110;q=l2queue");
@@ -144,34 +144,32 @@ module AnsaISISRouter
                 deviceType = "Router";
                 configFile = configFile;
                 @display("p=98,196");
-            gates:
-                lowerLayerIn[sizeof(pppg)+sizeof(ethg)];
-                lowerLayerOut[sizeof(pppg)+sizeof(ethg)];
+//            gates:
+//                lowerLayerIn[sizeof(pppg)+sizeof(ethg)];
+//                lowerLayerOut[sizeof(pppg)+sizeof(ethg)];
         }
     connections allowunconnected:
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
 
-            //            ppp[i].netwOut --> ipSplitter.ifIn[i];
-            ppp[i].upperLayerOut --> ipSplitter.ifIn[i];
-            //            ppp[i].netwIn <-- ipSplitter.ifOut[i];
-            ppp[i].upperLayerIn <-- ipSplitter.ifOut[i];
+//            ppp[i].upperLayerOut --> ipSplitter.ifIn[i];
+//            ppp[i].upperLayerIn <-- ipSplitter.ifOut[i];
 
-            ipSplitter.isisOut[i] --> isis.lowerLayerIn[i];
-            ipSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
+//            ipSplitter.isisOut[i] --> isis.lowerLayerIn[i];
+//            ipSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
         }
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
 
             //            eth[i].netwOut --> ipSplitter.ifIn[sizeof(pppg)+i];
-            eth[i].upperLayerOut --> ipSplitter.ifIn[sizeof(pppg)+i];
+//            eth[i].upperLayerOut --> ipSplitter.ifIn[sizeof(pppg)+i];
             //            eth[i].netwIn <-- ipSplitter.ifOut[sizeof(pppg)+i];
-            eth[i].upperLayerIn <-- ipSplitter.ifOut[sizeof(pppg)+i];
+//            eth[i].upperLayerIn <-- ipSplitter.ifOut[sizeof(pppg)+i];
 
-            ipSplitter.isisOut[i] --> isis.lowerLayerIn[i];
-            ipSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
+//            ipSplitter.isisOut[i] --> isis.lowerLayerIn[i];
+//            ipSplitter.isisIn[i] <-- isis.lowerLayerOut[i];
         }
 }
 

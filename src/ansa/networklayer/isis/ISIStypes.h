@@ -26,12 +26,14 @@
 #ifndef ISISTYPES_H_
 #define ISISTYPES_H_
 
-#include "MACAddress.h"
-#include "InterfaceEntry.h"
-#include "ISISTimer_m.h"
-#include "ISISMessage_m.h"
+#include "inet/linklayer/common/MACAddress.h"
+#include "inet/networklayer/common/InterfaceEntry.h"
+#include "ansa/networklayer/isis/ISISTimer_m.h"
+#include "ansa/networklayer/isis/ISISMessage_m.h"
 //#include "ISIS.h"
 
+
+namespace inet {
 
 #define ISIS_DIS_PRIORITY 64 /*!< Default priority to become DIS*/
 #define ISIS_METRIC 10 /*!< Default "default" metric value*/
@@ -394,6 +396,6 @@ typedef enum
 
 
 
-
+} //end namespace inet
 
 #endif /* ISISTYPES_H_ */

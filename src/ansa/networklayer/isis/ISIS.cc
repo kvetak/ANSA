@@ -25,11 +25,19 @@
  *       TODO B3 Add SimTime isisStarted; and compute initial wait period (for LSP generating and SPF calculation} from such variable
  */
 
-#include "ISIS.h"
-#include "TRILL.h"
 
-#include "deviceConfigurator.h"
-#include "TRILLInterfaceData.h"
+#include "ansa/networklayer/isis/ISIS.h"
+#include "ansa/networklayer/isis/ISISDeviceConfigurator.h"
+
+//#include "TRILL.h"
+
+//TODO A! Create ISISDeviceConfigurator class and include it
+//#include "deviceConfigurator.h"
+
+//TODO A! Add TRILL source files
+//#include "TRILLInterfaceData.h"
+
+namespace inet {
 
 Define_Module(ISIS);
 
@@ -235,14 +243,13 @@ ISIS::~ISIS()
  * @param is fired notification
  * @param detail is user defined pointer
  */
-void ISIS::receiveChangeNotification(int category, const cObject *details)
+void ISIS::receiveChangeNotification(int category, cObject *details)
 {
-    // TODO B1:
-//    return;
+    //TODO A! Make it work again.
     // ignore notifications during initialization
-    if (simulation.getContextType() == CTX_INITIALIZE){
-        return;
-    }
+//    if (simulation.getContextType() == CTX_INITIALIZE){
+//        return;
+//    }
     Enter_Method_Silent();
     if(category == NF_ISIS_ADJ_CHANGED){
         /*TODO B3 Make new timer Type and schedule it when you receive ADJ_CHANGED for short period of time (TBD)
@@ -255,7 +262,7 @@ void ISIS::receiveChangeNotification(int category, const cObject *details)
          *
          */
 //        ISISadj *adj = check_and_cast<ISISadj*>(details);
-        ISISTimer *timer = check_and_cast<ISISTimer*>(details);
+         ISISTimer *timer = check_and_cast<ISISTimer*>(details);
 
         generateLSP(timer);
 
@@ -285,16 +292,19 @@ void ISIS::initialize(int stage)
 {
     //interface init at stage 2
     if(stage == 0){
-         nb = NotificationBoardAccess().get();
-//         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-         nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
+        //TODO A! Notification board
+//         nb = NotificationBoardAccess().get();
+////         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+//         nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
+
+        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
     }
 
     if (stage == 1)
     {
-        deviceType = string((const char *) par("deviceType"));
-        deviceId = string((const char *) par("deviceId"));
-        configFile = string((const char *) par("configFile"));
+        deviceType = std::string((const char *) par("deviceType"));
+        deviceId = std::string((const char *) par("deviceId"));
+//        configFile = std::string((const char *) par("configFile"));
         if (deviceType == "Router")
         {
             this->mode = L3_ISIS_MODE;
@@ -312,8 +322,11 @@ void ISIS::initialize(int stage)
 
     if (stage == 3)
     {
-        DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-        devConf->loadISISConfig(this, this->mode);
+        //TODO A! Create ISISDeviceConfigurator class
+//        DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
+//        devConf->loadISISConfig(this, this->mode);
+
+        ISISDeviceConfigurator* devConf = new ISISDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
 
 
 
@@ -1376,14 +1389,14 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
         EV<< "ISIS::sendLANHello: Source-ID: ";
         for (unsigned int i = 0; i < 6; i++)
             {
-                EV << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+                EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) this->sysId[i];
                 if (i % 2 == 1)
                     EV << ".";
             }
         EV<< " DIS: ";
         for (unsigned int i = 0; i < 7; i++)
                     {
-                        EV << setfill('0') << setw(2) << dec << (unsigned int) disID[i];
+                        EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) disID[i];
                         if (i % 2 == 1)
                             EV << ".";
                     }
@@ -1974,7 +1987,7 @@ bool ISIS::parseNetAddr()
     unsigned char *systemId = new unsigned char[ISIS_SYSTEM_ID];
     unsigned char *nsel = new unsigned char[1];
 
-    while (found != string::npos)
+    while (found != std::string::npos)
     {
 
         switch (found)
@@ -1982,7 +1995,7 @@ bool ISIS::parseNetAddr()
             case 2:
                 dots++;
                 area[0] = (unsigned char) (atoi(net.substr(0, 2).c_str()));
-                cout << "BEZ ATOI" << net.substr(0, 2).c_str() << endl;
+                std::cout << "BEZ ATOI" << net.substr(0, 2).c_str() << endl;
                 break;
             case 7:
                 dots++;
@@ -2023,13 +2036,13 @@ bool ISIS::parseNetAddr()
     //49.0001.1921.6801.2003.00
 
     areaId = area;
-//    cout << "ISIS: AreaID: " << areaId[0] << endl;
-//    cout << "ISIS: AreaID: " << areaId[1] << endl;
-//    cout << "ISIS: AreaID: " << areaId[2] << endl;
+//    std::cout << "ISIS: AreaID: " << areaId[0] << endl;
+//    std::cout << "ISIS: AreaID: " << areaId[1] << endl;
+//    std::cout << "ISIS: AreaID: " << areaId[2] << endl;
     sysId = systemId;
-//    cout << "ISIS: SystemID: " << sysId << endl;
+//    std::cout << "ISIS: SystemID: " << sysId << endl;
     NSEL = nsel;
-//    cout << "ISIS: NSEL: " << NSEL << endl;
+//    std::cout << "ISIS: NSEL: " << NSEL << endl;
 
     this->nickname = this->sysId[ISIS_SYSTEM_ID - 1] + this->sysId[ISIS_SYSTEM_ID - 2] * 0xFF;
 
@@ -2117,7 +2130,8 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg)
                     {
                         //this->sendMyL1LSPs();
                         //TODO generate event adjacencyStateChanged
-                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        //TODO A! Transform to signals
+//                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                     }
                     break;
                 }
@@ -2263,7 +2277,8 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
                     {
                         //this->sendMyL1LSPs();
                         //TODO B1 generate event adjacencyStateChanged (i suppose it's done)
-                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        //TODO A! Signals ...
+//                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                         //TODO support multiple area addresses
                         if (!compareArrays((unsigned char *) this->areaId, tmpAdj->areaID, ISIS_AREA_ID)
                                 && this->isType == L1L2_TYPE)
@@ -2439,8 +2454,9 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
     tmpMAC.getAddressBytes(tmpMACChars);
     //if sender is DIS
     if(memcmp(this->getSysID(msg), tmpIntf->L1DIS, ISIS_SYSTEM_ID) == 0){
-        TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
-        trillD->setDesigVlan(tmpDesigVlanId);
+        //TODO A! TRILL: Uncomment after adding TRILL
+//        TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
+//        trillD->setDesigVlan(tmpDesigVlanId);
         if ((subTLV = this->getSubTLVByType(tmpTLV, TLV_MT_PORT_CAP_APP_FWD)) != NULL)
         {
             //THIS SHOULD BE HANDLED IN electDIS. based on result act accordingly
@@ -2448,16 +2464,17 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
             //TODO A2 appointed Fwd should be touples <nickname, vlanIdRange> or simply <nickname, vlanId>
 
 
-
-            trillD->clearAppointedForwarder();
+            //TODO A! TRILL: Uncomment after adding TRILL
+//            trillD->clearAppointedForwarder();
             for(int subLen = 0; subLen < subTLV[1];){
                 int appointeeNickname = subTLV[subLen + 2] + subTLV[subLen + 1 + 2] * 0xFF;
                 int startVlan = subTLV[subLen + 2 + 2] + (subTLV[subLen + 3 + 2] & 0x0F) * 0xFF;
                 int endVlan = subTLV[subLen + 4 + 2] + (subTLV[subLen + 5 + 2] & 0x0F) * 0xFF;
                 subLen += 6;
-                for(int appVlan = startVlan; appVlan <= endVlan; appVlan++){
-                    trillD->addAppointedForwarder(appVlan, appointeeNickname);
-                }
+                //TODO A! TRILL: Uncomment after adding TRILL
+//                for(int appVlan = startVlan; appVlan <= endVlan; appVlan++){
+//                    trillD->addAppointedForwarder(appVlan, appointeeNickname);
+//                }
             }
 
 
@@ -2536,7 +2553,8 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
                     if (changed != tmpAdj->state)
                     {
                         //TODO generate event adjacencyStateChanged
-                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                        //TODO A! Signals...
+//                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                         int gateIndex = msg->getArrivalGate()->getIndex();
                 //        int gateIndex = timer->getInterfaceIndex();
                         InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(gateIndex);
@@ -2715,7 +2733,8 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
 //                            }
                             //TODO B2
                             //schedule adjacencyStateChange(up);
-                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
+                            //TODO A! Signals...
+//                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
 
                         }
                         else
@@ -2834,7 +2853,8 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
 //                            }
                             //TODO B2
                             //schedule adjacencyStateChange(up);
-                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL2LspTimer);
+                            //TODO A! Signals
+//                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL2LspTimer);
                             //TODO support multiple area addresses
                             if (!compareArrays((unsigned char *) this->areaId, tmpAdj->areaID, ISIS_AREA_ID)
                                     && this->isType == L1L2_TYPE)
@@ -3329,7 +3349,7 @@ void ISIS::printAdjTable()
     //print area id
     for (unsigned int i = 0; i < 3; i++)
     {
-        EV<< setfill('0') << setw(2) << dec << (unsigned int) areaId[i];
+        EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) areaId[i];
         if (i % 2 == 0)
         EV << ".";
 
@@ -3338,13 +3358,13 @@ void ISIS::printAdjTable()
         //print system id
     for (unsigned int i = 0; i < 6; i++)
     {
-        EV<< setfill('0') << setw(2) << hex << (unsigned int) sysId[i];
+        EV<< std::setfill('0') << std::setw(2) << std::hex << (unsigned int) sysId[i];
         if (i % 2 == 1)
         EV << ".";
     }
 
         //print NSEL
-    EV<< setfill('0') << setw(2) << dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
+    EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
     << adjL1Table.size() << endl;
 
     //print neighbour records
@@ -3354,7 +3374,7 @@ void ISIS::printAdjTable()
         //print neighbour system id
         for (unsigned int i = 0; i < 6; i++)
         {
-            EV << setfill('0') << setw(2) << hex << (unsigned int) adjL1Table.at(j).sysID[i];
+            EV << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) adjL1Table.at(j).sysID[i];
             if (i == 1 || i == 3)
             EV << ".";
         }
@@ -3363,7 +3383,7 @@ void ISIS::printAdjTable()
         //print neighbour MAC address
         for (unsigned int i = 0; i < 6; i++)
         {
-            EV << setfill('0') << setw(2) << hex << (unsigned int) adjL1Table.at(j).mac.getAddressByte(i);
+            EV << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) adjL1Table.at(j).mac.getAddressByte(i);
             if (i < 5)
             EV << ":";
         }
@@ -3384,7 +3404,7 @@ void ISIS::printAdjTable()
     //print area id
     for (unsigned int i = 0; i < 3; i++)
     {
-        EV<< setfill('0') << setw(2) << dec << (unsigned int) areaId[i];
+        EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) areaId[i];
         if (i % 2 == 0)
         EV << ".";
 
@@ -3393,13 +3413,13 @@ void ISIS::printAdjTable()
         //print system id
     for (unsigned int i = 0; i < 6; i++)
     {
-        EV<< setfill('0') << setw(2) << hex << (unsigned int) sysId[i];
+        EV<< std::setfill('0') << std::setw(2) << std::hex << (unsigned int) sysId[i];
         if (i % 2 == 1)
         EV << ".";
     }
 
         //print NSEL
-    EV<< setfill('0') << setw(2) << dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
+    EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
     << adjL2Table.size() << endl;
 
     //print neighbour records
@@ -3409,7 +3429,7 @@ void ISIS::printAdjTable()
         //print neighbour area id and system id
         for (unsigned int i = 0; i < 3; i++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) adjL2Table.at(j).areaID[i];
+            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) adjL2Table.at(j).areaID[i];
             if (i % 2 == 0)
             EV << ".";
 
@@ -3417,7 +3437,7 @@ void ISIS::printAdjTable()
 
         for (unsigned int i = 0; i < 6; i++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) adjL2Table.at(j).sysID[i];
+            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) adjL2Table.at(j).sysID[i];
             if (i == 1 || i == 3)
             EV << ".";
         }
@@ -3426,7 +3446,7 @@ void ISIS::printAdjTable()
         //print neighbour MAC address
         for (unsigned int i = 0; i < 6; i++)
         {
-            EV << setfill('0') << setw(2) << hex << (unsigned int) adjL2Table.at(j).mac.getAddressByte(i);
+            EV << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) adjL2Table.at(j).mac.getAddressByte(i);
             if (i < 5)
             EV << ":";
         }
@@ -3446,14 +3466,14 @@ void ISIS::setClnsTable(CLNSTable *clnsTable)
     this->clnsTable = clnsTable;
 }
 
-void ISIS::setNb(NotificationBoard *nb)
-{
-    this->nb = nb;
-}
+//void ISIS::setNb(NotificationBoard *nb)
+//{
+//    this->nb = nb;
+//}
 /* Sets and then parses NET address.
  * @param netAddr specify NET address
  */
-void ISIS::setNetAddr(string netAddr)
+void ISIS::setNetAddr(std::string netAddr)
 {
     this->netAddr = netAddr;
 
@@ -3468,27 +3488,29 @@ void ISIS::setMode(ISIS_MODE mode)
     this->mode = mode;
 }
 
-void ISIS::subscribeNb(void)
-{
-    nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-    nb->subscribe(this, NF_CLNS_ROUTE_DELETED);
-    nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
-
-}
+//TODO A! Signals
+//void ISIS::subscribeNb(void)
+//{
+//    nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
+//    nb->subscribe(this, NF_CLNS_ROUTE_DELETED);
+//    nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
+//
+//}
 
 void ISIS::setIft(IInterfaceTable *ift)
 {
     this->ift = ift;
 }
 
-void ISIS::setTrill(TRILL *trill)
-{
-    if (trill == NULL)
-    {
-        throw cRuntimeError("Got NULL pointer instead of TRILL reference");
-    }
-    this->trill = trill;
-}
+//TODO A! Uncomment after adding TRILL
+//void ISIS::setTrill(TRILL *trill)
+//{
+//    if (trill == NULL)
+//    {
+//        throw cRuntimeError("Got NULL pointer instead of TRILL reference");
+//    }
+//    this->trill = trill;
+//}
 
 /**
  * Print content of L1 LSP database to EV.
@@ -3503,7 +3525,7 @@ void ISIS::printLSPDB()
     //print area id
     for (unsigned int i = 0; i < 3; i++)
     {
-        EV<< setfill('0') << setw(2) << dec << (unsigned int) areaId[i];
+        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) areaId[i];
         if (i % 2 == 0)
         EV << ".";
 
@@ -3512,13 +3534,13 @@ void ISIS::printLSPDB()
         //print system id
     for (unsigned int i = 0; i < 6; i++)
     {
-        EV<< setfill('0') << setw(2) << dec << (unsigned int) sysId[i];
+        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
         if (i % 2 == 1)
         EV << ".";
     }
 
         //print NSEL
-    EV<< setfill('0') << setw(2) << dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
+    EV<< std::setfill('0') <<   std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
     << lspDb->size() << endl;
 //    unsigned char *lspId;
     std::vector<LSPRecord *>::iterator it = lspDb->begin();
@@ -3528,7 +3550,7 @@ void ISIS::printLSPDB()
         //print LSP ID
         for (unsigned int j = 0; j < 8; j++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) (*it)->LSP->getLspID(j);
+            EV << std::setfill('0') <<   std::setw(2) << std::dec << (unsigned int) (*it)->LSP->getLspID(j);
             if (j == 1 || j == 3 || j == 5)
             EV << ".";
             if (j == 6)
@@ -3537,8 +3559,8 @@ void ISIS::printLSPDB()
         EV << "\t0x";
 
         //print sequence number
-        EV << setfill('0') << setw(8) << hex << (*it)->LSP->getSeqNumber();
-        EV << "\t" << setfill('0') << setw(5) << dec << (*it)->LSP->getRemLifeTime() << endl;
+        EV << std::setfill('0') <<  std::setw(8) << std::hex << (*it)->LSP->getSeqNumber();
+        EV << "\t" << std::setfill('0') <<  std::setw(5) << std::dec << (*it)->LSP->getRemLifeTime() << endl;
         //EV <<"SeqNum: " << (*it)->LSP->getSeqNumber()<<endl;
 
         TLV_t *tmpTlv;
@@ -3552,12 +3574,12 @@ void ISIS::printLSPDB()
                 for (unsigned int l = 0; l < 7; l++)
                 {
                     //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
-                    EV << setfill('0') << setw(2) << dec << (unsigned int) tmpTlv->value[m + 4 + l];
+                    EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) tmpTlv->value[m + 4 + l];
                     if (l % 2 == 1)
                     EV << ".";
                 }
 
-                EV << "\tmetric: " << setfill('0') << setw(2) << dec << (unsigned int) tmpTlv->value[m + 0] << endl;
+                EV << "\tmetric: " << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) tmpTlv->value[m + 0] << endl;
             }
 
         }
@@ -3572,7 +3594,7 @@ void ISIS::printLSPDB()
             for (unsigned int l = 0; l < 7; l++)
             {
                 //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
-                EV << setfill('0') << setw(2) << dec << (unsigned int) (*attIt)->id[l];
+                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*attIt)->id[l];
                 if (l % 2 == 1)
                 EV << ".";
             }
@@ -3587,7 +3609,7 @@ void ISIS::printLSPDB()
     //print area id
     for (unsigned int i = 0; i < 3; i++)
     {
-        EV<< setfill('0') << setw(2) << dec << (unsigned int) areaId[i];
+        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) areaId[i];
         if (i % 2 == 0)
         EV << ".";
 
@@ -3596,13 +3618,13 @@ void ISIS::printLSPDB()
         //print system id
     for (unsigned int i = 0; i < 6; i++)
     {
-        EV<< setfill('0') << setw(2) << dec << (unsigned int) sysId[i];
+        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
         if (i % 2 == 1)
         EV << ".";
     }
 
         //print NSEL
-    EV<< setfill('0') << setw(2) << dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
+    EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
     << lspDb->size() << endl;
 //        unsigned char *lspId;
     it = lspDb->begin();
@@ -3612,7 +3634,7 @@ void ISIS::printLSPDB()
         //print LSP ID
         for (unsigned int j = 0; j < 8; j++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) (*it)->LSP->getLspID(j);
+            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*it)->LSP->getLspID(j);
             if (j == 1 || j == 3 || j == 5)
             EV << ".";
             if (j == 6)
@@ -3621,8 +3643,8 @@ void ISIS::printLSPDB()
         EV << "\t0x";
 
         //print sequence number
-        EV << setfill('0') << setw(8) << hex << (*it)->LSP->getSeqNumber();
-        EV << "\t" << setfill('0') << setw(5) << dec << (*it)->LSP->getRemLifeTime() << endl;
+        EV << std::setfill('0') <<  std::setw(8) << std::hex << (*it)->LSP->getSeqNumber();
+        EV << "\t" << std::setfill('0') <<  std::setw(5) << std::dec << (*it)->LSP->getRemLifeTime() << endl;
         //EV <<"SeqNum: " << (*it)->LSP->getSeqNumber()<<endl;
 
         TLV_t *tmpTlv;
@@ -3636,12 +3658,12 @@ void ISIS::printLSPDB()
                 for (unsigned int l = 0; l < 7; l++)
                 {
                     //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
-                    EV << setfill('0') << setw(2) << dec << (unsigned int) tmpTlv->value[m + 4 + l];
+                    EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) tmpTlv->value[m + 4 + l];
                     if (l % 2 == 1)
                     EV << ".";
                 }
 
-                EV << "\tmetric: " << setfill('0') << setw(2) << dec << (unsigned int) tmpTlv->value[m + 0] << endl;
+                EV << "\tmetric: " << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) tmpTlv->value[m + 0] << endl;
             }
 
         }
@@ -3695,9 +3717,9 @@ void ISIS::printLspId(unsigned char *lspId)
 {
 
     this->printSysId(lspId);
-    std::cout << setfill('0') << setw(2) << dec << (unsigned int) lspId[ISIS_SYSTEM_ID];
+    std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) lspId[ISIS_SYSTEM_ID];
     std::cout << "-";
-    std::cout << setfill('0') << setw(2) << dec << (unsigned int) lspId[ISIS_SYSTEM_ID + 1] << endl;
+    std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) lspId[ISIS_SYSTEM_ID + 1] << endl;
 }
 
 void ISIS::printSysId(unsigned char *sysId)
@@ -3706,7 +3728,7 @@ void ISIS::printSysId(unsigned char *sysId)
     //print system id
     for (unsigned int i = 0; i < 6; i++)
     {
-        std::cout << setfill('0') << setw(2) << dec << (unsigned int) sysId[i];
+        std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
         if (i % 2 == 1)
             std::cout << ".";
     }
@@ -4372,7 +4394,7 @@ void ISIS::sendCsnp(ISISTimer *timer)
         EV<< "ISIS::sendCSNP: Source-ID: ";
         for (unsigned int i = 0; i < 6; i++)
             {
-                EV << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
                 if (i % 2 == 1)
                     EV << ".";
             }
@@ -4548,7 +4570,7 @@ void ISIS::sendPsnp(ISISTimer *timer)
     EV<< "ISIS::sendPSNP: Source-ID: ";
     for (unsigned int i = 0; i < 6; i++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
             if (i % 2 == 1)
                 EV << ".";
         }
@@ -4976,7 +4998,7 @@ bool ISIS::checkDuplicateSysID(ISISMessage * msg)
         EV<< this->deviceId << ": IS-IS WARNING: possible duplicate system ID ";
         for (unsigned g = 0; g < 6; g++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) sysId[g];
+            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[g];
             if (g == 1 || g == 3)
             EV << ".";
         }
@@ -5171,7 +5193,7 @@ void ISIS::sendLSP(LSPRecord *lspRec, int gateIndex)
     EV<< "ISIS::sendLSP: Source-ID: ";
     for (unsigned int i = 0; i < 6; i++)
         {
-            EV << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
             if (i % 2 == 1)
                 EV << ".";
         }
@@ -7271,7 +7293,7 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
                 EV<< "ISIS::sendPTPHello: Source-ID: ";
                 for (unsigned int i = 0; i < 6; i++)
                 {
-                    EV<< setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+                    EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
                     if (i % 2 == 1)
                     EV << ".";
                 }
@@ -7284,7 +7306,7 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
 
                 for (unsigned int i = 0; i < 6; i++)
                 {
-                    EV << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+                    EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
                     if (i % 2 == 1)
                     EV << ".";
                 }
@@ -7300,7 +7322,7 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
             EV<< "ISIS::sendPTPHello: Source-ID: ";
             for (unsigned int i = 0; i < 6; i++)
             {
-                EV << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
                 if (i % 2 == 1)
                 EV << ".";
             }
@@ -7329,7 +7351,8 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
 
         if (ie != NULL)
         {
-            d = ie->trillData();
+            //TODO A! Uncomment after adding TRILL
+//            d = ie->trillData();
         }
 
         myTLV = new TLV_t;
@@ -7369,24 +7392,25 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType, int 
         //Outer.VLAN
         //TODO B1 what to do when the port is configured to strip VLAN tag
         //TODO B1 in some cases one hello is sent on EVERY VLAN (0 - 4096)
-        myTLV->value[myTLV->length + 4] = d->getVlanId() & 0xFF;
-        myTLV->value[myTLV->length + 5] = (d->getVlanId() >> 8) & 0x0F;
-        //AF
-        myTLV->value[myTLV->length + 5] |= (d->isAppointedForwarder(d->getVlanId(), this->nickname) << 7);
-        //AC
-        myTLV->value[myTLV->length + 5] |= (d->isAccess() << 6);
-        //VM VLAN Mapping TODO unable to detect so setting false
-        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 5);
-        //BY Bypass pseudonode
-        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 4);
-
-        //Design.VLAN
-        myTLV->value[myTLV->length + 6] = d->getDesigVlan() && 0xFF;
-        myTLV->value[myTLV->length + 7] = (d->getDesigVlan() >> 8) && 0x0F;
-        //TR flag
-        myTLV->value[myTLV->length + 7] |= (d->isTrunk() << 7);
-
-        myTLV->length += 8;
+        //TODO A! Uncomment after adding TRILL
+//        myTLV->value[myTLV->length + 4] = d->getVlanId() & 0xFF;
+//        myTLV->value[myTLV->length + 5] = (d->getVlanId() >> 8) & 0x0F;
+//        //AF
+//        myTLV->value[myTLV->length + 5] |= (d->isAppointedForwarder(d->getVlanId(), this->nickname) << 7);
+//        //AC
+//        myTLV->value[myTLV->length + 5] |= (d->isAccess() << 6);
+//        //VM VLAN Mapping TODO unable to detect so setting false
+//        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 5);
+//        //BY Bypass pseudonode
+//        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 4);
+//
+//        //Design.VLAN
+//        myTLV->value[myTLV->length + 6] = d->getDesigVlan() && 0xFF;
+//        myTLV->value[myTLV->length + 7] = (d->getDesigVlan() >> 8) && 0x0F;
+//        //TR flag
+//        myTLV->value[myTLV->length + 7] |= (d->isTrunk() << 7);
+//
+//        myTLV->length += 8;
 
         /* Appointed Forwarders Sub-TLV     */
         /*************************************
@@ -7857,7 +7881,7 @@ void ISIS::bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *IS
             EV << "ISIS: Error during SPF. I think we shouldn't have neither same metric." << endl;
             //append
             tmpPath->metric = path->metric;
-            cout << "pathb metric: " << tmpPath->metric << endl;
+            std::cout << "pathb metric: " << tmpPath->metric << endl;
             tmpPath->from.clear();
             for (ISISNeighbours_t::iterator it = path->from.begin(); it != path->from.end(); ++it)
             {
@@ -7896,7 +7920,7 @@ void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from
             tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
             this->copyArrayContent((*consIt)->to, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
             tmpPath->metric = (*consIt)->metric + metric;
-//               cout << "patha metric: " << tmpPath->metric << endl;
+//               std::cout << "patha metric: " << tmpPath->metric << endl;
             if((*consIt)->from[ISIS_SYSTEM_ID] != 0){
                 //"from" is pseudonode and i guess that's not desirable
                 for (ISISNeighbours_t::iterator nIt = path->from.begin(); nIt != path->from.end(); ++nIt)
@@ -7983,7 +8007,7 @@ void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from
                 }
                 //append
                 tmpPath->metric = (*consIt)->metric + metric;
-                cout << "path metric: " << tmpPath->metric << endl;
+                std::cout << "path metric: " << tmpPath->metric << endl;
 
                 if((*consIt)->from[ISIS_SYSTEM_ID] != 0){
                     for (ISISNeighbours_t::iterator nIt = path->from.begin(); nIt != path->from.end(); ++nIt)
@@ -8585,7 +8609,7 @@ void ISIS::printPaths(ISISPaths_t *paths)
     //print area id
     for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
     {
-        std::cout << setfill('0') << setw(2) << dec << (unsigned int) this->areaId[i];
+        std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->areaId[i];
         if (i % 2 == 0)
             std::cout << ".";
 
@@ -8594,13 +8618,13 @@ void ISIS::printPaths(ISISPaths_t *paths)
     //print system id
     for (unsigned int i = 0; i < 6; i++)
     {
-        std::cout << setfill('0') << setw(2) << dec << (unsigned int) this->sysId[i];
+        std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
         if (i % 2 == 1)
             std::cout << ".";
     }
 
     //print NSEL
-    std::cout << setfill('0') << setw(2) << dec << (unsigned int) this->NSEL[0] << "\tNo. of paths: " << paths->size()
+    std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->NSEL[0] << "\tNo. of paths: " << paths->size()
             << endl;
     for (ISISPaths_t::iterator it = paths->begin(); it != paths->end(); ++it)
     {
@@ -8609,13 +8633,13 @@ void ISIS::printPaths(ISISPaths_t *paths)
 
         for (unsigned int i = 0; i < 6; i++)
         {
-            std::cout << setfill('0') << setw(2) << dec << (unsigned int) (*it)->to[i];
+            std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*it)->to[i];
             if (i % 2 == 1)
                 std::cout << ".";
         }
 
 
-        std::cout << setfill('0') << setw(2) << dec << (unsigned short) (*it)->to[6];
+        std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned short) (*it)->to[6];
         std::cout << "\t\t metric: " << (*it)->metric << "\t via: ";
         if ((*it)->from.empty())
         {
@@ -8625,7 +8649,7 @@ void ISIS::printPaths(ISISPaths_t *paths)
         {
 //            std::cout << "\t\t\t\t\t";
             this->printSysId((*nIt)->id);
-            std::cout << setfill('0') << setw(2) << dec << (unsigned short) (*nIt)->id[6];
+            std::cout << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned short) (*nIt)->id[6];
             std::cout << " ";
         }
         std::cout << endl;
@@ -8672,7 +8696,7 @@ void ISIS::bestToPath(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISIS
             EV << "ISIS: Error during SPF. I think we shouldn't have neither same metric." << endl;
             //append
             tmpPath->metric = path->metric;
-            cout << "pathb metric: " << tmpPath->metric << endl;
+            std::cout << "pathb metric: " << tmpPath->metric << endl;
             for (ISISNeighbours_t::iterator it = path->from.begin(); it != path->from.end(); ++it)
             {
                 tmpPath->from.push_back((*it));
@@ -8710,7 +8734,7 @@ void ISIS::moveToTent(ISISCons_t *initial, ISISPath *path, unsigned char *from, 
             tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
             this->copyArrayContent((*consIt)->to, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
             tmpPath->metric = (*consIt)->metric + metric;
-//               cout << "patha metric: " << tmpPath->metric << endl;
+//               std::cout << "patha metric: " << tmpPath->metric << endl;
 
             ISISNeighbour *neighbour = new ISISNeighbour;
 
@@ -8765,7 +8789,7 @@ void ISIS::moveToTent(ISISCons_t *initial, ISISPath *path, unsigned char *from, 
                 }
                 //append
                 tmpPath->metric = (*consIt)->metric + metric;
-                cout << "path metric: " << tmpPath->metric << endl;
+                std::cout << "path metric: " << tmpPath->metric << endl;
 //                   ISISNeighbour *neighbour = new ISISNeighbour;
 //                   neighbour->id = new unsigned char[ISIS_SYSTEM_ID + 2];
 //                   this->copyArrayContent((*consIt)->from, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
@@ -8889,7 +8913,7 @@ bool ISIS::extractISO(ISISCons_t *initial, short circuitType)
         this->copyArrayContent(tmpTLV->value, connection->to, ISIS_SYSTEM_ID + 1, i + 4, 0);
         connection->to[ISIS_SYSTEM_ID + 1] = 0;
         connection->metric = tmpTLV->value[i]; //default metric
-        //                    cout << "connection metric : " << connection->metric << endl;
+        //                    std::cout << "connection metric : " << connection->metric << endl;
         connection->type = false; //it's not a leaf
 
         //if this LSP has been generated by this IS (lspId == sysId)
@@ -9240,7 +9264,7 @@ int ISIS::getISISIftSize(void)
  */
 void ISIS::generateNetAddr()
 {
-    ift = InterfaceTableAccess().get();
+
 //    unsigned char *a = new unsigned char[6];
     char *tmp = new char[25];
     MACAddress address;
@@ -9257,7 +9281,7 @@ void ISIS::generateNetAddr()
      * This is not likely to happen.*/
     if (address.getInt() == 0)
     {
-        cout << "Warning: didn't get non-zero MAC address for NET generating" << endl;
+        std::cout << "Warning: didn't get non-zero MAC address for NET generating" << endl;
         address.generateAutoAddress();
     }
 //
@@ -9266,9 +9290,9 @@ void ISIS::generateNetAddr()
 //    this->NSEL = new unsigned char[1];
 
     this->netAddr = std::string(tmp);
-    stringstream addressStream;
-    addressStream << hex << address;
-    string aS = addressStream.str();
+    std::stringstream addressStream;
+    addressStream << std::hex << address;
+    std::string aS = addressStream.str();
 
 //    this->areaId[0] = (unsigned char)atoi("49");
 //    this->areaId[1] = (unsigned char)atoi("00");
@@ -9288,3 +9312,6 @@ void ISIS::generateNetAddr()
 
 }
 
+
+
+}//end namespace inet

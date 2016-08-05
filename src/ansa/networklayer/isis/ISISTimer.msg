@@ -16,6 +16,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
+namespace inet;
 
 enum ISISTimerType
 {
@@ -39,7 +40,7 @@ enum ISISTimerType
 };
 
 
-message ISISTimer extends cMessage
+message ISISTimer
 {
       char 		timerKind enum(ISISTimerType);
       int		interfaceIndex; //index to ISISIft maybe change to gateway index CHANGED TO gateIndex

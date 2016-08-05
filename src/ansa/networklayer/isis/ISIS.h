@@ -35,43 +35,54 @@
 #include <queue>
 #include <iomanip>
 
-#include "CLNSTable.h"
-#include "CLNSTableAccess.h"
-#include "ISISMessage_m.h"
-#include "ISISInterfaceData.h"
-//#include "ISISLSPPacket.h"
-#include "Ieee802Ctrl_m.h"
-#include "MACAddress.h"
+#include "ansa/networklayer/clns/CLNSTable.h"
+//#include "CLNSTableAccess.h"
+#include "ansa/networklayer/isis/ISISMessage_m.h"
+#include "ansa/networklayer/isis/ISISInterfaceData.h"
+
+
+#include "inet/linklayer/common/Ieee802Ctrl.h"
+#include "inet/linklayer/common/MACAddress.h"
 //#include "AnsaInterfaceTable.h"
 //#include "AnsaInterfaceTableAccess.h"
-#include "InterfaceTable.h"
-#include "InterfaceTableAccess.h"
-#include "NotificationBoard.h"
-#include "NotifierConsts.h"
-#include "InterfaceStateManager.h"
-#include "RoutingTableAccess.h"
-#include "IRoutingTable.h"
+#include "inet/networklayer/common/InterfaceTable.h"
+//#include "InterfaceTableAccess.h"
+//#include "NotificationBoard.h"
+#include "inet/common/NotifierConsts.h"
+//#include "InterfaceStateManager.h"
+//#include "RoutingTableAccess.h"
+#include "inet/networklayer/contract/IRoutingTable.h"
 //#include "IPRoute.h"
-#include "IPv4Route.h"
-#include "ISISTimer_m.h"
-#include "xmlParser.h"
-#include "ISIStypes.h"
-#include <cmessage.h>
-#include <crng.h>
+#include "inet/networklayer/ipv4/IPv4Route.h"
+#include "ansa/networklayer/isis/ISISTimer_m.h"
+//#include "xmlParser.h"
+#include "ansa/networklayer/isis/ISIStypes.h"
+//#include <cmessage.h>
+//#include <crng.h>
 //#include "TRILL.h"
-class TRILL;
+
+
+
+namespace inet {
+
+
+//class TRILL;
 
 //Multicast MAC adresses 01:80:c2:00:00:14 and :15 works so replace the ff:ff:...
 #define ISIS_ALL_L1_IS "01:80:c2:00:00:14"
 #define ISIS_ALL_L2_IS "01:80:c2:00:00:15"
 
+//TODO A! Remove after addin TRILL
+#define ALL_IS_IS_RBRIDGES "01-80-C2-00-00-41"
+
 //class ISISLSPPacket;
 /**
  * Single class providing all functionality of whole module.
  */
-class ISIS : public cSimpleModule, protected INotifiable
+class ISIS : public cSimpleModule
 {
-        friend class TRILL;
+    //TODO A! Uncomment after adding TRILL
+//        friend class TRILL;
     public:
         enum ISIS_MODE
         {
@@ -81,14 +92,17 @@ class ISIS : public cSimpleModule, protected INotifiable
         IInterfaceTable *ift; /*!< pointer to interface table */
         std::vector<ISISinterface> ISISIft; /*!< vector of available interfaces */
         CLNSTable *clnsTable; /*!< pointer to CLNS routing table */
-        NotificationBoard *nb; /*!< Provides access to the notification board */
-        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
+//        NotificationBoard *nb; /*!< Provides access to the notification board */
+        //TODO A! Uncomment after adding TRILL
+//        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
         ISIS_MODE mode;
 
-        string deviceType; /*!< device type specified in .ned when using this module */
-        string deviceId; /*!< device ID */
-        string configFile; /*!< config file specified in simulation */
-        string netAddr; /*!<  OSI network address in simplified NSAP format */
+        std::string deviceType; /*!< device type specified in .ned when using this module */
+        std::string deviceId; /*!< device ID */
+        std::string configFile; /*!< config file specified in simulation */
+
+
+        std::string netAddr; /*!<  OSI network address in simplified NSAP format */
         unsigned char *areaId; /*!< first 3Bytes of netAddr as area ID */
         unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
         unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
@@ -330,7 +344,7 @@ class ISIS : public cSimpleModule, protected INotifiable
         bool compareArrays(unsigned char *first, unsigned char *second, unsigned int size); //method for comparison of two unsigned int arrays
         void copyArrayContent(unsigned char *src, unsigned char *dst, unsigned int size, unsigned int startSrc,
                 unsigned int startDst); //copy content from one array to another
-        virtual void receiveChangeNotification(int category, const cObject *details);
+        virtual void receiveChangeNotification(int category, cObject *details);
 
     public:
         ISIS();
@@ -340,12 +354,13 @@ class ISIS : public cSimpleModule, protected INotifiable
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
         void setClnsTable(CLNSTable *clnsTable);
-        void setTrill(TRILL *trill);
+        //TODO A! Uncomment after adding TRILL
+//        void setTrill(TRILL *trill);
         void setIft(IInterfaceTable *ift);
-        void setNb(NotificationBoard *nb);
+//        void setNb(NotificationBoard *nb);
         void subscribeNb(void);
         void setMode(ISIS_MODE mode);
-        void setNetAddr(string netAddr);
+        void setNetAddr(std::string netAddr);
 
         void generateNetAddr();
         void setIsType(short isType);
@@ -391,5 +406,6 @@ class ISIS : public cSimpleModule, protected INotifiable
 
 };
 
+}//end namespace inet
 
 #endif /* ISIS_H_ */

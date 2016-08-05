@@ -30,6 +30,8 @@
 #include "ModuleAccess.h"
 #include "ISIS.h"
 
+namespace inet {
+
 class ISISAccess : public ModuleAccess<ISIS>
 {
     public:
@@ -38,5 +40,7 @@ class ISISAccess : public ModuleAccess<ISIS>
         {
         }
 };
+
+}//end namespace inet
 
 #endif /* ISISACCESS_H_ */
