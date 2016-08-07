@@ -327,7 +327,7 @@ void ISIS::initialize(int stage)
 //        devConf->loadISISConfig(this, this->mode);
 
         ISISDeviceConfigurator* devConf = new ISISDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
-
+        devConf->loadISISConfig(this,this->mode);
 
 
         //TODO passive-interface

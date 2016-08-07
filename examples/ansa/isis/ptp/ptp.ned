@@ -17,12 +17,12 @@ package inet.examples.ansa.isis.ptp;
 
 import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;
-import inet.node.ethernet.EtherSwitch;
-import ansa.networklayer.isis.AnsaISISRouter;
+//import inet.node.ethernet.EtherSwitch;
+//import ansa.networklayer.isis.AnsaISISRouter;
 import ansa.node.ANSA_ISISRouter;
 //import inet.ansa.ANSARouter;
 //import inet.networklayer.autorouting.FlatNetworkConfigurator;
-import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
+//import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
 
 
 

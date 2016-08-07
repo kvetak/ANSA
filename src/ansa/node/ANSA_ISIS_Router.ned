@@ -35,6 +35,9 @@ module ANSA_ISISRouter extends ANSA_Router
         @capabilitiesEnabled("Router");
         
         hasISIS = true;
+        enableCLNS = true;
+        enableIPv4 = false;
+        enableIPv6 = false;
 		isis.configData = configData;   
 		string deviceId = default("");  
         xml configFile = default(xmldoc("config.xml"));

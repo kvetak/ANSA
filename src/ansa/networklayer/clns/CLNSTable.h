@@ -42,7 +42,7 @@ namespace inet {
 class IInterfaceTable;
 class InterfaceEntry;
 
-/* It will get renamed to CLNPRoute or RoutingTable under CLNP */
+
 
 class CLNSRoute: public cObject {
 friend class CLNSTable;
