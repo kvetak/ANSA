@@ -28,8 +28,7 @@
 
 #include "inet/common/INETDefs.h"
 
-//#include "inet/networklayer/contract/ipv4/IPv4Address.h"
-#include "ansa/networklayer/clns/NET.h"
+#include "ansa/networklayer/clns/CLNSAddress.h"
 #include "inet/networklayer/contract/IRoute.h"
 
 namespace inet {
@@ -65,10 +64,10 @@ class INET_API CLNSRoute : public cObject, public IRoute
     };
 
   private:
-    IIPv4RoutingTable *rt;    ///< the routing table in which this route is inserted, or nullptr
-    NET dest;    ///< Destination
-    NET netmask;    ///< Route mask
-    NET gateway;    ///< Next hop
+    CLNSRoutingTable *rt;    ///< the routing table in which this route is inserted, or nullptr
+    CLNSAddress dest;    ///< Destination
+//    CLNSAddress netmask;
+    CLNSAddress gateway;    ///< Next hop
     InterfaceEntry *interfacePtr;    ///< interface
     SourceType sourceType;    ///< manual, routing prot, etc.
     unsigned int adminDist;    ///< Cisco like administrative distance
@@ -102,9 +101,9 @@ class INET_API CLNSRoute : public cObject, public IRoute
     /** test validity of route entry, e.g. check expiry */
     virtual bool isValid() const { return true; }
 
-    virtual void setDestination(NET _dest) { if (dest != _dest) { dest = _dest; changed(F_DESTINATION); } }
-    virtual void setNetmask(NET _netmask) { if (netmask != _netmask) { netmask = _netmask; changed(F_PREFIX_LENGTH); } }
-    virtual void setGateway(NET _gateway) { if (gateway != _gateway) { gateway = _gateway; changed(F_NEXTHOP); } }
+    virtual void setDestination(CLNSAddress _dest) { if (dest != _dest) { dest = _dest; changed(F_DESTINATION); } }
+//    virtual void setNetmask(NET _netmask) { if (netmask != _netmask) { netmask = _netmask; changed(F_PREFIX_LENGTH); } }
+    virtual void setGateway(CLNSAddress _gateway) { if (gateway != _gateway) { gateway = _gateway; changed(F_NEXTHOP); } }
     virtual void setInterface(InterfaceEntry *_interfacePtr) override { if (interfacePtr != _interfacePtr) { interfacePtr = _interfacePtr; changed(F_IFACE); } }
     virtual void setSourceType(SourceType _source) override { if (sourceType != _source) { sourceType = _source; changed(F_SOURCE); } }
 #ifdef ANSAINET
@@ -114,13 +113,13 @@ class INET_API CLNSRoute : public cObject, public IRoute
     virtual void setMetric(int _metric) override { if (metric != _metric) { metric = _metric; changed(F_METRIC); } }
 
     /** Destination address prefix to match */
-    NET getDestination() const { return dest; }
+    CLNSAddress getDestination() const { return dest; }
 
-    /** Represents length of prefix to match */
-    NET getNetmask() const { return netmask; }
+//    /** Represents length of prefix to match */
+//    CLNSAddress getNetmask() const { return netmask; }
 
     /** Next hop address */
-    NET getGateway() const { return gateway; }
+    CLNSAddress getGateway() const { return gateway; }
 
     /** Next hop interface */
     InterfaceEntry *getInterface() const override { return interfacePtr; }
@@ -144,12 +143,12 @@ class INET_API CLNSRoute : public cObject, public IRoute
     void setProtocolData(cObject *protocolData) override { this->protocolData = protocolData; }
 
     virtual IRoutingTable *getRoutingTableAsGeneric() const override;
-    virtual void setDestination(const L3Address& dest) override { setDestination(dest.toIPv4()); }
-    virtual void setPrefixLength(int len) override { setNetmask(NET::makeNetmask(len)); }
-    virtual void setNextHop(const L3Address& nextHop) override { setGateway(nextHop.toIPv4()); }    //TODO rename IPv4 method
+    virtual void setDestination(const L3Address& dest) override { setDestination(dest.toCLNS()); }
+    virtual void setPrefixLength(int len) override { /*setNetmask(CLNSAddress::makeNetmask(len));*/ }
+    virtual void setNextHop(const L3Address& nextHop) override { setGateway(nextHop.toCLNS()); }    //TODO rename IPv4 method
 
     virtual L3Address getDestinationAsGeneric() const override { return getDestination(); }
-    virtual int getPrefixLength() const override { return getNetmask().getNetmaskLength(); }
+    virtual int getPrefixLength() const override { return 0; /*getNetmask().getNetmaskLength();*/ }
     virtual L3Address getNextHopAsGeneric() const override { return getGateway(); }    //TODO rename IPv4 method
 };
 

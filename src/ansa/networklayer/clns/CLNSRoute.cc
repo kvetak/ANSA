@@ -21,3 +21,112 @@
  * @brief Class representing a route for CLNS
  * @detail Class representing a route for CLNS
  */
+
+
+#include "ansa/networklayer/clns/CLNSRoute.h"
+
+#include "inet/networklayer/common/InterfaceEntry.h"
+
+namespace inet {
+
+Register_Class(CLNSRoute);
+
+CLNSRoute::~CLNSRoute()
+{
+    delete protocolData;
+}
+
+
+#ifdef ANSAINET
+const char* inet::CLNSRoute::getSourceTypeAbbreviation() const {
+    switch (sourceType) {
+        case IFACENETMASK:
+            return "C";
+        case MANUAL:
+            return (getDestination().isUnspecified() ? "S*": "S");
+//        case ROUTER_ADVERTISEMENT:
+//            return "ra";
+//        case RIP:
+//            return "R";
+//        case OSPF:
+//            return "O";
+//        case BGP:
+//            return "B";
+//        case EIGRP:
+//            return getAdminDist() < CLNSRoute::dEIGRPExternal ? "D" : "D EX";
+//        case LISP:
+//            return "l";
+//        case BABEL:
+//            return "ba";
+//        case ODR:
+//            return "o";
+        case ISIS:
+            return "i";
+        default:
+            return "???";
+    }
+}
+#endif
+
+std::string CLNSRoute::info() const
+{
+    std::stringstream out;
+#ifdef ANSAINET
+    out << getSourceTypeAbbreviation();
+    out << " ";
+    if (getDestination().isUnspecified())
+        out << "0.0.0.0";
+    else
+        out << getDestination();
+    out << "/";
+
+    if (getGateway().isUnspecified())
+    {
+        out << " is directly connected";
+    }
+    else
+    {
+        out << " [" << getAdminDist() << "/" << getMetric() << "]";
+        out << " via ";
+        out << getGateway();
+    }
+    out << ", " << getInterfaceName();
+#else
+    out << "dest:";
+    if (dest.isUnspecified())
+        out << "*  ";
+    else
+        out << dest << "  ";
+    out << "gw:";
+    if (gateway.isUnspecified())
+        out << "*  ";
+    else
+        out << gateway << "  ";
+
+    out << "metric:" << metric << " ";
+    out << "if:";
+    if (!interfacePtr)
+        out << "*";
+    else
+        out << interfacePtr->getName();
+    if (interfacePtr && interfacePtr->ipv4Data())
+        out << "(" << interfacePtr->ipv4Data()->getIPAddress() << ")";
+    out << "  ";
+    out << (gateway.isUnspecified() ? "DIRECT" : "REMOTE");
+    out << " " << IRoute::sourceTypeName(sourceType);
+
+#endif // ANSAINET
+    return out.str();
+}
+
+//void CLNSAddress::_checkNetmaskLength(int length)
+//{
+//    if (length < 0 || length > 64)
+//        throw cRuntimeError("CLNSAddress: wrong netmask length %d (not in 0..64)", length);
+//}
+
+
+
+
+
+}

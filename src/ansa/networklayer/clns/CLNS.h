@@ -24,12 +24,16 @@
 #ifndef __ANSAINET_CLNS_H_
 #define __ANSAINET_CLNS_H_
 
-#include <omnetpp.h>
+#include <vector>
+
 #include "inet/common/INETDefs.h"
+
 #include "inet/networklayer/contract/INetworkProtocol.h"
 #include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "inet/common/ProtocolMap.h"
 #include "inet/common/queue/QueueBase.h"
+
+#include "ansa/networklayer/clns/CLNSAddress.h"
 
 using namespace omnetpp;
 
@@ -42,6 +46,15 @@ class IInterfaceTable;
  */
 class INET_API CLNS : public cSimpleModule
 {
+  public:
+      typedef std::vector<CLNSAddress> CLNSAddressVector;
+
+  private:
+      CLNSAddressVector addressVector;
+
+
+
+
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

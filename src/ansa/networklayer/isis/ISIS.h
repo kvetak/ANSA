@@ -35,7 +35,7 @@
 #include <queue>
 #include <iomanip>
 
-#include "ansa/networklayer/clns/CLNSTable.h"
+#include "ansa/networklayer/clns/CLNSRoutingTable.h"
 //#include "CLNSTableAccess.h"
 #include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "ansa/networklayer/isis/ISISInterfaceData.h"
