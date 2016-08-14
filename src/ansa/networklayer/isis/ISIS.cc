@@ -28,6 +28,9 @@
 
 #include "ansa/networklayer/isis/ISIS.h"
 #include "ansa/networklayer/isis/ISISDeviceConfigurator.h"
+#include "inet/networklayer/contract/NetworkProtocolCommand_m.h"
+
+#include "inet/common/ModuleAccess.h"
 
 //#include "TRILL.h"
 
@@ -297,7 +300,9 @@ void ISIS::initialize(int stage)
 ////         nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
 //         nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
 
-        ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+      ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
+        clnsrt = check_and_cast<CLNSRoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("clns"));
+
     }
 
     if (stage == 1)
@@ -319,8 +324,7 @@ void ISIS::initialize(int stage)
         }
 
     }
-
-    if (stage == 3)
+    else if (stage == 3)
     {
         //TODO A! Create ISISDeviceConfigurator class
 //        DeviceConfigurator *devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
@@ -386,6 +390,13 @@ void ISIS::initialize(int stage)
         ISISTimer *timerMsg = new ISISTimer("ISIS Start", ISIS_START_TIMER);
         timerMsg->setTimerKind(ISIS_START_TIMER);
         this->schedule(timerMsg);
+
+    }
+    else if (stage == INITSTAGE_ROUTING_PROTOCOLS)
+    {
+      RegisterTransportProtocolCommand *message = new RegisterTransportProtocolCommand();
+      message->setProtocol(1234);
+      send(message, "lowerLayerOut");
 
     }
 
@@ -3461,10 +3472,10 @@ void ISIS::printAdjTable()
     }
 }
 
-void ISIS::setClnsTable(CLNSTable *clnsTable)
-{
-    this->clnsTable = clnsTable;
-}
+//void ISIS::setClnsTable(CLNSTable *clnsTable)
+//{
+//    this->clnsTable = clnsTable;
+//}
 
 //void ISIS::setNb(NotificationBoard *nb)
 //{

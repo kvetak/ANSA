@@ -91,7 +91,8 @@ class ISIS : public cSimpleModule
     private:
         IInterfaceTable *ift; /*!< pointer to interface table */
         std::vector<ISISinterface> ISISIft; /*!< vector of available interfaces */
-        CLNSTable *clnsTable; /*!< pointer to CLNS routing table */
+//        CLNSTable *clnsTable; /*!< pointer to CLNS routing table */
+        CLNSRoutingTable *clnsrt;
 //        NotificationBoard *nb; /*!< Provides access to the notification board */
         //TODO A! Uncomment after adding TRILL
 //        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
@@ -338,7 +339,7 @@ class ISIS : public cSimpleModule
         virtual void handleMessage(cMessage *msg); //basic message handling
         virtual int numInitStages() const
         {
-            return 5;
+            return NUM_INIT_STAGES;
         }
 
         bool compareArrays(unsigned char *first, unsigned char *second, unsigned int size); //method for comparison of two unsigned int arrays
@@ -353,7 +354,7 @@ class ISIS : public cSimpleModule
         void appendISISInterface(ISISinterface iface);
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
-        void setClnsTable(CLNSTable *clnsTable);
+//        void setClnsTable(CLNSTable *clnsTable);
         //TODO A! Uncomment after adding TRILL
 //        void setTrill(TRILL *trill);
         void setIft(IInterfaceTable *ift);

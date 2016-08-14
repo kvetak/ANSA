@@ -26,7 +26,8 @@ simple ISIS
         string deviceType;
         xml configFile;
         xml configData = default(xmldoc("config.xml"));
-        string interfaceTableModule;
+        string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;
         
 
     gates:

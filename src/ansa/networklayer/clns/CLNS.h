@@ -29,35 +29,65 @@
 #include "inet/common/INETDefs.h"
 
 #include "inet/networklayer/contract/INetworkProtocol.h"
-#include "ansa/networklayer/isis/ISISMessage_m.h"
+//#include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "inet/common/ProtocolMap.h"
 #include "inet/common/queue/QueueBase.h"
 
 #include "ansa/networklayer/clns/CLNSAddress.h"
+//#include "inet/networklayer/common/InterfaceEntry.h"
+
 
 using namespace omnetpp;
 
 namespace inet {
 
+class ISISMessage;
 class IInterfaceTable;
+class CLNSRoutingTable;
+class InterfaceEntry;
 
 /**
  * TODO - Generated class
  */
-class INET_API CLNS : public cSimpleModule
+class INET_API CLNS : public QueueBase, public INetworkProtocol
 {
   public:
-      typedef std::vector<CLNSAddress> CLNSAddressVector;
+    typedef std::vector<CLNSAddress> CLNSAddressVector;
 
   private:
-      CLNSAddressVector addressVector;
+    CLNSAddressVector addressVector;
 
+  protected:
+    CLNSRoutingTable *rt = nullptr;
+    IInterfaceTable *ift = nullptr;
+
+    int transportInGateBaseId = -1;
+    int queueOutGateBaseId = -1;
+
+    ProtocolMapping mapping;
+    bool isUp = false;
+
+
+    // statistics
+    int numMulticast = 0;
+    int numLocalDeliver = 0;
+    int numDropped = 0;    // forwarding off, no outgoing interface, too large but "don't fragment" is set, TTL exceeded, etc
+    int numUnroutable = 0;
+    int numForwarded = 0;
 
 
 
   protected:
-    virtual void initialize();
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void initialize(int stage) override;
     virtual void handleMessage(cMessage *msg);
+    virtual void updateDisplayString();
+
+    virtual void endService(cPacket *packet) override;
+
+    virtual void handlePacketFromHL(cPacket *packet);
+    virtual void handleIncomingISISMessage(ISISMessage* packet, const InterfaceEntry *fromIE);
+    virtual const InterfaceEntry *getSourceInterfaceFrom(cPacket *packet);
 };
 
 } //namespace
