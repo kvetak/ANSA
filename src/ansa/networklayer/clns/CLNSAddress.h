@@ -41,7 +41,7 @@ private:
 //    unsigned char* systemID;
     uint8 nsel; //this field is probably not part of NET, but part of NSAP (still confused)
 
-    bool unspecified;
+
 public:
 
     enum AddressCategory {
@@ -92,9 +92,9 @@ public:
      * Compares two CLNS addresses.
      */
     bool operator<(const CLNSAddress& addr1) const { if(areaID == addr1.getAreaId()){return systemID < addr1.getSystemId();}else{ return areaID < addr1.getAreaId();} }
-//    bool operator<=(const CLNSAddress& addr1) const { return getInt() <= addr1.getInt(); }
-//    bool operator>(const CLNSAddress& addr1) const { return getInt() > addr1.getInt(); }
-//    bool operator>=(const CLNSAddress& addr1) const { return getInt() >= addr1.getInt(); }
+    bool operator<=(const CLNSAddress& addr1) const { if(areaID == addr1.getAreaId()){return systemID <= addr1.getSystemId();}else{ return areaID < addr1.getAreaId();} }
+    bool operator>(const CLNSAddress& addr1) const { if(areaID == addr1.getAreaId()){return systemID > addr1.getSystemId();}else{ return areaID > addr1.getAreaId();} }
+    bool operator>=(const CLNSAddress& addr1) const { if(areaID == addr1.getAreaId()){return systemID >= addr1.getSystemId();}else{ return areaID > addr1.getAreaId();} }
 
 
 //    static CLNSAddress makeNetmask(int length) { _checkNetmaskLength(length); return CLNSAddress(_makeNetmask(length)); }

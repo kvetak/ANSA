@@ -102,11 +102,12 @@ class ISIS : public cSimpleModule
         std::string deviceId; /*!< device ID */
         std::string configFile; /*!< config file specified in simulation */
 
+        CLNSAddress localAddr;
+//        std::string netAddr; /*!<  OSI network address in simplified NSAP format */
+//        unsigned char *areaId; /*!< first 3Bytes of netAddr as area ID */
+//        unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
+//        unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
 
-        std::string netAddr; /*!<  OSI network address in simplified NSAP format */
-        unsigned char *areaId; /*!< first 3Bytes of netAddr as area ID */
-        unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
-        unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
         int nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
         AdjTab_t adjL1Table; /*!< table of L1 adjacencies */
         AdjTab_t adjL2Table; /*!< table of L2 adjacencies */

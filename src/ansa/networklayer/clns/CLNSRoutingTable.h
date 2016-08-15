@@ -40,26 +40,55 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
   private:
     typedef std::vector<CLNSRoute *> RouteVector;
     RouteVector routes;    // Unicast route array, sorted by //netmask desc, dest asc, metric asc
-    CLNSAddress routerId;
+
+
+
 
   protected:
     IInterfaceTable *ift = nullptr;    // cached pointer
 
+    CLNSAddress routerId;
     bool isNodeUp = false;
+    bool useAdminDist = false;
 
     // routing cache: maps destination address to the route
     typedef std::map<CLNSAddress, CLNSRoute *> RoutingCache;
     mutable RoutingCache routingCache;
+
+
+    // local addresses cache (to speed up isLocalAddress())
+    typedef std::set<CLNSAddress> AddressSet;
+    mutable AddressSet localAddresses;
+
 
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void initialize(int stage);
     virtual void handleMessage(cMessage *msg);
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
+    // helper functions:
+    void internalAddRoute(CLNSRoute *entry);
+
+    // invalidates routing cache and local addresses cache
+    virtual void invalidateCache();
+
+    // helper for sorting routing table, used by addRoute()
+    class RouteLessThan
+    {
+        const CLNSRoutingTable &c;
+    public:
+        RouteLessThan(const CLNSRoutingTable& c) : c(c) {}
+        bool operator () (const CLNSRoute *a, const CLNSRoute *b) { return c.routeLessThan(a, b); }
+    };
+    bool routeLessThan(const CLNSRoute *a, const CLNSRoute *b) const;
+
+    void updateDisplayString();
 
 
   private:
-    void invalidateCache();
+
+    virtual void addRoute(IRoute *entry) override {addRoute(check_and_cast<CLNSRoute *>(entry)); }
+
 
   public:
     virtual ~CLNSRoutingTable();
@@ -84,7 +113,7 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
         /**
          * Checks if the address is a local one, i.e. one of the host's.
          */
-        virtual bool isLocalAddress(const L3Address& dest) const override {return false;}    //TODO A1
+        virtual bool isLocalAddress(const CLNSAddress& dest) const;
 
         /**
          * Returns an interface given by its address. Returns nullptr if not found.
@@ -164,7 +193,7 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
          * while in the routing table. (There is a notification mechanism that
          * allows routing table internals to be updated on a routing entry change.)
          */
-        virtual void addRoute(IRoute *entry) override {};
+        virtual void addRoute(CLNSRoute *entry);
 
         /**
          * Removes the given route from the routing table, and returns it.
@@ -213,6 +242,10 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
         virtual IRoute *createRoute() override { return new CLNSRoute(); }
     const CLNSAddress& getRouterId() const;
     void setRouterId(const CLNSAddress& routerId);
+
+    virtual bool isLocalAddress(const L3Address& dest) const override { return isLocalAddress(dest.toCLNS()); }
+
+    void addLocalAddress(const CLNSAddress& address);
     /**
      * ILifecycle method
      */

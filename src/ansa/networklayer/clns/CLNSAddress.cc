@@ -35,7 +35,7 @@ const CLNSAddress CLNSAddress::UNSPECIFIED_ADDRESS;
 CLNSAddress::CLNSAddress()
 {
 
-    unspecified = true;
+
     areaID = 0;
     systemID = 0;
     nsel = 0;
@@ -44,7 +44,7 @@ CLNSAddress::CLNSAddress()
 
 CLNSAddress::CLNSAddress(uint64 areaID, uint64 systemID)
 {
-  unspecified = false;
+
       this->areaID = areaID;
       this->systemID = systemID;
       nsel = 0;
@@ -53,7 +53,7 @@ CLNSAddress::CLNSAddress(uint64 areaID, uint64 systemID)
 
 CLNSAddress::CLNSAddress(std::string net)
 {
-  unspecified = true;
+
   areaID = 0;
   systemID = 0;
   nsel = 0;
@@ -134,7 +134,7 @@ CLNSAddress::CLNSAddress(std::string net)
 
 //        this->nickname = this->sysId[ISIS_SYSTEM_ID - 1] + this->sysId[ISIS_SYSTEM_ID - 2] * 0xFF;
 
-  unspecified = false;
+
 
 }
 
@@ -143,7 +143,7 @@ CLNSAddress::~CLNSAddress() {
 }
 
 bool CLNSAddress::isUnspecified() const {
-    return unspecified;
+    return systemID == 0 && areaID == 0;
 }
 
 std::string CLNSAddress::str(bool printUnspec    /* = true */) const

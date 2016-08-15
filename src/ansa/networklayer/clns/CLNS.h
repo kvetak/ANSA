@@ -55,7 +55,12 @@ class INET_API CLNS : public QueueBase, public INetworkProtocol
     typedef std::vector<CLNSAddress> CLNSAddressVector;
 
   private:
+
+    // local addresses cache (to speed up isLocalAddress())
     CLNSAddressVector addressVector;
+
+
+    CLNSAddressVector  localAddresses; //TODO A! Load it from .xml
 
   protected:
     CLNSRoutingTable *rt = nullptr;
@@ -88,6 +93,10 @@ class INET_API CLNS : public QueueBase, public INetworkProtocol
     virtual void handlePacketFromHL(cPacket *packet);
     virtual void handleIncomingISISMessage(ISISMessage* packet, const InterfaceEntry *fromIE);
     virtual const InterfaceEntry *getSourceInterfaceFrom(cPacket *packet);
+
+
+  public:
+    CLNSAddress getKAddress(unsigned int k) const;
 };
 
 } //namespace

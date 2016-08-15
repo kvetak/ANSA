@@ -153,5 +153,12 @@ void CLNS::updateDisplayString()
 //    getDisplayString().setTagArg("t", 0, buf);
 }
 
+CLNSAddress CLNS::getKAddress(unsigned int k) const {
+
+    if(k< localAddresses.size())
+    {
+        return localAddresses[k];
+    }
+}
 
 } //namespace

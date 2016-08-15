@@ -96,7 +96,7 @@ void CLNSRoutingTable::initialize(int stage)
         //TODO: A1 What about routerID?
 //          const char *routerIdStr = par("routerId").stringValue();
 //          if (strcmp(routerIdStr, "") && strcmp(routerIdStr, "auto"))
-//              routerId = IPv4Address(routerIdStr);
+//              routerId = CLNSAddress(routerIdStr);
       }
   }
   else if (stage == INITSTAGE_NETWORK_LAYER_3) {
@@ -126,6 +126,35 @@ void CLNSRoutingTable::invalidateCache()
 //    localBroadcastAddresses.clear();
 }
 
+bool CLNSRoutingTable::isLocalAddress(const CLNSAddress& dest) const
+{
+    Enter_Method("isLocalAddress()");    // note: str().c_str() too slow here
+//
+//    if (localAddresses.empty()) {
+//        // collect interface addresses if not yet done
+//        for (int i = 0; i < ift->getNumInterfaces(); i++) {
+//            CLNSAddress interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
+//            localAddresses.insert(interfaceAddr);
+//        }
+//    }
+//#if defined(ANSAINET)
+//    for (int i=0; i<ift->getNumInterfaces(); i++)
+//    {
+//        ANSA_InterfaceEntry* ieVF = dynamic_cast<ANSA_InterfaceEntry *>(ift->getInterface(i));
+//        if (ieVF && ieVF->hasIPAddress(dest))
+//            return true;
+//    }
+//#endif
+    auto it = localAddresses.find(dest);
+    return it != localAddresses.end();
+}
+
+void CLNSRoutingTable::addLocalAddress(const CLNSAddress& address)
+{
+    localAddresses.insert(address);
+}
+
+
 void CLNSRoutingTable::printRoutingTable() const
 {
   Enter_Method("");
@@ -154,6 +183,58 @@ CLNSRoute *CLNSRoutingTable::getRoute(int k) const
     return nullptr;
 }
 
+void CLNSRoutingTable::addRoute(CLNSRoute *entry)
+{
+    Enter_Method("addRoute(...)");
+
+    internalAddRoute(entry);
+
+    invalidateCache();
+    updateDisplayString();
+
+    emit(NF_ROUTE_ADDED, entry);
+}
+
+
+void CLNSRoutingTable::internalAddRoute(CLNSRoute *entry)
+{
+//    if (!entry->getNetmask().isValidNetmask())
+//        throw cRuntimeError("addRoute(): wrong netmask %s in route", entry->getNetmask().str().c_str());
+
+//    if (entry->getNetmask().getInt() != 0 && (entry->getDestination().getInt() & entry->getNetmask().getInt()) == 0)
+//        throw cRuntimeError("addRoute(): all bits of destination address %s is 0 inside non zero netmask %s",
+//                entry->getDestination().str().c_str(), entry->getNetmask().str().c_str());
+
+//    if ((entry->getDestination().getInt() & ~entry->getNetmask().getInt()) != 0)
+//        throw cRuntimeError("addRoute(): suspicious route: destination IP address %s has bits set outside netmask %s",
+//                entry->getDestination().str().c_str(), entry->getNetmask().str().c_str());
+
+    // check that the interface exists
+    if (!entry->getInterface())
+        throw cRuntimeError("addRoute(): interface cannot be nullptr");
+
+    // if this is a default route, remove old default route (we're replacing it)
+//    if (entry->getNetmask().isUnspecified()) {
+//        CLNSRoute *oldDefaultRoute = getDefaultRoute();
+//        if (oldDefaultRoute != nullptr)
+//            deleteRoute(oldDefaultRoute);
+//    }
+
+    // The 'routes' vector may contain multiple routes with the same destination/netmask.
+    // Routes are stored in descending netmask length and ascending administrative_distance/metric order,
+    // so the first matching is the best one.
+    // XXX Should only the route with the best metric be stored? Then the worse route should be deleted and
+    //     internalAddRoute() should return a bool indicating if it was successful.
+
+    // add to tables
+    // we keep entries sorted by netmask desc, metric asc in routeList, so that we can
+    // stop at the first match when doing the longest netmask matching
+    auto pos = upper_bound(routes.begin(), routes.end(), entry, RouteLessThan(*this));
+    routes.insert(pos, entry);
+
+    entry->setRoutingTable(this);
+}
+
 CLNSRoute *CLNSRoutingTable::findBestMatchingRoute(const CLNSAddress& dest) const
 {
     Enter_Method("findBestMatchingRoute");
@@ -180,6 +261,33 @@ CLNSRoute *CLNSRoutingTable::findBestMatchingRoute(const CLNSAddress& dest) cons
     routingCache[dest] = bestRoute;
     return bestRoute;
 }
+
+
+
+// The 'routes' vector stores the routes in this order.
+// The best matching route should precede the other matching routes,
+// so the method should return true if a is better the b.
+bool CLNSRoutingTable::routeLessThan(const CLNSRoute *a, const CLNSRoute *b) const
+{
+    // longer prefixes are better, because they are more specific
+//    if (a->getNetmask() != b->getNetmask())
+//        return a->getNetmask() > b->getNetmask();
+
+    if (a->getDestination() != b->getDestination())
+        return a->getDestination() < b->getDestination();
+
+    // for the same destination/netmask:
+
+    // smaller administration distance is better (if useAdminDist)
+    if (useAdminDist && (a->getAdminDist() != b->getAdminDist()))
+        return a->getAdminDist() < b->getAdminDist();
+
+    // smaller metric is better
+    return a->getMetric() < b->getMetric();
+}
+
+
+
 
 void CLNSRoutingTable::handleMessage(cMessage *msg)
 {
@@ -211,7 +319,7 @@ void CLNSRoutingTable::receiveSignal(cComponent *source, simsignal_t signalID, c
         invalidateCache();
     }
     else if (signalID == NF_INTERFACE_CLNSCONFIG_CHANGED) {
-        // if anything IPv4-related changes in the interfaces, interface netmask
+        // if anything CLNS-related changes in the interfaces, interface netmask
         // based routes have to be re-built.
 //        updateNetmaskRoutes();
     }
@@ -255,5 +363,20 @@ bool CLNSRoutingTable::handleOperationStage(LifecycleOperation *operation, int s
 //{
 //    return new CLNSRoute();
 //}
+
+void CLNSRoutingTable::updateDisplayString()
+{
+    if (!hasGUI())
+        return;
+
+    char buf[80];
+    if (routerId.isUnspecified())
+        sprintf(buf, "%d routes", (int)routes.size());
+    else
+        sprintf(buf, "routerId: %s\n%d routes", routerId.str().c_str(), (int)routes.size());
+    getDisplayString().setTagArg("t", 0, buf);
+}
+
+
 
 } //namespace

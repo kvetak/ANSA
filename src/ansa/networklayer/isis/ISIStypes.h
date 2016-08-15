@@ -57,6 +57,97 @@ namespace inet {
 //class InterfaceEntr;
 //class MACAddress;
 
+
+
+class SystemID {
+
+private:
+    uint64 systemID;
+public:
+    uint64 getSystemId() const {
+        return systemID;
+    }
+
+    void setSytemId(uint64 systemId) {
+        systemID = systemId;
+    }
+
+    bool operator==(const SystemID& sysID) const {return systemID == sysID.getSystemId();}
+    bool operator!=(const SystemID& sysID) const {return systemID != sysID.getSystemId();}
+
+    bool operator<(const SystemID& sysID) const {return systemID < sysID.getSystemId();}
+    bool operator<=(const SystemID& sysID) const {return systemID <= sysID.getSystemId();}
+
+    bool operator>(const SystemID& sysID) const {return systemID > sysID.getSystemId();}
+    bool operator>=(const SystemID& sysID) const {return systemID >= sysID.getSystemId();}
+
+};
+
+class AreaID {
+
+
+private:
+    uint64 areaID;
+public:
+
+    AreaID(){
+        areaID = 0;
+    }
+    uint64 getAreaId() const {
+        return areaID;
+    }
+
+    void setAreaId(uint64 areaId) {
+        areaID = areaId;
+    }
+
+    bool operator==(const AreaID& other) const {return areaID == other.getAreaId();}
+    bool operator!=(const AreaID& other) const {return areaID != other.getAreaId();}
+
+    bool operator<(const AreaID& other) const {return areaID < other.getAreaId();}
+    bool operator<=(const AreaID& other) const {return areaID <= other.getAreaId();}
+
+    bool operator>(const AreaID& other) const {return areaID > other.getAreaId();}
+    bool operator>=(const AreaID& other) const {return areaID >= other.getAreaId();}
+
+};
+
+
+class PseudonodeID
+{
+private:
+    uint64 pseudoID;
+
+public:
+
+
+    PseudonodeID() {
+        pseudoID = 0;
+    }
+    PseudonodeID(uint64 systemID, uint circuitID){
+        pseudoID = systemID << 8;
+        pseudoID += circuitID & 255;
+    }
+
+    PseudonodeID(SystemID systemID, uint circuitID){
+            pseudoID = systemID.getSystemId() << 8;
+            pseudoID += circuitID & 255;
+        }
+
+};
+
+class LspID
+{
+
+    PseudonodeID lanID;
+    uint fragmentID;
+
+    LspID(){
+        fragmentID = 0;
+    }
+
+};
+
 /**
  * Structure for storing info about all active interfaces.
  */
@@ -70,11 +161,13 @@ struct ISISinterface
     bool passive;             /*!<is it passive intf?*/
     bool ISISenabled;         /*!<is IS-IS activated on this interface? (default yes for all ifts)*/
     short circuitType;        /*!<circuit type  L1, L2, L1L2*/
-    unsigned char priority;   /*!<interface priority for being designated IS*/
-    unsigned char L1DISpriority;    /*!<priority of current L1 DIS*/
-    unsigned char L2DISpriority;    /*!<priority of currend L2 DIS*/
-    unsigned char L1DIS[ISIS_SYSTEM_ID + 1];   /*!<L1 designated router ID for ift*/
-    unsigned char L2DIS[ISIS_SYSTEM_ID + 1];   /*!<L2 designated router ID for ift*/
+    uint priority;   /*!<interface priority for being designated IS*/
+    uint L1DISpriority;    /*!<priority of current L1 DIS*/
+    uint L2DISpriority;    /*!<priority of currend L2 DIS*/
+//    unsigned char L1DIS[ISIS_SYSTEM_ID + 1];   /*!<L1 designated router ID for ift*/
+//    unsigned char L2DIS[ISIS_SYSTEM_ID + 1];   /*!<L2 designated router ID for ift*/
+    PseudonodeID L1DIS;
+    PseudonodeID L2DIS;
     unsigned char metric;     /*!<interface metric (default 10)*/
     int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
     int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
@@ -105,8 +198,12 @@ typedef enum{
  */
 struct ISISadj
 {
-    unsigned char sysID[6];             /*!<system ID of neighbour*/
-    unsigned char areaID[3];            /*!<neighbour areaID*/
+//    unsigned char sysID[6];             /*!<system ID of neighbour*/
+    SystemID sysID;
+
+//    unsigned char areaID[3];            /*!<neighbour areaID*/
+    AreaID areaID;
+
     MACAddress mac;                     /*!<mac address of neighbour*/
     ISISAdjState state;                         /*!<adjacency state has to be 2-way; 0 = only 1 way, 1 = 2-way (hello received from adj router)*/
     ISISTimer *timer;                   /*!<timer set to hold time and reseted every time hello from neighbour is received. For L2_MODE works as designated VLAN holding timer*/
@@ -121,32 +218,42 @@ struct ISISadj
     //bool operator for sorting
     bool operator<(const ISISadj& adj2) const {
 
-        for (unsigned int j = 0; j < ISIS_AREA_ID; j++){
-            if(areaID[j] < adj2.areaID[j]){
-                return true; //first is smaller, so return true
-            }else if(areaID[j] > adj2.areaID[j]){
-                return false; //first is bigger, so return false
+        if(areaID == adj2.areaID){
+            if(sysID == adj2.sysID){
+                return mac.compareTo(adj2.mac) < 0;
+            }else{
+                return sysID < adj2.sysID;
             }
-            //if it's equal then continue to next one
-        }
-        //AreaIDs match, so compare system IDs
-
-        for (unsigned int i = 0; i < ISIS_SYSTEM_ID; i++){
-            if(sysID[i] < adj2.sysID[i]){
-                return true; //first is smaller, so return true
-            }else if(sysID[i] > adj2.sysID[i]){
-                return false; //first is bigger, so return false
-            }
-            //if it's equal then continue to next one
+        }else{
+            return areaID < adj2.areaID;
         }
 
-        //if the first MAC address is smaller, return true
-        if(mac.compareTo(adj2.mac) < 0){
-            return true;
-        }
-
-        //if they're equal, return false
-        return false;
+//        for (unsigned int j = 0; j < ISIS_AREA_ID; j++){
+//            if(areaID[j] < adj2.areaID[j]){
+//                return true; //first is smaller, so return true
+//            }else if(areaID[j] > adj2.areaID[j]){
+//                return false; //first is bigger, so return false
+//            }
+//            //if it's equal then continue to next one
+//        }
+//        //AreaIDs match, so compare system IDs
+//
+//        for (unsigned int i = 0; i < ISIS_SYSTEM_ID; i++){
+//            if(sysID[i] < adj2.sysID[i]){
+//                return true; //first is smaller, so return true
+//            }else if(sysID[i] > adj2.sysID[i]){
+//                return false; //first is bigger, so return false
+//            }
+//            //if it's equal then continue to next one
+//        }
+//
+//        //if the first MAC address is smaller, return true
+//        if(mac.compareTo(adj2.mac) < 0){
+//            return true;
+//        }
+//
+//        //if they're equal, return false
+//        return false;
     }
 };
 
@@ -168,7 +275,8 @@ struct metrics_t
  */
 struct LSPneighbour
 {
-    unsigned char LANid[7]; /*!LAN ID = System ID (6B)+ Pseudonode ID (1B)*/
+//    unsigned char LANid[7]; /*!LAN ID = System ID (6B)+ Pseudonode ID (1B)*/
+    PseudonodeID LANid;
     metrics_t metrics;      /*!metric*/
 
 };
@@ -176,7 +284,8 @@ struct LSPneighbour
 struct LSPrecord
 {
     std::vector<LSPneighbour> neighbours;    //list of neighbours
-    unsigned char LSPid[8];             //ID of LSP
+//    unsigned char LSPid[8];             //ID of LSP
+    LspID LSPid;
     unsigned long seq;                  //sequence number
     ISISTimer *deadTimer;               //dead timer - 1200s
 };
@@ -397,5 +506,7 @@ typedef enum
 
 
 } //end namespace inet
+
+
 
 #endif /* ISISTYPES_H_ */

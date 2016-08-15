@@ -21,6 +21,7 @@ cplusplus {{
     
 //#include "ISISLSPPacket.h"
 //class ISISLSPPacket;
+#include "ansa/networklayer/isis/ISIStypes.h"
     typedef struct NSAP_t
     {
         unsigned char AreaAddr[3];
@@ -44,6 +45,7 @@ cplusplus {{
 class noncobject charP;
 class noncobject TLV_t;
 class noncobject NSAP_t;
+class noncobject PseudonodeID;
 
 
 enum PDU_Type
@@ -164,6 +166,7 @@ packet ISISLANHelloPacket extends ISISMessage
 	unsigned short pduLength;						//Gives the length of the packet (PDU), in bytes.
 	unsigned char priority = 64;					//Carries a value between 0 and 127 which is used for DIS (Designated IS) election on a LAN network. The default value is 64.	
 	unsigned char lanID[7];							//Consists of the system ID of the designated intermediate system, plus a unique number as an identifier of the LAN. e.g. 0000.0000.0001.02
+	PseudonodeID pseudoID;
     
 }
 
