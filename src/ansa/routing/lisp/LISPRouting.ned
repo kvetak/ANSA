@@ -28,7 +28,9 @@ module LISPRouting
         @display("i=block/network2;bgb=315,213,white");
         bool hasSiteDB = default(false);
         xml configData = default(xml("<LISP />"));
-        string packetHandling = default("Vanilla"); //Either Vanilla or Symmetric
+        string packetHandling = default("Vanilla"); //Either Vanilla or Symmetric        
+		string interfaceTableModule;   // The path to the InterfaceTable module
+        string routingTableModule;        
 
     gates:
         input udpContrIn @labels(UDPControlInfo/up);
@@ -45,6 +47,7 @@ module LISPRouting
             parameters:
                 @display("p=152,71");
                 configData = configData;
+                interfaceTableModule = interfaceTableModule;
         }
         lispCore: LISPCore {
             parameters:
@@ -55,6 +58,7 @@ module LISPRouting
             parameters:
                 @display("p=52,71");
                 configData = configData;
+                interfaceTableModule = interfaceTableModule;
         }
         lispSiteDatabase: LISPSiteDatabase if hasSiteDB {
             parameters:

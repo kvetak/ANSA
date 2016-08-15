@@ -29,4 +29,5 @@ module ANSA_xTR extends ANSA_Router
 {
     parameters:
         hasLISP = true;
+        lisp.configData = configData; 
 }

@@ -138,6 +138,15 @@ void LISPSiteDatabase::parseConfig(cXMLElement* config) {
     if (!config)
         return;
 
+    std::stringstream ss;
+    ss << ROUTING_TAG << "/" << LISP_TAG << "/" << MAPSERVER_TAG;
+    if (config->getElementByPath(ss.str().c_str()) == nullptr) {
+        EV << "Node does not contain any LISP SiteDB configuration!" << endl;
+        return;
+    }
+    config = config->getElementByPath(ss.str().c_str());
+    par(CONFIG_PAR).setXMLValue(config);
+
     if ( opp_strcmp(config->getTagName(), MAPSERVER_TAG) )
         config = config->getFirstChildWithTag(MAPSERVER_TAG);
 

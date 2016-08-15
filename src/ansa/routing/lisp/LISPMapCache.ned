@@ -28,6 +28,7 @@ simple LISPMapCache
         string 	cacheSynchronization = default("None"); //None OR Naive OR Smart
         bool   	cacheSyncAck 		 = default(false);   
         string  ssAddressType 		 = default("nonLISP"); //Either nonLISP OR RLOC OR EID
+        string interfaceTableModule;   // The path to the InterfaceTable module
         
         @signal[sigLispLookup](type=bool);
         @signal[sigLispMiss](type=bool);

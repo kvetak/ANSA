@@ -150,6 +150,15 @@ void LISPCore::parseConfig(cXMLElement* config)
     //Config element is empty
     if (!config)
         return;
+    //Parse forward to LISP section
+    std::stringstream ss;
+    ss << ROUTING_TAG << "/" << LISP_TAG;
+    if (config->getElementByPath(ss.str().c_str()) == nullptr) {
+        EV << "Node does not contain any LISP Core configuration!" << endl;
+        return;
+    }
+    config = config->getElementByPath(ss.str().c_str());
+    par(CONFIG_PAR).setXMLValue(config);
 
     //Map server addresses initial setup
     parseMapServerConfig(config);
@@ -302,7 +311,7 @@ void LISPCore::initPointers() {
 
     //If node is acting as MS and it has not MapDB then throw error
     if (!hasSiteDB && (mapServerV4 || mapServerV6)) {
-        throw cException("Cannot act as Map Server without Mapping Database!");
+        throw cException("Cannot act as Map Server without Site Database!");
     }
 
 

@@ -97,7 +97,7 @@ module ANSA_Router extends ANSA_NodeBase
                 @display("p=225,269");
         }
 
-        udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP) {
+        udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP || hasLISP) {
             parameters:
             	@display("p=534,180");
         }
@@ -185,6 +185,10 @@ module ANSA_Router extends ANSA_NodeBase
             udp.appIn++ <-- lisp.udpContrOut;
             udp.appOut++ --> lisp.udpDataIn;
             udp.appIn++ <-- lisp.udpDataOut;
+            
+            udp.ipOut --> networkLayer.transportIn++;
+            udp.ipIn <-- networkLayer.transportOut++;
+                        
             networkLayer.transportOut++ --> lisp.ipv4In if enableIPv4;
             networkLayer.transportIn++ <-- lisp.ipv4Out if enableIPv4;
             networkLayer.transportOut++ --> lisp.ipv6In if enableIPv6;

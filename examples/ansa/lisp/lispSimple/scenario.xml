@@ -6,6 +6,6 @@
   <at t="300">
     <connect src-module="R2" src-gate="ethg[1]" 
              dest-module="R3" dest-gate="ethg[0]"
-             channel-type="inet.nodes.ethernet.Eth100M"/>
+             channel-type="inet.node.ethernet.Eth100M"/>
   </at>
 </scenario>

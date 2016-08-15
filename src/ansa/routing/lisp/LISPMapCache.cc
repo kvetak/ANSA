@@ -36,6 +36,16 @@ LISPMapCache::~LISPMapCache()
 }
 
 void LISPMapCache::parseConfig(cXMLElement* config) {
+    //Parse to the LISP section
+    std::stringstream ss;
+    ss << ROUTING_TAG << "/" << LISP_TAG << "/" << MAPCACHE_TAG;
+    if (config->getElementByPath(ss.str().c_str()) == nullptr) {
+        EV << "Node does not contain any LISP Map-Cache configuration!" << endl;
+        return;
+    }
+    config = config->getElementByPath(ss.str().c_str());
+    par(CONFIG_PAR).setXMLValue(config);
+
     if ( opp_strcmp(config->getTagName(), MAPCACHE_TAG) )
         config = config->getFirstChildWithTag(MAPCACHE_TAG);
 
@@ -265,7 +275,7 @@ void LISPMapCache::restartMapCache() {
     clearMappingStorage();
 
     //DeviceConfigurator* devConf = ModuleAccess<DeviceConfigurator>("deviceConfigurator").get();
-    parseConfig( par("configData").xmlValue() );
+    parseConfig( par(CONFIG_PAR).xmlValue() );
 
     //Create default record
     LISPMapEntry m1 = LISPMapEntry(LISPEidPrefix(IPv4Address::UNSPECIFIED_ADDRESS, 0));

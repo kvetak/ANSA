@@ -65,6 +65,8 @@ const           char*   RLOC_TAG                = "RLOC";
 const           char*   SYNCSET_TAG             = "SynchronizationSet";
 const           char*   SETMEMBER_TAG           = "SetMember";
 const           char*   MAPCACHE_TAG            = "MapCache";
+const           char*   ROUTING_TAG             = "Routing";
+const           char*   LISP_TAG                = "LISP";
 
 const           char*   ADDRESS_ATTR            = "address";
 const           char*   IPV4_ATTR               = "ipv4";

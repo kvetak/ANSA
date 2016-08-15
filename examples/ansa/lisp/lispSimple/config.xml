@@ -7,27 +7,42 @@
                 <IPAddress>192.168.1.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:db8:a::1/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1"/>
+-->
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.0.2</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:db8:AC::2/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1">
                 	<PassiveInterface>enable</PassiveInterface>
                 </RIPng>
+-->                
             </Interface>            
         </Interfaces>
-        
+       
         <Routing6>    
+<!--
         	<RIPng name="RIPng1"/>
+-->        	
         </Routing6>
                         
         <Routing>
+<!--
         	<RIP>
         		<Network>10.0.0.0</Network>
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
+-->        	
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>10.0.0.1</NextHopAddress>
+        		</Route>
+        	</Static>
         	<LISP>
         		<EtrMapServer address="10.0.0.10" key="HesloA" proxy="enabled" />
         		<ItrMapResolver address="10.0.0.10" />        	
@@ -58,30 +73,52 @@
                 <IPAddress>10.0.0.1</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:db8:AC::1/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1"/>
+-->                
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.0.5</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:db8:BC::1/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1"/>
+-->                
             </Interface>
             <Interface name="eth2">
                 <IPAddress>10.0.0.9</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:db8:c0e::1/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1"/>
+-->                
             </Interface>            
         </Interfaces>
         
         <Routing6>    
+<!--
         	<RIPng name="RIPng1"/>
+-->        	
         </Routing6> 
                                 
         <Routing>
+<!--
         	<RIP>
         		<Network>0.0.0.0</Network>
         	</RIP>
+-->        	
+        	<Static>
+        		<Route>
+        			<NetworkAddress>192.168.1.0</NetworkAddress>
+        			<NetworkMask>255.255.255.0</NetworkMask>
+        			<NextHopAddress>10.0.0.2</NextHopAddress>
+        		</Route>
+        		<Route>
+        			<NetworkAddress>192.168.2.0</NetworkAddress>
+        			<NetworkMask>255.255.255.0</NetworkMask>
+        			<NextHopAddress>10.0.0.6</NextHopAddress>
+        		</Route>        		
+        	</Static>
         </Routing>
         
     </Router>
@@ -94,18 +131,31 @@
                 <IPAddress>10.0.0.10</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:db8:c0e::2/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1"/>
+-->                
             </Interface>
         </Interfaces>
 
         <Routing6>    
+<!--
         	<RIPng name="RIPng1"/>
+-->        	
         </Routing6>
         
         <Routing>        
+<!--
         	<RIP>
         		<Network>10.0.0.0</Network>
         	</RIP>
+-->        	
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>10.0.0.9</NextHopAddress>
+        		</Route>
+        	</Static>
         	<LISP>        	
         		<MapServer ipv4="enabled" ipv6="enabled">
         			<Site name="Site A" key="HesloA">
@@ -132,27 +182,42 @@
                 <IPAddress>192.168.2.1</IPAddress>
                 <Mask>255.255.255.0</Mask>
                 <IPv6Address>2001:db8:B::1/64</IPv6Address>  
-                <RIPng name="RIPng1"/>              
+<!--
+                <RIPng name="RIPng1"/>
+-->              
             </Interface>
             <Interface name="eth1">
                 <IPAddress>10.0.0.6</IPAddress>
                 <Mask>255.255.255.252</Mask>
                 <IPv6Address>2001:db8:BC::2/64</IPv6Address>
+<!--
                 <RIPng name="RIPng1">
                 	<PassiveInterface>enable</PassiveInterface>
                 </RIPng>                
+-->
             </Interface>                        
         </Interfaces>    
             
         <Routing6>    
+<!--
         	<RIPng name="RIPng1"/>
+-->
         </Routing6>   
              
         <Routing>
+<!--
         	<RIP>
         		<Network>10.0.0.0</Network>
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
+-->
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>10.0.0.5</NextHopAddress>
+        		</Route>
+        	</Static>
         	<LISP>
         		<EtrMapServer address="10.0.0.10" key="HesloB" proxy="enabled" want-map-notify="enabled" quick-registration="enabled" />
         		<ItrMapResolver address="10.0.0.10" />   

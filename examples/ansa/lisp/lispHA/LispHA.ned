@@ -38,19 +38,29 @@ network LispHA
                 optimizeRoutes = false;
                 @display("p=55,34");
         }
+        MRMS: ANSA_MRMS {
+            @display("p=306,34");
+        }
         xTR_A1: ANSA_xTR {
             @display("p=186,92");
             gates:
                 ethg[3];
-        }
-        MRMS: ANSA_MRMS {
-            @display("p=306,34");
         }
         xTR_B1: ANSA_xTR {
             @display("p=434,92");
             gates:
                 ethg[3];
         }
+        xTR_A2: ANSA_xTR {
+            @display("p=186,176");
+            gates:
+                ethg[3];
+        }
+        xTR_B2: ANSA_xTR {
+            @display("p=434,176");
+            gates:
+                ethg[3];
+        }        
         S1: EtherSwitch {
             @display("p=86,140");
         }
@@ -72,16 +82,7 @@ network LispHA
         Core: ANSA_Router {
             @display("p=306,145");
         }
-        xTR_A2: ANSA_xTR {
-            @display("p=186,176");
-            gates:
-                ethg[3];
-        }
-        xTR_B2: ANSA_xTR {
-            @display("p=434,176");
-            gates:
-                ethg[3];
-        }
+
     connections:
         xTR_A1.ethg[2] <--> Eth100M <--> xTR_A2.ethg[2];
         xTR_B1.ethg[2] <--> Eth100M <--> xTR_B2.ethg[2];

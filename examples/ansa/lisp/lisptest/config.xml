@@ -29,8 +29,8 @@
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
         	<LISP>
-        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
-        		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" />        	
+        		<EtrMapServer ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
+        		<ItrMapResolver ipv4="10.0.12.2" ipv6="2001:0:12::2" />        	
         		<MapCache>
         		    <EID address="10.0.1.0/24">
         		     	<RLOC address="10.0.12.1" priority="1" weight ="100" />
@@ -116,8 +116,8 @@
 				<Passive-interface>eth1</Passive-interface>        		
         	</RIP>
         	<LISP>
-        		<MapServerAddress ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
-        		<MapResolverAddress ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>   
+        		<EtrMapServer ipv4="10.0.12.2" ipv6="2001:0:12::2" key="HESLO" />
+        		<ItrMapResolver ipv4="10.0.12.2" ipv6="2001:0:12::2"></MapResolverAddress>   
         		<MapCache>
         		    <EID address="10.0.1.0/24">
         		     	<RLOC address="10.0.12.1" priority="1" weight ="100" />

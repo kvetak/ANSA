@@ -54,6 +54,16 @@ void LISPMapDatabase::handleMessage(cMessage *msg)
 }
 
 void LISPMapDatabase::parseEtrMappings(cXMLElement* config) {
+    //Parse forward to LISP section
+    std::stringstream ss;
+    ss << ROUTING_TAG << "/" << LISP_TAG;
+    if (config->getElementByPath(ss.str().c_str()) == nullptr) {
+        //EV << "Node does not contain any LISP configuration!" << endl;
+        return;
+    }
+    config = config->getElementByPath(ss.str().c_str());
+    par(CONFIG_PAR).setXMLValue(config);
+
     //EtrMappings
     if ( opp_strcmp(config->getTagName(), ETRMAP_TAG) )
         config = config->getFirstChildWithTag(ETRMAP_TAG);

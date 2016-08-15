@@ -64,6 +64,8 @@ extern const char* ETRMAP_TAG;
 extern const char* SYNCSET_TAG;
 extern const char* SETMEMBER_TAG;
 extern const char* MAPCACHE_TAG;
+extern const char* ROUTING_TAG;
+extern const char* LISP_TAG;
 
 extern const char* ADDRESS_ATTR;
 extern const char* IPV4_ATTR;
