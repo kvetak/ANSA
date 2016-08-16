@@ -15,20 +15,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
-namespace inet;
+//namespace inet;
 
 cplusplus {{
     
 //#include "ISISLSPPacket.h"
 //class ISISLSPPacket;
-#include "ansa/networklayer/isis/ISIStypes.h"
-    typedef struct NSAP_t
-    {
-        unsigned char AreaAddr[3];
-        unsigned char sysID[6];
-        unsigned char NSEL;
-        
-    } NSAP_t;
+#include "ansa/networklayer/isis/ISISCommon.h"
+}}
+namespace inet;
+cplusplus {{
+//using namespace inet;
+//    typedef struct NSAP_t
+//    {
+//        unsigned char AreaAddr[3];
+//        unsigned char sysID[6];
+//        unsigned char NSEL;
+//        
+//    } NSAP_t;
     
     typedef struct TLV_t
     {
@@ -44,8 +48,12 @@ cplusplus {{
 }}
 class noncobject charP;
 class noncobject TLV_t;
-class noncobject NSAP_t;
+//class noncobject NSAP_t;
+
 class noncobject PseudonodeID;
+class noncobject SystemID;
+class noncobject LspID;
+
 
 
 enum PDU_Type
@@ -161,12 +169,14 @@ packet ISISMTUAck extends ISISMTUPDU
 packet ISISLANHelloPacket extends ISISMessage
 {
     unsigned char circuitType enum(CIRCUIT_TYPES);	//Defines whether the link is Level 1 and/or Level 2.
-	unsigned char sourceID[6];						//Is the same as the system identifier (SysID).  address in format 0123.4567.89AB
+//	unsigned char sourceID[6];						//Is the same as the system identifier (SysID).  address in format 0123.4567.89AB
+	SystemID sourceID;
 	unsigned short holdTime = 40;					//Defines how long to wait for a hello from this system before clearing the adjacency. default = 40sec.
 	unsigned short pduLength;						//Gives the length of the packet (PDU), in bytes.
 	unsigned char priority = 64;					//Carries a value between 0 and 127 which is used for DIS (Designated IS) election on a LAN network. The default value is 64.	
-	unsigned char lanID[7];							//Consists of the system ID of the designated intermediate system, plus a unique number as an identifier of the LAN. e.g. 0000.0000.0001.02
-	PseudonodeID pseudoID;
+//	unsigned char lanID[7];							//Consists of the system ID of the designated intermediate system, plus a unique number as an identifier of the LAN. e.g. 0000.0000.0001.02
+	PseudonodeID lanID;
+	
     
 }
 
@@ -200,7 +210,8 @@ packet ISISPTPHelloPacket extends ISISMessage
 {
     type = PTP_HELLO;								//set PDU type
 	unsigned char circuitType enum(CIRCUIT_TYPES);	//Defines whether the link is Level 1 and/or Level 2.
-	unsigned char sourceID[6];						//Is the same as the system identifier (SysID).  address in format 0123.4567.89AB
+//	unsigned char sourceID[6];						//Is the same as the system identifier (SysID).  address in format 0123.4567.89AB
+	SystemID sourceID;
 	unsigned short holdTime;						//Defines how long to wait for a hello from this system before clearing the adjacency. (probably in seconds)
 	unsigned short pduLength;						//Gives the length of the packet (PDU), in bytes.
 	unsigned char localCircuitID;					//Local Circuit ID  1 octet unique ID assigned to this circuit when it is created by this Intermediate system.
@@ -214,7 +225,8 @@ packet ISISLSPPacket extends ISISMessage
 	//type = L1_LSP;
 	unsigned short pduLength;						//Gives the length of the packet (PDU), in bytes.
 	unsigned short remLifeTime = 1200;				//Number of seconds before an LSP is considered expired. Cisco IOS uses 20 mins (1200 seconds).
-	unsigned char lspID[8];							//It is the System ID, the Pseudonode ID and the LSP number of the LSP. e.g. 0000.0000.0002.00-00
+//	unsigned char lspID[8];							//It is the System ID, the Pseudonode ID and the LSP number of the LSP. e.g. 0000.0000.0002.00-00
+	LspID lspID;
 	unsigned long seqNumber = 0;					//It is the sequence number of the LSP.
 	unsigned short checksum;						//It is the checksum of the contents of the LSP.
 	unsigned char PATTLSPDBOLIS = 0x01;				//	1b P |  4b ATT | 1b OL | 2b IS TYPE
@@ -242,9 +254,12 @@ packet ISISLSPL2Packet extends ISISLSPPacket
 packet ISISCSNPPacket extends ISISMessage
 {
     unsigned short pduLength;						//Length of the entire PDU in bytes.
-	unsigned char sourceID[7];						// Source ID + zero circuit number  e.g. 0000.0000.0002.00
-	unsigned char startLspID[8];					// Start LSP ID � the LSP ID of first LSP in the range covered by this Complete Sequence Numbers PDU.  e.g. 0000.0000.0003.00-00
-	unsigned char endLspID[8];						//analogical to startLspID
+//	unsigned char sourceID[7];						// Source ID + zero circuit number  e.g. 0000.0000.0002.00
+	PseudonodeID sourceID;
+//	unsigned char startLspID[8];					// Start LSP ID � the LSP ID of first LSP in the range covered by this Complete Sequence Numbers PDU.  e.g. 0000.0000.0003.00-00
+	LspID startLspID;
+//	unsigned char endLspID[8];						//analogical to startLspID
+	LspID endLspID;
     
 }
 //IS-IS CSNP Level1 message
@@ -265,7 +280,8 @@ packet ISISCSNPL2Packet extends ISISCSNPPacket
 packet ISISPSNPPacket extends ISISMessage
 {
     unsigned short pduLength;						//Length of the entire PDU in bytes.
-	unsigned char sourceID[7];						// Source ID + zero circuit number  e.g. 0000.0000.0002.00
+//	unsigned char sourceID[7];						// Source ID + zero circuit number  e.g. 0000.0000.0002.00
+	PseudonodeID sourceID;
 }
 
 

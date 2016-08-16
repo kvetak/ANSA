@@ -89,29 +89,29 @@ CLNSAddress::CLNSAddress(std::string net)
         area[1] = (unsigned char) (atoi(net.substr(3, 2).c_str()));
         area[2] = (unsigned char) (atoi(net.substr(5, 2).c_str()));
         areaID += strtoul(net.substr(3, 2).c_str(), NULL, 16);
-        areaID += 16 * strtoul(net.substr(5, 2).c_str(), NULL, 16);
+        areaID += strtoul(net.substr(5, 2).c_str(), NULL, 16) << 8;
         dots++;
         break;
       case 12:
         dots++;
         systemId[0] = (unsigned char) (strtol(net.substr(8, 2).c_str(), NULL, 16));
         systemId[1] = (unsigned char) (strtol(net.substr(10, 2).c_str(), NULL, 16));
-        systemID += 1 * strtoul(net.substr(8, 2).c_str(), NULL, 16);
-        systemID += 256 * strtoul(net.substr(10, 2).c_str(), NULL, 16);
+        systemID += strtoul(net.substr(8, 2).c_str(), NULL, 16);
+        systemID += strtoul(net.substr(10, 2).c_str(), NULL, 16) << 8;
         break;
       case 17:
         dots++;
         systemId[2] = (unsigned char) (strtol(net.substr(13, 2).c_str(), NULL, 16));
         systemId[3] = (unsigned char) (strtol(net.substr(15, 2).c_str(), NULL, 16));
-        systemID += 256 * 256 * strtoul(net.substr(13, 2).c_str(), NULL, 16);
-        systemID += 256 * 256 * 256 * strtoul(net.substr(15, 2).c_str(), NULL, 16);
+        systemID += strtoul(net.substr(13, 2).c_str(), NULL, 16) << 16;
+        systemID += strtoul(net.substr(15, 2).c_str(), NULL, 16) << 24;
         break;
       case 22:
         dots++;
         systemId[4] = (unsigned char) (strtol(net.substr(18, 2).c_str(), NULL, 16));
         systemId[5] = (unsigned char) (strtol(net.substr(20, 2).c_str(), NULL, 16));
-        systemID += 256 * 256 * 256 * 256 * strtoul(net.substr(18, 2).c_str(), NULL, 16);
-        systemID += 256 * 256 * 256 * 256 * 256 * strtoul(net.substr(20, 2).c_str(), NULL, 16);
+        systemID += strtoul(net.substr(18, 2).c_str(), NULL, 16) << 32;
+        systemID +=strtoul(net.substr(20, 2).c_str(), NULL, 16) << 36;
         break;
       default:
         return;

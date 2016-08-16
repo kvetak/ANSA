@@ -333,6 +333,9 @@ void ISIS::initialize(int stage)
         ISISDeviceConfigurator* devConf = new ISISDeviceConfigurator(par("deviceId"),par("deviceType"),par("configFile"), ift);
         devConf->loadISISConfig(this,this->mode);
 
+        systemId.setSystemId(devConf->getSystemId());
+        areaID.setAreaId(devConf->getAreaId());
+
 
         //TODO passive-interface
         //create SRMQueue for each interface (even though it would be used only for broadcast interfaces)
@@ -386,10 +389,7 @@ void ISIS::initialize(int stage)
     }
     else if (stage == 4)
     {
-//        this->initISIS();
-        ISISTimer *timerMsg = new ISISTimer("ISIS Start", ISIS_START_TIMER);
-        timerMsg->setTimerKind(ISIS_START_TIMER);
-        this->schedule(timerMsg);
+
 
     }
     else if (stage == INITSTAGE_ROUTING_PROTOCOLS)
@@ -398,232 +398,239 @@ void ISIS::initialize(int stage)
       message->setProtocol(1234);
       send(message, "lowerLayerOut");
 
+      //        this->initISIS();
+      ISISTimer *timerMsg = new ISISTimer("ISIS Start", ISIS_START_TIMER);
+      timerMsg->setTimerKind(ISIS_START_TIMER);
+      this->schedule(timerMsg);
+
     }
 
 }
-
-/**
- * Set initial parameters of network interfaces.
- * @param entry Pointer to interface record in interfaceTable
- * @param intElement XML element of current interface in XML config file
- */
-void ISIS::insertIft(InterfaceEntry *entry, cXMLElement *intElement)
-{
-
-    if (intElement == NULL)
-    {
-        return;
-    }
-    ISISinterface newIftEntry;
-    newIftEntry.intID = entry->getInterfaceId();
-
-    newIftEntry.gateIndex = entry->getNetworkLayerGateIndex();
-    EV<< "deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " << newIftEntry.gateIndex << endl;
-
-    //set interface priority
-    newIftEntry.priority = ISIS_DIS_PRIORITY; //default value
-
-    /* Interface is NOT enabled by default. If ANY IS-IS related property is configured on interface then it's enabled. */
-    newIftEntry.ISISenabled = false;
-
-    cXMLElement *priority = intElement->getFirstChildWithTag("ISIS-Priority");
-    if (priority != NULL && priority->getNodeValue() != NULL)
-    {
-        newIftEntry.priority = (unsigned char) atoi(priority->getNodeValue());
-        newIftEntry.ISISenabled = true;
-    }
-
-    //set network type (point-to-point vs. broadcast)
-
-    newIftEntry.network = true; //default value
-
-    cXMLElement *network = intElement->getFirstChildWithTag("ISIS-Network");
-    if (network != NULL && network->getNodeValue() != NULL)
-    {
-        if (!strcmp(network->getNodeValue(), "point-to-point"))
-        {
-            newIftEntry.network = false;
-            EV<< "Interface network type is point-to-point " << network->getNodeValue() << endl;
-        }
-        else if (!strcmp(network->getNodeValue(), "broadcast"))
-        {
-            EV << "Interface network type is broadcast " << network->getNodeValue() << endl;
-        }
-        else
-        {
-            EV << "ERORR: Unrecognized interface's network type: " << network->getNodeValue() << endl;
-
-        }
-        newIftEntry.ISISenabled = true;
-
-    }
-
-            //set interface metric
-
-    newIftEntry.metric = ISIS_METRIC; //default value
-
-    cXMLElement *metric = intElement->getFirstChildWithTag("ISIS-Metric");
-    if (metric != NULL && metric->getNodeValue() != NULL)
-    {
-        newIftEntry.metric = (unsigned char) atoi(metric->getNodeValue());
-        newIftEntry.ISISenabled = true;
-    }
-
-    //set interface type according to global router configuration
-    switch (this->isType)
-        {
-        case (L1_TYPE):
-            newIftEntry.circuitType = L1_TYPE;
-            break;
-        case (L2_TYPE):
-            newIftEntry.circuitType = L2_TYPE;
-            break;
-            //if router is type is equal L1L2, then interface configuration sets the type
-        default: {
-
-            newIftEntry.circuitType = L1L2_TYPE;
-
-            cXMLElement *circuitType = intElement->getFirstChildWithTag("ISIS-Circuit-Type");
-            if (circuitType != NULL && circuitType->getNodeValue() != NULL)
-            {
-                if (strcmp(circuitType->getNodeValue(), "L2") == 0)
-                {
-                    newIftEntry.circuitType = L2_TYPE;
-                }
-                else
-                {
-                    if (strcmp(circuitType->getNodeValue(), "L1") == 0)
-                        newIftEntry.circuitType = L1_TYPE;
-                }
-                newIftEntry.ISISenabled = true;
-            }
-            else
-            {
-                newIftEntry.circuitType = L1L2_TYPE;
-            }
-
-            break;
-        }
-        }
-
-    //set L1 hello interval in seconds
-    cXMLElement *L1HelloInt = intElement->getFirstChildWithTag("ISIS-L1-Hello-Interval");
-    if (L1HelloInt == NULL || L1HelloInt->getNodeValue() == NULL)
-    {
-        newIftEntry.L1HelloInterval = this->L1HelloInterval;
-    }
-    else
-    {
-        newIftEntry.L1HelloInterval = atoi(L1HelloInt->getNodeValue());
-    }
-
-    //set L1 hello multiplier
-    cXMLElement *L1HelloMult = intElement->getFirstChildWithTag("ISIS-L1-Hello-Multiplier");
-    if (L1HelloMult == NULL || L1HelloMult->getNodeValue() == NULL)
-    {
-        newIftEntry.L1HelloMultiplier = this->L1HelloMultiplier;
-    }
-    else
-    {
-        newIftEntry.L1HelloMultiplier = atoi(L1HelloMult->getNodeValue());
-    }
-
-    //set L2 hello interval in seconds
-    cXMLElement *L2HelloInt = intElement->getFirstChildWithTag("ISIS-L2-Hello-Interval");
-    if (L2HelloInt == NULL || L2HelloInt->getNodeValue() == NULL)
-    {
-        newIftEntry.L2HelloInterval = this->L2HelloInterval;
-    }
-    else
-    {
-        newIftEntry.L2HelloInterval = atoi(L2HelloInt->getNodeValue());
-    }
-
-    //set L2 hello multiplier
-    cXMLElement *L2HelloMult = intElement->getFirstChildWithTag("ISIS-L2-Hello-Multiplier");
-    if (L2HelloMult == NULL || L2HelloMult->getNodeValue() == NULL)
-    {
-        newIftEntry.L2HelloMultiplier = this->L2HelloMultiplier;
-    }
-    else
-    {
-        newIftEntry.L2HelloMultiplier = atoi(L2HelloMult->getNodeValue());
-    }
-
-    //set lspInterval
-    cXMLElement *cxlspInt = intElement->getFirstChildWithTag("ISIS-LSP-Interval");
-    if (cxlspInt == NULL || cxlspInt->getNodeValue() == NULL)
-    {
-        newIftEntry.lspInterval = ISIS_LSP_INTERVAL;
-    }
-    else
-    {
-        newIftEntry.lspInterval = atoi(cxlspInt->getNodeValue());
-    }
-
-    //set L1CsnpInterval
-    cXMLElement *cxL1CsnpInt = intElement->getFirstChildWithTag("ISIS-L1-CSNP-Interval");
-    if (cxL1CsnpInt == NULL || cxL1CsnpInt->getNodeValue() == NULL)
-    {
-        newIftEntry.L1CsnpInterval = ISIS_CSNP_INTERVAL;
-    }
-    else
-    {
-        newIftEntry.L1CsnpInterval = atoi(cxL1CsnpInt->getNodeValue());
-    }
-
-    //set L2CsnpInterval
-    cXMLElement *cxL2CsnpInt = intElement->getFirstChildWithTag("ISIS-L2-CSNP-Interval");
-    if (cxL2CsnpInt == NULL || cxL2CsnpInt->getNodeValue() == NULL)
-    {
-        newIftEntry.L2CsnpInterval = ISIS_CSNP_INTERVAL;
-    }
-    else
-    {
-        newIftEntry.L2CsnpInterval = atoi(cxL2CsnpInt->getNodeValue());
-    }
-
-    //set L1PsnpInterval
-    cXMLElement *cxL1PsnpInt = intElement->getFirstChildWithTag("ISIS-L1-PSNP-Interval");
-    if (cxL1PsnpInt == NULL || cxL1PsnpInt->getNodeValue() == NULL)
-    {
-        newIftEntry.L1PsnpInterval = ISIS_CSNP_INTERVAL;
-    }
-    else
-    {
-        newIftEntry.L1PsnpInterval = atoi(cxL1PsnpInt->getNodeValue());
-    }
-
-    //set L2PsnpInterval
-    cXMLElement *cxL2PsnpInt = intElement->getFirstChildWithTag("ISIS-L2-PSNP-Interval");
-    if (cxL2PsnpInt == NULL || cxL2PsnpInt->getNodeValue() == NULL)
-    {
-        newIftEntry.L2PsnpInterval = ISIS_CSNP_INTERVAL;
-    }
-    else
-    {
-        newIftEntry.L2PsnpInterval = atoi(cxL2PsnpInt->getNodeValue());
-    }
-
-    // priority is not needed for point-to-point, but it won't hurt
-    // set priority of current DIS = me at start
-    newIftEntry.L1DISpriority = newIftEntry.priority;
-    newIftEntry.L2DISpriority = newIftEntry.priority;
-
-    //set initial designated IS as himself
-    this->copyArrayContent((unsigned char*) this->sysId, newIftEntry.L1DIS, ISIS_SYSTEM_ID, 0, 0);
-    //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
-    //newIftEntry.L1DIS[6] = entry->getInterfaceId() - 99;
-    newIftEntry.L1DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
-    //do the same for L2 DIS
-    this->copyArrayContent((unsigned char*) this->sysId, newIftEntry.L2DIS, ISIS_SYSTEM_ID, 0, 0);
-    //newIftEntry.L2DIS[6] = entry->getInterfaceId() - 99;
-    newIftEntry.L2DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
-
-    newIftEntry.passive = false;
-    newIftEntry.entry = entry;
-    this->ISISIft.push_back(newIftEntry);
-}
+//
+///**
+// * Set initial parameters of network interfaces.
+// * @param entry Pointer to interface record in interfaceTable
+// * @param intElement XML element of current interface in XML config file
+// */
+//void ISIS::insertIft(InterfaceEntry *entry, cXMLElement *intElement)
+//{
+//
+//    if (intElement == NULL)
+//    {
+//        return;
+//    }
+//    ISISinterface newIftEntry;
+//    newIftEntry.intID = entry->getInterfaceId();
+//
+//    newIftEntry.gateIndex = entry->getNetworkLayerGateIndex();
+//    EV<< "deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " << newIftEntry.gateIndex << endl;
+//
+//    //set interface priority
+//    newIftEntry.priority = ISIS_DIS_PRIORITY; //default value
+//
+//    /* Interface is NOT enabled by default. If ANY IS-IS related property is configured on interface then it's enabled. */
+//    newIftEntry.ISISenabled = false;
+//
+//    cXMLElement *priority = intElement->getFirstChildWithTag("ISIS-Priority");
+//    if (priority != NULL && priority->getNodeValue() != NULL)
+//    {
+//        newIftEntry.priority = (unsigned char) atoi(priority->getNodeValue());
+//        newIftEntry.ISISenabled = true;
+//    }
+//
+//    //set network type (point-to-point vs. broadcast)
+//
+//    newIftEntry.network = true; //default value
+//
+//    cXMLElement *network = intElement->getFirstChildWithTag("ISIS-Network");
+//    if (network != NULL && network->getNodeValue() != NULL)
+//    {
+//        if (!strcmp(network->getNodeValue(), "point-to-point"))
+//        {
+//            newIftEntry.network = false;
+//            EV<< "Interface network type is point-to-point " << network->getNodeValue() << endl;
+//        }
+//        else if (!strcmp(network->getNodeValue(), "broadcast"))
+//        {
+//            EV << "Interface network type is broadcast " << network->getNodeValue() << endl;
+//        }
+//        else
+//        {
+//            EV << "ERORR: Unrecognized interface's network type: " << network->getNodeValue() << endl;
+//
+//        }
+//        newIftEntry.ISISenabled = true;
+//
+//    }
+//
+//            //set interface metric
+//
+//    newIftEntry.metric = ISIS_METRIC; //default value
+//
+//    cXMLElement *metric = intElement->getFirstChildWithTag("ISIS-Metric");
+//    if (metric != NULL && metric->getNodeValue() != NULL)
+//    {
+//        newIftEntry.metric = (unsigned char) atoi(metric->getNodeValue());
+//        newIftEntry.ISISenabled = true;
+//    }
+//
+//    //set interface type according to global router configuration
+//    switch (this->isType)
+//        {
+//        case (L1_TYPE):
+//            newIftEntry.circuitType = L1_TYPE;
+//            break;
+//        case (L2_TYPE):
+//            newIftEntry.circuitType = L2_TYPE;
+//            break;
+//            //if router is type is equal L1L2, then interface configuration sets the type
+//        default: {
+//
+//            newIftEntry.circuitType = L1L2_TYPE;
+//
+//            cXMLElement *circuitType = intElement->getFirstChildWithTag("ISIS-Circuit-Type");
+//            if (circuitType != NULL && circuitType->getNodeValue() != NULL)
+//            {
+//                if (strcmp(circuitType->getNodeValue(), "L2") == 0)
+//                {
+//                    newIftEntry.circuitType = L2_TYPE;
+//                }
+//                else
+//                {
+//                    if (strcmp(circuitType->getNodeValue(), "L1") == 0)
+//                        newIftEntry.circuitType = L1_TYPE;
+//                }
+//                newIftEntry.ISISenabled = true;
+//            }
+//            else
+//            {
+//                newIftEntry.circuitType = L1L2_TYPE;
+//            }
+//
+//            break;
+//        }
+//        }
+//
+//    //set L1 hello interval in seconds
+//    cXMLElement *L1HelloInt = intElement->getFirstChildWithTag("ISIS-L1-Hello-Interval");
+//    if (L1HelloInt == NULL || L1HelloInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L1HelloInterval = this->L1HelloInterval;
+//    }
+//    else
+//    {
+//        newIftEntry.L1HelloInterval = atoi(L1HelloInt->getNodeValue());
+//    }
+//
+//    //set L1 hello multiplier
+//    cXMLElement *L1HelloMult = intElement->getFirstChildWithTag("ISIS-L1-Hello-Multiplier");
+//    if (L1HelloMult == NULL || L1HelloMult->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L1HelloMultiplier = this->L1HelloMultiplier;
+//    }
+//    else
+//    {
+//        newIftEntry.L1HelloMultiplier = atoi(L1HelloMult->getNodeValue());
+//    }
+//
+//    //set L2 hello interval in seconds
+//    cXMLElement *L2HelloInt = intElement->getFirstChildWithTag("ISIS-L2-Hello-Interval");
+//    if (L2HelloInt == NULL || L2HelloInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L2HelloInterval = this->L2HelloInterval;
+//    }
+//    else
+//    {
+//        newIftEntry.L2HelloInterval = atoi(L2HelloInt->getNodeValue());
+//    }
+//
+//    //set L2 hello multiplier
+//    cXMLElement *L2HelloMult = intElement->getFirstChildWithTag("ISIS-L2-Hello-Multiplier");
+//    if (L2HelloMult == NULL || L2HelloMult->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L2HelloMultiplier = this->L2HelloMultiplier;
+//    }
+//    else
+//    {
+//        newIftEntry.L2HelloMultiplier = atoi(L2HelloMult->getNodeValue());
+//    }
+//
+//    //set lspInterval
+//    cXMLElement *cxlspInt = intElement->getFirstChildWithTag("ISIS-LSP-Interval");
+//    if (cxlspInt == NULL || cxlspInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.lspInterval = ISIS_LSP_INTERVAL;
+//    }
+//    else
+//    {
+//        newIftEntry.lspInterval = atoi(cxlspInt->getNodeValue());
+//    }
+//
+//    //set L1CsnpInterval
+//    cXMLElement *cxL1CsnpInt = intElement->getFirstChildWithTag("ISIS-L1-CSNP-Interval");
+//    if (cxL1CsnpInt == NULL || cxL1CsnpInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L1CsnpInterval = ISIS_CSNP_INTERVAL;
+//    }
+//    else
+//    {
+//        newIftEntry.L1CsnpInterval = atoi(cxL1CsnpInt->getNodeValue());
+//    }
+//
+//    //set L2CsnpInterval
+//    cXMLElement *cxL2CsnpInt = intElement->getFirstChildWithTag("ISIS-L2-CSNP-Interval");
+//    if (cxL2CsnpInt == NULL || cxL2CsnpInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L2CsnpInterval = ISIS_CSNP_INTERVAL;
+//    }
+//    else
+//    {
+//        newIftEntry.L2CsnpInterval = atoi(cxL2CsnpInt->getNodeValue());
+//    }
+//
+//    //set L1PsnpInterval
+//    cXMLElement *cxL1PsnpInt = intElement->getFirstChildWithTag("ISIS-L1-PSNP-Interval");
+//    if (cxL1PsnpInt == NULL || cxL1PsnpInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L1PsnpInterval = ISIS_CSNP_INTERVAL;
+//    }
+//    else
+//    {
+//        newIftEntry.L1PsnpInterval = atoi(cxL1PsnpInt->getNodeValue());
+//    }
+//
+//    //set L2PsnpInterval
+//    cXMLElement *cxL2PsnpInt = intElement->getFirstChildWithTag("ISIS-L2-PSNP-Interval");
+//    if (cxL2PsnpInt == NULL || cxL2PsnpInt->getNodeValue() == NULL)
+//    {
+//        newIftEntry.L2PsnpInterval = ISIS_CSNP_INTERVAL;
+//    }
+//    else
+//    {
+//        newIftEntry.L2PsnpInterval = atoi(cxL2PsnpInt->getNodeValue());
+//    }
+//
+//    // priority is not needed for point-to-point, but it won't hurt
+//    // set priority of current DIS = me at start
+//    newIftEntry.L1DISpriority = newIftEntry.priority;
+//    newIftEntry.L2DISpriority = newIftEntry.priority;
+//
+//    //set initial designated IS as himself
+//    newIftEntry.L1DIS.set(systemId, newIftEntry.gateIndex + 1);
+////    this->copyArrayContent((unsigned char*) this->sysId, newIftEntry.L1DIS, ISIS_SYSTEM_ID, 0, 0);
+////    //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
+////    //newIftEntry.L1DIS[6] = entry->getInterfaceId() - 99;
+////    newIftEntry.L1DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
+//    //do the same for L2 DIS
+//    newIftEntry.L2DIS.set(systemId, newIftEntry.gateIndex + 1);
+////    this->copyArrayContent((unsigned char*) this->sysId, newIftEntry.L2DIS, ISIS_SYSTEM_ID, 0, 0);
+////    //newIftEntry.L2DIS[6] = entry->getInterfaceId() - 99;
+////    newIftEntry.L2DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
+//
+//    newIftEntry.passive = false;
+//    newIftEntry.entry = entry;
+//    this->ISISIft.push_back(newIftEntry);
+//}
 
 /**
  * Initiate scheduling timers.
@@ -1317,7 +1324,7 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
      * interface's circuitType.
      */
 //    unsigned int tlvSize;
-    unsigned char * disID;
+    PseudonodeID disID;
     ISISinterface *iface = &(this->ISISIft.at(interfaceIndex));
 
     // create L1 and L2 hello packets
@@ -1332,13 +1339,13 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
     if (circuitType == L1_TYPE)
     {
         hello->setType(LAN_L1_HELLO);
-        disID = iface->L1DIS;
+        disID = PseudonodeID(iface->L1DIS);
 //        ma.setAddress(ISIS_ALL_L1_IS);
     }
     else if (circuitType == L2_TYPE)
     {
         hello->setType(LAN_L2_HELLO);
-        disID = iface->L2DIS;
+        disID = PseudonodeID(iface->L2DIS);
 //        ma.setAddress(ISIS_ALL_L2_IS);
     }
     else
@@ -1350,10 +1357,11 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
 //    hello->setCircuitType(circuitType);
 
     //set source id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        hello->setSourceID(i, sysId[i]);
-    }
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        hello->setSourceID(i, sysId[i]);
+//    }
+    hello->setSourceID(systemId);
 
 
 //    Ieee802Ctrl *ctrl = new Ieee802Ctrl();
@@ -1389,28 +1397,30 @@ void ISIS::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circui
         // decision is made according to global hello counter (dirty hax - don't blame me pls, but i don't have time to code it nice way :)
 
         //set LAN ID field (DIS-ID)
-        for (unsigned int j = 0; j < 7; j++)
-        {
-            hello->setLanID(j, disID[j]);
-        }
+//        for (unsigned int j = 0; j < 7; j++)
+//        {
+//            hello->setLanID(j, disID[j]);
+//        }
+
+        hello->setLanID(disID);
 
         hello->setPriority(iface->priority);
         send(hello, "lowerLayerOut", iface->gateIndex);
 //        EV<< "'devideId :" << deviceId << " ISIS: L1 Hello packet was sent from " << iface->entry->getName() << "\n";
-        EV<< "ISIS::sendLANHello: Source-ID: ";
-        for (unsigned int i = 0; i < 6; i++)
-            {
-                EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) this->sysId[i];
-                if (i % 2 == 1)
-                    EV << ".";
-            }
-        EV<< " DIS: ";
-        for (unsigned int i = 0; i < 7; i++)
-                    {
-                        EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) disID[i];
-                        if (i % 2 == 1)
-                            EV << ".";
-                    }
+        EV<< "ISIS::sendLANHello: Source-ID: " << systemId;
+//        for (unsigned int i = 0; i < 6; i++)
+//            {
+//                EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) this->sysId[i];
+//                if (i % 2 == 1)
+//                    EV << ".";
+//            }
+        EV<< " DIS: " << disID;
+//        for (unsigned int i = 0; i < 7; i++)
+//        {
+//          EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) disID[i];
+//          if (i % 2 == 1)
+//            EV << ".";
+//        }
         EV<< endl;
 
     }
@@ -1466,10 +1476,11 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 
     //sourceID
     //set source id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        ptpHello->setSourceID(i, sysId[i]);
-    }
+    ptpHello->setSourceID(systemId);
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        ptpHello->setSourceID(i, sysId[i]);
+//    }
 
     //holdTime
     //set holdTime
@@ -1507,7 +1518,7 @@ void ISIS::sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType)
 void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
 {
 
-    const unsigned char *disId;
+    PseudonodeID disId;
     InterfaceEntry *ie = ift->getInterfaceById(interfaceId);
     ISISInterfaceData *d = ie->isisData();
     ISISinterface *iface = this->getIfaceByGateIndex(ie->getNetworkLayerGateIndex());
@@ -1560,18 +1571,20 @@ void ISIS::genTRILLHello(int interfaceId, ISISCircuitType circuitType)
     {
         TRILLHelloPacket *hello = new TRILLHelloPacket("TRILL Hello");
         //set source id
-        for (unsigned int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            hello->setSourceID(i, sysId[i]);
-        }
+        hello->setSourceID(systemId);
+//        for (unsigned int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            hello->setSourceID(i, sysId[i]);
+//        }
 
         //DIS (TRILL currently supports only L1)
         disId = d->getL1Dis();
-        for (unsigned int j = 0; j < ISIS_LAN_ID; j++)
-        {
-            hello->setLanID(j, disId[j]);
-
-        }
+        hello->setLanID(disId);
+//        for (unsigned int j = 0; j < ISIS_LAN_ID; j++)
+//        {
+//            hello->setLanID(j, disId[j]);
+//
+//        }
         //TODO A1 change to define
         hello->setMaxAreas(1);
         hello->setPriority(d->getPriority());
@@ -1737,10 +1750,11 @@ void ISIS::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuit
 
     //sourceID
     //set source id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        ptpHello->setSourceID(i, sysId[i]);
-    }
+    ptpHello->setSourceID(systemId);
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        ptpHello->setSourceID(i, sysId[i]);
+//    }
 
     //holdTime
     //set holdTime
@@ -1973,93 +1987,93 @@ void ISIS::schedule(ISISTimer *timer, double timee)
 
 }
 
-/**
- * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
- * Method is used in initialization.
- * @see initialize(int stage)
- * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
- */
-bool ISIS::parseNetAddr()
-{
-    std::string net = netAddr;
-    unsigned int dots = 0;
-    size_t found;
-
-    //net address (in this module - not according to standard O:-) MUST have this format:
-    //49.0001.1921.6801.2003.00
-
-    found = net.find_first_of(".");
-    if (found != 2 || net.length() != 25)
-    {
-        return false;
-    }
-
-    unsigned char *area = new unsigned char[ISIS_AREA_ID];
-    unsigned char *systemId = new unsigned char[ISIS_SYSTEM_ID];
-    unsigned char *nsel = new unsigned char[1];
-
-    while (found != std::string::npos)
-    {
-
-        switch (found)
-            {
-            case 2:
-                dots++;
-                area[0] = (unsigned char) (atoi(net.substr(0, 2).c_str()));
-                std::cout << "BEZ ATOI" << net.substr(0, 2).c_str() << endl;
-                break;
-            case 7:
-                dots++;
-                area[1] = (unsigned char) (atoi(net.substr(3, 2).c_str()));
-                area[2] = (unsigned char) (atoi(net.substr(5, 2).c_str()));
-                break;
-            case 12:
-                dots++;
-                systemId[0] = (unsigned char) (strtol(net.substr(8, 2).c_str(), NULL, 16));
-                systemId[1] = (unsigned char) (strtol(net.substr(10, 2).c_str(), NULL, 16));
-                break;
-            case 17:
-                dots++;
-                systemId[2] = (unsigned char) (strtol(net.substr(13, 2).c_str(), NULL, 16));
-                systemId[3] = (unsigned char) (strtol(net.substr(15, 2).c_str(), NULL, 16));
-                break;
-            case 22:
-                dots++;
-                systemId[4] = (unsigned char) (strtol(net.substr(18, 2).c_str(), NULL, 16));
-                systemId[5] = (unsigned char) (strtol(net.substr(20, 2).c_str(), NULL, 16));
-                break;
-            default:
-                return false;
-                break;
-
-            }
-
-        found = net.find_first_of(".", found + 1);
-    }
-
-    if (dots != 5)
-    {
-        return false;
-    }
-
-    nsel[0] = (unsigned char) (atoi(net.substr(23, 2).c_str()));
-
-    //49.0001.1921.6801.2003.00
-
-    areaId = area;
-//    std::cout << "ISIS: AreaID: " << areaId[0] << endl;
-//    std::cout << "ISIS: AreaID: " << areaId[1] << endl;
-//    std::cout << "ISIS: AreaID: " << areaId[2] << endl;
-    sysId = systemId;
-//    std::cout << "ISIS: SystemID: " << sysId << endl;
-    NSEL = nsel;
-//    std::cout << "ISIS: NSEL: " << NSEL << endl;
-
-    this->nickname = this->sysId[ISIS_SYSTEM_ID - 1] + this->sysId[ISIS_SYSTEM_ID - 2] * 0xFF;
-
-
-    return true;
-}
+///**
+// * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
+// * Method is used in initialization.
+// * @see initialize(int stage)
+// * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
+// */
+//bool ISIS::parseNetAddr()
+//{
+//    std::string net = netAddr;
+//    unsigned int dots = 0;
+//    size_t found;
+//
+//    //net address (in this module - not according to standard O:-) MUST have this format:
+//    //49.0001.1921.6801.2003.00
+//
+//    found = net.find_first_of(".");
+//    if (found != 2 || net.length() != 25)
+//    {
+//        return false;
+//    }
+//
+//    unsigned char *area = new unsigned char[ISIS_AREA_ID];
+//    unsigned char *systemId = new unsigned char[ISIS_SYSTEM_ID];
+//    unsigned char *nsel = new unsigned char[1];
+//
+//    while (found != std::string::npos)
+//    {
+//
+//        switch (found)
+//            {
+//            case 2:
+//                dots++;
+//                area[0] = (unsigned char) (atoi(net.substr(0, 2).c_str()));
+//                std::cout << "BEZ ATOI" << net.substr(0, 2).c_str() << endl;
+//                break;
+//            case 7:
+//                dots++;
+//                area[1] = (unsigned char) (atoi(net.substr(3, 2).c_str()));
+//                area[2] = (unsigned char) (atoi(net.substr(5, 2).c_str()));
+//                break;
+//            case 12:
+//                dots++;
+//                systemId[0] = (unsigned char) (strtol(net.substr(8, 2).c_str(), NULL, 16));
+//                systemId[1] = (unsigned char) (strtol(net.substr(10, 2).c_str(), NULL, 16));
+//                break;
+//            case 17:
+//                dots++;
+//                systemId[2] = (unsigned char) (strtol(net.substr(13, 2).c_str(), NULL, 16));
+//                systemId[3] = (unsigned char) (strtol(net.substr(15, 2).c_str(), NULL, 16));
+//                break;
+//            case 22:
+//                dots++;
+//                systemId[4] = (unsigned char) (strtol(net.substr(18, 2).c_str(), NULL, 16));
+//                systemId[5] = (unsigned char) (strtol(net.substr(20, 2).c_str(), NULL, 16));
+//                break;
+//            default:
+//                return false;
+//                break;
+//
+//            }
+//
+//        found = net.find_first_of(".", found + 1);
+//    }
+//
+//    if (dots != 5)
+//    {
+//        return false;
+//    }
+//
+//    nsel[0] = (unsigned char) (atoi(net.substr(23, 2).c_str()));
+//
+//    //49.0001.1921.6801.2003.00
+//
+//    areaId = area;
+////    std::cout << "ISIS: AreaID: " << areaId[0] << endl;
+////    std::cout << "ISIS: AreaID: " << areaId[1] << endl;
+////    std::cout << "ISIS: AreaID: " << areaId[2] << endl;
+//    sysId = systemId;
+////    std::cout << "ISIS: SystemID: " << sysId << endl;
+//    NSEL = nsel;
+////    std::cout << "ISIS: NSEL: " << NSEL << endl;
+//
+//    this->nickname = this->sysId[ISIS_SYSTEM_ID - 1] + this->sysId[ISIS_SYSTEM_ID - 2] * 0xFF;
+//
+//
+//    return true;
+//}
 
 /**
  * Handle L1 hello messages. Insert new neighbours into L1 adjacency table (this->adjL1Table) and
@@ -2186,21 +2200,26 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg)
         neighbour.timer->setGateIndex(gateIndex);
         //set source system ID in neighbour record & in timer to identify it
         //set also lspId for easier purging LSPs
-        for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
-        {
-            neighbour.sysID[the_game] = msg->getSourceID(the_game);
-            neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
-            neighbour.timer->setLSPid(the_game, msg->getSourceID(the_game));
-        }
-        neighbour.timer->setLSPid(ISIS_SYSTEM_ID, 0);
-        neighbour.timer->setLSPid(ISIS_SYSTEM_ID + 1, 0);
+        neighbour.sysID = msg->getSourceID();
+        neighbour.timer->setSysID(msg->getSourceID());
+        neighbour.timer->setLSPid(LspID(msg->getSourceID()));
 
-        //TODO should be from message's TLV Area Addresses
-        for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
-        {
-            neighbour.areaID[i] = this->areaId[i];
-            neighbour.timer->setAreaID(i, this->areaId[i]);
-        }
+//        for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
+//        {
+//            neighbour.sysID[the_game] = msg->getSourceID(the_game);
+//            neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
+//            neighbour.timer->setLSPid(the_game, msg->getSourceID(the_game));
+//        }
+//        neighbour.timer->setLSPid(ISIS_SYSTEM_ID, 0);
+//        neighbour.timer->setLSPid(ISIS_SYSTEM_ID + 1, 0);
+
+        //TODO A1 should be from message's TLV Area Addresses
+        neighbour.areaID.setAreaId(areaID.getAreaId());
+//        for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
+//        {
+//            neighbour.areaID[i] = this->areaId[i];
+//            neighbour.timer->setAreaID(i, this->areaId[i]);
+//        }
 
         //get source MAC address of received frame
         Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
@@ -2291,8 +2310,7 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
                         //TODO A! Signals ...
 //                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
                         //TODO support multiple area addresses
-                        if (!compareArrays((unsigned char *) this->areaId, tmpAdj->areaID, ISIS_AREA_ID)
-                                && this->isType == L1L2_TYPE)
+                        if (areaID != tmpAdj->areaID  && this->isType == L1L2_TYPE)
                         {
 //                            this->att = true;
                             this->updateAtt(true);
@@ -2339,18 +2357,22 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg)
 
             //set neighbours system ID
             //set also lspId for easier purging LSPs
-            for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
-            {
-                neighbour.sysID[the_game] = msg->getSourceID(the_game);
-                neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
-                neighbour.timer->setLSPid(the_game, msg->getSourceID(the_game));
-            }
-            neighbour.timer->setLSPid(ISIS_SYSTEM_ID, 0);
-            neighbour.timer->setLSPid(ISIS_SYSTEM_ID + 1, 0);
+            neighbour.sysID = msg->getSourceID();
+            neighbour.timer->setSysID(msg->getSourceID());
+            neighbour.timer->setLSPid(LspID(msg->getSourceID()));
+//            for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
+//            {
+//                neighbour.sysID[the_game] = msg->getSourceID(the_game);
+//                neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
+//                neighbour.timer->setLSPid(the_game, msg->getSourceID(the_game));
+//            }
+//            neighbour.timer->setLSPid(ISIS_SYSTEM_ID, 0);
+//            neighbour.timer->setLSPid(ISIS_SYSTEM_ID + 1, 0);
 
             //TODO check that area address length match with ISIS_AREA_ID
             // tmpTLV->value[0] == ISIS_AREA_ID
             //set neighbours area ID
+//            neighbour.timer->setAreaID()
             this->copyArrayContent(tmpTLV->value, neighbour.areaID, ISIS_AREA_ID, 1, 0);
 
             for (unsigned int z = 0; z < ISIS_AREA_ID; z++)
@@ -2464,7 +2486,7 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
     unsigned char *tmpMACChars = new unsigned char[MAC_ADDRESS_SIZE];
     tmpMAC.getAddressBytes(tmpMACChars);
     //if sender is DIS
-    if(memcmp(this->getSysID(msg), tmpIntf->L1DIS, ISIS_SYSTEM_ID) == 0){
+    if(msg->getSourceID() == tmpIntf->L1DIS){
         //TODO A! TRILL: Uncomment after adding TRILL
 //        TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
 //        trillD->setDesigVlan(tmpDesigVlanId);
@@ -2606,21 +2628,26 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg)
         neighbour.timer->setGateIndex(gateIndex);
         //set source system ID in neighbour record & in timer to identify it
         //set also lspId for easier purging LSPs
-        for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
-        {
-            neighbour.sysID[the_game] = msg->getSourceID(the_game);
-            neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
-            neighbour.timer->setLSPid(the_game, msg->getSourceID(the_game));
-        }
-        neighbour.timer->setLSPid(ISIS_SYSTEM_ID, 0);
-        neighbour.timer->setLSPid(ISIS_SYSTEM_ID + 1, 0);
+        neighbour.sysID = msg->getSourceID();
+        neighbour.timer->setSysID(msg->getSourceID());
+        neighbour.timer->setLSPid(LspID(msg->getSourceID()));
+//        for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
+//        {
+//            neighbour.sysID[the_game] = msg->getSourceID(the_game);
+//            neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
+//            neighbour.timer->setLSPid(the_game, msg->getSourceID(the_game));
+//        }
+//        neighbour.timer->setLSPid(ISIS_SYSTEM_ID, 0);
+//        neighbour.timer->setLSPid(ISIS_SYSTEM_ID + 1, 0);
 
         //TODO should be from message's TLV Area Addresses
-        for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
-        {
-            neighbour.areaID[i] = this->areaId[i];
-            neighbour.timer->setAreaID(i, this->areaId[i]);
-        }
+        neighbour.areaID = areaID;
+        neighbour.timer->setAreaID(areaID);
+//        for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
+//        {
+//            neighbour.areaID[i] = this->areaId[i];
+//            neighbour.timer->setAreaID(i, this->areaId[i]);
+//        }
 
         //get source MAC address of received frame
         Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
@@ -2784,17 +2811,22 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
             neighbour.timer->setGateIndex(gateIndex);
             //set source system ID in neighbour record & in timer to identify it
 
-            for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
-            {
-                neighbour.sysID[the_game] = msg->getSourceID(the_game);
-                neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
-            }
+            neighbour.sysID = msg->getSourceID();
+            neighbour.timer->setSysID(msg->getSourceID());
+            neighbour.timer->setLSPid(LspID(msg->getSourceID()));
+
+//            for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
+//            {
+//                neighbour.sysID[the_game] = msg->getSourceID(the_game);
+//                neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
+//            }
 
             //TODO should be from message's TLV Area Addresses
-            for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
-            {
-                neighbour.areaID[i] = this->areaId[i];
-            }
+            neighbour.areaID = areaID;
+//            for (unsigned int i = 0; i < ISIS_AREA_ID; i++)
+//            {
+//                neighbour.areaID[i] = this->areaId[i];
+//            }
 
             //get source MAC address of received frame
             Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
@@ -2867,8 +2899,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
                             //TODO A! Signals
 //                            nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL2LspTimer);
                             //TODO support multiple area addresses
-                            if (!compareArrays((unsigned char *) this->areaId, tmpAdj->areaID, ISIS_AREA_ID)
-                                    && this->isType == L1L2_TYPE)
+                            if (areaID != tmpAdj->areaID && this->isType == L1L2_TYPE)
                             {
                                 this->updateAtt(true);
                             }
@@ -2908,11 +2939,14 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
             neighbour.timer->setGateIndex(gateIndex);
 
             //set source system ID in neighbour record & in timer to identify it
-            for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
-            {
-                neighbour.sysID[the_game] = msg->getSourceID(the_game);
-                neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
-            }
+            neighbour.sysID = msg->getSourceID();
+            neighbour.timer->setSysID(msg->getSourceID());
+            neighbour.timer->setLSPid(LspID(msg->getSourceID()));
+//            for (unsigned int the_game = 0; the_game < msg->getSourceIDArraySize(); the_game++)
+//            {
+//                neighbour.sysID[the_game] = msg->getSourceID(the_game);
+//                neighbour.timer->setSysID(the_game, msg->getSourceID(the_game));
+//            }
             //set neighbours area ID
             tmpTLV = this->getTLVByType(msg, AREA_ADDRESS);
             //TODO compare tmpTLV->value[0] and ISIS_AREA_ID
@@ -2962,7 +2996,7 @@ void ISIS::updateAtt(bool action)
     {
         for (AdjTab_t::iterator it = this->adjL2Table.begin(); it != this->adjL2Table.end(); ++it)
         {
-            if (!compareArrays((unsigned char *) this->areaId, (*it).areaID, ISIS_AREA_ID && this->isType == L1L2_TYPE))
+            if (areaID != (*it).areaID && this->isType == L1L2_TYPE)
             {
                 //at least one L2 adjacency with another area exists so don't clear Attached flag
                 this->setClosestAtt();
@@ -2981,7 +3015,7 @@ bool ISIS::isAdjBySystemID(unsigned char *systemID, short ciruitType)
         //walk through adjacency table and look for existing neighbours
         for (std::vector<ISISadj>::iterator it = this->adjL1Table.begin(); it != adjL1Table.end(); ++it)
         {
-            if (compareArrays(systemID, (*it).sysID, ISIS_SYSTEM_ID))
+            if (systemId == (*it).sysID)
             {
                 return true;
             }
@@ -2992,7 +3026,7 @@ bool ISIS::isAdjBySystemID(unsigned char *systemID, short ciruitType)
         //walk through adjacency table and look for existing neighbours
         for (std::vector<ISISadj>::iterator it = this->adjL2Table.begin(); it != adjL2Table.end(); ++it)
         {
-            if (compareArrays(systemID, (*it).sysID, ISIS_SYSTEM_ID))
+          if (systemId == (*it).sysID)
             {
                 return true;
             }
@@ -3010,34 +3044,34 @@ bool ISIS::isAdjBySystemID(unsigned char *systemID, short ciruitType)
 ISISadj* ISIS::getAdj(ISISMessage *inMsg, short circuitType)
 {
 //    short circuitType;
-    unsigned char * systemID = new unsigned char[ISIS_SYSTEM_ID];
+    SystemID sysID;
     std::vector<ISISadj> *adjTable;
 
     if (inMsg->getType() == LAN_L1_HELLO)
     {
         ISISLANHelloPacket *msg = check_and_cast<ISISLANHelloPacket *>(inMsg);
-        systemID = this->getSysID(msg);
+        sysID = msg->getSourceID();
         circuitType = L1_TYPE;
         adjTable = &(this->adjL1Table);
     }
     else if (inMsg->getType() == LAN_L2_HELLO)
     {
         ISISLANHelloPacket *msg = check_and_cast<ISISLANHelloPacket *>(inMsg);
-        systemID = this->getSysID(msg);
+        sysID = msg->getSourceID();
         circuitType = L2_TYPE;
         adjTable = &(this->adjL2Table);
     }
     else if (inMsg->getType() == TRILL_HELLO)
     {
         TRILLHelloPacket *msg = check_and_cast<TRILLHelloPacket *>(inMsg);
-        systemID = this->getSysID(msg);
+        sysID = msg->getSourceID();
         circuitType = L1_TYPE;
         adjTable = &(this->adjL1Table);
     }
     else if (inMsg->getType() == PTP_HELLO)
     {
         ISISPTPHelloPacket *msg = check_and_cast<ISISPTPHelloPacket *>(inMsg);
-        systemID = this->getSysID(msg);
+        sysID = msg->getSourceID();
 //        circuitType = msg->getCircuitType();
 
         adjTable = &(this->adjL1Table);
@@ -3060,7 +3094,7 @@ ISISadj* ISIS::getAdj(ISISMessage *inMsg, short circuitType)
     for (std::vector<ISISadj>::iterator it = adjTable->begin(); it != adjTable->end(); ++it)
     {
         //System-ID match?
-        if (compareArrays(systemID, (*it).sysID, ISIS_SYSTEM_ID))
+        if (sysID == (*it).sysID)
         {
 
             //MAC Address and gateIndex
@@ -3087,12 +3121,12 @@ ISISadj* ISIS::getAdj(ISISMessage *inMsg, short circuitType)
                         break;
                     }
                 }
-                delete[] systemID;
+//                delete[] sysID;
                 return &(*it);
             }
         }
     }
-    delete[] systemID;
+//    delete[] sysID;
     return NULL;
 
 }
@@ -3103,7 +3137,7 @@ ISISadj* ISIS::getAdj(ISISMessage *inMsg, short circuitType)
  * @param specify level
  * @param gateIndex specify interface
  */
-ISISadj *ISIS::getAdjBySystemID(unsigned char *systemID, short circuitType, int gateIndex)
+ISISadj *ISIS::getAdjBySystemID(SystemID systemID, short circuitType, int gateIndex)
 {
 
     /* For redundant links there could be more than one adjacency for the same System-ID.
@@ -3114,7 +3148,7 @@ ISISadj *ISIS::getAdjBySystemID(unsigned char *systemID, short circuitType, int 
 
         for (std::vector<ISISadj>::iterator it = this->adjL1Table.begin(); it != this->adjL1Table.end(); ++it)
         {
-            if (compareArrays(systemID, (*it).sysID, ISIS_SYSTEM_ID))
+            if (systemID == (*it).sysID)
             {
                 if (gateIndex > -1 && (*it).gateIndex != gateIndex)
                 {
@@ -3130,7 +3164,7 @@ ISISadj *ISIS::getAdjBySystemID(unsigned char *systemID, short circuitType, int 
 
         for (std::vector<ISISadj>::iterator it = this->adjL2Table.begin(); it != this->adjL2Table.end(); ++it)
         {
-            if (compareArrays(systemID, (*it).sysID, ISIS_SYSTEM_ID))
+            if (systemID == (*it).sysID)
             {
                 if (gateIndex > -1 && (*it).gateIndex != gateIndex)
                 {
@@ -3148,7 +3182,7 @@ ISISadj *ISIS::getAdjBySystemID(unsigned char *systemID, short circuitType, int 
         /* For point-to-point link there should be only ONE adjacency in both tables*/
         for (std::vector<ISISadj>::iterator it = this->adjL1Table.begin(); it != this->adjL1Table.end(); ++it)
         {
-            if (compareArrays(systemID, (*it).sysID, ISIS_SYSTEM_ID))
+            if (systemID == (*it).sysID)
             {
                 return &(*it);
             }
@@ -3174,178 +3208,178 @@ ISISadj *ISIS::getAdjByMAC(const MACAddress &address, short circuitType, int gat
     return NULL;
 }
 
-/*
- * Extract System-ID from message.
- * @param msg incomming msg
- * @return newly allocated system-id
- */
-unsigned char * ISIS::getSysID(ISISMessage *msg)
-{
-
-    unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
-    if (msg->getType() == LAN_L1_HELLO)
-    {
-        ISISLANHelloPacket *l1hello = check_and_cast<ISISLANHelloPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = l1hello->getSourceID(i);
-        }
-    }
-    else if (msg->getType() == LAN_L2_HELLO)
-    {
-        ISISLANHelloPacket *l2hello = check_and_cast<ISISLANHelloPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = l2hello->getSourceID(i);
-        }
-    }
-    else if (msg->getType() == TRILL_HELLO)
-    {
-        TRILLHelloPacket *trillHello = check_and_cast<TRILLHelloPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = trillHello->getSourceID(i);
-        }
-    }
-    else if (msg->getType() == PTP_HELLO)
-    {
-        ISISPTPHelloPacket *ptphello = check_and_cast<ISISPTPHelloPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = ptphello->getSourceID(i);
-        }
-
-    }
-    else if (msg->getType() == L1_PSNP)
-    {
-        ISISPSNPPacket *psnp = check_and_cast<ISISPSNPPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = psnp->getSourceID(i);
-        }
-
-    }
-    else if (msg->getType() == L2_PSNP)
-    {
-        ISISPSNPPacket *psnp = check_and_cast<ISISPSNPPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = psnp->getSourceID(i);
-        }
-
-    }
-    else if (msg->getType() == L1_CSNP)
-    {
-        ISISCSNPPacket *csnp = check_and_cast<ISISCSNPPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = csnp->getSourceID(i);
-        }
-
-    }
-    else if (msg->getType() == L2_CSNP)
-    {
-        ISISCSNPPacket *csnp = check_and_cast<ISISCSNPPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = csnp->getSourceID(i);
-        }
-
-    }
-    else if (msg->getType() == L1_LSP || msg->getType() == L2_LSP)
-    {
-        ISISLSPPacket *lsp = check_and_cast<ISISLSPPacket *>(msg);
-        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-        {
-            systemID[i] = lsp->getLspID(i);
-        }
-
-    }
-    else
-    {
-        EV<< "ISIS: ERROR: getSysID for this message type is not implemented (yet?): " << msg->getType() << endl;
-    }
-
-    return systemID;
-
-}
-
-/*
- * Extract System-ID from timer.
- * @param msg incomming msg
- * @return newly allocated system-id
- */
-unsigned char* ISIS::getSysID(ISISTimer *timer)
-{
-    unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
-
-    for (int i = 0; i < ISIS_SYSTEM_ID; i++)
-    {
-        systemID[i] = timer->getSysID(i);
-    }
-
-    return systemID;
-}
-
-/*
- * Extract LSP-ID from timer.
- * @param timer incomming timer
- * @return newly allocated system-id
- */
-unsigned char* ISIS::getLspID(ISISTimer *timer)
-{
-    unsigned char *lspID = new unsigned char[ISIS_SYSTEM_ID + 2];
-
-    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-    {
-        lspID[i] = timer->getLSPid(i);
-    }
-
-    return lspID;
-}
-
-
-/*
- * Extract LSP-ID from message.
- * @param msg incomming msg
- * @return newly allocated system-id
- */
-unsigned char* ISIS::getLspID(ISISLSPPacket *msg)
-{
-
-    unsigned char *lspId = new unsigned char[8]; //TODO change back to ISIS_SYSTEM_ID + 2
-
-    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-    {
-        lspId[i] = msg->getLspID(i);
-    }
-
-    return lspId;
-
-}
-
-void ISIS::setLspID(ISISLSPPacket *msg, unsigned char * lspId)
-{
-
-    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-    {
-        msg->setLspID(i, lspId[i]);
-    }
-
-}
-
-unsigned char* ISIS::getLanID(ISISLANHelloPacket *msg)
-{
-
-    unsigned char *lanID = new unsigned char(ISIS_SYSTEM_ID +  2);
-
-    for (int i = 0; i < ISIS_SYSTEM_ID + 1; ++i)
-    {
-        lanID[i] = msg->getLanID(i); //XXX Invalid write? How?
-    }
-
-    return lanID;
-}
+///*
+// * Extract System-ID from message.
+// * @param msg incomming msg
+// * @return newly allocated system-id
+// */
+//unsigned char * ISIS::getSysID(ISISMessage *msg)
+//{
+//
+//    unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
+//    if (msg->getType() == LAN_L1_HELLO)
+//    {
+//        ISISLANHelloPacket *l1hello = check_and_cast<ISISLANHelloPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = l1hello->getSourceID(i);
+//        }
+//    }
+//    else if (msg->getType() == LAN_L2_HELLO)
+//    {
+//        ISISLANHelloPacket *l2hello = check_and_cast<ISISLANHelloPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = l2hello->getSourceID(i);
+//        }
+//    }
+//    else if (msg->getType() == TRILL_HELLO)
+//    {
+//        TRILLHelloPacket *trillHello = check_and_cast<TRILLHelloPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = trillHello->getSourceID(i);
+//        }
+//    }
+//    else if (msg->getType() == PTP_HELLO)
+//    {
+//        ISISPTPHelloPacket *ptphello = check_and_cast<ISISPTPHelloPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = ptphello->getSourceID(i);
+//        }
+//
+//    }
+//    else if (msg->getType() == L1_PSNP)
+//    {
+//        ISISPSNPPacket *psnp = check_and_cast<ISISPSNPPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = psnp->getSourceID(i);
+//        }
+//
+//    }
+//    else if (msg->getType() == L2_PSNP)
+//    {
+//        ISISPSNPPacket *psnp = check_and_cast<ISISPSNPPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = psnp->getSourceID(i);
+//        }
+//
+//    }
+//    else if (msg->getType() == L1_CSNP)
+//    {
+//        ISISCSNPPacket *csnp = check_and_cast<ISISCSNPPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = csnp->getSourceID(i);
+//        }
+//
+//    }
+//    else if (msg->getType() == L2_CSNP)
+//    {
+//        ISISCSNPPacket *csnp = check_and_cast<ISISCSNPPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = csnp->getSourceID(i);
+//        }
+//
+//    }
+//    else if (msg->getType() == L1_LSP || msg->getType() == L2_LSP)
+//    {
+//        ISISLSPPacket *lsp = check_and_cast<ISISLSPPacket *>(msg);
+//        for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//        {
+//            systemID[i] = lsp->getLspID(i);
+//        }
+//
+//    }
+//    else
+//    {
+//        EV<< "ISIS: ERROR: getSysID for this message type is not implemented (yet?): " << msg->getType() << endl;
+//    }
+//
+//    return systemID;
+//
+//}
+//
+///*
+// * Extract System-ID from timer.
+// * @param msg incomming msg
+// * @return newly allocated system-id
+// */
+//unsigned char* ISIS::getSysID(ISISTimer *timer)
+//{
+//    unsigned char *systemID = new unsigned char[ISIS_SYSTEM_ID];
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID; i++)
+//    {
+//        systemID[i] = timer->getSysID(i);
+//    }
+//
+//    return systemID;
+//}
+//
+///*
+// * Extract LSP-ID from timer.
+// * @param timer incomming timer
+// * @return newly allocated system-id
+// */
+//unsigned char* ISIS::getLspID(ISISTimer *timer)
+//{
+//    unsigned char *lspID = new unsigned char[ISIS_SYSTEM_ID + 2];
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//    {
+//        lspID[i] = timer->getLSPid(i);
+//    }
+//
+//    return lspID;
+//}
+//
+//
+///*
+// * Extract LSP-ID from message.
+// * @param msg incomming msg
+// * @return newly allocated system-id
+// */
+//unsigned char* ISIS::getLspID(ISISLSPPacket *msg)
+//{
+//
+//    unsigned char *lspId = new unsigned char[8]; //TODO change back to ISIS_SYSTEM_ID + 2
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//    {
+//        lspId[i] = msg->getLspID(i);
+//    }
+//
+//    return lspId;
+//
+//}
+//
+//void ISIS::setLspID(ISISLSPPacket *msg, unsigned char * lspId)
+//{
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//    {
+//        msg->setLspID(i, lspId[i]);
+//    }
+//
+//}
+//
+//unsigned char* ISIS::getLanID(ISISLANHelloPacket *msg)
+//{
+//
+//    unsigned char *lanID = new unsigned char(ISIS_SYSTEM_ID +  2);
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID + 1; ++i)
+//    {
+//        lanID[i] = msg->getLanID(i); //XXX Invalid write? How?
+//    }
+//
+//    return lanID;
+//}
 
 /**
  * Print L1 and L2 adjacency tables to EV.
@@ -3358,37 +3392,42 @@ void ISIS::printAdjTable()
     EV<< "L1 adjacency table of IS ";
 
     //print area id
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) areaId[i];
-        if (i % 2 == 0)
-        EV << ".";
-
-    }
+    EV << areaID << ".";
+//    for (unsigned int i = 0; i < 3; i++)
+//    {
+//        EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) areaId[i];
+//        if (i % 2 == 0)
+//        EV << ".";
+//
+//    }
 
         //print system id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        EV<< std::setfill('0') << std::setw(2) << std::hex << (unsigned int) sysId[i];
-        if (i % 2 == 1)
-        EV << ".";
-    }
+    EV << systemId << ".";
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        EV<< std::setfill('0') << std::setw(2) << std::hex << (unsigned int) sysId[i];
+//        if (i % 2 == 1)
+//        EV << ".";
+//    }
 
         //print NSEL
-    EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
-    << adjL1Table.size() << endl;
+    EV <<"00"; //It's always zero (for ISIS)
+    EV << "\tNo. of records in Table: " << adjL1Table.size() << endl;
+//    EV << std::setfill('0') << std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
+//    << adjL1Table.size() << endl;
 
     //print neighbour records
     for (unsigned int j = 0; j < adjL1Table.size(); j++)
     {
         EV<< "\t";
         //print neighbour system id
-        for (unsigned int i = 0; i < 6; i++)
-        {
-            EV << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) adjL1Table.at(j).sysID[i];
-            if (i == 1 || i == 3)
-            EV << ".";
-        }
+        EV << adjL1Table.at(j).sysID;
+//        for (unsigned int i = 0; i < 6; i++)
+//        {
+//            EV << std::setfill('0') << std::setw(2) << std::hex << (unsigned int) adjL1Table.at(j).sysID[i];
+//            if (i == 1 || i == 3)
+//            EV << ".";
+//        }
         EV << "\t";
 
         //print neighbour MAC address
@@ -3413,45 +3452,49 @@ void ISIS::printAdjTable()
     EV<< "L2 adjacency table of IS ";
 
     //print area id
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) areaId[i];
-        if (i % 2 == 0)
-        EV << ".";
-
-    }
+    EV << areaID << ".";
+//    for (unsigned int i = 0; i < 3; i++)
+//    {
+//        EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) areaId[i];
+//        if (i % 2 == 0)
+//        EV << ".";
+//
+//    }
 
         //print system id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        EV<< std::setfill('0') << std::setw(2) << std::hex << (unsigned int) sysId[i];
-        if (i % 2 == 1)
-        EV << ".";
-    }
+    EV << systemId << ".";
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        EV<< std::setfill('0') << std::setw(2) << std::hex << (unsigned int) sysId[i];
+//        if (i % 2 == 1)
+//        EV << ".";
+//    }
 
         //print NSEL
-    EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
-    << adjL2Table.size() << endl;
+    EV << "00\tNo. of records in Table: " << adjL2Table.size() << endl;
+//    EV<< std::setfill('0') << std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in Table: "
+//    << adjL2Table.size() << endl;
 
     //print neighbour records
     for (unsigned int j = 0; j < adjL2Table.size(); j++)
     {
         EV<< "\t";
         //print neighbour area id and system id
-        for (unsigned int i = 0; i < 3; i++)
-        {
-            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) adjL2Table.at(j).areaID[i];
-            if (i % 2 == 0)
-            EV << ".";
-
-        }
-
-        for (unsigned int i = 0; i < 6; i++)
-        {
-            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) adjL2Table.at(j).sysID[i];
-            if (i == 1 || i == 3)
-            EV << ".";
-        }
+        EV << adjL2Table.at(j).areaID << ".";
+//        for (unsigned int i = 0; i < 3; i++)
+//        {
+//            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) adjL2Table.at(j).areaID[i];
+//            if (i % 2 == 0)
+//            EV << ".";
+//
+//        }
+        EV << adjL2Table.at(j).sysID;
+//        for (unsigned int i = 0; i < 6; i++)
+//        {
+//            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) adjL2Table.at(j).sysID[i];
+//            if (i == 1 || i == 3)
+//            EV << ".";
+//        }
         EV << "\t";
 
         //print neighbour MAC address
@@ -3484,15 +3527,15 @@ void ISIS::printAdjTable()
 /* Sets and then parses NET address.
  * @param netAddr specify NET address
  */
-void ISIS::setNetAddr(std::string netAddr)
-{
-    this->netAddr = netAddr;
-
-    if (!this->parseNetAddr())
-    {
-        throw cRuntimeError("Unable to parse NET address.");
-    }
-}
+//void ISIS::setNetAddr(std::string netAddr)
+//{
+//    this->netAddr = netAddr;
+//
+//    if (!this->parseNetAddr())
+//    {
+//        throw cRuntimeError("Unable to parse NET address.");
+//    }
+//}
 
 void ISIS::setMode(ISIS_MODE mode)
 {
@@ -3534,39 +3577,43 @@ void ISIS::printLSPDB()
     EV<< "L1 LSP database of IS ";
 
     //print area id
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) areaId[i];
-        if (i % 2 == 0)
-        EV << ".";
-
-    }
+    EV << areaID << ".";
+//    for (unsigned int i = 0; i < 3; i++)
+//    {
+//        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) areaId[i];
+//        if (i % 2 == 0)
+//        EV << ".";
+//
+//    }
 
         //print system id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
-        if (i % 2 == 1)
-        EV << ".";
-    }
+    EV << systemId << ".";
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
+//        if (i % 2 == 1)
+//        EV << ".";
+//    }
 
         //print NSEL
-    EV<< std::setfill('0') <<   std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
-    << lspDb->size() << endl;
+    EV << "00\tNo. of records in database: " << lspDb->size() << endl;
+//    EV<< std::setfill('0') <<   std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
+//    << lspDb->size() << endl;
 //    unsigned char *lspId;
     std::vector<LSPRecord *>::iterator it = lspDb->begin();
     for (; it != lspDb->end(); ++it)
     {
         EV<< "\t";
         //print LSP ID
-        for (unsigned int j = 0; j < 8; j++)
-        {
-            EV << std::setfill('0') <<   std::setw(2) << std::dec << (unsigned int) (*it)->LSP->getLspID(j);
-            if (j == 1 || j == 3 || j == 5)
-            EV << ".";
-            if (j == 6)
-            EV << "-";
-        }
+        EV << (*it)->LSP->getLspID();
+//        for (unsigned int j = 0; j < 8; j++)
+//        {
+//            EV << std::setfill('0') <<   std::setw(2) << std::dec << (unsigned int) (*it)->LSP->getLspID(j);
+//            if (j == 1 || j == 3 || j == 5)
+//            EV << ".";
+//            if (j == 6)
+//            EV << "-";
+//        }
         EV << "\t0x";
 
         //print sequence number
@@ -3602,13 +3649,14 @@ void ISIS::printLSPDB()
         EV<< "Closest L1L2 IS:" << endl;
         for (ISISNeighbours_t::iterator attIt = this->attIS->begin(); attIt != this->attIS->end(); ++attIt)
         {
-            for (unsigned int l = 0; l < 7; l++)
-            {
-                //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
-                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*attIt)->id[l];
-                if (l % 2 == 1)
-                EV << ".";
-            }
+          EV << (*attIt)->id;
+//            for (unsigned int l = 0; l < 7; l++)
+//            {
+//                //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
+//                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*attIt)->id[l];
+//                if (l % 2 == 1)
+//                EV << ".";
+//            }
             EV << endl;
         }
     }
@@ -3618,39 +3666,43 @@ void ISIS::printLSPDB()
     EV<< "L2 LSP database of IS ";
 
     //print area id
-    for (unsigned int i = 0; i < 3; i++)
-    {
-        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) areaId[i];
-        if (i % 2 == 0)
-        EV << ".";
-
-    }
+    EV << areaID << ".";
+//    for (unsigned int i = 0; i < 3; i++)
+//    {
+//        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) areaId[i];
+//        if (i % 2 == 0)
+//        EV << ".";
+//
+//    }
 
         //print system id
-    for (unsigned int i = 0; i < 6; i++)
-    {
-        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
-        if (i % 2 == 1)
-        EV << ".";
-    }
+    EV << systemId << ".";
+//    for (unsigned int i = 0; i < 6; i++)
+//    {
+//        EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) sysId[i];
+//        if (i % 2 == 1)
+//        EV << ".";
+//    }
 
         //print NSEL
-    EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
-    << lspDb->size() << endl;
+    EV << "00\tNo. of records in database: " << lspDb->size() << endl;
+//    EV<< std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) NSEL[0] << "\tNo. of records in database: "
+//    << lspDb->size() << endl;
 //        unsigned char *lspId;
     it = lspDb->begin();
     for (; it != lspDb->end(); ++it)
     {
         EV<< "\t";
         //print LSP ID
-        for (unsigned int j = 0; j < 8; j++)
-        {
-            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*it)->LSP->getLspID(j);
-            if (j == 1 || j == 3 || j == 5)
-            EV << ".";
-            if (j == 6)
-            EV << "-";
-        }
+        EV << (*it)->LSP->getLspID();
+//        for (unsigned int j = 0; j < 8; j++)
+//        {
+//            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) (*it)->LSP->getLspID(j);
+//            if (j == 1 || j == 3 || j == 5)
+//            EV << ".";
+//            if (j == 6)
+//            EV << "-";
+//        }
         EV << "\t0x";
 
         //print sequence number
@@ -3804,16 +3856,16 @@ void ISIS::removeDeadNeighbour(ISISTimer *msg)
         {
             if (msg->getGateIndex() == adjL1Table.at(i).gateIndex)
             {
-                bool found = true;
-                for (unsigned int j = 0; j < msg->getSysIDArraySize() && found; j++)
-                {
-                    if (msg->getSysID(j) != adjL1Table.at(i).sysID[j])
-                    {
-                        found = false;
-                    }
-                }
+//                bool found = true;
+//                for (unsigned int j = 0; j < msg->getSysIDArraySize() && found; j++)
+//                {
+//                    if (msg->getSysID(j) != adjL1Table.at(i).sysID[j])
+//                    {
+//                        found = false;
+//                    }
+//                }
 
-                if (found)
+                if (msg->getSysID() == adjL1Table.at(i).sysID)
                 {
                     adjL1Table.erase(adjL1Table.begin() + i);
                 }
@@ -3829,13 +3881,13 @@ void ISIS::removeDeadNeighbour(ISISTimer *msg)
         }
         std::sort(this->adjL1Table.begin(), this->adjL1Table.end());
 
-        unsigned char *lspId = this->getLspID(msg);
+        LspID lspId = msg->getLSPid();
         this->purgeRemainLSP(lspId, msg->getIsType());
 
         if (this->ISISIft.at(msg->getInterfaceIndex()).network)
         {
             //lspId has two bytes more than we need (that does no harm)
-            this->resetDIS(lspId, msg->getInterfaceIndex(), msg->getIsType());
+            this->resetDIS(lspId.getPseudonodeID(), msg->getInterfaceIndex(), msg->getIsType());
         }
         delete lspId;
 
@@ -4014,35 +4066,37 @@ void ISIS::electDIS(ISISLANHelloPacket *msg)
  * @see electL1DesignatedIS(ISISL1HelloPacket *msg)
  * @param IStype Defines IS type - L1 or L2
  */
-void ISIS::resetDIS(unsigned char* systemID, int interfaceIndex, short circuitType)
+void ISIS::resetDIS(PseudonodeID pseudoID, int interfaceIndex, short circuitType)
 {
 
     ISISinterface *iface = &(this->ISISIft.at(interfaceIndex));
     if (circuitType == L1_TYPE || circuitType == L1L2_TYPE)
     {
         //if the systemID was DIS, then set DIS = me. if dead neighbour wasn't DIS do nothing.
-        if (this->compareArrays(systemID, iface->L1DIS, ISIS_SYSTEM_ID + 1))
+        if (pseudoID == iface->L1DIS)
         {
             //set myself as DIS
             iface->L1DISpriority = iface->priority;
             //set initial designated IS as himself
-            this->copyArrayContent((unsigned char*) this->sysId, iface->L1DIS, ISIS_SYSTEM_ID, 0, 0);
+            iface->L1DIS.set(systemId, interfaceIndex +1);
+//            this->copyArrayContent((unsigned char*) this->sysId, iface->L1DIS, ISIS_SYSTEM_ID, 0, 0);
             //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
-            iface->L1DIS[ISIS_SYSTEM_ID] = interfaceIndex + 1;
+//            iface->L1DIS[ISIS_SYSTEM_ID] = interfaceIndex + 1;
         }
     }
 
     if (circuitType == L2_TYPE || circuitType == L1L2_TYPE)
     {
         //if the systemID was DIS, then set DIS = me. if dead neighbour wasn't DIS do nothing.
-        if (this->compareArrays(systemID, iface->L2DIS, ISIS_SYSTEM_ID + 1))
+        if (pseudoID == iface->L2DIS)
         {
             //set myself as DIS
             iface->L2DISpriority = iface->priority;
             //set initial designated IS as himself
-            this->copyArrayContent((unsigned char*) this->sysId, iface->L2DIS, ISIS_SYSTEM_ID, 0, 0);
-            //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
-            iface->L2DIS[ISIS_SYSTEM_ID] = interfaceIndex + 1;
+            iface->L2DIS.set(systemId, interfaceIndex + 1);
+//            this->copyArrayContent((unsigned char*) this->sysId, iface->L2DIS, ISIS_SYSTEM_ID, 0, 0);
+//            //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
+//            iface->L2DIS[ISIS_SYSTEM_ID] = interfaceIndex + 1;
         }
     }
 }
@@ -4111,7 +4165,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
      * this->updateLSP(lsp, L1_TYPE);
      */
     /* 7.3.15.1. */
-    unsigned char *lspID;
+    LspID lspID;
     int circuitType = this->getLevel(lsp);
     int gateIndex = lsp->getArrivalGate()->getIndex();
     ISISinterface *iface = this->getIfaceByGateIndex(gateIndex);
@@ -4129,7 +4183,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
     }
 //    this->schedulePeriodicSend(circuitType);
 
-    lspID = this->getLspID(lsp);
+    lspID = lsp->getLspID();
 
     /* 7.3.15.1. b */
     if (lsp->getRemLifeTime() == 0)
@@ -4138,13 +4192,13 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
         this->purgeLSP(lsp, circuitType);
         /* lsp is already deleted in purgeLSP */
         //delete lsp;
-        delete[] lspID;
+//        delete[] lspID;
         return;
 
     }
     LSPRecord *lspRec;
     //is it my LSP?
-    if (this->compareArrays(lspID, (unsigned char*) this->sysId, ISIS_SYSTEM_ID))
+    if (lspID.getSystemId().getSystemId() == systemId.getSystemId())
     {
 
         //if i don't have it anymore
@@ -4154,7 +4208,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
             //init network wide purge
             this->purgeLSP(lsp, circuitType);
             //delete lsp;
-            delete lspID;
+//            delete lspID;
             return;
         }
         else
@@ -4166,7 +4220,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
              */
                 /* 7.3.15.1 c) */
                 this->purgeLSP(lsp, circuitType);
-                delete lspID;
+//                delete lspID;
                 return;
             }
             /* 7.3.15.1 d) */
@@ -4186,7 +4240,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
             {
 
                 delete lsp;
-                delete lspID;
+//                delete lspID;
                 return;
             }
 
@@ -4201,7 +4255,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
             /* 7.3.15.1 e) 1) i. */
             this->installLSP(lsp, circuitType);
             this->schedulePeriodicSend(circuitType);
-            delete[]   lspID;
+//            delete[]   lspID;
             return;
 
         }
@@ -4212,7 +4266,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
                 /* 7.3.15.1 e) 1) i. */
                 this->replaceLSP(lsp, lspRec, circuitType);
                 this->schedulePeriodicSend(circuitType);
-                delete[] lspID;
+//                delete[] lspID;
                 return;
 
             }
@@ -4243,7 +4297,7 @@ void ISIS::handleLsp(ISISLSPPacket *lsp)
 
     }
     delete lsp;
-    delete lspID;
+//    delete lspID;
 }
 
 
@@ -4305,29 +4359,33 @@ void ISIS::sendCsnp(ISISTimer *timer)
 //        packet->setControlInfo(ctrl);
 
         //set system ID field which consists of my system id + zero circuit id inc this case
-        for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
-        {
-            packet->setSourceID(i, this->sysId[i]);
-        }
         //last octet has to be 0 see 9.11 at ISO 10589:2002(E)
-        packet->setSourceID(6, 0);
+        packet->setSourceID(PseudonodeID(systemId, 0));
+//        for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
+//        {
+//            packet->setSourceID(i, this->sysId[i]);
+//        }
+//        //last octet has to be 0 see 9.11 at ISO 10589:2002(E)
+//        packet->setSourceID(6, 0);
 
         int lspCount = lspDb->end() - it;
 
         //TODO set start LSP-ID
         if (fragment != 0)
         {
-            for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-            {
-                packet->setStartLspID(i, (*it)->LSP->getLspID(i));
-            }
+          packet->setStartLspID((*it)->LSP->getLspID());
+//            for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//            {
+//                packet->setStartLspID(i, (*it)->LSP->getLspID(i));
+//            }
         }
         else
         {
-            for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-            {
-                packet->setStartLspID(i, 0);
-            }
+          packet->setStartLspID(LspID());
+//            for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//            {
+//                packet->setStartLspID(i, 0);
+//            }
         }
 
         for (; it != lspDb->end() && packet->getLength() < ISIS_LSP_MAX_SIZE;)
@@ -4382,7 +4440,8 @@ void ISIS::sendCsnp(ISISTimer *timer)
         {
             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
             {
-                packet->setEndLspID(i, (*it)->LSP->getLspID(i));
+              packet->setEndLspID((*it)->LSP->getLspID());
+//                packet->setEndLspID(i, (*it)->LSP->getLspID(i));
             }
         }
         else
@@ -4390,7 +4449,10 @@ void ISIS::sendCsnp(ISISTimer *timer)
         {
             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
             {
-                packet->setEndLspID(i, 255);
+              LspID endLsp;
+              endLsp.setMax();
+              packet->setEndLspID(endLsp);
+//                packet->setEndLspID(i, 255);
             }
 
         }
@@ -4402,13 +4464,13 @@ void ISIS::sendCsnp(ISISTimer *timer)
 
             //send only on interface specified in timer
         send(packet, "lowerLayerOut", timer->getGateIndex());
-        EV<< "ISIS::sendCSNP: Source-ID: ";
-        for (unsigned int i = 0; i < 6; i++)
-            {
-                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
-                if (i % 2 == 1)
-                    EV << ".";
-            }
+        EV<< "ISIS::sendCSNP: Source-ID: " << systemId;
+//        for (unsigned int i = 0; i < 6; i++)
+//            {
+//                EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
+//                if (i % 2 == 1)
+//                    EV << ".";
+//            }
 
         EV<< endl;
 
@@ -4508,11 +4570,12 @@ void ISIS::sendPsnp(ISISTimer *timer)
 //    packet->setControlInfo(ctrl);
 
     //set system ID field which consists of my system id + zero circuit id in this case
-    for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
-    {
-        packet->setSourceID(i, this->sysId[i]);
-    }
-    packet->setSourceID(6, 0);
+    packet->setSourceID(PseudonodeID(systemId, 0));
+//    for (unsigned int i = 0; i < packet->getSourceIDArraySize() - 1; i++)
+//    {
+//        packet->setSourceID(i, this->sysId[i]);
+//    }
+//    packet->setSourceID(6, 0);
 
     //TODO check that all fields of the packet are filled correctly
 
@@ -4578,13 +4641,13 @@ void ISIS::sendPsnp(ISISTimer *timer)
 
         //send only on interface specified in timer
     send(packet, "lowerLayerOut", gateIndex);
-    EV<< "ISIS::sendPSNP: Source-ID: ";
-    for (unsigned int i = 0; i < 6; i++)
-        {
-            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
-            if (i % 2 == 1)
-                EV << ".";
-        }
+    EV<< "ISIS::sendPSNP: Source-ID: " << systemId;
+//    for (unsigned int i = 0; i < 6; i++)
+//        {
+//            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
+//            if (i % 2 == 1)
+//                EV << ".";
+//        }
 
     EV<< endl;
 
@@ -4627,7 +4690,7 @@ void ISIS::handlePsnp(ISISPSNPPacket *psnp)
 
         /* 7.3.15.2 b) */
     TLV_t * tmpTlv;
-    unsigned char *tmpLspID;
+    LspID tmpLspID;
     for (int offset = 0; (tmpTlv = this->getTLVByType(psnp, LSP_ENTRIES, offset)) != NULL; offset++)
     {
 
@@ -4717,7 +4780,7 @@ void ISIS::handlePsnp(ISISPSNPPacket *psnp)
 
                 }
             }
-            delete[] tmpLspID;
+//            delete[] tmpLspID;
         }
 
     }
@@ -4915,41 +4978,41 @@ std::vector<unsigned char *>* ISIS::getLspRange(unsigned char *startLspID, unsig
 
 }
 
-/*
- * Extracts Start LSP-ID from CSNP message.
- * @param csnp incoming CSNP message.
- * @return start LSP-ID.
- */
-unsigned char * ISIS::getStartLspID(ISISCSNPPacket *csnp)
-{
-
-    unsigned char *lspId = new unsigned char[ISIS_SYSTEM_ID + 2];
-
-    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-    {
-        lspId[i] = csnp->getStartLspID(i);
-    }
-
-    return lspId;
-}
-
-/*
- * Extracts End LSP-ID from CSNP message.
- * @param csnp incoming CSNP message.
- * @return end LSP-ID.
- */
-unsigned char * ISIS::getEndLspID(ISISCSNPPacket *csnp)
-{
-
-    unsigned char *lspId = new unsigned char[ISIS_SYSTEM_ID + 2];
-
-    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-    {
-        lspId[i] = csnp->getEndLspID(i);
-    }
-
-    return lspId;
-}
+///*
+// * Extracts Start LSP-ID from CSNP message.
+// * @param csnp incoming CSNP message.
+// * @return start LSP-ID.
+// */
+//unsigned char * ISIS::getStartLspID(ISISCSNPPacket *csnp)
+//{
+//
+//    unsigned char *lspId = new unsigned char[ISIS_SYSTEM_ID + 2];
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//    {
+//        lspId[i] = csnp->getStartLspID(i);
+//    }
+//
+//    return lspId;
+//}
+//
+///*
+// * Extracts End LSP-ID from CSNP message.
+// * @param csnp incoming CSNP message.
+// * @return end LSP-ID.
+// */
+//unsigned char * ISIS::getEndLspID(ISISCSNPPacket *csnp)
+//{
+//
+//    unsigned char *lspId = new unsigned char[ISIS_SYSTEM_ID + 2];
+//
+//    for (int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//    {
+//        lspId[i] = csnp->getEndLspID(i);
+//    }
+//
+//    return lspId;
+//}
 
 
 
@@ -5201,13 +5264,13 @@ void ISIS::sendLSP(LSPRecord *lspRec, int gateIndex)
 //    tmpLSP->setControlInfo(tmpCtrl);
 
     send(tmpLSP, "lowerLayerOut", gateIndex);
-    EV<< "ISIS::sendLSP: Source-ID: ";
-    for (unsigned int i = 0; i < 6; i++)
-        {
-            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
-            if (i % 2 == 1)
-                EV << ".";
-        }
+    EV<< "ISIS::sendLSP: Source-ID: " << systemId;
+//    for (unsigned int i = 0; i < 6; i++)
+//        {
+//            EV << std::setfill('0') <<  std::setw(2) << std::dec << (unsigned int) this->sysId[i];
+//            if (i % 2 == 1)
+//                EV << ".";
+//        }
 
     EV<< endl;
 
@@ -5220,7 +5283,7 @@ void ISIS::sendLSP(LSPRecord *lspRec, int gateIndex)
  */
 std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
 {
-    unsigned char *myLSPID = this->getLSPID();
+    LspID myLSPID = this->getLSPID();
     ISISLSPPacket* LSP; // = new ISISLSPL1Packet;
 
 //    if ((LSP = this->getLSPFromDbByID(myLSPID, circuitType)) != NULL)
@@ -5309,8 +5372,10 @@ std::vector<ISISLSPPacket *>* ISIS::genLSP(short circuitType)
         LSP->setRemLifeTime(this->lspMaxLifetime);
 
         //set lspID[8];
-        myLSPID[ISIS_SYSTEM_ID + 1] = fragment;
-        this->setLspID(LSP, myLSPID);
+        myLSPID.setFragmentId(fragment);
+        LSP->setLspID(myLSPID);
+//        myLSPID[ISIS_SYSTEM_ID + 1] = fragment;
+//        this->setLspID(LSP, myLSPID);
 
         //set seqNum
         LSP->setSeqNumber(1);
@@ -5692,7 +5757,7 @@ void ISIS::generateLSP(short circuitType)
  * @param lspId is first LSP that should be purged.
  * @param circuitType is level
  */
-void ISIS::purgeRemainLSP(unsigned char *lspId, short circuitType)
+void ISIS::purgeRemainLSP(LspID lspId, short circuitType)
 {
 
     //lspId[ISIS_SYSTEM_ID + 1] = lspId[ISIS_SYSTEM_ID + 1] + 1;
@@ -6564,27 +6629,30 @@ bool ISIS::compareLSP(ISISLSPPacket *lsp1, ISISLSPPacket *lsp2)
  * @param LSPID is ID of LSP to be returned.
  * @param circuitType is level.
  */
-LSPRecord* ISIS::getLSPFromDbByID(unsigned char *LSPID, short circuitType)
+LSPRecord* ISIS::getLSPFromDbByID(LspID LSPID, short circuitType)
 {
 
     std::vector<LSPRecord *> *lspDb;
 
-    if (LSPID == NULL)
+    if (LSPID.toInt() == 0)
     {
         return NULL;
     }
 
     lspDb = this->getLSPDb(circuitType);
-    unsigned char *lspId;
+//    LspID lspId;
     for (std::vector<LSPRecord*>::iterator it = lspDb->begin(); it != lspDb->end(); ++it)
     {
-        lspId = this->getLspID((*it)->LSP);
-        if (this->compareArrays(lspId, LSPID, ISIS_SYSTEM_ID + 2))
-        {
-            delete[] lspId;
-            return (*it);
-        }
-        delete[] lspId;
+      if((*it)->LSP->getLspID() == LSPID){
+        return (*it);
+      }
+//        lspId = this->getLspID((*it)->LSP);
+//        if (this->compareArrays(lspId, LSPID, ISIS_SYSTEM_ID + 2))
+//        {
+//            delete[] lspId;
+//            return (*it);
+//        }
+//        delete[] lspId;
     }
 
     return NULL;
@@ -6593,15 +6661,16 @@ LSPRecord* ISIS::getLSPFromDbByID(unsigned char *LSPID, short circuitType)
 /*
  * Returns "first" LSP-ID of this system eg. SYSTEM-ID.00-00, because this LSP-I
  */
-unsigned char* ISIS::getLSPID()
+LspID ISIS::getLSPID()
 {
 
-    unsigned char *myLSPID = new unsigned char[8];
-
-    this->copyArrayContent((unsigned char*) this->sysId, myLSPID, ISIS_SYSTEM_ID, 0, 0);
-    myLSPID[6] = 0;
-    myLSPID[7] = 0;
-    return myLSPID;
+  return LspID(systemId);
+//    unsigned char *myLSPID = new unsigned char[8];
+//
+//    this->copyArrayContent((unsigned char*) this->sysId, myLSPID, ISIS_SYSTEM_ID, 0, 0);
+//    myLSPID[6] = 0;
+//    myLSPID[7] = 0;
+//    return myLSPID;
 }
 
 
@@ -6855,7 +6924,8 @@ bool ISIS::amIL2DIS(int interfaceIndex)
         return false;
     }
 
-    return (compareArrays((unsigned char *) this->sysId, this->ISISIft.at(interfaceIndex).L2DIS, ISIS_SYSTEM_ID));
+    return systemId == ISISIft.at(interfaceIndex).L2DIS;
+//    return (compareArrays((unsigned char *) this->sysId, this->ISISIft.at(interfaceIndex).L2DIS, ISIS_SYSTEM_ID));
 
 }
 
@@ -8244,11 +8314,12 @@ void ISIS::fullSPF(ISISTimer *timer)
     }
 
     //put myself (this IS) on TENT list
-    unsigned char *lspId = this->getLSPID(); //returns sysId + 00
+    LspID lspId = this->getLSPID(); //returns sysId + 00
 
     tmpPath = new ISISPath;
-    tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
-    this->copyArrayContent(lspId, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
+//    tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+//    this->copyArrayContent(lspId, tmpPath->to, ISIS_SYSTEM_ID + 2, 0, 0);
+    tmpPath->to.setSystemId(systemId);
 
     tmpPath->metric = 0;
 
@@ -9238,9 +9309,9 @@ short ISIS::getIsType() const
     return isType;
 }
 
-const unsigned char *ISIS::getSysId() const
+SystemID ISIS::getSystemId() const
 {
-    return sysId;
+    return systemId;
 }
 
 void ISIS::setLspRefreshInterval(int lspRefreshInterval)
@@ -9253,6 +9324,21 @@ void ISIS::setIsType(short isType)
     this->isType = isType;
 }
 
+AreaID ISIS::getAreaId() const
+{
+  return areaID;
+}
+
+void ISIS::setAreaId(AreaID areaId)
+{
+  areaID = areaId;
+}
+
+void ISIS::setSystemId(const SystemID& systemId)
+{
+  this->systemId = systemId;
+}
+
 int ISIS::getNickname() const
 {
     return nickname;
@@ -9263,7 +9349,7 @@ void ISIS::setAtt(bool att)
     this->att = att;
 }
 
-int ISIS::getISISIftSize(void)
+unsigned int ISIS::getISISIftSize(void)
 {
     return this->ISISIft.size();
 }

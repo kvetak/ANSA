@@ -46,6 +46,10 @@ private:
     cXMLElement* configFile = nullptr;
     cXMLElement *device = nullptr;
 
+    uint64 areaID;
+    uint64 systemID;
+    uint nsel;
+
 //   const char *deviceType;
 //   const char *deviceId;
 //   const char *configFile;
@@ -85,6 +89,7 @@ private:
          /* END of ISIS related */
 
          static cXMLElement * getIsisRouting(cXMLElement * device);
+         bool parseNetAddr(const char *netAddr);
 
 public:
     ISISDeviceConfigurator();
@@ -102,9 +107,8 @@ public:
      * @param isisMode [in] L2_ISIS_MODE or L3_ISIS_MODE
      */
     void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
-
-
-
+    uint64 getAreaId() const;
+    uint64 getSystemId() const;
 };
 
 } /* namespace inet */

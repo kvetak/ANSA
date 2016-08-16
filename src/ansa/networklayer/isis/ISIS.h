@@ -92,8 +92,10 @@ class ISIS : public cSimpleModule
         IInterfaceTable *ift; /*!< pointer to interface table */
         std::vector<ISISinterface> ISISIft; /*!< vector of available interfaces */
 //        CLNSTable *clnsTable; /*!< pointer to CLNS routing table */
+
         CLNSRoutingTable *clnsrt;
 //        NotificationBoard *nb; /*!< Provides access to the notification board */
+
         //TODO A! Uncomment after adding TRILL
 //        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
         ISIS_MODE mode;
@@ -101,6 +103,9 @@ class ISIS : public cSimpleModule
         std::string deviceType; /*!< device type specified in .ned when using this module */
         std::string deviceId; /*!< device ID */
         std::string configFile; /*!< config file specified in simulation */
+
+        SystemID systemId;
+        AreaID areaID;
 
         CLNSAddress localAddr;
 //        std::string netAddr; /*!<  OSI network address in simplified NSAP format */
@@ -186,7 +191,7 @@ class ISIS : public cSimpleModule
         unsigned short getHoldTime(int interfaceIndex, short circuitType = L1_TYPE);
         double getHelloInterval(int interfaceIndex, short circuitType); //return hello interval for specified interface and circuitType. For DIS interface returns only 1/3 of actual value;
         ISISadj *getAdjByGateIndex(int gateIndex, short circuitType, int offset = 0); // return something corresponding to adjacency on specified link
-        ISISadj *getAdjBySystemID(unsigned char *systemID, short circuitType, int gateIndex = -1);
+        ISISadj *getAdjBySystemID(SystemID systemID, short circuitType, int gateIndex = -1);
         ISISadj *getAdj(ISISMessage *inMsg, short circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
         ISISadj *getAdjByMAC(const MACAddress &address, short circuitType, int gateIndex = -1);
         ISISinterface *getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
@@ -206,13 +211,13 @@ class ISIS : public cSimpleModule
         void handleCsnp(ISISCSNPPacket *csnp);
         void handlePsnp(ISISPSNPPacket *psnp);
         std::vector<unsigned char*> *getLspRange(unsigned char *startLspID, unsigned char *endLspID, short circuitType);
-        unsigned char *getStartLspID(ISISCSNPPacket *csnp);
-        unsigned char *getEndLspID(ISISCSNPPacket *csnp);
-        unsigned char *getLspID(ISISLSPPacket *msg);
+//        unsigned char *getStartLspID(ISISCSNPPacket *csnp);
+//        unsigned char *getEndLspID(ISISCSNPPacket *csnp);
+//        unsigned char *getLspID(ISISLSPPacket *msg);
         void setLspID(ISISLSPPacket *msg, unsigned char *lspID);
 //    void updateLSP(ISISLSPPacket *lsp, short  circuitType);
         void replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitType);
-        void purgeRemainLSP(unsigned char *lspId, short circuitType);
+        void purgeRemainLSP(LspID lspId, short circuitType);
         void purgeLSP(unsigned char *lspId, short circuitType); //purge in-memory LSP
         void purgeLSP(ISISLSPPacket *lsp, short circuitType); //purge incomming LSP
         void purgeMyLSPs(short circuitType);
@@ -228,9 +233,9 @@ class ISIS : public cSimpleModule
         void schedulePeriodicSend(short circuitType);
         void sendCsnp(ISISTimer *timer);
         void sendPsnp(ISISTimer *timer);
-        unsigned char *getLSPID();
+        LspID getLSPID();
         //double getHoldtimeInterval(int interfaceIndex, short circuitType); //return hold time interval for specified interface and circuitType.
-        LSPRecord *getLSPFromDbByID(unsigned char *LSPID, short circuitType);
+        LSPRecord *getLSPFromDbByID(LspID LSPID, short circuitType);
         bool compareLSP(ISISLSPPacket *lsp1, ISISLSPPacket *lsp2);
         LSPRecord *installLSP(ISISLSPPacket *lsp, short circuitType); //install lsp into local LSP database
         void updateAtt(bool action); /*!< Action specify whether this method has been called to set (true - new adjacency) or clear (false - removing adjacency) Attached flag. */
@@ -289,9 +294,9 @@ class ISIS : public cSimpleModule
         void printLspId(unsigned char *lspId);
         void printPaths(ISISPaths_t *paths);
         void schedule(ISISTimer *timer, double timee = -1); //if timer needs additional information there is msg
-        unsigned char *getSysID(ISISMessage *msg);
-        unsigned char *getSysID(ISISTimer *timer);
-        unsigned char *getLspID(ISISTimer *timer);
+//        unsigned char *getSysID(ISISMessage *msg);
+//        unsigned char *getSysID(ISISTimer *timer);
+//        unsigned char *getLspID(ISISTimer *timer);
 
         /* TLV */
         void addTLV(ISISMessage *inMsg, enum TLVtypes tlvType, short circuitType, int gateIndex = -1); //generate and add this tlvType LSP to message
@@ -311,12 +316,12 @@ class ISIS : public cSimpleModule
         /* General */
         short getLevel(ISISMessage *msg); //returns level (circuitType) of the message
 
-        bool parseNetAddr(); // validate and parse net address format
+//        bool parseNetAddr(); // validate and parse net address format
 
         void removeDeadNeighbour(ISISTimer *msg); //remove dead neighbour when timer message arrives
 //    void electL1DesignatedIS(ISISL1HelloPacket *msg); //starts election of L1 designated intermediate system
 //    void electL2DesignatedIS(ISISL2HelloPacket *msg); //starts election of L2 designated intermediate system
-        void resetDIS(unsigned char *systemID, int interfaceIndex, short circuitType); //resetDIS only if system specified in timer was DIS on interface specified in timer                 //resets DIS on al interfaces for L1/L2
+        void resetDIS(PseudonodeID systemID, int interfaceIndex, short circuitType); //resetDIS only if system specified in timer was DIS on interface specified in timer                 //resets DIS on al interfaces for L1/L2
 //    void sendMyL1LSPs(); //send content of my L1 link-state DB
 //    void sendMyL2LSPs(); //send content of my L2 link-state DB
 //    void floodFurtherL1LSP(ISISLSPL1Packet *msg); //send recived LSP packet further to all other neighbours
@@ -351,7 +356,7 @@ class ISIS : public cSimpleModule
     public:
         ISIS();
         virtual ~ISIS(); //destructor
-        void insertIft(InterfaceEntry *entry, cXMLElement *device); //insert new interface to vector
+//        void insertIft(InterfaceEntry *entry, cXMLElement *device); //insert new interface to vector
         void appendISISInterface(ISISinterface iface);
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
@@ -386,7 +391,7 @@ class ISIS : public cSimpleModule
         void setLspInterval(int lspInterval);
         void setLspMaxLifetime(int lspMaxLifetime);
         void setLspRefreshInterval(int lspRefreshInterval);
-        const unsigned char *getSysId() const;
+        SystemID getSystemId() const;
         short getIsType() const;
         int getL1HelloInterval() const;
         short getL1HelloMultiplier() const;
@@ -402,10 +407,12 @@ class ISIS : public cSimpleModule
         void setL2CsnpInterval(int l2CsnpInterval);
         void setL2PsnpInterval(int l2PsnpInterval);
         ISIS_MODE getMode() const;
-        int getISISIftSize();
+        unsigned int getISISIftSize();
         void setAtt(bool att);
         int getNickname() const;
-
+    AreaID getAreaId() const;
+    void setAreaId(AreaID areaId);
+    void setSystemId(const SystemID& systemId);
 };
 
 }//end namespace inet

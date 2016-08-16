@@ -51,8 +51,10 @@ class ISISInterfaceData : public InterfaceProtocolData
         unsigned int priority; /*!<interface priority for being designated IS*/
         unsigned int l1DISPriority; /*!<priority of current L1 DIS*/
         unsigned int l2DISPriority; /*!<priority of currend L2 DIS*/
-        unsigned char l1DIS[ISIS_LAN_ID]; /*!<L1 designated router ID for ift*/
-        unsigned char l2DIS[ISIS_LAN_ID]; /*!<L2 designated router ID for ift*/
+//        unsigned char l1DIS[ISIS_LAN_ID]; /*!<L1 designated router ID for ift*/
+        PseudonodeID l1DIS;
+//        unsigned char l2DIS[ISIS_LAN_ID]; /*!<L2 designated router ID for ift*/
+        PseudonodeID l2DIS;
         unsigned int metric; /*!<interface metric (default 10)*/
         int L1HelloInterval; /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
         int L2HelloInterval; /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
@@ -86,8 +88,8 @@ class ISISInterfaceData : public InterfaceProtocolData
         void setIsisEnabled(bool isisEnabled);
         int getL1CsnpInterval() const;
         void setL1CsnpInterval(int l1CsnpInterval);
-        const unsigned char* getL1Dis() const;
-        void setL1Dis(unsigned char *l1DIS);
+        const PseudonodeID getL1Dis() const;
+        void setL1Dis(const PseudonodeID& l1DIS);
         unsigned int getL1DisPriority() const;
         void setL1DisPriority(unsigned int l1DisPriority);
         int getL1HelloInterval() const;
@@ -98,8 +100,8 @@ class ISISInterfaceData : public InterfaceProtocolData
         void setL1PsnpInterval(int l1PsnpInterval);
         int getL2CsnpInterval() const;
         void setL2CsnpInterval(int l2CsnpInterval);
-        const unsigned char* getL2Dis() const;
-        void setL2Dis(unsigned char *l2DIS);
+        const PseudonodeID getL2Dis() const;
+        void setL2Dis(const PseudonodeID& l2DIS);
         unsigned int getL2DisPriority() const;
         void setL2DisPriority(unsigned int l2DisPriority);
         int getL2HelloInterval() const;

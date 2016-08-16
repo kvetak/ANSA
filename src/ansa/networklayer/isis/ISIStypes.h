@@ -30,6 +30,7 @@
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/networklayer/isis/ISISTimer_m.h"
 #include "ansa/networklayer/isis/ISISMessage_m.h"
+//#include "ansa/networklayer/isis/ISISCommon.h"
 //#include "ISIS.h"
 
 
@@ -39,7 +40,7 @@ namespace inet {
 #define ISIS_METRIC 10 /*!< Default "default" metric value*/
 #define ISIS_HELLO_INTERVAL 10 /*!< Default hello interval in seconds*/
 #define ISIS_HELLO_MULTIPLIER 3 /*!< Default hello multiplier value.*/
-#define ISIS_SYSTEM_ID 6 /*!< Length of System-ID.*/
+//#define ISIS_SYSTEM_ID 6 /*!< Length of System-ID.*/
 #define ISIS_LAN_ID ISIS_SYSTEM_ID + 1 /*!< Length of LAN-ID.*/
 #define ISIS_MAX_AREAS 1 /*!< Default value for Maximum Areas.*/
 #define ISIS_AREA_ID 3 /*!< Length of Area-ID.*/
@@ -58,95 +59,6 @@ namespace inet {
 //class MACAddress;
 
 
-
-class SystemID {
-
-private:
-    uint64 systemID;
-public:
-    uint64 getSystemId() const {
-        return systemID;
-    }
-
-    void setSytemId(uint64 systemId) {
-        systemID = systemId;
-    }
-
-    bool operator==(const SystemID& sysID) const {return systemID == sysID.getSystemId();}
-    bool operator!=(const SystemID& sysID) const {return systemID != sysID.getSystemId();}
-
-    bool operator<(const SystemID& sysID) const {return systemID < sysID.getSystemId();}
-    bool operator<=(const SystemID& sysID) const {return systemID <= sysID.getSystemId();}
-
-    bool operator>(const SystemID& sysID) const {return systemID > sysID.getSystemId();}
-    bool operator>=(const SystemID& sysID) const {return systemID >= sysID.getSystemId();}
-
-};
-
-class AreaID {
-
-
-private:
-    uint64 areaID;
-public:
-
-    AreaID(){
-        areaID = 0;
-    }
-    uint64 getAreaId() const {
-        return areaID;
-    }
-
-    void setAreaId(uint64 areaId) {
-        areaID = areaId;
-    }
-
-    bool operator==(const AreaID& other) const {return areaID == other.getAreaId();}
-    bool operator!=(const AreaID& other) const {return areaID != other.getAreaId();}
-
-    bool operator<(const AreaID& other) const {return areaID < other.getAreaId();}
-    bool operator<=(const AreaID& other) const {return areaID <= other.getAreaId();}
-
-    bool operator>(const AreaID& other) const {return areaID > other.getAreaId();}
-    bool operator>=(const AreaID& other) const {return areaID >= other.getAreaId();}
-
-};
-
-
-class PseudonodeID
-{
-private:
-    uint64 pseudoID;
-
-public:
-
-
-    PseudonodeID() {
-        pseudoID = 0;
-    }
-    PseudonodeID(uint64 systemID, uint circuitID){
-        pseudoID = systemID << 8;
-        pseudoID += circuitID & 255;
-    }
-
-    PseudonodeID(SystemID systemID, uint circuitID){
-            pseudoID = systemID.getSystemId() << 8;
-            pseudoID += circuitID & 255;
-        }
-
-};
-
-class LspID
-{
-
-    PseudonodeID lanID;
-    uint fragmentID;
-
-    LspID(){
-        fragmentID = 0;
-    }
-
-};
 
 /**
  * Structure for storing info about all active interfaces.
@@ -292,84 +204,90 @@ struct LSPrecord
 
 struct LSPRecord
 {
-        ISISLSPPacket* LSP; //link-state protocol data unit
-        ISISTimer *deadTimer; //dead timer
-        std::vector<bool> SRMflags;
-        std::vector<bool> SSNflags;
-        double simLifetime; /*!< specify deadTi */
+    ISISLSPPacket* LSP; //link-state protocol data unit
+    ISISTimer *deadTimer; //dead timer
+    std::vector<bool> SRMflags;
+    std::vector<bool> SSNflags;
+    double simLifetime; /*!< specify deadTi */
 
-/*        LSPRecord(){
-            for (std::vector<ISISinterface>::iterator intIt = this->ISISIft.begin(); intIt != this->ISISIft.end(); ++intIt)
-            {
+    /*        LSPRecord(){
+     for (std::vector<ISISinterface>::iterator intIt = this->ISISIft.begin(); intIt != this->ISISIft.end(); ++intIt)
+     {
 
-                this->SRMflags.push_back(false);
-                this->SSNflags.push_back(false);
+     this->SRMflags.push_back(false);
+     this->SSNflags.push_back(false);
 
-            }
-        }*/
+     }
+     }*/
 
+    //bool operator for sorting
+    bool operator<(const LSPRecord& lspRec2) const
+    {
+      return LSP->getLspID() < lspRec2.LSP->getLspID();
+//      for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//      {
+//        if (this->LSP->getLspID(i) < lspRec2.LSP->getLspID(i))
+//        {
+//          return true; //first is smaller, so return true
+//        }
+//        else if (this->LSP->getLspID(i) > lspRec2.LSP->getLspID(i))
+//        {
+//          return false; //first is bigger, so return false
+//        }
+//        //if it's equal then continue to next one
+//      }
+//
+//      //if they're equal, return false
+//      return false;
+    }
 
+    ~LSPRecord()
+    {
 
-
-        //bool operator for sorting
-
-         bool operator<(const LSPRecord& lspRec2) const {
-
-             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
-                 if(this->LSP->getLspID(i) < lspRec2.LSP->getLspID(i)){
-                     return true; //first is smaller, so return true
-                 }else if(this->LSP->getLspID(i) > lspRec2.LSP->getLspID(i)){
-                     return false; //first is bigger, so return false
-                 }
-                 //if it's equal then continue to next one
-             }
-
-             //if they're equal, return false
-             return false;
-         }
-
-         ~LSPRecord(){
-
-  /*            for (unsigned int i = 0; i < this->LSP->getTLVArraySize(); i++)
-              {
-                  if(this->LSP->getTLV(i).value != NULL){
-                      delete this->LSP->getTLV(i).value;
-                  }
-              }*/
-              this->LSP->setTLVArraySize(0);
-              if(this->LSP != NULL){
-                  delete this->LSP;
-              }
-  //            if(this->deadTimer != NULL){
-  //                drop(this->deadTimer);
-  //                delete this->deadTimer;
-  //            }
-              this->SRMflags.clear();
-              this->SSNflags.clear();
-          }
+      /*            for (unsigned int i = 0; i < this->LSP->getTLVArraySize(); i++)
+       {
+       if(this->LSP->getTLV(i).value != NULL){
+       delete this->LSP->getTLV(i).value;
+       }
+       }*/
+      this->LSP->setTLVArraySize(0);
+      if (this->LSP != NULL)
+      {
+        delete this->LSP;
+      }
+      //            if(this->deadTimer != NULL){
+      //                drop(this->deadTimer);
+      //                delete this->deadTimer;
+      //            }
+      this->SRMflags.clear();
+      this->SSNflags.clear();
+    }
 
 };
 typedef std::vector<LSPRecord *> LSPRecQ_t;
 
 
-struct cmpLSPRecord{
-        bool operator()(const LSPRecord *lspRec1, const LSPRecord *lspRec2){
-                    for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-                    {
-                        if (lspRec1->LSP->getLspID(i) < lspRec2->LSP->getLspID(i))
-                        {
-                            return true; //first is smaller, so return true
-                        }
-                        else if (lspRec1->LSP->getLspID(i) > lspRec2->LSP->getLspID(i))
-                        {
-                            return false; //first is bigger, so return false
-                        }
-                        //if it's equal then continue to next one
-                    }
-
-                    //if they're equal, return false
-                    return false;
-                }
+struct cmpLSPRecord
+{
+    bool operator()(const LSPRecord *lspRec1, const LSPRecord *lspRec2)
+    {
+      return lspRec1->LSP->getLspID() < lspRec2->LSP->getLspID();
+//      for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
+//      {
+//        if (lspRec1->LSP->getLspID(i) < lspRec2->LSP->getLspID(i))
+//        {
+//          return true; //first is smaller, so return true
+//        }
+//        else if (lspRec1->LSP->getLspID(i) > lspRec2->LSP->getLspID(i))
+//        {
+//          return false; //first is bigger, so return false
+//        }
+//        //if it's equal then continue to next one
+//      }
+//
+//      //if they're equal, return false
+//      return false;
+    }
 };
 
 struct FlagRecord
@@ -385,7 +303,8 @@ typedef std::vector<FlagRecord*> FlagRecQ_t;
 typedef std::vector<std::vector<FlagRecord*> *> FlagRecQQ_t;
 struct ISISNeighbour
 {
-        unsigned char *id;
+//        unsigned char *id;
+        SystemID id;
         //uint32_t metric;
         bool type; //should represent whether it's a leaf node; true = leaf
         InterfaceEntry *entry;
@@ -394,19 +313,20 @@ struct ISISNeighbour
 
         }
 
-        ISISNeighbour(unsigned char * id, bool type, InterfaceEntry *entry){
-            this->id = new unsigned char [ISIS_SYSTEM_ID + 2];
-            memcpy(this->id, id, ISIS_SYSTEM_ID + 2);
+        ISISNeighbour(SystemID sysId, bool type, InterfaceEntry *entry){
+//            this->id = new unsigned char [ISIS_SYSTEM_ID + 2];
+//            memcpy(this->id, id, ISIS_SYSTEM_ID + 2);
+            id = sysId;
             this->type = false;
             this->entry = entry;
         }
 
         ~ISISNeighbour(){
-            delete id;
+//            delete id;
         }
 
         ISISNeighbour *copy(){
-            return new ISISNeighbour(this->id, this->type, this->entry);
+            return new ISISNeighbour(SystemID(id), this->type, this->entry);
         }
 
 };
@@ -415,35 +335,36 @@ typedef std::vector<ISISNeighbour*> ISISNeighbours_t;
 
 struct ISISPath
 {
-        unsigned char *to;
-        uint32_t metric;
-        ISISNeighbours_t from; // works as next hop
-        //bool operator for sorting
+    //        unsigned char *to;
+    PseudonodeID to;
+    uint32_t metric;
+    ISISNeighbours_t from; // works as next hop
+    //bool operator for sorting
 
-        bool operator()(const ISISPath *path1, const ISISPath *path2) {
+    bool operator()(const ISISPath *path1, const ISISPath *path2)
+    {
 
-        //             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
-                if(path1->metric < path2->metric){
-                    return true; //first is smaller, so return true
-                }else if(path1->metric > path2->metric){
-                    return false; //first is bigger, so return false
-                }else{
-                    if(path1->to[ISIS_SYSTEM_ID] > path2->to[ISIS_SYSTEM_ID]){
-                        return true;
-                    }
-                }
-                //if it's equal then continue to next one
-        //             }
+      //             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
+      if (path1->metric != path2->metric)
+      {
+        return path1->metric < path2->metric; //first is smaller, so return true
+      }
+      else
+      {
+        return path1->to < path2->to;
+        //                    if(path1->to[ISIS_SYSTEM_ID] > path2->to[ISIS_SYSTEM_ID]){
+        //                        return true;
+        //                    }
+      }
 
-            //if they're equal, return false
-            return false;
         }
         ISISPath(){
 
         }
-        ISISPath(unsigned char *to, uint32_t metric, ISISNeighbours_t from){
-            this->to = new unsigned char [ISIS_SYSTEM_ID + 2];
-            memcpy(this->to, to, ISIS_SYSTEM_ID + 1);
+        ISISPath(PseudonodeID to, uint32_t metric, ISISNeighbours_t from){
+//            this->to = new unsigned char [ISIS_SYSTEM_ID + 2];
+//            memcpy(this->to, to, ISIS_SYSTEM_ID + 1);
+            this->to = to;
             this->metric = metric;
             for(ISISNeighbours_t::iterator it = from.begin(); it != from.end(); ++it){
                 this->from.push_back((*it)->copy());
@@ -451,7 +372,7 @@ struct ISISPath
 //            this->from = from;
         }
         ISISPath* copy(){
-            return new ISISPath(this->to, this->metric, this->from);
+            return new ISISPath(PseudonodeID(to), this->metric, this->from);
         }
 
 };

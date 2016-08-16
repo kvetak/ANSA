@@ -114,7 +114,14 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
         const char *netAddr = this->getISISNETAddress(isisRouting);
         if (netAddr != NULL)
         {
-            isisModule->setNetAddr(netAddr);
+
+            if (!this->parseNetAddr(netAddr))
+            {
+                throw cRuntimeError("Unable to parse NET address.");
+            }else{
+              //TODO set AreaID and systemID in ISIS module
+            }
+
         }
         else if (isisMode == ISIS::L2_ISIS_MODE)
         {
@@ -203,6 +210,100 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
 
     this->loadISISInterfacesConfig(isisModule);
     /* End of load configuration for interfaces */
+
+}
+
+
+/**
+ * Parse NET address stored in this->netAddr into areaId, sysId and NSEL.
+ * Method is used in initialization.
+ * @see initialize(int stage)
+ * @return Return true if NET address loaded from XML file is valid. Otherwise return false.
+ */
+bool ISISDeviceConfigurator::parseNetAddr(const char* netAddr)
+{
+    std::string net = netAddr;
+
+    areaID = 0;
+      systemID = 0;
+      nsel = 0;
+
+      unsigned int dots = 0;
+      unsigned char *area = new unsigned char[ISIS_AREA_ID];
+      unsigned char *systemId = new unsigned char[ISIS_SYSTEM_ID];
+
+      size_t found;
+
+      //net address (in this module - not according to standard O:-) MUST have the following format:
+      //49.0001.1921.6800.1001.00
+      //IDI: 49 (private addressing)
+      //AREA: 0001
+      //systemID: 1921.6800.1001 from IP 192.168.1.1
+      //NSEL: 00
+
+      found = net.find_first_of(".");
+      if (found != 2 || net.length() != 25) {
+        return false;
+      }
+
+      while (found != std::string::npos) {
+
+        switch (found) {
+          case 2:
+            dots++;
+            area[0] = (unsigned char) (atoi(net.substr(0, 2).c_str()));
+    //                    cout << "BEZ ATOI" << net.substr(0, 2).c_str() << endl;
+            break;
+          case 7:
+
+            area[1] = (unsigned char) (atoi(net.substr(3, 2).c_str()));
+            area[2] = (unsigned char) (atoi(net.substr(5, 2).c_str()));
+            areaID += strtoul(net.substr(3, 2).c_str(), NULL, 16);
+            areaID += strtoul(net.substr(5, 2).c_str(), NULL, 16) << 8;
+            dots++;
+            break;
+          case 12:
+            dots++;
+            systemId[0] = (unsigned char) (strtol(net.substr(8, 2).c_str(), NULL, 16));
+            systemId[1] = (unsigned char) (strtol(net.substr(10, 2).c_str(), NULL, 16));
+            systemID += strtoul(net.substr(8, 2).c_str(), NULL, 16);
+            systemID += strtoul(net.substr(10, 2).c_str(), NULL, 16) << 8;
+            break;
+          case 17:
+            dots++;
+            systemId[2] = (unsigned char) (strtol(net.substr(13, 2).c_str(), NULL, 16));
+            systemId[3] = (unsigned char) (strtol(net.substr(15, 2).c_str(), NULL, 16));
+            systemID += strtoul(net.substr(13, 2).c_str(), NULL, 16) << 16;
+            systemID += strtoul(net.substr(15, 2).c_str(), NULL, 16) << 24;
+            break;
+          case 22:
+            dots++;
+            systemId[4] = (unsigned char) (strtol(net.substr(18, 2).c_str(), NULL, 16));
+            systemId[5] = (unsigned char) (strtol(net.substr(20, 2).c_str(), NULL, 16));
+            systemID += strtoul(net.substr(18, 2).c_str(), NULL, 16) << 32;
+            systemID +=strtoul(net.substr(20, 2).c_str(), NULL, 16) << 36;
+            break;
+          default:
+            return false;
+            break;
+
+        }
+
+        found = net.find_first_of(".", found + 1);
+      }
+
+      if (dots != 5) {
+        return false;
+      }
+
+      nsel =  strtoul(net.substr(23, 2).c_str(), NULL, 16);
+
+
+
+      //49.0001.1921.6801.2003.00
+
+    //        this->nickname = this->sysId[ISIS_SYSTEM_ID - 1] + this->sysId[ISIS_SYSTEM_ID - 2] * 0xFF;
+return true;
 
 }
 
@@ -394,20 +495,24 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, In
         newIftEntry.L2DISpriority = newIftEntry.priority;
         d->setL2DisPriority(d->getPriority());
 
-        //set initial designated IS as himself
+        //set initial designated IS as itself
 
-        memcpy(newIftEntry.L1DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
+        newIftEntry.L1DIS.set(isisModule->getSystemId(), isisModule->getISISIftSize() + 1);
+
+//        memcpy(newIftEntry.L1DIS, isisModule->getSysId(), ISIS_SYSTEM_ID);
         //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
         //newIftEntry.L1DIS[6] = ie->getInterfaceId() - 99;
-        newIftEntry.L1DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
+//        newIftEntry.L1DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
 
         d->setL1Dis(newIftEntry.L1DIS);
+
         //do the same for L2 DIS
 
-        memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
-        //newIftEntry.L2DIS[6] = ie->getInterfaceId() - 99;
-        newIftEntry.L2DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
-        d->setL2Dis(newIftEntry.L2DIS);
+        newIftEntry.L2DIS.set(isisModule->getSystemId(), isisModule->getISISIftSize() + 1);
+//        memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
+//        //newIftEntry.L2DIS[6] = ie->getInterfaceId() - 99;
+//        newIftEntry.L2DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
+//        d->setL2Dis(newIftEntry.L2DIS);
 
         /* By this time the trillData should be initialized.
          * So set the intial appointedForwaders to itself for configured VLAN(s).
@@ -636,17 +741,20 @@ void ISISDeviceConfigurator::loadISISInterfaceConfig(ISIS *isisModule, Interface
     newIftEntry.L1DISpriority = newIftEntry.priority;
     newIftEntry.L2DISpriority = newIftEntry.priority;
 
-    //set initial designated IS as himself
+    //set initial designated IS as itself
 //    this->copyArrayContent((unsigned char*)this->sysId, newIftEntry.L1DIS, ISIS_SYSTEM_ID, 0, 0);
-    memcpy(newIftEntry.L1DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
-    //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
-    //newIftEntry.L1DIS[6] = entry->getInterfaceId() - 99;
-    newIftEntry.L1DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
+    newIftEntry.L1DIS.set(isisModule->getSystemId(), newIftEntry.gateIndex + 1);
+//    memcpy(newIftEntry.L1DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
+//    //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
+//    //newIftEntry.L1DIS[6] = entry->getInterfaceId() - 99;
+//    newIftEntry.L1DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
+
     //do the same for L2 DIS
-//    memcpy((unsigned char*)isisModule->getSy, newIftEntry.L2DIS, ISIS_SYSTEM_ID);
-    memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
-    //newIftEntry.L2DIS[6] = entry->getInterfaceId() - 99;
-    newIftEntry.L2DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
+    newIftEntry.L2DIS.set(isisModule->getSystemId(), newIftEntry.gateIndex + 1);
+////    memcpy((unsigned char*)isisModule->getSy, newIftEntry.L2DIS, ISIS_SYSTEM_ID);
+//    memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
+//    //newIftEntry.L2DIS[6] = entry->getInterfaceId() - 99;
+//    newIftEntry.L2DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
 
     newIftEntry.passive = false;
     newIftEntry.entry = entry;
@@ -964,3 +1072,13 @@ cXMLElement * ISISDeviceConfigurator::getIsisRouting(cXMLElement * device)
 }
 
 } /* namespace inet */
+
+uint64 ISISDeviceConfigurator::getAreaId() const
+{
+  return areaID;
+}
+
+uint64 ISISDeviceConfigurator::getSystemId() const
+{
+  return systemID;
+}

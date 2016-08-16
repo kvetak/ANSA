@@ -137,14 +137,15 @@ void ISISInterfaceData::setL1CsnpInterval(int l1CsnpInterval)
     this->l1CsnpInterval = l1CsnpInterval;
 }
 
-const unsigned char* ISISInterfaceData::getL1Dis() const
+const PseudonodeID ISISInterfaceData::getL1Dis() const
 {
     return l1DIS;
 }
 
-void ISISInterfaceData::setL1Dis(unsigned char* l1DIS)
+void ISISInterfaceData::setL1Dis(const PseudonodeID& l1DIS)
 {
-    memcpy(this->l1DIS, l1DIS, ISIS_LAN_ID);
+  this->l1DIS = PseudonodeID(l1DIS);
+//    memcpy(this->l1DIS, l1DIS, ISIS_LAN_ID);
 }
 
 unsigned int ISISInterfaceData::getL1DisPriority() const
@@ -204,14 +205,15 @@ void ISISInterfaceData::setL2CsnpInterval(int l2CsnpInterval)
     this->l2CsnpInterval = l2CsnpInterval;
 }
 
-const unsigned char* ISISInterfaceData::getL2Dis() const
+const PseudonodeID ISISInterfaceData::getL2Dis() const
 {
     return l2DIS;
 }
 
-void ISISInterfaceData::setL2Dis(unsigned char* l2DIS)
+void ISISInterfaceData::setL2Dis(const PseudonodeID& l2DIS)
 {
-    memcpy(this->l2DIS, l2DIS, ISIS_LAN_ID);
+  this->l2DIS = PseudonodeID(l2DIS);
+//    memcpy(this->l2DIS, l2DIS, ISIS_LAN_ID);
 }
 
 unsigned int ISISInterfaceData::getL2DisPriority() const
