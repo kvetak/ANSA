@@ -87,6 +87,10 @@ public:
     AreaID(){
         areaID = 0;
     }
+    AreaID(const AreaID& areaId)
+    {
+      areaID = areaId.getAreaId();
+    }
 
     uint64 getAreaId() const {
         return areaID;
@@ -233,7 +237,9 @@ public:
     void fromTLV(const unsigned char * lanIDTLV)
     {
         std::string helper(reinterpret_cast<const char *>(lanIDTLV));
-        areaID = strtoul(helper.substr(1, ISIS_LAN_ID_TLV_LEN).c_str(), NULL, 16);
+        systemID = strtoul(helper.substr(1, ISIS_LAN_ID_TLV_LEN).c_str(), NULL, 16);
+        circuitID = systemID & 255;
+        systemID = systemID >> 8;
 
     }
 
@@ -282,6 +288,10 @@ public:
 
     LspID(SystemID sysID):PseudonodeID(sysID, 0){
       LspID();
+    }
+
+    LspID(PseudonodeID pseudoID):PseudonodeID(pseudoID){
+          LspID();
     }
 
     void set(const SystemID sysID){

@@ -24,6 +24,8 @@
 
 
 #include "ansa/networklayer/clns/CLNSRoute.h"
+#include "ansa/networklayer/clns/CLNSRoutingTable.h"
+#include "inet/networklayer/contract/IRoutingTable.h"
 
 #include "inet/networklayer/common/InterfaceEntry.h"
 
@@ -117,6 +119,27 @@ std::string CLNSRoute::info() const
 
 #endif // ANSAINET
     return out.str();
+}
+
+std::string CLNSRoute::detailedInfo() const
+{
+    return std::string();
+}
+
+const char *CLNSRoute::getInterfaceName() const
+{
+    return interfacePtr ? interfacePtr->getName() : "";
+}
+
+void CLNSRoute::changed(int fieldCode)
+{
+    if (rt)
+        rt->routeChanged(this, fieldCode);
+}
+
+IRoutingTable *CLNSRoute::getRoutingTableAsGeneric() const
+{
+    return getRoutingTable();
 }
 
 //void CLNSAddress::_checkNetmaskLength(int length)

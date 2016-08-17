@@ -247,6 +247,7 @@ class ISIS : public cSimpleModule
         void fullSPF(ISISTimer *timer);
         bool extractISO(ISISCons_t *initial, short circuitType); /*!< Extracts ISO informations from lspDb needed to perform SPF calculation. > */
         ISISPath *getPath(ISISPaths_t *paths, PseudonodeID id);
+        ISISAPath *getAPath(ISISAPaths_t *paths, AreaID id);
         ISISCons_t *getCons(ISISCons_t *cons, PseudonodeID from);
         void getBestMetric(ISISPaths_t *paths);
         ISISPath *getBestPath(ISISPaths_t *paths);
@@ -256,7 +257,7 @@ class ISIS : public cSimpleModule
         void moveToTent(ISISCons_t *initial, ISISPath *path, PseudonodeID from, uint32_t metric,
                 ISISPaths_t *ISISTent);
         void moveToPath(ISISPath *path);
-        void extractAreas(ISISPaths_t *paths, ISISPaths_t *areas, short circuitType);
+        void extractAreas(ISISPaths_t *paths, ISISAPaths_t *areas, short circuitType);
         ISISPaths_t *getPathsISO(short circuitType);
 
         void spfDistribTrees(short int circuitType); //L2_ISIS_MODE related -> computes distribution trees for forwarding TRILL multicast
@@ -293,6 +294,7 @@ class ISIS : public cSimpleModule
         void printSysId(SystemID sysId);
         void printLspId(LspID lspId);
         void printPaths(ISISPaths_t *paths);
+        void printAPaths(ISISAPaths_t *paths);
         void schedule(ISISTimer *timer, double timee = -1); //if timer needs additional information there is msg
         SystemID getSysID(ISISMessage *msg);
 //        unsigned char *getSysID(ISISTimer *timer);

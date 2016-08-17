@@ -23,4 +23,6 @@ simple CLNSRoutingTable like IRoutingTable
     parameters:
         @display("i=block/table");
         string interfaceTableModule;   // The path to the InterfaceTable module
+        bool forwarding = default(true);
+        bool multicastForwarding = default(false);
 }

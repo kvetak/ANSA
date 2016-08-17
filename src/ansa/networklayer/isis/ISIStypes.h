@@ -344,7 +344,6 @@ struct ISISPath
     bool operator()(const ISISPath *path1, const ISISPath *path2)
     {
 
-      //             for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++){
       if (path1->metric != path2->metric)
       {
         return path1->metric < path2->metric; //first is smaller, so return true
@@ -352,33 +351,87 @@ struct ISISPath
       else
       {
         return path1->to < path2->to;
-        //                    if(path1->to[ISIS_SYSTEM_ID] > path2->to[ISIS_SYSTEM_ID]){
-        //                        return true;
-        //                    }
+
       }
 
-        }
-        ISISPath(){
+    }
 
-        }
-        ISISPath(PseudonodeID to, uint32_t metric, ISISNeighbours_t from){
-//            this->to = new unsigned char [ISIS_SYSTEM_ID + 2];
-//            memcpy(this->to, to, ISIS_SYSTEM_ID + 1);
-            this->to = to;
-            this->metric = metric;
-            for(ISISNeighbours_t::iterator it = from.begin(); it != from.end(); ++it){
-                this->from.push_back((*it)->copy());
-            }
-//            this->from = from;
-        }
-        ISISPath* copy(){
-            return new ISISPath(PseudonodeID(to), this->metric, this->from);
-        }
+    ISISPath()
+    {
+
+    }
+
+    ISISPath(PseudonodeID to, uint32_t metric, ISISNeighbours_t from)
+    {
+      this->to = to;
+      this->metric = metric;
+      for (ISISNeighbours_t::iterator it = from.begin(); it != from.end(); ++it)
+      {
+        this->from.push_back((*it)->copy());
+      }
+
+    }
+
+    ISISPath* copy()
+    {
+      return new ISISPath(PseudonodeID(to), this->metric, this->from);
+    }
 
 };
 
 
 typedef std::vector<ISISPath*> ISISPaths_t;
+
+struct ISISAPath
+{
+    //        unsigned char *to;
+    AreaID to;
+    uint32_t metric;
+    ISISNeighbours_t from; // works as next hop
+    //bool operator for sorting
+
+    bool operator()(const ISISAPath *path1, const ISISAPath *path2)
+    {
+
+      if (path1->metric != path2->metric)
+      {
+        return path1->metric < path2->metric; //first is smaller, so return true
+      }
+      else
+      {
+        return path1->to < path2->to;
+
+      }
+
+    }
+
+    ISISAPath()
+    {
+
+    }
+
+    ISISAPath(AreaID to, uint32_t metric, ISISNeighbours_t from)
+    {
+      this->to = to;
+      this->metric = metric;
+      for (ISISNeighbours_t::iterator it = from.begin(); it != from.end(); ++it)
+      {
+        this->from.push_back((*it)->copy());
+      }
+
+    }
+
+    ISISAPath* copy()
+    {
+      return new ISISAPath(AreaID(to), this->metric, this->from);
+    }
+
+};
+
+
+typedef std::vector<ISISAPath*> ISISAPaths_t;
+
+
 
 
 typedef std::vector<LSPRecord *> ISISLspDb_t;

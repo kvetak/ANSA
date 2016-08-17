@@ -7822,20 +7822,20 @@ void ISIS::fullSPF(ISISTimer *timer) {
         this->L2ISISPathsISO = ISISPaths;
     }
 
-    ISISPaths_t *areas = new ISISPaths_t;
+    ISISAPaths_t *areas = new ISISAPaths_t;
     ISISPaths_t *ISISPathsISO = getPathsISO(circuitType);
     if (circuitType == L2_TYPE) {
         this->extractAreas(ISISPathsISO, areas, circuitType);
         std::cout << "Print Areas\n";
-        this->printPaths(areas);
+        this->printAPaths(areas);
 
-        for (ISISPaths_t::iterator it = areas->begin(); it != areas->end();
+        for (ISISAPaths_t::iterator it = areas->begin(); it != areas->end();
                 ++it) {
 
-            if ((*it)->to.getCircuitId() != 0) {
-                //skip all pseudonodes, put only real nodes to routing table
-                continue;
-            }
+//            if ((*it)->to.getCircuitId() != 0) {
+//                //skip all pseudonodes, put only real nodes to routing table
+//                continue;
+//            }
             //for every neighbour (nextHop)
             for (ISISNeighbours_t::iterator nIt = (*it)->from.begin();
                     nIt != (*it)->from.end(); ++nIt) {
@@ -7868,9 +7868,22 @@ void ISIS::fullSPF(ISISTimer *timer) {
                 //            (*nIt)->entry = this->getIfaceByGateIndex((this->getAdjBySystemID((*nIt)->id, circuitType))->gateIndex)->entry;
             }
 
-            this->clnsTable->addRecord(
-                    new CLNSRoute((*it)->to, ISIS_SYSTEM_ID + 1, (*it)->from,
-                            (*it)->metric));
+            CLNSRoute* entry = new CLNSRoute();
+            CLNSAddress dest;
+            dest.set((*it)->to.getAreaId(), 0);
+            CLNSAddress nextHop;
+            nextHop.set(0,(*(*it)->from.begin())->id.getSystemId().getSystemId());
+            entry->setDestination(dest);
+            entry->setGateway(nextHop);
+            entry->setInterface((*(*it)->from.begin())->entry);
+            entry->setSourceType(IRoute::SourceType::ISIS);
+            entry->setAdminDist(CLNSRoute::RouteAdminDist::dISIS);
+            entry->setMetric((*it)->metric);
+
+            clnsrt->addRoute(entry);
+//            this->clnsTable->addRecord(
+//                    new CLNSRoute((*it)->to, ISIS_SYSTEM_ID + 1, (*it)->from,
+//                            (*it)->metric));
 
         }
     }
@@ -7921,9 +7934,23 @@ void ISIS::fullSPF(ISISTimer *timer) {
 //            (*nIt)->entry = this->getIfaceByGateIndex((this->getAdjBySystemID((*nIt)->id, circuitType))->gateIndex)->entry;
         }
 
-        this->clnsTable->addRecord(
-                new CLNSRoute((*it)->to, ISIS_SYSTEM_ID + 1, (*it)->from,
-                        (*it)->metric));
+        CLNSRoute* entry = new CLNSRoute();
+        CLNSAddress dest;
+        dest.set(areaID.getAreaId(), (*it)->to.getSystemId().getSystemId());
+        CLNSAddress nextHop;
+        nextHop.set(areaID.getAreaId(),(*(*it)->from.begin())->id.getSystemId().getSystemId());
+        entry->setDestination(dest);
+        entry->setGateway(nextHop);
+        entry->setInterface((*(*it)->from.begin())->entry);
+        entry->setSourceType(IRoute::SourceType::ISIS);
+        entry->setAdminDist(CLNSRoute::RouteAdminDist::dISIS);
+        entry->setMetric((*it)->metric);
+
+        clnsrt->addRoute(entry);
+
+//        this->clnsTable->addRecord(
+//                new CLNSRoute((*it)->to, ISIS_SYSTEM_ID + 1, (*it)->from,
+//                        (*it)->metric));
 
     }
 
@@ -7931,70 +7958,69 @@ void ISIS::fullSPF(ISISTimer *timer) {
 }
 /**
  * Extracts areas from LSP DB for every path in @param paths
- * @param paths is set of paths to be searched
+ * @param paths is a set of paths to be searched
  * @param areas output variable to store extracted paths
  * @param circuitType is either L1 or L2
  */
-void ISIS::extractAreas(ISISPaths_t* paths, ISISPaths_t* areas,
-        short circuitType) {
+void ISIS::extractAreas(ISISPaths_t* paths, ISISAPaths_t* areas, short circuitType) {
 
     ISISLSPPacket* lsp;
     LSPRecord* lspRec;
     TLV_t* tmpTLV;
-    ISISPath *tmpPath;
+    ISISAPath *tmpPath;
 
-    for (ISISPaths_t::iterator pathIt = paths->begin(); pathIt != paths->end();
-            ++pathIt) {
-        //for each record in best paths extract connected Areas
-        lspRec = this->getLSPFromDbByID((*pathIt)->to, circuitType);
+  for (ISISPaths_t::iterator pathIt = paths->begin(); pathIt != paths->end(); ++pathIt)
+  {
+    //for each record in best paths extract connected Areas
+    lspRec = this->getLSPFromDbByID(LspID((*pathIt)->to), circuitType);
         if (lspRec == NULL) {
             continue;
         }
         lsp = lspRec->LSP;
-        for (int offset = 0;
-                (tmpTLV = this->getTLVByType(lsp, AREA_ADDRESS, offset)) != NULL;
-                offset++) {
-            for (unsigned int i = 0; i + ISIS_AREA_ID + 1 <= tmpTLV->length;
-                    i = +ISIS_AREA_ID + 1) {
-                if ((tmpPath = this->getPath(areas, (*pathIt)->to)) == NULL) {
-                    //path to this address doesn't exist, so create new
-                    tmpPath = new ISISPath;
-                    tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
-                    this->copyArrayContent(tmpTLV->value, tmpPath->to,
-                            ISIS_AREA_ID, i + 1, 0);
-                    for (unsigned int b = ISIS_AREA_ID; b < ISIS_SYSTEM_ID + 2;
-                            b++) {
-                        tmpPath->to[b] = 0;
-                    }
-                    tmpPath->metric = (*pathIt)->metric;
+        for (int offset = 0; (tmpTLV = this->getTLVByType(lsp, AREA_ADDRESS, offset)) != NULL; offset++)
+        {
+          AreaID tmpAreaId;
+          tmpAreaId.fromTLV(tmpTLV->value);
 
-                    //copy all neighbours from 'from'
-                    for (ISISNeighbours_t::iterator nIt =
-                            (*pathIt)->from.begin();
-                            nIt != (*pathIt)->from.end(); ++nIt) {
-                        tmpPath->from.push_back((*nIt)->copy());
-                    }
+          if ((tmpPath = this->getAPath(areas, tmpAreaId)) == NULL) {
+            //path to this address doesn't exist, so create new
+            tmpPath = new ISISAPath;
+            tmpPath->to = tmpAreaId;
+//            tmpPath->to = new unsigned char[ISIS_SYSTEM_ID + 2];
+//            this->copyArrayContent(tmpTLV->value, tmpPath->to, ISIS_AREA_ID, i + 1, 0);
+//            //I guess this just fills the rest of 'to' field with zeros
+//            for (unsigned int b = ISIS_AREA_ID; b < ISIS_SYSTEM_ID + 2;  b++)
+//            {
+//              tmpPath->to[b] = 0;
+//            }
+            tmpPath->metric = (*pathIt)->metric;
 
-                    areas->push_back(tmpPath);
-
-                } else {
-                    //path to this address already exists, so check metric
-                    if (tmpPath->metric >= (*pathIt)->metric) {
-                        if (tmpPath->metric > (*pathIt)->metric) {
-                            //we got better metric for this area so clear 'from' neighbours
-                            tmpPath->from.clear();
-                        }
-                        tmpPath->metric = (*pathIt)->metric;
-                        //copy all neighbours from 'from'
-                        for (ISISNeighbours_t::iterator nIt =
-                                (*pathIt)->from.begin();
-                                nIt != (*pathIt)->from.end(); ++nIt) {
-                            tmpPath->from.push_back((*nIt)->copy());
-                        }
-
-                    }
-                }
+            //copy all neighbours from 'from'
+            for (ISISNeighbours_t::iterator nIt = (*pathIt)->from.begin(); nIt != (*pathIt)->from.end(); ++nIt)
+            {
+              tmpPath->from.push_back((*nIt)->copy());
             }
+
+            areas->push_back(tmpPath);
+
+          } else {
+            //path to this address already exists, so check metric
+            if (tmpPath->metric >= (*pathIt)->metric) {
+              if (tmpPath->metric > (*pathIt)->metric) {
+                //we got better metric for this area so clear 'from' neighbours
+                tmpPath->from.clear();
+              }
+              tmpPath->metric = (*pathIt)->metric;
+              //copy all neighbours from 'from'
+              for (ISISNeighbours_t::iterator nIt =
+                  (*pathIt)->from.begin();
+                  nIt != (*pathIt)->from.end(); ++nIt) {
+                tmpPath->from.push_back((*nIt)->copy());
+              }
+
+            }
+          }
+
         }
     }
 
@@ -8109,14 +8135,50 @@ void ISIS::printPaths(ISISPaths_t *paths) {
     std::cout << endl;
 }
 
+
+/*
+ * Print best paths informations to stdout
+ * @param paths is set of best paths.
+ */
+void ISIS::printAPaths(ISISAPaths_t *paths) {
+
+    std::cout << "Best paths of IS: " << areaID << ".";
+
+    //print system id
+    std::cout << systemId << ".";
+
+
+    //print NSEL
+    std::cout << "." << "00";
+
+    std::cout<< endl;
+    for (ISISAPaths_t::iterator it = paths->begin(); it != paths->end(); ++it) {
+        std::cout << "To: " << (*it)->to;
+        std::cout << "\t\t metric: " << (*it)->metric << "\t via: ";
+        if ((*it)->from.empty()) {
+            std::cout << "EMPTY";
+        }
+        for (ISISNeighbours_t::iterator nIt = (*it)->from.begin();
+                nIt != (*it)->from.end(); ++nIt) {
+
+            this->printSysId((*nIt)->id);
+
+            std::cout << std::setfill('0') << std::setw(2) << std::dec
+                    << (unsigned short) (*nIt)->id.getCircuitId();
+            std::cout << " ";
+        }
+        std::cout << endl;
+    }
+    std::cout << endl;
+}
+
 /*
  * Moves best path from ISISTent to ISISPaths and initiate move of appropriate connections from init to ISISTent
  * @param initial is set of connections
  * @param ISISTent is set of tentative paths
  * @param ISISPaths is set of best paths from this IS
  */
-void ISIS::bestToPath(ISISCons_t *init, ISISPaths_t *ISISTent,
-        ISISPaths_t *ISISPaths) {
+void ISIS::bestToPath(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths) {
 
     ISISPath *path;
     ISISPath *tmpPath;
@@ -8360,13 +8422,12 @@ bool ISIS::extractISO(ISISCons_t *initial, short circuitType) {
                     //if destination of this connection (entry in LSP) is to Pseudonode
                     if (connection->to.getCircuitId() != 0) {
                         //if System-ID part of Pseudonode's LAN-ID belongs to this system
-                        if (connection->to) {
+                        if (connection->to.getSystemId() == systemId) {
                             //then the connection entry index equals to Pseudonode-ID byte minus 1
                             connection->entry = this->ISISIft.at(connection->to.getCircuitId() - 1).entry;
                         } else {
                             //if not, we have too search through Adjacency table to find adjacency with matching destination
-                            ISISadj *tmpAdj = getAdjBySystemID(connection->to,
-                                    circuitType);
+                            ISISadj *tmpAdj = getAdjBySystemID(connection->to,   circuitType);
                             if (!tmpAdj) {
                                 return false;
                             }
@@ -8377,9 +8438,10 @@ bool ISIS::extractISO(ISISCons_t *initial, short circuitType) {
                         }
                     }
                     //if it is Pseudonode's LSP
-                    else if (lspId.getCircuitId() != 0) {
-                        connection->entry = this->ISISIft.at(
-                                lspId[ISIS_SYSTEM_ID] - 1).entry;
+                    else if (lspId.getCircuitId() != 0)
+                    {
+//                        connection->entry = this->ISISIft.at(lspId[ISIS_SYSTEM_ID] - 1).entry;
+                        connection->entry = this->ISISIft.at(lspId.getCircuitId() - 1).entry;
                     } else {
                         ISISadj *tmpAdj = getAdjBySystemID(connection->to,
                                 circuitType);
@@ -8469,6 +8531,28 @@ ISISPath * ISIS::getPath(ISISPaths_t *paths, PseudonodeID id) {
 
     return NULL;
 }
+
+/*
+ * Returns path with specified id.
+ * @param paths vector of paths
+ * @param id is identificator of desired path
+ * @return path
+ */
+ISISAPath * ISIS::getAPath(ISISAPaths_t *paths, AreaID id) {
+
+    for (ISISAPaths_t::iterator it = paths->begin(); it != paths->end(); ++it) {
+
+        if (id == (*it)->to) {
+            return (*it);
+        }
+    }
+
+    return NULL;
+}
+
+
+
+
 
 void ISIS::setHelloCounter(unsigned long helloCounter) {
     this->helloCounter = helloCounter;

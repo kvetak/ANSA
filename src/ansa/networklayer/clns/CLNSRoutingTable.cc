@@ -195,6 +195,16 @@ void CLNSRoutingTable::addRoute(CLNSRoute *entry)
     emit(NF_ROUTE_ADDED, entry);
 }
 
+CLNSRoute *CLNSRoutingTable::internalRemoveRoute(CLNSRoute *entry)
+{
+    auto i = std::find(routes.begin(), routes.end(), entry);
+    if (i != routes.end()) {
+        routes.erase(i);
+        return entry;
+    }
+    return nullptr;
+}
+
 
 void CLNSRoutingTable::internalAddRoute(CLNSRoute *entry)
 {
@@ -363,6 +373,19 @@ bool CLNSRoutingTable::handleOperationStage(LifecycleOperation *operation, int s
 //{
 //    return new CLNSRoute();
 //}
+
+void CLNSRoutingTable::routeChanged(CLNSRoute *entry, int fieldCode)
+{
+    if (fieldCode == CLNSRoute::F_DESTINATION || fieldCode == CLNSRoute::F_PREFIX_LENGTH || fieldCode == CLNSRoute::F_METRIC) {    // our data structures depend on these fields
+        entry = internalRemoveRoute(entry);
+        ASSERT(entry != nullptr);    // failure means inconsistency: route was not found in this routing table
+        internalAddRoute(entry);
+
+        invalidateCache();
+        updateDisplayString();
+    }
+    emit(NF_ROUTE_CHANGED, entry);    // TODO include fieldCode in the notification
+}
 
 void CLNSRoutingTable::updateDisplayString()
 {

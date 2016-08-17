@@ -55,6 +55,7 @@ public:
     CLNSAddress();
     CLNSAddress(std::string net);
     CLNSAddress(uint64 areaID, uint64 systemID);
+    void set(uint64 areaID, uint64 systemID);
     virtual ~CLNSAddress();
 
     bool isUnspecified() const;

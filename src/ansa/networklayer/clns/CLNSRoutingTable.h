@@ -68,6 +68,7 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG) override;
     // helper functions:
     void internalAddRoute(CLNSRoute *entry);
+    CLNSRoute *internalRemoveRoute(CLNSRoute *entry);
 
     // invalidates routing cache and local addresses cache
     virtual void invalidateCache();
@@ -240,6 +241,14 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
         //@}
 
         virtual IRoute *createRoute() override { return new CLNSRoute(); }
+
+        /**
+         * To be called from route objects whenever a field changes. Used for
+         * maintaining internal data structures and firing "routing table changed"
+         * notifications.
+         */
+        virtual void routeChanged(CLNSRoute *entry, int fieldCode);
+
     const CLNSAddress& getRouterId() const;
     void setRouterId(const CLNSAddress& routerId);
 

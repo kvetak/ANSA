@@ -16,7 +16,7 @@
 package ansa.networklayer.clns;
 
 // @author Marcel Marek
-simple CLNS
+simple CLNS 
 {
     parameters:
         @display("i=block/routing");
