@@ -22,6 +22,7 @@
 
 #include "ansa/networklayer/isis/ISISDeviceConfigurator.h"
 
+
 namespace inet {
 
 ISISDeviceConfigurator::ISISDeviceConfigurator() {
@@ -125,7 +126,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
         }
         else if (isisMode == ISIS::L2_ISIS_MODE)
         {
-            isisModule->generateNetAddr();
+            generateNetAddr();
         }
         else
         {
@@ -305,6 +306,55 @@ bool ISISDeviceConfigurator::parseNetAddr(const char* netAddr)
     //        this->nickname = this->sysId[ISIS_SYSTEM_ID - 1] + this->sysId[ISIS_SYSTEM_ID - 2] * 0xFF;
 return true;
 
+}
+
+
+void ISISDeviceConfigurator::generateNetAddr() {
+
+//    //    unsigned char *a = new unsigned char[6];
+//        char *tmp = new char[25];
+//        MACAddress address;
+//
+//        for (int i = 0; i < ift->getNumInterfaces(); i++)
+//        {
+//            if ((address = ift->getInterface(i)->getMacAddress()).getInt() != 0)
+//            {
+//                break;
+//            }
+//
+//        }
+//        /* If there's not any interface with non-zero MAC address then generate one.
+//         * This is not likely to happen.*/
+//        if (address.getInt() == 0)
+//        {
+//            std::cout << "Warning: didn't get non-zero MAC address for NET generating" << endl;
+//            address.generateAutoAddress();
+//        }
+//    //
+//    //    this->areaId = new unsigned char[3];
+//    //    this->sysId = new unsigned char[6];
+//    //    this->NSEL = new unsigned char[1];
+//
+//        this->netAddr = std::string(tmp);
+//        std::stringstream addressStream;
+//        addressStream << std::hex << address;
+//        std::string aS = addressStream.str();
+//
+//    //    this->areaId[0] = (unsigned char)atoi("49");
+//    //    this->areaId[1] = (unsigned char)atoi("00");
+//    //    this->areaId[2] = (unsigned char)atoi("01");
+//
+//    //    address.getAddressBytes(this->sysId);
+//
+//    //    this->NSEL[0] = (unsigned char)atoi("00");
+//    //    this->sysId = string(aS.substr(0,2) + aS.substr(3,2) + aS.substr(0,2) + aS.substr(3,2)  ).c_str();
+//        this->netAddr = "00.0000." + aS.substr(0, 2) + aS.substr(3, 2) + "." + aS.substr(6, 2) + aS.substr(9, 2) + "."
+//                + aS.substr(12, 2) + aS.substr(15, 2) + ".00";
+//
+//        if (!this->parseNetAddr())
+//        {
+//            throw cRuntimeError("Unable to parse auto-generated NET address.");
+//        }
 }
 
 
@@ -1070,9 +1120,6 @@ cXMLElement * ISISDeviceConfigurator::getIsisRouting(cXMLElement * device)
     cXMLElement * isis = routing->getFirstChildWithTag("ISIS");
     return isis;
 }
-
-} /* namespace inet */
-
 uint64 ISISDeviceConfigurator::getAreaId() const
 {
   return areaID;
@@ -1082,3 +1129,7 @@ uint64 ISISDeviceConfigurator::getSystemId() const
 {
   return systemID;
 }
+
+} /* namespace inet */
+
+

@@ -195,7 +195,7 @@ class ISIS : public cSimpleModule
         ISISadj *getAdj(ISISMessage *inMsg, short circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
         ISISadj *getAdjByMAC(const MACAddress &address, short circuitType, int gateIndex = -1);
         ISISinterface *getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
-        bool isAdjBySystemID(unsigned char *systemID, short circuitType); //do we have adjacency for systemID on specified circuitType
+        bool isAdjBySystemID(SystemID systemID, short circuitType); //do we have adjacency for systemID on specified circuitType
         bool isUp(int gateIndex, short circuitType); //returns true if ISISInterface specified by the corresponding gateIndex have at least one adjacency in state UP
         bool amIL1DIS(int interfaceIndex); //returns true if specified interface is DIS
         bool amIL2DIS(int interfaceIndex); //returns true if specified interface is DIS
@@ -210,7 +210,7 @@ class ISIS : public cSimpleModule
         void handleLsp(ISISLSPPacket *lsp);
         void handleCsnp(ISISCSNPPacket *csnp);
         void handlePsnp(ISISPSNPPacket *psnp);
-        std::vector<unsigned char*> *getLspRange(unsigned char *startLspID, unsigned char *endLspID, short circuitType);
+        std::vector<LspID> *getLspRange(LspID startLspID, LspID endLspID, short circuitType);
 //        unsigned char *getStartLspID(ISISCSNPPacket *csnp);
 //        unsigned char *getEndLspID(ISISCSNPPacket *csnp);
 //        unsigned char *getLspID(ISISLSPPacket *msg);
@@ -218,7 +218,7 @@ class ISIS : public cSimpleModule
 //    void updateLSP(ISISLSPPacket *lsp, short  circuitType);
         void replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitType);
         void purgeRemainLSP(LspID lspId, short circuitType);
-        void purgeLSP(unsigned char *lspId, short circuitType); //purge in-memory LSP
+        void purgeLSP(LspID lspId, short circuitType); //purge in-memory LSP
         void purgeLSP(ISISLSPPacket *lsp, short circuitType); //purge incomming LSP
         void purgeMyLSPs(short circuitType);
         void deleteLSP(ISISTimer *timer); //delete (already purged)LSP from DB when appropriate timer expires
@@ -240,32 +240,32 @@ class ISIS : public cSimpleModule
         LSPRecord *installLSP(ISISLSPPacket *lsp, short circuitType); //install lsp into local LSP database
         void updateAtt(bool action); /*!< Action specify whether this method has been called to set (true - new adjacency) or clear (false - removing adjacency) Attached flag. */
         void setClosestAtt(void); /*!< Find and set the closest L1L2 attached IS */
-        std::map<std::string, int> getAllSystemIdsFromLspDb(short circuitType);
+        std::map<SystemID, int> getAllSystemIdsFromLspDb(short circuitType);
 
         /* SPF */
         void runSPF(short circuitType, ISISTimer *timer = NULL);
         void fullSPF(ISISTimer *timer);
         bool extractISO(ISISCons_t *initial, short circuitType); /*!< Extracts ISO informations from lspDb needed to perform SPF calculation. > */
-        ISISPath *getPath(ISISPaths_t *paths, unsigned char *id);
-        ISISCons_t *getCons(ISISCons_t *cons, unsigned char *from);
+        ISISPath *getPath(ISISPaths_t *paths, PseudonodeID id);
+        ISISCons_t *getCons(ISISCons_t *cons, PseudonodeID from);
         void getBestMetric(ISISPaths_t *paths);
         ISISPath *getBestPath(ISISPaths_t *paths);
         void twoWayCheck(ISISCons_t *cons);
-        bool isCon(ISISCons_t *cons, unsigned char *from, unsigned char *to);
+        bool isCon(ISISCons_t *cons,PseudonodeID from, PseudonodeID to);
         void bestToPath(ISISCons_t *cons, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
-        void moveToTent(ISISCons_t *initial, ISISPath *path, unsigned char *from, uint32_t metric,
+        void moveToTent(ISISCons_t *initial, ISISPath *path, PseudonodeID from, uint32_t metric,
                 ISISPaths_t *ISISTent);
         void moveToPath(ISISPath *path);
         void extractAreas(ISISPaths_t *paths, ISISPaths_t *areas, short circuitType);
         ISISPaths_t *getPathsISO(short circuitType);
 
         void spfDistribTrees(short int circuitType); //L2_ISIS_MODE related -> computes distribution trees for forwarding TRILL multicast
-        void moveToTentDT(ISISCons_t *initial, ISISPath *path, unsigned char *from, uint32_t metric,
+        void moveToTentDT(ISISCons_t *initial, ISISPath *path, PseudonodeID from, uint32_t metric,
                 ISISPaths_t *ISISTent);
         void bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
 
-        std::vector<unsigned char *> *getSystemIDsFromTreeOnlySource(int nickname, const unsigned char *systemId);
-        std::vector<unsigned char *> *getSystemIDsFromTree(int nickname, const unsigned char *systemId);
+        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(int nickname, SystemID systemId);
+        std::vector<SystemID> *getSystemIDsFromTree(int nickname, SystemID systemId);
 
         /* Flags */
         FlagRecQQ_t *getSRMPTPQueue(short circuitType);
@@ -290,11 +290,11 @@ class ISIS : public cSimpleModule
 
         /* Print */
         void printLSP(ISISLSPPacket *lsp, char *from);
-        void printSysId(unsigned char *sysId);
-        void printLspId(unsigned char *lspId);
+        void printSysId(SystemID sysId);
+        void printLspId(LspID lspId);
         void printPaths(ISISPaths_t *paths);
         void schedule(ISISTimer *timer, double timee = -1); //if timer needs additional information there is msg
-//        unsigned char *getSysID(ISISMessage *msg);
+        SystemID getSysID(ISISMessage *msg);
 //        unsigned char *getSysID(ISISTimer *timer);
 //        unsigned char *getLspID(ISISTimer *timer);
 
@@ -310,7 +310,7 @@ class ISIS : public cSimpleModule
         unsigned char *getSubTLVByType(TLV_t *tlv, enum TLVtypes subTLVType, int offset = 0);
 
         bool isMessageOK(ISISMessage *inMsg);
-        bool isAreaIDOK(TLV_t *areaAddressTLV, unsigned char *compare = NULL); //if compare is NULL then use this->areaId for comparison
+        bool isAreaIDOK(TLV_t *areaAddressTLV, AreaID compare); //if compare is NULL then use this->areaId for comparison
         int getIfaceIndex(ISISinterface *interface); //returns index to ISISIft
 
         /* General */

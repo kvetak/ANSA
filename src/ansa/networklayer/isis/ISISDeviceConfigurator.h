@@ -27,8 +27,6 @@
 
 #include <omnetpp.h>
 
-
-
 #include "inet/common/INETDefs.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/networklayer/isis/ISIStypes.h"
@@ -90,6 +88,7 @@ private:
 
          static cXMLElement * getIsisRouting(cXMLElement * device);
          bool parseNetAddr(const char *netAddr);
+         void generateNetAddr();
 
 public:
     ISISDeviceConfigurator();

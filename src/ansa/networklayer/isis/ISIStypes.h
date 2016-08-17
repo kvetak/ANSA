@@ -304,7 +304,7 @@ typedef std::vector<std::vector<FlagRecord*> *> FlagRecQQ_t;
 struct ISISNeighbour
 {
 //        unsigned char *id;
-        SystemID id;
+        PseudonodeID id;
         //uint32_t metric;
         bool type; //should represent whether it's a leaf node; true = leaf
         InterfaceEntry *entry;
@@ -313,10 +313,10 @@ struct ISISNeighbour
 
         }
 
-        ISISNeighbour(SystemID sysId, bool type, InterfaceEntry *entry){
+        ISISNeighbour(PseudonodeID pseudoId, bool type, InterfaceEntry *entry){
 //            this->id = new unsigned char [ISIS_SYSTEM_ID + 2];
 //            memcpy(this->id, id, ISIS_SYSTEM_ID + 2);
-            id = sysId;
+            id = pseudoId;
             this->type = false;
             this->entry = entry;
         }
@@ -326,7 +326,7 @@ struct ISISNeighbour
         }
 
         ISISNeighbour *copy(){
-            return new ISISNeighbour(SystemID(id), this->type, this->entry);
+            return new ISISNeighbour(PseudonodeID(id), this->type, this->entry);
         }
 
 };
@@ -385,8 +385,9 @@ typedef std::vector<LSPRecord *> ISISLspDb_t;
 
 struct ISISCon
 {
-        unsigned char *from;
-        unsigned char *to;
+
+        PseudonodeID from; //or maybe just SystemID?
+        PseudonodeID to; //or maybe just SystemID?
         uint32_t metric;
         bool type;
         InterfaceEntry *entry;
