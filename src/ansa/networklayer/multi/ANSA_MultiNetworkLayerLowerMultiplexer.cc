@@ -40,8 +40,8 @@
 #include "inet/networklayer/ipv6/IPv6Datagram.h"
 #endif // ifdef WITH_IPv6
 
-#ifdef WITH_GENERIC
-#include "inet/networklayer/generic/GenericDatagram.h"
+#ifdef WITH_CLNS
+#include "ansa/networklayer/isis/ISISMessage_m.h"
 #endif // ifdef WITH_GENERIC
 
 namespace inet {
@@ -92,10 +92,10 @@ int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolIndex(cMessage *message)
     else if (dynamic_cast<IPv6Datagram *>(message))
         return (getParentModule()->par("enableIPv6")) ? 1 : -1;
 #endif // ifdef WITH_IPv6
-#ifdef WITH_GENERIC
-    else if (dynamic_cast<GenericDatagram *>(message))
+#ifdef WITH_CLNS
+    else if (dynamic_cast<ISISMessage *>(message))
         return (getParentModule()->par("enableCLNS")) ? 2 : -1;
-#endif // ifdef WITH_GENERIC
+#endif // ifdef WITH_CLNS
     else if (dynamic_cast<CDPUpdate *>(message))
         return (getParentModule()->par("enableCDP")) ? 3 : -1;
     else if (dynamic_cast<LLDPUpdate *>(message))

@@ -13,7 +13,7 @@
   		<Routing>
   			<ISIS>
   				<IS-Type>level-1</IS-Type>
-  				<NET>49.0001.1921.6800.1001.00</NET>
+  				<NET>49.0001.1921.6800.1234.00</NET>
   			</ISIS>
   		</Routing>
 	</Router>
@@ -31,7 +31,7 @@
   		<Routing>
   			<ISIS>
   				<IS-Type>level-1</IS-Type>
-  				<NET>49.0001.1921.6800.1002.00</NET>
+  				<NET>49.0001.1921.6800.4567.00</NET>
   			</ISIS>
   		</Routing>
 	</Router>

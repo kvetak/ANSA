@@ -16,12 +16,13 @@
 package ansa.networklayer.clns;
 
 // @author Marcel Marek
-simple CLNS 
+simple CLNS
 {
     parameters:
         @display("i=block/routing");
         string interfaceTableModule;   // The path to the InterfaceTable module
         string routingTableModule;
+        double procDelay @unit("s") = default(0s);
     gates:
         
         input transportIn[] @labels(CLNSControlInfo/down,ISISMessage);

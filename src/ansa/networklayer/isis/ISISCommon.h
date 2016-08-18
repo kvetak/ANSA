@@ -53,8 +53,9 @@ public:
     virtual std::string str() const
     {
 
-        char buf[SYSTEMID_STRING_SIZE];
-        sprintf(buf, "%04X.%04X.%04X", (systemID >> 32) & (0xFFFF), (systemID >> 16) & (255*255), systemID & (255*255));
+        char buf[SYSTEMID_STRING_SIZE + 1];
+        sprintf(buf, "%04lX.%04lX.%04lX", (systemID >> 32) & (0xFFFF), (systemID >> 16) & (0xFFFF), systemID & (0xFFFF));
+        buf[SYSTEMID_STRING_SIZE] = 0;
         return std::string(buf);
     }
 
@@ -116,24 +117,28 @@ public:
     unsigned char *toTLV() const{
         unsigned char *buffer = new unsigned char[ISIS_AREA_ADDRESS_TLV_LEN];
         buffer[0] = ISIS_AREA_ID_LEN & 0xFF;
-        buffer[1] = (areaID ) & 0xFF;
+        buffer[1] = (areaID >> 16 ) & 0xFF;
         buffer[2] = (areaID >> 8) & 0xFF;
-        buffer[3] = (areaID >> 16) & 0xFF;
+        buffer[3] = (areaID ) & 0xFF;
         return buffer;
     }
 
     void fromTLV(const unsigned char * areaIDTLV)
     {
         std::string helper(reinterpret_cast<const char *>(areaIDTLV));
-        areaID = strtoul(helper.substr(1, 3).c_str(), NULL, 16);
+//        areaID = strtoul(helper.substr(1, 3).c_str(), NULL, 16);
+        areaID = areaIDTLV[1] << 16;
+        areaID += areaIDTLV[2] << 8;
+        areaID += areaIDTLV[3];
+
 
     }
 
     unsigned char *toChar() const{
         unsigned char *buffer = new unsigned char[ISIS_AREA_ID_LEN];
-        buffer[0] = (areaID ) & 0xFF;
+        buffer[0] = (areaID >> 16 ) & 0xFF;
         buffer[1] = (areaID >> 8) & 0xFF;
-        buffer[2] = (areaID >> 16) & 0xFF;
+        buffer[2] = (areaID) & 0xFF;
         return buffer;
     }
 
@@ -141,7 +146,7 @@ public:
     {
 
         char buf[SYSTEMID_STRING_SIZE];
-        sprintf(buf, "%02X.%04X", (areaID >> 16) & (0xFF), areaID & (255*255));
+        sprintf(buf, "%02lX.%04lX", (areaID >> 16) & (0xFF), areaID & (255*255));
         return std::string(buf);
     }
 
@@ -185,18 +190,22 @@ public:
         circuitID = circID;
     }
 
-    PseudonodeID(SystemID sysID, uint circID):SystemID(sysID){
+    PseudonodeID(SystemID sysID, uint circID)
+//    :SystemID(sysID)
+    {
 //      pseudoID = systemID.getSystemId() << 8;
 //      pseudoID += circuitID & 255;
 
 
-//      systemID = sysID.getSystemId();
+      systemID = sysID.getSystemId();
       circuitID = circID;
     }
 
     PseudonodeID(const PseudonodeID& pseudoID)
     {
-      PseudonodeID(pseudoID.getSystemId(), pseudoID.getCircuitId());
+//      PseudonodeID(pseudoID.getSystemId(), pseudoID.getCircuitId());
+      systemID = pseudoID.getSystemId().getSystemId();
+      circuitID = pseudoID.getCircuitId();
 
     }
 
@@ -228,7 +237,7 @@ public:
         unsigned char *buffer = new unsigned char[ISIS_LAN_ID_TLV_LEN];
 
         for(int i = 0; i < ISIS_LAN_ID_TLV_LEN; i++){
-            buffer[i] = (toInt() >> (i * 8)) & 0xFF;
+            buffer[i] = (toInt() >> (((ISIS_LAN_ID_TLV_LEN - 1) - i) * 8)) & 0xFF;
         }
 
         return buffer;
@@ -236,10 +245,16 @@ public:
 
     void fromTLV(const unsigned char * lanIDTLV)
     {
-        std::string helper(reinterpret_cast<const char *>(lanIDTLV));
-        systemID = strtoul(helper.substr(1, ISIS_LAN_ID_TLV_LEN).c_str(), NULL, 16);
-        circuitID = systemID & 255;
-        systemID = systemID >> 8;
+//        std::string helper(reinterpret_cast<const char *>(lanIDTLV));
+        systemID = 0;
+//        systemID = strtoul(helper.substr(1, ISIS_LAN_ID_TLV_LEN).c_str(), NULL, 16);
+        for(int i = 0; i < ISIS_LAN_ID_TLV_LEN - 1 ; i++)
+        {
+          systemID = systemID << 8;
+          systemID += lanIDTLV[i];
+        }
+        circuitID = lanIDTLV[ISIS_LAN_ID_TLV_LEN - 1];
+
 
     }
 
@@ -327,7 +342,7 @@ public:
         unsigned char *buffer = new unsigned char[ISIS_LSP_ID_TLV_LEN];
 
         for(int i = 0; i < ISIS_LSP_ID_TLV_LEN; i++){
-            buffer[i] = (toInt() >> (i * 8)) & 0xFF;
+            buffer[i] = (toInt() >> (((ISIS_LSP_ID_TLV_LEN - 1) - i) * 8)) & 0xFF;
         }
 //        buffer[0] = toInt() & 0xFF;
 //        buffer[1] = (toInt() >> 8) & 0xFF;

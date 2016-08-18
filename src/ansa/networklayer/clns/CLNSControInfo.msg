@@ -32,6 +32,8 @@ class CLNSControlInfo
     
     CLNSAddress destAddr;   // destination IPv4 address
     CLNSAddress srcAddr;    // source IPv4 address
+    MACAddress src;
+    MACAddress dest;
     int interfaceId = -1; // interface on which the datagram was received, or
                           // should be sent (see ~InterfaceTable)
 //    bool multicastLoop;   // if true, sent multicast datagrams will be looped back

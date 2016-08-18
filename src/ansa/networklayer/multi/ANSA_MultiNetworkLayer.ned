@@ -108,7 +108,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         ipv6: <"IPv6NetworkLayer"> like INetworkLayer if enableIPv6 {
             @display("p=300,361");
         }
-        clns: <"CLNS"> like INetworkLayer if enableCLNS {
+        clns: <"CLNSNetworkLayer"> like INetworkLayer if enableCLNS {
             @display("p=500,361");
         }
         upperMultiplexer: ANSA_MultiNetworkLayerUpperMultiplexer {

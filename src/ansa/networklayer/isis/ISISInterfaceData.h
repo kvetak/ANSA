@@ -42,8 +42,8 @@ class ISISInterfaceData : public InterfaceProtocolData
         bool helloValid; // mark the Hello message invalid so during next Hello send it needs to be re-generated
 
         /* From ISISinterface */
-        int ifaceId; //previously intID
-        int gateIndex;
+        int ifaceId = -1; //previously intID
+        int gateIndex = -1;
         ISISNetworkType network; //previously broadcast = true
         bool passive;
         bool isisEnabled; /*!<is IS-IS activated on this interface? (default yes for all ifts)*/

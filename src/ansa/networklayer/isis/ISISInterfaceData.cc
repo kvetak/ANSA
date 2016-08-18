@@ -33,6 +33,33 @@ ISISInterfaceData::ISISInterfaceData()
     // TODO Auto-generated constructor stub
 
     this->helloValid = false;
+
+
+
+
+
+
+    ifaceId = -1;
+    gateIndex = -1;
+    network = ISIS_NETWORK_BROADCAST; //previously broadcast = true
+    passive = false;
+    isisEnabled = true; /*!<is IS-IS activated on this interface? (default yes for all ifts)*/
+    circuitType = ISIS_CIRCUIT_L1;
+    priority = -1; /*!<interface priority for being designated IS*/
+    l1DISPriority = 0; /*!<priority of current L1 DIS*/
+    l2DISPriority = 0; /*!<priority of currend L2 DIS*/
+    PseudonodeID l1DIS;
+    PseudonodeID l2DIS;
+    metric = 0; /*!<interface metric (default 10)*/
+    L1HelloInterval = -1; /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+    L2HelloInterval = -1; /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+    L1HelloMultiplier = -1; /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
+    L2HelloMultiplier = -1; /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
+    lspInterval = -1; /*!< Minimum delay in ms between sending two successive LSPs.*/
+    l1CsnpInterval = -1; /*!< Interval in seconds between generating CSNP message.*/
+    l2CsnpInterval = -1; /*!< Interval in seconds between generating CSNP message.*/
+    l1PsnpInterval = -1; /*!< Interval in seconds between generating PSNP message.*/
+    l2PsnpInterval = -1; /*!< Interval in seconds between generating PSNP message.*/
 }
 
 void ISISInterfaceData::init(void){

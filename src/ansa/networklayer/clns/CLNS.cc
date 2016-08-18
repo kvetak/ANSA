@@ -26,6 +26,7 @@
 #include "inet/common/ModuleAccess.h"
 #include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
+#include "ansa/networklayer/clns/CLNSControlInfo.h"
 
 namespace inet {
 
@@ -129,11 +130,20 @@ void CLNS::handlePacketFromHL(cPacket *packet)
     }
 
     if(dynamic_cast<ISISMessage*>(packet)){
-      int id = ((Ieee802Ctrl*)packet->getControlInfo())->getInterfaceId();
+      CLNSControlInfo* info = static_cast<CLNSControlInfo*>(packet->removeControlInfo());
+      int id = info->getInterfaceId();
       InterfaceEntry *ie = ift->getInterfaceById(id);
       if(ie != nullptr){
+        Ieee802Ctrl* ctrl = new Ieee802Ctrl();
+        ctrl->setSrc(info->getSrc());
+        ctrl->setDest(info->getDest());
+        ctrl->setSsap(SAP_CLNS);
+        ctrl->setDsap(SAP_CLNS);
+        ctrl->setInterfaceId(id);
+        packet->setControlInfo(ctrl);
         send(packet, queueOutGateBaseId + ie->getNetworkLayerGateIndex());
       }
+      delete info;
     }
 }
 

@@ -222,7 +222,7 @@ class ISIS : public cSimpleModule
         void purgeLSP(ISISLSPPacket *lsp, short circuitType); //purge incomming LSP
         void purgeMyLSPs(short circuitType);
         void deleteLSP(ISISTimer *timer); //delete (already purged)LSP from DB when appropriate timer expires
-        void sendLSP(LSPRecord *lspRec, int gateIndex);
+        void sendLSP(LSPRecord *lspRec, ISISinterface* isisInterface);
         std::vector<ISISLSPPacket*> *genLSP(short circuitType);
         void generateLSP(ISISTimer *timer);
         void generateLSP(short circuitType);
