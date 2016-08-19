@@ -2125,20 +2125,20 @@ void ISIS::handleL2HelloMsg(ISISMessage *inMsg) {
 
         //find neighbours TLV
         if ((tmpTLV = this->getTLVByType(msg, IS_NEIGHBOURS_HELLO)) != NULL) {
-            unsigned char *tmpRecord = new unsigned char[ISIS_SYSTEM_ID];
+            unsigned char *tmpRecord = new unsigned char[MAC_ADDRESS_SIZE];
             //walk through all neighbour identifiers contained in TLV
 
-            for (unsigned int r = 0; r < (tmpTLV->length / ISIS_SYSTEM_ID);
+            for (unsigned int r = 0; r < (tmpTLV->length / MAC_ADDRESS_SIZE);
                     r++) {
                 //check if my system id is contained in neighbour's adjL1Table
-                this->copyArrayContent(tmpTLV->value, tmpRecord, ISIS_SYSTEM_ID,
-                        r * ISIS_SYSTEM_ID, 0);
+                this->copyArrayContent(tmpTLV->value, tmpRecord, MAC_ADDRESS_SIZE,
+                        r * MAC_ADDRESS_SIZE, 0);
 
                 MACAddress tmpMAC = iface->entry->getMacAddress();
-                unsigned char *tmpMACAddress = new unsigned char[6];
+                unsigned char *tmpMACAddress = new unsigned char[MAC_ADDRESS_SIZE];
                 tmpMAC.getAddressBytes(tmpMACAddress);
 
-                if (compareArrays(tmpMACAddress, tmpRecord, 6)) {
+                if (compareArrays(tmpMACAddress, tmpRecord, MAC_ADDRESS_SIZE)) {
                     //store previous state
                     bool changed = tmpAdj->state;
                     tmpAdj->state = ISIS_ADJ_REPORT;
@@ -3422,13 +3422,16 @@ void ISIS::printLSPDB() {
                         != NULL; k++) {
             for (unsigned int m = 1; m + 11 <= tmpTlv->length; m += 11) {
                 EV << "\t\t";
-                for (unsigned int l = 0; l < 7; l++) {
-                    //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
-                    EV << std::setfill('0') << std::setw(2) << std::dec
-                              << (unsigned int) tmpTlv->value[m + 4 + l];
-                    if (l % 2 == 1)
-                        EV << ".";
-                }
+                PseudonodeID tmpPseudoID;
+                tmpPseudoID.fromTLV(&(tmpTlv->value[m + 4]));
+                EV << tmpPseudoID;
+//                for (unsigned int l = 0; l < 7; l++) {
+//                    //1 = virtual flag, m = current neighbour record, 4 is offset in current neigh. record(start LAN-ID)
+//                    EV << std::setfill('0') << std::setw(2) << std::dec
+//                              << (unsigned int) tmpTlv->value[m + 4 + l];
+//                    if (l % 2 == 1)
+//                        EV << ".";
+//                }
 
                 EV << "\tmetric: " << std::setfill('0') << std::setw(2)
                           << std::dec << (unsigned int) tmpTlv->value[m + 0]
@@ -4208,12 +4211,8 @@ void ISIS::sendCsnp(ISISTimer *timer) {
 
         }
 
-        if (timer->getInterfaceIndex()
-                != this->getIfaceIndex(
-                        this->getIfaceByGateIndex(
-                                timer->getInterfaceIndex()))) {
-            EV << "ISIS: Warning: Houston, we got a problem! A BIG ONE!"
-                      << endl;
+        if (timer->getInterfaceIndex()!= this->getIfaceIndex(this->getIfaceByGateIndex(timer->getInterfaceIndex()))) {
+            EV << "ISIS: Warning: Houston, we got a problem! A BIG ONE!"<< endl;
         }
 
         //send only on interface specified in timer
@@ -4460,7 +4459,7 @@ void ISIS::handlePsnp(ISISPSNPPacket *psnp) {
         for (int i = 0; i < tmpTlv->length; i += 16) //TODO change 16 to something
                 {
 //            tmpLspID = new unsigned char[ISIS_SYSTEM_ID + 2];
-            tmpLspID.fromTLV(tmpTlv->value);
+            tmpLspID.fromTLV(&(tmpTlv->value[i + 2]));
 //            this->copyArrayContent(tmpTlv->value, tmpLspID, (ISIS_SYSTEM_ID + 2), i + 2, 0);
             unsigned short remLife = tmpTlv->value[i] * 255
                     + tmpTlv->value[i + 1];
@@ -4585,7 +4584,7 @@ void ISIS::handleCsnp(ISISCSNPPacket *csnp) {
 
         for (int i = 0; i + 16 <= tmpTlv->length; i += 16) //TODO change 16 to something
                 {
-            tmpLspID.fromTLV(tmpTlv->value);
+            tmpLspID.fromTLV(&(tmpTlv->value[i + 2]));
 //            tmpLspID = new unsigned char[ISIS_SYSTEM_ID + 2];
 //            this->copyArrayContent(tmpTlv->value, tmpLspID, (ISIS_SYSTEM_ID + 2), i + 2, 0);
             unsigned short remLife = tmpTlv->value[i] * 255
@@ -7105,7 +7104,7 @@ void ISIS::addTLV(std::vector<TLV_t *> *tlvTable, enum TLVtypes tlvType, short c
         }
         else
         {
-          neighbour.LANid.set(systemId, 0);
+          neighbour.LANid.set(tmpAdj->sysID, 0);
 
 //                    this->copyArrayContent(tmpAdj->sysID, neighbour.LANid, ISIS_SYSTEM_ID, 0, 0);
 //                    neighbour.LANid[ISIS_SYSTEM_ID] = 0;
@@ -7516,7 +7515,7 @@ void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, PseudonodeID from,
                     if ((*nIt)->id.getCircuitId() != 0) {
                         ASSERT(false); //this basically says if you get to this part of the code, it's trouble
                         ISISNeighbour *neigh = (*nIt)->copy();
-                        (*consIt)->to = neigh->id;
+                        neigh->id = (*consIt)->to;
 //                        memcpy(neigh->id, (*consIt)->to, ISIS_SYSTEM_ID + 2);
 
                         tmpPath->from.push_back(neigh);
@@ -7594,7 +7593,7 @@ void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, PseudonodeID from,
                         if ((*nIt)->id.getCircuitId() != 0) {
                             ASSERT(false); //this basically says if you get to this part of the code, it's trouble
                             ISISNeighbour *neigh = (*nIt)->copy();
-                            (*consIt)->to = neigh->id;
+                            neigh->id = (*consIt)->to;
 //                            memcpy(neigh->id, (*consIt)->to, ISIS_SYSTEM_ID + 2);
                             tmpPath->from.push_back(neigh);
                         } else {

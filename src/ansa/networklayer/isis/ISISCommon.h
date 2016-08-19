@@ -146,7 +146,7 @@ public:
     {
 
         char buf[SYSTEMID_STRING_SIZE];
-        sprintf(buf, "%02lX.%04lX", (areaID >> 16) & (0xFF), areaID & (255*255));
+        sprintf(buf, "%02lX.%04lX", (areaID >> 16) & (0xFF), areaID & (0xFFFF));
         return std::string(buf);
     }
 
@@ -355,12 +355,18 @@ public:
         return buffer;
     }
 
-    void fromTLV(const unsigned char * areaIDTLV)
+    void fromTLV(const unsigned char * lspIDTLV)
     {
-        std::string helper(reinterpret_cast<const char *>(areaIDTLV));
-        systemID = strtoul(helper.substr(0, ISIS_SYSTEM_ID).c_str(), NULL, 16);
-        circuitID = strtoul(helper.substr(ISIS_SYSTEM_ID, 1).c_str(), NULL, 16);
-        fragmentID = strtoul(helper.substr(ISIS_SYSTEM_ID + 1, 1).c_str(), NULL, 16);
+//        std::string helper(reinterpret_cast<const char *>(areaIDTLV));
+        systemID = 0;
+        for(int i = 0; i < ISIS_SYSTEM_ID ; i++)
+        {
+          systemID = systemID << 8;
+          systemID += lspIDTLV[i];
+        }
+
+        circuitID = lspIDTLV[ISIS_SYSTEM_ID];
+        fragmentID = lspIDTLV[ISIS_SYSTEM_ID + 1];
 
     }
 

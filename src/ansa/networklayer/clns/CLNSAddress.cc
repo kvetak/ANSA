@@ -161,7 +161,7 @@ std::string CLNSAddress::str(bool printUnspec    /* = true */) const
         return std::string("<unspec>");
 
     char buf[CLNSADDRESS_STRING_SIZE];
-    sprintf(buf, "49.%04X.%04X.%04X.%04X.%02X", areaID & (255 * 255), (systemID >> 32) & (255*255), (systemID >> 16) & (255*255), systemID & (255*255), nsel & 255);
+    sprintf(buf, "%02lX.%04lX.%04lX.%04lX.%04lX.%02X", (areaID >> 16) & (0xFF), areaID & (0xFFFF), (systemID >> 32) & (0xFFFF), (systemID >> 16) & (0xFFFF), systemID & (0xFFFF), nsel & 255);
     return std::string(buf);
 }
 
