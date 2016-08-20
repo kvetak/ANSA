@@ -999,7 +999,9 @@ void ISIS::handleMessage(cMessage* msg) {
         }
 
         //get arrival interface
-        int gateIndex = inMsg->getArrivalGate()->getIndex();
+        Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(inMsg->getControlInfo());
+        int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//        int gateIndex = inMsg->getArrivalGate()->getIndex();
         ISISinterface * tmpIntf = this->getIfaceByGateIndex(gateIndex);
         if (tmpIntf == NULL) {
             EV
@@ -1930,7 +1932,10 @@ void ISIS::schedule(ISISTimer *timer, double timee) {
 void ISIS::handleL1HelloMsg(ISISMessage *inMsg) {
 
     TLV_t* tmpTLV;
-    int gateIndex = inMsg->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(inMsg->getControlInfo());
+
+      int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//    int gateIndex = inMsg->getArrivalGate()->getIndex();
     ISISinterface *tmpIntf = this->getIfaceByGateIndex(gateIndex);
     ISISLANHelloPacket *msg = check_and_cast<ISISLANHelloPacket *>(inMsg);
 
@@ -2098,7 +2103,10 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg) {
 void ISIS::handleL2HelloMsg(ISISMessage *inMsg) {
 
     TLV_t* tmpTLV;
-    int gateIndex = inMsg->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(inMsg->getControlInfo());
+
+      int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//    int gateIndex = inMsg->getArrivalGate()->getIndex();
     ISISinterface *iface = this->getIfaceByGateIndex(gateIndex);
     ISISLANHelloPacket *msg = check_and_cast<ISISLANHelloPacket *>(inMsg);
 
@@ -2315,7 +2323,9 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
 //    tmpOuterVlanId = subTLV[8] + (subTLV[8] & 0x0F) * 0xFF;
 //    tr = (subTLV[9] >> 7) & 0x01;
 
-    int gateIndex = inMsg->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(inMsg->getControlInfo());
+    //  int gateIndex = inMsg->getArrivalGate()->getIndex();
+      int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
     ISISinterface *tmpIntf = this->getIfaceByGateIndex(gateIndex);
     MACAddress tmpMAC = tmpIntf->entry->getMacAddress();
     unsigned char *tmpMACChars = new unsigned char[MAC_ADDRESS_SIZE];
@@ -2420,7 +2430,10 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
                         //TODO generate event adjacencyStateChanged
                         //TODO A! Signals...
 //                        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
-                        int gateIndex = msg->getArrivalGate()->getIndex();
+                      Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(msg->getControlInfo());
+                      //  int gateIndex = inMsg->getArrivalGate()->getIndex();
+                        int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//                        int gateIndex = msg->getArrivalGate()->getIndex();
                         //        int gateIndex = timer->getInterfaceIndex();
                         InterfaceEntry *entry =
                                 this->ift->getInterfaceByNetworkLayerGateIndex(
@@ -2502,7 +2515,10 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
         std::sort(this->adjL1Table.begin(), this->adjL1Table.end());
 
 //        nb->fireChangeNotification(NF_ISIS_ADJ_CHANGED, this->genL1LspTimer);
-        int gateIndex = msg->getArrivalGate()->getIndex();
+//        Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(msg->getControlInfo());
+
+          int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//        int gateIndex = msg->getArrivalGate()->getIndex();
 //        int gateIndex = timer->getInterfaceIndex();
         InterfaceEntry *entry = this->ift->getInterfaceByNetworkLayerGateIndex(
                 gateIndex);
@@ -2520,9 +2536,11 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
  */
 void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
 {
-
-  int gateIndex = inMsg->getArrivalGate()->getIndex();
+  Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(inMsg->getControlInfo());
+//  int gateIndex = inMsg->getArrivalGate()->getIndex();
+  int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
   ISISinterface *iface = this->getIfaceByGateIndex(gateIndex);
+
 
   //duplicate system ID check
   if (this->checkDuplicateSysID(inMsg))
@@ -2665,7 +2683,7 @@ void ISIS::handlePTPHelloMsg(ISISMessage *inMsg)
       neighbour.mac = ctrl->getSrc();
 
       //set gate index, which is neighbour connected to
-      neighbour.gateIndex = msg->getArrivalGate()->getIndex();
+      neighbour.gateIndex = gateIndex;
 
       //set network type
       neighbour.network = this->getIfaceByGateIndex(neighbour.gateIndex)->network;
@@ -2898,10 +2916,13 @@ ISISadj* ISIS::getAdj(ISISMessage *inMsg, short circuitType) {
         }
     }
 
-    int gateIndex = inMsg->getArrivalGate()->getIndex();
+
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(inMsg->getControlInfo());
+    //  int gateIndex = inMsg->getArrivalGate()->getIndex();
+      int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
     //            ISISinterface * tmpIntf = this->getIfaceByGateIndex(gateIndex);
     //TODO for truly point-to-point link there would not be MAC address
-    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(inMsg->getControlInfo());
+//    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(inMsg->getControlInfo());
     MACAddress tmpMac = ctrl->getSrc();
 
     for (std::vector<ISISadj>::iterator it = adjTable->begin(); it != adjTable->end(); ++it) {
@@ -3741,7 +3762,10 @@ void ISIS::electDIS(ISISLANHelloPacket *msg) {
     int interfaceIndex;
     ISISinterface* iface;
 
-    gateIndex = msg->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(msg->getControlInfo());
+
+      gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//    gateIndex = msg->getArrivalGate()->getIndex();
 
     iface = this->getIfaceByGateIndex(gateIndex);
     interfaceIndex = this->getIfaceIndex(iface);
@@ -3936,7 +3960,10 @@ void ISIS::handleLsp(ISISLSPPacket *lsp) {
     /* 7.3.15.1. */
     LspID lspID;
     int circuitType = this->getLevel(lsp);
-    int gateIndex = lsp->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(lsp->getControlInfo());
+    int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+
+//    int gateIndex = lsp->getArrivalGate()->getIndex();
     ISISinterface *iface = this->getIfaceByGateIndex(gateIndex);
     int interfaceIndex = this->getIfaceIndex(iface);
     /* 7.3.15.1. a) 6) */
@@ -4061,13 +4088,13 @@ void ISIS::handleLsp(ISISLSPPacket *lsp) {
 void ISIS::sendCsnp(ISISTimer *timer) {
     //TODO don't know how to handle csnp over PtP yet (there is no periodic sending, but initial csnp is sent)
     /* Maybe send CSNP during some initial interval (or number of times, or just once) and then just don't re-schedule timer for this interface */
-    if (this->ISISIft.at(timer->getInterfaceIndex()).network
-            && (false && !this->ISISIft.at(timer->getInterfaceIndex()).network
-                    || !this->amIDIS(timer->getInterfaceIndex(),
-                            timer->getIsType()))) {
-        this->schedule(timer);
-        return;
-    }
+//    if (this->ISISIft.at(timer->getInterfaceIndex()).network
+//            && (false && !this->ISISIft.at(timer->getInterfaceIndex()).network
+//                    || !this->amIDIS(timer->getInterfaceIndex(),
+//                            timer->getIsType()))) {
+//        this->schedule(timer);
+//        return;
+//    }
 
     ISISinterface *iface = &(this->ISISIft.at(timer->getInterfaceIndex()));
 //    unsigned char * disID;
@@ -4424,7 +4451,9 @@ void ISIS::sendPsnp(ISISTimer *timer) {
 void ISIS::handlePsnp(ISISPSNPPacket *psnp) {
 
     short circuitType = this->getLevel(psnp);
-    int gateIndex = psnp->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(psnp->getControlInfo());
+    int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//    int gateIndex = psnp->getArrivalGate()->getIndex();
     ISISinterface* iface = this->getIfaceByGateIndex(gateIndex);
     int interfaceIndex = this->getIfaceIndex(iface);
 
@@ -4552,7 +4581,9 @@ void ISIS::handlePsnp(ISISPSNPPacket *psnp) {
 void ISIS::handleCsnp(ISISCSNPPacket *csnp) {
 
     short circuitType = this->getLevel(csnp); //L1_TYPE; //TODO get circuitType from csnp
-    int gateIndex = csnp->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(csnp->getControlInfo());
+    int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//    int gateIndex = csnp->getArrivalGate()->getIndex();
     ISISinterface* iface = this->getIfaceByGateIndex(gateIndex);
     int interfaceIndex = this->getIfaceIndex(iface);
 
@@ -5568,7 +5599,11 @@ void ISIS::purgeLSP(LspID lspId, short circuitType) {
  */
 void ISIS::purgeLSP(ISISLSPPacket *lsp, short circuitType) {
     LSPRecord *lspRec;
-    int gateIndex = lsp->getArrivalGate()->getIndex();
+//    int gateIndex = lsp->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(lsp->getControlInfo());
+    //  int gateIndex = inMsg->getArrivalGate()->getIndex();
+      int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+
     ISISinterface* iface = this->getIfaceByGateIndex(gateIndex);
     int interfaceIndex = this->getIfaceIndex(iface);
     //std::vector<LSPRecord *> * lspDb = this->getLSPDb(circuitType);
@@ -6078,7 +6113,10 @@ void ISIS::replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord,
 //            this->setSSNflag(lspRecord, gateIndex, circuitType);
 //        }
         //received so don't set SRM flag on that interface
-        int gateIndex = lsp->getArrivalGate()->getIndex();
+      Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(lsp->getControlInfo());
+      //  int gateIndex = inMsg->getArrivalGate()->getIndex();
+        int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//        int gateIndex = lsp->getArrivalGate()->getIndex();
         ISISinterface* iface = this->getIfaceByGateIndex(gateIndex);
         int interfaceIndex = this->getIfaceIndex(iface);
         this->setSRMflagsBut(lspRecord, interfaceIndex, circuitType);
@@ -6143,7 +6181,10 @@ LSPRecord * ISIS::installLSP(ISISLSPPacket *lsp, short circuitType) {
      */
 
     if (lsp->getArrivalGate() != NULL) {
-        int gateIndex = lsp->getArrivalGate()->getIndex();
+      Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(lsp->getControlInfo());
+
+        int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+//        int gateIndex = lsp->getArrivalGate()->getIndex();
         ISISinterface* iface = this->getIfaceByGateIndex(gateIndex);
         int interfaceIndex = this->getIfaceIndex(iface);
         /* 7.3.15.1 e) 1) ii. */
@@ -7314,10 +7355,13 @@ bool ISIS::isUp(int gateIndex, short circuitType) {
 bool ISIS::isAdjUp(ISISMessage *msg, short circuitType) {
     /* Pretty messy code, please clean up */
     std::vector<ISISadj> *adjTable = this->getAdjTab(circuitType);
-    int gateIndex = msg->getArrivalGate()->getIndex();
+    Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(msg->getControlInfo());
+    int gateIndex = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
+
+//    int gateIndex = msg->getArrivalGate()->getIndex();
 
     //TODO for truly point-to-point link there would not be MAC address
-    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
+//    Ieee802Ctrl *ctrl = check_and_cast<Ieee802Ctrl *>(msg->getControlInfo());
     MACAddress tmpMac = ctrl->getSrc();
     SystemID sysID;
 

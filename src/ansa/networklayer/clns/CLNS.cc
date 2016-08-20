@@ -94,6 +94,10 @@ void CLNS::endService(cPacket *packet)
 void CLNS::handleIncomingISISMessage(ISISMessage* packet, const InterfaceEntry* fromIE)
 {
   int protocol = 1234;
+  Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(packet->getControlInfo());
+  ctrl->setInterfaceId(fromIE->getInterfaceId());
+
+
 
   int gateindex = mapping.findOutputGateForProtocol(protocol);
       // check if the transportOut port are connected, otherwise discard the packet
