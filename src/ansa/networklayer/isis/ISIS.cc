@@ -8012,7 +8012,29 @@ void ISIS::fullSPF(ISISTimer *timer) {
             entry->setAdminDist(CLNSRoute::RouteAdminDist::dISIS);
             entry->setMetric((*it)->metric);
 
-            clnsrt->addRoute(entry);
+            bool found = false;
+            for(int i = 0; i < clnsrt->getNumRoutes(); i++){
+              auto iter = clnsrt->getRoute(i);
+              //find route in routing table
+              if(dest == iter->getDestination()){
+                //found
+                found = true;
+                //same administrative distance?
+                if(iter->getAdminDist() == CLNSRoute::RouteAdminDist::dISIS){
+                  iter->setMetric(entry->getMetric());
+                  iter->setGateway(entry->getGateway());
+                  iter->setInterface(entry->getInterface());
+                  delete entry;
+                }else if (iter->getAdminDist() > CLNSRoute::RouteAdminDist::dISIS){
+                  clnsrt->removeRoute(iter);
+                  clnsrt->addRoute(entry);
+                }
+              }
+            }
+
+            if(!found){
+              clnsrt->addRoute(entry);
+            }
 //            this->clnsTable->addRecord(
 //                    new CLNSRoute((*it)->to, ISIS_SYSTEM_ID + 1, (*it)->from,
 //                            (*it)->metric));
@@ -8090,7 +8112,29 @@ void ISIS::fullSPF(ISISTimer *timer) {
 
         }
 
-        clnsrt->addRoute(entry);
+        bool found = false;
+        for(int i = 0; i < clnsrt->getNumRoutes(); i++){
+          auto iter = clnsrt->getRoute(i);
+          //find route in routing table
+          if(dest == iter->getDestination()){
+            //found
+            found = true;
+            //same administrative distance?
+            if(iter->getAdminDist() == CLNSRoute::RouteAdminDist::dISIS){
+              iter->setMetric(entry->getMetric());
+              iter->setGateway(entry->getGateway());
+              iter->setInterface(entry->getInterface());
+              delete entry;
+            }else if (iter->getAdminDist() > CLNSRoute::RouteAdminDist::dISIS){
+              clnsrt->removeRoute(iter);
+              clnsrt->addRoute(entry);
+            }
+          }
+        }
+
+        if(!found){
+          clnsrt->addRoute(entry);
+        }
 
 //        this->clnsTable->addRecord(
 //                new CLNSRoute((*it)->to, ISIS_SYSTEM_ID + 1, (*it)->from,
