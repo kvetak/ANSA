@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-package inet.examples.ansa.isis.ISIS2;
+package inet.examples.ansa.isis.lan;
 
 import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;
@@ -29,7 +29,7 @@ import inet.node.ethernet.EtherSwitch;
 import inet.node.mpls.LDP_LSR;
 import ned.DatarateChannel;
 
-network ISIStest2
+network lan
 {
     @display("bgb=701,389");
     types:
@@ -49,7 +49,7 @@ network ISIStest2
             parameters:
                 @display("p=269,293");
             gates:
-                ethg[3];
+                ethg[1];
         }
         router3: ANSA_ISISRouter {
             parameters:
@@ -63,59 +63,8 @@ network ISIStest2
             gates:
                 ethg[3];
         }
-        router4: ANSA_ISISRouter {
-            parameters:
-                @display("p=409,293");
-            gates:
-                ethg[3];
-        }
-        router5: ANSA_ISISRouter {
-            parameters:
-                @display("p=338,214");
-            gates:
-                ethg[3];
-        }
-        router6: ANSA_ISISRouter {
-            parameters:
-                @display("p=530,293");
-            gates:
-                ethg[2];
-        }
-        router7: ANSA_ISISRouter {
-            parameters:
-                @display("p=657,293");
-            gates:
-                ethg[1];
-        }
-        etherSwitch2: EtherSwitch {
-            parameters:
-                @display("p=338,110");
-            gates:
-                ethg[3];
-        }
-        router8: ANSA_ISISRouter {
-            parameters:
-                @display("p=268,29");
-            gates:
-                ethg[1];
-        }
-        router9: ANSA_ISISRouter {
-            parameters:
-                @display("p=401,27");
-            gates:
-                ethg[1];
-        }
     connections allowunconnected:
         router1.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[0];
-        router2.ethg[1] <--> Eth100M <--> etherSwitch1.ethg[2];
+        router2.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[2];
         router3.ethg[0] <--> Eth100M <--> etherSwitch1.ethg[1];
-        router2.ethg[2] <--> Eth100M <--> router4.ethg[0];
-        router2.ethg[0] <--> Eth100M <--> router5.ethg[1];
-        router5.ethg[0] <--> Eth100M <--> router4.ethg[1];
-        router8.ethg[0] <--> Eth100M <--> etherSwitch2.ethg[0];
-        router9.ethg[0] <--> Eth100M <--> etherSwitch2.ethg[1];
-        router5.ethg[2] <--> Eth100M <--> etherSwitch2.ethg[2];
-        router6.ethg[0] <--> Eth100M <--> router4.ethg[2];
-        router6.ethg[1] <--> Eth100M <--> router7.ethg[0];
-
 }

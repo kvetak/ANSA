@@ -301,10 +301,12 @@ void ISIS::initialize(int stage) {
 
         ISISDeviceConfigurator* devConf = new ISISDeviceConfigurator(
                 par("deviceId"), par("deviceType"), par("configData"), ift);
-        devConf->loadISISConfig(this, this->mode);
 
+        devConf->prepareAddress(mode);
         systemId.setSystemId(devConf->getSystemId());
         areaID.setAreaId(devConf->getAreaId());
+
+        devConf->loadISISConfig(this, this->mode);
 
         //TODO passive-interface
         //create SRMQueue for each interface (even though it would be used only for broadcast interfaces)
@@ -357,9 +359,9 @@ void ISIS::initialize(int stage) {
 
 
 
-        RegisterTransportProtocolCommand *message =   new RegisterTransportProtocolCommand();
-        message->setProtocol(1234);
-        send(message, "lowerLayerOut");
+//        RegisterTransportProtocolCommand *message =   new RegisterTransportProtocolCommand();
+//        message->setProtocol(1234);
+//        send(message, "lowerLayerOut");
 
         //        this->initISIS();
     }else if (stage == INITSTAGE_LAST){
@@ -1986,13 +1988,13 @@ void ISIS::handleL1HelloMsg(ISISMessage *inMsg) {
             //walk through all neighbour identifiers contained in TLV
             for (unsigned int r = 0; r < (tmpTLV->length / 6); r++) {
                 //check if my system id is contained in neighbour's adjL1Table
-                this->copyArrayContent(tmpTLV->value, tmpRecord, 6, r * 6, 0);
+                this->copyArrayContent(tmpTLV->value, tmpRecord, MAC_ADDRESS_SIZE, r * MAC_ADDRESS_SIZE, 0);
 
                 MACAddress tmpMAC = tmpIntf->entry->getMacAddress();
-                unsigned char *tmpMACAddress = new unsigned char[6];
+                unsigned char *tmpMACAddress = new unsigned char[MAC_ADDRESS_SIZE];
                 tmpMAC.getAddressBytes(tmpMACAddress);
 
-                if (compareArrays(tmpMACAddress, tmpRecord, 6)) {
+                if (compareArrays(tmpMACAddress, tmpRecord, MAC_ADDRESS_SIZE)) {
                     //store previous state
                     ISISAdjState changed = tmpAdj->state;
                     tmpAdj->state = ISIS_ADJ_REPORT;
@@ -3835,18 +3837,29 @@ void ISIS::electDIS(ISISLANHelloPacket *msg) {
             || (msg->getPriority() == disPriority
                     && (receivedDIS.compareTo(localDIS) > 0)))) {
         LspID disLspID;
-        disLspID.set(lastDIS.getSystemId());
+        disLspID.set(lastDIS);
 //        this->copyArrayContent(lastDIS, disLspID, ISIS_SYSTEM_ID + 1, 0, 0);
 //        disLspID[ISIS_SYSTEM_ID + 1] = 0; //set fragment-ID
         //purge lastDIS's LSPs
         this->purgeRemainLSP(disLspID, circuitType);
 
-        //set new DIS (LAN-ID)
-        disID = msgLanID;
-//        this->copyArrayContent(msgLanID, disID, ISIS_SYSTEM_ID + 1, 0, 0);
+//        //set new DIS (LAN-ID)
+//        disID = msgLanID;
+////        this->copyArrayContent(msgLanID, disID, ISIS_SYSTEM_ID + 1, 0, 0);
+//        //and set his priority
+//                disPriority = msg->getPriority();
 
-        //and set his priority
-        disPriority = msg->getPriority();
+        if (msg->getType() == LAN_L1_HELLO || msg->getType() == TRILL_HELLO) {
+
+            iface->L1DIS = msgLanID;
+            iface->L1DISpriority = msg->getPriority();;
+        } else if (msg->getType() == LAN_L2_HELLO) {
+
+            iface->L2DIS = msgLanID;
+            iface->L2DISpriority = msg->getPriority();;
+        }
+
+
 
         if (mode == L2_ISIS_MODE) {
             //TODO B1 SEVERE call trillDIS() -> such method would appoint forwarder and handled other TRILL-DIS related duties
@@ -7233,7 +7246,7 @@ void ISIS::addTLV(std::vector<TLV_t *> *tlvTable, enum TLVtypes tlvType, short c
 //            }
       //add also mine non-pseudonode interface as neighbour
       LSPneighbour neighbour;
-      neighbour.LANid = PseudonodeID(tmpAdj->sysID, 0);
+      neighbour.LANid = PseudonodeID(systemId, 0);
 //            this->copyArrayContent((unsigned char*) this->sysId, neighbour.LANid, ISIS_SYSTEM_ID, 0, 0);
 //            neighbour.LANid[ISIS_SYSTEM_ID] = 0;
       neighbour.metrics.defaultMetric = 0; //metric to every neighbour in pseudonode LSP is always zero!!!
@@ -8451,7 +8464,7 @@ void ISIS::moveToTent(ISISCons_t *initial, ISISPath *path, PseudonodeID from,
 //                this->copyArrayContent((*consIt)->to, neighbour->id, ISIS_SYSTEM_ID + 2, 0, 0);
                 neighbour->id = (*consIt)->to;
                 neighbour->entry = (*consIt)->entry;
-                ASSERT(neighbour->entry != NULL);
+//                ASSERT(neighbour->entry != NULL);
                 tmpPath->from.push_back(neighbour);
             } else {
                 //TODO neighbour must be THIS IS or next hop, therefore we need to check whether directly connected

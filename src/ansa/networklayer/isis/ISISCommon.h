@@ -315,12 +315,18 @@ public:
       fragmentID = 0;
     }
 
+    void set(const PseudonodeID pseudoID){
+      setSystemId(pseudoID.getSystemId());
+      circuitID = pseudoID.getCircuitId();
+      fragmentID = 0;
+    }
+
     PseudonodeID getPseudonodeID()const{
       return PseudonodeID(getSystemId(),circuitID);
     }
 
     virtual uint64 toInt() const override {
-      return (PseudonodeID::toInt() << 8) + circuitID;
+      return (PseudonodeID::toInt() << 8) + fragmentID;
     }
 
     void setMax() {

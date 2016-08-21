@@ -45,7 +45,55 @@ ISISDeviceConfigurator::ISISDeviceConfigurator(const char* devId,
   device = configFile;
 }
 
+void ISISDeviceConfigurator::prepareAddress( ISIS::ISIS_MODE isisMode)
+{
+  if (device == NULL)
+  {
+    if (isisMode == ISIS::L3_ISIS_MODE)
+    {
+      /* In L3 mode we need configuration (at least NET) */
+      throw cRuntimeError("No configuration found for this device");
+    }
 
+  }
+
+  cXMLElement *isisRouting = getIsisRouting(device);
+  if (isisRouting == NULL)
+  {
+    if (isisMode == ISIS::L3_ISIS_MODE)
+    {
+      throw cRuntimeError("Can't find ISISRouting in config file");
+    }
+  }
+
+  if (isisRouting != NULL)
+  {
+    //NET
+    //TODO: multiple NETs for migrating purposes (merging, splitting areas)
+    const char *netAddr = this->getISISNETAddress(isisRouting);
+    if (netAddr != NULL)
+    {
+
+      if (!this->parseNetAddr(netAddr))
+      {
+        throw cRuntimeError("Unable to parse NET address.");
+      }
+      else
+      {
+        //TODO set AreaID and systemID in ISIS module
+      }
+
+    }
+  }
+  else if (isisMode == ISIS::L2_ISIS_MODE)
+  {
+    generateNetAddr();
+  }
+  else
+  {
+    throw cRuntimeError("Net address wasn't specified in IS-IS routing.");
+  }
+}
 /* IS-IS related methods */
 
 void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode){

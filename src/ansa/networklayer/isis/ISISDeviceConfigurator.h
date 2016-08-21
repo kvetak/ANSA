@@ -108,6 +108,8 @@ public:
     void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
     uint64 getAreaId() const;
     uint64 getSystemId() const;
+
+    void prepareAddress( ISIS::ISIS_MODE isisMode);
 };
 
 } /* namespace inet */
