@@ -26,4 +26,5 @@ simple CLNSRoutingTable like IRoutingTable
         bool forwarding = default(true);
         bool multicastForwarding = default(false);
         @signal[NF_ROUTE_ADDED](type=CLNSRoute);
+        @signal[NF_ROUTE_CHANGED](type=CLNSRoute);
 }
