@@ -332,7 +332,7 @@ void LLDPMain::handleUpdate(LLDPUpdate *msg)
     LLDPAgent *agent = lat->findAgentById(ifaceId);
     if(agent == nullptr)
     {
-        EV_ERROR << "Agent don't exist on interface " << ifaceId << endl;
+        EV_ERROR << "Agent doesn't exist on interface " << ifaceId << endl;
         return;
     }
 

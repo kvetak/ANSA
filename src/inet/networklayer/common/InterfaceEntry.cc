@@ -43,6 +43,11 @@
 #include "inet/networklayer/generic/GenericNetworkProtocolInterfaceData.h"
 #endif // ifdef WITH_GENERIC
 
+
+//#ifdef WITH_CLNS
+#include "ansa/networklayer/clns/CLNSInterfaceData.h"
+
+
 namespace inet {
 
 Register_Abstract_Class(InterfaceEntryChangeDetails);
@@ -123,6 +128,8 @@ std::string InterfaceEntry::info() const
         out << " " << ((InterfaceProtocolData *)trilldata)->info(); // Khmm...
     if (ieee8021ddata)
         out << " " << ((InterfaceProtocolData *)ieee8021ddata)->info(); // Khmm...
+    if (clnsdata)
+        out << " " << ((InterfaceProtocolData *)clnsdata)->info(); //Kahim...
     return out.str();
 }
 
@@ -170,6 +177,8 @@ std::string InterfaceEntry::detailedInfo() const
         out << " " << ((InterfaceProtocolData *)trilldata)->detailedInfo() << "\n"; // Khmm...
     if (ieee8021ddata)
         out << " " << ((InterfaceProtocolData *)ieee8021ddata)->detailedInfo() << "\n"; // Khmm...
+    if (clnsdata)
+        out << " " << ((InterfaceProtocolData *)clnsdata)->detailedInfo() << "\n"; // Kahim.. .
     return out.str();
 }
 
@@ -221,6 +230,9 @@ void InterfaceEntry::resetInterface()
     if (ieee8021ddata && ((InterfaceProtocolData *)ieee8021ddata)->ownerp == this)
         delete (InterfaceProtocolData *)ieee8021ddata;
     ieee8021ddata = nullptr;
+    if (clnsdata && ((InterfaceProtocolData *)clnsdata)->ownerp == this)
+        delete (InterfaceProtocolData *)clnsdata;
+    clnsdata = nullptr;
 }
 
 void InterfaceEntry::setGenericNetworkProtocolData(GenericNetworkProtocolInterfaceData *p)
@@ -304,6 +316,15 @@ void InterfaceEntry::setIeee8021dInterfaceData(Ieee8021dInterfaceData *p)
     ieee8021ddata = p;
     ((InterfaceProtocolData *)p)->ownerp = this;    // Khmm...
     configChanged(F_IEEE8021D_DATA);
+}
+
+void InterfaceEntry::setCLNSData(CLNSInterfaceData *p)
+{
+    if (clnsdata && ((InterfaceProtocolData *)clnsdata)->ownerp == this) // Kahimm...
+        delete (InterfaceProtocolData *)clnsdata; // Kahmim...
+    clnsdata = p;
+    ((InterfaceProtocolData *)p)->ownerp = this;    // Kahimm...
+    configChanged(F_CLNS_DATA);
 }
 
 bool InterfaceEntry::setEstimateCostProcess(int position, MacEstimateCostProcess *p)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <featurestates>
     <feature enabled="true" id="ANSAINET"/>
-	<feature enabled="true" id="TCP_common"/>
+    <feature enabled="true" id="TCP_common"/>
     <feature enabled="true" id="TCP_INET"/>
     <feature enabled="false" id="TCP_lwIP"/>
     <feature enabled="false" id="TCP_NSC"/>
@@ -55,8 +55,8 @@
     <feature enabled="true" id="wireless_examples"/>
     <feature enabled="false" id="VoIPStream"/>
     <feature enabled="false" id="VoIPStream_examples"/>
-    <feature enabled="true" id="SimpleVoIP"/>
-    <feature enabled="true" id="SimpleVoIP_examples"/>
+    <feature enabled="false" id="SimpleVoIP"/>
+    <feature enabled="false" id="SimpleVoIP_examples"/>
     <feature enabled="true" id="HttpTools"/>
     <feature enabled="true" id="HttpTools_examples_direct"/>
     <feature enabled="true" id="HttpTools_examples_socket"/>
