@@ -1,0 +1,5 @@
+<ul class="social">
+{% for network in site.data.social.networks %}
+	<li><a class="fa fa-{{network.name}}" target="_blank" href="{{network.url}}{{network.username}}" title="@{{network.username}}" taget="_blank"></a></li>
+{% endfor %}
+</ul>

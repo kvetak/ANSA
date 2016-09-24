@@ -1,0 +1,18 @@
+
+<div class="responsive-menu">
+	<a href="#" class="fa fa-bars btn-responsive-menu"></a>
+	<div class="menu">
+		<img src="{{ site.logo | prepend: site.url | prepend: baseurl}}" class="logo" />
+
+		<ul>
+			<li><span>Linguagens </span>{% include general/languages.html %}</li>
+			{% for l in site.data.lang %}
+				{% if l[0] == page.lang %}
+					{% for sec in l[1].terms[0] %}
+						<li><a href="#scrollto-section-{{ forloop.index }}">{{ sec[1].section }}</a></li>
+					{% endfor %} 
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+</div>

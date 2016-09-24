@@ -1,0 +1,50 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+/*
+ *
+ *  ||    // \\ || )) || \\ // \\ || \\   // \\  || \\
+ *  ||    ||=|| ||=)  ||_// ||=|| ||  )) ((   )) ||_//
+ *  ||__| || || ||_)) || \\ || || ||_//   \\_//  || \\
+ *
+ *
+ * Designed, built, and released under MIT license by @donini. Learn more at
+ * https://github.com/donini/labrador-jekyll-theme.
+ */
+
+
+@charset "utf-8";
+
+// Global variables
+$default_font_family: 'PT Sans', serif;
+$secondary_font_family: "Abril Fatface", serif;
+
+
+// Colors
+$color_white: rgba(255, 255, 255, 1);
+$color_black: rgba(32, 32, 32, 1);
+$color_gray64: rgba(163, 163, 163, 1);
+$color_grey_dark: rgb(138, 138, 138);
+
+// Sizes
+$h1_size: 28px;
+$h3_size: 24px;
+$h4_size: 16px;
+$p_size: 22px;
+$p_size_quote: 32px;
+$p_size_footer: 18px;
+$a_26: 26px;
+$author_size: 11px;
+
+// @import url("@import url(https://fonts.googleapis.com/css?family=Alegreya:400,700,400italic,700italic");
+@import url("http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface");
+@import url("https://fonts.googleapis.com/css?family=Lato:300");
+// Import partials from `sass_dir` (defaults to `_sass`)
+@import
+		"base",
+		"profile-photo",
+		"profile-about",
+		"profile-quote",
+		"blog-posts"
+;

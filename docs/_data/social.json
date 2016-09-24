@@ -1,0 +1,19 @@
+{
+	"networks": [
+		{
+			"name": "facebook-official",
+			"username":  "LabradorRetrieverDogs",
+			"url": "https://www.facebook.com/"
+		},
+		{
+			"name": "youtube-play",
+			"username":  "labrador",
+			"url": "https://www.youtube.com/results?search_query="
+		},
+		{
+			"name": "instagram",
+			"username": "#labrador",
+			"url": "https://www.instagram.com/explore/tags/"
+		}
+	]
+}

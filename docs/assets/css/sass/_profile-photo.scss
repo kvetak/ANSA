@@ -1,0 +1,252 @@
+/*
+ *
+ *  ||    // \\ || )) || \\ // \\ || \\   // \\  || \\
+ *  ||    ||=|| ||=)  ||_// ||=|| ||  )) ((   )) ||_//
+ *  ||__| || || ||_)) || \\ || || ||_//   \\_//  || \\
+ *
+ *
+ * Designed, built, and released under MIT license by @donini. Learn more at
+ * https://github.com/donini/labrador-jekyll-theme.
+ */
+
+.profile-photo {
+    /*-webkit-filter: grayscale(100%);
+    filter: grayscale(100%);*/
+    background-image: url('../img/bg_lamp.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: top center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative;
+    opacity: 0;
+    .my-name {
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        width: 100%;
+        top: 540px;
+        z-index: 10;
+        h1 {
+           font-weight: bold;
+        }
+        h3 {
+            font-weight: normal;
+            font-style: italic;
+        }
+    }
+    .photo {
+        width: 301px;
+        height: 301px;
+        border-radius: 160px;
+        -webkit-border-radius: 160px;
+        -moz-border-radius: 150px;
+        background: url(../img/profile_photo.jpg) no-repeat;
+        position: absolute;
+        left: 50%;
+        margin-left: -150px;
+        margin-top: 200px;
+        border: 6px solid $color_gray64;
+        box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+        -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+        -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+        z-index: 10;
+    }
+    .language {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 9999;
+        li {
+            display: inline;
+            &.ativo {
+                display: none !important;
+                a {
+                    background-color: #000000;
+                    color: #ffffff;
+                }
+            }
+            a{
+                color: $color_black;
+                font-weight: bold;
+                text-transform: uppercase;
+                margin: 0 3px;
+                background: $color_white;
+                padding: 5px;
+                border-radius: 3px;
+                -webkit-opacity: 0.5;
+                opacity: 0.5;
+                &:hover {
+                    -webkit-opacity: 1;
+                    opacity: 1;
+                }
+            }
+            &:after {
+                content: '|';
+                margin-left: 6px;
+            }
+            &:last-child {
+                &:after {
+                    content: '';
+                }
+            }
+        }
+    }
+    .btn-responsive-menu {
+        display: none;
+        font-size: 30px;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 9999;
+    }
+    .responsive-menu {
+        display: none;
+    }
+    .gradiente {
+        width: 100%;
+        height: 400px;
+        position: absolute;
+        bottom: 0px;
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+100 */
+        background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+        z-index: 8;
+    }
+    .scroll-down {
+        background: url(../img/scroll-down.png) top center no-repeat;
+        width: 75px;
+        height: 40px;
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        margin-left: -37px;
+        span {
+            font-size: 10px;
+            display: block;
+            text-align: center;
+            margin-top: 45px;
+            font-weight: bold;
+        }
+    }
+}
+.profile-photo-show {
+    -webkit-transition: opacity 2.0s ease-in;
+    -moz-transition: opacity 2.0s ease-in;
+    -o-transition: opacity 2.0s ease-in;
+    transition: opacity 2.0s ease-in;
+    opacity: 1;
+}
+/*
+.profile-photo-white {
+    .language {
+        a{
+            color: $color_white !important;
+            background: $color_black !important;
+        }
+    }
+}
+*/
+/* RESPONSIVE */
+@media screen and (min-width: 320px) and (max-width: 768px) {
+    .profile-photo-white {
+        .btn-responsive-menu {
+            color: $color_white;
+        }
+    }
+    .profile-photo {
+        .photo {
+            margin-top: 150px;
+            width: 150px;
+            height: 150px;
+            background-size: contain;
+            margin-left: -75px;
+        }
+        .my-name {
+            width: 100%;
+            top: 340px;
+            margin-left: initial;
+            left: initial;
+        }
+        .language {
+            display: none;
+            li.ativo {
+                display: inline !important;
+            }
+        }
+        .btn-responsive-menu {
+            display: block;
+        }
+        .responsive-menu {
+            display: block;
+            &.open {
+                display: block;
+                -webkit-transition: height 2.0s ease-in;
+                -moz-transition: height 2.0s ease-in;
+                -o-transition: height 2.0s ease-in;
+                transition: height 2.0s ease-in;
+                height: 100%;
+                .menu {
+                    display: block;
+                }
+                .btn-responsive-menu {
+                    color: #E5E5E5;
+                }
+            }
+            .menu {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 999;
+                background-color: $color_black;
+                // color: $color_white;
+                padding-top: 50px;
+                font-size: $a_26;
+                .logo {
+                    width: 150px;
+                    margin: 0 auto 40px auto;
+                    display: block;
+                    opacity: 0.9;
+                }
+                ul {
+                    text-align: center;
+                    background-color: #E5E5E5;
+                    height: 100%;
+                    padding-top: 30px;
+                    .language {
+                        display: block;
+                        position: relative;
+                        top: initial;
+                        right: initial;
+                        padding-top: 0;
+                        li {
+                            margin: 0;
+                            a {
+                                display: inline;
+                            }
+                        }
+                    }
+                    li {
+                        margin: 30px 0;
+                        text-transform: uppercase;
+                        a {
+                            display: block;
+                            // color: $color_white;
+                        }
+                        &:first-child {
+                            margin-top: 0;
+                        }
+                        span {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
