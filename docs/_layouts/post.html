@@ -1,0 +1,36 @@
+---
+layout: blog
+---
+
+<div class="post">
+  <h1 class="post-title">{{ page.title }}</h1>
+  <h2 class="post-subtitle">{{ page.subtitle }}</h2>
+  <span class="post-date">
+  {{ page.date | date: "%d/%m/%Y" }}
+  
+  {% assign words = content | number_of_words %}
+  {% if words < 360 %}
+    - 1 minuto de leitura
+  {% else %}
+    - {{ words | divided_by:180 }} minutos de leitura
+  {% endif %}
+  </span>
+  
+  {{ content }}
+</div>
+
+<div class="related">
+  <h2>Últimos posts</h2>
+  <ul class="related-posts">
+    {% for post in site.related_posts limit:5 %}
+      <li>
+        <h3>
+          <a href="{{ site.url | prepend: site.baseurl }}{{ post.url }}">
+            {{ post.title }}
+            <small>{{ post.date | date: "%d/%m/%Y" }}</small>
+          </a>
+        </h3>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

@@ -1,0 +1,21 @@
+
+# Site settings
+title: Charlotte
+email: charlotte@labradora.com
+description: > # this means to ignore newlines until "baseurl:"
+  Labradora amável, brincalhona e esfomiada, mas que acima de tudo, feliz! <a href="#">@charlotte</a>
+baseurl: "/labrador-jekyll-theme" # the subpath of your site, e.g. /blog
+url:  # the base hostname & protocol for your site
+logo: "/assets/img/logo.png"
+
+# Build settings
+paginate: 10
+paginate_path: "/blog/page:num/"
+markdown: kramdown
+sass:
+    sass_dir: assets/css/sass
+    style: compressed
+
+gems:
+  - jekyll-gist
+  - jekyll-paginate

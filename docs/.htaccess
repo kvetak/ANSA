@@ -1,0 +1,6 @@
+# <IfModule mod_rewrite.c>
+# RewriteEngine on
+# RewriteCond %{HTTP_HOST} yourdomain\.com [NC]
+# RewriteCond %{REQUEST_URI} ^/$
+# Rewriterule ^(.*)$ http://yourdomain/en [L,R=301]
+# </IfModule>
