@@ -30,6 +30,7 @@ import inet.routing.contract.IIPRouting;
 import inet.routing.contract.IPIMRouting;
 import inet.transportlayer.contract.ITCP;
 import inet.transportlayer.contract.IUDP;
+import ansa.networklayer.isis.ISIS;
 
 import ansa.node.ANSA_NodeBase;
 
@@ -49,6 +50,7 @@ module ANSA_Router extends ANSA_NodeBase
         bool hasVRRP = default(false);
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
+        bool hasISIS = default(false);
 
         string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
         string udpType = default("UDP");
@@ -99,7 +101,7 @@ module ANSA_Router extends ANSA_NodeBase
 
         udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP || hasLISP) {
             parameters:
-            	@display("p=534,180");
+                @display("p=534,180");
         }
 
         pim: <"PIMRouting"> like IPIMRouting if hasPIM {
@@ -109,12 +111,17 @@ module ANSA_Router extends ANSA_NodeBase
 
         eigrp: EigrpProcessDS if hasEIGRP {
             parameters:
-	            @display("p=534,269");
+                @display("p=534,269");
         }
 
         lisp: LISPRouting if hasLISP {
             parameters:
-	            @display("p=427,80");
+                @display("p=427,80");
+        }
+
+        isis: ISIS if hasISIS {
+            parameters:
+                @display("p=689.388,268.284");
         }
 
     connections allowunconnected:
@@ -175,8 +182,13 @@ module ANSA_Router extends ANSA_NodeBase
             eigrp.splitter6In <-- networkLayer.transportOut++ if enableIPv6;
         }
         
+        if hasISIS {
+            isis.lowerLayerOut --> networkLayer.transportIn++ if enableCLNS;
+            isis.lowerLayerIn <-- networkLayer.transportOut++ if enableCLNS;
+        }
+
         if hasVRRP {
-			vrrp.ipOut --> networkLayer.transportIn++ if enableIPv4;
+            vrrp.ipOut --> networkLayer.transportIn++ if enableIPv4;
             vrrp.ipIn <-- networkLayer.transportOut++ if enableIPv4;
         }
 

@@ -36,7 +36,7 @@ module ANSA_MultiRoutingTable like IRoutingTable
         @display("i=block/table");
         bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
         bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
-        bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
+        bool enableCLNS = default(haveClass("inet::CLNSRoutingTable"));
         bool forwarding;
         bool multicastForwarding;
 
@@ -51,7 +51,7 @@ module ANSA_MultiRoutingTable like IRoutingTable
             forwarding = forwarding;
             multicastForwarding = multicastForwarding;
         }
-        clns: <"GenericRoutingTable"> like IRoutingTable if enableCLNS {
+        clns: <"CLNSRoutingTable"> like IRoutingTable if enableCLNS {
             @display("p=50,150;is=s");
             forwarding = forwarding;
             multicastForwarding = multicastForwarding;

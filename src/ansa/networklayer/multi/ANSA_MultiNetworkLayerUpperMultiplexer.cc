@@ -24,7 +24,7 @@
 #include "ansa/networklayer/multi/ANSA_MultiNetworkLayerUpperMultiplexer.h"
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
-#include "inet/networklayer/contract/generic/GenericNetworkProtocolControlInfo.h"
+#include "ansa/networklayer/clns/CLNSControlInfo.h"
 
 
 namespace inet {
@@ -115,7 +115,7 @@ int ANSA_MultiNetworkLayerUpperMultiplexer::getProtocolIndex(
         return (getParentModule()->par("enableIPv4")) ? 0 : -1;
     else if (dynamic_cast<IPv6ControlInfo *>(controlInfo))
         return (getParentModule()->par("enableIPv6")) ? 1 : -1;
-    else if (dynamic_cast<GenericNetworkProtocolControlInfo *>(controlInfo))
+    else if (dynamic_cast<CLNSControlInfo *>(controlInfo))
         return (getParentModule()->par("enableCLNS")) ? 2 : -1;
     else
         throw cRuntimeError("Unknown control info");

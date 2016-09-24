@@ -24,6 +24,7 @@ package ansa.networklayer.multi;
 
 import ansa.linklayer.cdp.CDP;
 import ansa.linklayer.lldp.LLDP;
+import ansa.networklayer.clns.CLNS;
 import inet.networklayer.contract.INetworkLayerLower;
 import inet.networklayer.contract.INetworkLayer;
 import inet.networklayer.multi.MultiNetworkLayerUpperMultiplexer;
@@ -78,7 +79,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         @display("i=block/fork;bgb=665,680");
         bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
         bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
-        bool enableCLNS = default(haveClass("inet::GenericRoutingTable"));
+        bool enableCLNS = default(haveClass("inet::CLNSRoutingTable"));
         bool enableCDP = default(false);
         bool enableLLDP = default(false);
         bool enableANSAConfig = default(false);
@@ -107,7 +108,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         ipv6: <"IPv6NetworkLayer"> like INetworkLayer if enableIPv6 {
             @display("p=300,361");
         }
-        clns: <"GenericNetworkLayer"> like INetworkLayer if enableCLNS {
+        clns: <"CLNSNetworkLayer"> like INetworkLayer if enableCLNS {
             @display("p=500,361");
         }
         upperMultiplexer: ANSA_MultiNetworkLayerUpperMultiplexer {
