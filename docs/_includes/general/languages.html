@@ -1,0 +1,13 @@
+{% assign total_langs = site.data.lang | size %}
+
+{% if total_langs > 1 %}
+	<ul class="language">
+	{% for l in site.data.lang %}
+
+		{% assign actual_lang_name = l[1].name %}
+		{% assign actual_lang_initial = l[0] %}
+		<li class="{% if l[0] == page.lang %}ativo{% endif %}"><a href="{{ site.url | prepend: site.baseurl }}/{{actual_lang_initial}}" title="{{ site.data.lang.[actual_lang_initial].terms[0]['profile_photo'].change }} {{actual_lang_name}}">{{actual_lang_initial}}</a></li>
+
+	{% endfor %}
+	</ul>
+{% endif %} 

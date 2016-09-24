@@ -1,0 +1,64 @@
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+
+    <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+      <meta name="DC.title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+      <meta name="DC.description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description | strip_html }}{% endif %}">
+      <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description | strip_html }}{% endif %}">
+      
+      <!-- OPENGRAPH -->
+      <meta property="og:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+      <meta name="fb:app_id" content="1668638246711351">
+      {% if page.title %}
+      <meta content="article" property="og:type">
+      {% else %}
+      <meta content="website" property="og:type">
+      {% endif %}
+      <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description | strip_html }}{% endif %}">
+      {% if page.url %}
+      <meta content="{{ site.url }}{{ page.url }}" property="og:url">
+      {% endif %}
+      {% if page.date %}
+      <meta content="{{ page.date | date_to_xmlschema }}" property="article:published_time">
+      {% endif %}
+      <meta content="{{ site.url }}/pt/#scrollto-section-2/" property="article:author">
+      {% if page.image %}
+      <meta content="{{ site.url | append: page.image }}" property="og:image">
+      {% else %}
+      <meta content="{{ "/assets/img/icon-1000.png" | prepend: site.url | prepend: site.baseurl  }}" property="og:image">
+      {% endif %}
+      {% if page.categories %}
+        {% for category in page.categories limit:1 %}
+      <meta content="{{ category }}" property="article:section">
+        {% endfor %}
+      {% endif %}
+      {% if page.tags %}
+        {% for tag in page.tags %}
+      <meta content="{{ tag }}" property="article:tag">
+        {% endfor %}
+      {% endif %}
+      <meta name="DC.language" scheme="ISO639-1" content="pt-br">
+
+    <link rel="stylesheet" href="{{ "/assets/css/normalize.css" | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ "/assets/css/section-scroll.css" | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ "/assets/css/font-awesome.min.css" | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ "/assets/css/labrador.css" | prepend: site.baseurl }}">
+
+    <script src="{{ "/assets/js/jquery-2.2.3.min.js" | prepend: site.baseurl }}" ></script>
+    <script src="{{ "/assets/js/jquery.stellar.min.js" | prepend: site.baseurl }}" ></script>
+    <script src="{{ "/assets/js/jquery.section-scroll.js" | prepend: site.baseurl }}" ></script>
+    <script src="{{ "/assets/js/labrador.js" | prepend: site.baseurl }}" ></script>
+
+    <meta name="msapplication-TileImage" content="{{ "/assets/img/icon-144.png" | prepend: site.baseurl }}">
+    <link rel="apple-touch-icon" href="{{ "/assets/img/icon-152.png" | prepend: site.baseurl }}">
+    <link rel="icon" type="image/png" href="{{ "/assets/img/icon.png" | prepend: site.baseurl }}" />
+
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+
+    <meta http-equiv="content-language" content="pt-br">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
