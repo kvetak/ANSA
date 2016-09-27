@@ -20,7 +20,7 @@
     <header>
       <div class="inner">
         <h1>ANSA</h1>
-        <h2>ANSAINET extends INET framework for OMNeT++</h2>
+        <h2>ANSAINET extends INET framework for OMNeT++ since 2008</h2>
         <a href="https://github.com/kvetak/ANSA" class="button" target="_blank"><small>View project's repo</small> GitHub</a>
       </div>
     </header>
@@ -47,15 +47,31 @@
 <li>Play with ANSAINET; run fingerprinted scenarios in <code>/examples/ansa</code> folder and check the source codes in <code>/src/ansa</code> folder.</li>
 </ol>
  
-<p>The most up-to-date branch is <code>ansainet-3.3.0</code>. However, several branches still exist (thou unmainted) in order to provide functionality to deprecated version of OMNeT++ simulator. Among these branches are:</p>
+<p>The most up-to-date branch is <code>ansainet-3.3.0</code> created from INET version 3.3.0 and intended for OMNeT++ 5.0. However, several branches still exist (thou unmainted) in order to provide functionality to deprecated version of OMNeT++ simulator. Among these branches are:</p>
 
 <ul>
-<li>ansainet-3.2.1 for OMNeT++ 5.0</li>
-<li>ansainet-3.0 for OMNeT++ 4.6</li>
-<li>ansainet-2.2 for OMNeT++ 4.4</li>
-<li>ansainet-2.1 for OMNeT++ 4.3</li>
-<li>ansainet-2.0 for OMNeT++ 4.2.1</li>
+<li><a href="https://github.com/kvetak/ANSA/tree/ansainet-3.2.1" target="_blank"><code>ansainet-3.2.1</code></a> for <a href="https://omnetpp.org/omnetpp/download/30-omnet-releases/2307-omnetpp-50-windows" target="_blank">OMNeT++ 5.0</li>
+<li><a href="https://github.com/kvetak/ANSA/tree/ansainet-3.0" target="_blank"><code>ansainet-3.0</code></a> for <a href="https://omnetpp.org/component/jdownloads/download/32-release-older-versions/2291-omnet-4-6-win32-source-ide-mingw-zip" target="_blank">OMNeT++ 4.6</li>
+<li><a href="https://github.com/kvetak/ANSA/tree/ansainet-2.2" target="_blank"><code>ansainet-2.2</code></a> for <a href="https://omnetpp.org/component/jdownloads/download/32-release-older-versions/2270-omnet-4-4-win32-source-ide-mingw-zip" target="_blank">OMNeT++ 4.4</li>
+<li><a href="https://github.com/kvetak/ANSA/tree/ansainet-2.1" target="_blank"><code>ansainet-2.1</code></a> for <a href="https://omnetpp.org/component/jdownloads/download/32-release-older-versions/2248-omnet-4-3-win32-source-ide-mingw-zip" target="_blank">OMNeT++ 4.3</li>
+<li><a href="https://github.com/kvetak/ANSA/tree/ansainet-2.0" target="_blank"><code>ansainet-2.0</code></a> for <a href="https://omnetpp.org/component/jdownloads/download/32-release-older-versions/2242-omnet-4-2-1-win32-source-ide-mingw-zip" target="_blank">OMNeT++ 4.2.1</a></li>
 </ul>
+
+<h3><a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Motivation</h3>
+
+<p>
+Network configuration and network topology can be seen as a program directing the network communication. Once the configuration and the topology are specified one can analyze behavior of a converged network. The complexity of determination of its behavior is comparable to the complexity of checking the correctness of programs. Therefore, verification of the network behavior including reachability and security properties can be solved using a similar approach as typically used for programs. In this project we aim to study automatized methods for verification of networks based on the knowledge of the configuration of network devices and the network topology. Besides the building theoretical framework and methodology of the issue we also plan to deliver tools that demonstrate our approach on real case studies.
+</p>
+
+<p>
+Configurations of active devices define network communication. From this point of view, network behaviour can be predicted and analyzed using configuration files. This project exploits discrete simulation of a network for automated analysis of security properties. Network topology is formally built using nodes (e.g., routers) and links. Nodes include network interfaces with IP addresses, filtering rules (express using ACLs), and routing processes. Using automated simulation with changing configuration (links going up and down), dynamic behaviour of the network is observed and analyzed. The goal is to find out weak points of the network design and configuration. 
+</p>
+
+<p>
+Our research group is mainly focused on automated network simulation and analysis. Usually we are taking Brno University of Technology network as a baseline. We extract static running configurations and dynamic state via SNMP to generate unified XML description of interesting devices and parts of network. Using this description we automatically create an OMNeT++ simulation model and inspect variety of relevant scenarios. Then we apply both topology information and simulation results as inputs to the formal analysis that can suggests us improvements (like to discover ACL rules cross-referencing, find single-point of failures for particular service or review our configuration errors). Our long-term goal is to develop variety of tools that would allow network administrator to simulate computer network behavior under any situation.
+</p>
+
+<img src="images/idea.png">
 
 <h3><a id="references" class="anchor" href="#references" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>References and Results Reproduction</h3>
 
@@ -76,16 +92,6 @@
 <li>VESELÝ Vladimír and ŠVÉDA Miroslav. <i>L2 protocols in OMNeT++</i>. IP Networking 1 -- Theory and Practice. Žilina: Zilina University Publisher, 2012, pp. 37-40. ISBN 978-80-554-0494-3.</li>
 <li>VESELÝ Vladimír, MATOUŠEK Petr and ŠVÉDA Miroslav. <i>Multicast Simulation and Modeling in OMNeT++</i>. In: Proceedings of the IEEE 5th International ICST Conference on Simulation Tools and Techniques. Desenzano del Garda: International Communication Sciences and Technology Association, 2012, pp. 298-301. ISBN 978-1-936968-47-3.</li>
 </ul>
-
-<h3><a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Motivation</h3>
-
-<p>
-Network configuration and network topology can be seen as a program directing the network communication. Once the configuration and the topology are specified one can analyze behavior of a converged network. The complexity of determination of its behavior is comparable to the complexity of checking the correctness of programs. Therefore, verification of the network behavior including reachability and security properties can be solved using a similar approach as typically used for programs. In this project we aim to study automatized methods for verification of networks based on the knowledge of the configuration of network devices and the network topology. Besides the building theoretical framework and methodology of the issue we also plan to deliver tools that demonstrate our approach on real case studies.
-</p>
-
-<p>
-Configurations of active devices define network communication. From this point of view, network behaviour can be predicted and analyzed using configuration files. This project exploits discrete simulation of a network for automated analysis of security properties. Network topology is formally built using nodes (e.g., routers) and links. Nodes include network interfaces with IP addresses, filtering rules (express using ACLs), and routing processes. Using automated simulation with changing configuration (links going up and down), dynamic behaviour of the network is observed and analyzed. The goal is to find out weak points of the network design and configuration. 
-</p>
 
 <h3><a id="contributions" class="anchor" href="#contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributions</h3>
 
@@ -128,7 +134,7 @@ Configurations of active devices define network communication. From this point o
             .tar.gz file
           </a>
 
-          <p class="repo-owner"><a href="https://github.com/kvetak/ANSA"></a> is maintained by <a href="http://www.fit.vutbr.cz/~ivesely/index.php.en" target="_blank">Ing. Vladimír Veselý, Ph.D. a.k.a. <a href="https://github.com/kvetak">kvetak</a>.</p>
+          <p class="repo-owner"><a href="https://github.com/kvetak/ANSA"></a> is maintained by <a href="http://www.fit.vutbr.cz/~ivesely/index.php.en" target="_blank">Ing. Vladimír Veselý, Ph.D.</a> a.k.a. <a href="https://github.com/kvetak">kvetak</a>.</p>
 
           <p><small>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> and uses altered Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</small></p>
         </aside>
