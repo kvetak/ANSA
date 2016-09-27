@@ -444,7 +444,8 @@ a {
   color: #f15a24;
 }
 a:hover {
-  color: lighten(#f15a24,10);
+  filter: brightness(120%);	
+  color: #f15a24;
   text-decoration:underline;
 }
 
@@ -556,7 +557,7 @@ code, pre {
 code {
   padding: 0 3px;
   background-color: #f2f8fc;
-  border: solid 1px #dbe7f3;
+  border: solid 1px #f15a24;
 }
 
 pre {
