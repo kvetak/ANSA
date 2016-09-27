@@ -19,7 +19,7 @@
   <body>
     <header>
       <div class="inner">
-	    <div style="float: left"><img src="images/logo_1.png"></div>
+	    <img src="images/logo_1.png" style="float: left" width="190px">
         <h1>ANSA</h1>
         <h2>ANSAINET extends INET framework for OMNeT++ since 2008</h2>
         <a href="https://github.com/kvetak/ANSA" class="button" target="_blank"><small>View project's repo</small> GitHub</a>
@@ -36,6 +36,11 @@
 </p>
 
 <h3><a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h3>
+
+<p>Basically, we are developing new simulation models for IP based wired network. So far we have created modules for a variety of unicast routing protocols and modules addressing quality of service. During the last years we focused on multicast transfers and relevant signalization protocols; these contributions have been <a href="https://inet.omnetpp.org/2015-06-24-INET-3.0.0-released.html" target="_blank">already accepted to INET</a>. Nowadays, we are interested once again in routing, namely in first-hop redundancy protocols and advanced routing protocols for service providers.</p>
+
+<p>In order to model a router and simulate its behavior, we have created module called <code>ANSARouter</code>. It's functionality, packet processing and printed outputs are loosely inspired by the Cisco look-and-feel. <code>ANSARouter</code> offers programmable functionality (similar to INET's classical <code>NodeBase</code> and <code>Router</code> module designs) including upto triple-stack capabilities (simultaneously operated IPv4, IPv6 and CLNS network layers).</p>
+
 
 <h3><a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation and Branches</h3>
 
@@ -103,10 +108,10 @@ Our research group is mainly focused on automated network simulation and analysi
 <li>SIVÁK, Vladimír. <i>Modelling Cisco Router in Simulation Tool OMNeT++</i>. Brno, 2009. Available from: <a href="http://www.fit.vutbr.cz/study/DP/BP.php?id=7851" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=7851</a>. Bachelor's Thesis. Brno University of Technology, Faculty of Information Technology. 2009-06-16. Supervisor Matoušek Petr.</li>
 <li>SUCHOMEL, Tomáš. <i>OMNeT++ Extension with ACL Filtering Module</i>. Brno, 2009. Available from: <a href="http://www.fit.vutbr.cz/study/DP/BP.php?id=7854" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=7854</a>. Bachelor's Thesis. Brno University of Technology, Faculty of Information Technology. 2009-06-16. Supervisor Matoušek Petr.</li>
 <li>DANKO, Martin. <i>Modelling OSPF Routing Protocols Using OMNeT++ Simulator</i>. Brno, 2009. Available from: <a href="http://www.fit.vutbr.cz/study/DP/BP.php?id=7989" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=7989</a>. Bachelor's Thesis</i>. Brno University of Technology, Faculty of Information Technology. 2009-06-15. Supervisor Ryšavý Ondřej.</li>
-<li>SCHERFEL, Peter. <i>Simulation of Network Behaviour Based on Analysis of Configuration of Active Network Devices</i>. Brno, 2009. Available from: <a href="" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=7852. Bachelor's Thesis. Brno University of Technology, Faculty of Information Technology. 2009-06-16. Supervisor Ryšavý Ondřej.</li>
+<li>SCHERFEL, Peter. <i>Simulation of Network Behaviour Based on Analysis of Configuration of Active Network Devices</i>. Brno, 2009. Available from: <a href="" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=7852</a>. Bachelor's Thesis. Brno University of Technology, Faculty of Information Technology. 2009-06-16. Supervisor Ryšavý Ondřej.</li>
 <li>TLOLKA, Martin. <i>Simulation of EIGRP Protocol Behavior Using OMNeT++</i>. Brno, 2009. Available from: <a href="http://www.fit.vutbr.cz/study/DP/BP.php?id=7853" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=7853</a>. Bachelor's Thesis. Brno University of Technology, Faculty of Information Technology. 2009-06-16. Supervisor Ryšavý Ondřej.</li>
 <li>MATELEŠKO, Petr. <i>Multicast Simulation in OMNeT++</i>. Brno, 2010. Available from: <a href="http://www.fit.vutbr.cz/study/DP/BP.php?id=9485" target="_blank">http://www.fit.vutbr.cz/study/DP/BP.php?id=9485</a>. Bachelor's Thesis. Brno University of Technology, Faculty of Information Technology. 2010-06-17. Supervisor Matoušek Petr.</li>
-<li>DANKO, Martin. <i>Modelling QoS in Computer Networks</i>. Brno, 2012. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2012-06-18. Supervisor Ryšavý Ondřej.</li>
+<li>DANKO, Martin. <i>Modelling QoS in Computer Networks</i>. Brno, 2012. Availabe from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php.en?id=10950" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php.en?id=10950</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2012-06-18. Supervisor Ryšavý Ondřej.</li>
 <li>ČERNÝ, Marek. <i>IPv6 Modelling in OMNeT++</i>. Brno, 2011. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=11892" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=11892</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2011-06-22. Supervisor Veselý Vladimír.</li>
 <li>KRAUS, Zdeněk. <i>Modelling and Reliability Analysis of Campus Network at the BUT</i>. Brno, 2011. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=9468" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=9468</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2011-06-22. Supervisor Veselý Vladimír.</li>
 <li>HRNČIŘÍK, Matej. <i>Modelling of L2 Loop-Preventing Protocols</i>. Brno, 2012. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=14268" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=14268</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2012-06-20. Supervisor Veselý Vladimír.</li>
@@ -118,7 +123,7 @@ Our research group is mainly focused on automated network simulation and analysi
 <li>VÍTEK, Petr. <i>Modelling Gateway Redundancy Protocols</i>. Brno, 2013. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=15253" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=15253</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2013-06-17. Supervisor Veselý Vladimír.</li>
 <li>BLOUDÍČEK, Jan. <i>Modelling of EIGRP Routing Protocol</i>. Brno, 2014. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=16877" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=16695</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2014-06-24. Supervisor Veselý Vladimír.</li>
 <li>MRÁZEK, Jakub. <i>Modelling Link-State OSPFv3 Routing Protocol</i>. Brno, 2014. Available from: <a href="" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=16877</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2014-06-25. Vedoucí práce Veselý Vladimír.</li>
-<li>REK, Vít. <i>Modelling of Babel Routing Protocol</i>. Brno, 2015. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=18727" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=17681. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2015-06-25. Supervisor Veselý Vladimír.</li>
+<li>REK, Vít. <i>Modelling of Babel Routing Protocol</i>. Brno, 2015. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=18727" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=17681</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2015-06-25. Supervisor Veselý Vladimír.</li>
 <li>HOLUŠA, Jan. <i>Modelling HSRP and GLBP Gateway Redundancy Protocols</i>. Brno, 2016. Available from: <a href="" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=18727</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2016-06-21. Supervisor Veselý Vladimír.</li>
 <li>RAJCA, Tomáš. <i>Modelling of L2 Management Protocols</i>. Brno, 2016. Available from: <a href="http://www.fit.vutbr.cz/study/DP/DP.php?id=18685" target="_blank">http://www.fit.vutbr.cz/study/DP/DP.php?id=18685</a>. Master's Thesis. Brno University of Technology, Faculty of Information Technology. 2016-06-21. Supervisor Veselý Vladimír.</li>
 </ul>
