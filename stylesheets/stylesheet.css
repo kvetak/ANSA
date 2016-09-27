@@ -441,10 +441,11 @@ p {
 }
 
 a {
-  color: #2879d0;
+  color: #f15a24;
 }
 a:hover {
-  color: #2268b2;
+  color: lighten(#f15a24,10);
+  text-decoration:underline;
 }
 
 header {
