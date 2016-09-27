@@ -441,11 +441,9 @@ p {
 }
 
 a {
-  color: #f15a24;
+  color: rgba(241, 90, 36, 1);
 }
 a:hover {
-  filter: brightness(120%);	
-  color: #f15a24;
   text-decoration:underline;
 }
 
@@ -556,8 +554,8 @@ code, pre {
 
 code {
   padding: 0 3px;
-  background-color: #f2f8fc;
-  border: solid 1px #f15a24;
+  background-color: rgba(241, 90, 36, 0.05);
+  border: solid 1px rgba(241, 90, 36, 0.25);
 }
 
 pre {
