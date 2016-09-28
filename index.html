@@ -88,13 +88,13 @@
 <ul>
 <li>Locator/Id Separation Protocol (<a href="https://tools.ietf.org/html/rfc6830" target="_blank">LISP</a>)</li>
 </ul>
+<li>Dynamic multicast routing</li>
+<ul>
+<li>Protocol Independnet Multicast - Dense Mode(<a href="https://tools.ietf.org/html/rfc3973" target="_blank">PIM-DM</a>)</li>
+<li>Protocol Independnet Multicast - Sparse Mode(<a href="https://tools.ietf.org/html/rfc2362" target="_blank">PIM-SM</a>)</li>
+<li>Internet Group Management Protocol version 2 and 3(<a href="https://tools.ietf.org/html/rfc2236" target="_blank">IGMPv2</a>)</li>
 </ul>
-
-<p>In order to model a router and simulate its behavior, we have created a module called <code>ANSARouter</code>. Its functionality, packet processing, and printed outputs are loosely inspired by the Cisco look-and-feel. <code>ANSARouter</code> offers programmable functionality (similar to INET's classical <code>NodeBase</code> and <code>Router</code> module designs) including upto triple-stack capabilities (simultaneously operated IPv4, IPv6 and CLNS network layers). Apart from <code>ANSARouter</code>, we have also a similar node for end-stations called <code>ANSAHost</code>.</p>
-
-<p>The current design of <code>ANSARouter</code> is depicted in the figure below. Comparing to original ancestor, <code>ANSARouter</code> has upgraded <code>routingTable</code>, <code>interfaceTable</code> and <code>networkLayer</code> modules</p>
-
-<img src="images/ansarouter.png">
+</ul>
 
 <p>Work in progress for academic year 2016/2017 involves:</p>
 <ul>
@@ -105,6 +105,13 @@
 <li>Comparison of distance-vector protocol efficiency</li>
 <li>IPv6, DHCPv6, SLAAC</li>
 </ul>
+
+<p>In order to model a router and simulate its behavior, we have created a module called <code>ANSARouter</code>. Its functionality, packet processing, and printed outputs are loosely inspired by the Cisco look-and-feel. <code>ANSARouter</code> offers programmable functionality (similar to INET's classical <code>NodeBase</code> and <code>Router</code> module designs) including upto triple-stack capabilities (simultaneously operated IPv4, IPv6 and CLNS network layers). Apart from <code>ANSARouter</code>, we have also a similar node for end-stations called <code>ANSAHost</code>.</p>
+
+<p>The current design of <code>ANSARouter</code> is depicted in the figure below. Comparing to original ancestor, <code>ANSARouter</code> has upgraded <code>routingTable</code>, <code>interfaceTable</code> and <code>networkLayer</code> modules</p>
+
+<img src="images/ansarouter.png">
+
 
 <h3><a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation and Branches</h3>
 
