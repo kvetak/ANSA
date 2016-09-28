@@ -30,45 +30,81 @@
       <div class="inner clearfix">
         <section id="main-content">
           
-<h3><a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to the ANSA project webpages</h3>
+<h3><a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to the ANSA project web pages</h3>
 
 <p>The Automated Network Simulation and Analysis (ANSA) is a long-term project carried by researchers and students at the <a href="https://www.vutbr.cz/en/" target="_blank">Brno University of Technology</a> (namely at <a href="http://www.fit.vutbr.cz/research/groups/nes@fit/" target="_blank">Faculty of Information Technology</a>). It is dedicated to develope a variety of simulation models compatible with RFC specifications or referential implementations, which extend wired IP network framework INET. Subsequently, these tools would allow formal analysis of real networks and their configurations. ANSAINET may be publicly used as the routing/switching baseline for further research initiatives, i.e., in simulations for proving (or disproving) certain aspects of technologies and/or related protocols.
 </p>
 
 <p>There are three significant goals of this project:</p>
 <ol>
-<li>To develop accurate simulation modules (compatible with referential implementations) for a protocols employed in wired networks based on traditional TCP/IP</li>
+<li>To develop accurate simulation modules (compatible with referential implementations) for protocols employed in wired networks based on traditional TCP/IP</li>
 <li>To popularize the usage of simulators as verification and validation tools for network deployments and protocol designs</li>
-<li>Last but not least, to contribute and provide support to OMNeT++ community by integrating popular ANSAINET features into orignal INET</li>
+<li>Last but not least, to contribute and provide support to OMNeT++ community by integrating popular ANSAINET features into original INET</li>
 </ol>
 
 <h3><a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h3>
 
-<p>Basically, we are developing new simulation models for IP based wired network. So far we have created modules for a variety of unicast routing protocols and modules addressing quality of service. During the last years we focused on multicast transfers and relevant signalization protocols; these contributions have been <a href="https://inet.omnetpp.org/2015-06-24-INET-3.0.0-released.html" target="_blank">already accepted to INET</a>. Nowadays, we are interested once again in routing, namely in first-hop redundancy protocols and advanced routing protocols for service providers.</p>
+<p>Basically, we are developing new simulation models for IP-based wired network. So far we have created modules for a variety of unicast routing protocols and modules addressing quality of service. During the last years, we focused on multicast transfers and relevant signalization protocols; these contributions have been <a href="https://inet.omnetpp.org/2015-06-24-INET-3.0.0-released.html" target="_blank">already accepted to INET</a>. Nowadays, we are interested once again in routing, namely in first-hop redundancy protocols and advanced routing protocols for service providers.</p>
 
 <p>Following features/protocols are supported in ANSAINET:</p>
 
 <ul>
+<li>INET improvements</li>
+<ul>
+<li><code>ANSA MultiRoutingTable<code> offers triple-stack routing information storage for IPv4, IPv6 and CLNS</li>
+<li><code>MultiNetworkConfigurator</code> capable of static IPv4/IPv6/CLNS addressing and routing from external XML file</li>
+<li><code>ANSAInterfaceEntry</code> extending interface entry by parameters like delay, load, virtual forwarder and others</li>
+<li>Interconnection between interfaces have labels containing both IPv4 and IPv6 addresses for better clarity in GUI simulation mode</li>
+<li>Gratuitous ARP responses and multicast MAC address processing on Ethernet interface</li>
+<li>Link-layer protocols processing via <code>LowerMultiplexer</code> connections</li>
+</ul>
 <li>First-hop redundancy protocols backing up functionality of default gateway</li>
 <ul>
-<li>Hot Standby Router Protocol (HSRP)</li>
-<li>Virual Router Redundancy Protocol (VRRP)</li>
-<li>Gateway Load-Balancing Protocol (GLBP)</li>
+<li>Hot Standby Router Protocol (<a href="http://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3560/software/release/12-2_52_se/configuration/guide/3560scg/swhsrp.html" target="_blank">HSRP</a>)</li>
+<li>Virtual Router Redundancy Protocol version 2 (<a href="https://tools.ietf.org/html/rfc3768" target="_blank">VRRPv2</a>)</li>
+<li>Gateway Load-Balancing Protocol (<a href="http://www.cisco.com/en/US/docs/ios/12_2t/12_2t15/feature/guide/ft_glbp.html" target="_blank">GLBP</a>)</li>
 </ul>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
+<li>Link-State routing protocols based on Dijkstra's algorithm</li>
+<ul>
+<li>Intermediate System to Intermediate System (<a href="https://tools.ietf.org/html/rfc1142" target="_blank">IS-IS</a>)</li>
+</ul>
+<li>(Hybrid) Distance-Vector routing protocols based on Bellman-Ford algorithm and/or Feasibility Conditions</li>
+<ul>
+<li>Routing Information Protocol version 2 and Next-geneartion version (<a href="https://tools.ietf.org/html/rfc2453" target="_blank">RIPv2</a> and <a href="https://tools.ietf.org/html/rfc2080" target="_blank">RIPng</a>)</li>
+<li>Enhanced Interior Gateway Protocol (<a href="https://tools.ietf.org/html/rfc7868" target="_blank">EIGRP</a>)</li>
+<li>Babel Routing Protocol (<a href="https://tools.ietf.org/html/rfc6126" target="_blank">Babel</a>)</li>
+</ul>
+<li>L2 management protocols</li>
+<ul>
+<li>Cisco Discovery Protocol (<a href="http://www.cisco.com/c/en/us/td/docs/ios-xml/ios/cdp/configuration/15-mt/cdp-15-mt-book/nm-cdp-discover.html" target="_blank">CDP</a>)</li>
+<li>Link-layer Discovery Protocol (<a href="https://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol" target="_blank">LLDP</a>)</li>
+</ul>
+<li>Loop-Preventing on data-link layer</li>
+<ul>
+<li>Spanning Tree Protocol (<a href="https://en.wikipedia.org/wiki/Spanning_Tree_Protocol" target="_blank">STP</a>)</li>
+<li>Transparent Interconnection of Lots of Links (<a href="https://tools.ietf.org/html/rfc7176" target="_blank">TRILL</a>)</li>
+</ul>
+<li>Alternative routing concepts to TCP/IP</li>
+<ul>
+<li>Locator/Id Separation Protocol (<a href="https://tools.ietf.org/html/rfc6830" target="_blank">LISP</a>)</li>
+</ul>
 </ul>
 
-<p>In order to model a router and simulate its behavior, we have created module called <code>ANSARouter</code>. It's functionality, packet processing and printed outputs are loosely inspired by the Cisco look-and-feel. <code>ANSARouter</code> offers programmable functionality (similar to INET's classical <code>NodeBase</code> and <code>Router</code> module designs) including upto triple-stack capabilities (simultaneously operated IPv4, IPv6 and CLNS network layers). Apart from <code>ANSARouter</code>, we have also similar node for end-stations called <code>ANSAHost</code>.</p>
+<p>In order to model a router and simulate its behavior, we have created a module called <code>ANSARouter</code>. Its functionality, packet processing, and printed outputs are loosely inspired by the Cisco look-and-feel. <code>ANSARouter</code> offers programmable functionality (similar to INET's classical <code>NodeBase</code> and <code>Router</code> module designs) including upto triple-stack capabilities (simultaneously operated IPv4, IPv6 and CLNS network layers). Apart from <code>ANSARouter</code>, we have also a similar node for end-stations called <code>ANSAHost</code>.</p>
 
 <p>The current design of <code>ANSARouter</code> is depicted in the figure below. Comparing to original ancestor, <code>ANSARouter</code> has upgraded <code>routingTable</code>, <code>interfaceTable</code> and <code>networkLayer</code> modules</p>
 
 <img src="images/ansarouter.png">
+
+<p>Work in progress for academic year 2016/2017 involves:</p>
+<ul>
+<li>Open-Shortest Path v3 (OSPFv3)</li>
+<li>Multiple Spanning Tree Protocol (MSTP)</li>
+<li>VLAN Trunking Protocol (VTP)</li>
+<li>Open-Shortest Path v3 (OSPFv3)</li>
+<li>Comparison of distance-vector protocol efficiency</li>
+<li>IPv6, DHCPv6, SLAAC</li>
+</ul>
 
 <h3><a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation and Branches</h3>
 
@@ -76,12 +112,12 @@
 
 <ol>
 <li>Just clone or download repository's <a href="https://github.com/kvetak/ANSA" target="_blank">main branch</a>. This branch already contains the newest version of supported INET (currently INET 3.3.0 in folder <code>/src/inet</code>) together with ANSAINET extension <code>/src/ansa</code>.</li>
-<li><a href="https://omnetpp.org/pmwiki/index.php?n=Main.HowToImportSimulations" target="_blank">Import the project</a> into OMNeT++ (it is named <code>ansainet-*</code>, which allows you to have also <code>inet</code> project in the same worspace).</li>
+<li><a href="https://omnetpp.org/pmwiki/index.php?n=Main.HowToImportSimulations" target="_blank">Import the project</a> into OMNeT++ (it is named <code>ansainet-*</code>, which allows you to have also an <code>inet</code> project in the same worspace).</li>
 <li>Compile the project; it will take just a little more time than traditional INET.</li>
 <li>Play with ANSAINET; run fingerprinted scenarios in <code>/examples/ansa</code> folder and check the source codes in <code>/src/ansa</code> folder.</li>
 </ol>
  
-<p>The most up-to-date branch is <code>ansainet-3.3.0</code> created from INET version 3.3.0 and intended for OMNeT++ 5.0. However, several branches still exist (thou unmainted) in order to provide functionality to deprecated version of OMNeT++ simulator. Among these branches are:</p>
+<p>The most up-to-date branch is <code>ansainet-3.3.0</code> created from INET version 3.3.0 and intended for OMNeT++ 5.0. However, several branches still exist (thou unmainted) in order to provide functionality to a deprecated version of OMNeT++ simulator. Among these branches are:</p>
 
 <ul>
 <li><a href="https://github.com/kvetak/ANSA/tree/ansainet-3.2.1" target="_blank"><code>ansainet-3.2.1</code></a> for <a href="https://omnetpp.org/omnetpp/download/30-omnet-releases/2307-omnetpp-50-windows" target="_blank">OMNeT++ 5.0</li>
@@ -94,15 +130,15 @@
 <h3><a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Motivation</h3>
 
 <p>
-Network configuration and network topology can be seen as a program directing the network communication. Once the configuration and the topology are specified one can analyze behavior of a converged network. The complexity of determination of its behavior is comparable to the complexity of checking the correctness of programs. Therefore, verification of the network behavior including reachability and security properties can be solved using a similar approach as typically used for programs. In this project we aim to study automatized methods for verification of networks based on the knowledge of the configuration of network devices and the network topology. Besides the building theoretical framework and methodology of the issue we also plan to deliver tools that demonstrate our approach on real case studies.
+Network configuration and network topology can be seen as a program directing the network communication. Once the configuration and the topology are specified, one can analyze the behavior of a converged network. The complexity of determination of its behavior is comparable to the complexity of checking the correctness of programs. Therefore, verification of the network behavior including reachability and security properties can be solved using a similar approach as typically used for programs. In this project, we aim to study automatized methods for verification of networks based on the knowledge of the configuration of network devices and the network topology. Besides the building theoretical framework and methodology of the issue, we also plan to deliver tools that demonstrate our approach on real case studies.
 </p>
 
 <p>
-Configurations of active devices define network communication. From this point of view, network behaviour can be predicted and analyzed using configuration files. This project exploits discrete simulation of a network for automated analysis of security properties. Network topology is formally built using nodes (e.g., routers) and links. Nodes include network interfaces with IP addresses, filtering rules (express using ACLs), and routing processes. Using automated simulation with changing configuration (links going up and down), dynamic behaviour of the network is observed and analyzed. The goal is to find out weak points of the network design and configuration. 
+Configurations of active devices define network communication. From this point of view, network behavior can be predicted and analyzed using configuration files. This project exploits discrete simulation of a network for automated analysis of security properties. Network topology is formally built using nodes (e.g., routers) and links. Nodes include network interfaces with IP addresses, filtering rules (express using ACLs), and routing processes. Using automated simulation with changing configuration (links going up and down), we can observe and analyze network operation under different scenarios. The goal is to find out weak points of the network design and configuration. 
 </p>
 
 <p>
-Our research group is mainly focused on automated network simulation and analysis. Usually we are taking Brno University of Technology network as a baseline. We extract static running configurations and dynamic state via SNMP to generate unified XML description of interesting devices and parts of network. Using this description we automatically create an OMNeT++ simulation model and inspect variety of relevant scenarios. Then we apply both topology information and simulation results as inputs to the formal analysis that can suggests us improvements (like to discover ACL rules cross-referencing, find single-point of failures for particular service or review our configuration errors). Our long-term goal is to develop variety of tools that would allow network administrator to simulate computer network behavior under any situation.
+Our research group is mainly focused on automated network simulation and analysis. Usually, we are taking Brno University of Technology network as a baseline. We extract static running configurations and dynamic state via SNMP to generate unified XML description of interesting devices and parts of the network. Using this description, we automatically create an OMNeT++ simulation model and inspect variety of relevant scenarios. Then we apply both topology information and simulation results as inputs to the formal analysis that can suggest us improvements (like to discover ACL rules cross-referencing, find single-point of failures for particular service or review our configuration errors).
 </p>
 
 <img src="images/idea.png">
