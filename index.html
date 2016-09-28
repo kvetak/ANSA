@@ -22,7 +22,7 @@
 	    <img src="images/logo_glow.png" style="float: left" width="190px">
         <h1>ANSA</h1>
         <h2>ANSAINET extends INET framework for OMNeT++ since 2008</h2>
-        <a href="https://github.com/kvetak/ANSA" class="button" target="_blank"><small>View project's repo</small> GitHub</a>
+        <a href="https://github.com/kvetak/ANSA" class="button" target="_blank"><small>View project's</small> GitHub repo</a>
       </div>
     </header>
 
@@ -32,14 +32,14 @@
           
 <h3><a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to the ANSA project web pages</h3>
 
-<p>The Automated Network Simulation and Analysis (ANSA) is a long-term project carried by researchers and students at the <a href="https://www.vutbr.cz/en/" target="_blank">Brno University of Technology</a> (namely at <a href="http://www.fit.vutbr.cz/research/groups/nes@fit/" target="_blank">Faculty of Information Technology</a>). It is dedicated to develope a variety of simulation models compatible with RFC specifications or referential implementations, which extend wired IP network framework INET (thus the source code is called ANSAINET). Subsequently, these tools would allow formal analysis of real networks and their configurations. ANSAINET may be publicly used as the routing/switching baseline for further research initiatives, i.e., in simulations for proving (or disproving) certain aspects of technologies and/or related protocols.
+<p>The Automated Network Simulation and Analysis (ANSA) is a long-term project carried by researchers and students at the <a href="https://www.vutbr.cz/en/" target="_blank">Brno University of Technology</a> (namely at <a href="http://www.fit.vutbr.cz/research/groups/nes@fit/" target="_blank">Faculty of Information Technology</a>). It is dedicated to develop a variety of simulation models compatible with RFC specifications or referential implementations, which extend wired IP network framework INET (thus, the source code is called ANSAINET). Subsequently, these modules and related tools could (one day) allow formal analysis of real networks and their configurations. ANSAINET may be publicly used as the routing/switching baseline for further research initiatives, i.e., in simulations proving (or disproving) certain aspects of networking technologies (e.g., finding bottlenecks and single-point of failures, configuration errors, faulty network states, etc.).  
 </p>
 
 <p>There are three significant goals of this project:</p>
 <ol>
 <li>To develop accurate simulation modules (compatible with referential implementations) for protocols employed in wired networks based on traditional TCP/IP</li>
 <li>To popularize the usage of simulators as verification and validation tools for network deployments and protocol designs</li>
-<li>Last but not least, to contribute and provide support to OMNeT++ community by integrating popular ANSAINET features into original INET</li>
+<li>Last but not least, to contribute and to provide support to OMNeT++ community by integrating popular ANSAINET features into original INET</li>
 </ol>
 
 <h3><a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h3>
@@ -108,7 +108,7 @@
 
 <p>In order to model a router and simulate its behavior, we have created a module called <code>ANSARouter</code>. Its functionality, packet processing, and printed outputs are loosely inspired by the Cisco look-and-feel. <code>ANSARouter</code> offers programmable functionality (similar to INET's classical <code>NodeBase</code> and <code>Router</code> module designs) including upto triple-stack capabilities (simultaneously operated IPv4, IPv6 and CLNS network layers). Apart from <code>ANSARouter</code>, we have also a similar node for end-stations called <code>ANSAHost</code>.</p>
 
-<p>The current design of <code>ANSARouter</code> is depicted in the figure below. Comparing to original ancestor, <code>ANSARouter</code> has upgraded <code>routingTable</code>, <code>interfaceTable</code> and <code>networkLayer</code> modules</p>
+<p>The current design of <code>ANSARouter</code> is depicted in the figure below. Comparing to original ancestor, <code>ANSARouter</code> has upgraded <code>routingTable</code>, <code>interfaceTable</code> and <code>networkLayer</code> modules.</p>
 
 <img src="images/ansarouter.png">
 
@@ -119,12 +119,12 @@
 
 <ol>
 <li>Just clone or download repository's <a href="https://github.com/kvetak/ANSA" target="_blank">main branch</a>. This branch already contains the newest version of supported INET (currently INET 3.3.0 in folder <code>/src/inet</code>) together with ANSAINET extension <code>/src/ansa</code>.</li>
-<li><a href="https://omnetpp.org/pmwiki/index.php?n=Main.HowToImportSimulations" target="_blank">Import the project</a> into OMNeT++ (it is named <code>ansainet-*</code>, which allows you to have also an <code>inet</code> project in the same worspace).</li>
+<li><a href="https://omnetpp.org/pmwiki/index.php?n=Main.HowToImportSimulations" target="_blank">Import the project</a> into OMNeT++ (it is named <code>ansainet-*</code>, which allows you to have also separate vanilla <code>inet</code> project in the same worspace).</li>
 <li>Compile the project; it will take just a little more time than traditional INET.</li>
 <li>Play with ANSAINET; run fingerprinted scenarios in <code>/examples/ansa</code> folder and check the source codes in <code>/src/ansa</code> folder.</li>
 </ol>
  
-<p>The most up-to-date branch is <code>ansainet-3.3.0</code> created from INET version 3.3.0 and intended for OMNeT++ 5.0. However, several branches still exist (thou unmainted) in order to provide functionality to a deprecated version of OMNeT++ simulator. Among these branches are:</p>
+<p>The most up-to-date branch is <code>ansainet-3.3.0</code> created from INET version 3.3.0 and intended for OMNeT++ 5.0. However, several branches still exist (thou unmainted) in order to provide functionality to a deprecated versions of OMNeT++ simulator. Among these branches are:</p>
 
 <ul>
 <li><a href="https://github.com/kvetak/ANSA/tree/ansainet-3.2.1" target="_blank"><code>ansainet-3.2.1</code></a> for <a href="https://omnetpp.org/omnetpp/download/30-omnet-releases/2307-omnetpp-50-windows" target="_blank">OMNeT++ 5.0</li>
@@ -157,7 +157,7 @@ Our research group is mainly focused on automated network simulation and analysi
 <ul>
 <li>Gábor Lencse and István Derka, <i>Experimental Analysis of the Fault Tolerance of the PIM-SM IP Multicast Routing Protocol</i> under GNS3 International Journal of Advanced Computer Science and Applications(IJACSA), 5(5), 2014. <a href="http://dx.doi.org/10.14569/IJACSA.2014.050503" target="_blank">http://dx.doi.org/10.14569/IJACSA.2014.050503</a></li>
 <li>Jozef Papán, <i>IP Fast Reroute</i>, Dissertation thesis, University of Žilina, 2016. <a href="http://acmbulletin.fiit.stuba.sk/abstracts/papan2016.pdf" target="_blank">http://acmbulletin.fiit.stuba.sk/abstracts/papan2016.pdf</a></li>
-<li></li>
+<small>
 <li>VESELÝ Vladimír, REK Vít and RYŠAVÝ Ondřej. <i>Enhanced Interior Gateway Routing Protocol with IPv4 and IPv6 Support for OMNeT++</i>. Advances in Intelligent Systems and Computing. 2016, vol. 2015, no. 1, pp. 65-85. ISSN 2194-5357.</li>
 <li>VESELÝ Vladimír and RYŠAVÝ Ondřej. <i>Locator/Id Split Protocol Improvement for High-Availability Environment</i>. In: Proceedings of The Eleventh International Conference on Networking and Services ICNS 2015. Roma: The International Academy, Research and Industry Association, 2015, pp. 61-67. ISBN 978-1-61208-404-6.</li>
 <li>VESELÝ Vladimír and RYŠAVÝ Ondřej. <i>Map-Cache Synchronization and Merged RLOC Probing Study for LISP</i>. The International Journal on Advances in Intelligent Systems. 2015, vol. 2015, no. 34, pp. 494-506. ISSN 1942-2679.</li>
@@ -168,6 +168,7 @@ Our research group is mainly focused on automated network simulation and analysi
 <li>VESELÝ Vladimír, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>IPv6 Unicast and IPv4 Multicast Routing in OMNeT++</i>. In: Proceedings of the IEEE 6th International ICST Conference on Simulation Tools and Techniques. Cannes: International Communication Sciences and Technology Association, 2013, pp. 1-4. ISBN 978-1-936968-47-3.</li>
 <li>VESELÝ Vladimír and ŠVÉDA Miroslav. <i>L2 protocols in OMNeT++</i>. IP Networking 1 -- Theory and Practice. Žilina: Zilina University Publisher, 2012, pp. 37-40. ISBN 978-80-554-0494-3.</li>
 <li>VESELÝ Vladimír, MATOUŠEK Petr and ŠVÉDA Miroslav. <i>Multicast Simulation and Modeling in OMNeT++</i>. In: Proceedings of the IEEE 5th International ICST Conference on Simulation Tools and Techniques. Desenzano del Garda: International Communication Sciences and Technology Association, 2012, pp. 298-301. ISBN 978-1-936968-47-3.</li>
+</small>
 </ul>
 
 <h3><a id="contributions" class="anchor" href="#contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributions</h3>
