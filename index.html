@@ -8,12 +8,98 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
+	<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>	
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
     <title>ANSA by Brno University of Technology</title>
+	
+
+<script type='text/javascript'>//<![CDATA[ 
+$(window).load(function(){
+/**
+************************************************************
+*************** THIS IS THE NAVIGATION CODE ****************
+************************************************************
+**/
+
+$(function() {
+    // Stick the #nav to the top of the window
+    var nav = $('#nav');
+    var navHomeY = nav.offset().top;
+    var isFixed = false;
+    var $w = $(window);
+    $w.scroll(function() {
+        var scrollTop = $w.scrollTop();
+        var shouldBeFixed = scrollTop > navHomeY;
+        if (shouldBeFixed && !isFixed) {
+            nav.css({
+                position: 'fixed',
+                top: 0,
+                left: nav.offset().left,
+                width: nav.width()
+            });
+            isFixed = true;
+        }
+        else if (!shouldBeFixed && isFixed)
+        {
+            nav.css({
+                position: 'static'
+            });
+            isFixed = false;
+        }
+    });
+});
+
+
+/**
+************************************************************
+*** THIS IS THE ADD-IN SMOOTH SCROLLING CODE ***************
+*** (see: http://www.dwuser.com/education/content/quick-guide-adding-smooth-scrolling-to-your-webpages/ )
+************************************************************
+**/
+
+
+/**
+ * SmoothScroll
+ * This helper script created by DWUser.com.  Copyright 2012 DWUser.com.  
+ * Dual-licensed under the GPL and MIT licenses.  
+ * All individual scripts remain property of their copyrighters.
+ * Date: 10-Sep-2012
+ * Version: 1.0.1
+ */
+if (!window['jQuery']) alert('The jQuery library must be included before the smoothscroll.js file.  The plugin will not work propery.');
+
+/**
+ * jQuery.ScrollTo - Easy element scrolling using jQuery.
+ * Copyright (c) 2007-2012 Ariel Flesler - aflesler(at)gmail(dot)com | http://flesler.blogspot.com
+ * Dual licensed under MIT and GPL.
+ * @author Ariel Flesler
+ * @version 1.4.3.1
+ */
+;(function($){var h=$.scrollTo=function(a,b,c){$(window).scrollTo(a,b,c)};h.defaults={axis:'xy',duration:parseFloat($.fn.jquery)>=1.3?0:1,limit:true};h.window=function(a){return $(window)._scrollable()};$.fn._scrollable=function(){return this.map(function(){var a=this,isWin=!a.nodeName||$.inArray(a.nodeName.toLowerCase(),['iframe','#document','html','body'])!=-1;if(!isWin)return a;var b=(a.contentWindow||a).document||a.ownerDocument||a;return/webkit/i.test(navigator.userAgent)||b.compatMode=='BackCompat'?b.body:b.documentElement})};$.fn.scrollTo=function(e,f,g){if(typeof f=='object'){g=f;f=0}if(typeof g=='function')g={onAfter:g};if(e=='max')e=9e9;g=$.extend({},h.defaults,g);f=f||g.duration;g.queue=g.queue&&g.axis.length>1;if(g.queue)f/=2;g.offset=both(g.offset);g.over=both(g.over);return this._scrollable().each(function(){if(e==null)return;var d=this,$elem=$(d),targ=e,toff,attr={},win=$elem.is('html,body');switch(typeof targ){case'number':case'string':if(/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)){targ=both(targ);break}targ=$(targ,this);if(!targ.length)return;case'object':if(targ.is||targ.style)toff=(targ=$(targ)).offset()}$.each(g.axis.split(''),function(i,a){var b=a=='x'?'Left':'Top',pos=b.toLowerCase(),key='scroll'+b,old=d[key],max=h.max(d,a);if(toff){attr[key]=toff[pos]+(win?0:old-$elem.offset()[pos]);if(g.margin){attr[key]-=parseInt(targ.css('margin'+b))||0;attr[key]-=parseInt(targ.css('border'+b+'Width'))||0}attr[key]+=g.offset[pos]||0;if(g.over[pos])attr[key]+=targ[a=='x'?'width':'height']()*g.over[pos]}else{var c=targ[pos];attr[key]=c.slice&&c.slice(-1)=='%'?parseFloat(c)/100*max:c}if(g.limit&&/^\d+$/.test(attr[key]))attr[key]=attr[key]<=0?0:Math.min(attr[key],max);if(!i&&g.queue){if(old!=attr[key])animate(g.onAfterFirst);delete attr[key]}});animate(g.onAfter);function animate(a){$elem.animate(attr,f,g.easing,a&&function(){a.call(this,e,g)})}}).end()};h.max=function(a,b){var c=b=='x'?'Width':'Height',scroll='scroll'+c;if(!$(a).is('html,body'))return a[scroll]-$(a)[c.toLowerCase()]();var d='client'+c,html=a.ownerDocument.documentElement,body=a.ownerDocument.body;return Math.max(html[scroll],body[scroll])-Math.min(html[d],body[d])};function both(a){return typeof a=='object'?a:{top:a,left:a}}})(jQuery);
+
+/**
+ * jQuery.LocalScroll
+ * Copyright (c) 2007-2010 Ariel Flesler - aflesler(at)gmail(dot)com | http://flesler.blogspot.com
+ * Dual licensed under MIT and GPL.
+ * Date: 05/31/2010
+ * @author Ariel Flesler
+ * @version 1.2.8b
+ **/
+;(function(b){function g(a,e,d){var h=e.hash.slice(1),f=document.getElementById(h)||document.getElementsByName(h)[0];if(f){a&&a.preventDefault();var c=b(d.target);if(!(d.lock&&c.is(":animated")||d.onBefore&&!1===d.onBefore(a,f,c))){d.stop&&c._scrollable().stop(!0);if(d.hash){var a=f.id==h?"id":"name",g=b("<a> </a>").attr(a,h).css({position:"absolute",top:b(window).scrollTop(),left:b(window).scrollLeft()});f[a]="";b("body").prepend(g);location=e.hash;g.remove();f[a]=h}c.scrollTo(f,d).trigger("notify.serialScroll",
+[f])}}}var i=location.href.replace(/#.*/,""),c=b.localScroll=function(a){b("body").localScroll(a)};c.defaults={duration:1E3,axis:"y",event:"click",stop:!0,target:window,reset:!0};c.hash=function(a){if(location.hash){a=b.extend({},c.defaults,a);a.hash=!1;if(a.reset){var e=a.duration;delete a.duration;b(a.target).scrollTo(0,a);a.duration=e}g(0,location,a)}};b.fn.localScroll=function(a){function e(){return!!this.href&&!!this.hash&&this.href.replace(this.hash,"")==i&&(!a.filter||b(this).is(a.filter))}
+a=b.extend({},c.defaults,a);return a.lazy?this.bind(a.event,function(d){var c=b([d.target,d.target.parentNode]).filter(e)[0];c&&g(d,c,a)}):this.find("a,area").filter(e).bind(a.event,function(b){g(b,this,a)}).end().end()}})(jQuery);
+
+// Initialize all .smoothScroll links
+jQuery(function($){ $.localScroll({filter:'.smoothScroll'}); });
+
+
+
+});//]]>  
+
+</script>	
   </head>
 
   <body>
@@ -24,11 +110,25 @@
         <h2>ANSAINET extends INET framework for OMNeT++ since 2008</h2>
         <a href="https://github.com/kvetak/ANSA" class="button" target="_blank"><small>View project's</small> GitHub repo</a>
       </div>
-    </header>
+
+	</header>
 
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
+	  <div id="navWrap">
+        <div id="nav">
+			<ul>
+				<li><a href="#welcome" class="smoothScroll">Welcome</a></li>
+				<li><a href="#features" class="smoothScroll">Features</a></li>
+				<li><a href="#install" class="smoothScroll">Installation</a></li>
+				<li><a href="#motivation" class="smoothScroll">Motivation</a></li>
+				<li><a href="#references" class="smoothScroll">References</a></li>
+				<li><a href="#contributions" class="smoothScroll">Contributions</a></li>
+			</ul>    
+			<br class="clearLeft" />
+        </div>
+      </div>		
           
 <h3><a id="welcome" class="anchor" href="#welcome" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to the ANSA project web pages</h3>
 
@@ -49,51 +149,66 @@
 <p>Following features/protocols are supported in ANSAINET:</p>
 
 <ul>
-<li>INET improvements</li>
-<ul>
-<li><code>ANSA MultiRoutingTable</code> offers triple-stack routing information storage for IPv4, IPv6 and CLNS</li>
-<li><code>MultiNetworkConfigurator</code> capable of static IPv4/IPv6/CLNS addressing and routing from external XML file</li>
-<li><code>ANSAInterfaceEntry</code> extending interface entry by parameters like delay, load, virtual forwarder and others</li>
-<li>Interconnection between interfaces have labels containing both IPv4 and IPv6 addresses for better clarity in GUI simulation mode</li>
-<li>Gratuitous ARP responses and multicast MAC address processing on Ethernet interface</li>
-<li>Link-layer protocols processing via <code>LowerMultiplexer</code> connections</li>
-</ul>
-<li>First-hop redundancy protocols backing up functionality of default gateway</li>
-<ul>
-<li>Hot Standby Router Protocol (<a href="http://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3560/software/release/12-2_52_se/configuration/guide/3560scg/swhsrp.html" target="_blank">HSRP</a>)</li>
-<li>Virtual Router Redundancy Protocol version 2 (<a href="https://tools.ietf.org/html/rfc3768" target="_blank">VRRPv2</a>)</li>
-<li>Gateway Load-Balancing Protocol (<a href="http://www.cisco.com/en/US/docs/ios/12_2t/12_2t15/feature/guide/ft_glbp.html" target="_blank">GLBP</a>)</li>
-</ul>
-<li>Link-State routing protocols based on Dijkstra's algorithm</li>
-<ul>
-<li>Intermediate System to Intermediate System (<a href="https://tools.ietf.org/html/rfc1142" target="_blank">IS-IS</a>)</li>
-</ul>
-<li>(Hybrid) Distance-Vector routing protocols based on Bellman-Ford algorithm and/or Feasibility Conditions</li>
-<ul>
-<li>Routing Information Protocol version 2 and Next-geneartion version (<a href="https://tools.ietf.org/html/rfc2453" target="_blank">RIPv2</a> and <a href="https://tools.ietf.org/html/rfc2080" target="_blank">RIPng</a>)</li>
-<li>Enhanced Interior Gateway Protocol (<a href="https://tools.ietf.org/html/rfc7868" target="_blank">EIGRP</a>)</li>
-<li>Babel Routing Protocol (<a href="https://tools.ietf.org/html/rfc6126" target="_blank">Babel</a>)</li>
-</ul>
-<li>L2 management protocols</li>
-<ul>
-<li>Cisco Discovery Protocol (<a href="http://www.cisco.com/c/en/us/td/docs/ios-xml/ios/cdp/configuration/15-mt/cdp-15-mt-book/nm-cdp-discover.html" target="_blank">CDP</a>)</li>
-<li>Link-layer Discovery Protocol (<a href="https://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol" target="_blank">LLDP</a>)</li>
-</ul>
-<li>Loop-Prevention on data-link layer</li>
-<ul>
-<li>Spanning Tree Protocol (<a href="https://en.wikipedia.org/wiki/Spanning_Tree_Protocol" target="_blank">STP</a>)</li>
-<li>Transparent Interconnection of Lots of Links (<a href="https://tools.ietf.org/html/rfc7176" target="_blank">TRILL</a>)</li>
-</ul>
-<li>Alternative routing concepts to TCP/IP</li>
-<ul>
-<li>Locator/Id Separation Protocol (<a href="https://tools.ietf.org/html/rfc6830" target="_blank">LISP</a>)</li>
-</ul>
-<li>Dynamic multicast routing</li>
-<ul>
-<li>Protocol Independnet Multicast - Dense Mode(<a href="https://tools.ietf.org/html/rfc3973" target="_blank">PIM-DM</a>)</li>
-<li>Protocol Independnet Multicast - Sparse Mode(<a href="https://tools.ietf.org/html/rfc2362" target="_blank">PIM-SM</a>)</li>
-<li>Internet Group Management Protocol version 2 and 3 (<a href="https://tools.ietf.org/html/rfc2236" target="_blank">IGMPv2</a> and <a href="https://tools.ietf.org/html/rfc3376" target="_blank">IGMPv3</a>)</li>
-</ul>
+<li>INET improvements
+	<ul>
+		<li><code>ANSA MultiRoutingTable</code> offers triple-stack routing information storage for IPv4, IPv6 and CLNS</li>
+		<li><code>MultiNetworkConfigurator</code> capable of static IPv4/IPv6/CLNS addressing and routing from external XML file</li>
+		<li><code>ANSAInterfaceEntry</code> extending interface entry by parameters like delay, load, virtual forwarder and others</li>
+		<li>Interconnection between interfaces have labels containing both IPv4 and IPv6 addresses for better clarity in GUI simulation mode</li>
+		<li>Gratuitous ARP responses and multicast MAC address processing on Ethernet interface</li>
+		<li>Link-layer protocols processing via <code>LowerMultiplexer</code> connections</li>
+	</ul>
+</li>
+
+<li>First-hop redundancy protocols backing up functionality of default gateway
+	<ul>
+		<li>Hot Standby Router Protocol (<a href="http://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst3560/software/release/12-2_52_se/configuration/guide/3560scg/swhsrp.html" target="_blank">HSRP</a>)</li>
+		<li>Virtual Router Redundancy Protocol version 2 (<a href="https://tools.ietf.org/html/rfc3768" target="_blank">VRRPv2</a>)</li>
+		<li>Gateway Load-Balancing Protocol (<a href="http://www.cisco.com/en/US/docs/ios/12_2t/12_2t15/feature/guide/ft_glbp.html" target="_blank">GLBP</a>)</li>
+	</ul>
+</li>
+
+<li>Link-State routing protocols based on Dijkstra's algorithm
+	<ul>
+		<li>Intermediate System to Intermediate System (<a href="https://tools.ietf.org/html/rfc1142" target="_blank">IS-IS</a>)</li>
+	</ul>
+</li>
+
+<li>(Hybrid) Distance-Vector routing protocols based on Bellman-Ford algorithm and/or Feasibility Conditions
+	<ul>
+		<li>Routing Information Protocol version 2 and Next-geneartion version (<a href="https://tools.ietf.org/html/rfc2453" target="_blank">RIPv2</a> and <a href="https://tools.ietf.org/html/rfc2080" target="_blank">RIPng</a>)</li>
+		<li>Enhanced Interior Gateway Protocol (<a href="https://tools.ietf.org/html/rfc7868" target="_blank">EIGRP</a>)</li>
+		<li>Babel Routing Protocol (<a href="https://tools.ietf.org/html/rfc6126" target="_blank">Babel</a>)</li>
+	</ul>
+</li>
+
+<li>L2 management protocols
+	<ul>
+		<li>Cisco Discovery Protocol (<a href="http://www.cisco.com/c/en/us/td/docs/ios-xml/ios/cdp/configuration/15-mt/cdp-15-mt-book/nm-cdp-discover.html" target="_blank">CDP</a>)</li>
+		<li>Link-layer Discovery Protocol (<a href="https://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol" target="_blank">LLDP</a>)</li>
+	</ul>
+</li>
+
+<li>Loop-Prevention on data-link layer
+	<ul>
+		<li>Spanning Tree Protocol (<a href="https://en.wikipedia.org/wiki/Spanning_Tree_Protocol" target="_blank">STP</a>)</li>
+		<li>Transparent Interconnection of Lots of Links (<a href="https://tools.ietf.org/html/rfc7176" target="_blank">TRILL</a>)</li>
+	</ul>
+</li>
+
+<li>Alternative routing concepts to TCP/IP
+	<ul>
+		<li>Locator/Id Separation Protocol (<a href="https://tools.ietf.org/html/rfc6830" target="_blank">LISP</a>)</li>
+	</ul>
+</li>
+
+<li>Dynamic multicast routing
+	<ul>
+		<li>Protocol Independnet Multicast - Dense Mode (<a href="https://tools.ietf.org/html/rfc3973" target="_blank">PIM-DM</a>)</li>
+		<li>Protocol Independnet Multicast - Sparse Mode (<a href="https://tools.ietf.org/html/rfc2362" target="_blank">PIM-SM</a>)</li>
+		<li>Internet Group Management Protocol version 2 and 3 (<a href="https://tools.ietf.org/html/rfc2236" target="_blank">IGMPv2</a> and <a href="https://tools.ietf.org/html/rfc3376" target="_blank">IGMPv3</a>)</li>
+	</ul>
+</li>	
 </ul>
 
 <p>Work in progress for academic year 2016/2017 involves:</p>
@@ -158,16 +273,16 @@ Our research group is mainly focused on automated network simulation and analysi
 <li>Gábor Lencse and István Derka, <i>Experimental Analysis of the Fault Tolerance of the PIM-SM IP Multicast Routing Protocol</i> under GNS3 International Journal of Advanced Computer Science and Applications(IJACSA), 5(5), 2014. <a href="http://dx.doi.org/10.14569/IJACSA.2014.050503" target="_blank">http://dx.doi.org/10.14569/IJACSA.2014.050503</a></li>
 <li>Jozef Papán, <i>IP Fast Reroute</i>, Dissertation thesis, University of Žilina, 2016. <a href="http://acmbulletin.fiit.stuba.sk/abstracts/papan2016.pdf" target="_blank">http://acmbulletin.fiit.stuba.sk/abstracts/papan2016.pdf</a></li>
 <small>
-<li>VESELÝ Vladimír, REK Vít and RYŠAVÝ Ondřej. <i>Enhanced Interior Gateway Routing Protocol with IPv4 and IPv6 Support for OMNeT++</i>. Advances in Intelligent Systems and Computing. 2016, vol. 2015, no. 1, pp. 65-85. ISSN 2194-5357.</li>
-<li>VESELÝ Vladimír and RYŠAVÝ Ondřej. <i>Locator/Id Split Protocol Improvement for High-Availability Environment</i>. In: Proceedings of The Eleventh International Conference on Networking and Services ICNS 2015. Roma: The International Academy, Research and Industry Association, 2015, pp. 61-67. ISBN 978-1-61208-404-6.</li>
-<li>VESELÝ Vladimír and RYŠAVÝ Ondřej. <i>Map-Cache Synchronization and Merged RLOC Probing Study for LISP</i>. The International Journal on Advances in Intelligent Systems. 2015, vol. 2015, no. 34, pp. 494-506. ISSN 1942-2679.</li>
-<li>VESELÝ Vladimír, BLOUDÍČEK Jan and RYŠAVÝ Ondřej. <i>Enhanced Interior Gateway Routing Protocol for OMNeT++</i>. In: Proceedings of the 4th International Conference on Simulation and Modeling Methodologies, Technologies and Applications (SIMULTECH 2014). Wien: SciTePress - Science and Technology Publications, 2014, pp. 50-58. ISBN 978-989-758-045-1.</li>
-<li>VESELÝ Vladimír, MAREK Marcel, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>Multicast, TRILL and LISP Extensions for INET</i>. International Journal on Advances in Networks and Services. 2014, vol. 2014, no. 4, pp. 240-251. ISSN 1942-2644.</li>
-<li>VESELÝ Vladimír, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>Protocol Independent Multicast in OMNeT++</i>. In: The Tenth International Conference on Networking and Services. 74400 CHAMONIX MONT-BLANC: The International Academy, Research and Industry Association, 2014, pp. 132-137. ISBN 978-1-61208-330-8.</li>
-<li>VESELÝ Vladimír, MATOUŠEK Petr and ŠVÉDA Miroslav. <i>Multicast simulation and modeling in OMNeT++</i>. In: SimuTools '13 Proceedings of the 6th International ICST Conference on Simulation Tools and Techniques. Brussels: International Communication Sciences and Technology Association, 2013, pp. 142-145. ISBN 978-1-4503-2464-9.</li>
-<li>VESELÝ Vladimír, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>IPv6 Unicast and IPv4 Multicast Routing in OMNeT++</i>. In: Proceedings of the IEEE 6th International ICST Conference on Simulation Tools and Techniques. Cannes: International Communication Sciences and Technology Association, 2013, pp. 1-4. ISBN 978-1-936968-47-3.</li>
-<li>VESELÝ Vladimír and ŠVÉDA Miroslav. <i>L2 protocols in OMNeT++</i>. IP Networking 1 -- Theory and Practice. Žilina: Zilina University Publisher, 2012, pp. 37-40. ISBN 978-80-554-0494-3.</li>
-<li>VESELÝ Vladimír, MATOUŠEK Petr and ŠVÉDA Miroslav. <i>Multicast Simulation and Modeling in OMNeT++</i>. In: Proceedings of the IEEE 5th International ICST Conference on Simulation Tools and Techniques. Desenzano del Garda: International Communication Sciences and Technology Association, 2012, pp. 298-301. ISBN 978-1-936968-47-3.</li>
+
+<li>VESELÝ Vladimír, REK Vít and RYŠAVÝ Ondřej. <i>Enhanced Interior Gateway Routing Protocol with IPv4 and IPv6 Support for OMNeT++</i>. Advances in Intelligent Systems and Computing. 2016, vol. 2015, no. 1, pp. 65-85. ISSN 2194-5357. Availabe from: <a href="http://link.springer.com/chapter/10.1007%2F978-3-319-26470-7_4" target="_blank">http://link.springer.com/chapter/10.1007%2F978-3-319-26470-7_4</a>.</li>
+<li>VESELÝ Vladimír and RYŠAVÝ Ondřej. <i>Locator/Id Split Protocol Improvement for High-Availability Environment</i>. In: Proceedings of The Eleventh International Conference on Networking and Services ICNS 2015. Roma: The International Academy, Research and Industry Association, 2015, pp. 61-67. ISBN 978-1-61208-404-6. Availabe from: <a href="https://www.thinkmind.org/download.php?articleid=intsys_v8_n34_2015_22" target="_blank">https://www.thinkmind.org/download.php?articleid=intsys_v8_n34_2015_22</a>.</li>
+<li>VESELÝ Vladimír and RYŠAVÝ Ondřej. <i>Map-Cache Synchronization and Merged RLOC Probing Study for LISP</i>. The International Journal on Advances in Intelligent Systems. 2015, vol. 2015, no. 34, pp. 494-506. ISSN 1942-2679. Availabe from: <a href="http://www.iariajournals.org/intelligent_systems/intsys_v8_n34_2015_paged.pdf" target="_blank">http://www.iariajournals.org/intelligent_systems/intsys_v8_n34_2015_paged.pdf</a>.</li>
+<li>VESELÝ Vladimír, BLOUDÍČEK Jan and RYŠAVÝ Ondřej. <i>Enhanced Interior Gateway Routing Protocol for OMNeT++</i>. In: Proceedings of the 4th International Conference on Simulation and Modeling Methodologies, Technologies and Applications (SIMULTECH 2014). Wien: SciTePress - Science and Technology Publications, 2014, pp. 50-58. ISBN 978-989-758-045-1. Availabe from: <a href="http://ieeexplore.ieee.org/document/7094999/" target="_blank">http://ieeexplore.ieee.org/document/7094999/</a>.</li>
+<li>VESELÝ Vladimír, MAREK Marcel, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>Multicast, TRILL and LISP Extensions for INET</i>. International Journal on Advances in Networks and Services. 2014, vol. 2014, no. 4, pp. 240-251. ISSN 1942-2644. Availabe from: <a href="http://citeseerx.ist.psu.edu/viewdoc/citations;jsessionid=9327E6202E5FCD817A7045122B7B32C1?doi=10.1.1.684.9937" target="_blank">http://citeseerx.ist.psu.edu/viewdoc/citations;jsessionid=9327E6202E5FCD817A7045122B7B32C1?doi=10.1.1.684.9937</a>.</li>
+<li>VESELÝ Vladimír, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>Protocol Independent Multicast in OMNeT++</i>. In: The Tenth International Conference on Networking and Services. 74400 CHAMONIX MONT-BLANC: The International Academy, Research and Industry Association, 2014, pp. 132-137. ISBN 978-1-61208-330-8. Availabe from: <a href="https://www.thinkmind.org/download.php?articleid=icns_2014_6_50_10121" target="_blank">https://www.thinkmind.org/download.php?articleid=icns_2014_6_50_10121</a>.</li>
+<li>VESELÝ Vladimír, MATOUŠEK Petr and ŠVÉDA Miroslav. <i>Multicast simulation and modeling in OMNeT++</i>. In: SimuTools '13 Proceedings of the 6th International ICST Conference on Simulation Tools and Techniques. Brussels: International Communication Sciences and Technology Association, 2013, pp. 142-145. ISBN 978-1-4503-2464-9. Availabe from: <a href="http://dl.acm.org/citation.cfm?id=2512752" target="_blank">http://dl.acm.org/citation.cfm?id=2512752</a>.</li>
+<li>VESELÝ Vladimír, RYŠAVÝ Ondřej and ŠVÉDA Miroslav. <i>IPv6 Unicast and IPv4 Multicast Routing in OMNeT++</i>. In: Proceedings of the IEEE 6th International ICST Conference on Simulation Tools and Techniques. Cannes: International Communication Sciences and Technology Association, 2013, pp. 1-4. ISBN 978-1-936968-47-3. Availabe from: <a href="http://dl.acm.org/citation.cfm?id=2512785" target="_blank">http://dl.acm.org/citation.cfm?id=2512785</a>.</li>
+<li>VESELÝ Vladimír and ŠVÉDA Miroslav. <i>L2 protocols in OMNeT++</i>. IP Networking 1 -- Theory and Practice. Žilina: Zilina University Publisher, 2012, pp. 37-40. ISBN 978-80-554-0494-3. Availabe from: <a href="http://www.fit.vutbr.cz/~ivesely/pubs.php?id=9961" target="_blank">http://www.fit.vutbr.cz/~ivesely/pubs.php?id=9961</a>.</li>
 </small>
 </ul>
 
@@ -204,6 +319,7 @@ Our research group is mainly focused on automated network simulation and analysi
         </section>
 
         <aside id="sidebar">
+		  <p class="repo-owner">source code availalble</p>
           <a href="https://github.com/kvetak/ANSA/zipball/ansainet-3.3.0" class="button">
             <small>Download</small>
             .zip file
@@ -212,10 +328,29 @@ Our research group is mainly focused on automated network simulation and analysi
             <small>Download</small>
             .tar.gz file
           </a>
+		  <hr>
+		  <p class="repo-owner">belongs to</p>
+		  <a href="http://www.fit.vutbr.cz/~ivesely/index.php.en" style="background: transparent url(images/web-button.png) 0 0 no-repeat;" class="button">
+            <small>simulator</small>
+            OMNeT++
+          </a>
+		  <a href="http://www.fit.vutbr.cz/~ivesely/index.php.en" style="background: transparent url(images/web-button.png) 0 0 no-repeat;" class="button">
+            <small>framework</small>
+            INET
+          </a>
+		  
+		  <hr>
+		  <p class="repo-owner">is maintained and managed by<br>Ing. Vladimír Veselý, Ph.D.</p>
+		  <a href="http://www.fit.vutbr.cz/~ivesely/index.php.en" style="background: transparent url(images/button-person.png) 0 0 no-repeat;" class="button">
+            <small>personal profile at</small>
+            university
+          </a>
+		  <a href="https://github.com/kvetak" style="background: transparent url(images/button-person.png) 0 0 no-repeat;" class="button">
+            <small>account profile at</small>
+            GitHub
+          </a>
 
-          <p class="repo-owner"><a href="https://github.com/kvetak/ANSA"></a> is maintained by <br><a href="http://www.fit.vutbr.cz/~ivesely/index.php.en" target="_blank">Ing. Vladimír Veselý, Ph.D.</a> <br>a.k.a. <br><a href="https://github.com/kvetak">kvetak</a></p>
-
-          <p><small>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> and uses altered Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</small></p>
+          <p><small>This page was generated by <a href="https://pages.github.com" target="_blank">GitHub Pages</a>, uses altered Architect theme by <a href="https://twitter.com/jasonlong" target="_blank">Jason Long</a> and smooth-scrolling menu described by <a href="http://www.dwuser.com/education/content/creating-a-floating-navigation-menu/" target="_blank">Nathan Rohler.</small></p>
         </aside>
       </div>
     </div>
