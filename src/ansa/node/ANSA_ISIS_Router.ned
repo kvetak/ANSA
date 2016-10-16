@@ -44,6 +44,6 @@ module ANSA_ISISRouter extends ANSA_Router
         string deviceType = default("Router"); 
         **.deviceId = deviceId;
         **.deviceType = deviceType;
-        **.configFile = default(xmldoc("config.xml"));              
+        **.configFile = configFile;              
 }
 

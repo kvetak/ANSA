@@ -59,7 +59,7 @@
 #include "ansa/networklayer/isis/ISIStypes.h"
 //#include <cmessage.h>
 //#include <crng.h>
-//#include "TRILL.h"
+#include "ansa/linklayer/rbridge/TRILL.h"
 
 
 
@@ -72,8 +72,6 @@ namespace inet {
 #define ISIS_ALL_L1_IS "01:80:c2:00:00:14"
 #define ISIS_ALL_L2_IS "01:80:c2:00:00:15"
 
-//TODO A! Remove after addin TRILL
-#define ALL_IS_IS_RBRIDGES "01-80-C2-00-00-41"
 
 //class ISISLSPPacket;
 /**
@@ -81,8 +79,8 @@ namespace inet {
  */
 class ISIS : public cSimpleModule
 {
-    //TODO A! Uncomment after adding TRILL
-//        friend class TRILL;
+
+        friend class TRILL;
     public:
         enum ISIS_MODE
         {
@@ -96,8 +94,8 @@ class ISIS : public cSimpleModule
         CLNSRoutingTable *clnsrt;
 //        NotificationBoard *nb; /*!< Provides access to the notification board */
 
-        //TODO A! Uncomment after adding TRILL
-//        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
+
+        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
         ISIS_MODE mode;
 
         std::string deviceType; /*!< device type specified in .ned when using this module */
@@ -113,7 +111,7 @@ class ISIS : public cSimpleModule
 //        unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
 //        unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
 
-        int nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
+        TRILLNickname nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
         AdjTab_t adjL1Table; /*!< table of L1 adjacencies */
         AdjTab_t adjL2Table; /*!< table of L2 adjacencies */
         short isType; /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
@@ -363,8 +361,8 @@ class ISIS : public cSimpleModule
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
 //        void setClnsTable(CLNSTable *clnsTable);
-        //TODO A! Uncomment after adding TRILL
-//        void setTrill(TRILL *trill);
+
+        void setTrill(TRILL *trill);
         void setIft(IInterfaceTable *ift);
 //        void setNb(NotificationBoard *nb);
         void subscribeNb(void);

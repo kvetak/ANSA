@@ -2334,17 +2334,17 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
     tmpMAC.getAddressBytes(tmpMACChars);
     //if sender is DIS
     if (msg->getSourceID() == tmpIntf->L1DIS) {
-        //TODO A! TRILL: Uncomment after adding TRILL
-//        TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
-//        trillD->setDesigVlan(tmpDesigVlanId);
+
+        TRILLInterfaceData *trillD = tmpIntf->entry->trillData();
+        trillD->setDesigVlan(tmpDesigVlanId);
         if ((subTLV = this->getSubTLVByType(tmpTLV, TLV_MT_PORT_CAP_APP_FWD))
                 != NULL) {
             //THIS SHOULD BE HANDLED IN electDIS. based on result act accordingly
             //handle Appointed Forwarders subTLV
             //TODO A2 appointed Fwd should be touples <nickname, vlanIdRange> or simply <nickname, vlanId>
 
-            //TODO A! TRILL: Uncomment after adding TRILL
-//            trillD->clearAppointedForwarder();
+
+            trillD->clearAppointedForwarder();
             for (int subLen = 0; subLen < subTLV[1];) {
                 int appointeeNickname = subTLV[subLen + 2]
                         + subTLV[subLen + 1 + 2] * 0xFF;
@@ -2353,10 +2353,10 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
                 int endVlan = subTLV[subLen + 4 + 2]
                         + (subTLV[subLen + 5 + 2] & 0x0F) * 0xFF;
                 subLen += 6;
-                //TODO A! TRILL: Uncomment after adding TRILL
-//                for(int appVlan = startVlan; appVlan <= endVlan; appVlan++){
-//                    trillD->addAppointedForwarder(appVlan, appointeeNickname);
-//                }
+
+                for(int appVlan = startVlan; appVlan <= endVlan; appVlan++){
+                  trillD->addAppointedForwarder(appVlan, appointeeNickname);
+                }
             }
 
         }
@@ -3372,15 +3372,15 @@ void ISIS::setIft(IInterfaceTable *ift) {
     this->ift = ift;
 }
 
-//TODO A! Uncomment after adding TRILL
-//void ISIS::setTrill(TRILL *trill)
-//{
-//    if (trill == NULL)
-//    {
-//        throw cRuntimeError("Got NULL pointer instead of TRILL reference");
-//    }
-//    this->trill = trill;
-//}
+
+void ISIS::setTrill(TRILL *trill)
+{
+    if (trill == NULL)
+    {
+        throw cRuntimeError("Got NULL pointer instead of TRILL reference");
+    }
+    this->trill = trill;
+}
 
 /**
  * Print content of L1 LSP database to EV.
@@ -6998,8 +6998,8 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
          */
 
         if (ie != NULL) {
-            //TODO A! Uncomment after adding TRILL
-//            d = ie->trillData();
+
+            d = ie->trillData();
         }
 
         myTLV = new TLV_t;
@@ -7039,25 +7039,25 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
         //Outer.VLAN
         //TODO B1 what to do when the port is configured to strip VLAN tag
         //TODO B1 in some cases one hello is sent on EVERY VLAN (0 - 4096)
-        //TODO A! Uncomment after adding TRILL
-//        myTLV->value[myTLV->length + 4] = d->getVlanId() & 0xFF;
-//        myTLV->value[myTLV->length + 5] = (d->getVlanId() >> 8) & 0x0F;
-//        //AF
-//        myTLV->value[myTLV->length + 5] |= (d->isAppointedForwarder(d->getVlanId(), this->nickname) << 7);
-//        //AC
-//        myTLV->value[myTLV->length + 5] |= (d->isAccess() << 6);
-//        //VM VLAN Mapping TODO unable to detect so setting false
-//        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 5);
-//        //BY Bypass pseudonode
-//        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 4);
-//
-//        //Design.VLAN
-//        myTLV->value[myTLV->length + 6] = d->getDesigVlan() && 0xFF;
-//        myTLV->value[myTLV->length + 7] = (d->getDesigVlan() >> 8) && 0x0F;
-//        //TR flag
-//        myTLV->value[myTLV->length + 7] |= (d->isTrunk() << 7);
-//
-//        myTLV->length += 8;
+
+        myTLV->value[myTLV->length + 4] = d->getVlanId() & 0xFF;
+        myTLV->value[myTLV->length + 5] = (d->getVlanId() >> 8) & 0x0F;
+        //AF
+        myTLV->value[myTLV->length + 5] |= (d->isAppointedForwarder(d->getVlanId(), this->nickname) << 7);
+        //AC
+        myTLV->value[myTLV->length + 5] |= (d->isAccess() << 6);
+        //VM VLAN Mapping TODO unable to detect so setting false
+        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 5);
+        //BY Bypass pseudonode
+        myTLV->value[myTLV->length + 5] |= (d->isVlanMapping() << 4);
+
+        //Design.VLAN
+        myTLV->value[myTLV->length + 6] = d->getDesigVlan() && 0xFF;
+        myTLV->value[myTLV->length + 7] = (d->getDesigVlan() >> 8) && 0x0F;
+        //TR flag
+        myTLV->value[myTLV->length + 7] |= (d->isTrunk() << 7);
+
+        myTLV->length += 8;
 
         /* Appointed Forwarders Sub-TLV     */
         /*************************************
