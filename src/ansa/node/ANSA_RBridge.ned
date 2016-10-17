@@ -56,38 +56,61 @@ import inet.networklayer.contract.INetworkLayer;
 //import inet.ansa.InterfaceStateManager.InterfaceStateManager;
 import inet.networklayer.common.InterfaceTable;
 //import inet.ansa.routingTable.AnsaInterfaceTable;
-//import inet.ansa.routingTable.AnsaRoutingTable;
+import inet.networklayer.contract.IRoutingTable;
 
 import ansa.networklayer.clns.CLNSTable;
 import ansa.networklayer.isis.ISIS;
 
 import ansa.linklayer.rbridge.TRILL;
-module RBridge
+module ANSA_RBridge
 {
     parameters:
-        @node();
+        
         @display("i=abstract/switch;bgb=589,469,white");
-        xml configFile = default(xmldoc("config.xml"));
+        @networkNode;
+        
         string hostname = default("");
+        
         string deviceId = default("");
         string deviceType = "RBridge";
         xml configData = default(xmldoc("config.xml"));
+        xml configFile = default(xmldoc("config.xml"));
         
         bool hasISIS = true;
         bool hasTRILL = true;
         
-        isis.configData = configData;
-        isis.deviceId = deviceId;
-        isis.deviceType = deviceType;
-        isis.configFile = configFile;
+        bool enableCLNS = default(true);
         
-        trill.configData = configData;
-        trill.deviceId = deviceId;
-        trill.deviceType = deviceType;
-        trill.configFile = configFile;
+        bool forwarding = default(true);
+        bool multicastForwarding = default(false);
+        
+                
+        string routingTableType = default("ANSA_MultiRoutingTable");
+        
+        *.enableCLNS = enableCLNS;
+        
+        routingTable.forwarding = forwarding;
+        routingTable.multicastForwarding = multicastForwarding;
+
+		*.configData = configData;
+		*.deviceId = deviceId;
+		*.deviceType = deviceType;
+		*.configFile = configFile;
+		        
+//        isis.configData = configData;
+//        isis.deviceId = deviceId;
+//        isis.deviceType = deviceType;
+//        isis.configFile = configFile;
+//        
+//        trill.configData = configData;
+//        trill.deviceId = deviceId;
+//        trill.deviceType = deviceType;
+//        trill.configFile = configFile;
         
         
         *.interfaceTableModule = default(absPath(".interfaceTable"));
+        
+        *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
         
     gates:
         inout ethg[];
@@ -139,10 +162,14 @@ module RBridge
 //                @display("p=527,118");
 //        }
 
-        clnsTable: CLNSTable {
+//        clnsTable: CLNSTable {
+//            parameters:
+//                @display("p=277,44;is=l");
+//
+//        }
+        routingTable: <routingTableType> like IRoutingTable if routingTableType != "" {
             parameters:
-                @display("p=277,44;is=l");
-
+                                @display("p=277,44;is=l");
         }
         isis: ISIS {
             parameters:

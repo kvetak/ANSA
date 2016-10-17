@@ -102,8 +102,11 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
 
     if(isisMode == ISIS::L2_ISIS_MODE){
         //TRILL
-        //TODO A! Uncomment after adding TRILL
-//        isisModule->setTrill(TRILLAccess().get());
+
+
+
+      cModule * tmp_trill = isisModule->getParentModule()->getSubmodule("trill");
+              isisModule->setTrill(check_and_cast<TRILL *>(tmp_trill));
 
 
         //RBridgeSplitter
@@ -615,10 +618,10 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, In
         /* By this time the trillData should be initialized.
          * So set the intial appointedForwaders to itself for configured VLAN(s).
          * TODO B5 add RFC reference and do some magic with vlanId, desiredVlanId, enabledVlans, ... */
-        //TODO A! Uncomment after adding TRILL
-//        if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
-//            ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
-//        }
+
+        if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
+            ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
+        }
         newIftEntry.passive = false;
         d->setPassive(false);
         newIftEntry.entry = ie;

@@ -162,7 +162,7 @@ class ISIS : public cSimpleModule
         ISISTimer *periodicL2Timer;
 
         /* TRILL related */
-        std::map<int, ISISPaths_t *> distribTrees;
+        std::map<TRILLNickname, ISISPaths_t *> distribTrees;
 
         /* Init */
         void initISIS(); // main init
@@ -263,8 +263,8 @@ class ISIS : public cSimpleModule
                 ISISPaths_t *ISISTent);
         void bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
 
-        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(int nickname, SystemID systemId);
-        std::vector<SystemID> *getSystemIDsFromTree(int nickname, SystemID systemId);
+        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(TRILLNickname nickname, SystemID systemId);
+        std::vector<SystemID> *getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId);
 
         /* Flags */
         FlagRecQQ_t *getSRMPTPQueue(short circuitType);
@@ -409,7 +409,7 @@ class ISIS : public cSimpleModule
         ISIS_MODE getMode() const;
         unsigned int getISISIftSize();
         void setAtt(bool att);
-        int getNickname() const;
+        TRILLNickname getNickname() const;
     AreaID getAreaId() const;
     void setAreaId(AreaID areaId);
     void setSystemId(const SystemID& systemId);

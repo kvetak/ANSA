@@ -28,6 +28,7 @@
 
 
 #include "inet/networklayer/common/InterfaceEntry.h"
+#include "ansa/linklayer/rbridge/TRILLCommon.h"
 
 namespace inet {
 
@@ -56,7 +57,7 @@ class TRILLInterfaceData : public InterfaceProtocolData
         void setP2p(bool p2p);
         void setTrunk(bool trunk);
         void setVlanId(int vlanId);
-        bool isAppointedForwarder(int vlanId, int nickname); //port is gateIndex
+        bool isAppointedForwarder(int vlanId, TRILLNickname nickname); //port is gateIndex
         bool isEnabled(int vlanId);
         bool isInhibited() const;
         void setInhibited(bool inhibited);
@@ -66,9 +67,9 @@ class TRILLInterfaceData : public InterfaceProtocolData
         void setVlanMapping(bool vlanMapping);
         int getDesiredDesigVlan() const;
         void setDesiredDesigVlan(int desiredDesigVlan);
-        void setAppointedForwarder(int vlanId, int nickname);
-        void addAppointedForwarder(int vlanId, int nickname);
-        void removeAppointedFowrwarder(int vlanId, int nickname);
+        void setAppointedForwarder(int vlanId, TRILLNickname nickname);
+        void addAppointedForwarder(int vlanId, TRILLNickname nickname);
+        void removeAppointedFowrwarder(int vlanId, TRILLNickname nickname);
         void clearAppointedForwarder();
 
     private:
@@ -94,7 +95,7 @@ class TRILLInterfaceData : public InterfaceProtocolData
 
 //        VLANVector appointedForwarder;
 
-        std::map<int, int> appointedForwarder; //map<vlanId, nickname>
+        std::map<int, TRILLNickname> appointedForwarder; //map<vlanId, nickname>
 
 
 };

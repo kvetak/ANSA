@@ -227,15 +227,16 @@ void RBVLANTable::initialize(int stage) {
 
 
 
-        const char *filename = par("configFile");
+//        const char *filename = par("configFile");
+        cXMLElement* configFile = par("configFile");
         const char *rBridgeId = par("rBridgeId");
 
-        if (*filename == '\0' || *rBridgeId == '\0') {
+        if (configFile == nullptr || *rBridgeId == '\0') {
             EV << "Warning: " << this->getParentModule()->getName() << ": Could not config, config filename or rBridgeId is not set, using Default." << std::endl;
             initDefault();
         } else {
             initDefault();
-            //TODO FIX
+            //TODO B2 FIX
 //            VLANTableXMLparser config(this);
 //            config.parse(filename, rBridgeId);
         }

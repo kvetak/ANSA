@@ -48,6 +48,14 @@ class TRILLNickname {
     TRILLNickname(SystemID sysID){
       nickname = sysID.toInt() && 0xFFFF;
     }
+    TRILLNickname(int nick){
+      nickname = nick & 0xFFFF;
+    }
+
+    void set (int nick){
+      nickname = nick & 0xFFFF;
+    }
+
     uint16 getNickname() const {
         return nickname;
     }

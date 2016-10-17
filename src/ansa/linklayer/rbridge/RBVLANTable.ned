@@ -21,8 +21,10 @@ package ansa.linklayer.rbridge;
 simple RBVLANTable
 {
         parameters:
-        string configFile = default("");
+        
         string rBridgeId = default("");
+        xml configData = default(xmldoc("config.xml"));
+        xml configFile = default(xmldoc("config.xml"));
         int portCount;
         @display("i=block/table2,lightblue");
 }

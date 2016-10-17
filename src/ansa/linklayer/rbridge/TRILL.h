@@ -141,7 +141,7 @@ class TRILL : public cSimpleModule
       int portCount;
 
       virtual void initialize(int stage);
-      virtual int numInitStages() const {return 2;}
+      virtual int numInitStages() const {return NUM_INIT_STAGES;}
       virtual void handleMessage(cMessage * msg);
       virtual void finish();
 
@@ -176,7 +176,7 @@ class TRILL : public cSimpleModule
       /* NEW */
       FrameCategory classify(tFrameDescriptor &frameDesc);
 
-      void learnTRILLData(tFrameDescriptor &innerFrameDesc, int ingressNickname);
+      void learnTRILLData(tFrameDescriptor &innerFrameDesc, TRILLNickname ingressNickname);
 
       bool processNative(tFrameDescriptor &frameDesc);
       bool processNativeMultiDest(tFrameDescriptor &frameDesc);

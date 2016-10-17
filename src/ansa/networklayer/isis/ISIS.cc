@@ -603,12 +603,14 @@ void ISIS::initialize(int stage) {
  */
 void ISIS::initISIS() {
 
-  RegisterTransportProtocolCommand *message =   new RegisterTransportProtocolCommand();
-  message->setProtocol(1234);
-  send(message, "lowerLayerOut");
+
 
     if (this->mode == ISIS::L3_ISIS_MODE) {
+      RegisterTransportProtocolCommand *message =   new RegisterTransportProtocolCommand();
+      message->setProtocol(1234);
+      send(message, "lowerLayerOut");
         this->initHello();
+
     } else {
         this->initTRILLHello();
     }
@@ -2346,8 +2348,8 @@ void ISIS::handleTRILLHelloMsg(ISISMessage *inMsg) {
 
             trillD->clearAppointedForwarder();
             for (int subLen = 0; subLen < subTLV[1];) {
-                int appointeeNickname = subTLV[subLen + 2]
-                        + subTLV[subLen + 1 + 2] * 0xFF;
+                TRILLNickname appointeeNickname;
+                appointeeNickname.set(subTLV[subLen + 2] + subTLV[subLen + 1 + 2] * 0xFF);
                 int startVlan = subTLV[subLen + 2 + 2]
                         + (subTLV[subLen + 3 + 2] & 0x0F) * 0xFF;
                 int endVlan = subTLV[subLen + 4 + 2]
@@ -6827,17 +6829,18 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
          * Area Address   * Address Length   *
          *************************************
          */
+        //TODO B1 Area-ID comparison is done for fixed (ISIS-L3-MODE style) Area address length. To fully support RFC 6326 Area-ID verification check would need to incorporate that.
         /* RFC 6326 4.2. */
-        if (this->mode == ISIS::L2_ISIS_MODE) {
-            myTLV = new TLV_t;
-            myTLV->type = AREA_ADDRESS;
-            myTLV->length = 2;
-            myTLV->value = new unsigned char[myTLV->length];
-            myTLV->value[0] = 1;
-            myTLV->value[1] = 0;
-            myTLVVector.push_back(myTLV);
+//        if (this->mode == ISIS::L2_ISIS_MODE) {
+//            myTLV = new TLV_t;
+//            myTLV->type = AREA_ADDRESS;
+//            myTLV->length = 2;
+//            myTLV->value = new unsigned char[myTLV->length];
+//            myTLV->value[0] = 1;
+//            myTLV->value[1] = 0;
+//            myTLVVector.push_back(myTLV);
 
-        } else {
+//        } else {
             //TODO add support for multiple Area Addresses
             myTLV = new TLV_t;
             myTLV->type = AREA_ADDRESS;
@@ -6847,7 +6850,7 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
             this->copyArrayContent(areaID.toTLV(), myTLV->value,
                     ISIS_AREA_ADDRESS_TLV_LEN, 0, 0);
             myTLVVector.push_back(myTLV);
-        }
+//        }
     } else if (tlvType == IS_NEIGHBOURS_HELLO) {
         /* IS Neighbours in state "UP" or "Initializing" eg. ALL in adjTab. */
         /*************************************
@@ -7034,8 +7037,8 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
 
         //TODO B1 Nickname
 //        memcpy(&(myTLV->value[myTLV->length + 2]), &(this->sysId[ISIS_SYSTEM_ID - 3]), 2);
-        myTLV->value[myTLV->length + 2] = this->nickname & 0xFF;
-        myTLV->value[myTLV->length + 3] = (this->nickname >> 8) & 0xFF;
+        myTLV->value[myTLV->length + 2] = this->nickname.getNickname() & 0xFF;
+        myTLV->value[myTLV->length + 3] = (this->nickname.getNickname() >> 8) & 0xFF;
         //Outer.VLAN
         //TODO B1 what to do when the port is configured to strip VLAN tag
         //TODO B1 in some cases one hello is sent on EVERY VLAN (0 - 4096)
@@ -7081,8 +7084,8 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
             myTLV->length += 2; //size of subTLV header (type, length)
             //Appointee Nickname
 
-            myTLV->value[myTLV->length + 2] = this->nickname & 0xFF; //Appointee Nickname
-            myTLV->value[myTLV->length + 2] = (this->nickname >> 8) & 0xFF; //Appointee Nickname
+            myTLV->value[myTLV->length + 2] = this->nickname.getNickname() & 0xFF; //Appointee Nickname
+            myTLV->value[myTLV->length + 2] = (this->nickname.getNickname() >> 8) & 0xFF; //Appointee Nickname
             myTLV->value[myTLV->length + 2] = 1; //Start VLAN
             myTLV->value[myTLV->length + 3] = 0; //Start VLAN
             myTLV->value[myTLV->length + 4] = 1; //End VLAN
@@ -7479,8 +7482,10 @@ void ISIS::spfDistribTrees(short int circuitType) {
             }
         }
 
-        //TODO A1 TRILL
+        //TODO B8 If it works, delete commented line
 //        this->distribTrees.insert(std::make_pair(lspId[ISIS_SYSTEM_ID - 1] + lspId[ISIS_SYSTEM_ID - 2] * 0xFF, ISISPaths));
+        this->distribTrees.insert(std::make_pair(TRILLNickname(lspId.getSystemId()), ISISPaths));
+
 
     }
 
@@ -7715,7 +7720,7 @@ void ISIS::moveToTentDT(ISISCons_t *initial, ISISPath *path, PseudonodeID from,
     }
 }
 
-std::vector<SystemID> *ISIS::getSystemIDsFromTreeOnlySource(int nickname, SystemID systemId) {
+std::vector<SystemID> *ISIS::getSystemIDsFromTreeOnlySource(TRILLNickname nickname, SystemID systemId) {
 
     std::vector<SystemID> *systemIDs = this->getSystemIDsFromTree(nickname, systemId);
 
@@ -7748,12 +7753,11 @@ std::vector<SystemID> *ISIS::getSystemIDsFromTreeOnlySource(int nickname, System
  * @param system-id to look for in distribution tree
  * @return vector of system-ids
  */
-std::vector<SystemID> *ISIS::getSystemIDsFromTree(int nickname,
-        SystemID systemId) {
+std::vector<SystemID> *ISIS::getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId) {
 
     std::vector<SystemID> *systemIDs = new std::vector<SystemID>;
 
-    std::map<int, ISISPaths_t *>::iterator it;
+    std::map<TRILLNickname, ISISPaths_t *>::iterator it;
     if (this->distribTrees.find(nickname) == this->distribTrees.end()) {
         this->spfDistribTrees(L1_TYPE);
     }
@@ -8938,7 +8942,7 @@ void ISIS::setSystemId(const SystemID& systemId) {
     this->systemId = systemId;
 }
 
-int ISIS::getNickname() const {
+TRILLNickname ISIS::getNickname() const {
     return nickname;
 }
 

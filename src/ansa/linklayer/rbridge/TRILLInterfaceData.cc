@@ -181,13 +181,13 @@ void TRILLInterfaceData::setInhibited(bool inhibited)
     this->inhibited = inhibited;
 }
 
-bool TRILLInterfaceData::isAppointedForwarder(int vlanId, int nickname){
+bool TRILLInterfaceData::isAppointedForwarder(int vlanId, TRILLNickname nickname){
 
     //TODO A2
 //    if(nickname == 0){
 //        nickname = getNicknameOfThisRBridge();
 //    }
-    std::map<int, int>::iterator it = this->appointedForwarder.find(vlanId);
+    std::map<int, TRILLNickname>::iterator it = this->appointedForwarder.find(vlanId);
     if(it != this->appointedForwarder.end()){
         if((*it).second == nickname){
             return true;
@@ -204,13 +204,13 @@ bool TRILLInterfaceData::isAppointedForwarder(int vlanId, int nickname){
     return false;
 }
 
-void TRILLInterfaceData::setAppointedForwarder(int vlanId, int nickname)
+void TRILLInterfaceData::setAppointedForwarder(int vlanId, TRILLNickname nickname)
 {
     this->appointedForwarder.clear();
     this->appointedForwarder.insert(std::make_pair(vlanId, nickname));
 }
 
-void TRILLInterfaceData::addAppointedForwarder(int vlanId, int nickname)
+void TRILLInterfaceData::addAppointedForwarder(int vlanId, TRILLNickname nickname)
 {
     this->appointedForwarder.insert(std::make_pair(vlanId, nickname));
 }
@@ -222,9 +222,9 @@ void TRILLInterfaceData::clearAppointedForwarder(){
 /*
  * TODO B2 To be determined if nickname has to match too.
  */
-void TRILLInterfaceData::removeAppointedFowrwarder(int vlanId, int nickname)
+void TRILLInterfaceData::removeAppointedFowrwarder(int vlanId, TRILLNickname nickname)
 {
-    std::map<int, int>::iterator it = this->appointedForwarder.find(vlanId);
+    std::map<int, TRILLNickname>::iterator it = this->appointedForwarder.find(vlanId);
     if(it != this->appointedForwarder.end()){
 
         this->appointedForwarder.erase(it);

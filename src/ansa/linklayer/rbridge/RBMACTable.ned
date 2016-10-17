@@ -19,4 +19,9 @@ simple RBMACTable
 {
     parameters:
         @display("i=block/table2,lightblue");
+        xml configData = default(xmldoc("config.xml"));
+        xml configFile = default(xmldoc("config.xml"));
+        string deviceId = default("");
+        string deviceType = "RBridge";
+        
 }

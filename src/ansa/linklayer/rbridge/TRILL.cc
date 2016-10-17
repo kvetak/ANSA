@@ -25,6 +25,7 @@
 
 #include "ansa/linklayer/rbridge/TRILL.h"
 #include "ansa/networklayer/isis/ISIS.h"
+#include "ansa/networklayer/clns/CLNSControlInfo.h"
 
 #include "inet/common/ModuleAccess.h"
 
@@ -49,7 +50,7 @@ MACAddress TRILL::getBridgeAddress() {
  */
 void TRILL::initialize(int stage) {
 
-    if (stage == 0) {
+    if (stage == INITSTAGE_LOCAL) {
         portCount = gateSize("lowerLayerOut");
 
         /* because ASSERT in handleIncomingFrame() */
@@ -83,7 +84,7 @@ void TRILL::initialize(int stage) {
 
         WATCH(bridgeAddress);
     }
-    else if(stage == 1){
+    else if(stage == INITSTAGE_LINK_LAYER_2){
         /* Only default init for now */
         for(int i = 0; i < ift->getNumInterfaces(); i++){
             InterfaceEntry *ie = ift->getInterface(i);
@@ -149,6 +150,7 @@ void TRILL::handleMessage(cMessage *msg) {
                         break;
 
                     case TRILL::TRILL_CONTROL:
+                    {
                         //TODO B1
 //                        EV <<"Error: L2_ISIS frame shoudn't get send to TRILL (for NOW)" <<endl;
 //                        send(msg->)
@@ -156,12 +158,17 @@ void TRILL::handleMessage(cMessage *msg) {
 //                        ctrl->dup();
 //                        frameDesc.payload->setControlInfo(frameDesc.ctrl->dup());
                         tmpPacket = frameDesc.payload->dup();
-                        tmpPacket->setControlInfo(frameDesc.ctrl->dup());
-                        //TODO A! add CLNS control info CLNS info
-                        send(tmpPacket, "isisOut", frameDesc.rPort);
+                        Ieee802Ctrl* ctrl = dynamic_cast<Ieee802Ctrl*>(frameDesc.ctrl->dup());
+                        int index = tmpPacket->getArrivalGate()->getIndex();
+                        InterfaceEntry* ie = ift->getInterfaceByNetworkLayerGateIndex(index);
+                        ctrl->setInterfaceId(ie->getInterfaceId());
+                        tmpPacket->setControlInfo(ctrl);
+                        //TODO A! add CLNS control info CLNS info -- really?
+                        send(tmpPacket, "isisOut");
 
 //                        processResult = true;
                         break;
+                    }
                     case TRILL::TRILL_OTHER:
                         EV <<"Warning: TRILL: Received TRILL::OTHER frame so discarding" <<endl;
                         break;
@@ -295,6 +302,7 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, EthernetIIFrame *frame, int rP
         tmp.ctrl->setSrc(frame->getSrc());
         tmp.ctrl->setDest(frame->getDest());
         tmp.ctrl->setEtherType(frame->getEtherType());
+        tmp.ctrl->setInterfaceId(rPort);
     }
     tmp.payload = frame->decapsulate();
     tmp.name.insert(0, frame->getName());
@@ -324,6 +332,7 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPo
         tmp.ctrl->setSrc(frame->getSrc());
         tmp.ctrl->setDest(frame->getDest());
         tmp.ctrl->setEtherType(frame->getEtherType());
+        tmp.ctrl->setInterfaceId(rPort);
     }
     tmp.payload = frame->decapsulate();
     tmp.name.insert(0, frame->getName());
@@ -568,7 +577,10 @@ bool TRILL::dispatchTRILLControl(ISISMessage* isisMsg){
 
     //TODO A1 This below is a mess. Get VLAN ID and port/gate index properly.
 
-    int port = isisMsg->getArrivalGate()->getIndex();
+    //TODO A! delete this comment if it works :)
+//    int port = isisMsg->getArrivalGate()->getIndex();
+    CLNSControlInfo* info = static_cast<CLNSControlInfo*>(isisMsg->removeControlInfo());
+    int port = ift->getInterfaceById( info->getInterfaceId())->getNetworkLayerGateIndex();
 
     RBVLANTable::tTagAction action = this->vlanTable->getTag(TRILL_DEFAULT_VLAN, port);
 
@@ -674,32 +686,35 @@ bool TRILL::dispatchNativeRemote(tFrameDescriptor &frameDesc){
      */
 
     //TODO A! Find out what is the Nickname for (in this context) and update CLNS version accordingly
-    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
-    memcpy(tmpSysId, this->isis->systemId, ISIS_SYSTEM_ID);
-    tmpSysId[ISIS_SYSTEM_ID - 2] = frameDesc.record.ingressNickname >> 8;
-    tmpSysId[ISIS_SYSTEM_ID - 1] = frameDesc.record.ingressNickname & 0xFF;
+//    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
+//    memcpy(tmpSysId, this->isis->systemId, ISIS_SYSTEM_ID);
+//    tmpSysId[ISIS_SYSTEM_ID - 2] = frameDesc.record.ingressNickname.getNickname() >> 8;
+//    tmpSysId[ISIS_SYSTEM_ID - 1] = frameDesc.record.ingressNickname.getNickname() & 0xFF;
 
     CLNSAddress clnsAddress;
-    clnsAddress.set(isis->getAreaId().getAreaId(), isis->getSystemId().getSystemId());
+    SystemID tmpSystemID;
+    uint64 tmpInt = isis->getSystemId().getSystemId() >>16;
+    tmpInt = tmpInt << 16;
+    tmpSystemID.setSystemId(tmpInt + frameDesc.record.ingressNickname.getNickname());
+
+    clnsAddress.set(isis->getAreaId().getAreaId(), tmpInt + frameDesc.record.ingressNickname.getNickname());
+
+    CLNSRoute* clnsRoute = clnsTable->findBestMatchingRoute(clnsAddress);
 
     RBVLANTable::tVIDPort egressPort;
-    CLNSAddress nextHopCLNS;
 
-    CLNSRoute* clnsRoute;
-//    clnsRoute = clnsTable->findBestMatchingRoute();
 
-    nextHopCLNS = this->clnsTable->getNextHopForDestination(clnsAddress).toCLNS();
-    if (nextHopCLNS == CLNSAddress::UNSPECIFIED_ADDRESS){
+    if (clnsRoute == nullptr){
         return false;
     }
-    //TODO A! uncomment
-//    egressPort.port = clnsTable->getGateIndexBySystemID(tmpSysId);
-//    frameDesc.portList.push_back(egressPort);
-//    ISISadj *adj = this->isis->getAdjBySystemID(nextHopSysId, L1_TYPE, egressPort.port);
-//    if(egressPort.port < 0 || adj == NULL){
-//        EV <<"dispatchNativeRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
-//        return false;
-//    }
+
+    egressPort.port = clnsRoute->getInterface()->getNetworkLayerGateIndex();
+    frameDesc.portList.push_back(egressPort);
+    ISISadj *adj = this->isis->getAdjBySystemID(SystemID(clnsRoute->getGateway().getSystemId()), L1_TYPE, egressPort.port);
+    if(egressPort.port < 0 || adj == NULL){
+        EV <<"dispatchNativeRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
+        return false;
+    }
 
     /*
      * End of horribly wrong solution
@@ -710,8 +725,8 @@ bool TRILL::dispatchNativeRemote(tFrameDescriptor &frameDesc){
 
     taggedFrame->setKind(frameDesc.payload->getKind());
 //    taggedFrame->setSrc(frameDesc.src); ////will be set by underlying MAC module
-    //TODO A! uncomment
-//    taggedFrame->setDest(adj->mac);//TODO A! this should be MAC of the nextHop
+
+    taggedFrame->setDest(adj->mac);//TODO A! this should be MAC of the nextHop
     taggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
 //    taggedFrame->setVlan(frameDesc.VID);//vlanId is set below during send
     taggedFrame->setEtherType(ETHERTYPE_TRILL);
@@ -724,8 +739,8 @@ bool TRILL::dispatchNativeRemote(tFrameDescriptor &frameDesc){
 
     untaggedFrame->setKind(frameDesc.payload->getKind());
 //    untaggedFrame->setSrc(frameDesc.src);//will be set by underlying MAC module
-    //TODO A! uncomment
-//    untaggedFrame->setDest(adj->mac);
+
+    untaggedFrame->setDest(adj->mac);
     untaggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
     untaggedFrame->setEtherType(ETHERTYPE_TRILL);
 
@@ -773,7 +788,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
      * because we don't have nickname ->systemID mapping, we have to go the hard way
      * ALSO move it to egressNativeRemote
      */
-    //TODO A! uncomment
+    //TODO A1 if it works, delete commented section
 //    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
 //    memcpy(tmpSysId, this->isis->sysId, ISIS_SYSTEM_ID);
 //    tmpSysId[ISIS_SYSTEM_ID - 2] = trillFrame->getEgressRBNickname() >> 8;
@@ -790,6 +805,28 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
 //        return false;
 //    }
 
+    CLNSAddress clnsAddress;
+    SystemID tmpSystemID;
+    uint64 tmpInt = isis->getSystemId().getSystemId() >>16;
+    tmpInt = tmpInt << 16;
+    tmpSystemID.setSystemId(tmpInt + frameDesc.record.ingressNickname.getNickname());
+
+    clnsAddress.set(isis->getAreaId().getAreaId(), tmpInt + frameDesc.record.ingressNickname.getNickname());
+
+    CLNSRoute* clnsRoute = clnsTable->findBestMatchingRoute(clnsAddress);
+
+    RBVLANTable::tVIDPort egressPort;
+    if (clnsRoute == nullptr){
+      return false;
+    }
+
+    egressPort.port = clnsRoute->getInterface()->getNetworkLayerGateIndex();
+    frameDesc.portList.push_back(egressPort);
+    ISISadj *adj = this->isis->getAdjBySystemID(SystemID(clnsRoute->getGateway().getSystemId()), L1_TYPE, egressPort.port);
+    if(egressPort.port < 0 || adj == NULL){
+      EV <<"dispatchNativeRemote: NOOOOOOOOOOOOOOOOOOOOOOOOOOO!";
+      return false;
+    }
     /*
      * End of horribly wrong solution
      */
@@ -799,8 +836,8 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
 
     taggedFrame->setKind(frameDesc.payload->getKind());
 //    taggedFrame->setSrc(frameDesc.src); ////will be set by underlying MAC module
-    //TODO A! uncomment
-//    taggedFrame->setDest(adj->mac);//TODO A! this should be MAC of the nextHop
+
+    taggedFrame->setDest(adj->mac);//TODO A! this should be MAC of the nextHop
     taggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
 //    taggedFrame->setVlan(frameDesc.VID);//vlanId is set below during send
     taggedFrame->setEtherType(ETHERTYPE_TRILL);
@@ -813,8 +850,8 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
 
     untaggedFrame->setKind(frameDesc.payload->getKind());
 //    untaggedFrame->setSrc(frameDesc.src);//will be set by underlying MAC module
-    //TODO A! uncomment
-//    untaggedFrame->setDest(MACAddress(adj->mac));
+
+    untaggedFrame->setDest(MACAddress(adj->mac));
     untaggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
     untaggedFrame->setEtherType(ETHERTYPE_TRILL);
 
@@ -1041,7 +1078,7 @@ void TRILL::learn(TRILL::tFrameDescriptor& frame) {
     }
 }
 
-void TRILL::learnTRILLData(TRILL::tFrameDescriptor &innerFrameDesc, int ingressNickname){
+void TRILL::learnTRILLData(TRILL::tFrameDescriptor &innerFrameDesc, TRILLNickname ingressNickname){
     if(!innerFrameDesc.src.isMulticast()){
         rbMACTable->updateTRILLData(innerFrameDesc.src, innerFrameDesc.VID, ingressNickname);
     }
