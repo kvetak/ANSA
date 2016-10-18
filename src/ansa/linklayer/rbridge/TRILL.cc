@@ -159,9 +159,10 @@ void TRILL::handleMessage(cMessage *msg) {
 //                        frameDesc.payload->setControlInfo(frameDesc.ctrl->dup());
                         tmpPacket = frameDesc.payload->dup();
                         Ieee802Ctrl* ctrl = dynamic_cast<Ieee802Ctrl*>(frameDesc.ctrl->dup());
-                        int index = tmpPacket->getArrivalGate()->getIndex();
-                        InterfaceEntry* ie = ift->getInterfaceByNetworkLayerGateIndex(index);
-                        ctrl->setInterfaceId(ie->getInterfaceId());
+//                        int index = tmpPacket->getArrivalGate()->getIndex();
+//                        index = msg->getArrivalGate()->getIndex();
+//                        InterfaceEntry* ie = ift->getInterfaceByNetworkLayerGateIndex(index);
+//                        ctrl->setInterfaceId(ie->getInterfaceId());
                         tmpPacket->setControlInfo(ctrl);
                         //TODO A! add CLNS control info CLNS info -- really?
                         send(tmpPacket, "isisOut");
@@ -302,8 +303,9 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, EthernetIIFrame *frame, int rP
         tmp.ctrl->setSrc(frame->getSrc());
         tmp.ctrl->setDest(frame->getDest());
         tmp.ctrl->setEtherType(frame->getEtherType());
-        tmp.ctrl->setInterfaceId(rPort);
+
     }
+    tmp.ctrl->setInterfaceId(ift->getInterfaceByNetworkLayerGateIndex(rPort)->getInterfaceId());
     tmp.payload = frame->decapsulate();
     tmp.name.insert(0, frame->getName());
     tmp.rPort = rPort;
@@ -332,8 +334,9 @@ bool TRILL::ingress(TRILL::tFrameDescriptor& tmp, AnsaEtherFrame *frame, int rPo
         tmp.ctrl->setSrc(frame->getSrc());
         tmp.ctrl->setDest(frame->getDest());
         tmp.ctrl->setEtherType(frame->getEtherType());
-        tmp.ctrl->setInterfaceId(rPort);
+
     }
+    tmp.ctrl->setInterfaceId(ift->getInterfaceByNetworkLayerGateIndex(rPort)->getInterfaceId());
     tmp.payload = frame->decapsulate();
     tmp.name.insert(0, frame->getName());
     tmp.rPort = rPort;
