@@ -67,7 +67,8 @@ module ANSA_RBridge
     parameters:
         
         @display("i=abstract/switch;bgb=589,469,white");
-        @networkNode;
+        @networkNode();
+        @labels(node,ethernet-node);
         
         string hostname = default("");
         
@@ -142,11 +143,14 @@ module ANSA_RBridge
         //                promiscuous = true;
         //        }
 //        eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
+
         eth[sizeof(ethg)]: EthernetInterface {
             parameters:
                 @display("p=154,417,row,110;q=l2queue");
                 encapType="EtherEncapDummy";
+                mac.promiscuous=true;
         }
+        
         rBMACTable: RBMACTable {
             @display("p=53,44;is=l");
         }

@@ -809,12 +809,12 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
 //    }
 
     CLNSAddress clnsAddress;
-    SystemID tmpSystemID;
+//    SystemID tmpSystemID;
     uint64 tmpInt = isis->getSystemId().getSystemId() >>16;
     tmpInt = tmpInt << 16;
-    tmpSystemID.setSystemId(tmpInt + frameDesc.record.ingressNickname.getNickname());
+//    tmpSystemID.setSystemId(tmpInt + frameDesc.record.ingressNickname.getNickname());
 
-    clnsAddress.set(isis->getAreaId().getAreaId(), tmpInt + frameDesc.record.ingressNickname.getNickname());
+    clnsAddress.set(isis->getAreaId().getAreaId(), tmpInt + trillFrame->getEgressRBNickname().getNickname());
 
     CLNSRoute* clnsRoute = clnsTable->findBestMatchingRoute(clnsAddress);
 
@@ -1088,7 +1088,7 @@ void TRILL::learnTRILLData(TRILL::tFrameDescriptor &innerFrameDesc, TRILLNicknam
 }
 
 
-
+// TODO A3: Unused? Delete?
 void TRILL::handleIncomingFrame(EthernetIIFrame *frame) {
     // If buffer not full, insert payload frame into buffer and process the frame in parallel.
     cMessage *msg = this->currentMsg;
@@ -1387,9 +1387,9 @@ bool TRILL::processNativeMultiDest(tFrameDescriptor &frameDesc){
     frameDesc.portList.clear(); //clear output ports (obviously)
     frameDesc.portList = this->vlanTable->getPorts(frameDesc.VID); //set it to
     //minimize output ports
-    this->egressNativeLocal(frameDesc);
-    dispatchNativeLocalPort(frameDesc);
-
+    if(this->egressNativeLocal(frameDesc)){
+      dispatchNativeLocalPort(frameDesc);
+    }
 
     frameDesc.portList.clear();
     //send it to all ports with RBridge Adjacency as TRILL-encapsulated

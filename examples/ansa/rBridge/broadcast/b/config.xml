@@ -1,5 +1,43 @@
 <?xml version="1.0"?>
 <Devices>
+<!-- Host1 -->
+	<Host id="Host1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.1</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>192.168.1.2</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Host>
+	<!-- Host2 -->
+	<Host id="Host2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.2</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>0.0.0.0</NetworkAddress>
+					<NetworkMask>0.0.0.0</NetworkMask>
+					<NextHopAddress>192.168.1.1</NextHopAddress>
+					<ExitInterface>eth0</ExitInterface>
+				</Route>
+			</Static>	
+		</Routing>
+	</Host>
 	<RBridge id="rB1">
   		<Routing>
   			<ISIS>

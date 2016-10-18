@@ -30,23 +30,28 @@ network MultiDest1 extends MultiDest_Base
     
 //    configurator.config = xml("");
     submodules:
-                configurator: IPv4NetworkConfigurator {
-            parameters:
-                config = xmldoc("./networkConfig.xml");
-                assignAddresses = false;
-//                assignDisjunctSubnetAddresses = false;
+//                configurator: IPv4NetworkConfigurator {
+//            parameters:
+//                config = xmldoc("./networkConfig.xml");
 //                addStaticRoutes = false;
 //                addDefaultRoutes = false;
-//                addSubnetRoutes = false;
-//                optimizeRoutes = false;
-                addStaticRoutes = false;
-                addDefaultRoutes = false;
-                addSubnetRoutes = false;
-                optimizeRoutes = false;
-                dumpRoutes = true;
-
-                @display("p=42,305");
-        }
+//                
+//                assignAddresses = false;
+////                assignDisjunctSubnetAddresses = false;
+////                addStaticRoutes = false;
+////                addDefaultRoutes = false;
+////                addSubnetRoutes = false;
+////                optimizeRoutes = false;
+//
+////                addStaticRoutes = false;
+////                addDefaultRoutes = false;
+////                addSubnetRoutes = false;
+////                optimizeRoutes = false;
+////                dumpRoutes = true;
+//                
+//
+//                @display("p=42,305");
+//        }
         ansaHost2: ANSA_Host {
             @display("p=113,26");
             gates:

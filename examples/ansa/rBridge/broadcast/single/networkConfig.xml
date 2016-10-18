@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<config>
+  <interface hosts="ansaHost1" names="eth0" address="192.168.1.1" netmask="255.255.255.0" />
+  <interface hosts="ansaHost2" names="eth0" address="192.168.1.2" netmask="255.255.255.0" />
+  
+</config>

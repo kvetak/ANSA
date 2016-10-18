@@ -304,6 +304,7 @@ void ISIS::initialize(int stage) {
 
         devConf->prepareAddress(mode);
         systemId.setSystemId(devConf->getSystemId());
+        nickname.set(systemId.toInt());
         areaID.setAreaId(devConf->getAreaId());
 
         devConf->loadISISConfig(this, this->mode);
@@ -7084,8 +7085,8 @@ std::vector<TLV_t *> ISIS::genTLV(enum TLVtypes tlvType, short circuitType,
             myTLV->length += 2; //size of subTLV header (type, length)
             //Appointee Nickname
 
-            myTLV->value[myTLV->length + 2] = this->nickname.getNickname() & 0xFF; //Appointee Nickname
-            myTLV->value[myTLV->length + 2] = (this->nickname.getNickname() >> 8) & 0xFF; //Appointee Nickname
+            myTLV->value[myTLV->length + 0] = this->nickname.getNickname() & 0xFF; //Appointee Nickname
+            myTLV->value[myTLV->length + 1] = (this->nickname.getNickname() >> 8) & 0xFF; //Appointee Nickname
             myTLV->value[myTLV->length + 2] = 1; //Start VLAN
             myTLV->value[myTLV->length + 3] = 0; //Start VLAN
             myTLV->value[myTLV->length + 4] = 1; //End VLAN
@@ -7755,50 +7756,47 @@ std::vector<SystemID> *ISIS::getSystemIDsFromTreeOnlySource(TRILLNickname nickna
  */
 std::vector<SystemID> *ISIS::getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId) {
 
-    std::vector<SystemID> *systemIDs = new std::vector<SystemID>;
+  std::vector<SystemID> *systemIDs = new std::vector<SystemID>;
 
-    std::map<TRILLNickname, ISISPaths_t *>::iterator it;
-    if (this->distribTrees.find(nickname) == this->distribTrees.end()) {
-        this->spfDistribTrees(L1_TYPE);
-    }
+  std::map<TRILLNickname, ISISPaths_t *>::iterator it;
+  if (this->distribTrees.find(nickname) == this->distribTrees.end()) {
+    this->spfDistribTrees(L1_TYPE);
+  }
 
-    it = this->distribTrees.find(nickname);
-    if (it != this->distribTrees.end()) {
-        for (ISISPaths_t::iterator pathIt = it->second->begin();
-                pathIt != it->second->end(); ++pathIt) {
-            //if destination match -> push_back
-            if ((*pathIt)->to.getSystemId() == systemId) {
-                for (ISISNeighbours_t::iterator neighIt =
-                        (*pathIt)->from.begin();
-                        neighIt != (*pathIt)->from.end(); ++neighIt) {
-//                    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
-//                    memcpy(tmpSysId, (*neighIt)->id, ISIS_SYSTEM_ID);
-                    SystemID tmpSysId;
-                    tmpSysId = (*neighIt)->id;
-                    systemIDs->push_back(tmpSysId);
-
-                }
-
-                continue;
-            }
-            //if at least one "from" match -> push_back (actually there should be only one "from")
-            for (ISISNeighbours_t::iterator neighIt = (*pathIt)->from.begin();
-                    neighIt != (*pathIt)->from.end(); ++neighIt) {
-                if (systemId == (*neighIt)->id) {
-//                    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
-//                    memcpy(tmpSysId, (*pathIt)->to, ISIS_SYSTEM_ID);
-                    SystemID tmpSysId;
-                    tmpSysId = (*neighIt)->id;
-                    systemIDs->push_back(tmpSysId);
-
-                    break;
-                }
-            }
+  it = this->distribTrees.find(nickname);
+  if (it != this->distribTrees.end()) {
+    for (ISISPaths_t::iterator pathIt = it->second->begin();  pathIt != it->second->end(); ++pathIt) {
+      //if destination match -> push_back
+      if ((*pathIt)->to.getSystemId() == systemId) {
+        for (ISISNeighbours_t::iterator neighIt = (*pathIt)->from.begin(); neighIt != (*pathIt)->from.end(); ++neighIt) {
+          //                    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
+          //                    memcpy(tmpSysId, (*neighIt)->id, ISIS_SYSTEM_ID);
+          SystemID tmpSysId;
+          tmpSysId = (*neighIt)->id;
+          systemIDs->push_back(tmpSysId);
 
         }
 
+        continue;
+      }
+      //if at least one "from" match -> push_back (actually there should be only one "from")
+      for (ISISNeighbours_t::iterator neighIt = (*pathIt)->from.begin();
+          neighIt != (*pathIt)->from.end(); ++neighIt) {
+        if (systemId == (*neighIt)->id) {
+          //                    unsigned char *tmpSysId = new unsigned char[ISIS_SYSTEM_ID];
+          //                    memcpy(tmpSysId, (*pathIt)->to, ISIS_SYSTEM_ID);
+          SystemID tmpSysId;
+          tmpSysId = (*pathIt)->to.getSystemId();
+          systemIDs->push_back(tmpSysId);
+
+          break;
+        }
+      }
+
     }
-    return systemIDs;
+
+  }
+  return systemIDs;
 
 }
 
