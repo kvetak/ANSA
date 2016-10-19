@@ -39,5 +39,23 @@
 		</Interfaces>
 	</Router>		
 	
+	<!-- 	PC1		-->
+	<Host id="PC1">
+		<Interfaces>
+			<Interface name="eth0">			
+				<IPAddress>192.168.1.10</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>	
 
+	<!-- 	PC2		-->
+	<Host id="PC2">
+		<Interfaces>
+			<Interface name="eth0">				
+				<IPAddress>192.168.1.11</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>
 </Devices>
