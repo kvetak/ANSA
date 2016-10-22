@@ -63,11 +63,11 @@
 namespace inet {
 //#include "stp/stp.h"
 //#include "ISIS.h"
-class ISIS;
+class ISISMain;
 
 class TRILL : public cSimpleModule
 {
-        friend class ISIS;
+        friend class ISISMain;
     public:
         TRILL();
         virtual ~TRILL();
@@ -132,7 +132,7 @@ class TRILL : public cSimpleModule
       RBMACTable * rbMACTable;
       RBVLANTable * vlanTable;
 //      Stp * spanningTree;
-      ISIS* isis;
+      ISISMain* isis;
       CLNSRoutingTable *clnsTable;
       IInterfaceTable *ift;
 

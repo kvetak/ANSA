@@ -15,8 +15,8 @@
 //
 
 /**
- * @file ISIS.h
- * @author Matej Hrncirik, Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @file ISISMain.h
+ * @author Matej Hrncirik, Marcel Marek (mailto:imarek@fit.vutbr.cz), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 7.3.2012
  * @brief Header file for IS-IS module.
  * @detail Header file for IS-IS module.
@@ -24,8 +24,8 @@
  *       FIXED BUG-ID: 1; A known bug emerged with new version of INET. If gateIndex doesn't corresponds to interface's index in interface table, things go terribly wrong.
  */
 
-#ifndef ISIS_H_
-#define ISIS_H_
+#ifndef ISISMAIN_H_
+#define ISISMAIN_H_
 
 #include <algorithm>
 #include <stdlib.h>
@@ -77,7 +77,7 @@ namespace inet {
 /**
  * Single class providing all functionality of whole module.
  */
-class ISIS : public cSimpleModule
+class ISISMain : public cSimpleModule
 {
 
         friend class TRILL;
@@ -354,8 +354,8 @@ class ISIS : public cSimpleModule
         virtual void receiveChangeNotification(int category, cObject *details);
 
     public:
-        ISIS();
-        virtual ~ISIS(); //destructor
+        ISISMain();
+        virtual ~ISISMain(); //destructor
 //        void insertIft(InterfaceEntry *entry, cXMLElement *device); //insert new interface to vector
         void appendISISInterface(ISISinterface iface);
         void printAdjTable(); //print adjacency table
@@ -417,4 +417,4 @@ class ISIS : public cSimpleModule
 
 }//end namespace inet
 
-#endif /* ISIS_H_ */
+#endif /* ISISMAIN_H_ */

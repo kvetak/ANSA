@@ -23,8 +23,8 @@
  * @todo Z9
  */
 
+#include "ansa/networklayer/isis/ISISMain.h"
 #include "ansa/linklayer/rbridge/TRILL.h"
-#include "ansa/networklayer/isis/ISIS.h"
 #include "ansa/networklayer/clns/CLNSControlInfo.h"
 
 #include "inet/common/ModuleAccess.h"
@@ -72,8 +72,8 @@ void TRILL::initialize(int stage) {
 //        cModule * tmp_stp = getParentModule()->getSubmodule("stp");
 //        spanningTree = check_and_cast<Stp *>(tmp_stp);
 
-        cModule * tmp_isis = getParentModule()->getSubmodule("isis");
-        isis = check_and_cast<ISIS *>(tmp_isis);
+        cModule * tmp_isis = getParentModule()->getSubmodule("isis")->getSubmodule("isisMain");
+        isis = check_and_cast<ISISMain *>(tmp_isis);
 
 //        clnsTable = CLNSTableAccess().get();
         clnsTable = check_and_cast<CLNSRoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("clns"));

@@ -45,11 +45,11 @@ ISISDeviceConfigurator::ISISDeviceConfigurator(const char* devId,
   device = configFile;
 }
 
-void ISISDeviceConfigurator::prepareAddress( ISIS::ISIS_MODE isisMode)
+void ISISDeviceConfigurator::prepareAddress( ISISMain::ISIS_MODE isisMode)
 {
   if (device == NULL)
   {
-    if (isisMode == ISIS::L3_ISIS_MODE)
+    if (isisMode == ISISMain::L3_ISIS_MODE)
     {
       /* In L3 mode we need configuration (at least NET) */
       throw cRuntimeError("No configuration found for this device");
@@ -60,7 +60,7 @@ void ISISDeviceConfigurator::prepareAddress( ISIS::ISIS_MODE isisMode)
   cXMLElement *isisRouting = getIsisRouting(device);
   if (isisRouting == NULL)
   {
-    if (isisMode == ISIS::L3_ISIS_MODE)
+    if (isisMode == ISISMain::L3_ISIS_MODE)
     {
       throw cRuntimeError("Can't find ISISRouting in config file");
     }
@@ -85,7 +85,7 @@ void ISISDeviceConfigurator::prepareAddress( ISIS::ISIS_MODE isisMode)
 
     }
   }
-  else if (isisMode == ISIS::L2_ISIS_MODE)
+  else if (isisMode == ISISMain::L2_ISIS_MODE)
   {
     generateNetAddr();
   }
@@ -96,23 +96,23 @@ void ISISDeviceConfigurator::prepareAddress( ISIS::ISIS_MODE isisMode)
 }
 /* IS-IS related methods */
 
-void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode){
+void ISISDeviceConfigurator::loadISISConfig(ISISMain *isisModule, ISISMain::ISIS_MODE isisMode){
 
     /* init module pointers based on isisMode */
 
-    if(isisMode == ISIS::L2_ISIS_MODE){
+    if(isisMode == ISISMain::L2_ISIS_MODE){
         //TRILL
 
 
 
-      cModule * tmp_trill = isisModule->getParentModule()->getSubmodule("trill");
+      cModule * tmp_trill = isisModule->getParentModule()->getParentModule()->getSubmodule("trill");
               isisModule->setTrill(check_and_cast<TRILL *>(tmp_trill));
 
 
         //RBridgeSplitter
 
 
-    }else if(isisMode == ISIS::L3_ISIS_MODE){
+    }else if(isisMode == ISISMain::L3_ISIS_MODE){
         //IPv4
         //TODO C2
 
@@ -139,7 +139,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
 
 
     if(device == NULL){
-        if(isisMode == ISIS::L3_ISIS_MODE){
+        if(isisMode == ISISMain::L3_ISIS_MODE){
             /* In L3 mode we need configuration (at least NET) */
             throw cRuntimeError("No configuration found for this device");
         }else{
@@ -154,7 +154,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
     cXMLElement *isisRouting = getIsisRouting(device);
     if (isisRouting == NULL)
     {
-        if(isisMode == ISIS::L3_ISIS_MODE){
+        if(isisMode == ISISMain::L3_ISIS_MODE){
             throw cRuntimeError("Can't find ISISRouting in config file");
         }
     }
@@ -176,7 +176,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
             }
 
         }
-        else if (isisMode == ISIS::L2_ISIS_MODE)
+        else if (isisMode == ISISMain::L2_ISIS_MODE)
         {
             generateNetAddr();
         }
@@ -186,7 +186,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE is
         }
 
         //IS type {L1(L2_ISIS_MODE) | L2 | L1L2 default for L3_ISIS_MODE}
-        if (isisMode == ISIS::L2_ISIS_MODE)
+        if (isisMode == ISISMain::L2_ISIS_MODE)
         {
             isisModule->setIsType(L1_TYPE);
         }
@@ -410,7 +410,7 @@ void ISISDeviceConfigurator::generateNetAddr() {
 }
 
 
-void ISISDeviceConfigurator::loadISISInterfacesConfig(ISIS *isisModule){
+void ISISDeviceConfigurator::loadISISInterfacesConfig(ISISMain *isisModule){
 
     cXMLElement *interfaces = NULL;
     if (device != NULL)
@@ -442,7 +442,7 @@ void ISISDeviceConfigurator::loadISISInterfacesConfig(ISIS *isisModule){
 }
 
 
-void ISISDeviceConfigurator::loadISISCoreDefaultConfig(ISIS *isisModule){
+void ISISDeviceConfigurator::loadISISCoreDefaultConfig(ISISMain *isisModule){
     //NET
 
           isisModule->generateNetAddr();
@@ -515,7 +515,7 @@ void ISISDeviceConfigurator::loadISISCoreDefaultConfig(ISIS *isisModule){
 }
 
 
-void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *ie){
+void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule, InterfaceEntry *ie){
 
     ISISInterfaceData *d = new ISISInterfaceData();
         ISISinterface newIftEntry;
@@ -533,7 +533,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, In
         /* Interface is NOT enabled by default. If ANY IS-IS related property is configured on interface then it's enabled. */
         newIftEntry.ISISenabled = false;
         d->setIsisEnabled(false);
-        if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
+        if(isisModule->getMode() == ISISMain::L2_ISIS_MODE){
             newIftEntry.ISISenabled = true;
             d->setIsisEnabled(true);
         }
@@ -619,7 +619,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, In
          * So set the intial appointedForwaders to itself for configured VLAN(s).
          * TODO B5 add RFC reference and do some magic with vlanId, desiredVlanId, enabledVlans, ... */
 
-        if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
+        if(isisModule->getMode() == ISISMain::L2_ISIS_MODE){
             ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
         }
         newIftEntry.passive = false;
@@ -632,7 +632,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISIS *isisModule, In
 }
 
 
-void ISISDeviceConfigurator::loadISISInterfaceConfig(ISIS *isisModule, InterfaceEntry *entry, cXMLElement *intElement){
+void ISISDeviceConfigurator::loadISISInterfaceConfig(ISISMain *isisModule, InterfaceEntry *entry, cXMLElement *intElement){
 
 
     if(intElement == NULL){
@@ -651,7 +651,7 @@ void ISISDeviceConfigurator::loadISISInterfaceConfig(ISIS *isisModule, Interface
 
     /* Interface is NOT enabled by default. If ANY IS-IS related property is configured on interface then it's enabled. */
     newIftEntry.ISISenabled = false;
-    if(isisModule->getMode() == ISIS::L2_ISIS_MODE){
+    if(isisModule->getMode() == ISISMain::L2_ISIS_MODE){
         newIftEntry.ISISenabled = true;
     }
 

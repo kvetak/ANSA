@@ -25,15 +25,15 @@
 #define ANSA_NETWORKLAYER_ISIS_ISISDEVICECONFIGURATOR_H_
 
 
+#include "ansa/networklayer/isis/ISISMain.h"
 #include <omnetpp.h>
 
 #include "inet/common/INETDefs.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/networklayer/isis/ISIStypes.h"
-#include "ansa/networklayer/isis/ISIS.h"
 
 namespace inet {
-class ISIS;
+class ISISMain;
 
 class ISISDeviceConfigurator {
 private:
@@ -59,10 +59,10 @@ private:
    /////////////////////////
          //    ISIS related     //
          /////////////////////////
-         void loadISISCoreDefaultConfig(ISIS *isisModule);
-         void loadISISInterfaceDefaultConfig(ISIS *isisModule, InterfaceEntry *entry);
-         void loadISISInterfacesConfig(ISIS *isisModule);
-         void loadISISInterfaceConfig(ISIS *isisModule, InterfaceEntry *entry, cXMLElement *intElement);
+         void loadISISCoreDefaultConfig(ISISMain *isisModule);
+         void loadISISInterfaceDefaultConfig(ISISMain *isisModule, InterfaceEntry *entry);
+         void loadISISInterfacesConfig(ISISMain *isisModule);
+         void loadISISInterfaceConfig(ISISMain *isisModule, InterfaceEntry *entry, cXMLElement *intElement);
          const char *getISISNETAddress(cXMLElement *isisRouting);
          short int getISISISType(cXMLElement *isisRouting);
          int getISISL1HelloInterval(cXMLElement *isisRouting);
@@ -105,11 +105,11 @@ public:
      * @param isisModule [in]
      * @param isisMode [in] L2_ISIS_MODE or L3_ISIS_MODE
      */
-    void loadISISConfig(ISIS *isisModule, ISIS::ISIS_MODE isisMode);
+    void loadISISConfig(ISISMain *isisModule, ISISMain::ISIS_MODE isisMode);
     uint64 getAreaId() const;
     uint64 getSystemId() const;
 
-    void prepareAddress( ISIS::ISIS_MODE isisMode);
+    void prepareAddress( ISISMain::ISIS_MODE isisMode);
 };
 
 } /* namespace inet */
