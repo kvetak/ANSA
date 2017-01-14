@@ -1,0 +1,124 @@
+<Devices>
+	<Router id="Router1">
+		<Routing6>
+			<OSPFv3>
+				<Process id="100">
+					<RouterID>10.10.10.1</RouterID>
+				</Process>
+			</OSPFv3>
+		</Routing6>
+		
+		<Interfaces>
+			<Interface name="eth0">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<RouterPriority>120</RouterPriority>
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+					</Instance>
+				</Process>
+			</Interface>
+			<Interface name="eth1">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+						<PassiveInterface>True</PassiveInterface>
+					</Instance>
+				</Process>
+			</Interface>
+		</Interfaces>
+	</Router>
+	
+	<Router id="Router2">
+		<Routing6>
+			<OSPFv3>
+				<Process id="1">
+					<RouterID>10.10.10.2</RouterID>
+				</Process>
+			</OSPFv3>
+		</Routing6>
+
+		<Interfaces>
+			<Interface name="eth0">
+				<Process id="1">
+					<Instance AF="IPv4">
+						<RouterPriority>100</RouterPriority>
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+					</Instance>
+				</Process>
+			</Interface>
+			<Interface name="eth1">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+						<PassiveInterface>True</PassiveInterface>
+					</Instance>
+				</Process>
+			</Interface>
+		</Interfaces>
+	</Router>
+	
+	<Router id="Router3">
+		<Routing6>
+			<OSPFv3>
+				<Process id="100">
+					<RouterID>10.10.10.3</RouterID>
+				</Process>
+			</OSPFv3>
+		</Routing6>
+		
+		<Interfaces>
+			<Interface name="eth0">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+					</Instance>
+				</Process>
+			</Interface>
+			<Interface name="eth1">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+						<PassiveInterface>True</PassiveInterface>
+					</Instance>
+				</Process>
+			</Interface>
+		</Interfaces>
+	</Router>
+	
+	<Router id="Router4">
+		<Routing6>
+			<OSPFv3>
+				<Process id="100">
+					<RouterID>10.10.10.4</RouterID>
+				</Process>
+			</OSPFv3>
+		</Routing6>
+		
+		<Interfaces>
+			<Interface name="eth0">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+					</Instance>
+				</Process>
+			</Interface>
+			<Interface name="eth1">
+				<Process id="100">
+					<Instance AF="IPv4">
+						<InterfaceType>Broadcast</InterfaceType>
+						<Area>0.0.0.0</Area>
+						<PassiveInterface>True</PassiveInterface>
+					</Instance>
+				</Process>
+			</Interface>
+		</Interfaces>
+	</Router>
+</Devices>
+

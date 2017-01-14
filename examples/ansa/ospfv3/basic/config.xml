@@ -1,0 +1,54 @@
+<Devices>
+	<Router id="Router1">
+		<Routing6>
+			<OSPFv3>
+				<Process id="100">
+					<RouterID>10.10.10.1</RouterID>
+				</Process>
+				<Process id="101">
+					<RouterID>10.10.10.1</RouterID>
+				</Process>
+				<Process id="102">
+					<RouterID>10.10.10.1</RouterID>
+				</Process>
+			</OSPFv3>
+		</Routing6>
+		
+		<Interfaces>
+			<Interface name="eth0">
+				<Process id="100">
+					<Instance AF="IPv6">
+						<Area>0.0.0.0</Area>
+					</Instance>
+					<Instance AF="IPv4">
+						<Area>0.0.0.0</Area>
+					</Instance>
+				</Process>
+			</Interface>
+		</Interfaces>
+	</Router>
+	
+	<Router id="Router2">
+		<Routing6>
+			<OSPFv3>
+				<Process id="1">
+					<RouterID>10.10.10.2</RouterID>
+				</Process>
+			</OSPFv3>
+		</Routing6>
+
+		<Interfaces>
+			<Interface name="eth0" routerPriority="10">
+				<Process id="1">
+					<Instance AF="IPv6">
+						<Area>0.0.0.0</Area>
+					</Instance>
+					<Instance AF="IPv4">
+						<Area>0.0.0.0</Area>
+					</Instance>
+				</Process>
+			</Interface>
+		</Interfaces>
+	</Router>
+</Devices>
+
