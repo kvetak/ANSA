@@ -1,6 +1,6 @@
 package inet.examples.ansa.ospfv3.basic;
 
-import ansa.node.ANSA_OSPFv3Router;
+import ansa.node.ANSA_OSPFv3_Router;
 import ansa.node.ANSA_Router;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
@@ -28,13 +28,13 @@ network basic
                             "</config>");
                 @display("p=140,62");
         }
-        Router1: ANSA_OSPFv3Router {
+        Router1: ANSA_OSPFv3_Router {
             parameters:
                 @display("p=63,223");
             gates:
                 ethg[1];
         }
-        Router2: ANSA_OSPFv3Router {
+        Router2: ANSA_OSPFv3_Router {
             parameters:
                 @display("p=373,223");
             gates:

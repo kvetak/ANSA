@@ -27,6 +27,7 @@ import ansa.routing.lisp.LISPRouting;
 import inet.applications.contract.IUDPApp;
 import inet.routing.contract.IBGPRouting;
 import inet.routing.contract.IIPRouting;
+import inet.routing.contract.IIPDualRouting;
 import inet.routing.contract.IPIMRouting;
 import inet.transportlayer.contract.ITCP;
 import inet.transportlayer.contract.IUDP;
@@ -51,6 +52,7 @@ module ANSA_Router extends ANSA_NodeBase
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
         bool hasISIS = default(false);
+        bool hasOSPFv3 = default(false);
 
         string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
         string udpType = default("UDP");
@@ -124,6 +126,11 @@ module ANSA_Router extends ANSA_NodeBase
                 @display("p=689.388,268.284");
         }
 
+        ospfv3: <"OSPFv3Routing"> like IIPDualRouting if hasOSPFv3 {
+            parameters:
+                @display("p=689,331");
+        }
+
     connections allowunconnected:
         if hasOSPF {
             ospf.ipOut --> networkLayer.transportIn++;
@@ -181,7 +188,7 @@ module ANSA_Router extends ANSA_NodeBase
             eigrp.splitter6Out --> networkLayer.transportIn++ if enableIPv6;
             eigrp.splitter6In <-- networkLayer.transportOut++ if enableIPv6;
         }
-        
+
         if hasISIS {
             isis.lowerLayerOut --> networkLayer.transportIn++ if enableCLNS;
             isis.lowerLayerIn <-- networkLayer.transportOut++ if enableCLNS;
@@ -197,13 +204,20 @@ module ANSA_Router extends ANSA_NodeBase
             udp.appIn++ <-- lisp.udpContrOut;
             udp.appOut++ --> lisp.udpDataIn;
             udp.appIn++ <-- lisp.udpDataOut;
-            
+
             udp.ipOut --> networkLayer.transportIn++;
             udp.ipIn <-- networkLayer.transportOut++;
-                        
+
             networkLayer.transportOut++ --> lisp.ipv4In if enableIPv4;
             networkLayer.transportIn++ <-- lisp.ipv4Out if enableIPv4;
             networkLayer.transportOut++ --> lisp.ipv6In if enableIPv6;
             networkLayer.transportIn++ <-- lisp.ipv6Out if enableIPv6;
+        }
+
+        if hasOSPFv3 {
+            networkLayer.transportOut++ --> ospfv3.ipIn if enableIPv4;
+            networkLayer.transportIn++ <-- ospfv3.ipOut if enableIPv4;
+            networkLayer.transportOut++ --> ospfv3.ip6In if enableIPv6;
+            networkLayer.transportIn++ <-- ospfv3.ip6Out if enableIPv6;
         }
 }

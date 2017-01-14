@@ -1,7 +1,7 @@
 package inet.examples.ansa.ospfv3.small;
 
 import ansa.node.ANSA_Host;
-import ansa.node.ANSA_OSPFv3Router;
+import ansa.node.ANSA_OSPFv3_Router;
 import ansa.node.ANSA_Router;
 import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
@@ -34,13 +34,13 @@ network small
                             "</config>");
                 @display("p=211,62");
         }
-        Router1: ANSA_OSPFv3Router {
+        Router1: ANSA_OSPFv3_Router {
             parameters:
                 @display("p=180,223");
             gates:
                 ethg[2];
         }
-        Router2: ANSA_OSPFv3Router {
+        Router2: ANSA_OSPFv3_Router {
             parameters:
                 @display("p=405,223");
             gates:
@@ -49,12 +49,12 @@ network small
         etherSwitch: EtherSwitch {
             @display("p=292,179");
         }
-        Router4: ANSA_OSPFv3Router {
+        Router4: ANSA_OSPFv3_Router {
             @display("p=405,140");
             gates:
                 ethg[2];
         }
-        Router3: ANSA_OSPFv3Router {
+        Router3: ANSA_OSPFv3_Router {
             @display("p=180,140");
             gates:
                 ethg[2];
