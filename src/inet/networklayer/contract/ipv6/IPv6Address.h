@@ -91,6 +91,12 @@ class INET_API IPv6Address
 
     /** Link-local MANET routers multicast address */
     static const IPv6Address LL_MANET_ROUTERS;
+
+    /** OSPF multicast address for listening */
+    static const IPv6Address ALL_OSPF_ROUTERS_MCAST;
+
+    /** OSPF designated routers */
+    static const IPv6Address ALL_OSPF_DESIGNATED_ROUTERS_MCAST;
     //@}
 
     /**
