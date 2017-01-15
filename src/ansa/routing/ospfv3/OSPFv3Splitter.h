@@ -16,6 +16,7 @@
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 #include "inet/networklayer/contract/INetworkProtocolControlInfo.h"
 #include "inet/networklayer/contract/ipv4/IPv4Address.h"
+#include "inet/networklayer/contract/ipv6/IPv6Address.h"
 
 #include "ansa/routing/ospfv3/OSPFv3Packet_m.h"
 #include "ansa/routing/ospfv3/process/OSPFv3Process.h"

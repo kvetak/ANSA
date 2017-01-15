@@ -41,13 +41,13 @@ std::ostream& operator<<(std::ostream& os, const CDPOptionODRDef& e)
 
 TLVOptionBase *CDPUpdate::findOptionByType(short int optionType, int index)
 {
-    int i = options_var.findByType(optionType, index);
+    int i = options.findByType(optionType, index);
     return i >= 0 ? &getOption(i) : nullptr;
 }
 
 void CDPUpdate::addOption(TLVOptionBase *opt, int atPos)
 {
-    options_var.add(opt, atPos);
+    options.add(opt, atPos);
 }
 
 short CDPUpdate::getOptionLength(TLVOptionBase *opt)
@@ -135,8 +135,8 @@ uint16_t CDPUpdate::countChecksum()
     std::string a;
     const char *serialized;
 
-    a += version_var;
-    a += (char)ttl_var;
+    a += version;
+    a += (char)ttl;
     for(unsigned int i=0; i < this->getOptionArraySize(); i++)
     {
         TLVOptionBase *opt = &this->getOption(i);

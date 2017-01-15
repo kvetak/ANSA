@@ -45,7 +45,7 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     /**
      * Returns number of TLV in message.
      */
-    virtual unsigned int getOptionArraySize() const { return options_var.size(); }
+    virtual unsigned int getOptionArraySize() const { return options.size(); }
     /**
      * Get length of the specified option.
      */
@@ -65,7 +65,7 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     /**
      * Returns option
      */
-    virtual TLVOptionBase& getOption(unsigned int k) { return *check_and_cast<TLVOptionBase *>(&(options_var.at(k))); }
+    virtual TLVOptionBase& getOption(unsigned int k) { return *check_and_cast<TLVOptionBase *>(&(options.at(k))); }
     virtual const TLVOptionBase& getOption(unsigned int k) const { return const_cast<LLDPUpdate*>(this)->getOption(k); }
 
     /**
