@@ -110,6 +110,7 @@ void OSPFv3Splitter::parseConfig(cXMLElement* routingConfig, cXMLElement* intCon
 
         //register all interfaces to MCAST
         for (auto it=processToInterface.begin(); it!=processToInterface.end(); it++) {
+            EV_DEBUG << "FOR \n";
             InterfaceEntry* ie = ift->getInterfaceByName(intName);
             IPv6InterfaceData *ipv6int = ie->ipv6Data();
             ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_ROUTERS_MCAST);//TODO - join only once

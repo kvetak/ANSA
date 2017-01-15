@@ -215,7 +215,7 @@ module ANSA_Router extends ANSA_NodeBase
         }
 
         if hasOSPFv3 {
-            networkLayer.transportOut++ --> ospfv3.ipIn if enableIPv6;
-            networkLayer.transportIn++ <-- ospfv3.ipOut if enableIPv6;
+            networkLayer.transportOut++ --> ospfv3.ipv6In if enableIPv6;
+            networkLayer.transportIn++ <-- ospfv3.ipv6Out if enableIPv6;
         }
 }

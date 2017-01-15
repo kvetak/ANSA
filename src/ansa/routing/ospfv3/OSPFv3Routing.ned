@@ -16,7 +16,6 @@
 package ansa.routing.ospfv3;
 
 import inet.networklayer.contract.INetworkLayer;
-import inet.routing.contract.IIPRouting;
 
 
 
@@ -24,8 +23,8 @@ module OSPFv3Routing
 {
     @display("bgb=510,238;i=block/network2");
     gates:
-        input ipIn @labels(OSPFv3Packet/up);
-        output ipOut @labels(OSPFv3Packet/down);
+        input ipv6In @labels(OSPFv3Packet/up);
+        output ipv6Out @labels(OSPFv3Packet/down);
 
     submodules:
         OSPFv3Splitter: OSPFv3Splitter {
@@ -33,6 +32,6 @@ module OSPFv3Routing
         }
 
     connections:
-        ipIn --> OSPFv3Splitter.ipIn;
-        ipOut <-- OSPFv3Splitter.ipOut;
+        ipv6In --> OSPFv3Splitter.ipIn;
+        ipv6Out <-- OSPFv3Splitter.ipOut;
 }
