@@ -27,11 +27,11 @@ import ansa.routing.lisp.LISPRouting;
 import inet.applications.contract.IUDPApp;
 import inet.routing.contract.IBGPRouting;
 import inet.routing.contract.IIPRouting;
-import inet.routing.contract.IIPDualRouting;
 import inet.routing.contract.IPIMRouting;
 import inet.transportlayer.contract.ITCP;
 import inet.transportlayer.contract.IUDP;
 import ansa.networklayer.isis.ISIS;
+import ansa.routing.ospfv3.OSPFv3Routing;
 
 import ansa.node.ANSA_NodeBase;
 
@@ -126,7 +126,7 @@ module ANSA_Router extends ANSA_NodeBase
                 @display("p=689.388,268.284");
         }
 
-        ospfv3: <"OSPFv3Routing"> like IIPDualRouting if hasOSPFv3 {
+        ospfv3: OSPFv3Routing if hasOSPFv3 {
             parameters:
                 @display("p=689,331");
         }
@@ -215,9 +215,7 @@ module ANSA_Router extends ANSA_NodeBase
         }
 
         if hasOSPFv3 {
-            networkLayer.transportOut++ --> ospfv3.ipIn if enableIPv4;
-            networkLayer.transportIn++ <-- ospfv3.ipOut if enableIPv4;
-            networkLayer.transportOut++ --> ospfv3.ip6In if enableIPv6;
-            networkLayer.transportIn++ <-- ospfv3.ip6Out if enableIPv6;
+            networkLayer.transportOut++ --> ospfv3.ipIn if enableIPv6;
+            networkLayer.transportIn++ <-- ospfv3.ipOut if enableIPv6;
         }
 }
