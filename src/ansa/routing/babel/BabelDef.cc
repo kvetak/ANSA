@@ -193,7 +193,7 @@ int BabelMessage::getNextTlv(int offset) const
 
 char *BabelMessage::getBody() const
 {
-    return body;
+    return body_var;
 }
 
 /**

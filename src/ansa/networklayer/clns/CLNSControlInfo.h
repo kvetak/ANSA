@@ -40,10 +40,10 @@ class INET_API CLNSControlInfo : public CLNSControlInfo_Base, public INetworkPro
 
       virtual short getTransportProtocol() const override { return 0; }
       virtual void setTransportProtocol(short protocol) override {  }
-      virtual L3Address getSourceAddress() const override { return L3Address(srcAddr); }
-      virtual void setSourceAddress(const L3Address& address) override { srcAddr = address.toCLNS(); }
-      virtual L3Address getDestinationAddress() const override { return L3Address(destAddr); }
-      virtual void setDestinationAddress(const L3Address& address) override { destAddr = address.toCLNS(); }
+      virtual L3Address getSourceAddress() const override { return L3Address(srcAddr_var); }
+      virtual void setSourceAddress(const L3Address& address) override { srcAddr_var = address.toCLNS(); }
+      virtual L3Address getDestinationAddress() const override { return L3Address(destAddr_var); }
+      virtual void setDestinationAddress(const L3Address& address) override { destAddr_var = address.toCLNS(); }
       virtual int getInterfaceId() const override { return CLNSControlInfo_Base::getInterfaceId(); }
       virtual void setInterfaceId(int interfaceId) override { CLNSControlInfo_Base::setInterfaceId(interfaceId); }
       virtual short getHopLimit() const override { return getTimeToLive(); }

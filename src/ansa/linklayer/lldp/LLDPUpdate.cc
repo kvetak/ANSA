@@ -32,13 +32,13 @@ Register_Class(LLDPUpdate);
 
 TLVOptionBase *LLDPUpdate::findOptionByType(short int optionType, int index)
 {
-    int i = options.findByType(optionType, index);
+    int i = options_var.findByType(optionType, index);
     return i >= 0 ? &getOption(i) : nullptr;
 }
 
 void LLDPUpdate::addOption(TLVOptionBase *opt, int atPos)
 {
-    options.add(opt, atPos);
+    options_var.add(opt, atPos);
 }
 
 short LLDPUpdate::getOptionLength(TLVOptionBase *opt)
