@@ -114,6 +114,7 @@ void OSPFv3Splitter::parseConfig(cXMLElement* routingConfig, cXMLElement* intCon
             InterfaceEntry* ie = ift->getInterfaceByName(intName);
             IPv6InterfaceData *ipv6int = ie->ipv6Data();
             ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_ROUTERS_MCAST);//TODO - join only once
+            ipv6int->assignAddress(IPv6Address::ALL_OSPF_ROUTERS_MCAST, false, 0, 0);
         }
     }
 }//parseConfig
