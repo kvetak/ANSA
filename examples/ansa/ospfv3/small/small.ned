@@ -20,9 +20,6 @@ network small
             thruputDisplayFormat = "#N";
         }
     submodules:
-        configurator6: FlatNetworkConfigurator6 {
-            @display("p=352,62");
-        }
         configurator: IPv4NetworkConfigurator {
             parameters:
                 config = xml("<config>"+

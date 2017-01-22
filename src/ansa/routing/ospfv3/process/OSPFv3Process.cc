@@ -407,8 +407,8 @@ void OSPFv3Process::sendPacket(OSPFv3Packet *packet, IPv6Address destination, co
     IPv6ControlInfo *ipv6ControlInfo = new IPv6ControlInfo();
     ipv6ControlInfo->setProtocol(IP_PROT_OSPF);
     ipv6ControlInfo->setHopLimit(hopLimit);
-    ipv6ControlInfo->setSourceAddress(ipv6int->getLinkLocalAddress());
-//    ipv6ControlInfo->setSourceAddress(ipv6int->getAddress(0));//TODO - this is weird
+    //ipv6ControlInfo->setSourceAddress(ipv6int->getLinkLocalAddress());
+    ipv6ControlInfo->setSourceAddress(ipv6int->getAddress(0));
     ipv6ControlInfo->setDestinationAddress(destination);
     ipv6ControlInfo->setInterfaceId(ie->getInterfaceId());
 

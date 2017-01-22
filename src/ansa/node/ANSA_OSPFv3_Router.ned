@@ -32,4 +32,5 @@ module ANSA_OSPFv3_Router extends ANSA_Router
         hasOSPFv3 = true;
 
         enableIPv6 = true;
+        enableIPv4 = true;
 }
