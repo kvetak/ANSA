@@ -1,0 +1,1232 @@
+<Devices>
+	<!--				 ROUTER xTR1 					-->
+	<Router id="xTR1">	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>11.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::1/64</IPv6Address>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>HA</Description>
+                		<Priority>150</Priority>
+                	</Group>
+                </VRRP>                
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>10.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                        
+        </Interfaces>
+                                
+        <Routing>
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>11.0.0.2</NextHopAddress>
+        		</Route>    		
+        	</Static>
+        
+        	<LISP>       	
+        		<EtrMapServer address="31.0.0.1" key="HesloA" proxy="enabled" />
+        		<ItrMapResolver address="31.0.0.1" />        	
+        		<EtrMapping>
+        			<EID address="192.168.1.0/24">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="100" />
+        		    </EID>
+        			<EID address="2001:db8:a::/64">
+        		     	<RLOC address="11.0.0.1" priority="1" weight="100" />
+        		    </EID>        		            		    
+        		</EtrMapping>     	
+        	</LISP>
+        </Routing>        
+    </Router>
+
+
+	<!--				 ROUTER Core 					-->
+	<Router id="Core">
+	
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>31.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>                
+            </Interface>
+            <Interface name="eth1">
+                <IPAddress>11.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="eth2">
+                <IPAddress>22.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>            
+            <Interface name="eth3">
+                <IPAddress>21.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>                    
+        </Interfaces>                
+    </Router>
+    
+    
+    <!--				 ROUTER MRMS 					-->
+    <Router id="MRMS">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>31.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>                
+            </Interface>
+        </Interfaces>
+        
+        <Routing> 
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>31.0.0.2</NextHopAddress>
+        		</Route>
+        	</Static>
+               
+        	<LISP>        	
+        		<MapServer ipv4="enabled" ipv6="enabled">
+        			<Site name="Site A" key="HesloA">
+	        			<EID address="192.168.1.0/24" />
+						<EID address="2001:db8:a::/64" />
+        			</Site>
+        			<Site name="Site B" key="HesloB">
+	        		    <EID address="172.16.0.0/16" />	        		     		        		    
+						<EID address="2001:db8:ac10::/48" />
+	       			</Site>
+        		</MapServer>
+        		<MapResolver ipv4="enabled" ipv6="disabled" />
+        		<MapCache />
+        	</LISP>
+        </Routing>       
+    </Router>
+
+
+
+    <!--				 ROUTER xTR_Responder1 					-->
+    <Router id="xTR_Responder1">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>21.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="lo0">
+                <IPAddress>172.16.0.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:0::1/64</IPv6Address>
+            </Interface> 
+			<Interface name="lo1">
+                <IPAddress>172.16.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:1::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo2">
+                <IPAddress>172.16.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:2::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo3">
+                <IPAddress>172.16.3.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:3::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo4">
+                <IPAddress>172.16.4.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:4::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo5">
+                <IPAddress>172.16.5.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:5::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo6">
+                <IPAddress>172.16.6.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:6::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo7">
+                <IPAddress>172.16.7.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:7::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo8">
+                <IPAddress>172.16.8.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:8::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo9">
+                <IPAddress>172.16.9.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:9::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo10">
+                <IPAddress>172.16.10.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:10::1/64</IPv6Address>
+            </Interface>                        
+			<Interface name="lo11">
+                <IPAddress>172.16.11.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:11::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo12">
+                <IPAddress>172.16.12.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:12::1/64</IPv6Address>
+            </Interface>                        
+            <Interface name="lo13">
+                <IPAddress>172.16.13.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:13::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo14">
+                <IPAddress>172.16.14.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:14::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo15">
+                <IPAddress>172.16.15.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:15::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo16">
+                <IPAddress>172.16.16.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:16::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo17">
+                <IPAddress>172.16.17.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:17::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo18">
+                <IPAddress>172.16.18.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:18::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo19">
+                <IPAddress>172.16.19.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:19::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo20">
+                <IPAddress>172.16.20.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:20::1/64</IPv6Address>
+            </Interface> 
+			<Interface name="lo21">
+                <IPAddress>172.16.21.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:21::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo22">
+                <IPAddress>172.16.22.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:22::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo23">
+                <IPAddress>172.16.23.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:23::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo24">
+                <IPAddress>172.16.24.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:24::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo25">
+                <IPAddress>172.16.25.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:25::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo26">
+                <IPAddress>172.16.26.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:26::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo27">
+                <IPAddress>172.16.27.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:27::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo28">
+                <IPAddress>172.16.28.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:28::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo29">
+                <IPAddress>172.16.29.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:29::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo30">
+                <IPAddress>172.16.30.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:30::1/64</IPv6Address>
+            </Interface>                        
+			<Interface name="lo31">
+                <IPAddress>172.16.31.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:31::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo32">
+                <IPAddress>172.16.32.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:32::1/64</IPv6Address>
+            </Interface>                        
+            <Interface name="lo33">
+                <IPAddress>172.16.33.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:33::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo34">
+                <IPAddress>172.16.34.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:34::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo35">
+                <IPAddress>172.16.35.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:35::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo36">
+                <IPAddress>172.16.36.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:36::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo37">
+                <IPAddress>172.16.37.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:37::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo38">
+                <IPAddress>172.16.38.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:38::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo39">
+                <IPAddress>172.16.39.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:39::1/64</IPv6Address>
+            </Interface>           
+        </Interfaces>
+        
+        <Routing> 
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>21.0.0.2</NextHopAddress>
+        		</Route>
+        	</Static>
+               
+        	<LISP>        	
+        		<EtrMapServer address="31.0.0.1" key="HesloB" proxy="enabled" />
+        		<ItrMapResolver address="31.0.0.1" />        	
+        		<EtrMapping>
+        			<EID address="172.16.0.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.1.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.2.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.3.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.4.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.5.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.6.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.7.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.8.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.9.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.10.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="172.16.11.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.12.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.13.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.14.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.15.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.16.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.17.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.18.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.19.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		            		             		            		    
+        			<EID address="172.16.20.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.21.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.22.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.23.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.24.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.25.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.26.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.27.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.28.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.29.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.30.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="172.16.31.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.32.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.33.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.34.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.35.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.36.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.37.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.38.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.39.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		            		             		            		    
+
+        			<EID address="2001:db8:ac10:0::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>   
+        			<EID address="2001:db8:ac10:1::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:2::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:3::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:4::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:5::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:6::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:7::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:8::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:9::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		          		            		    
+        			<EID address="2001:db8:ac10:10::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="2001:db8:ac10:11::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:12::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:13::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:14::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:15::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:16::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:17::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:18::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:19::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		         		            		    
+        			<EID address="2001:db8:ac10:20::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>   
+        			<EID address="2001:db8:ac10:21::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:22::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:23::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:24::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:25::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:26::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:27::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:28::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:29::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		          		            		    
+        			<EID address="2001:db8:ac10:30::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="2001:db8:ac10:31::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:32::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:33::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:34::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:35::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:36::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:37::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:38::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:39::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		         		            		    
+        		</EtrMapping>
+        	</LISP>
+        </Routing>       
+    </Router>    
+    
+    
+    <!--				 ROUTER xTR_Responder2 					-->
+    <Router id="xTR_Responder2">
+    
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>22.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>
+            <Interface name="lo0">
+                <IPAddress>172.16.0.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:0::1/64</IPv6Address>
+            </Interface> 
+			<Interface name="lo1">
+                <IPAddress>172.16.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:1::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo2">
+                <IPAddress>172.16.2.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:2::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo3">
+                <IPAddress>172.16.3.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:3::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo4">
+                <IPAddress>172.16.4.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:4::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo5">
+                <IPAddress>172.16.5.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:5::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo6">
+                <IPAddress>172.16.6.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:6::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo7">
+                <IPAddress>172.16.7.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:7::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo8">
+                <IPAddress>172.16.8.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:8::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo9">
+                <IPAddress>172.16.9.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:9::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo10">
+                <IPAddress>172.16.10.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:10::1/64</IPv6Address>
+            </Interface>                        
+			<Interface name="lo11">
+                <IPAddress>172.16.11.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:11::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo12">
+                <IPAddress>172.16.12.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:12::1/64</IPv6Address>
+            </Interface>                        
+            <Interface name="lo13">
+                <IPAddress>172.16.13.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:13::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo14">
+                <IPAddress>172.16.14.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:14::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo15">
+                <IPAddress>172.16.15.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:15::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo16">
+                <IPAddress>172.16.16.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:16::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo17">
+                <IPAddress>172.16.17.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:17::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo18">
+                <IPAddress>172.16.18.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:18::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo19">
+                <IPAddress>172.16.19.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:19::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo20">
+                <IPAddress>172.16.20.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:20::1/64</IPv6Address>
+            </Interface> 
+			<Interface name="lo21">
+                <IPAddress>172.16.21.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:21::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo22">
+                <IPAddress>172.16.22.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:22::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo23">
+                <IPAddress>172.16.23.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:23::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo24">
+                <IPAddress>172.16.24.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:24::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo25">
+                <IPAddress>172.16.25.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:25::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo26">
+                <IPAddress>172.16.26.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:26::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo27">
+                <IPAddress>172.16.27.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:27::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo28">
+                <IPAddress>172.16.28.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:28::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo29">
+                <IPAddress>172.16.29.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:29::1/64</IPv6Address>
+            </Interface>
+			<Interface name="lo30">
+                <IPAddress>172.16.30.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:30::1/64</IPv6Address>
+            </Interface>                        
+			<Interface name="lo31">
+                <IPAddress>172.16.31.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:31::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo32">
+                <IPAddress>172.16.32.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:32::1/64</IPv6Address>
+            </Interface>                        
+            <Interface name="lo33">
+                <IPAddress>172.16.33.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:33::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo34">
+                <IPAddress>172.16.34.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:34::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo35">
+                <IPAddress>172.16.35.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:35::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo36">
+                <IPAddress>172.16.36.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:36::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo37">
+                <IPAddress>172.16.37.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:37::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo38">
+                <IPAddress>172.16.38.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:38::1/64</IPv6Address>
+            </Interface>
+            <Interface name="lo39">
+                <IPAddress>172.16.39.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:ac10:39::1/64</IPv6Address>
+            </Interface>           
+        </Interfaces>
+        
+        <Routing> 
+        	<Static>
+        		<Route>
+        			<NetworkAddress>0.0.0.0</NetworkAddress>
+        			<NetworkMask>0.0.0.0</NetworkMask>
+        			<NextHopAddress>22.0.0.2</NextHopAddress>
+        		</Route>
+        	</Static>
+               
+        	<LISP>        	
+        		<EtrMapServer address="31.0.0.1" key="HesloB" proxy="enabled" />
+        		<ItrMapResolver address="31.0.0.1" />        	
+        		<EtrMapping>
+        			<EID address="172.16.0.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.1.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.2.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.3.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.4.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.5.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.6.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.7.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.8.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.9.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.10.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="172.16.11.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.12.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.13.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.14.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.15.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.16.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.17.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.18.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.19.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		            		             		            		    
+        			<EID address="172.16.20.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.21.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.22.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.23.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.24.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.25.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.26.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.27.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.28.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.29.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.30.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="172.16.31.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        			<EID address="172.16.32.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.33.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.34.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.35.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.36.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.37.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.38.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		    
+        			<EID address="172.16.39.0/24">
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		            		            		             		            		    
+
+        			<EID address="2001:db8:ac10:0::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>   
+        			<EID address="2001:db8:ac10:1::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:2::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:3::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:4::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:5::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:6::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:7::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:8::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:9::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		          		            		    
+        			<EID address="2001:db8:ac10:10::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="2001:db8:ac10:11::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:12::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:13::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:14::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:15::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:16::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:17::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:18::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:19::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		         		            		    
+        			<EID address="2001:db8:ac10:20::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>   
+        			<EID address="2001:db8:ac10:21::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:22::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:23::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:24::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:25::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:26::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:27::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:28::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		    
+        			<EID address="2001:db8:ac10:29::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>        		            		          		            		    
+        			<EID address="2001:db8:ac10:30::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID> 
+        			<EID address="2001:db8:ac10:31::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:32::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:33::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:34::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:35::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:36::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:37::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:38::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>
+        		    <EID address="2001:db8:ac10:39::/64">        			
+        		     	<RLOC address="21.0.0.1" priority="1" weight="50" />
+        		     	<RLOC address="22.0.0.1" priority="1" weight="50" />
+        		    </EID>         		         		            		    
+        		</EtrMapping>
+        	</LISP>
+        </Routing>       
+    </Router>    
+
+
+    
+    <!--				 HOST Host1 					-->
+    <Host id="Host1">
+    
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.101</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <IPv6Address>2001:db8:a::101/64</IPv6Address>
+			</Interface>
+		</Interfaces>
+		
+		<DefaultRouter>192.168.1.254</DefaultRouter>
+		<DefaultRouter6>2001:db8:a::1</DefaultRouter6>
+	</Host>	
+	
+
+			
+</Devices>

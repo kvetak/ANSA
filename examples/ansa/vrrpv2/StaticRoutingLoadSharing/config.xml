@@ -1,0 +1,117 @@
+<Devices>
+	<Router id="33.33.33.33">
+        <Interfaces>
+            <Interface name="lo0">
+                <IPAddress>33.33.33.33</IPAddress>
+                <Mask>255.255.255.255</Mask>
+            </Interface>         
+            <Interface name="eth0">
+                <IPAddress>10.0.0.1</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>         
+            <Interface name="eth1">
+                <IPAddress>10.0.0.5</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface> 
+        </Interfaces>              
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>192.168.10.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>10.0.0.2</NextHopAddress>
+				</Route>
+				<Route>
+					<NetworkAddress>192.168.10.0</NetworkAddress>
+					<NetworkMask>255.255.255.0</NetworkMask>
+					<NextHopAddress>10.0.0.6</NextHopAddress>
+				</Route>
+			</Static>
+		</Routing>                                                  
+    </Router> 
+
+	<Router id="192.168.10.1">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>10.0.0.2</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>          
+            <Interface name="eth1">
+                <IPAddress>192.168.10.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.10.254</IPAddress>
+                		<Priority>150</Priority>
+                	</Group>
+                	<Group id="20">
+                		<IPAddress>192.168.10.253</IPAddress>
+                		<Priority>100</Priority>
+                	</Group>                
+                </VRRP>
+            </Interface>                                    
+        </Interfaces>  
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>33.33.33.33</NetworkAddress>
+					<NetworkMask>255.255.255.255</NetworkMask>
+					<NextHopAddress>10.0.0.1</NextHopAddress>
+				</Route>
+			</Static>											
+		</Routing>            
+    </Router> 
+    
+	<Router id="192.168.10.2">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>10.0.0.6</IPAddress>
+                <Mask>255.255.255.252</Mask>
+            </Interface>          
+            <Interface name="eth1">
+                <IPAddress>192.168.10.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.10.254</IPAddress>
+                		<Priority>100</Priority>
+                	</Group>
+                	<Group id="20">
+                		<IPAddress>192.168.10.253</IPAddress>
+                		<Priority>150</Priority>
+                	</Group>                
+                </VRRP>
+            </Interface>                                    
+        </Interfaces>    
+		<Routing>
+			<Static>
+				<Route>
+					<NetworkAddress>33.33.33.33</NetworkAddress>
+					<NetworkMask>255.255.255.255</NetworkMask>
+					<NextHopAddress>10.0.0.5</NextHopAddress>
+				</Route>
+			</Static>											
+		</Routing>             
+    </Router> 
+    
+	<Host id="192.168.10.10">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.10.10</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.10.254</DefaultRouter>
+	</Host>   
+
+	<Host id="192.168.10.20">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.10.20</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.10.253</DefaultRouter>
+	</Host> 
+		     
+</Devices>

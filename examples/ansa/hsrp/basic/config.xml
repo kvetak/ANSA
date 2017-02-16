@@ -1,0 +1,63 @@
+<Devices>
+	<!-- 	R1		-->
+	<Router id="R1">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.1</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<HSRP>
+					<Group ip="192.168.1.254" priority = "100"></Group>	
+				    <Group ip="192.168.1.253" priority = "105" id="1"></Group>				-->								
+				</HSRP>				
+			</Interface>	
+		  </Interfaces>	
+	</Router>
+	
+	<!-- 	R2		-->
+	<Router id="R2">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.2</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<HSRP>
+					<Group ip="192.168.1.254" priority = "100"></Group>
+					<Group ip="192.168.1.253" id="1"></Group>	
+				</HSRP>				
+			</Interface>
+	     </Interfaces>		
+	</Router>	
+	
+	<!-- 	R3		-->
+	<Router id="R3">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.3</IPAddress>
+				<Mask>255.255.255.0</Mask>
+				<HSRP>
+					<Group ip="192.168.1.254" priority = "100"></Group>	
+					<Group ip="192.168.1.253" id="1"></Group>										
+				</HSRP>				
+			</Interface>	
+		</Interfaces>	
+	</Router>	
+	
+	<!-- 	H1		-->
+	<Host id="H1">
+		<Interfaces>
+			<Interface name="eth0">			
+				<IPAddress>192.168.1.5</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>	
+
+	<!-- 	H2		-->
+	<Host id="H2">
+		<Interfaces>
+			<Interface name="eth0">				
+				<IPAddress>192.168.1.6</IPAddress>
+				<Mask>255.255.255.0</Mask>
+			</Interface>					
+		</Interfaces>
+	</Host>
+</Devices>

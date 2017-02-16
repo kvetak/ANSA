@@ -1,0 +1,64 @@
+<Devices>
+	<Router id="192.168.1.1">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.1.1</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>Host 1</Description>
+                		<Priority>150</Priority>
+                	</Group>
+                	<Group id="20">
+                		<IPAddress>192.168.1.253</IPAddress>
+                		<Description>Host 2</Description>
+                		<Priority>100</Priority>
+                	</Group>                	
+                </VRRP>
+            </Interface>                                    
+        </Interfaces>     
+    </Router> 
+    
+	<Router id="192.168.1.2">
+        <Interfaces>
+            <Interface name="eth0">
+                <IPAddress>192.168.1.2</IPAddress>
+                <Mask>255.255.255.0</Mask>
+                <VRRP>
+                	<Group id="10">
+                		<IPAddress>192.168.1.254</IPAddress>
+                		<Description>Host 1</Description>
+                		<Priority>100</Priority>
+                	</Group>
+                	<Group id="20">
+                		<IPAddress>192.168.1.253</IPAddress>
+                		<Description>Host 2</Description>
+                		<Priority>150</Priority>
+                	</Group>                	
+                </VRRP>
+            </Interface>                                     
+        </Interfaces>       
+    </Router>
+    
+	<Host id="192.168.1.10">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.10</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.1.254</DefaultRouter>
+	</Host>   
+	
+	<Host id="192.168.1.20">
+		<Interfaces>
+			<Interface name="eth0">
+				<IPAddress>192.168.1.20</IPAddress>
+                <Mask>255.255.255.0</Mask>
+			</Interface>
+		</Interfaces>
+		<DefaultRouter>192.168.1.253</DefaultRouter>
+	</Host>  
+	     
+</Devices>

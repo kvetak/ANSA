@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scave:Analysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:scave="http://www.omnetpp.org/omnetpp/scave">
+  <inputs>
+    <inputs name="/inet/examples/ansa/lisp/lispProbeTest/results/*.sca"/>
+    <inputs name="/inet/examples/ansa/lisp/lispProbeTest/results/*.vec"/>
+  </inputs>
+  <datasets>
+    <datasets name="LessLoopbacks">
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Cisco-0.vec) AND attr:configname(Cisco) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Sophisticated-0.vec) AND attr:configname(Sophisticated) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Simple-0.vec) AND attr:configname(Simple) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="Less Loopbacks" lineNameFormat="">
+        <properties name="Graph.Title.Font" value="Arial-regular-12"/>
+        <properties name="X.Axis.Title" value="time"/>
+        <properties name="Y.Axis.Title" value="total bytes"/>
+        <properties name="Axis.Title.Font" value="Arial-regular-12"/>
+        <properties name="Label.Font" value="Arial-regular-12"/>
+        <properties name="Y.Axis.Max" value="60000.0"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Legend.Border" value="true"/>
+        <properties name="Symbols.Size" value="10"/>
+        <properties name="Symbols.Type//inet/examples/ansa/lisp/lispProbeTest/results/Cisco-0.vec Cisco-0-20150218-14:11:20-10644 Cisco" value="Cross"/>
+        <properties name="Symbols.Size//inet/examples/ansa/lisp/lispProbeTest/results/Cisco-0.vec Cisco-0-20150218-14:11:20-10644 Cisco" value="10"/>
+      </items>
+    </datasets>
+    <datasets name="MoreLoopbacks">
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Cisco-moreLoop-0.vec) AND attr:configname(Cisco-moreLoop) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Sophisticated-moreLoop-0.vec) AND attr:configname(Sophisticated-moreLoop) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Simple-moreLoop-0.vec) AND attr:configname(Simple-moreLoop) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-size:vector)" type="VECTOR"/>
+      <items xsi:type="scave:LineChart" name="More Loopbacks" lineNameFormat="">
+        <properties name="Graph.Title.Font" value="Arial-regular-12"/>
+        <properties name="X.Axis.Title" value="time"/>
+        <properties name="Y.Axis.Title" value="total bytes"/>
+        <properties name="Axis.Title.Font" value="Arial-regular-12"/>
+        <properties name="Label.Font" value="Arial-regular-12"/>
+        <properties name="Y.Axis.Max" value="120000.0"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Legend.Border" value="true"/>
+        <properties name="Symbols.Size" value="10"/>
+        <properties name="Symbols.Type//inet/examples/ansa/lisp/lispProbeTest/results/Cisco-moreLoop-0.vec Cisco-moreLoop-0-20150218-14:12:15-6300 Cisco-moreLoop" value="Cross"/>
+        <properties name="Symbols.Size//inet/examples/ansa/lisp/lispProbeTest/results/Cisco-moreLoop-0.vec Cisco-moreLoop-0-20150218-14:12:15-6300 Cisco-moreLoop" value="10"/>
+      </items>
+    </datasets>
+    <datasets name="Amount of messages">
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Cisco-0.sca) AND attr:configname(Cisco) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-type:histogram:count)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Simple-0.sca) AND attr:configname(Simple) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-type:histogram:count)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Sophisticated-0.sca) AND attr:configname(Sophisticated) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-type:histogram:count)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Cisco-moreLoop-0.sca) AND attr:configname(Cisco-moreLoop) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-type:histogram:count)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Simple-moreLoop-0.sca) AND attr:configname(Simple-moreLoop) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-type:histogram:count)"/>
+      <items xsi:type="scave:Add" filterPattern="file(/inet/examples/ansa/lisp/lispProbeTest/results/Sophisticated-moreLoop-0.sca) AND attr:configname(Sophisticated-moreLoop) AND attr:runnumber(0) AND module(LispProbeTest.xTR_Responder1.LISP.lispMsgLogger) AND name(msg-type:histogram:count)"/>
+      <items xsi:type="scave:BarChart" name="Number of Messages">
+        <properties name="Graph.Title.Font" value="Arial-regular-12"/>
+        <properties name="X.Axis.Title" value="run"/>
+        <properties name="Y.Axis.Title" value="number of messages"/>
+        <properties name="Axis.Title.Font" value="Arial-regular-12"/>
+        <properties name="Label.Font" value="Arial-regular-12"/>
+        <properties name="Y.Axis.Max" value="1650.0"/>
+        <properties name="Legend.Display" value="true"/>
+        <properties name="Legend.Border" value="true"/>
+        <barFields>experiment</barFields>
+      </items>
+    </datasets>
+  </datasets>
+  <chartSheets>
+    <chartSheets name="default" charts="//@datasets/@datasets.0/@items.3 //@datasets/@datasets.1/@items.3 //@datasets/@datasets.2/@items.6"/>
+  </chartSheets>
+</scave:Analysis>

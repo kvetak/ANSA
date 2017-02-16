@@ -1,0 +1,103 @@
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+package inet.examples.ansa.glbp.fiveRouters;
+
+import ansa.node.ANSA_GLBPRouter;
+import ansa.node.ANSA_Host;
+import inet.common.lifecycle.LifecycleController;
+import inet.common.scenario.ScenarioManager;
+import inet.node.ethernet.EtherSwitch;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.ethernet.Eth100M;
+
+network fiveRouters
+{
+    @display("bgb=434,327");
+
+    submodules:
+        R1: ANSA_GLBPRouter {
+            @display("p=111,46");
+        }
+        R2: ANSA_GLBPRouter {
+            @display("p=225,46");
+        }
+        R3: ANSA_GLBPRouter {
+            @display("p=315,69");
+        }
+        R4: ANSA_GLBPRouter {
+            @display("p=341,131");
+        }
+        R5: ANSA_GLBPRouter {
+            @display("p=322,212");
+        }
+        H1: ANSA_Host {
+            @display("p=36,131");
+        }
+        H2: ANSA_Host {
+            @display("p=36,202");
+        }
+        H3: ANSA_Host {
+            @display("p=81,260");
+        }
+        H4: ANSA_Host {
+            @display("p=165,286");
+        }
+        H5: ANSA_Host {
+            @display("p=259,277");
+        }
+        SW1: EtherSwitch {
+            @display("p=205,169");
+        }
+        configurator: IPv4NetworkConfigurator {
+            parameters:
+                //"<interface hosts='R1' towards='SW2 H2' address='192.168.2.1' netmask='255.255.255.0' />"+
+                // "<interface hosts='R2' towards='SW2 H2' address='192.168.2.2' netmask='255.255.255.0' />"+
+
+                config = xml("<config>"+
+                            "<interface hosts='R1' towards='SW1 H1' address='192.168.1.1' netmask='255.255.255.0' />"+
+                            "<interface hosts='R2' towards='SW1 H1' address='192.168.1.2' netmask='255.255.255.0' />"+
+                            "<interface hosts='R3' towards='SW1 H1' address='192.168.1.3' netmask='255.255.255.0' />"+
+                            "<interface hosts='R4' towards='SW1 H1' address='192.168.1.4' netmask='255.255.255.0' />"+
+                            "<interface hosts='R5' towards='SW1 H1' address='192.168.1.5' netmask='255.255.255.0' />"+
+
+       						"<interface hosts='H1' address='192.168.1.10' netmask='255.255.255.0' />"+
+       						"<interface hosts='H2' address='192.168.1.11' netmask='255.255.255.0' />"+
+   						    "<interface hosts='H3' address='192.168.1.12' netmask='255.255.255.0' />"+
+       						"<interface hosts='H4' address='192.168.1.13' netmask='255.255.255.0' />"+
+       						"<interface hosts='H5' address='192.168.1.14' netmask='255.255.255.0' />"+
+       						
+                            "</config>");
+                addStaticRoutes = true;
+                addDefaultRoutes = true;
+                @display("p=36,19");
+        }
+
+        scenarioManager: ScenarioManager {
+            @display("p=36,69");
+        }
+
+    connections:
+        R1.ethg++ <--> Eth100M <--> SW1.ethg++;
+        R2.ethg++ <--> Eth100M <--> SW1.ethg++;
+        R3.ethg++ <--> Eth100M <--> SW1.ethg++;
+        R4.ethg++ <--> Eth100M <--> SW1.ethg++;
+        R5.ethg++ <--> Eth100M <--> SW1.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H1.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H2.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H3.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H4.ethg++;
+        SW1.ethg++ <--> Eth100M <--> H5.ethg++;
+}

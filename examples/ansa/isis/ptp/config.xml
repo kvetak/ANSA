@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<Devices>
+	<Router id="192.168.1.1">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.1.1</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L1</ISIS-Circuit-Type>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6800.1234.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+	
+	<Router id="192.168.1.2">
+		<Interfaces>
+     		<Interface name="eth0">
+        		<IPAddress>192.168.1.2</IPAddress>
+        		<Mask>255.255.255.0</Mask>
+        		<ISIS-Priority>100</ISIS-Priority>
+        		<ISIS-Network>point-to-point</ISIS-Network>
+        		<ISIS-Circuit-Type>L1</ISIS-Circuit-Type>
+      		</Interface>
+  		</Interfaces>
+  		<Routing>
+  			<ISIS>
+  				<IS-Type>level-1</IS-Type>
+  				<NET>49.0001.1921.6800.4567.00</NET>
+  			</ISIS>
+  		</Routing>
+	</Router>
+	
+	
+</Devices>

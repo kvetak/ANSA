@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<scenario>
+	<at t="44">		
+        <disconnect src-module="SW1" src-gate="ethg$o[2]" />	
+        <disconnect src-module="R3" src-gate="ethg$o[0]" />	
+  	</at>
+</scenario>

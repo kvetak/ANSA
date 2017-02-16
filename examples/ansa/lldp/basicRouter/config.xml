@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<Devices>
+	<!-- R1 -->
+	<Router id="R1">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledRxTx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth1">
+                <LLDP>
+                	<AdminStatus>enabledRxTx</AdminStatus>
+                	<msgTxInterval>20</msgTxInterval>
+                </LLDP>
+            </Interface>
+            <Interface name="eth2">
+                <LLDP>
+                	<AdminStatus>enabledRxOnly</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+    </Router>
+    
+    <!-- R2 -->
+    <Router id="R2">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledRxTx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth1">
+                <LLDP>
+                	<AdminStatus>enabledRxTx</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+
+    </Router>
+    
+    <!-- R3 -->
+    <Router id="R3">
+        <Interfaces>
+            <Interface name="eth0">
+                <LLDP>
+                	<AdminStatus>enabledRxTx</AdminStatus>
+                </LLDP>
+            </Interface>
+            <Interface name="eth1">
+                <LLDP>
+                	<AdminStatus>enabledRxTx</AdminStatus>
+                </LLDP>
+            </Interface>
+        </Interfaces>
+    </Router>
+</Devices>

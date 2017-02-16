@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<scenario>
+  	<at t="15">
+    	<disconnect src-module="GW2" src-gate="ethg[1]"/>
+	</at>
+  	<at t="30">
+  	    <connect src-module="GW2" src-gate="ethg[1]" dest-module="SW" dest-gate="ethg[1]" channel-type="inet.node.ethernet.Eth100M"/>
+	</at>	
+</scenario>

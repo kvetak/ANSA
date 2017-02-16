@@ -1,0 +1,11 @@
+<scenario>
+	<at t="41">
+        <disconnect src-module="R3" src-gate="ethg$o[0]" />	
+        <disconnect src-module="SW1" src-gate="ethg$o[2]" />
+	</at>
+	
+	<at t="50">			
+        <connect src-module="SW1" dest-module="R3" src-gate="ethg$o[2]" dest-gate="ethg$i[0]" channel-type="inet.node.ethernet.Eth100M"/>
+        <connect src-module="R3" dest-module="SW1" src-gate="ethg$o[0]" dest-gate="ethg$i[2]" channel-type="inet.node.ethernet.Eth100M"/>               
+  	</at>	
+</scenario>
