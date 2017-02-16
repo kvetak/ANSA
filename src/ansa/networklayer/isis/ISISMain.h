@@ -15,8 +15,8 @@
 //
 
 /**
- * @file ISIS.h
- * @author Matej Hrncirik, Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
+ * @file ISISMain.h
+ * @author Matej Hrncirik, Marcel Marek (mailto:imarek@fit.vutbr.cz), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 7.3.2012
  * @brief Header file for IS-IS module.
  * @detail Header file for IS-IS module.
@@ -24,8 +24,8 @@
  *       FIXED BUG-ID: 1; A known bug emerged with new version of INET. If gateIndex doesn't corresponds to interface's index in interface table, things go terribly wrong.
  */
 
-#ifndef ISIS_H_
-#define ISIS_H_
+#ifndef ISISMAIN_H_
+#define ISISMAIN_H_
 
 #include <algorithm>
 #include <stdlib.h>
@@ -59,7 +59,7 @@
 #include "ansa/networklayer/isis/ISIStypes.h"
 //#include <cmessage.h>
 //#include <crng.h>
-//#include "TRILL.h"
+#include "ansa/linklayer/rbridge/TRILL.h"
 
 
 
@@ -72,17 +72,15 @@ namespace inet {
 #define ISIS_ALL_L1_IS "01:80:c2:00:00:14"
 #define ISIS_ALL_L2_IS "01:80:c2:00:00:15"
 
-//TODO A! Remove after addin TRILL
-#define ALL_IS_IS_RBRIDGES "01-80-C2-00-00-41"
 
 //class ISISLSPPacket;
 /**
  * Single class providing all functionality of whole module.
  */
-class ISIS : public cSimpleModule
+class ISISMain : public cSimpleModule
 {
-    //TODO A! Uncomment after adding TRILL
-//        friend class TRILL;
+
+        friend class TRILL;
     public:
         enum ISIS_MODE
         {
@@ -96,8 +94,8 @@ class ISIS : public cSimpleModule
         CLNSRoutingTable *clnsrt;
 //        NotificationBoard *nb; /*!< Provides access to the notification board */
 
-        //TODO A! Uncomment after adding TRILL
-//        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
+
+        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
         ISIS_MODE mode;
 
         std::string deviceType; /*!< device type specified in .ned when using this module */
@@ -113,7 +111,7 @@ class ISIS : public cSimpleModule
 //        unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
 //        unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
 
-        int nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
+        TRILLNickname nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
         AdjTab_t adjL1Table; /*!< table of L1 adjacencies */
         AdjTab_t adjL2Table; /*!< table of L2 adjacencies */
         short isType; /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
@@ -164,7 +162,7 @@ class ISIS : public cSimpleModule
         ISISTimer *periodicL2Timer;
 
         /* TRILL related */
-        std::map<int, ISISPaths_t *> distribTrees;
+        std::map<TRILLNickname, ISISPaths_t *> distribTrees;
 
         /* Init */
         void initISIS(); // main init
@@ -265,8 +263,8 @@ class ISIS : public cSimpleModule
                 ISISPaths_t *ISISTent);
         void bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
 
-        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(int nickname, SystemID systemId);
-        std::vector<SystemID> *getSystemIDsFromTree(int nickname, SystemID systemId);
+        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(TRILLNickname nickname, SystemID systemId);
+        std::vector<SystemID> *getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId);
 
         /* Flags */
         FlagRecQQ_t *getSRMPTPQueue(short circuitType);
@@ -356,15 +354,15 @@ class ISIS : public cSimpleModule
         virtual void receiveChangeNotification(int category, cObject *details);
 
     public:
-        ISIS();
-        virtual ~ISIS(); //destructor
+        ISISMain();
+        virtual ~ISISMain(); //destructor
 //        void insertIft(InterfaceEntry *entry, cXMLElement *device); //insert new interface to vector
         void appendISISInterface(ISISinterface iface);
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
 //        void setClnsTable(CLNSTable *clnsTable);
-        //TODO A! Uncomment after adding TRILL
-//        void setTrill(TRILL *trill);
+
+        void setTrill(TRILL *trill);
         void setIft(IInterfaceTable *ift);
 //        void setNb(NotificationBoard *nb);
         void subscribeNb(void);
@@ -411,7 +409,7 @@ class ISIS : public cSimpleModule
         ISIS_MODE getMode() const;
         unsigned int getISISIftSize();
         void setAtt(bool att);
-        int getNickname() const;
+        TRILLNickname getNickname() const;
     AreaID getAreaId() const;
     void setAreaId(AreaID areaId);
     void setSystemId(const SystemID& systemId);
@@ -419,4 +417,4 @@ class ISIS : public cSimpleModule
 
 }//end namespace inet
 
-#endif /* ISIS_H_ */
+#endif /* ISISMAIN_H_ */

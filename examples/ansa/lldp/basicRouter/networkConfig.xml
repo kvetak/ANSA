@@ -12,6 +12,6 @@
   <interface hosts="R3" names="eth2" address="10.0.30.1" netmask="255.255.255.0"/>
   
   <interface hosts="R1" names="eth2" address="10.0.40.1" netmask="255.255.255.0"/>
-  <interface hosts="H" names="eth0" address="10.0.40.2" netmask="255.255.255.0"/>
+  <interface hosts="H" names="eth0" address="10.0.40.8" netmask="255.255.255.0"/>
   
 </config>

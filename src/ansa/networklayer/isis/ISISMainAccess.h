@@ -27,16 +27,16 @@
 #ifndef ISISACCESS_H_
 #define ISISACCESS_H_
 
+#include <ISISMain.h>
 #include "ModuleAccess.h"
-#include "ISIS.h"
 
 namespace inet {
 
-class ISISAccess : public ModuleAccess<ISIS>
+class ISISAccess : public ModuleAccess<ISISMain>
 {
     public:
         ISISAccess() :
-                ModuleAccess<ISIS>("isis")
+                ModuleAccess<ISISMain>("isis")
         {
         }
 };
