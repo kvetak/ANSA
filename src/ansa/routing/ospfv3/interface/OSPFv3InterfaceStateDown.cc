@@ -2,6 +2,7 @@
 #include "ansa/routing/ospfv3/interface/OSPFv3InterfaceStateDROther.h"
 #include "ansa/routing/ospfv3/interface/OSPFv3InterfaceStateLoopback.h"
 #include "ansa/routing/ospfv3/interface/OSPFv3InterfaceStatePointToPoint.h"
+#include "ansa/routing/ospfv3/interface/OSPFv3InterfacePassive.h"
 //#include "ansa/routing/ospfv3/OSPFv3Timers.h"
 //#include <cmodule.h>
 
@@ -59,6 +60,10 @@ void OSPFv3InterfaceStateDown::processEvent(OSPFv3Interface* interface, OSPFv3In
             default:
                 break;
             }
+        }
+        else if(interface->isInterfacePassive()) {
+            interface->originateLinkLSA();
+            changeState(interface, new OSPFv3InterfacePassive, this);
         }
         if (event == OSPFv3Interface::LOOP_IND_EVENT) {
             interface->reset();

@@ -11,22 +11,22 @@
 		<Interfaces>
 			<Interface name="eth0">
 				<Process id="100">
-					<Instance AF="IPv4">
-						<RouterPriority>120</RouterPriority>
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>2001:3::1/64</IPv6Address>
+				<IPv6Address>fe80:10::1/10</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
-					<Instance AF="IPv4">
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
+				<IPv6Address>fe80:12::1/10</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -43,22 +43,22 @@
 		<Interfaces>
 			<Interface name="eth0">
 				<Process id="100">
-					<Instance AF="IPv4">
-						<RouterPriority>100</RouterPriority>
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>2001:3::2/64</IPv6Address>
+				<IPv6Address>fe80:10::2/10</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
-					<Instance AF="IPv4">
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
+				<IPv6Address>fe80:12::2/10</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -75,21 +75,22 @@
 		<Interfaces>
 			<Interface name="eth0">
 				<Process id="100">
-					<Instance AF="IPv4">
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>2001:3::3/64</IPv6Address>
+				<IPv6Address>fe80:10::3/10</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
-					<Instance AF="IPv4">
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
+				<IPv6Address>fe80:12::3/10</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -106,21 +107,22 @@
 		<Interfaces>
 			<Interface name="eth0">
 				<Process id="100">
-					<Instance AF="IPv4">
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>2001:3::4/64</IPv6Address>
+				<IPv6Address>fe80:10::4/10</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
-					<Instance AF="IPv4">
+					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
+				<IPv6Address>fe80:12::4/10</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>

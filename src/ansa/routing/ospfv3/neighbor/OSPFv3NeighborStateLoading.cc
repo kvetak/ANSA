@@ -54,7 +54,7 @@ void OSPFv3NeighborStateLoading::processEvent(OSPFv3Neighbor *neighbor, OSPFv3Ne
         }
     }
     if ((event == OSPFv3Neighbor::SEQUENCE_NUMBER_MISMATCH) || (event == OSPFv3Neighbor::BAD_LINK_STATE_REQUEST)) {
-        EV_DEBUG << "OSPFv3Neighbor::SEQUENCE_NUMBER_MISMATCH caught StateLoading\n";
+        EV_DEBUG << "OSPFv3Neighbor::SEQUENCE_NUMBER_MISMATCH or BAD_LINK_STATE_REQUEST caught StateLoading\n";
         neighbor->reset();
         neighbor->incrementDDSequenceNumber();
         neighbor->sendDDPacket(true);

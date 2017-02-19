@@ -28,7 +28,8 @@ OSPFv3Interface::OSPFv3Interface(const char* name, cModule* routerModule, OSPFv3
     InterfaceEntry *ie = this->ift->getInterfaceByName(this->interfaceName.c_str());
     IPv6InterfaceData *ipv6int = ie->ipv6Data();
     this->interfaceId = ift->getInterfaceById(ie->getInterfaceId())->getInterfaceId();
-    this->interfaceIP = ipv6int->getAddress(0);//TODO - check
+    this->interfaceIP = ipv6int->getLinkLocalAddress();//TODO - check
+    EV_DEBUG << "Interface IP: " << ipv6int->getAddress(0) << "\n";
     this->interfaceType = interfaceType;
     this->passiveInterface = passive;
 
@@ -66,7 +67,7 @@ OSPFv3HelloPacket* OSPFv3Interface::prepareHello()
     std::vector<IPv4Address> neighbors;
 
     //OSPF common packet header first
-//    helloPacket->setVersion(3);
+    helloPacket->setVersion(3);
     helloPacket->setType(HELLO_PACKET);
     //TODO - packet length
     helloPacket->setRouterID(this->getArea()->getInstance()->getProcess()->getRouterID());
@@ -408,6 +409,7 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
         switch (neighborState) {
         case OSPFv3Neighbor::TWOWAY_STATE:
             EV_DEBUG << "Parsing DD Packet - two way state - throwing away\n";
+            delete(packet);
             //ignoring packet
             break;
 
@@ -500,6 +502,7 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
                                 packetID.ddOptions.iBit ||
                                 (packetID.options != neighbor->getLastReceivedDDPacket().options))
                 {
+                    EV_DEBUG << "Last DD Sequence is : " << neighbor->getLastReceivedDDPacket().sequenceNumber << "\n";
                     neighbor->processEvent(OSPFv3Neighbor::SEQUENCE_NUMBER_MISMATCH);
                 }
                 else {
@@ -547,6 +550,14 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
             if ((packetID != neighbor->getLastReceivedDDPacket()) ||
                     (packetID.ddOptions.iBit))
             {
+                EV_DEBUG << "  Processing packet contents(ddOptions="
+                            << ((ddPacket->getDdOptions().iBit) ? "I " : "_ ")
+                            << ((ddPacket->getDdOptions().mBit) ? "M " : "_ ")
+                            << ((ddPacket->getDdOptions().msBit) ? "MS" : "__")
+                            << "; seqNumber="
+                            << ddPacket->getSequenceNumber()
+                            << "):\n";
+
                 neighbor->processEvent(OSPFv3Neighbor::SEQUENCE_NUMBER_MISMATCH);
             }
             else {
@@ -563,6 +574,8 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
             break;
         }
     }
+    else
+        delete(packet); //simply reject the packet otherwise
 }
 
 bool OSPFv3Interface::preProcessDDPacket(OSPFv3DatabaseDescription *ddPacket, OSPFv3Neighbor* neighbor, bool inExchangeStart)
@@ -675,6 +688,7 @@ void OSPFv3Interface::processLSR(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
             }
             else {
                 error = true;
+                EV_DEBUG << "Somehow I got here...\n ";
                 neighbor->processEvent(OSPFv3Neighbor::BAD_LINK_STATE_REQUEST);
                 break;
             }
@@ -716,6 +730,7 @@ void OSPFv3Interface::processLSR(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
 
 OSPFv3LSUpdate* OSPFv3Interface::prepareLSUHeader()
 {
+    EV_DEBUG << "Preparing LSU HEADER\n";
     OSPFv3LSUpdate* updatePacket = new OSPFv3LSUpdate();
 
     updatePacket->setType(LSU);
@@ -807,21 +822,22 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
     if (neighbor->getState() >= OSPFv3Neighbor::EXCHANGE_STATE) {
         IPv4Address areaID = lsUpdatePacket->getAreaID();
         OSPFv3Area *area = this->getArea();
-        int currentType;
-        currentType = ROUTER_LSA;
+        int currentType = ROUTER_LSA;
         unsigned int currentLSAIndex = 0;
 
         EV_INFO << "  Processing packet contents:\n";
 
-        while (currentType >= ROUTER_LSA && currentType <= NETWORK_LSA){//AS_EXTERNAL_LSA) {TODO
+        while (currentType >= ROUTER_LSA && currentType <= LINK_LSA){//AS_EXTERNAL_LSA) {TODO
             EV_DEBUG << "While in process LSU - currentType = " << currentType << "\n";
             unsigned int lsaCount = 0;
             switch (currentType) {
             case ROUTER_LSA:
+                EV_DEBUG << "Parsing ROUTER_LSAs\n";
                 lsaCount = lsUpdatePacket->getRouterLSAsArraySize();
                 break;
 
             case NETWORK_LSA:
+                EV_DEBUG << "Parsing NETWORK_LSAs\n";
                 lsaCount = lsUpdatePacket->getNetworkLSAsArraySize();
                 break;
 
@@ -843,6 +859,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                 continue;
                 break;
             case LINK_LSA:
+                EV_DEBUG << "Parsing LINK_LSAs\n";
                 lsaCount = lsUpdatePacket->getLinkLSAsArraySize();
                 break;
             case INTRA_AREA_PREFIX_LSA:
@@ -1021,6 +1038,14 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                             currentLSA->getHeader().setLsaAge(MAX_AGE);
                             if(currentLSA->getHeader().getLsaType()!=LINK_LSA)
                                 this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this);
+                            else {
+                                LSAKeyType lsaKey;
+
+                                lsaKey.linkStateID = currentLSA->getHeader().getLinkStateID();
+                                lsaKey.advertisingRouter = currentLSA->getHeader().getAdvertisingRouter();
+                                lsaKey.LSType = currentLSA->getHeader().getLsaType();
+                                neighbor->removeFromRequestList(lsaKey);
+                            }
                         }
                         else {
                             if (ackFlags.lsaIsNewer) {
@@ -1038,8 +1063,9 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     }
                     continue;
                 }
-                //LSA is on retransmission list - error
+                //LSA is on request list - error
                 if (neighbor->isLSAOnRequestList(lsaKey)) {
+                    EV_DEBUG << "Ending up here..\n";
                     neighbor->processEvent(OSPFv3Neighbor::BAD_LINK_STATE_REQUEST);
                     break;
                 }
@@ -1498,6 +1524,12 @@ OSPFv3LinkLSA* OSPFv3Interface::originateLinkLSA()
         else {
             IPv6Address ipAdd = ipv6Data->getAddress(i);
 
+            //for some reason the ff02::5 is there as well
+            if(ipAdd.isMulticast()) {
+                numPrefixes--;
+                continue;
+            }
+            EV_DEBUG << "Creating Link LSA for address: " << ipv6Data->getAddress(i) << "\n";
             OSPFv3LinkLSAPrefix prefix;
             prefix.dnBit = false;
             prefix.laBit = false;
@@ -1513,6 +1545,7 @@ OSPFv3LinkLSA* OSPFv3Interface::originateLinkLSA()
         }
     }
 
+    linkLSA->setNumPrefixes(numPrefixes);
     lsaHeader.setLsaLength(packetLength);
     this->linkLSAList.push_back(linkLSA);
     return linkLSA;
@@ -1532,6 +1565,7 @@ OSPFv3LinkLSA* OSPFv3Interface::getLinkLSAbyKey(LSAKeyType lsaKey)
 
 bool OSPFv3Interface::installLinkLSA(OSPFv3LinkLSA *lsa)
 {
+    EV_DEBUG << "Link LSA is being installed in database \n";
     LSAKeyType lsaKey;
     lsaKey.linkStateID = lsa->getHeader().getLinkStateID();
     lsaKey.advertisingRouter = lsa->getHeader().getAdvertisingRouter();
@@ -1539,6 +1573,7 @@ bool OSPFv3Interface::installLinkLSA(OSPFv3LinkLSA *lsa)
 
     OSPFv3LinkLSA* lsaInDatabase = this->getLinkLSAbyKey(lsaKey);
     if (lsaInDatabase != nullptr) {
+        EV_DEBUG << "Link LSA is being removed from retransmission lists\n";
         this->getArea()->removeFromAllRetransmissionLists(lsaKey);
         return this->updateLinkLSA(lsaInDatabase, lsa);
     }
@@ -1547,7 +1582,7 @@ bool OSPFv3Interface::installLinkLSA(OSPFv3LinkLSA *lsa)
         this->linkLSAList.push_back(lsaCopy);
         return true;
     }
-}//installRouterLSA
+}//installLinkLSA
 
 bool OSPFv3Interface::updateLinkLSA(OSPFv3LinkLSA* currentLsa, OSPFv3LinkLSA* newLsa)
 {

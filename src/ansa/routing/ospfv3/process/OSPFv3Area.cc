@@ -99,6 +99,17 @@ OSPFv3LSAHeader* OSPFv3Area::findLSA(LSAKeyType lsaKey)
     break;
 
     case NETWORK_LSA: {
+        EV_DEBUG << "looking for lsa type NETWORK\n";
+        OSPFv3RouterLSA* lsa = this->getRouterLSAbyKey(lsaKey);
+                if(lsa == nullptr) {
+                    EV_DEBUG << "FIND LSA - nullptr returned\n";
+                    return nullptr;
+                }
+                else {
+                    OSPFv3LSAHeader* lsaHeader = &(lsa->getHeader());
+                    EV_DEBUG << "FIND LSA - header returned\n";
+                    return lsaHeader;
+                }
         //return this->getNetworkLSAbyId(lsaKey.linkStateID);
     }
     break;
@@ -139,7 +150,6 @@ OSPFv3RouterLSA* OSPFv3Area::originateRouterLSA()
     long interfaceCount = this->interfaceList.size();
     OSPFv3Options lsOptions;
     memset(&lsOptions, 0, sizeof(OSPFv3Options));
-    long i;
 
 
     //First set the LSA Header
@@ -190,6 +200,9 @@ OSPFv3RouterLSA* OSPFv3Area::originateRouterLSA()
     }
 
     this->addRouterLSA(routerLSA);
+
+    //originate Intra-Area-Prefix LSA along with any Router LSA
+    //this->originateIntraAreaPrefixLSA(routerLSA, intf);
 
 
 
@@ -876,7 +889,7 @@ std::string OSPFv3Area::detailedInfo() const
     }
 
     out << "\nLink (Type-8) Link States (Area " << this->getAreaID().str(false) << ")\n" ;
-    out << "\nADV Router\tAge\tSeq#\tLink State ID\tInterface\n";
+    out << "ADV Router\tAge\tSeq#\tLink State ID\tInterface\n";
     for(auto it=this->interfaceList.begin(); it!=this->interfaceList.end(); it++) {
         int linkLSACount = (*it)->getLinkLSACount();
         for(int i = 0; i<linkLSACount; i++) {
@@ -886,7 +899,7 @@ std::string OSPFv3Area::detailedInfo() const
     }
 
     out << "\nIntra Area Prefix Link States (Area" << this->getAreaID().str(false) << ")\n" ;
-    out << "\nADV Router\tAge\tSeq#\tLink ID\tRef-lstype\tRef-LSID\n";
+    out << "Router\tAge\tSeq#\tLink ID\tRef-lstype\tRef-LSID\n";
     for(auto it=this->intraAreaPrefixLSAList.begin(); it!=this->intraAreaPrefixLSAList.end(); it++) {
         OSPFv3LSAHeader& header = (*it)->getHeader();
         out << header.getAdvertisingRouter() << "\t" << header.getLsaAge() << "\t" << header.getLsaSequenceNumber() << "\t" << header.getLinkStateID() << "\t" << (*it)->getReferencedLSType() << "\t" << (*it)->getReferencedLSID()<<"\n";

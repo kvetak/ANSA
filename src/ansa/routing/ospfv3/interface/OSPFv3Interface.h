@@ -32,7 +32,8 @@ class INET_API OSPFv3Interface : public cObject
         INTERFACE_STATE_POINTTOPOINT = 3,
         INTERFACE_STATE_DROTHER = 4,
         INTERFACE_STATE_BACKUP = 5,
-        INTERFACE_STATE_DESIGNATED = 6
+        INTERFACE_STATE_DESIGNATED = 6,
+        INTERFACE_PASSIVE = 7
     };
 
     enum OSPFv3InterfaceEvent{
