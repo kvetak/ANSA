@@ -419,6 +419,10 @@ void OSPFv3Process::sendPacket(OSPFv3Packet *packet, IPv6Address destination, co
 
 OSPFv3LSA* OSPFv3Process::findLSA(LSAKeyType lsaKey, IPv4Address areaID, int instanceID)
 {
+    OSPFv3Instance* instance = this->getInstanceById(instanceID);
+    OSPFv3Area* area = instance->getAreaById(areaID);
+    return area->getLSAbyKey(lsaKey);
+    /*
     switch(lsaKey.LSType) {
         case ROUTER_LSA:
         {
@@ -462,8 +466,9 @@ OSPFv3LSA* OSPFv3Process::findLSA(LSAKeyType lsaKey, IPv4Address areaID, int ins
         }
 
         case INTRA_AREA_PREFIX_LSA:
+
             break;
-    }
+    }*/
 }
 
 bool OSPFv3Process::floodLSA(OSPFv3LSA* lsa, IPv4Address areaID, OSPFv3Interface* interface, OSPFv3Neighbor* neighbor)

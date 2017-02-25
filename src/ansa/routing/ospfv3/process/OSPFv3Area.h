@@ -40,6 +40,7 @@ class INET_API OSPFv3Area : public cObject
 
     OSPFv3LSA* getLSAbyKey(LSAKeyType lsaKey);
 
+    void deleteRouterLSA(int index);
     void addRouterLSA(OSPFv3RouterLSA* newLSA){this->routerLSAList.push_back(newLSA);}
     OSPFv3RouterLSA* originateRouterLSA();//this originates one router LSA for one area
     int getRouterLSACount(){return this->routerLSAList.size();}
@@ -68,6 +69,7 @@ class INET_API OSPFv3Area : public cObject
 
     void addInterAreaLSA(OSPFv3InterAreaPrefixLSA* newLSA);
     OSPFv3InterAreaPrefixLSA* getInterAreaLSAbyId(IPv4Address LSAId);
+    OSPFv3InterAreaPrefixLSA* getInterAreaLSA(int i){return this->interAreaLSAList.at(i);}
 
     void addIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* newLSA){this->intraAreaPrefixLSAList.push_back(newLSA);}
     OSPFv3IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this originates one router LSA for one area

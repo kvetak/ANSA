@@ -306,6 +306,12 @@ void OSPFv3Neighbor::createDatabaseSummary()
         OSPFv3LSAHeader* lsaHeader = new OSPFv3LSAHeader(this->getInterface()->getLinkLSA(i)->getHeader());
         this->databaseSummaryList.push_back(lsaHeader);
     }
+
+    int intraAreaPrefixCnt = area->getIntraAreaPrefixLSACount();
+    for(int i=0; i<intraAreaPrefixCnt; i++) {
+        OSPFv3LSAHeader* lsaHeader = new OSPFv3LSAHeader(area->getIntraAreaPrefixLSA(i)->getHeader());
+        this->databaseSummaryList.push_back(lsaHeader);
+    }
 }
 
 void OSPFv3Neighbor::retransmitUpdatePacket()

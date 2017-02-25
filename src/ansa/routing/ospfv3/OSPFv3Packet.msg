@@ -316,6 +316,7 @@ packet OSPFv3LSUpdate extends OSPFv3Packet{
     OSPFv3RouterLSA RouterLSAs[];
     OSPFv3NetworkLSA NetworkLSAs[];
     OSPFv3LinkLSA LinkLSAs[];
+    OSPFv3IntraAreaPrefixLSA IntraAreaPrefixLSAs[];
 //    OSPFv3LSA LSAs[];
     //TODO - template for any LSA??
 }

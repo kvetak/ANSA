@@ -164,6 +164,7 @@ OSPFv3RouterLSA* OSPFv3Area::originateRouterLSA()
     lsaHeader.setLinkStateID(this->getNewRouterLinkStateID());
     lsaHeader.setAdvertisingRouter(this->getInstance()->getProcess()->getRouterID());
     lsaHeader.setLsaSequenceNumber(this->getCurrentRouterSequence());
+    this->incrementRouterSequence();
 
     //TODO - set options
 
@@ -535,6 +536,26 @@ bool OSPFv3Area::routerLSADiffersFrom(OSPFv3RouterLSA* currentLsa, OSPFv3RouterL
     return differentHeader || differentBody;
 }//routerLSADiffersFrom
 
+void OSPFv3Area::deleteRouterLSA(int index) {
+    OSPFv3RouterLSA *delRouter = this->routerLSAList.at(index);
+    OSPFv3LSAHeader &routerHeader = delRouter->getHeader();
+
+    int prefixCount = this->intraAreaPrefixLSAList.size();
+    for(int i=0; i<prefixCount; i++) {
+       OSPFv3IntraAreaPrefixLSA* lsa = this->intraAreaPrefixLSAList.at(i);
+
+       if (lsa->getReferencedAdvRtr() == routerHeader.getAdvertisingRouter() &&
+               lsa->getReferencedLSID() == routerHeader.getLinkStateID() &&
+               lsa->getReferencedLSType() == ROUTER_LSA) {
+           this->intraAreaPrefixLSAList.erase(this->intraAreaPrefixLSAList.begin()+i);
+           break;
+       }
+    }
+
+
+
+    this->routerLSAList.erase(this->routerLSAList.begin()+index);
+}
 
 bool OSPFv3Area::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv3Neighbor* neighbor)
 {
@@ -954,7 +975,7 @@ std::string OSPFv3Area::detailedInfo() const
     }
 
     out << "\nIntra Area Prefix Link States (Area" << this->getAreaID().str(false) << ")\n" ;
-    out << "Router\tAge\tSeq#\tLink ID\tRef-lstype\tRef-LSID\n";
+    out << "ADV Router\tAge\tSeq#\tLink ID\tRef-lstype\tRef-LSID\n";
     for(auto it=this->intraAreaPrefixLSAList.begin(); it!=this->intraAreaPrefixLSAList.end(); it++) {
         OSPFv3LSAHeader& header = (*it)->getHeader();
         out << header.getAdvertisingRouter() << "\t" << header.getLsaAge() << "\t" << header.getLsaSequenceNumber() << "\t" << header.getLinkStateID() << "\t" << (*it)->getReferencedLSType() << "\t" << (*it)->getReferencedLSID()<<"\n";

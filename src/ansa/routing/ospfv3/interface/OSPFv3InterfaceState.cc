@@ -13,10 +13,33 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
 
     interface->changeState(currentState, newState);
 
+    //change of state -> new router LSA needs to be generated
+
     if (oldState == OSPFv3Interface::INTERFACE_STATE_WAITING)
     {
+        OSPFv3RouterLSA* routerLSA;
+        int routerLSAcount = interface->getArea()->getRouterLSACount();
+        for(int i=0; i< routerLSAcount; i++) {
+            routerLSA = interface->getArea()->getRouterLSA(i);
+            OSPFv3LSAHeader &header = routerLSA->getHeader();
+            if (header.getAdvertisingRouter() == interface->getArea()->getInstance()->getProcess()->getRouterID()) {
+                EV_DEBUG << "Changing state -> deleting the old router LSA\n";
+                interface->getArea()->deleteRouterLSA(i);
+            }
+        }
+
+        EV_DEBUG << "Changing state -> new Router LSA\n";
         interface->getArea()->originateRouterLSA();
-//        RouterLSA *routerLSA = intf->getArea()->findRouterLSA(intf->getArea()->getRouter()->getRouterID());
+
+        if(nextState == OSPFv3Interface::INTERFACE_STATE_BACKUP ||
+           nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED ||
+           nextState == OSPFv3Interface::INTERFACE_STATE_DROTHER) {
+            interface->setTransitNetInt(true);//this interface is in broadcast network
+        }
+
+        interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
+
+        //OSPFv3RouterLSA *routerLSA = intf->getArea()->getRouterLSA(intf->getArea()->getRouter()->getRouterID());
 
 //        if (routerLSA != nullptr) {
 //            long sequenceNumber = routerLSA->getHeader().getLsSequenceNumber();
