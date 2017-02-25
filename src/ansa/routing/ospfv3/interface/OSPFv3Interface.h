@@ -178,6 +178,9 @@ class INET_API OSPFv3Interface : public cObject
     void sendLSAcknowledgement(OSPFv3LSAHeader *lsaHeader, IPv6Address destination);
     void addDelayedAcknowledgement(OSPFv3LSAHeader& lsaHeader);
 
+    void setTransitNetInt(bool isTransit){this->transitNetworkInterface=isTransit;}
+    bool getTransitNetInt(){return this->transitNetworkInterface;}
+
 
   private:
     friend class OSPFv3InterfaceState;
@@ -205,6 +208,9 @@ class INET_API OSPFv3Interface : public cObject
     std::vector<OSPFv3Neighbor*> neighbors;
     std::map<IPv4Address, OSPFv3Neighbor*> neighborsById;
     std::map<IPv6Address, std::list<OSPFv3LSAHeader> > delayedAcknowledgements;
+
+    //for Intra-Area-Prefix LSA
+    bool transitNetworkInterface;
 
     std::vector<OSPFv3LinkLSA*> linkLSAList;
     uint32_t linkLSASequenceNumber = 1;

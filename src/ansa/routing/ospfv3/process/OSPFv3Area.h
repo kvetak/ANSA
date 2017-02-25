@@ -70,7 +70,7 @@ class INET_API OSPFv3Area : public cObject
     OSPFv3InterAreaPrefixLSA* getInterAreaLSAbyId(IPv4Address LSAId);
 
     void addIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* newLSA){this->intraAreaPrefixLSAList.push_back(newLSA);}
-    OSPFv3IntraAreaPrefixLSA* originateIntraAreaPrefixLSA(OSPFv3LSA* lsa, OSPFv3Interface* intf);//this originates one router LSA for one area
+    OSPFv3IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this originates one router LSA for one area
     int getIntraAreaPrefixLSACount(){return this->intraAreaPrefixLSAList.size();}
     OSPFv3IntraAreaPrefixLSA* getIntraAreaPrefixLSA(int i){return this->intraAreaPrefixLSAList.at(i);}
     bool installIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA *lsa);

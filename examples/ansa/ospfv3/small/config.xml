@@ -16,7 +16,8 @@
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:10::1/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:100/64</IPv6Address>
+				<IPv6Address>2001:db8:a::1/64</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
@@ -26,7 +27,8 @@
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:12::1/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:110/64</IPv6Address>
+				<IPv6Address>2001:db8:1::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -48,7 +50,8 @@
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:10::2/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:200/64</IPv6Address>
+				<IPv6Address>2001:db8:a::2/64</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
@@ -58,7 +61,8 @@
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:12::2/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:210/64</IPv6Address>
+				<IPv6Address>2001:db8:2::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -80,7 +84,8 @@
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:10::3/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:300/64</IPv6Address>
+				<IPv6Address>2001:db8:a::3/64</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
@@ -90,7 +95,8 @@
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:12::3/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:310/64</IPv6Address>
+				<IPv6Address>2001:db8:3::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -112,7 +118,8 @@
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:10::4/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:400/64</IPv6Address>
+				<IPv6Address>2001:db8:a::4/64</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
@@ -122,7 +129,8 @@
 						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
-				<IPv6Address>fe80:12::4/10</IPv6Address>
+				<IPv6Address>fe80::a8bb:ccff:fe00:410/64</IPv6Address>
+				<IPv6Address>2001:db8:4::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>

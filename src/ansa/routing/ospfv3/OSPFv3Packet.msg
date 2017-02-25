@@ -121,13 +121,14 @@ enum OSPFv3LSAFunctionCode
     INTRA_AREA_PREFIX_LSA = 9;
 }
 
+//used for Intra-Area-Prefix LSA
 struct OSPFv3LSAPrefix 
 {
-    bool dnBit;
-    bool pBit;
-    bool xBit;
-    bool laBit;
-    bool nuBit;
+    bool dnBit=0;
+    bool pBit=0;
+    bool xBit=0;
+    bool laBit=0;
+    bool nuBit=0;
     uint8_t prefixLen;
     
     //TODO address prefix

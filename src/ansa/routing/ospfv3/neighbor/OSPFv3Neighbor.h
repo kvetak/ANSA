@@ -110,7 +110,7 @@ class OSPFv3Neighbor{
     void sendDDPacket(bool init = false);
     void sendLinkStateRequestPacket();
 
-    void setLastReceivedDDPacket(OSPFv3DDPacketID packetID){this->lastReceivedDDPacket = packetID;}
+    void setLastReceivedDDPacket(OSPFv3DatabaseDescription* ddPacket);
     OSPFv3DDPacketID getLastReceivedDDPacket(){return this->lastReceivedDDPacket;}
     bool isLinkStateRequestListEmpty(){return this->linkStateRequestList.empty();}
     bool isRequestRetransmissionTimerActive(){return this->requestRetransmissionTimerActive;}

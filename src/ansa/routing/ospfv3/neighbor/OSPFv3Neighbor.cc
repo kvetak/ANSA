@@ -161,6 +161,18 @@ void OSPFv3Neighbor::clearRequestRetransmissionTimer()
     this->requestRetransmissionTimerActive = false;
 }
 
+void OSPFv3Neighbor::setLastReceivedDDPacket(OSPFv3DatabaseDescription* ddPacket){
+    OSPFv3DDOptions& ddOptions = ddPacket->getDdOptions();
+    OSPFv3DDPacketID packetID;
+    packetID.ddOptions = ddOptions;
+    packetID.options = ddPacket->getOptions();
+    packetID.sequenceNumber = ddPacket->getSequenceNumber();
+
+    setOptions(packetID.options);
+    setDDSequenceNumber(packetID.sequenceNumber);
+    this->lastReceivedDDPacket = packetID;
+}//setLastReceivedDDPacket
+
 void OSPFv3Neighbor::sendDDPacket(bool init)
 {
     OSPFv3DatabaseDescription* ddPacket = new OSPFv3DatabaseDescription();

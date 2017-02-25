@@ -32,6 +32,7 @@ OSPFv3Interface::OSPFv3Interface(const char* name, cModule* routerModule, OSPFv3
     EV_DEBUG << "Interface IP: " << ipv6int->getAddress(0) << "\n";
     this->interfaceType = interfaceType;
     this->passiveInterface = passive;
+    this->transitNetworkInterface = false; //false at first
 
     this->helloTimer = new cMessage();
     helloTimer->setKind(HELLO_TIMER);
@@ -130,6 +131,8 @@ void OSPFv3Interface::reset()
 {
     EV_DEBUG << "Resetting interface " << this->getIntName() << "\n";
 }//reset
+
+//----------------------------------------------- Hello Packet ------------------------------------------------//
 
 void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
 {
@@ -392,10 +395,12 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
     delete packet;
 }//processHello
 
+//--------------------------------------------Database Description Packets--------------------------------------------//
+
+
 void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
-    EV_DEBUG << "Parsing DD Packet \n";
     OSPFv3DatabaseDescription* ddPacket = check_and_cast<OSPFv3DatabaseDescription* >(packet);
-    EV_DEBUG << "Process " << this->getArea()->getInstance()->getProcess()->getProcessID() << " received a DD Packet from neighbor " << ddPacket->getRouterID() << "\n";
+    EV_DEBUG << "Process " << this->getArea()->getInstance()->getProcess()->getProcessID() << " received a DD Packet from neighbor " << ddPacket->getRouterID() << " on interface " << this->interfaceName << "\n";
 
     OSPFv3Neighbor* neighbor = this->getNeighborById(ddPacket->getRouterID());
     if(neighbor == nullptr)
@@ -405,7 +410,6 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
     if ((ddPacket->getInterfaceMTU() <= this->getInterfaceMTU()) &&
             (neighborState > OSPFv3Neighbor::ATTEMPT_STATE))
     {
-        EV_DEBUG << "Parsing DD Packet - trying the switch \n";
         switch (neighborState) {
         case OSPFv3Neighbor::TWOWAY_STATE:
             EV_DEBUG << "Parsing DD Packet - two way state - throwing away\n";
@@ -416,6 +420,8 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
         case OSPFv3Neighbor::INIT_STATE:
             EV_DEBUG << "Parsing DD Packet - init -> goint to 2way\n";
             neighbor->processEvent(OSPFv3Neighbor::TWOWAY_RECEIVED);
+            neighbor->setLastReceivedDDPacket(ddPacket);
+            delete(packet);
             break;
 
         case OSPFv3Neighbor::EXCHANGE_START_STATE: {
@@ -427,15 +433,8 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
             {
                 if (neighbor->getNeighborID() > this->getArea()->getInstance()->getProcess()->getRouterID()) {
                     EV_DEBUG << "Router " << this->getArea()->getInstance()->getProcess()->getRouterID() << " is becoming the slave\n";
-                    OSPFv3DDPacketID packetID;
-                    packetID.ddOptions = ddOptions;
-                    packetID.options = ddPacket->getOptions();
-                    packetID.sequenceNumber = ddPacket->getSequenceNumber();
-
-                    neighbor->setOptions(packetID.options);
                     neighbor->setDatabaseExchangeRelationship(OSPFv3Neighbor::SLAVE);
-                    neighbor->setDDSequenceNumber(packetID.sequenceNumber);
-                    neighbor->setLastReceivedDDPacket(packetID);
+                    neighbor->setLastReceivedDDPacket(ddPacket);
 
                     if (!preProcessDDPacket(ddPacket, neighbor, true)) {
                         break;
@@ -461,14 +460,8 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
                     (ddPacket->getSequenceNumber() == neighbor->getDDSequenceNumber()) &&
                     (neighbor->getNeighborID() < this->getArea()->getInstance()->getProcess()->getRouterID()))
             {
-                OSPFv3DDPacketID packetID;
-                packetID.ddOptions = ddOptions;
-                packetID.options = ddPacket->getOptions();
-                packetID.sequenceNumber = ddPacket->getSequenceNumber();
-
-                neighbor->setOptions(packetID.options);
                 neighbor->setDatabaseExchangeRelationship(OSPFv3Neighbor::MASTER);
-                neighbor->setLastReceivedDDPacket(packetID);
+                neighbor->setLastReceivedDDPacket(ddPacket);
 
                 if (!preProcessDDPacket(ddPacket, neighbor, true)) {
                     break;
@@ -484,6 +477,8 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
                     neighbor->startRequestRetransmissionTimer();
                 }
             }
+
+            delete(packet);
         }
         break;
 
@@ -511,7 +506,7 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
                             ((neighbor->getDatabaseExchangeRelationship() == OSPFv3Neighbor::SLAVE) &&
                                     (packetID.sequenceNumber == (neighbor->getDDSequenceNumber() + 1))))
                     {
-                        neighbor->setLastReceivedDDPacket(packetID);
+                        neighbor->setLastReceivedDDPacket(ddPacket);
                         if (!preProcessDDPacket(ddPacket, neighbor, false)) {
                             EV_DEBUG << "Parsing DD Packet - EXCHANGE - preprocessing was true \n";
                             break;
@@ -651,12 +646,16 @@ bool OSPFv3Interface::preProcessDDPacket(OSPFv3DatabaseDescription *ddPacket, OS
     return true;
 }//preProcessDDPacket
 
+//--------------------------------------------- Link State Requests --------------------------------------------//
+
 void OSPFv3Interface::processLSR(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor){
     EV_DEBUG << "Processing LSR Packet\n";
 
 
 }
 
+
+//-------------------------------------------- Link State Updates --------------------------------------------//
 OSPFv3LSUpdate* OSPFv3Interface::prepareLSUHeader()
 {
     EV_DEBUG << "Preparing LSU HEADER\n";
@@ -763,6 +762,8 @@ void OSPFv3Interface::acknowledgeLSA(OSPFv3LSAHeader* lsaHeader,
     }
 }//acknowledgeLSA
 
+
+//--------------------------------------- Link State Advertisements -----------------------------------------//
 void OSPFv3Interface::sendLSAcknowledgement(OSPFv3LSAHeader *lsaHeader, IPv6Address destination)
 {
     OSPFv3Options options;
@@ -791,6 +792,8 @@ void OSPFv3Interface::sendDelayedAcknowledgements()
 
 }//sendDelayedAcknowledgements
 
+
+//-------------------------------------------- Flooding ---------------------------------------------//
 bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv3Neighbor* neighbor)
 {
     bool floodedBackOut = false;
