@@ -1,0 +1,2386 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2017.03.21 13:58:10 =~=~=~=~=~=~=~=~=~=~=~=
+
+Mar 21 12:59:00.053: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 12:59:00.065: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#sh clo
+12:59:35.073 UTC Tue Mar 21 2017
+R1#sh clo
+12:59:39.285 UTC Tue Mar 21 2017
+R1#sh clo
+12:59:47.621 UTC Tue Mar 21 2017
+R1#sh clo
+12:59:54.433 UTC Tue Mar 21 2017
+R1#sh clo
+12:59:56.605 UTC Tue Mar 21 2017
+R1#
+Mar 21 13:00:00.061: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:00:00.073: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#debug standby events protocol
+HSRP Events debugging is on
+    (protocol)
+R1#debug standby packets hello
+HSRP Packets debugging is on
+    (Hello)
+R1#
+Mar 21 13:00:35.569: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:35.593: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:38.141: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:00:38.225: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:40.797: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:00:40.833: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:43.473: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:43.804: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:45.888: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:46.784: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:48.800: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:49.692: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:51.792: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:52.512: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:54.320: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:54.944: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:00:57.216: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:00:57.708: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:00.064: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+Mar 21 13:01:00.076: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:01:00.096: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:00.492: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:02.720: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:03.260: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:05.616: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:05.772: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:08.224: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:08.336: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:10.784: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:11.212: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:13.504: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:13.756: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:15.984: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:16.380: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:18.688: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:19.044: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:21.552: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:21.624: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:24.084: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:01:24.176: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:26.784: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:26.880: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:29.720: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:01:29.728: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:32.224: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:32.440: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:35.168: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:35.368: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:37.680: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:38.100: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:40.464: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:40.696: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:43.344: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:43.592: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:46.120: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:01:46.144: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:48.628: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:01:48.848: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:51.296: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:51.384: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:54.000: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:54.308: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:56.544: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:56.868: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:01:59.136: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:01:59.476: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:02:00.052: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:02:00.064: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:02:01.712: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:01.920: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:04.224: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:04.708: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:06.768: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:07.684: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:09.616: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:10.676: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:12.352: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:13.504: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:15.184: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:15.352: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:02:15.352: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.3, was 192.168.1.2
+Mar 21 13:02:15.356: HSRP: Fa0/0 Grp 0 Ignoring Resign from 192.168.1.2
+Mar 21 13:02:15.360: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:02:15.804: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:15.804: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.2)
+Mar 21 13:02:15.808: HSRP: Fa0/0 Grp 0 Standby -> Listen
+R1#
+Mar 21 13:02:15.808: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+Mar 21 13:02:17.828: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:18.232: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:20.720: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:20.960: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:23.376: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:23.612: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:25.864: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:26.000: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:26.000: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was local
+Mar 21 13:02:26.160: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:28.688: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:29.164: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:31.608: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:32.080: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:34.208: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:34.976: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:36.704: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:37.712: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:39.632: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:42.520: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:45.356: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:48.304: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:02:48.916: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (192.168.1.3)
+Mar 21 13:02:48.916: HSRP: Fa0/0 Grp 0 Active router is unknown, was 192.168.1.3
+Mar 21 13:02:48.916: HSRP: Fa0/0 Grp 0 Listen -> Speak
+Mar 21 13:02:48.916: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:49.552: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:02:49.552: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.2
+Mar 21 13:02:49.552: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R1#
+Mar 21 13:02:51.732: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:52.512: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:54.148: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:55.064: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:02:56.708: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:02:57.504: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:02:58.436: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+Mar 21 13:02:58.436: HSRP: Fa0/0 Grp 0 Standby router is local
+Mar 21 13:02:58.436: HSRP: Fa0/0 Grp 0 Speak -> Standby
+Mar 21 13:02:58.436: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+Mar 21 13:02:58.436: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:00.064: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+Mar 21 13:03:00.076: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:03:00.140: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:01.076: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:03.040: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:03.844: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:05.852: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:06.388: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:08.592: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:08.944: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:11.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:11.615: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:14.079: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:14.399: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:17.055: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:17.279: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:19.611: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:20.191: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:22.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:22.975: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:25.503: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:25.823: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:28.411: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:28.751: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:31.139: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:31.663: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:33.971: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:34.639: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:36.455: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:37.567: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:39.031: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:40.399: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:41.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:42.847: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:44.887: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:45.343: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:47.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:48.271: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:50.311: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:51.215: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:52.915: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:54.175: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:03:55.763: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:55.787: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.3, was 192.168.1.2
+Mar 21 13:03:55.787: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:55.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:03:55.835: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.2)
+Mar 21 13:03:55.835: HSRP: Fa0/0 Grp 0 Standby -> Listen
+R1#
+Mar 21 13:03:55.835: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+Mar 21 13:03:58.275: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:03:58.547: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:00.067: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:04:00.079: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:04:00.995: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:01.447: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:03.667: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:04.283: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:06.135: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:06.135: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was local
+Mar 21 13:04:06.415: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:08.679: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:09.371: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:11.323: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:12.027: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:14.191: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:14.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:16.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:17.663: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:19.651: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:20.463: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:22.179: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:23.359: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:24.667: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:26.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:27.335: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:28.727: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:30.327: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:31.151: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:32.807: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:35.763: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:38.343: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:40.935: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:42.467: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:42.467: HSRP: Fa0/0 Grp 0 Ignoring Hello (100/192.168.1.2 < 100/192.168.1.3)
+Mar 21 13:04:42.543: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (192.168.1.3)
+Mar 21 13:04:42.543: HSRP: Fa0/0 Grp 0 Active router is unknown, was 192.168.1.3
+Mar 21 13:04:42.543: HSRP: Fa0/0 Grp 0 Listen -> Speak
+Mar 21 13:04:42.543: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:45.239: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:45.239: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.2
+Mar 21 13:04:45.239: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+Mar 21 13:04:45.407: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:47.779: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:48.319: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:50.719: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:50.991: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:04:51.055: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+Mar 21 13:04:51.055: HSRP: Fa0/0 Grp 0 Standby router is local
+Mar 21 13:04:51.055: HSRP: Fa0/0 Grp 0 Speak -> Standby
+Mar 21 13:04:51.055: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+Mar 21 13:04:51.055: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:53.511: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:04:53.695: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:56.271: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:56.471: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:04:58.703: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:04:59.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:05:00.067: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+Mar 21 13:05:00.071: %SYS-5-CONFIG_I: Configured from console by  on vty1 (EEM:noshut_port)
+R1#
+Mar 21 13:05:00.079: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+Mar 21 13:05:00.083: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:05:01.487: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:05:01.863: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:04.119: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:05:04.647: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:06.887: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:05:07.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:09.527: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:05:10.451: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:11.943: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:13.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:14.855: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:16.387: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:05:17.271: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:19.183: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:05:20.103: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:21.791: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:22.919: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:24.631: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:25.815: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:27.123: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:28.615: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:29.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:31.463: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:32.723: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:34.087: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:05:35.543: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#un all
+All possible debugging has been turned off
+R1#
+Mar 21 13:05:37.031: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:05:37.963: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:06:00.067: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:06:00.079: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:07:00.062: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:07:00.074: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:08:00.054: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:08:00.066: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:09:00.050: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:09:00.062: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:10:00.054: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:10:00.066: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:11:00.054: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:11:00.066: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:12:00.054: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:12:00.066: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:13:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:13:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#un alldebug standby packets helloevents protocol
+HSRP Events debugging is on
+    (protocol)
+R1#debug standby events protocolun all                       debug standby packets hello
+HSRP Packets debugging is on
+    (Hello)
+R1#
+Mar 21 13:13:38.175: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:40.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:40.847: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:43.503: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:13:43.543: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:46.171: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:46.303: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:48.675: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:48.927: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:51.323: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:51.607: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:54.223: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:54.391: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:56.715: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:57.191: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:13:59.607: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:13:59.991: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:14:00.063: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:14:00.075: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:14:02.463: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:02.503: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:04.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:05.479: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:07.887: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:08.375: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:10.451: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:11.111: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:13.107: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:13.927: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:16.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:16.647: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:18.675: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:19.335: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:21.447: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:21.783: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:24.287: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:24.375: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:27.091: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:27.127: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:29.603: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:29.911: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:32.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:32.423: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:34.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:34.839: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:37.063: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:37.511: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+Mar 21 13:14:39.899: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:40.487: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:42.351: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:43.319: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:45.219: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:46.183: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:47.967: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:48.631: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:50.867: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:51.351: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:53.747: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:53.879: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:56.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:56.859: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:14:58.939: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:14:59.451: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:15:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:15:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:15:01.475: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:02.427: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:03.887: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:05.147: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:06.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:07.067: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:07.071: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.3, was 192.168.1.2
+Mar 21 13:15:07.091: HSRP: Fa0/0 Grp 0 Ignoring Resign from 192.168.1.2
+Mar 21 13:15:07.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:07.643: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:15:08.059: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:15:08.059: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.2)
+Mar 21 13:15:08.059: HSRP: Fa0/0 Grp 0 Standby -> Listen
+Mar 21 13:15:08.059: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+Mar 21 13:15:08.063: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:15:08.067: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was local
+R1#
+Mar 21 13:15:09.731: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:11.067: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:12.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:13.703: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:15.087: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:16.303: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:18.015: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:19.179: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:20.811: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:21.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:23.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:24.923: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:27.903: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:30.731: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:33.631: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:34.747: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (192.168.1.3)
+Mar 21 13:15:34.747: HSRP: Fa0/0 Grp 0 Active router is unknown, was 192.168.1.3
+Mar 21 13:15:34.747: HSRP: Fa0/0 Grp 0 Listen -> Speak
+Mar 21 13:15:34.747: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:15:34.955: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:34.955: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.2
+Mar 21 13:15:34.955: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R1#
+Mar 21 13:15:37.403: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:15:37.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:40.299: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:15:40.719: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:43.051: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+Mar 21 13:15:43.343: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:43.899: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+Mar 21 13:15:43.899: HSRP: Fa0/0 Grp 0 Standby router is local
+Mar 21 13:15:43.899: HSRP: Fa0/0 Grp 0 Speak -> Standby
+Mar 21 13:15:43.899: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+Mar 21 13:15:43.899: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:45.792: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:46.620: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:48.476: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:49.436: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:51.212: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:52.236: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:54.160: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:54.956: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:56.940: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:15:57.920: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:15:59.660: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:16:00.072: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#
+Mar 21 13:16:00.084: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#
+Mar 21 13:16:00.560: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:16:02.260: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:16:03.152: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#sho
+R1#show nt
+R1#show ntp ass
+R1#show ntp associations 
+
+  address         ref clock       st   when   poll reach  delay  offset   disp
+*~192.168.1.4     .LOCL.           1     47     64   377  5.598   6.834  4.799
+ * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+R1#
+Mar 21 13:16:05.112: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:16:05.728: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#show ntp associations              
+Mar 21 13:16:07.776: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:16:08.144: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#show ntp st
+R1#show ntp status 
+Clock is synchronized, stratum 2, reference is 192.168.1.4    
+nominal freq is 250.0000 Hz, actual freq is 250.0001 Hz, precision is 2**18
+ntp uptime is 424500 (1/100 of seconds), resolution is 4000
+reference time is DC7BA495.A2C46B81 (13:09:41.635 UTC Tue Mar 21 2017)
+clock offset is 6.8349 msec, root delay is 5.59 msec
+root dispersion is 38.41 msec, peer dispersion is 4.79 msec
+loopfilter state is 'CTRL' (Normal Controlled Loop), drift is -0.000000592 s/s
+system poll interval is 64, last update was 389 sec ago.
+R1#
+Mar 21 13:16:10.340: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:16:10.592: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:16:13.168: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:13.332: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:16:15.696: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:16.120: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:16:18.448: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:19.084: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:16:20.992: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:21.696: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+Mar 21 13:16:23.952: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:24.564: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#sho
+R1#show clo
+R1#show clock 
+Mar 21 13:16:26.960: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:27.536: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#show clock 
+13:16:28.772 UTC Tue Mar 21 2017
+R1#set clo
+Mar 21 13:16:29.872: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:30.388: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#set clo
+R1#set clo       
+Mar 21 13:16:32.448: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:33.184: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clo
+R1#clock se
+R1#clock set 
+Mar 21 13:16:35.392: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:35.712: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:38.208: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:38.224: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:40.928: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:41.052: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:43.424: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:43.632: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:45.888: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:46.148: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:48.624: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:48.708: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:51.248: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:51.360: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:53.936: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:16:54.176: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:56.592: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:56.700: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:16:59.040: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:16:59.688: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:17:00.060: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R1#clock set 
+Mar 21 13:17:00.072: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R1#clock set 
+Mar 21 13:17:01.824: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:17:02.100: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:17:04.292: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:17:04.864: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:17:07.252: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+Mar 21 13:17:07.356: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#clock set 
+Mar 21 13:17:10.036: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+Mar 21 13:17:10.132: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#clock set Connected to Dynamips VM "R1a" (ID 5, type c7200) - Console port
+Press ENTER to get the prompt.
+ROMMON emulation microcode.
+
+Launching IOS image at 0x80008000...
+
+              Restricted Rights Legend
+
+Use, duplication, or disclosure by the Government is
+subject to restrictions as set forth in subparagraph
+(c) of the Commercial Computer Software - Restricted
+Rights clause at FAR sec. 52.227-19 and subparagraph
+(c) (1) (ii) of the Rights in Technical Data and Computer
+Software clause at DFARS sec. 252.227-7013.
+
+           cisco Systems, Inc.
+           170 West Tasman Drive
+           San Jose, California 95134-1706
+
+
+
+Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M2, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2012 by Cisco Systems, Inc.
+Compiled Wed 07-Nov-12 18:15 by prod_rel_team
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+Cisco 7206VXR (NPE400) processor (revision A) with 491520K/32768K bytes of memory.Installed image archive
+
+Processor board ID 4279256517
+R7000 CPU at 150MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache
+6 slot VXR midplane, Version 2.1
+
+Last reset from power-on
+
+PCI bus mb0_mb1 (Slots 0, 1, 3 and 5) has a capacity of 600 bandwidth points.
+Current configuration on bus mb0_mb1 has a total of 400 bandwidth points. 
+This configuration is within the PCI bus capacity and is supported. 
+
+PCI bus mb2 (Slots 2, 4, 6) has a capacity of 600 bandwidth points.
+Current configuration on bus mb2 has a total of 0 bandwidth points 
+This configuration is within the PCI bus capacity and is supported. 
+
+Please refer to the following document "Cisco 7200 Series Port Adaptor
+Hardware Configuration Guidelines" on Cisco.com <http://www.cisco.com>
+for c7200 bandwidth points oversubscription and usage guidelines.
+
+
+2 FastEthernet interfaces
+509K bytes of NVRAM.
+
+8192K bytes of Flash internal SIMM (Sector size 256K).
+ event timer cron name 
+% Incomplete command.
+
+ cron-entry "*/1 * * * *"
+ ^
+% Invalid input detected at '^' marker.
+
+% Crashinfo may not be recovered at bootflash:crashinfo
+% This file system device reports an error
+
+
+Press RETURN to get started!
+
+
+*Mar 21 13:16:46.031: %IFMGR-7-NO_IFINDEX_FILE: Unable to open nvram:/ifIndex-table No such file or directory
+*Mar 21 13:16:53.643: %LINEPROTO-5-UPDOWN: Line protocol on Interface VoIP-Null0, changed state to up
+*Mar 21 13:16:53.651: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar 21 13:16:53.659: %LINK-3-UPDOWN: Interface FastEthernet0/1, changed state to up
+*Mar 21 13:16:54.319: %HA_EM-4-FMPD_NO_EVENT: No event configured for applet noshut_port
+*Mar 21 13:16:54.323: %SYS-5-CONFIG_I: Configured from memory by console
+*Mar 21 13:16:54.575: %SYS-5-RESTART: System restarted --
+Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M2, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2012 by Cisco Systems, Inc.
+Compiled Wed 07-Nov-12 18:15 by prod_rel_team
+*Mar 21 13:16:54.587: %SNMP-5-COLDSTART: SNMP agent on host R1 is undergoing a cold start
+*Mar 2
+R1#
+R1#
+R1#
+R1#
+R1#1 13:16:54.647: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is OFF
+*Mar 21 13:16:54.651: %CRYPTO-6-GDOI_ON_OFF: GDOI is OFF
+*Mar 21 13:16:54.655: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+*Mar 21 13:16:54.663: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
+*Mar 21 13:16:56.211: %LINK-5-CHANGED: Interface FastEthernet0/1, changed state to administratively down
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#debu
+R1#debug stan
+R1#debug standby ev
+R1#debug standby events pro
+R1#debug standby events protocol 
+HSRP Events debugging is on
+    (protocol)
+R1#deb
+R1#debug st
+R1#debug stn an
+R1#debug standby pac
+R1#debug standby packets he
+R1#debug standby packets hello 
+HSRP Packets debugging is on
+    (Hello)
+R1#
+*Mar 21 13:18:37.547: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:18:38.243: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:40.347: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:18:40.667: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:43.111: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:18:43.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:45.619: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:18:45.827: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:48.427: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:51.031: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:53.635: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:18:55.807: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (192.168.1.3)
+*Mar 21 13:18:55.807: HSRP: Fa0/0 Grp 0 Active router is unknown, was 192.168.1.3
+*Mar 21 13:18:55.807: HSRP: Fa0/0 Grp 0 Listen -> Speak
+*Mar 21 13:18:55.807: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:18:56.483: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:18:56.483: HSRP: Fa0/0 Grp 0 Speak: k/Hello rcvd from higher pri Standby router (100/192.168.1.2)
+*Mar 21 13:18:56.483: HSRP: Fa0/0 Grp 0 Speak -> Listen
+R1#
+*Mar 21 13:18:57.083: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:18:57.083: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.2
+*Mar 21 13:18:57.087: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R1#
+*Mar 21 13:18:59.987: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:02.531: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:05.159: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:07.151: HSRP: Fa0/0 Grp 0 Listen: d/Standby timer expired (unknown)
+*Mar 21 13:19:07.151: HSRP: Fa0/0 Grp 0 Listen -> Speak
+*Mar 21 13:19:07.151: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:19:07.659: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:09.871: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:19:10.151: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:12.619: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:19:12.767: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:15.243: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:19:15.567: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:17.675: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:19:18.047: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:19:19.087: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 21 13:19:19.087: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 21 13:19:19.087: HSRP: Fa0/0 Grp 0 Speak -> Standby
+*Mar 21 13:19:19.087: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+*Mar 21 13:19:19.087: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:20.507: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:22.047: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:22.987: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:25.023: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:25.955: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:27.663: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:28.967: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:30.083: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:31.547: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:33.091: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:34.311: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:35.795: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:37.115: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:38.675: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:39.675: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:41.571: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:42.579: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:44.387: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:45.563: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:47.347: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:48.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:50.147: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:50.871: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:52.947: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:53.563: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:55.731: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:56.219: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:19:58.691: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:19:59.079: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:01.299: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:20:01.943: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:03.811: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:04.935: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:06.467: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:07.915: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:09.459: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:10.471: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:12.371: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:13.419: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:13.787: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:13.787: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.3, was 192.168.1.2
+*Mar 21 13:20:13.791: HSRP: Fa0/0 Grp 0 Ignoring Resign from 192.168.1.2
+*Mar 21 13:20:13.799: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:13.895: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:20:13.895: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.2)
+*Mar 21 13:20:13.895: HSRP: Fa0/0 Grp 0 Standby -> Listen
+R1#
+*Mar 21 13:20:13.895: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+*Mar 21 13:20:16.251: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:20:16.579: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:18.719: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:20:19.155: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+*Mar 21 13:20:21.139: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:20:21.951: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+*Mar 21 13:20:23.691: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:20:24.479: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:25.723: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:20:25.723: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was local
+R1#
+*Mar 21 13:20:27.235: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:28.443: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:30.227: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:30.987: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:32.643: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:33.443: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:35.091: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:36.231: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:37.807: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:38.787: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:40.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:41.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:44.007: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:46.975: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:49.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:51.767: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:51.767: HSRP: Fa0/0 Grp 0 Ignoring Hello (100/192.168.1.2 < 100/192.168.1.3)
+*Mar 21 13:20:52.171: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (192.168.1.3)
+*Mar 21 13:20:52.171: HSRP: Fa0/0 Grp 0 Active router is unknown, was 192.168.1.3
+*Mar 21 13:20:52.171: HSRP: Fa0/0 Grp 0 Listen -> Speak
+*Mar 21 13:20:52.171: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:54.391: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:54.391: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.2
+*Mar 21 13:20:54.391: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+*Mar 21 13:20:54.603: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:57.155: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:20:57.499: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:20:59.603: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:00.347: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 21 13:21:00.347: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 21 13:21:00.347: HSRP: Fa0/0 Grp 0 Speak -> Standby
+*Mar 21 13:21:00.347: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+*Mar 21 13:21:00.347: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:02.319: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:02.955: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:04.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:05.883: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:07.527: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:08.491: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+R1#
+*Mar 21 13:21:10.487: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:11.371: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+*Mar 21 13:21:12.903: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:13.947: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:15.367: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:16.555: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:18.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:19.179: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:20.991: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:21.707: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:23.919: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:24.379: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:26.895: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:27.307: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:29.655: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:30.171: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:32.443: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:32.779: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:35.391: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:35.483: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:38.087: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:38.315: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:40.799: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:41.211: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:43.471: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:43.771: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:45.439: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:45.439: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.3, was 192.168.1.2
+*Mar 21 13:21:45.447: HSRP: Fa0/0 Grp 0 Ignoring Resign from 192.168.1.2
+*Mar 21 13:21:45.447: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:21:45.447: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.2)
+*Mar 21 13:21:45.447: HSRP: Fa0/0 Grp 0 Standby -> Listen
+*Mar 21 13:21:45.447: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+*Mar 21 13:21:45.451: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:48.211: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:48.439: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:50.707: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:51.163: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:53.491: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:54.091: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:21:55.903: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:56.167: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:21:56.167: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was local
+R1#
+*Mar 21 13:21:58.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:21:58.703: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:01.167: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:01.275: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+*Mar 21 13:22:03.895: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:03.935: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:06.527: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:06.775: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:09.123: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:09.735: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:11.875: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:12.335: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:15.099: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:17.579: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:20.479: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:21.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:21.883: HSRP: Fa0/0 Grp 0 Ignoring Hello (100/192.168.1.2 < 100/192.168.1.3)
+R1#
+*Mar 21 13:22:23.763: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (192.168.1.3)
+*Mar 21 13:22:23.763: HSRP: Fa0/0 Grp 0 Active router is unknown, was 192.168.1.3
+*Mar 21 13:22:23.763: HSRP: Fa0/0 Grp 0 Listen -> Speak
+*Mar 21 13:22:23.763: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:22:24.319: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:24.319: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.2
+*Mar 21 13:22:24.319: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R1#
+*Mar 21 13:22:26.579: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:22:27.099: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:29.091: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:22:29.735: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:31.587: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:22:31.875: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 21 13:22:31.875: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 21 13:22:31.875: HSRP: Fa0/0 Grp 0 Speak -> Standby
+*Mar 21 13:22:31.875: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+*Mar 21 13:22:31.875: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:22:32.279: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:34.531: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:22:35.083: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:37.411: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:22:37.595: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:40.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:40.371: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:42.503: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:42.867: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:45.355: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:45.715: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+*Mar 21 13:22:47.959: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:48.483: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:50.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:22:51.331: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:53.015: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:54.211: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:55.663: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:56.851: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:58.155: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:22:59.395: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:01.099: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:01.891: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:03.707: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:04.851: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:06.575: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:07.651: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:09.467: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:10.355: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:11.911: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:13.283: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:14.607: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:15.859: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:17.539: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:18.755: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:20.019: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:21.459: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:22.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:23.955: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:25.583: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:25.595: HSRP: Fa0/0 Grp 0 Active router is 192.168.1.3, was 192.168.1.2
+*Mar 21 13:23:25.595: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:25.907: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:23:25.907: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.2)
+*Mar 21 13:23:25.907: HSRP: Fa0/0 Grp 0 Standby -> Listen
+R1#
+*Mar 21 13:23:25.907: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+*Mar 21 13:23:28.083: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:23:28.463: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:30.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:23:31.059: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:33.347: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 13:23:33.527: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:36.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:23:36.131: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was local
+*Mar 21 13:23:36.515: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:38.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:23:39.431: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:41.515: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:23:42.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:44.351: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:23:44.855: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:47.147: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:23:47.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:49.795: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:23:49.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:52.531: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:52.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:55.347: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:55.595: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:23:58.347: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:23:58.403: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:00.875: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:24:01.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:03.355: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:24:04.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:06.239: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:24:06.983: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:08.959: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:24:09.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:11.775: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:24:12.403: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:14.459: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:24:15.235: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:16.971: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:18.211: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:19.615: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:20.919: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:22.303: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:23.763: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:25.163: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:26.471: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:27.731: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:29.371: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:30.659: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:32.299: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:33.135: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:35.091: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:35.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:37.819: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:38.435: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:40.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:40.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:43.475: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:43.743: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:46.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:46.723: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:49.115: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:49.699: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:52.123: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:52.163: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:54.659: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:55.123: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:24:57.607: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:24:57.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:00.135: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:00.831: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:03.051: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:03.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:05.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:06.051: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:08.435: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:08.771: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:11.107: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:11.619: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:14.063: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:14.315: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:16.727: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:17.223: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:19.575: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:20.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:21.983: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:22.707: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:24.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:25.299: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:27.399: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:27.855: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:30.159: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:30.567: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:33.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:33.223: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:35.647: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:35.867: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:38.375: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:25:38.443: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:40.943: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:41.315: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:43.591: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:43.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:46.159: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:46.771: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:49.035: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:49.583: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:51.515: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:52.327: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:54.315: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:54.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:57.175: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:25:57.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:25:59.951: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:26:00.099: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:02.811: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:02.903: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:05.319: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:05.739: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:08.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:08.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:10.643: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:11.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:13.367: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:13.607: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:16.039: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:26:16.375: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:18.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:26:19.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:21.367: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:26:22.087: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:23.863: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:26:24.631: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:26.535: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:26:27.431: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:29.099: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:30.403: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:31.707: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:33.047: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:34.615: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:35.911: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:37.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:38.615: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:39.863: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:41.351: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:42.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:43.875: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:45.315: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:46.611: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:47.871: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:49.579: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:50.511: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:52.519: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:53.299: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:55.235: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:56.223: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:26:58.219: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:26:58.899: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:01.107: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:01.699: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:04.035: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:04.239: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:06.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:06.963: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:09.319: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:09.507: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:11.939: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:12.039: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:14.527: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:14.663: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:17.347: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:17.439: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:20.063: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:20.143: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:23.071: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:23.119: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:25.839: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:27:25.971: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:28.387: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:28.767: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:31.023: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:31.763: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:33.735: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:34.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:36.483: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:37.267: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:39.075: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:40.239: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:42.015: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:42.963: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:44.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:45.855: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:47.779: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:48.531: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:50.367: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:51.011: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:53.315: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:53.571: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:55.939: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:56.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:27:58.515: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:27:58.523: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:00.935: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:01.143: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:03.347: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:03.743: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:05.927: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:06.575: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:08.699: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:09.591: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:11.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:12.115: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:13.627: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:15.007: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:16.427: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:17.935: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:19.207: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:20.711: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:22.167: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:23.279: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:24.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:25.955: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:27.563: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:28.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:30.167: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:31.475: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:32.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:34.355: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:35.827: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:36.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:38.807: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:39.551: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:41.795: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:42.227: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:44.455: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:45.139: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:47.207: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:47.987: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:49.859: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:50.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:52.607: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:53.507: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:55.155: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:28:55.999: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:57.855: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:28:58.867: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:00.467: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:01.503: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:03.039: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:04.403: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:05.539: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:06.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:08.215: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:09.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:11.059: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:12.479: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:14.055: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:15.267: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:16.659: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:17.747: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:19.207: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:20.243: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:21.987: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:23.219: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:24.435: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:25.983: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:27.035: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:28.483: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:29.599: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:31.391: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:32.391: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:34.047: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:35.359: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:36.783: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:38.343: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:39.603: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:40.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:42.307: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:43.843: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:29:44.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:46.567: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:47.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:49.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:50.167: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:51.959: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:29:52.787: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:54.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:55.747: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:57.359: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:29:58.655: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:00.019: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:01.567: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:02.647: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:04.495: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:05.399: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:07.247: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:08.143: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:10.183: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:10.735: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:12.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:13.683: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:15.323: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:16.459: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:17.951: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:19.219: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:20.855: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:21.679: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:23.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:24.279: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:26.599: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:27.171: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:29.007: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:29.903: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:31.971: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:32.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:34.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:30:35.215: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:37.055: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:38.195: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:39.475: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:41.171: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:42.003: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:43.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:44.595: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:46.447: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:47.283: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:48.887: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:49.751: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:51.799: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:52.303: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:54.447: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:54.975: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:30:57.175: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:30:57.971: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:00.055: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:31:00.495: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:02.703: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:31:03.235: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:05.235: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:31:05.923: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:07.695: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:31:08.691: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:10.151: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:11.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:12.867: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:14.119: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:15.331: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:16.703: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:18.247: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:19.535: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:20.967: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:22.483: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:23.667: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:25.423: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:26.215: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:28.255: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:28.839: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:31.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:31.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:34.047: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:34.175: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:36.463: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:36.863: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:39.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:39.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:41.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:42.279: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:44.195: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:44.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:46.971: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:47.555: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:49.603: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:50.475: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:52.583: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:53.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:55.143: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:56.087: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:31:58.139: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:31:58.867: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:00.839: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:01.403: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:03.355: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:03.863: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:05.867: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:06.551: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:08.603: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:09.299: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:11.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:11.795: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:13.911: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:14.615: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:16.435: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:17.399: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:18.995: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:19.995: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:21.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:22.675: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:24.523: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:25.303: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:27.363: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:32:28.203: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:29.911: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:31.115: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:32.555: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:33.687: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:34.987: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:36.235: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:37.571: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:38.691: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:39.995: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:41.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:32:42.611: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:44.119: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:32:45.075: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:46.995: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:32:47.543: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:49.451: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:32:50.403: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:52.047: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:32:53.043: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:54.479: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:55.959: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:57.291: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:32:58.515: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:00.199: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:33:01.167: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:02.727: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:03.763: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:05.227: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:06.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:08.107: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:09.219: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:10.731: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:12.211: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:13.319: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:14.927: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:16.151: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:17.699: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:18.647: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:20.387: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:21.375: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:22.931: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:23.963: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:25.411: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:26.843: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:28.035: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:29.711: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:30.871: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:32.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:33.759: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:35.003: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:36.567: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:37.519: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:39.283: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:40.023: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:41.855: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:42.791: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:44.391: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:45.243: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:47.091: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:47.999: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:49.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:50.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:52.479: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:53.703: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:55.139: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:56.207: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:33:58.071: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:33:58.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:00.819: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:01.823: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:03.679: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:04.731: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:06.323: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:07.679: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:09.091: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:10.283: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:11.683: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:13.087: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:14.567: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:15.999: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:17.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:18.423: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:20.115: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:20.927: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:22.947: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:23.359: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:25.359: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:26.039: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:27.999: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:28.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:31.011: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:31.135: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:33.803: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:34:33.891: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:36.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:34:36.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:39.263: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:39.351: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:41.811: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:41.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:44.643: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:44.783: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:47.127: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:47.207: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:50.043: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:34:50.115: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:52.587: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:34:52.871: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:55.071: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:34:55.679: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:34:57.699: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:34:58.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:00.503: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:01.555: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:03.423: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:04.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:06.083: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:06.851: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:08.983: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:09.859: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:11.887: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:12.775: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:14.447: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:15.427: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:17.187: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:18.295: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:20.095: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:20.907: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:23.023: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:23.339: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:25.927: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:25.983: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:28.887: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:28.915: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:31.371: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:31.419: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:34.103: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:34.231: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:36.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:36.883: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:39.483: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:39.839: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:42.467: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:42.767: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:45.375: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:35:45.395: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:47.835: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:48.387: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:50.771: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:51.247: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:53.563: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:53.903: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:56.251: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:56.627: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:35:58.687: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:35:59.147: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:01.231: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:36:02.143: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:04.191: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:36:04.575: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:06.831: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:36:07.215: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:09.655: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:36:09.803: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:12.267: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:36:12.419: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:14.687: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+*Mar 21 13:36:14.899: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 13:36:17.627: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Standby pri 100 vIP 192.168.1.254
+*Mar 21 13:36:17.643: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Active  pri 100 vIP 192.168.1.254
+R1#

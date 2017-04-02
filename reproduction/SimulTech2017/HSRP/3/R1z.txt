@@ -1,0 +1,108 @@
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#
+R1#debug standby events protocol
+HSRP Events debugging is on
+    (protocol)
+R1#debug standby packe terse
+HSRP Packets debugging is on
+    (Coup, Resign)
+R1#debug standby packe hello
+HSRP Packets debugging is on
+    (Hello, Coup, Resign)
+R1#
+*Mar 21 17:16:31.755: HSRP: Fa0/0 Grp 0 Listen: d/Standby timer expired (192.168.1.3)
+*Mar 21 17:16:31.755: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.3
+*Mar 21 17:16:31.755: HSRP: Fa0/0 Grp 0 Listen -> Speak
+*Mar 21 17:16:31.755: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 17:16:32.539: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:34.331: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:35.435: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:36.939: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:37.975: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:39.931: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 17:16:40.615: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:42.523: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 21 17:16:42.523: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 21 17:16:42.523: HSRP: Fa0/0 Grp 0 Speak -> Standby
+*Mar 21 17:16:42.523: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Standby
+R1#
+*Mar 21 17:16:42.523: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:16:43.147: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:44.987: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:16:45.671: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:47.707: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:16:48.503: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:50.427: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:16:51.131: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:53.131: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:16:53.639: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:55.563: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:16:56.287: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:58.027: HSRP: Fa0/0 Grp 0 Hello  out 192.168.1.1 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:16:59.559: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 17:16:59.579: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 17:16:59.579: HSRP: Fa0/0 Grp 0 Standby: f/Hello rcvd from higher pri Speak router (100/192.168.1.3)
+*Mar 21 17:16:59.579: HSRP: Fa0/0 Grp 0 Standby -> Listen
+R1#
+*Mar 21 17:16:59.579: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Listen
+R1#
+*Mar 21 17:17:01.563: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 17:17:02.535: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:03.815: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:05.319: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Speak   pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:06.623: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:08.135: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Speak   pri 100 vIP 192.168.1.254
+*Mar 21 17:17:09.079: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:09.863: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Standby pri 100 vIP 192.168.1.254
+*Mar 21 17:17:09.863: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.3, was local
+R1#
+*Mar 21 17:17:11.735: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+*Mar 21 17:17:12.355: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:14.151: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:15.323: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:16.799: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:18.291: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Standby pri 100 vIP 192.168.1.254
+R1#
+*Mar 21 17:17:19.735: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#un al
+*Mar 21 17:17:20.963: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.3 Standby pri 100 vIP 192.168.1.254
+R1#un all
+All possible debugging has been turned off
+R1#
+*Mar 21 17:17:22.383: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+R1#

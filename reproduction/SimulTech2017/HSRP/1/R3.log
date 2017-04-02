@@ -1,0 +1,279 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2017.03.15 09:26:50 =~=~=~=~=~=~=~=~=~=~=~=
+
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#interface FastEthernet0/0
+R3(config-if)#shut
+R3(config-if)#end
+R3#
+*Mar 15 08:27:00.063: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+*Mar 15 08:27:00.075: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+*Mar 15 08:27:00.523: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+*Mar 15 08:27:00.523: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+*Mar 15 08:27:00.523: HSRP: Fa0/0 Grp 0 Active -> Init
+*Mar 15 08:27:00.527: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+*Mar 15 08:27:00.539: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R3#
+R3#
+*Mar 15 08:27:00.919: %SYS-5-CONFIG_I: Configured from console by console
+R3#
+*Mar 15 08:27:02.511: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+*Mar 15 08:27:03.511: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3#
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#interface FastEthernet0/0
+R3(config-if)#shut
+R3(config-if)#end
+R3#
+R3#
+R3#
+R3#
+R3#
+*Mar 15 08:27:18.279: %SYS-5-CONFIG_I: Configured from console by console
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+*Mar 15 08:28:00.139: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:28:00.155: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:28:01.071: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+*Mar 15 08:28:01.071: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3#
+*Mar 15 08:28:02.055: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar 15 08:28:03.055: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3#
+*Mar 15 08:28:12.279: HSRP: Fa0/0 Grp 0 Listen: d/Standby timer expired (unknown)
+*Mar 15 08:28:12.279: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3#
+*Mar 15 08:28:23.895: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 15 08:28:23.895: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 15 08:28:23.895: HSRP: Fa0/0 Grp 0 Speak -> Standby
+R3#
+*Mar 15 08:28:35.223: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+*Mar 15 08:28:35.223: HSRP: Fa0/0 Grp 0 Active router is local
+*Mar 15 08:28:35.223: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+*Mar 15 08:28:35.223: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3#
+*Mar 15 08:28:35.223: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3#
+*Mar 15 08:28:57.475: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2
+R3#
+*Mar 15 08:29:00.095: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:29:00.107: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#interface FastEthernet0/0
+R3(config-if)#shut
+R3(config-if)#end
+R3#
+*Mar 15 08:29:08.655: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+*Mar 15 08:29:08.659: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+*Mar 15 08:29:08.659: HSRP: Fa0/0 Grp 0 Active -> Init
+*Mar 15 08:29:08.659: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+*Mar 15 08:29:08.675: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R3#
+R3#
+R3#
+*Mar 15 08:29:08.891: %SYS-5-CONFIG_I: Configured from console by console
+R3#
+*Mar 15 08:29:10.647: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+R3#
+*Mar 15 08:29:11.647: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+*Mar 15 08:30:00.143: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:30:00.155: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:30:01.075: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+*Mar 15 08:30:01.075: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3#
+*Mar 15 08:30:02.083: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar 15 08:30:03.083: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3#
+*Mar 15 08:30:11.507: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (unknown)
+*Mar 15 08:30:11.507: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3#
+*Mar 15 08:30:21.075: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 15 08:30:21.075: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 15 08:30:21.075: HSRP: Fa0/0 Grp 0 Speak -> Standby
+R3#
+*Mar 15 08:30:23.219: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+*Mar 15 08:30:23.219: HSRP: Fa0/0 Grp 0 Active router is local
+*Mar 15 08:30:23.219: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+*Mar 15 08:30:23.219: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3#
+*Mar 15 08:30:23.219: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3#
+*Mar 15 08:30:43.911: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+R3#
+*Mar 15 08:31:00.091: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:31:00.103: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#interface FastEthernet0/0
+R3(config-if)#shut
+R3(config-if)#end
+R3#
+*Mar 15 08:31:10.403: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+*Mar 15 08:31:10.403: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+*Mar 15 08:31:10.407: HSRP: Fa0/0 Grp 0 Active -> Init
+*Mar 15 08:31:10.407: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+*Mar 15 08:31:10.419: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R3#
+*Mar 15 08:31:10.659: %SYS-5-CONFIG_I: Configured from console by console
+R3#
+*Mar 15 08:31:12.395: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+*Mar 15 08:31:13.395: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3#
+*Mar 15 08:32:00.131: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:32:00.139: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:32:01.079: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+*Mar 15 08:32:01.079: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3#
+*Mar 15 08:32:02.075: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar 15 08:32:03.075: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3#
+*Mar 15 08:32:11.483: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (unknown)
+*Mar 15 08:32:11.483: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3#
+*Mar 15 08:32:20.331: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+*Mar 15 08:32:20.331: HSRP: Fa0/0 Grp 0 Standby router is local
+*Mar 15 08:32:20.331: HSRP: Fa0/0 Grp 0 Speak -> Standby
+*Mar 15 08:32:21.531: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+*Mar 15 08:32:21.531: HSRP: Fa0/0 Grp 0 Active router is local
+*Mar 15 08:32:21.531: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+*Mar 15 08:32:21.531: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3#
+*Mar 15 08:32:21.531: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3#
+*Mar 15 08:32:43.247: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2
+R3#
+*Mar 15 08:33:00.095: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:33:00.107: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:34:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:34:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:35:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:35:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:36:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:36:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:37:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:37:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:38:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:38:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:39:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:39:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:40:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:40:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:41:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:41:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:42:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:42:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:43:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:43:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:44:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:44:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:45:00.055: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:45:00.067: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:46:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:46:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#
+*Mar 15 08:47:00.047: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+*Mar 15 08:47:00.059: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#

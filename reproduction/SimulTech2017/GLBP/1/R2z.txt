@@ -1,0 +1,169 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2017.03.24 19:22:59 =~=~=~=~=~=~=~=~=~=~=~=
+deb
+R2#debug gl
+R2#debug glbp ev
+R2#debug glbp events de
+R2#debug glbp events detail 
+GLBP Events debugging is on
+    (protocol, detail)
+R2#debug glbp events detail               conf t     debug glbp events detail               pac
+R2#debug glbp packets al
+R2#debug glbp packets all 
+GLBP Packets debugging is on
+R2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R2(config)#int fa0/0
+R2(config-if)#no sh
+R2(config-if)#
+*Mar 24 18:24:44.859: GLBP: Fa0/0 Interface up
+*Mar 24 18:24:44.859: GLBP: Fa0/0 0 Init: d/GLBP enabled
+*Mar 24 18:24:44.859: GLBP: Fa0/0 0 Init -> Listen
+*Mar 24 18:24:44.863: GLBP: Fa0/0 0.1 Init: d/Forwarder enabled
+*Mar 24 18:24:44.863: GLBP: Fa0/0 0.1 Init -> Listen
+*Mar 24 18:24:44.863: GLBP: Fa0/0 0.2 Init: d/Forwarder enabled
+*Mar 24 18:24:44.867: GLBP: Fa0/0 0.2 Init -> Listen
+*Mar 24 18:24:44.867: GLBP: Fa0/0 0.3 Init: d/Forwarder enabled
+*Mar 24 18:24:44.867: GLBP: Fa0/0 0.3 Init -> Listen
+R2(config-if)#
+*Mar 24 18:24:46.839: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+R2(config-if)#
+*Mar 24 18:24:47.535: GLBP: Fa0/0 Grp 0 Hello  out VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Listen  pri 167 vMAC 0007.b400.0001
+R2(config-if)#
+*Mar 24 18:24:47.839: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R2(config-if)#
+*Mar 24 18:24:49.707: GLBP: Fa0/0 Grp 0 Hello  in  VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Listen  pri 167 vMAC 0007.b400.0003
+*Mar 24 18:24:50.191: GLBP: Fa0/0 Grp 0 Hello  out VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Listen  pri 167 vMAC 0007.b400.0001
+R2(config-if)#
+*Mar 24 18:24:52.515: GLBP: Fa0/0 Grp 0 Hello  in  VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Listen  pri 167 vMAC 0007.b400.0003
+*Mar 24 18:24:52.687: GLBP: Fa0/0 Grp 0 Hello  out VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Listen  pri 167 vMAC 0007.b400.0001
+R2(config-if)#
+*Mar 24 18:24:54.831: GLBP: Fa0/0 0 Listen: f/Standby timer expired (unknown)
+*Mar 24 18:24:54.831: GLBP: Fa0/0 0 Listen -> Speak
+*Mar 24 18:24:54.831: GLBP: Fa0/0 Grp 0 Hello  out VG Speak   pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Listen  pri 167 vMAC 0007.b400.0001
+*Mar 24 18:24:54.927: GLBP: Fa0/0 0 Speak: g/Active timer expired (unknown)
+*Mar 24 18:24:54.927: GLBP: Fa0/0 0 Active router IP is local
+*Mar 24 18:24:54.927: GLBP: Fa0/0 0 Speak -> Active
+*Mar 24 18:24:54.927: %GLBP-6-STATECHANGE: FastEthernet0/0 Grp 0 state Speak -> Active
+*Mar 24 18:24:54.927: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Listen  pri 167 vMAC 0007.b400.0001
+*Mar 24 18:24:55.023: GLBP: Fa0/0 0.3 Listen: g/Active timer expired
+*Mar 24 18:24:55.023: GLBP: Fa0/0 0.3 Listen -> Active
+*Mar 24 18:24:55.023: %GLBP-6-FWDSTATECHANGE: FastEthernet0/0 Grp 0 Fwd 3 state Listen -> Active
+*Mar 24 18:24:55.023: GLBP: Fa0/0 Grp 0 Hello  out VF 
+R2(config-if)#3 Active  pri 135 vMAC 0007.b400.0003
+*Mar 24 18:24:55.031: GLBP: Fa0/0 Grp 0 Hello  in  VF 3 Active  pri 167 vMAC 0007.b400.0003
+*Mar 24 18:24:55.031: GLBP: Fa0/0 0.3 Active: i/Hello rcvd from higher pri Active router (167/192.168.1.1)
+*Mar 24 18:24:55.031: GLBP: Fa0/0 0.3 Active -> Listen
+*Mar 24 18:24:55.031: %GLBP-6-FWDSTATECHANGE: FastEthernet0/0 Grp 0 Fwd 3 state Active -> Listen
+*Mar 24 18:24:55.487: GLBP: Fa0/0 Grp 0 Hello  in  VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+*Mar 24 18:24:56.591: GLBP: Fa0/0 0.1 Listen: g/Active timer expired
+*Mar 24 18:24:56.591: GLBP: Fa0/0 0.1 Listen -> Active
+*Mar 24 18:24:56.591: %GLBP-6-FWDSTATECHANGE: FastEthernet0/0 Grp 0 Fwd 1 state Listen -> Active
+R2(config-if)#
+*Mar 24 18:24:56.591: GLBP: Fa0/0 Grp 0 Hello  out VF 1 Active  pri 167 vMAC 0007.b400.0001
+*Mar 24 18:24:56.815: GLBP: Fa0/0 0.2 Listen: g/Active timer expired
+*Mar 24 18:24:56.815: GLBP: Fa0/0 0.2 Listen -> Active
+*Mar 24 18:24:56.815: %GLBP-6-FWDSTATECHANGE: FastEthernet0/0 Grp 0 Fwd 2 state Listen -> Active
+R2(config-if)#
+*Mar 24 18:24:56.815: GLBP: Fa0/0 Grp 0 Hello  out VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:24:57.391: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+R2(config-if)#
+*Mar 24 18:24:57.959: GLBP: Fa0/0 Grp 0 Hello  in  VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2(config-if)#
+*Mar 24 18:24:59.887: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:25:00.487: GLBP: Fa0/0 Grp 0 Hello  in  VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2(config-if)#
+*Mar 24 18:25:02.319: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:25:03.239: GLBP: Fa0/0 Grp 0 Hello  in  VG Listen  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2(config-if)#
+*Mar 24 18:25:04.751: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:25:04.839: GLBP: Fa0/0 Grp 0 Hello  in  VG Speak   pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2(config-if)#end
+*Mar 24 18:25:07.247: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:25:07.815: GLBP: Fa0/0 Grp 0 Hello  in  VG Speak   pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2(config-if)#end
+R2#sho
+R2#show gl
+R2#show glbp 
+*Mar 24 18:25:08.699: %SYS-5-CONFIG_I: Configured from console by console
+R2#show glbp br
+R2#show glbp brief 
+Interface   Grp  Fwd Pri State    Address         Active router   Standby router
+Fa0/0       0    -   100 Active   192.168.1.254   local           unknown
+Fa0/0       0    1   -   Active   0007.b400.0001  local           -
+Fa0/0       0    2   -   Active   0007.b400.0002  local           -
+Fa0/0       0    3   -   Listen   0007.b400.0003  192.168.1.1     -
+R2#
+*Mar 24 18:25:10.223: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:25:10.763: GLBP: Fa0/0 Grp 0 Hello  in  VG Speak   pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2#un
+*Mar 24 18:25:13.075: GLBP: Fa0/0 Grp 0 Hello  out VG Active  pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 1 Active  pri 167 vMAC 0007.b400.0001 VF 2 Active  pri 135 vMAC 0007.b400.0002
+*Mar 24 18:25:13.347: GLBP: Fa0/0 Grp 0 Hello  in  VG Speak   pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+R2#un all
+All possible debugging has been turned off
+R2#
+*Mar 24 18:25:14.855: GLBP: Fa0/0 Grp 0 Hello  in  VG Standby pri 100 vIP 192.168.1.254 hello 3000, hold 10000 VF 3 Active  pri 167 vMAC 0007.b400.0003
+*Mar 24 18:25:14.855: GLBP: Fa0/0 0 Standby router is 192.168.1.1
+R2#sho
+R2#show gl
+R2#show glbp _ ?
+  BVI           Bridge-Group Virtual Interface
+  FastEthernet  FastEthernet IEEE 802.3
+  Port-channel  Ethernet Channel of interfaces
+  active        Groups in active state
+  brief         Brief output
+  capability    GLBP capability
+  client-cache  Client cache
+  detail        Detailed output
+  disabled      Groups in disabled state
+  init          Groups in init state
+  listen        Groups in listen state
+  standby       Groups in standby or speak states
+  |             Output modifiers
+  <cr>
+
+R2#show glbp de
+R2#show glbp detail 
+FastEthernet0/0 - Group 0
+  State is Active
+    3 state changes, last state change 00:18:45
+  Virtual IP address is 192.168.1.254
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 2.784 secs
+  Redirect time 600 sec, forwarder timeout 14400 sec
+  Preemption disabled
+  Active is local
+  Standby is 192.168.1.1, priority 100 (expires in 9.856 sec)
+  Priority 100 (default)
+  Weighting 100 (default 100), thresholds: lower 1, upper 100
+  Load balancing: round-robin
+  Group members:
+    ca01.077b.0008 (192.168.1.1)
+    ca02.078a.0008 (192.168.1.2) local
+  There are 3 forwarders (2 active)
+  Forwarder 1
+    State is Active
+      13 state changes, last state change 00:18:44
+    MAC address is 0007.b400.0001 (default)
+    Owner ID is ca02.078a.0008
+ --More--             Redirection enabled
+    Preemption enabled, min delay 0 sec
+    Active is local, weighting 100
+  Forwarder 2
+    State is Active
+      3 state changes, last state change 00:18:44
+    MAC address is 0007.b400.0002 (learnt)
+    Owner ID is ca03.0799.0008
+    Redirection disabled
+    Time to live: 13093.728 sec (maximum 14400 sec)
+    Preemption enabled, min delay 0 sec
+    Active is local, weighting 100
+  Forwarder 3
+    State is Listen
+      2 state changes, last state change 00:18:45
+    MAC address is 0007.b400.0003 (learnt)
+    Owner ID is ca01.077b.0008
+    Redirection enabled, 599.872 sec remaining (maximum 600 sec)
+    Time to live: 14399.872 sec (maximum 14400 sec)
+    Preemption enabled, min delay 0 sec
+    Active is 192.168.1.1 (primary), weighting 100 (expires in 10.080 sec)
+R2#

@@ -1,0 +1,361 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2017.03.21 13:58:44 =~=~=~=~=~=~=~=~=~=~=~=
+sh clo
+                 ^
+% Invalid input detected at '^' marker.
+
+R3(config-if)#sh clo
+                 ^
+% Invalid input detected at '^' marker.
+
+R3(config-if)#end
+R3#sh clo
+.12:59:46.385 UTC Tue Mar 21 2017
+R3#
+.Mar 21 12:59:44.957: %SYS-5-CONFIG_I: Configured from console by console
+R3#
+.Mar 21 13:00:00.061: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3#
+.Mar 21 13:00:00.073: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#endsh clono sh sh   int fa0/0
+R3(config-if)#no sh
+R3(config-if)#
+.Mar 21 13:01:00.065: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:01:00.077: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#o no sh
+R3(config-if)#
+.Mar 21 13:02:00.053: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:02:00.065: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#end
+R3#debv
+R3#debv 
+.Mar 21 13:02:22.581: %SYS-5-CONFIG_I: Configured from console by console
+R3#debu
+R3#debug stan
+R3#debug standby b pr
+R3#debug standby pro
+R3#debug standby pro   eve
+R3#debug standby events pro
+R3#debug standby events protocol 
+HSRP Events debugging is on
+    (protocol)
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#endno shint fa0/0
+R3(config-if)#int fa0/0end      no shint fa0/0end      sh clono sh      sh
+R3(config-if)#
+.Mar 21 13:02:39.377: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+.Mar 21 13:02:39.377: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+.Mar 21 13:02:39.381: HSRP: Fa0/0 Grp 0 Active -> Init
+.Mar 21 13:02:39.381: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+R3(config-if)#
+.Mar 21 13:02:39.397: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R3(config-if)#
+.Mar 21 13:02:41.365: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+.Mar 21 13:02:42.365: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3(config-if)#
+.Mar 21 13:03:00.121: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:03:00.133: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:03:01.077: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+.Mar 21 13:03:01.077: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3(config-if)#
+.Mar 21 13:03:02.069: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+.Mar 21 13:03:03.069: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3(config-if)#
+.Mar 21 13:03:12.085: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (unknown)
+.Mar 21 13:03:12.085: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3(config-if)#
+.Mar 21 13:03:20.165: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+.Mar 21 13:03:20.165: HSRP: Fa0/0 Grp 0 Standby router is local
+.Mar 21 13:03:20.165: HSRP: Fa0/0 Grp 0 Speak -> Standby
+R3(config-if)#
+.Mar 21 13:03:22.949: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+.Mar 21 13:03:22.949: HSRP: Fa0/0 Grp 0 Active router is local
+.Mar 21 13:03:22.949: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+.Mar 21 13:03:22.949: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3(config-if)#
+.Mar 21 13:03:22.949: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3(config-if)#no sh
+R3(config-if)#no shsh     no sh
+R3(config-if)#
+.Mar 21 13:03:55.769: HSRP: Fa0/0 Grp 0 Hello  in  192.168.1.2 Active  pri 100 vIP 192.168.1.254
+.Mar 21 13:03:55.773: HSRP: Fa0/0 Grp 0 Active: h/Hello rcvd from lower pri Active router (100/192.168.1.2)
+R3(config-if)#
+.Mar 21 13:04:00.073: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:04:00.085: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:04:06.140: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2
+R3(config-if)#sh
+R3(config-if)#
+.Mar 21 13:04:35.360: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+.Mar 21 13:04:35.360: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+.Mar 21 13:04:35.364: HSRP: Fa0/0 Grp 0 Active -> Init
+.Mar 21 13:04:35.364: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+R3(config-if)#
+.Mar 21 13:04:35.376: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R3(config-if)#
+.Mar 21 13:04:37.348: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+.Mar 21 13:04:38.348: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3(config-if)#
+.Mar 21 13:05:00.104: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:05:00.112: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:05:01.048: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+.Mar 21 13:05:01.048: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3(config-if)#
+.Mar 21 13:05:02.056: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+.Mar 21 13:05:03.056: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3(config-if)#
+.Mar 21 13:05:11.816: HSRP: Fa0/0 Grp 0 Listen: c/Active timer expired (unknown)
+.Mar 21 13:05:11.816: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3(config-if)#
+.Mar 21 13:05:19.832: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+.Mar 21 13:05:19.832: HSRP: Fa0/0 Grp 0 Standby router is local
+.Mar 21 13:05:19.832: HSRP: Fa0/0 Grp 0 Speak -> Standby
+R3(config-if)#
+.Mar 21 13:05:22.712: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+.Mar 21 13:05:22.712: HSRP: Fa0/0 Grp 0 Active router is local
+.Mar 21 13:05:22.712: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+.Mar 21 13:05:22.712: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3(config-if)#
+.Mar 21 13:05:22.712: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3(config-if)#
+.Mar 21 13:06:00.072: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:06:00.084: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:07:00.056: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:07:00.068: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:08:00.052: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:08:00.064: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:09:00.048: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:09:00.060: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:10:00.052: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:10:00.064: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:11:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:11:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:12:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:12:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:13:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:13:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:14:00.051: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:14:00.063: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#sh
+R3(config-if)#
+.Mar 21 13:14:07.999: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+.Mar 21 13:14:08.003: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+.Mar 21 13:14:08.003: HSRP: Fa0/0 Grp 0 Active -> Init
+R3(config-if)#
+.Mar 21 13:14:08.003: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+R3(config-if)#
+.Mar 21 13:14:09.987: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+R3(config-if)#
+.Mar 21 13:14:10.987: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3(config-if)#no h sh
+R3(config-if)#
+.Mar 21 13:14:35.643: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+.Mar 21 13:14:35.643: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3(config-if)#
+.Mar 21 13:14:36.635: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+.Mar 21 13:14:37.635: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3(config-if)#
+.Mar 21 13:14:45.863: HSRP: Fa0/0 Grp 0 Listen: d/Standby timer expired (unknown)
+.Mar 21 13:14:45.863: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3(config-if)#
+.Mar 21 13:14:56.647: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+.Mar 21 13:14:56.647: HSRP: Fa0/0 Grp 0 Standby router is local
+.Mar 21 13:14:56.647: HSRP: Fa0/0 Grp 0 Speak -> Standby
+R3(config-if)#
+.Mar 21 13:14:58.935: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+.Mar 21 13:14:58.935: HSRP: Fa0/0 Grp 0 Active router is local
+.Mar 21 13:14:58.935: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+.Mar 21 13:14:58.935: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3(config-if)#
+.Mar 21 13:14:58.935: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+.Mar 21 13:15:00.067: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+.Mar 21 13:15:00.071: %SYS-5-CONFIG_I: Configured from console by  on vty1 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:15:00.079: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+.Mar 21 13:15:00.083: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:15:07.091: HSRP: Fa0/0 Grp 0 Active: i/Resign rcvd (100/192.168.1.2)
+.Mar 21 13:15:08.055: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.1
+.Mar 21 13:15:08.067: HSRP: Fa0/0 Grp 0 Standby router is 192.168.1.2, was 192.168.1.1
+R3(config-if)#sh
+R3(config-if)#
+.Mar 21 13:15:27.847: HSRP: Fa0/0 Grp 0 Active: b/HSRP disabled
+.Mar 21 13:15:27.847: HSRP: Fa0/0 Grp 0 Active router is unknown, was local
+.Mar 21 13:15:27.851: HSRP: Fa0/0 Grp 0 Active -> Init
+.Mar 21 13:15:27.851: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+R3(config-if)#
+.Mar 21 13:15:27.863: HSRP: Fa0/0 Grp 0 Standby router is unknown, was 192.168.1.2
+R3(config-if)#
+.Mar 21 13:15:29.835: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+.Mar 21 13:15:30.835: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3(config-if)#
+.Mar 21 13:16:00.123: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:16:00.131: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#
+.Mar 21 13:16:01.071: HSRP: Fa0/0 Grp 0 Init: a/HSRP enabled
+.Mar 21 13:16:01.071: HSRP: Fa0/0 Grp 0 Init -> Listen
+R3(config-if)#
+.Mar 21 13:16:02.059: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+.Mar 21 13:16:03.059: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3(config-if)#
+.Mar 21 13:16:11.439: HSRP: Fa0/0 Grp 0 Listen: d/Standby timer expired (unknown)
+.Mar 21 13:16:11.439: HSRP: Fa0/0 Grp 0 Listen -> Speak
+R3(config-if)#
+.Mar 21 13:16:23.007: HSRP: Fa0/0 Grp 0 Speak: d/Standby timer expired (unknown)
+.Mar 21 13:16:23.007: HSRP: Fa0/0 Grp 0 Standby router is local
+.Mar 21 13:16:23.007: HSRP: Fa0/0 Grp 0 Speak -> Standby
+R3(config-if)#
+.Mar 21 13:16:33.699: HSRP: Fa0/0 Grp 0 Standby: c/Active timer expired (unknown)
+.Mar 21 13:16:33.699: HSRP: Fa0/0 Grp 0 Active router is local
+.Mar 21 13:16:33.699: HSRP: Fa0/0 Grp 0 Standby router is unknown, was local
+.Mar 21 13:16:33.699: HSRP: Fa0/0 Grp 0 Standby -> Active
+R3(config-if)#
+.Mar 21 13:16:33.699: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3(config-if)#
+.Mar 21 13:17:00.071: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:noshut_port)
+R3(config-if)#
+.Mar 21 13:17:00.083: %HA_EM-6-LOG: noshut_port: Interface FastEthernet0/0 has been restored
+R3(config-if)#Connected to Dynamips VM "R3a" (ID 7, type c7200) - Console port
+Press ENTER to get the prompt.
+ROMMON emulation microcode.
+
+Launching IOS image at 0x80008000...
+
+              Restricted Rights Legend
+
+Use, duplication, or disclosure by the Government is
+subject to restrictions as set forth in subparagraph
+(c) of the Commercial Computer Software - Restricted
+Rights clause at FAR sec. 52.227-19 and subparagraph
+(c) (1) (ii) of the Rights in Technical Data and Computer
+Software clause at DFARS sec. 252.227-7013.
+
+           cisco Systems, Inc.
+           170 West Tasman Drive
+           San Jose, California 95134-1706
+
+
+
+Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M2, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2012 by Cisco Systems, Inc.
+Compiled Wed 07-Nov-12 18:15 by prod_rel_team
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+Cisco 7206VXR (NPE400) processor (revision A) with 491520K/32768K bytes of memory.Installed image archive
+
+Processor board ID 4279256517
+R7000 CPU at 150MHz, Implementation 39, Rev 2.1, 256KB L2, 512KB L3 Cache
+6 slot VXR midplane, Version 2.1
+
+Last reset from power-on
+
+PCI bus mb0_mb1 (Slots 0, 1, 3 and 5) has a capacity of 600 bandwidth points.
+Current configuration on bus mb0_mb1 has a total of 400 bandwidth points. 
+This configuration is within the PCI bus capacity and is supported. 
+
+PCI bus mb2 (Slots 2, 4, 6) has a capacity of 600 bandwidth points.
+Current configuration on bus mb2 has a total of 0 bandwidth points 
+This configuration is within the PCI bus capacity and is supported. 
+
+Please refer to the following document "Cisco 7200 Series Port Adaptor
+Hardware Configuration Guidelines" on Cisco.com <http://www.cisco.com>
+for c7200 bandwidth points oversubscription and usage guidelines.
+
+
+2 FastEthernet interfaces
+509K bytes of NVRAM.
+
+8192K bytes of Flash internal SIMM (Sector size 256K).
+ event timer cron name 
+% Incomplete command.
+
+ cron-entry "*/1 * * * *"
+ ^
+% Invalid input detected at '^' marker.
+
+% Crashinfo may not be recovered at bootflash:crashinfo
+% This file system device reports an error
+
+
+Press RETURN to get started!
+
+
+*Mar 21 13:16:50.031: %IFMGR-7-NO_IFINDEX_FILE: Unable to open nvram:/ifIndex-table No such file or directory
+*Mar 21 13:16:57.663: %LINEPROTO-5-UPDOWN: Line protocol on Interface VoIP-Null0, changed state to up
+*Mar 21 13:16:57.671: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar 21 13:16:57.679: %LINK-3-UPDOWN: Interface FastEthernet0/1, changed state to up
+*Mar 21 13:16:58.363: %HA_EM-4-FMPD_NO_EVENT: No event configured for applet noshut_port
+*Mar 21 13:16:58.367: %SYS-5-CONFIG_I: Configured from memory by console
+*Mar 21 13:16:58.591: %SYS-5-RESTART: System restarted --
+Cisco IOS Software, 7200 Software (C7200-ADVENTERPRISEK9-M), Version 15.2(4)M2, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2012 by Cisco Systems, Inc.
+Compiled Wed 07-Nov-12 18:15 by prod_rel_team
+*Mar 21 13:16:58.607: %SNMP-5-COLDSTART: SNMP agent on host R3 is undergoing a cold start
+*Mar 2
+R3#1 13:16:58.663: %CRYPTO-6-ISAKMP_ON_OFF: ISAKMP is OFF
+*Mar 21 13:16:58.667: %CRYPTO-6-GDOI_ON_OFF: GDOI is OFF
+*Mar 21 13:16:58.671: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+*Mar 21 13:16:58.679: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/1, changed state to down
+*Mar 21 13:17:00.251: %LINK-5-CHANGED: Interface FastEthernet0/1, changed state to administratively down
+R3#
+*Mar 21 13:17:36.803: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#int f0/0
+R3(config-if)#sh
+R3(config-if)#
+*Mar 21 13:19:00.335: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Active -> Init
+R3(config-if)#
+*Mar 21 13:19:02.323: %LINK-5-CHANGED: Interface FastEthernet0/0, changed state to administratively down
+*Mar 21 13:19:03.323: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to down
+R3(config-if)#no sh
+R3(config-if)#
+*Mar 21 13:19:36.171: %LINK-3-UPDOWN: Interface FastEthernet0/0, changed state to up
+*Mar 21 13:19:37.171: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+R3(config-if)#
+*Mar 21 13:19:56.811: %HSRP-5-STATECHANGE: FastEthernet0/0 Grp 0 state Standby -> Active
+R3(config-if)#
