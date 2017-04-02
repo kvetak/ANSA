@@ -181,11 +181,11 @@ void HSRP::parseConfig(cXMLElement *config){
                 preempt = false; //def val
             } else
             {
-                if (strcmp("false",group->getAttribute("preempt"))){
-                    preempt = false;
+                if (!strcmp("true",group->getAttribute("preempt"))){
+                    preempt = true;
                 }else
                 {
-                    preempt = true;
+                    preempt = false;
                 }
                 EV_DEBUG << "Setting preemption:" <<preempt<< endl;
             }

@@ -23,26 +23,26 @@ import inet.node.ethernet.Eth100M;
 
 network testActiveChoose
 {
-    @display("bgb=338,280");
+    @display("bgb=274,228,white");
 
     submodules:
         R1: ANSA_HSRPRouter {
-            @display("p=111,46");
+            @display("p=47,28");
         }
         R2: ANSA_HSRPRouter {
-            @display("p=205,46");
+            @display("p=133,28");
         }
         R3: ANSA_HSRPRouter {
-            @display("p=288,46");
+            @display("p=222,28");
         }
         PC1: ANSA_Host {
-            @display("p=136,201");
+            @display("p=75,182");
         }
         PC2: ANSA_Host {
-            @display("p=273,200");
-        }        
+            @display("p=186,182");
+        }
         SW1: EtherSwitch {
-            @display("p=205,139");
+            @display("p=133,121");
         }
         configurator: IPv4NetworkConfigurator {
             parameters:
@@ -56,7 +56,7 @@ network testActiveChoose
                             "</config>");
                 addStaticRoutes = true;
                 addDefaultRoutes = true;
-                @display("p=48,31");
+                @display("p=55,104");
         }
     connections:
         R1.ethg++ <--> Eth100M <--> SW1.ethg++;

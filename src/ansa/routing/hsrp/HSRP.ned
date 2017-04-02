@@ -26,10 +26,10 @@ import inet.applications.contract.IUDPApp;
 simple HSRP like IUDPApp
 {
     parameters:
-        @display("i=block/network2");
-        xml configData = default(xml("<HSRP />"));              
-        string interfaceTableModule = default(".interfaceTableModule");        
-            
+        @display("i=block/routing");
+        xml configData = default(xml("<HSRP />"));
+        string interfaceTableModule = default(".interfaceTableModule");
+
     gates:
         input hsrpIn[];					///from HSRPVR to GLBP
         output hsrpOut[];    			///from GLBP module to HSRPVR

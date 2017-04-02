@@ -26,14 +26,14 @@ import inet.applications.contract.IUDPApp;
 simple GLBP like IUDPApp
 {
     parameters:
-        @display("i=block/network2");
-        xml configData = default(xml("<GLBP />"));       
-//        bool jittered;                    
-        string interfaceTableModule = default(".interfaceTableModule");              
-      	int glbpUdpPort			= default(3222);
-      	string glbpMulticastAddress = default("224.0.0.102");	
+        @display("i=block/routing");
+        xml configData = default(xml("<GLBP />"));
+        //        bool jittered;                    
+        string interfaceTableModule = default(".interfaceTableModule");
+        int glbpUdpPort = default(3222);
+        string glbpMulticastAddress = default("224.0.0.102");
 
-	gates:
+    gates:
         input glbpIn[];		/// from GLBPVR module to GLBP
         output glbpOut[]; 	/// from GLBP module to GLBPVR	 
         input udpIn @labels(UDPControlInfo/up);		///from UDP module to GLBP

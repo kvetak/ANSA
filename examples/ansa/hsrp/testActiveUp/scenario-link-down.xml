@@ -5,7 +5,7 @@
         <disconnect src-module="R3" src-gate="ethg$o[0]" />	
   	</at>
   	
-	<at t="63">			
+	<at t="70">			
         <connect src-module="SW1" dest-module="R3" src-gate="ethg$o[2]" dest-gate="ethg$i[0]" channel-type="inet.node.ethernet.Eth100M"/>
         <connect src-module="R3" dest-module="SW1" src-gate="ethg$o[0]" dest-gate="ethg$i[2]" channel-type="inet.node.ethernet.Eth100M"/>               
   	</at>
