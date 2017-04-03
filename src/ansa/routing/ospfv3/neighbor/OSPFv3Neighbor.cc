@@ -230,7 +230,7 @@ void OSPFv3Neighbor::sendDDPacket(bool init)
     //TODO - virtual link hopLimit
     //TODO - checksum
 
-    if(this->getInterface()->getType() == OSPFv3Interface::POINTTOPOINT_TYPE)
+    if(this->getInterface()->getType() != OSPFv3Interface::POINTTOPOINT_TYPE)
         this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(ddPacket,IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getInterface()->getIntName().c_str());
     else
         this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(ddPacket,this->getNeighborIP(), this->getInterface()->getIntName().c_str());
