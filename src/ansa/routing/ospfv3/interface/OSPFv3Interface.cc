@@ -821,7 +821,247 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
 }//prepareUpdatePacekt
 
 void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor){
-    EV_DEBUG << "Processing LSU\n";
+    OSPFv3LSUpdate* lsUpdatePacket = dynamic_cast<OSPFv3LSUpdate*>(packet);
+    bool rebuildRoutingTable = false;
+
+    if(neighbor->getState()>=OSPFv3Neighbor::EXCHANGE_STATE) {
+        EV_DEBUG << "Processing LSU\n";
+        int currentType = ROUTER_LSA;
+        IPv4Address areaID = lsUpdatePacket->getAreaID();
+        OSPFv3Area *area = this->getArea();
+        unsigned int currentLSAIndex = 0;
+
+        //First I get count from one array
+        while (currentType >= ROUTER_LSA && currentType <= INTRA_AREA_PREFIX_LSA){//AS_EXTERNAL_LSA) {TODO
+            unsigned int lsaCount = 0;
+            switch (currentType) {
+            case ROUTER_LSA:
+                lsaCount = lsUpdatePacket->getRouterLSAsArraySize();
+                EV_DEBUG << "Parsing ROUTER_LSAs, lsaCount = " << lsaCount << "\n";
+                break;
+
+            case NETWORK_LSA:
+                lsaCount = lsUpdatePacket->getNetworkLSAsArraySize();
+                EV_DEBUG << "Parsing NETWORK_LSAs, lsaCount = " << lsaCount << "\n";
+                break;
+
+            case INTER_AREA_PREFIX_LSA:
+            case INTER_AREA_ROUTER_LSA:
+                currentType++;
+                continue;
+//                lsaCount = lsUpdatePacket->getSummaryLSAsArraySize();
+                break;
+
+            case AS_EXTERNAL_LSA:
+                currentType+=2;
+                continue;
+//                lsaCount = lsUpdatePacket->getAsExternalLSAsArraySize();
+                break;
+
+            case NSSA_LSA:
+                currentType++;
+                continue;
+                break;
+
+            case LINK_LSA:
+                lsaCount = lsUpdatePacket->getLinkLSAsArraySize();
+                EV_DEBUG << "Parsing LINK_LSAs, lsaCount = " << lsaCount << "\n";
+                break;
+
+            case INTRA_AREA_PREFIX_LSA:
+                lsaCount = lsUpdatePacket->getIntraAreaPrefixLSAsArraySize();
+                EV_DEBUG << "Parsing INTRA_AREA_PREFIX_LSAs, lsaCount = " << lsaCount << "\n";
+                break;
+            default:
+                throw cRuntimeError("Invalid currentType:%d", currentType);
+            }
+
+            for (unsigned int i = 0; i < lsaCount; i++) {
+                OSPFv3LSA *currentLSA;
+
+                switch (currentType) {
+                case ROUTER_LSA:
+                    currentLSA = (&(lsUpdatePacket->getRouterLSAs(i)));
+                    break;
+
+                case NETWORK_LSA:
+                    EV_DEBUG << "Caught NETWORK_LSA in LSU\n";
+                    currentLSA = (&(lsUpdatePacket->getNetworkLSAs(i)));
+                    break;
+
+                case INTER_AREA_PREFIX_LSA://TODO - check this whether they are the same and what to do with them
+                case INTER_AREA_ROUTER_LSA:
+
+                    //                    currentLSA = (&(lsUpdatePacket->getSummaryLSAs(i)));
+                    break;
+
+                case AS_EXTERNAL_LSA:
+                    //                    currentLSA = (&(lsUpdatePacket->getAsExternalLSAs(i)));
+                    break;
+
+                case NSSA_LSA:
+                    break;
+
+                case LINK_LSA:
+                    currentLSA = (&(lsUpdatePacket->getLinkLSAs(i)));
+                    break;
+
+                case INTRA_AREA_PREFIX_LSA:
+                    currentLSA = (&(lsUpdatePacket->getIntraAreaPrefixLSAs(i)));
+                    break;
+
+                default:
+                    throw cRuntimeError("Invalid currentType:%d", currentType);
+                }
+
+
+                LSAKeyType lsaKey;
+
+                lsaKey.linkStateID = currentLSA->getHeader().getLinkStateID();
+                lsaKey.advertisingRouter = currentLSA->getHeader().getAdvertisingRouter();
+                lsaKey.LSType = currentLSA->getHeader().getLsaType();
+
+                OSPFv3LSA *lsaInDatabase = this->getArea()->getInstance()->getProcess()->findLSA(lsaKey, areaID, lsUpdatePacket->getInstanceID());
+
+                unsigned short lsAge = currentLSA->getHeader().getLsaAge();
+                AcknowledgementFlags ackFlags;
+
+                if(lsaInDatabase!=nullptr)
+                    EV_DEBUG << "LSA is already in database\n";
+                else
+                    EV_DEBUG << "LSA is new - adding to database\n";
+
+                uint16_t lsaType = currentLSA->getHeader().getLsaType();
+                ackFlags.floodedBackOut = false;
+                ackFlags.lsaIsNewer = false;
+                ackFlags.lsaIsDuplicate = false;
+                ackFlags.impliedAcknowledgement = false;
+                ackFlags.lsaReachedMaxAge = (lsAge == MAX_AGE);
+                ackFlags.noLSAInstanceInDatabase = (lsaInDatabase == nullptr);
+
+                //LSA has max_age, it is not in the database and no router is in exchange or loading state
+                if ((ackFlags.lsaReachedMaxAge) && (ackFlags.noLSAInstanceInDatabase) && (!ackFlags.anyNeighborInExchangeOrLoadingState)) {
+                    //a) send ACK
+                    if (this->getType() == OSPFv3Interface::BROADCAST_TYPE) {
+                        if ((this->getState() == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
+                                (this->getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) ||
+                                (this->getDesignatedID() == IPv4Address::UNSPECIFIED_ADDRESS))
+                        {
+                            EV_DEBUG << "Sending ACK to all\n";//TODO
+                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_ROUTERS_MCAST);
+                        }
+                        else {
+                            EV_DEBUG << "Sending ACK to Designated mcast\n";//TODO
+                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
+                        }
+                    }
+                    else {
+                        if (this->getType() == OSPFv3Interface::POINTTOPOINT_TYPE) {
+                            EV_DEBUG << "Sending ACK to all\n";//TODO
+                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_ROUTERS_MCAST);
+                        }
+                        else {
+                            EV_DEBUG << "Sending ACK only to neighbor\n";//TODO
+                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), neighbor->getNeighborIP());
+                        }
+                    }
+                    //b)discard
+                    continue;
+                }
+
+                //LSA is in database
+                if (!ackFlags.noLSAInstanceInDatabase) {
+                    // operator< and operator== on OSPFLSAHeaders determines which one is newer(less means older)
+                    ackFlags.lsaIsNewer = (lsaInDatabase->getHeader() < currentLSA->getHeader());
+                    ackFlags.lsaIsDuplicate = (operator==(lsaInDatabase->getHeader(), currentLSA->getHeader()));
+                }
+
+                if ((ackFlags.noLSAInstanceInDatabase) || (ackFlags.lsaIsNewer)) {
+                    EV_DEBUG << "No lsa instance in database\n";
+                    //a) LSA in database and it was installed less than MinLsArrival seconds ago
+                    if ((!ackFlags.noLSAInstanceInDatabase) &&
+                            (lsaInDatabase->getHeader().getAdvertisingRouter() != this->getArea()->getInstance()->getProcess()->getRouterID()))
+                        //&&//TODO - install time - how?!?!
+                        //(info->getInstallTime() < MIN_LS_ARRIVAL))
+                    {//it should be discarded and no ack should be sent
+                        EV_DEBUG << "Discarding\n";
+                        continue;
+                    }
+
+                    //b)immediately flood the LSA
+                    //ackFlags.floodedBackOut = this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this, neighbor);
+                    if (!ackFlags.noLSAInstanceInDatabase) {
+                        LSAKeyType lsaKey;
+
+                        lsaKey.linkStateID = lsaInDatabase->getHeader().getLinkStateID();
+                        lsaKey.advertisingRouter = lsaInDatabase->getHeader().getAdvertisingRouter();
+                        lsaKey.LSType = lsaInDatabase->getHeader().getLsaType();
+                        //c) remove the copy from retransmission lists
+                        //this->getArea()->getInstance()->removeFromAllRetransmissionLists(lsaKey);
+                    }
+                    //d) install LSA in the database
+                    EV_DEBUG << "Installing the LSA\n";
+                    if(currentType == LINK_LSA)
+                        this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID(), this);
+                    else
+                        this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
+
+                    EV_INFO << "    (update installed)\n";
+
+                    //this->acknowledgeLSA(&(currentLSA->getHeader()), ackFlags, lsUpdatePacket->getRouterID());
+                    if ((currentLSA->getHeader().getAdvertisingRouter() == this->getArea()->getInstance()->getProcess()->getRouterID()) ||
+                            ((lsaType == NETWORK_LSA)))// &&//TODO
+                        //(router->isLocalAddress(currentLSA->getHeader().getLinkStateID()))))
+                    {
+                        if (ackFlags.noLSAInstanceInDatabase) {
+                            currentLSA->getHeader().setLsaAge(MAX_AGE);
+                            if(currentLSA->getHeader().getLsaType()!=LINK_LSA)
+                                this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this);
+                            else {
+                                LSAKeyType lsaKey;
+
+                                lsaKey.linkStateID = currentLSA->getHeader().getLinkStateID();
+                                lsaKey.advertisingRouter = currentLSA->getHeader().getAdvertisingRouter();
+                                lsaKey.LSType = currentLSA->getHeader().getLsaType();
+                                neighbor->removeFromRequestList(lsaKey);
+                            }
+                        }
+                        else {
+                            if (ackFlags.lsaIsNewer) {
+                                long sequenceNumber = currentLSA->getHeader().getLsaSequenceNumber();
+                                if (sequenceNumber == MAX_SEQUENCE_NUMBER) {
+                                    lsaInDatabase->getHeader().setLsaAge(MAX_AGE);
+                                    this->getArea()->getInstance()->getProcess()->floodLSA(lsaInDatabase, areaID);
+                                }
+                                else {
+                                    lsaInDatabase->getHeader().setLsaSequenceNumber(sequenceNumber + 1);
+                                    this->getArea()->getInstance()->getProcess()->floodLSA(lsaInDatabase, areaID);
+                                }
+                            }
+                        }
+                    }
+                    continue;
+                }
+                //TODO - LSA is on request list
+                //TODO - lsa is a duplicate
+                //TODO - database copy is more recent
+                //TODO - Otherwise as long as the database copy has not been sent in link state update send it to the neighbor directly
+
+
+            }//for (unsigned int i = 0; i < lsaCount; i++)
+
+            currentType++;
+        } //while (currentType >= ROUTER_LSA && currentType <= LINK_LSA){
+
+
+
+    } //if(neighbor->getState()>=OSPFv3Neighbor::EXCHANGE_STATE)
+    else {
+        EV_DEBUG << "Neighbor in lesser than EXCHANGE_STATE -> Drop the packet\n";
+    }
+
+    if(rebuildRoutingTable)
+        EV_DEBUG << "Rebuilding the routing table!!!\n";
 }//processLSU
 
 void OSPFv3Interface::processLSAck(OSPFv3Packet* packet){

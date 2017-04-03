@@ -548,6 +548,16 @@ bool OSPFv3Process::installLSA(OSPFv3LSA *lsa, int instanceID, IPv4Address areaI
             }
         }
         break;
+
+        case INTRA_AREA_PREFIX_LSA: {
+            OSPFv3Instance* instance = this->getInstanceById(instanceID);
+            OSPFv3Area* area = instance->getAreaById(areaID);
+            if(area!=nullptr) {
+                OSPFv3IntraAreaPrefixLSA* intraLSA = check_and_cast<OSPFv3IntraAreaPrefixLSA *>(lsa);
+                return area->installIntraAreaPrefixLSA(intraLSA);
+            }
+        }
+        break;
 //        default:
 //            ASSERT(false);
 //            break;
