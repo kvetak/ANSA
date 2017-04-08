@@ -73,6 +73,11 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
 
     if (nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) {
         interface->getArea()->originateNetworkLSA(interface);
+        InterfaceEntry* ie = interface->containingProcess->ift->getInterfaceById(interface->getInterfaceId());
+        IPv6InterfaceData *ipv6int = ie->ipv6Data();
+        ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
+        ipv6int->assignAddress(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, false, 0, 0);
+                //InterfaceEntry* ie = ift->getInterfaceByName(intName);
 //        NetworkLSA *newLSA = interface->getArea()->originateNetworkLSA(intf);
 //        if (newLSA != nullptr) {
 //            shouldRebuildRoutingTable |= interface->getArea()->installNetworkLSA(newLSA);

@@ -525,6 +525,11 @@ void OSPFv3Neighbor::addToRetransmissionList(OSPFv3LSA *lsa)
         case LINK_LSA:
             lsaCopy = new OSPFv3LinkLSA(*(check_and_cast<OSPFv3LinkLSA *>(lsa)));
             break;
+
+        case INTRA_AREA_PREFIX_LSA:
+            lsaCopy = new OSPFv3IntraAreaPrefixLSA(*(check_and_cast<OSPFv3IntraAreaPrefixLSA *>(lsa)));
+            break;
+
         default:
             ASSERT(false);    // error
             break;

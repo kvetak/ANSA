@@ -559,6 +559,7 @@ void OSPFv3Area::deleteRouterLSA(int index) {
 
 bool OSPFv3Area::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv3Neighbor* neighbor)
 {
+    EV_DEBUG << "Flooding from Area to all interfaces\n";
     bool floodedBackOut = false;
     long interfaceCount = this->interfaceList.size();
 

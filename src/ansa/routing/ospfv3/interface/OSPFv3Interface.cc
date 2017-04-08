@@ -989,7 +989,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     }
 
                     //b)immediately flood the LSA
-                    //ackFlags.floodedBackOut = this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this, neighbor);
+                    ackFlags.floodedBackOut = this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this, neighbor);
                     if (!ackFlags.noLSAInstanceInDatabase) {
                         LSAKeyType lsaKey;
 
@@ -1199,6 +1199,7 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
             )
     )
     {
+        EV_DEBUG << "Checking if this is backbone\n";
         long neighborCount = this->getNeighborCount();
         bool lsaAddedToRetransmissionList = false;
         IPv4Address linkStateID = lsa->getHeader().getLinkStateID();
@@ -1210,16 +1211,21 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
 
         for (long i = 0; i < neighborCount; i++) {    // (1)
             if (this->neighbors.at(i)->getState() < OSPFv3Neighbor::EXCHANGE_STATE) {    // (1) (a)
+                EV_DEBUG << "Skipping neighbor " << this->neighbors.at(i)->getNeighborID() << "\n";
                 continue;
             }
             if (this->neighbors.at(i)->getState() < OSPFv3Neighbor::FULL_STATE) {    // (1) (b)
+                EV_DEBUG << "Adjacency not yet full\n";
                 OSPFv3LSAHeader *requestLSAHeader = this->neighbors.at(i)->findOnRequestList(lsaKey);
                 if (requestLSAHeader != nullptr) {
+                    EV_DEBUG << "Instance of new lsa already on the list\n";
                     // operator< and operator== on OSPFLSAHeaders determines which one is newer(less means older)
                     if (lsa->getHeader() < (*requestLSAHeader)) {
+                        EV_DEBUG << "Instance is less recent\n";
                         continue;
                     }
                     if (operator==(lsa->getHeader(), (*requestLSAHeader))) {
+                        EV_DEBUG << "Two instances are the same, removing from request list\n";
                         this->neighbors.at(i)->removeFromRequestList(lsaKey);
                         continue;
                     }
@@ -1227,22 +1233,27 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
                 }
             }
             if (neighbor == this->neighbors.at(i)) {    // (1) (c)
+                EV_DEBUG << "1c - next neighbor\n";
                 continue;
             }
             this->neighbors.at(i)->addToRetransmissionList(lsa);    // (1) (d)
             lsaAddedToRetransmissionList = true;
         }
         if (lsaAddedToRetransmissionList) {    // (2)
+            EV_DEBUG << "lsaAddedToRetransmissionList true\n";
             if ((interface != this) ||
                     ((neighbor != nullptr) &&
                             (neighbor->getNeighborID() != this->getDesignatedID()) &&
                             (neighbor->getNeighborID() != this->getBackupID())))    // (3)
             {
-                if ((interface != this) || (getState() != OSPFv3Interface::INTERFACE_STATE_BACKUP)) {    // (4)
+                EV_DEBUG << "step 3 passed\n";
+                if ((interface != this) && (getState() != OSPFv3Interface::INTERFACE_STATE_BACKUP)) {    // (4)
+                    EV_DEBUG << "step 4 passed\n";
                     OSPFv3LSUpdate* updatePacket = this->prepareLSUHeader();   // (5)
                     updatePacket = this->prepareUpdatePacket(lsa, updatePacket);
 
                     if (updatePacket != nullptr) {
+                        EV_DEBUG << "Prepared LSUpdate packet is ready\n";
                         int hopLimit = (interfaceType == OSPFv3Interface::VIRTUAL_TYPE) ? VIRTUAL_LINK_TTL : 1;
 
                         if (interfaceType == OSPFv3Interface::BROADCAST_TYPE) {
@@ -1250,6 +1261,7 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
                                     (getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) ||
                                     (this->DesignatedRouterID == IPv4Address::UNSPECIFIED_ADDRESS))
                             {
+                                EV_DEBUG << "Sending LSUpdate packet\n";
                                 this->getArea()->getInstance()->getProcess()->sendPacket(updatePacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getIntName().c_str(), hopLimit);
                                 for (long k = 0; k < neighborCount; k++) {
                                     this->neighbors.at(k)->addToTransmittedLSAList(lsaKey);
@@ -1261,6 +1273,7 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
                                 }
                             }
                             else {
+                                EV_DEBUG << "Sending packet from floodLSA\n";
                                 this->getArea()->getInstance()->getProcess()->sendPacket(updatePacket, IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, this->getIntName().c_str(), hopLimit);
                                 OSPFv3Neighbor *dRouter = this->getNeighborById(this->DesignatedRouterID);
                                 OSPFv3Neighbor *backupDRouter = this->getNeighborById(this->BackupRouterID);
