@@ -989,6 +989,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     }
 
                     //b)immediately flood the LSA
+                    EV_DEBUG << "Flooding the LSA out\n";
                     ackFlags.floodedBackOut = this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this, neighbor);
                     if (!ackFlags.noLSAInstanceInDatabase) {
                         LSAKeyType lsaKey;
@@ -1247,7 +1248,7 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
                             (neighbor->getNeighborID() != this->getBackupID())))    // (3)
             {
                 EV_DEBUG << "step 3 passed\n";
-                if ((interface != this) && (getState() != OSPFv3Interface::INTERFACE_STATE_BACKUP)) {    // (4)
+                if ((interface != this) || (getState() != OSPFv3Interface::INTERFACE_STATE_BACKUP)) {    // (4)
                     EV_DEBUG << "step 4 passed\n";
                     OSPFv3LSUpdate* updatePacket = this->prepareLSUHeader();   // (5)
                     updatePacket = this->prepareUpdatePacket(lsa, updatePacket);
