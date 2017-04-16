@@ -72,7 +72,9 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
     }
 
     if (nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) {
-        interface->getArea()->originateNetworkLSA(interface);
+        OSPFv3NetworkLSA* newLSA = interface->getArea()->originateNetworkLSA(interface);
+        OSPFv3IntraAreaPrefixLSA* prefLSA = interface->getArea()->originateNetIntraAreaPrefixLSA(newLSA, interface);
+        interface->getArea()->installIntraAreaPrefixLSA(prefLSA);
         InterfaceEntry* ie = interface->containingProcess->ift->getInterfaceById(interface->getInterfaceId());
         IPv6InterfaceData *ipv6int = ie->ipv6Data();
         ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);

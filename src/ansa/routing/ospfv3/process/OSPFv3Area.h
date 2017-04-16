@@ -83,6 +83,12 @@ class INET_API OSPFv3Area : public cObject
     uint32_t getCurrentIntraAreaPrefixSequence(){return this->intraAreaPrefixLSASequenceNumber;}
     void incrementIntraAreaPrefixSequence(){this->intraAreaPrefixLSASequenceNumber++;}
 
+    OSPFv3IntraAreaPrefixLSA* originateNetIntraAreaPrefixLSA(OSPFv3NetworkLSA* networkLSA, OSPFv3Interface* interface);//this originates one router LSA for one area
+    IPv4Address getNewNetIntraAreaPrefixLinkStateID();
+    IPv4Address getNetIntraAreaPrefixLinkStateID(){return this->netIntraAreaPrefixLsID;}
+    uint32_t getCurrentNetIntraAreaPrefixSequence(){return this->netIntraAreaPrefixLSASequenceNumber;}
+    void incrementNetIntraAreaPrefixSequence(){this->netIntraAreaPrefixLSASequenceNumber++;}
+
     OSPFv3LSAHeader* findLSA(LSAKeyType lsaKey);
     bool floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface=nullptr, OSPFv3Neighbor* neighbor=nullptr);
 
@@ -119,6 +125,11 @@ class INET_API OSPFv3Area : public cObject
     std::vector<OSPFv3IntraAreaPrefixLSA*> intraAreaPrefixLSAList;
     IPv4Address intraAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t intraAreaPrefixLSASequenceNumber = 1;
+
+    IPv4Address netIntraAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
+    uint32_t netIntraAreaPrefixLSASequenceNumber = 1;
+
+
     //list of network-lsas
     //list of summary lsas
     //shortest path tree
