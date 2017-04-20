@@ -38,6 +38,7 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
         }
 
         interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
+        shouldRebuildRoutingTable = true;
 
         //OSPFv3RouterLSA *routerLSA = intf->getArea()->getRouterLSA(intf->getArea()->getRouter()->getRouterID());
 
@@ -79,6 +80,8 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
         IPv6InterfaceData *ipv6int = ie->ipv6Data();
         ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
         ipv6int->assignAddress(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, false, 0, 0);
+
+        shouldRebuildRoutingTable = true;
                 //InterfaceEntry* ie = ift->getInterfaceByName(intName);
 //        NetworkLSA *newLSA = interface->getArea()->originateNetworkLSA(intf);
 //        if (newLSA != nullptr) {
@@ -109,7 +112,7 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
     }
 
     if (shouldRebuildRoutingTable) {
-//        intf->getArea()->getRouter()->rebuildRoutingTable();
+        interface->getArea()->getInstance()->getProcess()->rebuildRoutingTable();
     }
 }
 

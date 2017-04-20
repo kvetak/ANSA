@@ -11,13 +11,16 @@
 #include "inet/networklayer/ipv6/IPv6InterfaceData.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 #include "inet/networklayer/ipv4/IIPv4RoutingTable.h"
+#include "inet/networklayer/ipv6/IPv6RoutingTable.h"
 
 #include "ansa/routing/ospfv3/process/OSPFv3Instance.h"
 #include "ansa/routing/ospfv3/process/OSPFv3Area.h"
 #include "ansa/routing/ospfv3/OSPFv3Timers.h"
-//#include "ansa/routing/ospfv3/OSPFv3RoutingTableEntry.h"
+#include "ansa/routing/ospfv3/process/OSPFv3RoutingTableEntry.h"
 #include "ansa/routing/ospfv3/OSPFv3Common.h"
 #include "ansa/routing/ospfv3/OSPFv3Packet_m.h"
+
+#include "inet/networklayer/ipv6/IPv6Route.h"
 
 
 namespace inet{
@@ -42,10 +45,11 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     bool floodLSA(OSPFv3LSA* lsa, IPv4Address areaID=IPv4Address::UNSPECIFIED_ADDRESS, OSPFv3Interface* intf=nullptr, OSPFv3Neighbor* neighbor=nullptr);
     bool installLSA(OSPFv3LSA *lsa, int instanceID, IPv4Address areaID=IPv4Address::UNSPECIFIED_ADDRESS, OSPFv3Interface* intf=nullptr);
     void rebuildRoutingTable();
+    void calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
 
   public:
     IInterfaceTable* ift = nullptr;
-    IIPv4RoutingTable *rt = nullptr;
+    IPv6RoutingTable *rt = nullptr;
     cModule* containingModule=nullptr;
 
 
@@ -60,7 +64,7 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     IPv4Address routerID;
     bool isActive=false;
     void debugDump();
-    //std::vector<OSPFv3RoutingTableEntry *> routingTable;
+    std::vector<OSPFv3RoutingTableEntry *> routingTable;
 
 
   protected:

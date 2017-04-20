@@ -990,6 +990,21 @@ OSPFv3LSA* OSPFv3Area::getLSAbyKey(LSAKeyType LSAKey)
     return nullptr;
 }
 
+void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* > newTable)
+{
+    EV_DEBUG << "Calculating SPF Tree for area " << this->getAreaID() << "\n";
+}
+
+void OSPFv3Area::calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable)
+{
+    EV_DEBUG << "Calculating Inter-Area Routes for Backbone\n";
+}
+
+void OSPFv3Area::recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTable)
+{
+    EV_DEBUG << "Rechecking Summary LSA\n";
+}
+
 void OSPFv3Area::debugDump()
 {
     for(auto it=this->interfaceList.begin(); it!=this->interfaceList.end(); it++)

@@ -17,7 +17,7 @@ void OSPFv3Process::initialize(int stage){
     if(stage == INITSTAGE_ROUTING_PROTOCOLS){
         this->containingModule=findContainingNode(this);
         ift = check_and_cast<IInterfaceTable* >(containingModule->getSubmodule("interfaceTable"));
-//        rt = check_and_cast<IIPv4RoutingTable* >(containingModule->getSubmodule("routingTableModule"));
+        rt = check_and_cast<IPv6RoutingTable* >(containingModule->getSubmodule("routingTable")->getSubmodule("ipv6"));
 
         this->routerID = IPv4Address(par("routerID").stringValue());
         this->processID = (int)par("processID");
@@ -565,94 +565,99 @@ bool OSPFv3Process::installLSA(OSPFv3LSA *lsa, int instanceID, IPv4Address areaI
     return false;
 }
 
+void OSPFv3Process::calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable)
+{
+    EV_DEBUG << "Calculating AS External Routes\n";
+}
+
 void OSPFv3Process::rebuildRoutingTable()
 {
-    //std::vector<OSPFv3RoutingTableEntry *> newTable;
-    for (int i=0; i<this->instances.size(); i++) {
-        OSPFv3Instance* inst = this->instances.at(i);
-        if(inst->getAddressFamily()==IPV4INSTANCE) {
+    unsigned long instanceCount = this->instances.size();
+    std::vector<OSPFv3RoutingTableEntry *> newTable;
 
-            bool hasTransitAreas = false;
-            unsigned long i;
+    for(unsigned int k=0; k<instanceCount; k++) {
+        OSPFv3Instance* currInst = this->instances.at(k);
+        unsigned long areaCount = currInst->getAreaCount();
+        bool hasTransitAreas = false;
 
-            EV_INFO << "Rebuilding routing table:\n";
+        unsigned long i;
 
-            unsigned long areaCount = inst->getAreaCount();
+        EV_INFO << "Rebuilding routing table for instance " << this->instances.at(k)->getInstanceID() << ":\n";
+
+        for (i = 0; i < areaCount; i++) {
+            currInst->getArea(i)->calculateShortestPathTree(newTable);
+            if (currInst->getArea(i)->getTransitCapability()) {
+                hasTransitAreas = true;
+            }
+        }
+        if (areaCount > 1) {
+            OSPFv3Area *backbone = currInst->getAreaById(BACKBONE_AREAID);
+            if (backbone != nullptr) {
+                backbone->calculateInterAreaRoutes(newTable);
+            }
+        }
+        else {
+            if (areaCount == 1) {
+                currInst->getArea(0)->calculateInterAreaRoutes(newTable);
+            }
+        }
+        if (hasTransitAreas) {
             for (i = 0; i < areaCount; i++) {
-                OSPFv3Area* area = inst->getArea(i);
-                //area->calculateShortestPathTree(newTable);
-                if (area->getTransitCapability()) {
-                    hasTransitAreas = true;
+                if (currInst->getArea(i)->getTransitCapability()) {
+                    currInst->getArea(i)->recheckSummaryLSAs(newTable);
                 }
             }
-            if (areaCount > 1) {
-                OSPFv3Area *backbone = inst->getAreaById(IPv4Address::UNSPECIFIED_ADDRESS);
-                if (backbone != nullptr) {
-//                    backbone->calculateInterAreaRoutes(newTable);
-                }
+        }
+        calculateASExternalRoutes(newTable);
+
+        // backup the routing table
+        unsigned long routeCount = routingTable.size();
+        std::vector<OSPFv3RoutingTableEntry *> oldTable;
+
+        oldTable.assign(routingTable.begin(), routingTable.end());
+        routingTable.clear();
+        routingTable.assign(newTable.begin(), newTable.end());
+
+        std::vector<IPv6Route *> eraseEntries;
+        unsigned long routingEntryNumber = rt->getNumRoutes();
+        // remove entries from the IPv4 routing table inserted by the OSPF module
+        for (i = 0; i < routingEntryNumber; i++) {
+            IPv6Route *entry = rt->getRoute(i);
+            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
+            if (ospfEntry != nullptr) {
+                eraseEntries.push_back(entry);
             }
-            else {
-                if (areaCount == 1) {
-//                    inst->getArea(0)->calculateInterAreaRoutes(newTable);
-                }
-            }
-            if (hasTransitAreas) {
-                for (i = 0; i < areaCount; i++) {
-                    if (inst->getArea(i)->getTransitCapability()) {
-//                        areas[i]->recheckSummaryLSAs(newTable);
-                    }
-                }
-            }
-//            calculateASExternalRoutes(newTable);
+        }
+
+        unsigned int eraseCount = eraseEntries.size();
+        for (i = 0; i < eraseCount; i++) {
+            rt->deleteRoute(eraseEntries[i]);
+        }
+
+        // add the new routing entries
+        routeCount = routingTable.size();
+        for (i = 0; i < routeCount; i++) {
+//            if (routingTable[i]->getDestinationType() == OSPFv3RoutingTableEntry::NETWORK_DESTINATION) {
+//                rt->addRoute(new RoutingTableEntry(*(routingTable[i])));
+//            }
+        }
+
+        //notifyAboutRoutingTableChanges(oldTable);
+
+        routeCount = oldTable.size();
+        for (i = 0; i < routeCount; i++) {
+            delete (oldTable[i]);
+        }
+
+        EV_INFO << "Routing table was rebuilt.\n"
+                << "Results:\n";
+
+        routeCount = routingTable.size();
+        for (i = 0; i < routeCount; i++) {
+            //EV_INFO << *routingTable[i]
+              //                       << "\n";
         }
     }
-    // backup the routing table
-    /*unsigned long routeCount = routingTable.size();
-    std::vector<OSPFv3RoutingTableEntry *> oldTable;
-
-    oldTable.assign(routingTable.begin(), routingTable.end());
-    routingTable.clear();
-    routingTable.assign(newTable.begin(), newTable.end());
-
-    std::vector<IPv4Route *> eraseEntries;
-    unsigned long routingEntryNumber = rt->getNumRoutes();
-    // remove entries from the IPv4 routing table inserted by the OSPF module
-    for (int i = 0; i < routingEntryNumber; i++) {
-        IPv4Route *entry = rt->getRoute(i);
-        OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
-        if (ospfEntry != nullptr) {
-            eraseEntries.push_back(entry);
-        }
-    }
-
-    unsigned int eraseCount = eraseEntries.size();
-    for (int i = 0; i < eraseCount; i++) {
-        rt->deleteRoute(eraseEntries[i]);
-    }
-
-    // add the new routing entries
-    routeCount = routingTable.size();
-    for (int i = 0; i < routeCount; i++) {
-        if (routingTable[i]->getDestinationType() == OSPFv3RoutingTableEntry::NETWORK_DESTINATION) {
-            rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i])));
-        }
-    }
-
-    //notifyAboutRoutingTableChanges(oldTable); TODO
-
-    routeCount = oldTable.size();
-    for (int i = 0; i < routeCount; i++) {
-        delete (oldTable[i]);
-    }
-
-    EV_INFO << "Routing table was rebuilt.\n"
-            << "Results:\n";
-
-    routeCount = routingTable.size();
-    for (int i = 0; i < routeCount; i++) {
-        EV_INFO << *routingTable[i]
-                << "\n";
-    }*/
 }
 
 }//namespace inet

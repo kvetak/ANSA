@@ -142,6 +142,7 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
     bool backupSeen = false;
     bool neighborsDRStateChanged = false;
     bool drChanged = false;
+    bool shouldRebuildRoutingTable=false;
 
     IPv6ControlInfo* ctlInfo = dynamic_cast<IPv6ControlInfo*>(packet->getControlInfo());
 
@@ -367,6 +368,7 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
 
                 if (neighborsDRStateChanged) {
                     EV_DEBUG <<"Router DR has changed - need to add LSAs\n";
+                    shouldRebuildRoutingTable = true;
 //                    OSPFv3RouterLSA* routerLSA = this->getArea()->originateRouterLSA();
 //                    RouterLSA *routerLSA = intf->getArea()->findRouterLSA(router->getRouterID());
 //
@@ -390,6 +392,10 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
                 }
             }
         }
+    }
+
+    if (shouldRebuildRoutingTable) {
+        this->getArea()->getInstance()->getProcess()->rebuildRoutingTable();
     }
 
     delete packet;
@@ -1001,11 +1007,12 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                         //this->getArea()->getInstance()->removeFromAllRetransmissionLists(lsaKey);
                     }
                     //d) install LSA in the database
+
                     EV_DEBUG << "Installing the LSA\n";
                     if(currentType == LINK_LSA)
-                        this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID(), this);
+                        rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID(), this);
                     else
-                        this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
+                        rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
 
                     EV_INFO << "    (update installed)\n";
 
@@ -1062,7 +1069,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
     }
 
     if(rebuildRoutingTable)
-        EV_DEBUG << "Rebuilding the routing table!!!\n";
+        this->getArea()->getInstance()->getProcess()->rebuildRoutingTable();
 }//processLSU
 
 void OSPFv3Interface::processLSAck(OSPFv3Packet* packet){
