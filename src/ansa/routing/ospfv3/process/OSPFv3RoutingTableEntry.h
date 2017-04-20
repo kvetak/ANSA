@@ -7,6 +7,8 @@
 #include "ansa/routing/ospfv3/OSPFv3Common.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/networklayer/ipv6/IPv6RoutingTable.h"
+#include "inet/networklayer/ipv6/IPv6Route.h"
+#include "inet/networklayer/contract/IRoute.h"
 
 namespace inet {
 
@@ -41,8 +43,8 @@ private:
     // IPv4Route::gateway is nextHops[0].hopAddress
 
 public:
-    OSPFv3RoutingTableEntry(IInterfaceTable *ift);
-    OSPFv3RoutingTableEntry(const OSPFv3RoutingTableEntry& entry);
+    OSPFv3RoutingTableEntry(const OSPFv3RoutingTableEntry& entry, IPv6Address destPrefix, int prefixLength, SourceType sourceType);
+    OSPFv3RoutingTableEntry(IInterfaceTable *ift, IPv6Address destPrefix, int prefixLength, SourceType sourceType);
     virtual ~OSPFv3RoutingTableEntry() {}
 
     bool operator==(const OSPFv3RoutingTableEntry& entry) const;
