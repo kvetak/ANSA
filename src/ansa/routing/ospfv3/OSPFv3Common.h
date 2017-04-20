@@ -44,6 +44,9 @@ const IPv4Address BACKBONE_AREAID(0, 0, 0, 0);
 const IPv4Address NULL_LINKSTATEID(0, 0, 0, 0);
 const IPv4Address NULL_IPV4ADDRESS(0, 0, 0, 0);
 
+typedef IPv4Address AreaID;
+typedef unsigned int Metric;
+
 struct LSAKeyType
 {
     uint16_t LSType;
