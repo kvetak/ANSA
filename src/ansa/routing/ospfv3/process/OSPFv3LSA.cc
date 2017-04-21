@@ -2,7 +2,7 @@
 
 namespace inet{
 
-bool OSPFv3RouterLinkState::update(const OSPFv3RouterLSA *lsa)
+bool OSPFv3RouterNode::update(const OSPFv3RouterLSA *lsa)
 {
     bool different = differsFrom(lsa);
     (*this) = (*lsa);
@@ -16,7 +16,7 @@ bool OSPFv3RouterLinkState::update(const OSPFv3RouterLSA *lsa)
     }
 }
 
-bool OSPFv3RouterLinkState::differsFrom(const OSPFv3RouterLSA *routerLSA) const
+bool OSPFv3RouterNode::differsFrom(const OSPFv3RouterLSA *routerLSA) const
 {
     const OSPFv3LSAHeader& thisHeader = getHeader();
     const OSPFv3LSAHeader& lsaHeader = routerLSA->getHeader();
@@ -55,7 +55,7 @@ bool OSPFv3RouterLinkState::differsFrom(const OSPFv3RouterLSA *routerLSA) const
     return differentHeader || differentBody;
 }
 
-std::string OSPFv3RouterLinkState::dumpRouterLSA() const
+std::string OSPFv3RouterNode::dumpRouterLSA() const
 {
     std::stringstream out;
 

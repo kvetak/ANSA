@@ -993,6 +993,15 @@ OSPFv3LSA* OSPFv3Area::getLSAbyKey(LSAKeyType LSAKey)
 void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* > newTable)
 {
     EV_DEBUG << "Calculating SPF Tree for area " << this->getAreaID() << "\n";
+    IPv4Address routerID = this->getInstance()->getProcess()->getRouterID();
+    bool finished = false;
+    std::vector<OSPFv3LSA *> treeVertices;
+    OSPFv3LSA *justAddedVertex;
+    std::vector<OSPFv3LSA *> candidateVertices;
+    unsigned long i, j, k;
+    unsigned long lsaCount;
+
+
 }
 
 void OSPFv3Area::calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable)
