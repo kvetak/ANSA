@@ -99,9 +99,14 @@ class INET_API OSPFv3Area : public cObject
     void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* > newTable);
     void calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
     void recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTable);
+    bool hasLink(OSPFv3LSA *fromLSA, OSPFv3LSA *toLSA) const;
+    std::vector<NextHop> *calculateNextHops(OSPFv3RouterLSABody& destination, OSPFv3LSA *parent) const;
+    std::vector<NextHop> *calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const;
 
 
     std::string detailedInfo() const override;
+
+    void setSpfTreeRoot(OSPFv3RouterNode* node){this->spfTreeRoot = node;};
 
   private:
     IPv4Address areaID;
@@ -132,7 +137,7 @@ class INET_API OSPFv3Area : public cObject
     IPv4Address netIntraAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t netIntraAreaPrefixLSASequenceNumber = 1;
 
-
+    OSPFv3RouterNode* spfTreeRoot=nullptr;
     //list of network-lsas
     //list of summary lsas
     //shortest path tree

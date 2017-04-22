@@ -57,7 +57,7 @@ struct LSAKeyType
 struct NextHop
 {
     int ifIndex;
-    IPv4Address hopAddress;
+    IPv6Address hopAddress;
     IPv4Address advertisingRouter;
 };
 

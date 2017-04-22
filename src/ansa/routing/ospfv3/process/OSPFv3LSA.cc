@@ -122,4 +122,157 @@ unsigned int calculateLSASize(OSPFv3LSA *lsa)
     return lsaLength;
 }
 
+std::ostream& operator<<(std::ostream& ostr, const OSPFv3LSAHeader& lsaHeader)
+{
+    ostr << "LSAHeader: age=" << lsaHeader.getLsaAge()
+         << ", type=";
+    switch (lsaHeader.getLsaType()) {
+        case ROUTER_LSA:
+            ostr << "RouterLSA";
+            break;
+
+        case NETWORK_LSA:
+            ostr << "NetworkLSA";
+            break;
+
+        case INTER_AREA_PREFIX_LSA:
+            ostr << "SummaryLSA_Networks";
+            break;
+
+        case INTER_AREA_ROUTER_LSA:
+            ostr << "SummaryLSA_ASBoundaryRouters";
+            break;
+
+        case AS_EXTERNAL_LSA:
+            ostr << "ASExternalLSA";
+            break;
+
+        default:
+            ostr << "Unknown";
+            break;
+    }
+    ostr << ", LSID=" << lsaHeader.getLinkStateID().str(false)
+         << ", advertisingRouter=" << lsaHeader.getAdvertisingRouter().str(false)
+         << ", seqNumber=" << lsaHeader.getLsaSequenceNumber()
+         << endl;
+    return ostr;
+}
+
+std::ostream& operator<<(std::ostream& ostr, const OSPFv3NetworkLSA& lsa)
+{
+    ostr << "Mask: 64" ;//<< lsa.getNetMask();
+    unsigned int cnt = lsa.getAttachedRouterArraySize();
+    if (cnt) {
+        ostr << ", Attached routers:";
+        for (unsigned int i = 0; i < cnt; i++) {
+            ostr << " " << lsa.getAttachedRouter(i);
+        }
+    }
+    ostr << ", " << lsa.getHeader();
+    return ostr;
+}
+
+//std::ostream& operator<<(std::ostream& ostr, const TOSData& tos)
+//{
+//    ostr << "tos: " << (int)tos.tos
+//         << "metric:";
+//    for (int i = 0; i < 3; i++)
+//        ostr << " " << (int)tos.tosMetric[i];
+//    return ostr;
+//}
+
+//std::ostream& operator<<(std::ostream& ostr, const Link& link)
+//{
+//    ostr << "ID: " << link.getLinkID().str(false)
+//         << ", data: ";
+//    unsigned long data = link.getLinkData();
+//    if ((data & 0xFF000000) != 0)
+//        ostr << IPv4Address(data).str(false);
+//    else
+//        ostr << data;
+//    ostr << ", cost: " << link.getLinkCost();
+//    unsigned int cnt = link.getTosDataArraySize();
+//    if (cnt) {
+//        ostr << ", tos: {";
+//        for (unsigned int i = 0; i < cnt; i++) {
+//            ostr << " " << link.getTosData(i);
+//        }
+//        ostr << "}";
+//    }
+//    return ostr;
+//}
+
+std::ostream& operator<<(std::ostream& ostr, const OSPFv3RouterLSA& lsa)
+{
+    if (lsa.getVBit())
+        ostr << "V, ";
+    if (lsa.getEBit())
+        ostr << "E, ";
+    if (lsa.getBBit())
+        ostr << "B, ";
+    ostr << "numberOfLinks: " << lsa.getRoutersArraySize() << ", ";
+    unsigned int cnt = lsa.getRoutersArraySize();
+    if (cnt) {
+        ostr << "Links: {";
+        for (unsigned int i = 0; i < cnt; i++) {
+            ostr << " {" << lsa.getRouters(i).neighborRouterID << "}";
+        }
+        ostr << "}, ";
+    }
+    ostr << lsa.getHeader();
+    return ostr;
+}
+
+std::ostream& operator<<(std::ostream& ostr, const OSPFv3InterAreaPrefixLSA& lsa)
+{
+    ostr << "Mask: " << lsa.getPrefixLen()
+         << ", Cost: " << lsa.getMetric() << ", ";
+//    unsigned int cnt = lsa.getTosDataArraySize();
+//    if (cnt) {
+//        ostr << ", tosData: {";
+//        for (unsigned int i = 0; i < cnt; i++) {
+//            ostr << " " << lsa.getTosData(i);
+//        }
+//        ostr << "}, ";
+//    }
+    ostr << lsa.getHeader();
+    return ostr;
+}
+
+//std::ostream& operator<<(std::ostream& ostr, const ExternalTOSInfo& tos)
+//{
+//    ostr << "TOSData: {" << tos.tosData
+//         << "}, MetricType: " << tos.E_ExternalMetricType
+//         << ", fwAddr: " << tos.forwardingAddress
+//         << ", extRouteTag: " << tos.externalRouteTag;
+//    return ostr;
+//}
+
+std::ostream& operator<<(std::ostream& ostr, const OSPFv3ASExternalLSA& lsa)
+{
+    if (lsa.getEBit())
+        ostr << "E, ";
+    if (lsa.getTBit())
+        ostr << "T, ";
+    if (lsa.getFBit())
+        ostr << "F, ";
+
+    ostr << "Referenced LSA Type: " << lsa.getReferencedLSType()
+         << ", Cost: " << lsa.getMetric()
+         << ", Forward: " << lsa.getForwardingAddress()
+         << ", ExtRouteTag: " << lsa.getExternalRouteTag()
+         << ", Referenced LSID: " << lsa.getReferencedLSID()
+         << ", ";
+//    unsigned int cnt = contents.getExternalTOSInfoArraySize();
+//    if (cnt) {
+//        ostr << ", tosData: {";
+//        for (unsigned int i = 0; i < cnt; i++) {
+//            ostr << " " << contents.getExternalTOSInfo(i);
+//        }
+//        ostr << "}, ";
+//    }
+    ostr << lsa.getHeader();
+    return ostr;
+}
+
 }//namespace inet
