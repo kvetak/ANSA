@@ -17,7 +17,8 @@ OSPFv3Interface::OSPFv3Interface(const char* name, cModule* routerModule, OSPFv3
         DesignatedRouterIP(IPv6Address::UNSPECIFIED_ADDRESS),
         BackupRouterIP(IPv6Address::UNSPECIFIED_ADDRESS),
         DesignatedRouterID(IPv4Address::UNSPECIFIED_ADDRESS),
-        BackupRouterID(IPv4Address::UNSPECIFIED_ADDRESS)
+        BackupRouterID(IPv4Address::UNSPECIFIED_ADDRESS),
+        DesignatedIntID(-1)
 {
     this->interfaceName=std::string(name);
     this->state = new OSPFv3InterfaceStateDown;
@@ -29,7 +30,7 @@ OSPFv3Interface::OSPFv3Interface(const char* name, cModule* routerModule, OSPFv3
     IPv6InterfaceData *ipv6int = ie->ipv6Data();
     this->interfaceId = ift->getInterfaceById(ie->getInterfaceId())->getInterfaceId();
     this->interfaceIP = ipv6int->getLinkLocalAddress();//TODO - check
-    EV_DEBUG << "Interface IP: " << ipv6int->getAddress(0) << "\n";
+    EV_DEBUG << "Interface IP: " << ipv6int->getLinkLocalAddress() << "\n";
     this->interfaceType = interfaceType;
     this->passiveInterface = passive;
     this->transitNetworkInterface = false; //false at first
@@ -236,6 +237,7 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
                 neighbor->setNeighborID(hello->getRouterID());
                 neighbor->setNeighborPriority(newPriority);
                 neighbor->setNeighborAddress(ctlInfo->getSourceAddress().toIPv6());
+                neighbor->setNeighborInterfaceID(hello->getInterfaceID());
                 dRouterID = newDesignatedRouterID;
                 if (newDesignatedRouterID != designatedRouterID) {
                     designatedRouterID = dRouterID;
@@ -286,6 +288,7 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
                 neighbor->setNeighborPriority(hello->getRouterPriority());
                 neighbor->setNeighborAddress(ctlInfo->getSourceAddress().toIPv6());
                 neighbor->setNeighborDeadInterval(hello->getDeadInterval());
+                EV_DEBUG << "HELLO: Interface ID used in hello packet: " << hello->getInterfaceID() << "\n";
                 neighbor->setNeighborInterfaceID(hello->getInterfaceID());
 
                 dRouterID = hello->getDesignatedRouterID();
@@ -1011,7 +1014,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     EV_DEBUG << "Installing the LSA\n";
                     if(currentType == LINK_LSA)
                         rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID(), this);
-                    else
+                    else if(currentType == ROUTER_LSA || currentType == NETWORK_LSA || currentType == INTRA_AREA_PREFIX_LSA)
                         rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
 
                     EV_INFO << "    (update installed)\n";

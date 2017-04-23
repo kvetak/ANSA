@@ -2,6 +2,61 @@
 
 namespace inet{
 
+OSPFv3SPFVertex::OSPFv3SPFVertex(VertexType type, VertexID vertexID)
+{
+    this->type = type;
+    this->distance = 0;
+    this->lsa = new struct VertexLSA;
+    this->lsa->routerLSA = nullptr;
+    this->lsa->networkLSA = nullptr;
+    this->parent = nullptr;
+    this->vertexID = vertexID;
+    this->vertexSource = FLOODED;
+}
+
+void OSPFv3SPFVertex::setVertexLSA(OSPFv3LSA* lsa)
+{
+    if(this->type == ROUTER_VERTEX) {
+        this->lsa->routerLSA = dynamic_cast<OSPFv3RouterLSA*>(lsa);
+        if(this->lsa->routerLSA == nullptr)
+            EV_DEBUG << "Unable to dynamic cast router lsa into vertex\n";
+    }
+    else {
+        this->lsa->networkLSA = dynamic_cast<OSPFv3NetworkLSA*>(lsa);
+        if(this->lsa->networkLSA == nullptr)
+        EV_DEBUG << "Unable to dynamic cast network lsa into vertex\n";
+    }
+}
+
+void OSPFv3SPFVertex::vertexInfo()
+{
+    EV_INFO << "Vertex:\n\tVertex Type: ";
+    if(this->getVertexType()==ROUTER_VERTEX) {
+        EV_INFO << "ROUTER\n\tVertex ID: ";
+        EV_INFO << this->getVertexID().routerID << "\n";
+    }
+    else{
+        EV_INFO << "NETWORK\n\tVertex ID: ";
+        EV_INFO << this->getVertexID().interfaceID << ", " << this->getVertexID().routerID << "\n";
+    }
+
+    EV_INFO << "\tVertex Origin: ";
+    if(this->getSource()==FLOODED)
+        EV_INFO << "FLOODED\n";
+    else
+        EV_INFO << "ORIGINATED\n";
+
+    EV_INFO << "\tVertex Distance: " << this->getDistance() << "\n";
+
+    if(this->getParent() != nullptr) {
+        EV_INFO << "\tVertex Parent: ";
+        if(this->getParent()->getVertexType()==ROUTER_VERTEX)
+            EV_INFO << this->getParent()->getVertexID().routerID << "\n";
+        else
+            EV_INFO << this->getParent()->getVertexID().interfaceID << ", " << this->getParent()->getVertexID().routerID << "\n";
+    }
+}
+
 bool OSPFv3RouterNode::update(const OSPFv3RouterLSA *lsa)
 {
     bool different = differsFrom(lsa);

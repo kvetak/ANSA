@@ -23,6 +23,7 @@ bool OSPFv3Area::hasInterface(std::string interfaceName)
 
     return true;
 }//hasArea
+
 OSPFv3Interface* OSPFv3Area::getInterfaceById(int id)
 {
     std::map<int, OSPFv3Interface*>::iterator interfaceIt = this->interfaceById.find(id);
@@ -31,6 +32,15 @@ OSPFv3Interface* OSPFv3Area::getInterfaceById(int id)
 
     return interfaceIt->second;
 }//getInterfaceById
+
+OSPFv3Interface* OSPFv3Area::getInterfaceByIndex(int id)
+{
+    std::map<int, OSPFv3Interface*>::iterator interfaceIt = this->interfaceByIndex.find(id);
+    if(interfaceIt == this->interfaceByIndex.end())
+        return nullptr;
+
+    return interfaceIt->second;
+}//getInterfaceByIndex
 
 void OSPFv3Area::addInterface(OSPFv3Interface* newInterface)
 {
@@ -44,9 +54,10 @@ void OSPFv3Area::init()
     for(auto it=this->interfaceList.begin(); it!=this->interfaceList.end(); it++)
     {
         (*it)->setInterfaceIndex(this->getInstance()->getUniqueId());
+        this->interfaceByIndex[(*it)->getInterfaceIndex()]=(*it);
         (*it)->processEvent(OSPFv3Interface::INTERFACE_UP_EVENT);
     }
-    this->setSpfTreeRoot(new OSPFv3RouterNode(*(this->originateRouterLSA())));
+    this->setSpfTreeRoot(this->originateRouterLSA());
 
     OSPFv3IntraAreaPrefixLSA* prefixLsa = this->originateIntraAreaPrefixLSA();
     this->installIntraAreaPrefixLSA(prefixLsa);
@@ -192,7 +203,7 @@ OSPFv3RouterLSA* OSPFv3Area::originateRouterLSA()
                 break;
             }
 
-            routerLSABody.interfaceID = intf->getInterfaceId();
+            routerLSABody.interfaceID = intf->getInterfaceIndex();
             routerLSABody.metric = 1;//TODO - correct this
 
             OSPFv3Neighbor* neighbor = intf->getNeighbor(j);
@@ -988,8 +999,489 @@ OSPFv3LSA* OSPFv3Area::getLSAbyKey(LSAKeyType LSAKey)
 void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* > newTable)
 {
     EV_DEBUG << "Calculating SPF Tree for area " << this->getAreaID() << "\n";
+    /*1)Initialize the algorithm’s data structures. Clear the list
+        of candidate vertices. Initialize the shortest-path tree to
+        only the root (which is the router doing the calculation).
+        Set Area A’s TransitCapability to FALSE*/
+
+    std::vector<OSPFv3SPFVertex*> candidates;
+    std::vector<OSPFv3SPFVertex*> treeVertices;
+    OSPFv3SPFVertex* justAddedVertex;
+    VertexID rootID;
+    OSPFv3SPFVertex* rootVertex;
+    IPv4Address routerID = this->getInstance()->getProcess()->getRouterID();
+    bool transitCapability = false;
+    bool finished = false;
+
+    rootID.routerID = routerID;
+    rootVertex = new OSPFv3SPFVertex(ROUTER_VERTEX, rootID);
+    rootVertex->setSource(ORIGINATED);
+
+    for(auto it=this->routerLSAList.begin(); it != this->routerLSAList.end(); it++){
+        if ((*it)->getHeader().getAdvertisingRouter()==routerID) {
+            rootVertex->setVertexLSA((*it));
+            EV_DEBUG << "ROOT:\n";
+            rootVertex->vertexInfo();
+            break;
+        }
+    }
+
+    justAddedVertex = rootVertex;
+
+    EV_DEBUG << "SPFTREE:";
+    /*2)Call the vertex just added to the tree vertex V. Examine
+        the LSA associated with vertex V. This is a lookup in the
+        Area A’s link state database based on the Vertex ID. If
+        this is a router-LSA, and bit V of the router-LSA (see
+        Section A.4.2) is set, set Area A’s TransitCapability to
+        TRUE. In any case, each link described by the LSA gives the
+        cost to an adjacent vertex. For each described link, (say
+        it joins vertex V to vertex W):*/
+    do{
+        if(justAddedVertex->getVertexType() == ROUTER_VERTEX){
+            EV_DEBUG << "\t\tCurrent Vertex - ROUTER\n";
+            OSPFv3RouterLSA* currentLSA = justAddedVertex->getVertexLSA()->routerLSA;
+            if(currentLSA->getVBit() == true)
+                transitCapability = true;
+
+            unsigned int routerCount = currentLSA->getRoutersArraySize();
+            for(unsigned int i = 0; i<routerCount; i++){
+                EV_DEBUG << "\t\tExamining Router body\n";
+                OSPFv3RouterLSABody& router = currentLSA->getRouters(i);
+                short int routerType = router.type;
+                OSPFv3SPFVertex* joiningVertex;
+                VertexType joiningVertexType;
+
+                /*2b)W is a transit vertex (router or transit
+                     network). Look up the vertex W’s LSA (router-LSA or
+                     network-LSA) in Area A’s link state database. If the
+                     LSA does not exist, or its LS age is equal to MaxAge, or
+                     it does not have a link back to vertex V, examine the
+                     next link in V’s LSA.*/
+                if(routerType == TRANSIT_NETWORK) {
+                    EV_DEBUG << "\t\tRouter is transit\n";
+                    OSPFv3NetworkLSA* joiningLSA=nullptr;
+                    EV_DEBUG << "\t\tInterface id is" << router.interfaceID << "\n";
+                    OSPFv3Interface* intf = this->getInterfaceByIndex(router.interfaceID);
+                    IPv4Address designatedRtr = intf->getDesignatedID();
+
+                    for(auto it=this->networkLSAList.begin(); it!=this->networkLSAList.end(); it++){
+                        if((*it)->getHeader().getAdvertisingRouter() == designatedRtr) {
+                            EV_DEBUG << "\t\tFound Network LSA originated by " << designatedRtr << "\n";
+//                            EV_DEBUG << "\t\tDesignated Rtr Interface ID is " << intf->getDesignatedIntID() << "\n";
+                            joiningLSA = (*it);
+                            break;
+                        }
+                    }
+
+                    if(joiningLSA == nullptr)
+                        continue;
+
+                    joiningVertexType = NETWORK_VERTEX;
+                    VertexID vertID;
+                    //TODO - here I need not only Router ID but also its interface ID
+                    //TODO - V6 and R bits check
+                    vertID.routerID = designatedRtr;
+                    vertID.interfaceID = 0;
+                    joiningVertex = new OSPFv3SPFVertex(joiningVertexType, vertID);
+                    joiningVertex->setVertexLSA(joiningLSA);
+                }
+                else{
+                    EV_DEBUG << "\t\tRouter is Router";
+                    OSPFv3RouterLSA* joiningLSA=nullptr;
+                    for(auto it=this->routerLSAList.begin(); it!=this->routerLSAList.end(); it++){
+                        if((*it)->getHeader().getAdvertisingRouter()==router.neighborRouterID){
+                            joiningLSA = (*it);
+                            EV_DEBUG << "\t\tFound Router LSA originated by " << (*it)->getHeader().getAdvertisingRouter() << "\n";
+                            break;
+                        }
+                    }
+
+                    if(joiningLSA == nullptr)
+                        continue;
+
+                    joiningVertexType = ROUTER_VERTEX;
+                    VertexID vertID;
+                    vertID.routerID = router.neighborRouterID;
+                    joiningVertex = new OSPFv3SPFVertex(joiningVertexType, vertID);
+                    joiningVertex->setVertexLSA(joiningLSA);
+                }
+
+                unsigned int treeSize = treeVertices.size();
+                bool alreadyOnTree = false;
+
+                for(int i=0; i<treeSize; i++){
+                    if(treeVertices.at(i)->getVertexID()==joiningVertex->getVertexID()){
+                        alreadyOnTree = true;
+                        break;
+                    }
+                }
+
+                /*2c)If vertex W is already on the shortest-path tree,
+                     examine the next link in the LSA.*/
+                if(alreadyOnTree) {
+                    EV_DEBUG << "\t\tAlready on the tree... skippnig\n";
+                    continue;
+                }
+                else
+                    EV_DEBUG << "\t\tTotaly new to the tree\n";
+
+                /*2d)Calculate the link state cost D of the resulting path
+                     from the root to vertex W. D is equal to the sum of the
+                     link state cost of the (already calculated) shortest
+                     path to vertex V and the advertised cost of the link
+                     between vertices V and W. If D is:*/
+                unsigned long linkStateCost = justAddedVertex->getDistance() + router.metric;
+                unsigned int candidateCount = candidates.size();
+                OSPFv3SPFVertex *candidate = nullptr;
+
+                for (int j = 0; j < candidateCount; j++) {
+                    if (candidates.at(j)->getVertexID() == joiningVertex->getVertexID()) {
+                        candidate = candidates.at(j);
+                    }
+                }
+
+                if(candidate!=nullptr){
+                    EV_DEBUG << "\t\tcandidate found on candidate list\n";
+                    unsigned long candidateDistance = candidate->getDistance();
+
+                    /*  Greater than the value that already appears for
+                        vertex W on the candidate list, then examine the
+                        next link.*/
+                    if (linkStateCost > candidateDistance) {
+                        EV_DEBUG << "\t\tlink state cost greater than candidateDistance\n";
+                        continue;
+                    }
+                    /*  Less than the value that appears for vertex W on the
+                        candidate list, or if W does not yet appear on the
+                        candidate list, then set the entry for W on the
+                        candidate list to indicate a distance of D from the
+                        root. Also calculate the list of next hops that
+                        result from using the advertised link, setting the
+                        next hop values for W accordingly.It takes
+                        as input the destination (W) and its parent (V)*/
+                    if (linkStateCost < candidateDistance) {
+                        EV_DEBUG << "\t\tlink state cost is less than that of candidate\n";
+                        candidate->setDistance(linkStateCost);
+                        candidate->clearNextHops();
+                    }
+
+                    /*  Equal to the value that appears for vertex W on the
+                        candidate list, calculate the set of next hops that
+                        result from using the advertised link. Input to
+                        this calculation is the destination (W), and its
+                        parent (V). This set of hops should be added to the
+                        next hop values that appear for W on the candidate
+                        list.*/
+//                    std::vector<NextHop> *newNextHops = calculateNextHops(joiningVertex, justAddedVertex);    // (destination, parent)
+//                    unsigned int nextHopCount = newNextHops->size();
+//                    for (int k = 0; k < nextHopCount; k++) {
+//                        candidate->addNextHop((*newNextHops)[k]);
+//                    }
+//                    delete newNextHops;
+                }
+                else {
+                    EV_DEBUG << "\t\tcandidate not found on the tree - adding\n";
+                    joiningVertex->setDistance(linkStateCost);
+                    //std::vector<NextHop> *newNextHops = calculateNextHops(joiningVertex, justAddedVertex);    // (destination, parent)
+                    //unsigned int nextHopCount = newNextHops->size();
+//                    for (int k = 0; k < nextHopCount; k++) {
+//                        joiningVertex->addNextHop((*newNextHops)[k]);
+//                    }
+//                    delete newNextHops;
+                    joiningVertex->setParent(justAddedVertex);
+
+                    candidates.push_back(joiningVertex);
+                    EV_DEBUG << "\t\tcandidates size: " << candidates.size();
+                }
+            }//for
+        }
+
+        if(justAddedVertex->getVertexType() == NETWORK_VERTEX){
+            EV_DEBUG << "\t\tCurrent Vertex - Network\n";
+            unsigned int routerCount = justAddedVertex->getVertexLSA()->networkLSA->getAttachedRouterArraySize();
+
+            for(int i=0; i<routerCount;i++){
+                OSPFv3SPFVertex* joiningVertex;
+                VertexType joiningVertexType;
+                IPv4Address routerID = justAddedVertex->getVertexLSA()->networkLSA->getAttachedRouter(i);
+                OSPFv3RouterLSA* joiningLSA = nullptr;
+                for(auto it=this->routerLSAList.begin(); it<this->routerLSAList.end(); it++){
+                    if((*it)->getHeader().getAdvertisingRouter()==routerID) {
+                        joiningLSA = (*it);
+                    }
+                }
+
+                if(joiningLSA == nullptr)
+                    continue;
+
+                joiningVertexType = ROUTER_VERTEX;
+                VertexID vertID;
+                vertID.routerID = routerID;
+                joiningVertex = new OSPFv3SPFVertex(joiningVertexType, vertID);
+                joiningVertex->setVertexLSA(joiningLSA);
+
+                unsigned int treeSize = treeVertices.size();
+                bool alreadyOnTree = false;
+
+                for (int j = 0; j < treeSize; j++) {
+                    if (treeVertices.at(i)->getVertexID()==joiningVertex->getVertexID()) {
+                        alreadyOnTree = true;
+                        break;
+                    }
+                }
+                if (alreadyOnTree) {    // (2) (c)
+                    continue;
+                }
+
+                unsigned long linkStateCost = justAddedVertex->getDistance();
+                unsigned int candidateCount = candidates.size();
+                OSPFv3SPFVertex *candidate = nullptr;
+
+                for (int j = 0; j < candidateCount; j++) {
+                    if (candidates.at(j)->getVertexID() == joiningVertex->getVertexID()) {
+                        candidate = candidates.at(j);
+                    }
+                }
+
+                if(candidate!=nullptr){
+                    EV_DEBUG << "\t\tcandidate found on candidate list\n";
+                    unsigned long candidateDistance = candidate->getDistance();
+
+                    if (linkStateCost > candidateDistance) {
+                        EV_DEBUG << "\t\tlink state cost greater than candidateDistance\n";
+                        continue;
+                    }
+                    if (linkStateCost < candidateDistance) {
+                        EV_DEBUG << "\t\tlink state cost is less than that of candidate\n";
+                        candidate->setDistance(linkStateCost);
+                        candidate->clearNextHops();
+                    }
+
+                    //                    std::vector<NextHop> *newNextHops = calculateNextHops(joiningVertex, justAddedVertex);    // (destination, parent)
+                    //                    unsigned int nextHopCount = newNextHops->size();
+                    //                    for (int k = 0; k < nextHopCount; k++) {
+                    //                        candidate->addNextHop((*newNextHops)[k]);
+                    //                    }
+                    //                    delete newNextHops;
+                }
+                else {
+                    EV_DEBUG << "\t\tcandidate not found on the tree - adding\n";
+                    joiningVertex->setDistance(linkStateCost);
+                    //std::vector<NextHop> *newNextHops = calculateNextHops(joiningVertex, justAddedVertex);    // (destination, parent)
+                    //unsigned int nextHopCount = newNextHops->size();
+                    //                    for (int k = 0; k < nextHopCount; k++) {
+                    //                        joiningVertex->addNextHop((*newNextHops)[k]);
+                    //                    }
+                    //                    delete newNextHops;
+                    joiningVertex->setParent(justAddedVertex);
+
+                    candidates.push_back(joiningVertex);
+                    EV_DEBUG << "\t\tcandidates size: " << candidates.size();
+                }
+            }//for
+        }
+        /*3)If at this step the candidate list is empty, the shortest-
+            path tree (of transit vertices) has been completely built
+            and this stage of the procedure terminates.*/
+        if(candidates.empty())
+            finished=true;
+        else{
+//            unsigned int candidateCount = candidateVertices.size();
+//            unsigned long minDistance = LS_INFINITY;
+//            OSPFLSA *closestVertex = candidateVertices[0];
+//
+//            for (i = 0; i < candidateCount; i++) {
+//                RoutingInfo *routingInfo = check_and_cast<RoutingInfo *>(candidateVertices[i]);
+//                unsigned long currentDistance = routingInfo->getDistance();
+//
+//                if (currentDistance < minDistance) {
+//                    closestVertex = candidateVertices[i];
+//                    minDistance = currentDistance;
+//                }
+//                else {
+//                    if (currentDistance == minDistance) {
+//                        if ((closestVertex->getHeader().getLsType() == ROUTERLSA_TYPE) &&
+//                                (candidateVertices[i]->getHeader().getLsType() == NETWORKLSA_TYPE))
+//                        {
+//                            closestVertex = candidateVertices[i];
+//                        }
+//                    }
+//                }
+//            }
+//
+//            treeVertices.push_back(closestVertex);
+//
+//            for (auto it = candidateVertices.begin(); it != candidateVertices.end(); it++) {
+//                if ((*it) == closestVertex) {
+//                    candidateVertices.erase(it);
+//                    break;
+//                }
+//            }
+//
+//            if (closestVertex->getHeader().getLsType() == ROUTERLSA_TYPE) {
+//                RouterLSA *routerLSA = check_and_cast<RouterLSA *>(closestVertex);
+//                if (routerLSA->getB_AreaBorderRouter() || routerLSA->getE_ASBoundaryRouter()) {
+//                    RoutingTableEntry *entry = new RoutingTableEntry(ift);
+//                    RouterID destinationID = routerLSA->getHeader().getLinkStateID();
+//                    unsigned int nextHopCount = routerLSA->getNextHopCount();
+//                    RoutingTableEntry::RoutingDestinationType destinationType = RoutingTableEntry::NETWORK_DESTINATION;
+//
+//                    entry->setDestination(destinationID);
+//                    entry->setLinkStateOrigin(routerLSA);
+//                    entry->setArea(areaID);
+//                    entry->setPathType(RoutingTableEntry::INTRAAREA);
+//                    entry->setCost(routerLSA->getDistance());
+//                    if (routerLSA->getB_AreaBorderRouter()) {
+//                        destinationType |= RoutingTableEntry::AREA_BORDER_ROUTER_DESTINATION;
+//                    }
+//                    if (routerLSA->getE_ASBoundaryRouter()) {
+//                        destinationType |= RoutingTableEntry::AS_BOUNDARY_ROUTER_DESTINATION;
+//                    }
+//                    entry->setDestinationType(destinationType);
+//                    entry->setOptionalCapabilities(routerLSA->getHeader().getLsOptions());
+//                    for (i = 0; i < nextHopCount; i++) {
+//                        entry->addNextHop(routerLSA->getNextHop(i));
+//                    }
+//
+//                    newRoutingTable.push_back(entry);
+//
+//                    Area *backbone;
+//                    if (areaID != BACKBONE_AREAID) {
+//                        backbone = parentRouter->getAreaByID(BACKBONE_AREAID);
+//                    }
+//                    else {
+//                        backbone = this;
+//                    }
+//                    if (backbone != nullptr) {
+//                        Interface *virtualIntf = backbone->findVirtualLink(destinationID);
+//                        if ((virtualIntf != nullptr) && (virtualIntf->getTransitAreaID() == areaID)) {
+//                            IPv4AddressRange range;
+//                            range.address = getInterface(routerLSA->getNextHop(0).ifIndex)->getAddressRange().address;
+//                            range.mask = IPv4Address::ALLONES_ADDRESS;
+//                            virtualIntf->setAddressRange(range);
+//                            virtualIntf->setIfIndex(ift, routerLSA->getNextHop(0).ifIndex);
+//                            virtualIntf->setOutputCost(routerLSA->getDistance());
+//                            Neighbor *virtualNeighbor = virtualIntf->getNeighbor(0);
+//                            if (virtualNeighbor != nullptr) {
+//                                unsigned int linkCount = routerLSA->getLinksArraySize();
+//                                RouterLSA *toRouterLSA = dynamic_cast<RouterLSA *>(justAddedVertex);
+//                                if (toRouterLSA != nullptr) {
+//                                    for (i = 0; i < linkCount; i++) {
+//                                        Link& link = routerLSA->getLinks(i);
+//
+//                                        if ((link.getType() == POINTTOPOINT_LINK) &&
+//                                                (link.getLinkID() == toRouterLSA->getHeader().getLinkStateID()) &&
+//                                                (virtualIntf->getState() < Interface::WAITING_STATE))
+//                                        {
+//                                            virtualNeighbor->setAddress(IPv4Address(link.getLinkData()));
+//                                            virtualIntf->processEvent(Interface::INTERFACE_UP);
+//                                            break;
+//                                        }
+//                                    }
+//                                }
+//                                else {
+//                                    NetworkLSA *toNetworkLSA = dynamic_cast<NetworkLSA *>(justAddedVertex);
+//                                    if (toNetworkLSA != nullptr) {
+//                                        for (i = 0; i < linkCount; i++) {
+//                                            Link& link = routerLSA->getLinks(i);
+//
+//                                            if ((link.getType() == TRANSIT_LINK) &&
+//                                                    (link.getLinkID() == toNetworkLSA->getHeader().getLinkStateID()) &&
+//                                                    (virtualIntf->getState() < Interface::WAITING_STATE))
+//                                            {
+//                                                virtualNeighbor->setAddress(IPv4Address(link.getLinkData()));
+//                                                virtualIntf->processEvent(Interface::INTERFACE_UP);
+//                                                break;
+//                                            }
+//                                        }
+//                                    }
+//                                }//else
+//                            }//(virtualNeighbor != nullptr)
+//                        }//if ((virtualIntf != nullptr) && (virtualIntf->getTransitAreaID() == areaID))
+//                    }//if(backbone != nullptr) {
+//                }//if (routerLSA->getB_AreaBorderRouter() || routerLSA->getE_ASBoundaryRouter())
+//            }//if (closestVertex->getHeader().getLsType() == ROUTERLSA_TYPE)
+//
+//            if (closestVertex->getHeader().getLsType() == NETWORKLSA_TYPE) {
+//                NetworkLSA *networkLSA = check_and_cast<NetworkLSA *>(closestVertex);
+//                IPv4Address destinationID = (networkLSA->getHeader().getLinkStateID() & networkLSA->getNetworkMask());
+//                unsigned int nextHopCount = networkLSA->getNextHopCount();
+//                bool overWrite = false;
+//                RoutingTableEntry *entry = nullptr;
+//                unsigned long routeCount = newRoutingTable.size();
+//                IPv4Address longestMatch(0u);
+//
+//                for (i = 0; i < routeCount; i++) {
+//                    if (newRoutingTable[i]->getDestinationType() == RoutingTableEntry::NETWORK_DESTINATION) {
+//                        RoutingTableEntry *routingEntry = newRoutingTable[i];
+//                        IPv4Address entryAddress = routingEntry->getDestination();
+//                        IPv4Address entryMask = routingEntry->getNetmask();
+//
+//                        if ((entryAddress & entryMask) == (destinationID & entryMask)) {
+//                            if ((destinationID & entryMask) > longestMatch) {
+//                                longestMatch = (destinationID & entryMask);
+//                                entry = routingEntry;
+//                            }
+//                        }
+//                    }
+//                }
+//                if (entry != nullptr) {
+//                    const OSPFLSA *entryOrigin = entry->getLinkStateOrigin();
+//                    if ((entry->getCost() != networkLSA->getDistance()) ||
+//                            (entryOrigin->getHeader().getLinkStateID() >= networkLSA->getHeader().getLinkStateID()))
+//                    {
+//                        overWrite = true;
+//                    }
+//                }
+//
+//                if ((entry == nullptr) || (overWrite)) {
+//                    if (entry == nullptr) {
+//                        entry = new RoutingTableEntry(ift);
+//                    }
+//
+//                    entry->setDestination(IPv4Address(destinationID));
+//                    entry->setNetmask(networkLSA->getNetworkMask());
+//                    entry->setLinkStateOrigin(networkLSA);
+//                    entry->setArea(areaID);
+//                    entry->setPathType(RoutingTableEntry::INTRAAREA);
+//                    entry->setCost(networkLSA->getDistance());
+//                    entry->setDestinationType(RoutingTableEntry::NETWORK_DESTINATION);
+//                    entry->setOptionalCapabilities(networkLSA->getHeader().getLsOptions());
+//                    for (i = 0; i < nextHopCount; i++) {
+//                        entry->addNextHop(networkLSA->getNextHop(i));
+//                    }
+//
+//                    if (!overWrite) {
+//                        newRoutingTable.push_back(entry);
+//                    }
+//                }
+//            }
+//
+//            justAddedVertex = closestVertex;
+        }//else
 
 
+        finished = true;
+    }while(!finished);
+
+
+
+
+
+     /*3)Otherwise,
+         choose the vertex belonging to the candidate list that is
+         closest to the root, and add it to the shortest-path tree
+         (removing it from the candidate list in the process). Note
+         that when there is a choice of vertices closest to the root,
+         network vertices must be chosen before router vertices in
+         order to necessarily find all equal-cost paths*/
+
+    /*4)Possibly modify the routing table. For those routing table
+        entries modified, the associated area will be set to Area A,
+        the path type will be set to intra-area, and the cost will
+        be set to the newly discovered shortest path’s calculated
+        distance.*/
     EV_DEBUG << "SPFTree calculation finished\n";
 }
 
@@ -1003,7 +1495,7 @@ void OSPFv3Area::recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTa
     EV_DEBUG << "Rechecking Summary LSA\n";
 }
 
-std::vector<NextHop> *OSPFv3Area::calculateNextHops(OSPFv3RouterLSABody& destination, OSPFv3LSA *parent) const
+std::vector<NextHop> *OSPFv3Area::calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const
 {
     EV_DEBUG << "Calculating Next Hops\n";
 }
@@ -1058,7 +1550,7 @@ std::string OSPFv3Area::detailedInfo() const
     out << "ADV Router\tAge\tSeq#\tLink ID\tRef-lstype\tRef-LSID\n";
     for(auto it=this->intraAreaPrefixLSAList.begin(); it!=this->intraAreaPrefixLSAList.end(); it++) {
         OSPFv3LSAHeader& header = (*it)->getHeader();
-        out << header.getAdvertisingRouter() << "\t" << header.getLsaAge() << "\t" << header.getLsaSequenceNumber() << "\t" << header.getLinkStateID() << "\t" << (*it)->getReferencedLSType() << "\t" << (*it)->getReferencedLSID()<<"\n";
+        out << header.getAdvertisingRouter() << "\t" << header.getLsaAge() << "\t" << header.getLsaSequenceNumber() << "\t" << header.getLinkStateID().str(false) << "\t" << (*it)->getReferencedLSType() << "\t" << (*it)->getReferencedLSID()<<"\n";
     }
 
     return out.str();

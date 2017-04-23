@@ -11,11 +11,6 @@ namespace inet {
 class INET_API LSATrackingInfo
 {
   public:
-    enum InstallSource {
-        ORIGINATED = 0,
-        FLOODED = 1
-    };
-
   private:
     InstallSource source;
     unsigned long installTime;
@@ -51,6 +46,40 @@ class INET_API RoutingInfo
     unsigned long getDistance() const { return distance; }
     void setParent(OSPFv3LSA *p) { parent = p; }
     OSPFv3LSA *getParent() const { return parent; }
+};
+
+class INET_API OSPFv3SPFVertex
+{
+  public:
+    OSPFv3SPFVertex(VertexType type, VertexID vertexID);
+
+    VertexType getVertexType(){return this->type;}
+    VertexID getVertexID(){return this->vertexID;}
+    void setVertexID(IPv4Address newID, unsigned int intID=0){this->vertexID.routerID = newID; this->vertexID.interfaceID = intID;}
+    void setVertexLSA(OSPFv3LSA* lsa);
+    VertexLSA* getVertexLSA(){return this->lsa;}
+    void addNextHop(NextHop nextHop){this->nextHops.push_back(nextHop);}
+    NextHop getNextHop(unsigned int i){return this->nextHops.at(i);}
+    void clearNextHops(){this->nextHops.clear();}
+    unsigned int getNextHopsCount(){return this->nextHops.size();}
+    void setDistance(unsigned int d){this->distance = d;}
+    unsigned int getDistance(){return this->distance;}
+    OSPFv3SPFVertex* getParent(){return this->parent;}
+    void setParent(OSPFv3SPFVertex* parent){this->parent = parent;}
+    InstallSource getSource(){return this->vertexSource;};
+    void setSource(InstallSource source){this->vertexSource=source;}
+
+    //DEBUG
+    void vertexInfo();
+
+  private:
+    VertexType type;
+    VertexID vertexID;//ID of vertex
+    VertexLSA* lsa;
+    std::vector<NextHop> nextHops; //list of next hop addresses
+    unsigned int distance; //distance from root
+    OSPFv3SPFVertex* parent;
+    InstallSource vertexSource;
 };
 
 class INET_API OSPFv3RouterNode : public OSPFv3RouterLSA, public LSATrackingInfo, public RoutingInfo

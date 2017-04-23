@@ -33,6 +33,7 @@ class INET_API OSPFv3Area : public cObject
     void setStubDefaultCost(int newCost){this->stubDefaultCost=newCost;}
     void setTransitCapability(bool capable){this->transitCapability=capable;}
     OSPFv3Interface* getInterfaceById(int id);
+    OSPFv3Interface* getInterfaceByIndex(int id);
     OSPFv3Instance* getInstance() const {return this->containingInstance;};
     bool getExternalRoutingCapability(){return this->externalRoutingCapability;}
     int getStubDefaultCost(){return this->stubDefaultCost;}
@@ -100,19 +101,20 @@ class INET_API OSPFv3Area : public cObject
     void calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
     void recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTable);
     bool hasLink(OSPFv3LSA *fromLSA, OSPFv3LSA *toLSA) const;
-    std::vector<NextHop> *calculateNextHops(OSPFv3RouterLSABody& destination, OSPFv3LSA *parent) const;
+    std::vector<NextHop> *calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const;
     std::vector<NextHop> *calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const;
 
 
     std::string detailedInfo() const override;
 
-    void setSpfTreeRoot(OSPFv3RouterNode* node){this->spfTreeRoot = node;};
+    void setSpfTreeRoot(OSPFv3RouterLSA* routerLSA){this->spfTreeRoot = routerLSA;};
 
   private:
     IPv4Address areaID;
     std::vector<OSPFv3Interface*> interfaceList;//associated router interfaces
     std::map<std::string, OSPFv3Interface*> interfaceByName;//interfaces by ids
     std::map<int, OSPFv3Interface*> interfaceById;
+    std::map<int, OSPFv3Interface*> interfaceByIndex;
     int instanceType;
     OSPFv3Instance* containingInstance;
     bool externalRoutingCapability;
@@ -137,7 +139,7 @@ class INET_API OSPFv3Area : public cObject
     IPv4Address netIntraAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t netIntraAreaPrefixLSASequenceNumber = 1;
 
-    OSPFv3RouterNode* spfTreeRoot=nullptr;
+    OSPFv3RouterLSA* spfTreeRoot=nullptr;
     //list of network-lsas
     //list of summary lsas
     //shortest path tree

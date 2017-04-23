@@ -584,12 +584,15 @@ void OSPFv3Process::rebuildRoutingTable()
 
         EV_INFO << "Rebuilding routing table for instance " << this->instances.at(k)->getInstanceID() << ":\n";
 
+        //2)Intra area routes are calculated using SPF algo
         for (i = 0; i < areaCount; i++) {
             currInst->getArea(i)->calculateShortestPathTree(newTable);
             if (currInst->getArea(i)->getTransitCapability()) {
                 hasTransitAreas = true;
             }
         }
+
+        //3)Inter-area routes are calculated by examining summary-LSAs (on backbone only)
         if (areaCount > 1) {
             OSPFv3Area *backbone = currInst->getAreaById(BACKBONE_AREAID);
             if (backbone != nullptr) {
@@ -601,6 +604,8 @@ void OSPFv3Process::rebuildRoutingTable()
                 currInst->getArea(0)->calculateInterAreaRoutes(newTable);
             }
         }
+
+        //4)On BDR - Transit area LSAs(summary) are examined - find better paths then in 2) and 3)
         if (hasTransitAreas) {
             for (i = 0; i < areaCount; i++) {
                 if (currInst->getArea(i)->getTransitCapability()) {
@@ -608,6 +613,8 @@ void OSPFv3Process::rebuildRoutingTable()
                 }
             }
         }
+
+        //5) Routes to external destinations are calculated
         calculateASExternalRoutes(newTable);
 
         // backup the routing table

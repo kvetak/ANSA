@@ -29,7 +29,7 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
         }
 
         EV_DEBUG << "Changing state -> new Router LSA\n";
-        interface->getArea()->setSpfTreeRoot(new OSPFv3RouterNode(*(interface->getArea()->originateRouterLSA())));
+        interface->getArea()->setSpfTreeRoot(interface->getArea()->originateRouterLSA());
 
         if(nextState == OSPFv3Interface::INTERFACE_STATE_BACKUP ||
            nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED ||

@@ -106,6 +106,7 @@ class INET_API OSPFv3Interface : public cObject
     void setDesignatedIP(IPv6Address newIP){this->DesignatedRouterIP = newIP;}
     void setBackupIP(IPv6Address newIP){this->BackupRouterIP = newIP;}
     void setDesignatedID(IPv4Address newID){this->DesignatedRouterID = newID;}
+    void setDesignatedIntID(int newIntID){this->DesignatedIntID = newIntID;}
     void setBackupID(IPv4Address newID){this->BackupRouterID = newID;}
     void sendDelayedAcknowledgements();
     void setInterfaceIndex(int newIndex){this->interfaceIndex = newIndex;}
@@ -133,6 +134,7 @@ class INET_API OSPFv3Interface : public cObject
     IPv6Address getBackupIP() const {return this->BackupRouterIP;}
     IPv4Address getDesignatedID() const {return this->DesignatedRouterID;}
     IPv4Address getBackupID() const {return this->BackupRouterID;}
+    int getDesignatedIntID() const {return this->DesignatedIntID;}
 
     int calculateInterfaceCost();
     cMessage* getWaitTimer(){return this->waitTimer;}
@@ -219,6 +221,7 @@ class INET_API OSPFv3Interface : public cObject
     IPv6Address BackupRouterIP;
     IPv4Address DesignatedRouterID;
     IPv4Address BackupRouterID;
+    int DesignatedIntID;
 
     cMessage *helloTimer;
     cMessage *waitTimer;

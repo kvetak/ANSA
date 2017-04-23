@@ -54,11 +54,38 @@ struct LSAKeyType
     IPv4Address advertisingRouter;
 };
 
+//Things needed for SPF Tree Vertices
 struct NextHop
 {
     int ifIndex;
     IPv6Address hopAddress;
     IPv4Address advertisingRouter;
+};
+
+enum VertexType {
+    ROUTER_VERTEX = 0,
+    NETWORK_VERTEX
+};
+
+struct VertexID {
+    int interfaceID=-1; //Needed only for Network Vertex
+    IPv4Address routerID;
+};
+
+inline bool operator==(const VertexID& leftID, const VertexID& rightID)
+{
+    return ((leftID.interfaceID == rightID.interfaceID)
+            && (leftID.routerID == rightID.routerID));
+}
+
+enum InstallSource {
+    ORIGINATED = 0,
+    FLOODED = 1
+};
+
+struct VertexLSA {
+    OSPFv3RouterLSA* routerLSA;
+    OSPFv3NetworkLSA* networkLSA;
 };
 
 inline bool operator==(const NextHop& leftHop, const NextHop& rightHop)
