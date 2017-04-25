@@ -58,11 +58,13 @@ void OSPFv3Splitter::handleMessage(cMessage* msg)
 
             InterfaceEntry* ie = this->ift->getInterfaceById(ctlInfo->getInterfaceId());
             char* ieName = (char*)ie->getName();
-            std::map<std::string, int>::iterator it = this->interfaceToProcess.find(ieName);
+            std::map<std::string, std::pair<int,int>>::iterator it = this->interfaceToProcess.find(ieName);
             //Is there a process with this interface??
             if(it!=this->interfaceToProcess.end()){
-                int outNum = it->second;
-                this->send(msg, "processOut", outNum);
+                this->send(msg, "processOut", it->second.first);//first is always there
+
+                if(it->second.second!=-1)
+                    this->send(msg->dup(), "processOut", it->second.second);
             }
             else {
                 delete msg;
@@ -95,19 +97,40 @@ void OSPFv3Splitter::parseConfig(cXMLElement* routingConfig, cXMLElement* intCon
         const char* intName = (*it)->getAttribute("name");
 
         cXMLElementList processElements = (*it)->getElementsByTagName("Process");
-        if(processElements.size()>1)
-            EV_DEBUG <<"More than one process is configured for interface " << intName << "\n";
+        if(processElements.size()>2)
+            EV_DEBUG <<"More than two processes are configured for interface " << intName << "\n";
 
-        const char* processID = processElements.at(0)->getAttribute("id");
-        std::map<std::string, int>::iterator procIt;
-        procIt = this->processInVector.find(processID);
-        int processPosition = procIt->second;
-        this->interfaceToProcess[intName]=processPosition;
-        this->processesModules.at(processPosition)->activateProcess();
+        int processCount = processElements.size();
+        for(int i=0; i<processCount; i++) {
+            const char* processID = processElements.at(i)->getAttribute("id");
+            std::map<std::string, int>::iterator procIt;
+            procIt = this->processInVector.find(processID);
+            int processPosition = procIt->second;
 
-        std::string procName = "process"+std::string(processID);
-        this->processToInterface[(char*)procName.c_str()]=(char*)intName;
+            //find interface in interfaceToProcess, if this is the first time, set first int to process position
+            //and second int to -1
+            std::map<std::string, std::pair<int, int>>::iterator intProc;
+            intProc = this->interfaceToProcess.find(intName);
+            std::pair<int, int> procInts;
+            if(intProc == this->interfaceToProcess.end()) {
+                EV_DEBUG << "Process " << processID << " is assigned to interface " << intName << " as the first process. Its position in vector is" << processPosition << "\n";
+                procInts.first = processPosition;
+                procInts.second = -1;
+            }
+            else {
+                procInts.second = processPosition;
+                EV_DEBUG << "Process " << processID << " is assigned to interface " << intName << " as the second process. The first was number " << procInts.first << " in the vector\n";
+            }
 
+            this->interfaceToProcess[intName]=procInts;
+
+            this->processesModules.at(processPosition)->activateProcess();
+
+
+            std::string procName = "process"+std::string(processID);
+            EV_DEBUG << "Adding process " << processID << " to ProcessToInterface\n";
+            this->processToInterface[(char*)procName.c_str()]=(char*)intName;
+        }
         //register all interfaces to MCAST
         for (auto it=processToInterface.begin(); it!=processToInterface.end(); it++) {
             EV_DEBUG << "FOR \n";
@@ -117,6 +140,15 @@ void OSPFv3Splitter::parseConfig(cXMLElement* routingConfig, cXMLElement* intCon
             ipv6int->assignAddress(IPv6Address::ALL_OSPF_ROUTERS_MCAST, false, 0, 0);
         }
     }
+
+    EV_DEBUG << "Interface to Process: \n";
+    for(auto it=this->interfaceToProcess.begin(); it!=this->interfaceToProcess.end(); it++)
+        EV_DEBUG << "\tinterface " << (*it).first << " mapped to process(es) " << (*it).second.first << ", " <<
+        (*it).second.second << endl;
+
+    EV_DEBUG << "Process to Interface: \n";
+    for(auto it=this->processToInterface.begin(); it!=this->processToInterface.end(); it++)
+        EV_DEBUG << "\tprocess " << (*it).first << " is mapped to " << (*it).second << endl;
 }//parseConfig
 
 void OSPFv3Splitter::addNewProcess(cXMLElement* process, cXMLElement* interfaces, int gateIndex)
@@ -131,13 +163,22 @@ void OSPFv3Splitter::addNewProcess(cXMLElement* process, cXMLElement* interfaces
         throw cRuntimeError("More than one routerID was configured for process %s", processID.c_str());
 
     std::string routerID = std::string(idList.at(0)->getNodeValue());//TODO - if no routerID choose the loopback or interface
+    std::istringstream ss(processID);
+    int processIdNum;
+    ss>>processIdNum;
+    for(auto it=this->processesModules.begin(); it<this->processesModules.end(); it++){
+        if((*it)->getProcessID()==processIdNum) {
+            //two processes with same ID are defined
+            throw cRuntimeError("Duplicate process found, no new process created");
+            return;
+        }
+    }
+
     this->processInVector.insert(std::make_pair(processID,gateIndex));//[*processID]=gateCount;
     std::string processFullName = "process" + processID;
 
     OSPFv3Process* newProcessModule = (OSPFv3Process*)newProcessType->create(processFullName.c_str(), this->routingModule);
-    std::istringstream ss(processID);
-    int processIdNum;
-    ss>>processIdNum;
+
 
     newProcessModule->par("processID")=processIdNum;
     newProcessModule->par("routerID")=routerID;

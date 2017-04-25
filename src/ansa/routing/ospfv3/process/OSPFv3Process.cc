@@ -72,7 +72,7 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
 
 
         cXMLElementList process = (*interfaceIt)->getElementsByTagName("Process");
-        if(process.size()>1)
+        if(process.size()>2)
             throw cRuntimeError("More than one process is configured for interface %s", (*interfaceIt)->getAttribute("name"));
 
         //Check whether it belongs to this process

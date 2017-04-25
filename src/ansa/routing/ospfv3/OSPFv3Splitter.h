@@ -44,9 +44,9 @@ class INET_API OSPFv3Splitter : protected cListener, public cSimpleModule
     cModule* containingModule=nullptr;
     cModule* routingModule=nullptr;
     std::vector<OSPFv3Process*> processesModules;
-    std::map<std::string ,int> processInVector;
-    std::map<std::string ,int> interfaceToProcess;
-    std::map<char*,char*> processToInterface;
+    std::map<std::string ,int> processInVector; //processID is mapped to its position in vector of processes in Splitter
+    std::map<std::string ,std::pair<int, int>> interfaceToProcess;//name of interface to position in vector - "eth0" : 0
+    std::map<char*,char*> processToInterface;//"process101":"eth0", "process100":"eth0"
 
   protected:
      virtual void initialize(int stage) override;
