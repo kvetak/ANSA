@@ -1411,14 +1411,14 @@ OSPFv3LinkLSA* OSPFv3Interface::originateLinkLSA()
             packetLength+=20;
         }
         else {
-            IPv6Address ipAdd = ipv6Data->getAddress(i);
+            IPv6Address ipAdd = ipv6Data->getLinkLocalAddress();
 
-            //for some reason the ff02::5 is there as well
-            if(ipAdd.isMulticast()) {
-                numPrefixes--;
-                continue;
-            }
-            EV_DEBUG << "Creating Link LSA for address: " << ipv6Data->getAddress(i) << "\n";
+//            //for some reason the ff02::5 is there as well
+//            if(ipAdd.isMulticast()) {
+//                numPrefixes--;
+//                continue;
+//            }
+            EV_DEBUG << "Creating Link LSA for address: " << ipv6Data->getLinkLocalAddress() << "\n";
             OSPFv3LinkLSAPrefix prefix;
             prefix.dnBit = false;
             prefix.laBit = false;

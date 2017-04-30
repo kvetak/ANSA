@@ -44,23 +44,32 @@ void OSPFv3Process::handleMessage(cMessage* msg)
             IPv6ControlInfo *ctlInfo = dynamic_cast<IPv6ControlInfo*>(packet->getControlInfo());
             if(ctlInfo!=nullptr) {
                 OSPFv3Instance* instance = this->getInstanceById(packet->getInstanceID());
-                if(instance == nullptr)//Is there an instance with this number?
-                    delete msg;//TODO - some warning??
-                else
+                if(instance == nullptr){//Is there an instance with this number?
+                    EV_DEBUG << "Instance with this ID not found, dropping\n";
+                    //delete msg;//TODO - some warning??
+                }
+                else {
+                    EV_DEBUG << "Obviously not here\n";
                     instance->processPacket(packet);
+                }
             }
-            else
+            else {
+                EV_DEBUG << "Deleting msg\n";
                 delete msg;
+            }
         }
     }
 }//handleMessage
 
 void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
 {
+    EV_DEBUG << "Parsing config on process " << this->processID << endl;
+//    interfaceConfig->debugDump();
     //Take each interface
     cXMLElementList intList = interfaceConfig->getElementsByTagName("Interface");
     for(auto interfaceIt=intList.begin(); interfaceIt!=intList.end(); interfaceIt++)
     {
+//        (*interfaceIt)->debugDump();
         const char* interfaceName = (*interfaceIt)->getAttribute("name");
         const char* routerPriority = nullptr;
         const char* helloInterval = nullptr;
@@ -73,152 +82,164 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
 
         cXMLElementList process = (*interfaceIt)->getElementsByTagName("Process");
         if(process.size()>2)
-            throw cRuntimeError("More than one process is configured for interface %s", (*interfaceIt)->getAttribute("name"));
+            throw cRuntimeError("More than two processes configured for interface %s", (*interfaceIt)->getAttribute("name"));
 
         //Check whether it belongs to this process
-        int procId = atoi(process.at(0)->getAttribute("id"));
-        if(procId != this->processID)
-            continue;
+        int processCount = process.size();
+        for(int i = 0; i < processCount; i++){
+            process.at(i)->debugDump();
+            int procId = atoi(process.at(i)->getAttribute("id"));
+            if(procId != this->processID)
+                continue;
 
-        //Parsing instances
-        cXMLElementList instList = process.at(0)->getElementsByTagName("Instance");
-        for(auto instIt=instList.begin(); instIt!=instList.end(); instIt++)
-        {
-            const char* instId = (*instIt)->getAttribute("instanceID");
-            const char* addressFamily = (*instIt)->getAttribute("AF");
+            EV_DEBUG << "Creating new interface "  << interfaceName << " in process " << procId << endl;
 
-            //Get the router priority for this interface and instance
-            cXMLElementList interfaceOptions = (*instIt)->getElementsByTagName("RouterPriority");
-            if(interfaceOptions.size()>1)
-                throw cRuntimeError("Multiple router priority is configured for interface %s", interfaceName);
-
-            if(interfaceOptions.size()!=0)
-                routerPriority = interfaceOptions.at(0)->getNodeValue();
-
-            //get the hello interval for this interface and instance
-            interfaceOptions = (*instIt)->getElementsByTagName("HelloInterval");
-            if(interfaceOptions.size()>1)
-                throw cRuntimeError("Multiple HelloInterval value is configured for interface %s", interfaceName);
-
-            if(interfaceOptions.size()!=0)
-                helloInterval = interfaceOptions.at(0)->getNodeValue();
-
-            //get the dead interval for this interface and instance
-            interfaceOptions = (*instIt)->getElementsByTagName("DeadInterval");
-            if(interfaceOptions.size()>1)
-                throw cRuntimeError("Multiple DeadInterval value is configured for interface %s", interfaceName);
-
-            if(interfaceOptions.size()!=0)
-                deadInterval = interfaceOptions.at(0)->getNodeValue();
-
-            //get the interface cost for this interface and instance
-            interfaceOptions = (*instIt)->getElementsByTagName("InterfaceCost");
-            if(interfaceOptions.size()>1)
-                throw cRuntimeError("Multiple InterfaceCost value is configured for interface %s", interfaceName);
-
-            if(interfaceOptions.size()!=0)
-                interfaceCost = interfaceOptions.at(0)->getNodeValue();
-
-            //get the interface cost for this interface and instance
-            interfaceOptions = (*instIt)->getElementsByTagName("InterfaceType");
-            if(interfaceOptions.size()>1)
-                throw cRuntimeError("Multiple InterfaceType value is configured for interface %s", interfaceName);
-
-            if(interfaceOptions.size()!=0){
-                interfaceType = interfaceOptions.at(0)->getNodeValue();
-                if(strcmp(interfaceType, "Broadcast")==0)
-                    interfaceTypeNum = OSPFv3Interface::BROADCAST_TYPE;
-                else if(strcmp(interfaceType, "PointToPoint")==0)
-                    interfaceTypeNum = OSPFv3Interface::POINTTOPOINT_TYPE;
-                else if(strcmp(interfaceType, "NBMA")==0)
-                    interfaceTypeNum = OSPFv3Interface::NBMA_TYPE;
-                else if(strcmp(interfaceType, "PointToMultipoint")==0)
-                    interfaceTypeNum = OSPFv3Interface::POINTTOMULTIPOINT_TYPE;
-                else if(strcmp(interfaceType, "Virtual")==0)
-                    interfaceTypeNum = OSPFv3Interface::VIRTUAL_TYPE;
-                else
-                    interfaceTypeNum = OSPFv3Interface::UNKNOWN_TYPE;
-            }
-            else
-                throw cRuntimeError("Interface type needs to be specified for interface %s", interfaceName);
-
-            //find out whether the interface is passive
-            interfaceOptions = (*instIt)->getElementsByTagName("PassiveInterface");
-            if(interfaceOptions.size()>1)
-                throw cRuntimeError("Multiple PassiveInterface value is configured for interface %s", interfaceName);
-
-            if(interfaceOptions.size()!=0){
-                if(strcmp(interfaceOptions.at(0)->getNodeValue(), "True")==0)
-                    passiveInterface = true;
-            }
-
-
-            int instIdNum;
-
-            if(instId==nullptr) {
-                if(strcmp(addressFamily, "IPv4")==0)
-                    instIdNum = DEFAULT_IPV4_INSTANCE;
-                else if(strcmp(addressFamily, "IPv6")==0)
-                    instIdNum = DEFAULT_IPV6_INSTANCE;
-                else
-                    throw cRuntimeError("Unknown address family in process %d", this->getProcessID());
-            }
-            else
-                instIdNum = atoi(instId);
-
-            //TODO - check range of instance ID
-
-            //check for multiple definition of one instance
-            OSPFv3Instance* instance = this->getInstanceById(instIdNum);
-            //if(instance != nullptr)
-               // throw cRuntimeError("Multiple OSPFv3 instance with the same instance ID configured for process %d on interface %s", this->getProcessID(), interfaceName);
-
-            if(instance == nullptr) {
-                if(strcmp(addressFamily, "IPv4")==0)
-                    instance = new OSPFv3Instance(instIdNum, this, IPV4INSTANCE);
-                else
-                    instance = new OSPFv3Instance(instIdNum, this, IPV6INSTANCE);
-
-                this->addInstance(instance);
-            }
-
-                //TODO - multiarea configuration??
-            cXMLElementList areasList = (*instIt)->getElementsByTagName("Area");
-            for(auto areasIt=areasList.begin(); areasIt!=areasList.end(); areasIt++)
+            //Parsing instances
+            cXMLElementList instList = process.at(i)->getElementsByTagName("Instance");
+            for(auto instIt=instList.begin(); instIt!=instList.end(); instIt++)
             {
-                const char* areaId = (*areasIt)->getNodeValue();
-                IPv4Address areaIP = IPv4Address(areaId);
+                const char* instId = (*instIt)->getAttribute("instanceID");
+                const char* addressFamily = (*instIt)->getAttribute("AF");
 
-                //insert area if it's not already there and assign this interface
-                OSPFv3Area* area;
-                if(!(instance->hasArea(areaIP))) {
-                    area = new OSPFv3Area(areaIP, instance);
-                    instance->addArea(area);
+                //Get the router priority for this interface and instance
+                cXMLElementList interfaceOptions = (*instIt)->getElementsByTagName("RouterPriority");
+                if(interfaceOptions.size()>1)
+                    throw cRuntimeError("Multiple router priority is configured for interface %s", interfaceName);
+
+                if(interfaceOptions.size()!=0)
+                    routerPriority = interfaceOptions.at(0)->getNodeValue();
+
+                //get the hello interval for this interface and instance
+                interfaceOptions = (*instIt)->getElementsByTagName("HelloInterval");
+                if(interfaceOptions.size()>1)
+                    throw cRuntimeError("Multiple HelloInterval value is configured for interface %s", interfaceName);
+
+                if(interfaceOptions.size()!=0)
+                    helloInterval = interfaceOptions.at(0)->getNodeValue();
+
+                //get the dead interval for this interface and instance
+                interfaceOptions = (*instIt)->getElementsByTagName("DeadInterval");
+                if(interfaceOptions.size()>1)
+                    throw cRuntimeError("Multiple DeadInterval value is configured for interface %s", interfaceName);
+
+                if(interfaceOptions.size()!=0)
+                    deadInterval = interfaceOptions.at(0)->getNodeValue();
+
+                //get the interface cost for this interface and instance
+                interfaceOptions = (*instIt)->getElementsByTagName("InterfaceCost");
+                if(interfaceOptions.size()>1)
+                    throw cRuntimeError("Multiple InterfaceCost value is configured for interface %s", interfaceName);
+
+                if(interfaceOptions.size()!=0)
+                    interfaceCost = interfaceOptions.at(0)->getNodeValue();
+
+                //get the interface cost for this interface and instance
+                interfaceOptions = (*instIt)->getElementsByTagName("InterfaceType");
+                if(interfaceOptions.size()>1)
+                    throw cRuntimeError("Multiple InterfaceType value is configured for interface %s", interfaceName);
+
+                if(interfaceOptions.size()!=0){
+                    interfaceType = interfaceOptions.at(0)->getNodeValue();
+                    if(strcmp(interfaceType, "Broadcast")==0)
+                        interfaceTypeNum = OSPFv3Interface::BROADCAST_TYPE;
+                    else if(strcmp(interfaceType, "PointToPoint")==0)
+                        interfaceTypeNum = OSPFv3Interface::POINTTOPOINT_TYPE;
+                    else if(strcmp(interfaceType, "NBMA")==0)
+                        interfaceTypeNum = OSPFv3Interface::NBMA_TYPE;
+                    else if(strcmp(interfaceType, "PointToMultipoint")==0)
+                        interfaceTypeNum = OSPFv3Interface::POINTTOMULTIPOINT_TYPE;
+                    else if(strcmp(interfaceType, "Virtual")==0)
+                        interfaceTypeNum = OSPFv3Interface::VIRTUAL_TYPE;
+                    else
+                        interfaceTypeNum = OSPFv3Interface::UNKNOWN_TYPE;
                 }
                 else
-                    area = instance->getAreaById(areaIP);
+                    throw cRuntimeError("Interface type needs to be specified for interface %s", interfaceName);
 
-                if(!area->hasInterface(std::string(interfaceName))) {
-                    OSPFv3Interface* newInterface = new OSPFv3Interface(interfaceName, this->containingModule, this, interfaceTypeNum, passiveInterface);
-                    if(helloInterval!=nullptr)
-                        newInterface->setHelloInterval(atoi(helloInterval));
+                //find out whether the interface is passive
+                interfaceOptions = (*instIt)->getElementsByTagName("PassiveInterface");
+                if(interfaceOptions.size()>1)
+                    throw cRuntimeError("Multiple PassiveInterface value is configured for interface %s", interfaceName);
 
-                    if(deadInterval!=nullptr)
-                        newInterface->setDeadInterval(atoi(deadInterval));
+                if(interfaceOptions.size()!=0){
+                    if(strcmp(interfaceOptions.at(0)->getNodeValue(), "True")==0)
+                        passiveInterface = true;
+                }
 
-                    if(interfaceCost!=nullptr)
-                        newInterface->setInterfaceCost(atoi(interfaceCost));
 
-                    if(routerPriority!=nullptr) {
-                        int rtrPrio = atoi(routerPriority);
-                        if(rtrPrio < 0 || rtrPrio > 255)
-                            throw cRuntimeError("Router priority out of range on interface %s", interfaceName);
+                int instIdNum;
 
-                        newInterface->setRouterPriority(rtrPrio);
+                if(instId==nullptr) {
+                    EV_DEBUG << "Address Family " << addressFamily << endl;
+                    if(strcmp(addressFamily, "IPv4")==0) {
+                        EV_DEBUG << "IPv4 instance\n";
+                        instIdNum = DEFAULT_IPV4_INSTANCE;
                     }
+                    else if(strcmp(addressFamily, "IPv6")==0) {
+                        EV_DEBUG << "IPv6 instance\n";
+                        instIdNum = DEFAULT_IPV6_INSTANCE;
+                    }
+                    else
+                        throw cRuntimeError("Unknown address family in process %d", this->getProcessID());
+                }
+                else
+                    instIdNum = atoi(instId);
 
-                    newInterface->setArea(area);
-                    area->addInterface(newInterface);
+                //TODO - check range of instance ID
+
+                //check for multiple definition of one instance
+                OSPFv3Instance* instance = this->getInstanceById(instIdNum);
+                //if(instance != nullptr)
+                // throw cRuntimeError("Multiple OSPFv3 instance with the same instance ID configured for process %d on interface %s", this->getProcessID(), interfaceName);
+
+                if(instance == nullptr) {
+                    if(strcmp(addressFamily, "IPv4")==0)
+                        instance = new OSPFv3Instance(instIdNum, this, IPV4INSTANCE);
+                    else
+                        instance = new OSPFv3Instance(instIdNum, this, IPV6INSTANCE);
+
+                    EV_DEBUG << "Adding instance " << instIdNum << " to process " << this->processID << endl;
+                    this->addInstance(instance);
+                }
+
+                //TODO - multiarea configuration??
+                cXMLElementList areasList = (*instIt)->getElementsByTagName("Area");
+                for(auto areasIt=areasList.begin(); areasIt!=areasList.end(); areasIt++)
+                {
+                    const char* areaId = (*areasIt)->getNodeValue();
+                    IPv4Address areaIP = IPv4Address(areaId);
+
+                    //insert area if it's not already there and assign this interface
+                    OSPFv3Area* area;
+                    if(!(instance->hasArea(areaIP))) {
+                        area = new OSPFv3Area(areaIP, instance);
+                        instance->addArea(area);
+                    }
+                    else
+                        area = instance->getAreaById(areaIP);
+
+                    if(!area->hasInterface(std::string(interfaceName))) {
+                        OSPFv3Interface* newInterface = new OSPFv3Interface(interfaceName, this->containingModule, this, interfaceTypeNum, passiveInterface);
+                        if(helloInterval!=nullptr)
+                            newInterface->setHelloInterval(atoi(helloInterval));
+
+                        if(deadInterval!=nullptr)
+                            newInterface->setDeadInterval(atoi(deadInterval));
+
+                        if(interfaceCost!=nullptr)
+                            newInterface->setInterfaceCost(atoi(interfaceCost));
+
+                        if(routerPriority!=nullptr) {
+                            int rtrPrio = atoi(routerPriority);
+                            if(rtrPrio < 0 || rtrPrio > 255)
+                                throw cRuntimeError("Router priority out of range on interface %s", interfaceName);
+
+                            newInterface->setRouterPriority(rtrPrio);
+                        }
+
+                        newInterface->setArea(area);
+                        area->addInterface(newInterface);
+                    }
                 }
             }
         }

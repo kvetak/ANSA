@@ -63,8 +63,11 @@ void OSPFv3Splitter::handleMessage(cMessage* msg)
             if(it!=this->interfaceToProcess.end()){
                 this->send(msg, "processOut", it->second.first);//first is always there
 
-                if(it->second.second!=-1)
-                    this->send(msg->dup(), "processOut", it->second.second);
+                if(it->second.second!=-1) {
+                    cMessage* copy = msg->dup();
+                    copy->setControlInfo(msg->getControlInfo()->dup());
+                    this->send(copy, "processOut", it->second.second);
+                }
             }
             else {
                 delete msg;
@@ -173,6 +176,8 @@ void OSPFv3Splitter::addNewProcess(cXMLElement* process, cXMLElement* interfaces
             return;
         }
     }
+
+    EV_DEBUG << "New process " << processID << " with routerID " << routerID << " created\n";
 
     this->processInVector.insert(std::make_pair(processID,gateIndex));//[*processID]=gateCount;
     std::string processFullName = "process" + processID;

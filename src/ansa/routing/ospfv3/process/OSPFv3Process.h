@@ -50,6 +50,7 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
   public:
     IInterfaceTable* ift = nullptr;
     IPv6RoutingTable *rt = nullptr;
+    IIPv4RoutingTable *rt4 = nullptr;
     cModule* containingModule=nullptr;
 
 
