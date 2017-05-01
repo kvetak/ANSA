@@ -32,13 +32,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:110/64</IPv6Address>
@@ -128,13 +128,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.3</Area>
+						<Area type="stub" summary="no">0.0.0.3</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.3</Area>
+						<Area type="stub" summary="no">0.0.0.3</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:310/64</IPv6Address>
@@ -176,13 +176,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.4</Area>
+						<Area type="nssa" summary="no">0.0.0.4</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.4</Area>
+						<Area type="nssa" summary="no">0.0.0.4</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:410/64</IPv6Address>
@@ -224,13 +224,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
+						<Area type="nssa">0.0.0.5</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
+						<Area type="nssa">0.0.0.5</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:510/64</IPv6Address>
@@ -256,13 +256,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:610/64</IPv6Address>
@@ -272,13 +272,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:620/64</IPv6Address>
@@ -352,13 +352,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.3</Area>
+						<Area type="stub" summary="no">0.0.0.3</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.3</Area>
+						<Area type="stub" summary="no">0.0.0.3</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:810/64</IPv6Address>
@@ -368,13 +368,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.3</Area>
+						<Area type="stub" summary="no">0.0.0.3</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.3</Area>
+						<Area type="stub" summary="no">0.0.0.3</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:820/64</IPv6Address>
@@ -400,13 +400,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.4</Area>
+						<Area type="nssa" summary="no">0.0.0.4</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.4</Area>
+						<Area type="nssa" summary="no">0.0.0.4</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:910/64</IPv6Address>
@@ -416,13 +416,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.2</Area>
+						<Area type="nssa" summary="no">0.0.0.2</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.2</Area>
+						<Area type="nssa" summary="no">0.0.0.2</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:920/64</IPv6Address>
@@ -448,13 +448,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
+						<Area type="nssa">0.0.0.5</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
+						<Area type="nssa">0.0.0.5</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:111/64</IPv6Address>
@@ -464,13 +464,13 @@
 				<Process id="100">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
+						<Area type="nssa">0.0.0.5</Area>
 					</Instance>
 				</Process>
 				<Process id="101">
 					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
+						<Area type="nssa">0.0.0.5</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:121/64</IPv6Address>

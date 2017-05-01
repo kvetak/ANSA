@@ -64,12 +64,10 @@ void OSPFv3Process::handleMessage(cMessage* msg)
 void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
 {
     EV_DEBUG << "Parsing config on process " << this->processID << endl;
-//    interfaceConfig->debugDump();
     //Take each interface
     cXMLElementList intList = interfaceConfig->getElementsByTagName("Interface");
     for(auto interfaceIt=intList.begin(); interfaceIt!=intList.end(); interfaceIt++)
     {
-//        (*interfaceIt)->debugDump();
         const char* interfaceName = (*interfaceIt)->getAttribute("name");
         const char* routerPriority = nullptr;
         const char* helloInterval = nullptr;
@@ -87,7 +85,6 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
         //Check whether it belongs to this process
         int processCount = process.size();
         for(int i = 0; i < processCount; i++){
-            process.at(i)->debugDump();
             int procId = atoi(process.at(i)->getAttribute("id"));
             if(procId != this->processID)
                 continue;
@@ -208,11 +205,31 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
                 {
                     const char* areaId = (*areasIt)->getNodeValue();
                     IPv4Address areaIP = IPv4Address(areaId);
+                    const char* areaType = (*areasIt)->getAttribute("type");
+                    OSPFv3AreaType type = NORMAL;
+
+                    if(areaType != nullptr){
+                        if(strcmp(areaType, "stub") == 0)
+                            type = STUB;
+                        else if(strcmp(areaType, "nssa") == 0)
+                            type = NSSA;
+                    }
+
+                    const char* summary = (*areasIt)->getAttribute("summary");
+
+                    if(summary != nullptr){
+                        if(strcmp(summary, "no") == 0) {
+                            if(type == STUB)
+                                type = TOTALLY_STUBBY;
+                            else if(type == NSSA)
+                                type = NSSA_TOTALLY_STUB;
+                        }
+                    }
 
                     //insert area if it's not already there and assign this interface
                     OSPFv3Area* area;
                     if(!(instance->hasArea(areaIP))) {
-                        area = new OSPFv3Area(areaIP, instance);
+                        area = new OSPFv3Area(areaIP, instance, type);
                         instance->addArea(area);
                     }
                     else

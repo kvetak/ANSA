@@ -2,11 +2,13 @@
 
 namespace inet{
 
-OSPFv3Area::OSPFv3Area(IPv4Address areaID, OSPFv3Instance* parent)
+OSPFv3Area::OSPFv3Area(IPv4Address areaID, OSPFv3Instance* parent, OSPFv3AreaType type)
 {
     this->areaID=areaID;
     this->containingInstance=parent;
     this->externalRoutingCapability = true;
+    this->areaType = type;
+    EV_DEBUG << "Area Type : " << type << endl;
 
     WATCH_PTRVECTOR(this->interfaceList);
 }
@@ -61,6 +63,9 @@ void OSPFv3Area::init()
 
     OSPFv3IntraAreaPrefixLSA* prefixLsa = this->originateIntraAreaPrefixLSA();
     this->installIntraAreaPrefixLSA(prefixLsa);
+
+    if(this->getInstance()->getAreaCount()>1)
+        this->originateInterAreaPrefixLSA(prefixLsa, this);
 }
 
 OSPFv3Interface* OSPFv3Area::findVirtualLink(IPv4Address routerID)
@@ -75,23 +80,6 @@ OSPFv3Interface* OSPFv3Area::findVirtualLink(IPv4Address routerID)
     }
     return nullptr;
 }
-
-void OSPFv3Area::addInterAreaLSA(OSPFv3InterAreaPrefixLSA* newLSA)
-{
-    this->interAreaLSAList.push_back(newLSA);
-    IPv4Address LSAIP = newLSA->getHeader().getLinkStateID();
-    this->interAreaLSAById[LSAIP]=newLSA;
-}//addInterAreaLSA
-
-
-OSPFv3InterAreaPrefixLSA* OSPFv3Area::getInterAreaLSAbyId(IPv4Address LSAId)
-{
-    std::map<IPv4Address, OSPFv3InterAreaPrefixLSA* >::iterator it = this->interAreaLSAById.find(LSAId);
-    if(it!=this->interAreaLSAById.end())
-        return it->second;
-
-    return nullptr;
-}//getInterAreaLSA
 
 OSPFv3LSAHeader* OSPFv3Area::findLSA(LSAKeyType lsaKey)
 {
@@ -696,6 +684,133 @@ IPv4Address OSPFv3Area::getNewNetworkLinkStateID()
     return currIP;
 }//getNewNetworkLinkStateID
 
+//----------------------------------------- Inter-Area-Prefix LSA ------------------------------------------//
+void OSPFv3Area::originateInterAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* lsa, OSPFv3Area* fromArea)
+{
+    int packetLength = OSPFV3_LSA_HEADER_LENGTH+OSPFV3_INTER_AREA_PREFIX_LSA_HEADER_LENGTH;
+    int prefixCount = 0;
+
+    //Only one Inter-Area-Prefix LSA for an area so only one header will suffice
+    OSPFv3InterAreaPrefixLSA* newLsa = new OSPFv3InterAreaPrefixLSA();
+    OSPFv3LSAHeader& newHeader = newLsa->getHeader();
+    newHeader.setLsaAge(0);
+    newHeader.setLsaType(INTER_AREA_PREFIX_LSA);
+    newHeader.setLinkStateID(this->getNewInterAreaPrefixLinkStateID());
+    newHeader.setAdvertisingRouter(this->getInstance()->getProcess()->getRouterID());
+    newHeader.setLsaSequenceNumber(this->interAreaPrefixLSASequenceNumber++);
+
+    OSPFv3LSAPrefix& prefix = lsa->getPrefixes(0);//TODO - this here takes only one prefix, need to make one new LSA for each prefix
+    newLsa->setDnBit(prefix.dnBit);
+    newLsa->setLaBit(prefix.laBit);
+    newLsa->setNuBit(prefix.nuBit);
+    newLsa->setPBit(prefix.pBit);
+    newLsa->setXBit(prefix.xBit);
+    newLsa->setMetric(prefix.metric);
+    newLsa->setPrefixLen(prefix.prefixLen);
+    newLsa->setPrefix(prefix.addressPrefix);
+
+    EV_DEBUG << "Setting Address Prefix in InterAreaPrefixLSA to " << prefix.addressPrefix << endl;
+
+    for(int i = 0; i < this->getInstance()->getAreaCount(); i++)
+    {
+        OSPFv3Area* area = this->getInstance()->getArea(i);
+        if(area->getAreaID() == fromArea->getAreaID())
+            continue;
+
+        area->installInterAreaPrefixLSA(newLsa);
+    }
+    //TODO - length!!!
+}
+
+bool OSPFv3Area::installInterAreaPrefixLSA(OSPFv3InterAreaPrefixLSA* lsa)
+{
+    OSPFv3LSAHeader &header = lsa->getHeader();
+
+    EV_DEBUG << "Installing Inter-Area-Prefix LSA:\nLink State ID: " << header.getLinkStateID() << "\nAdvertising router: " << header.getAdvertisingRouter();
+    EV_DEBUG << "\nLS Seq Number: " << header.getLsaSequenceNumber() << endl;
+
+    EV_DEBUG << "Prefix Address: " << lsa->getPrefix();
+    EV_DEBUG << "\nPrefix Length: " << lsa->getPrefixLen();
+    if(lsa->getDnBit())
+        EV_DEBUG << "DN ";
+    if(lsa->getLaBit())
+        EV_DEBUG << "LA ";
+    if(lsa->getNuBit())
+        EV_DEBUG << "NU ";
+    if(lsa->getPBit())
+        EV_DEBUG << "P ";
+    if(lsa->getXBit())
+        EV_DEBUG << "X ";
+
+    EV_DEBUG << ", Metric: " << lsa->getMetric() << "\n";
+
+    LSAKeyType lsaKey;
+    lsaKey.linkStateID = lsa->getHeader().getLinkStateID();
+    lsaKey.advertisingRouter = lsa->getHeader().getAdvertisingRouter();
+    lsaKey.LSType = lsa->getHeader().getLsaType();
+
+    OSPFv3InterAreaPrefixLSA* lsaInDatabase = (OSPFv3InterAreaPrefixLSA*)this->getLSAbyKey(lsaKey);
+    if (lsaInDatabase != nullptr) {
+        this->removeFromAllRetransmissionLists(lsaKey);
+        EV_DEBUG << "Only updating\n";
+        return this->updateInterAreaPrefixLSA(lsaInDatabase, lsa);
+    }
+    else {
+        OSPFv3InterAreaPrefixLSA* lsaCopy = new OSPFv3InterAreaPrefixLSA(*lsa);
+        this->interAreaPrefixLSAList.push_back(lsaCopy);
+        EV_DEBUG << "creating new one\n";
+        return true;
+    }
+}
+
+bool OSPFv3Area::updateInterAreaPrefixLSA(OSPFv3InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa)
+{
+    bool different = interAreaPrefixLSADiffersFrom(currentLsa, newLsa);
+    (*currentLsa) = (*newLsa);
+    currentLsa->getHeader().setLsaAge(0);//reset the age
+    if (different) {
+        //        clearNextHops();//TODO
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool OSPFv3Area::interAreaPrefixLSADiffersFrom(OSPFv3InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa)
+{
+    const OSPFv3LSAHeader& thisHeader = currentLsa->getHeader();
+    const OSPFv3LSAHeader& lsaHeader = newLsa->getHeader();
+    bool differentHeader = (((thisHeader.getLsaAge() == MAX_AGE) && (lsaHeader.getLsaAge() != MAX_AGE)) ||
+            ((thisHeader.getLsaAge() != MAX_AGE) && (lsaHeader.getLsaAge() == MAX_AGE)) ||
+            (thisHeader.getLsaLength() != lsaHeader.getLsaLength()));
+    bool differentBody = false;
+
+    if (!differentHeader) {
+        differentBody = ((currentLsa->getMetric() != newLsa->getMetric()) ||
+                (currentLsa->getPrefix() != newLsa->getPrefix()) ||
+                (currentLsa->getPrefixLen() != newLsa->getPrefixLen()) ||
+                (currentLsa->getDnBit() != newLsa->getDnBit()) ||
+                (currentLsa->getLaBit() != newLsa->getLaBit()) ||
+                (currentLsa->getMetric() != newLsa->getMetric()) ||
+                (currentLsa->getNuBit() != newLsa->getNuBit()) ||
+                (currentLsa->getPBit() != newLsa->getPBit()) ||
+                (currentLsa->getPrefixLen() != newLsa->getPrefixLen()) ||
+                (currentLsa->getXBit() != newLsa->getXBit()));
+    }
+
+    return differentHeader || differentBody;
+}
+
+IPv4Address OSPFv3Area::getNewInterAreaPrefixLinkStateID()
+{
+    IPv4Address currIP = this->interAreaPrefixLsID;
+    int newIP = currIP.getInt()+1;
+    this->interAreaPrefixLsID = IPv4Address(newIP);
+    return currIP;
+}
+
+
 //----------------------------------------- Intra-Area-Prefix LSA ------------------------------------------//
 OSPFv3IntraAreaPrefixLSA* OSPFv3Area::originateIntraAreaPrefixLSA()
 {
@@ -940,7 +1055,7 @@ OSPFv3LSA* OSPFv3Area::getLSAbyKey(LSAKeyType LSAKey)
         break;
 
     case INTER_AREA_PREFIX_LSA:
-        for (auto it=this->routerLSAList.begin(); it!=this->routerLSAList.end(); it++)
+        for (auto it=this->interAreaPrefixLSAList.begin(); it!=this->interAreaPrefixLSAList.end(); it++)
         {
             if(((*it)->getHeader().getAdvertisingRouter() == LSAKey.advertisingRouter) && (*it)->getHeader().getLinkStateID() == LSAKey.linkStateID) {
                 return (*it);
@@ -1527,6 +1642,25 @@ std::string OSPFv3Area::detailedInfo() const
     for(auto it=this->routerLSAList.begin(); it!=this->routerLSAList.end(); it++) {
         OSPFv3LSAHeader& header = (*it)->getHeader();
         out << header.getAdvertisingRouter()<<"\t"<<header.getLsaAge()<<"\t"<<header.getLsaSequenceNumber()<<"\t1\t\tNone"<<"\n";//TODO Link count and Bits
+    }
+
+    out << "\nInter Area Prefix Link States (Area " << this->getAreaID().str(false) << ")\n" ;
+    out << "ADV Router\tAge\tSeq#\tPrefix\n";
+    for(auto it = this->interAreaPrefixLSAList.begin(); it != this->interAreaPrefixLSAList.end(); it++){
+        OSPFv3LSAHeader& header = (*it)->getHeader();
+        out << header.getAdvertisingRouter()<<"\t"<<header.getLsaAge()<<"\t"<<header.getLsaSequenceNumber()<<"\t";
+
+        L3Address addrPref = (*it)->getPrefix();
+        if(this->getInstance()->getAddressFamily()==IPV4INSTANCE) {
+            IPv4Address ipv4addr = addrPref.toIPv4();
+            ipv4addr = ipv4addr.getNetwork();
+            out << ipv4addr << "/" << (*it)->getPrefixLen() << endl;
+        }
+        else if(this->getInstance()->getAddressFamily()==IPV6INSTANCE) {
+            IPv6Address ipv6addr = addrPref.toIPv6();
+            ipv6addr = ipv6addr.getPrefix((*it)->getPrefixLen());
+            out << ipv6addr << "/64" << endl; //TODO - this needs to be changed to the actual length
+        }
     }
 
     out << "\nNet Link States (Area " << this->getAreaID().str(false) << ")\n" ;
