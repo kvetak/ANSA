@@ -28,6 +28,8 @@ void OSPFv3Splitter::initialize(int stage)
         ipSocket.registerProtocol(IP_PROT_OSPF);
 
         this->parseConfig(par("ospfv3RoutingConfig"), par("ospfv3IntConfig"));
+
+        WATCH_PTRVECTOR(this->processesModules);
     }
 }
 

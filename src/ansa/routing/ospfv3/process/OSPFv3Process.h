@@ -57,7 +57,6 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
   private:
     void handleTimer(cMessage* msg);
 
-
   private:
     std::vector<OSPFv3Instance*> instances;
     std::map<int, OSPFv3Instance*> instancesById;
@@ -66,7 +65,6 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     bool isActive=false;
     void debugDump();
     std::vector<OSPFv3RoutingTableEntry *> routingTable;
-
 
   protected:
     virtual void initialize(int stage) override;

@@ -54,6 +54,7 @@ void OSPFv3NeighborStateExStart::processEvent(OSPFv3Neighbor *neighbor, OSPFv3Ne
     if (event == OSPFv3Neighbor::NEGOTIATION_DONE) {
         EV_DEBUG << "OSPFv3Neighbor::NEGOTIATION_DONE caught in ExStartState\n";
         neighbor->createDatabaseSummary();
+        EV_DEBUG << "SummaryListCount " << neighbor->getDatabaseSummaryListCount() << endl;
         neighbor->sendDDPacket();
         neighbor->getInterface()->getArea()->getInstance()->getProcess()->clearTimer(neighbor->getDDRetransmissionTimer());
         changeState(neighbor, new OSPFv3NeighborStateExchange, this);

@@ -49,12 +49,10 @@ void OSPFv3Process::handleMessage(cMessage* msg)
                     //delete msg;//TODO - some warning??
                 }
                 else {
-                    EV_DEBUG << "Obviously not here\n";
                     instance->processPacket(packet);
                 }
             }
             else {
-                EV_DEBUG << "Deleting msg\n";
                 delete msg;
             }
         }
@@ -704,5 +702,4 @@ void OSPFv3Process::rebuildRoutingTable()
         }
     }
 }
-
 }//namespace inet

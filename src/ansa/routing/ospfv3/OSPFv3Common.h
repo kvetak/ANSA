@@ -23,7 +23,11 @@ namespace inet{
 #define MAX_AGE                 3600
 #define MAX_AGE_DIFF            900
 #define MIN_LS_ARRIVAL          1
+#define MIN_LS_INTERVAL         5
 #define MAX_SEQUENCE_NUMBER     2147483647
+#define MAX_SPF_WAIT_TIME       10000
+#define MIN_SPF_WAIT_TIME       10000
+#define REFERENCE_BANDWIDTH     100
 
 #define OSPFV3_ROUTER_LSA_HEADER_LENGTH 4
 #define OSPFV3_ROUTER_LSA_BODY_LENGTH 16

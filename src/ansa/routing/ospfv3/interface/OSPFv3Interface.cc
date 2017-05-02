@@ -473,6 +473,7 @@ void OSPFv3Interface::processDDPacket(OSPFv3Packet* packet){
                 neighbor->setLastReceivedDDPacket(ddPacket);
 
                 if (!preProcessDDPacket(ddPacket, neighbor, true)) {
+                    EV_DEBUG << "???????????????????????????";
                     break;
                 }
 
@@ -630,13 +631,18 @@ bool OSPFv3Interface::preProcessDDPacket(OSPFv3DatabaseDescription *ddPacket, OS
         EV_DETAIL << "\n";
     }
 
+    EV_DEBUG << "DatabaseSummaryListCount = " << neighbor->getDatabaseSummaryListCount() << endl;
+    EV_DEBUG << "M_BIT " << ddPacket->getDdOptions().mBit << endl;
     if (neighbor->getDatabaseExchangeRelationship() == OSPFv3Neighbor::MASTER) {
+        EV_DEBUG << "I am the master!\n";
         neighbor->incrementDDSequenceNumber();
         if ((neighbor->getDatabaseSummaryListCount() == 0) && !ddPacket->getDdOptions().mBit) {
+            EV_DEBUG << "Passing EXCHANGE_DONE to neighbor\n";
             neighbor->processEvent(OSPFv3Neighbor::EXCHANGE_DONE);    // does nothing in ExchangeStart
         }
         else {
             if (!inExchangeStart) {
+                EV_DEBUG <<"Sending packet\n";
                 neighbor->sendDDPacket();
             }
         }

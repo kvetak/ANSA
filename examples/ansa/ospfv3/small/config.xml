@@ -5,9 +5,6 @@
 				<Process id="100">
 					<RouterID>10.10.10.1</RouterID>
 				</Process>
-				<Process id="101">
-					<RouterID>172.16.10.1</RouterID>
-				</Process>
 			</OSPFv3>
 		</Routing6>
 		
@@ -19,25 +16,12 @@
 						<Area>0.0.0.0</Area>
 					</Instance>
 				</Process>
-				<Process id="101">
-					<Instance AF="IPv4">
-						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.0</Area>
-					</Instance>
-				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:100/64</IPv6Address>
 				<IPv6Address>2001:db8:a::1/64</IPv6Address>
 			</Interface>
 			<Interface name="eth1">
 				<Process id="100">
 					<Instance AF="IPv6">
-						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.0</Area>
-						<PassiveInterface>True</PassiveInterface>
-					</Instance>
-				</Process>
-				<Process id="101">
-					<Instance AF="IPv4">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>
 						<PassiveInterface>True</PassiveInterface>

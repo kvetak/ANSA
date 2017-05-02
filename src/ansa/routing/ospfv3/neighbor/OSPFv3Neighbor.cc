@@ -175,6 +175,7 @@ void OSPFv3Neighbor::setLastReceivedDDPacket(OSPFv3DatabaseDescription* ddPacket
 
 void OSPFv3Neighbor::sendDDPacket(bool init)
 {
+    EV_DEBUG << "Send DD Packet\n";
     OSPFv3DatabaseDescription* ddPacket = new OSPFv3DatabaseDescription();
 
     //common header first
@@ -192,18 +193,6 @@ void OSPFv3Neighbor::sendDDPacket(bool init)
     OSPFv3DDOptions ddOptions;
     ddPacket->setSequenceNumber(this->ddSequenceNumber);
 
-    if(init){
-        ddOptions.iBit = true;
-        ddOptions.mBit = true;
-        ddOptions.msBit = true;
-    }
-    else{
-        ddOptions.iBit = false;
-        ddOptions.mBit = (databaseSummaryList.empty()) ? false : true;
-        ddOptions.msBit = (databaseExchangeRelationship == OSPFv3Neighbor::MASTER) ? true : false;
-    }
-
-    ddPacket->setDdOptions(ddOptions);
     int packetSize = OSPFV3_HEADER_LENGTH + OSPFV3_DD_HEADER_LENGTH;
 
     if (init || databaseSummaryList.empty()) {
@@ -220,6 +209,23 @@ void OSPFv3Neighbor::sendDDPacket(bool init)
             packetSize += OSPFV3_LSA_HEADER_LENGTH;
         }
     }
+
+    EV_DEBUG << "DatabaseSummatyListCount = " << this->getDatabaseSummaryListCount() << endl;
+    if(init){
+        ddOptions.iBit = true;
+        ddOptions.mBit = true;
+        ddOptions.msBit = true;
+    }
+    else{
+        ddOptions.iBit = false;
+        ddOptions.mBit = (databaseSummaryList.empty()) ? false : true;
+        ddOptions.msBit = (databaseExchangeRelationship == OSPFv3Neighbor::MASTER) ? true : false;
+    }
+
+    ddPacket->setDdOptions(ddOptions);
+
+
+
 
     ddPacket->setPacketLength(packetSize);
 

@@ -28,7 +28,7 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
             }
         }
 
-        EV_DEBUG << "Changing state -> new Router LSA\n";
+//        EV_DEBUG << "Changing state -> new Router LSA\n";
         interface->getArea()->setSpfTreeRoot(interface->getArea()->originateRouterLSA());
 
         if(nextState == OSPFv3Interface::INTERFACE_STATE_BACKUP ||
@@ -120,7 +120,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
     IPv4Address routerID = intf->getArea()->getInstance()->getProcess()->getRouterID();
     IPv4Address currentDesignatedRouter = intf->getDesignatedID();
     IPv4Address currentBackupRouter = intf->getBackupID();
-    EV_DEBUG << "Calculating the designated router, currentDesignated:" << currentDesignatedRouter << ", current backup: " << currentBackupRouter << "\n";
+//    EV_DEBUG << "Calculating the designated router, currentDesignated:" << currentDesignatedRouter << ", current backup: " << currentBackupRouter << "\n";
 
     unsigned int neighborCount = intf->getNeighborCount();
     unsigned char repeatCount = 0;
@@ -137,7 +137,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
     bool designatedRouterDeclared;
 
     do {
-        EV_DEBUG <<  "ELECTION DO in router " << routerID << "\n";
+//        EV_DEBUG <<  "ELECTION DO in router " << routerID << "\n";
         // calculating backup designated router
         declaredBackupIP = IPv6Address::UNSPECIFIED_ADDRESS;
         declaredBackupPriority = 0;
@@ -164,9 +164,9 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
             IPv4Address neighborsDesignatedRouterID = neighbor->getNeighborsDR();
             IPv4Address neighborsBackupDesignatedRouterID = neighbor->getNeighborsBackup();
 
-            EV_DEBUG << "Neighbors DR: " << neighborsDesignatedRouterID << ", neighbors backup: " << neighborsBackupDesignatedRouterID << "\n";
+//            EV_DEBUG << "Neighbors DR: " << neighborsDesignatedRouterID << ", neighbors backup: " << neighborsBackupDesignatedRouterID << "\n";
             if (neighborsDesignatedRouterID != neighborID) {
-                EV_DEBUG << "Router " << routerID << " trying backup on neighbor " << neighborID << "\n";
+//                EV_DEBUG << "Router " << routerID << " trying backup on neighbor " << neighborID << "\n";
                 if (neighborsBackupDesignatedRouterID == neighborID) {
                     if ((neighborPriority > declaredBackupPriority) ||
                             ((neighborPriority == declaredBackupPriority) &&
@@ -189,7 +189,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
                     }
                 }
             }
-            EV_DEBUG << "Router " << routerID << " declared backup is " << declaredBackupID << "\n";
+//            EV_DEBUG << "Router " << routerID << " declared backup is " << declaredBackupID << "\n";
         }
 
         // also include the router itself in the calculations
@@ -224,7 +224,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
                 }
             }
         }
-        EV_DEBUG << "Router " << routerID << " declared backup after backup round is " << declaredBackupID << "\n";
+//        EV_DEBUG << "Router " << routerID << " declared backup after backup round is " << declaredBackupID << "\n";
         // calculating designated router
         declaredDesignatedRouterID = NULL_IPV4ADDRESS;
         declaredDesignatedRouterPriority = 0;
@@ -257,7 +257,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
                 }
             }
         }
-        EV_DEBUG << "Router " << routerID << " declared DR after neighbors is " << declaredDesignatedRouterID << "\n";
+//        EV_DEBUG << "Router " << routerID << " declared DR after neighbors is " << declaredDesignatedRouterID << "\n";
         // also include the router itself in the calculations
         if (intf->routerPriority > 0) {
             if (currentDesignatedRouter == routerID) {
@@ -277,7 +277,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
             declaredDesignatedRouterPriority = declaredBackupPriority;
             designatedRouterDeclared = true;
         }
-        EV_DEBUG << "Router " << routerID << " declared DR after a round is " << declaredDesignatedRouterID << "\n";
+//        EV_DEBUG << "Router " << routerID << " declared DR after a round is " << declaredDesignatedRouterID << "\n";
         // if the router is any kind of DR or is no longer one of them, then repeat
         if (
                 (

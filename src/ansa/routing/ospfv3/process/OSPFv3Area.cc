@@ -8,7 +8,7 @@ OSPFv3Area::OSPFv3Area(IPv4Address areaID, OSPFv3Instance* parent, OSPFv3AreaTyp
     this->containingInstance=parent;
     this->externalRoutingCapability = true;
     this->areaType = type;
-    EV_DEBUG << "Area Type : " << type << endl;
+//    EV_DEBUG << "Area Type : " << type << endl;
 
     WATCH_PTRVECTOR(this->interfaceList);
 }
@@ -83,34 +83,34 @@ OSPFv3Interface* OSPFv3Area::findVirtualLink(IPv4Address routerID)
 
 OSPFv3LSAHeader* OSPFv3Area::findLSA(LSAKeyType lsaKey)
 {
-    EV_DEBUG << "FIND LSA:\n";
+//    EV_DEBUG << "FIND LSA:\n";
 
     switch (lsaKey.LSType) {
     case ROUTER_LSA: {
-        EV_DEBUG << "looking for lsa type ROUTER\n";
+//        EV_DEBUG << "looking for lsa type ROUTER\n";
         OSPFv3RouterLSA* lsa = this->getRouterLSAbyKey(lsaKey);
         if(lsa == nullptr) {
-            EV_DEBUG << "FIND LSA - nullptr returned\n";
+//            EV_DEBUG << "FIND LSA - nullptr returned\n";
             return nullptr;
         }
         else {
             OSPFv3LSAHeader* lsaHeader = &(lsa->getHeader());
-            EV_DEBUG << "FIND LSA - header returned\n";
+//            EV_DEBUG << "FIND LSA - header returned\n";
             return lsaHeader;
         }
     }
     break;
 
     case NETWORK_LSA: {
-        EV_DEBUG << "looking for lsa type NETWORK\n";
+//        EV_DEBUG << "looking for lsa type NETWORK\n";
         OSPFv3RouterLSA* lsa = this->getRouterLSAbyKey(lsaKey);
                 if(lsa == nullptr) {
-                    EV_DEBUG << "FIND LSA - nullptr returned\n";
+//                    EV_DEBUG << "FIND LSA - nullptr returned\n";
                     return nullptr;
                 }
                 else {
                     OSPFv3LSAHeader* lsaHeader = &(lsa->getHeader());
-                    EV_DEBUG << "FIND LSA - header returned\n";
+//                    EV_DEBUG << "FIND LSA - header returned\n";
                     return lsaHeader;
                 }
         //return this->getNetworkLSAbyId(lsaKey.linkStateID);
@@ -439,12 +439,11 @@ OSPFv3RouterLSA* OSPFv3Area::originateRouterLSA()
 
 OSPFv3RouterLSA* OSPFv3Area::getRouterLSAbyKey(LSAKeyType LSAKey)
 {
-    EV_DEBUG << "GET ROUTER LSA BY KEY  \n";
+//    EV_DEBUG << "GET ROUTER LSA BY KEY  \n";
     for (auto it=this->routerLSAList.begin(); it!=this->routerLSAList.end(); it++)
     {
-        EV_DEBUG << "FOR, routerLSAList size: " << this->routerLSAList.size() << "\n";
+//        EV_DEBUG << "FOR, routerLSAList size: " << this->routerLSAList.size() << "\n";
         if(((*it)->getHeader().getAdvertisingRouter() == LSAKey.advertisingRouter) && (*it)->getHeader().getLinkStateID() == LSAKey.linkStateID) {
-            EV_DEBUG << "This is OK!\n";
             return (*it);
         }
     }
@@ -550,7 +549,7 @@ void OSPFv3Area::deleteRouterLSA(int index) {
 
 bool OSPFv3Area::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv3Neighbor* neighbor)
 {
-    EV_DEBUG << "Flooding from Area to all interfaces\n";
+//    EV_DEBUG << "Flooding from Area to all interfaces\n";
     bool floodedBackOut = false;
     long interfaceCount = this->interfaceList.size();
 
@@ -709,7 +708,7 @@ void OSPFv3Area::originateInterAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* lsa, OSPF
     newLsa->setPrefixLen(prefix.prefixLen);
     newLsa->setPrefix(prefix.addressPrefix);
 
-    EV_DEBUG << "Setting Address Prefix in InterAreaPrefixLSA to " << prefix.addressPrefix << endl;
+//    EV_DEBUG << "Setting Address Prefix in InterAreaPrefixLSA to " << prefix.addressPrefix << endl;
 
     for(int i = 0; i < this->getInstance()->getAreaCount(); i++)
     {
@@ -853,7 +852,6 @@ OSPFv3IntraAreaPrefixLSA* OSPFv3Area::originateIntraAreaPrefixLSA()
                     prefix->metric=1;//TODO - check
                     prefix->addressPrefix=ipv6;
 
-                    EV_DEBUG << "setting array\n";
                     newLsa->setPrefixesArraySize(currentPrefix);
                     newLsa->setPrefixes(currentPrefix-1, *prefix);
                     prefixCount++;
@@ -898,7 +896,6 @@ OSPFv3IntraAreaPrefixLSA* OSPFv3Area::originateNetIntraAreaPrefixLSA(OSPFv3Netwo
             prefix->metric=0;//TODO - check
             prefix->addressPrefix=ipv6.getPrefix(64);
 
-            EV_DEBUG << "setting array\n";
             newLsa->setPrefixesArraySize(currentPrefix);
             newLsa->setPrefixes(currentPrefix-1, *prefix);
             prefixCount++;
@@ -1113,7 +1110,7 @@ OSPFv3LSA* OSPFv3Area::getLSAbyKey(LSAKeyType LSAKey)
 
 void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* > newTable)
 {
-    EV_DEBUG << "Calculating SPF Tree for area " << this->getAreaID() << "\n";
+//    EV_DEBUG << "Calculating SPF Tree for area " << this->getAreaID() << "\n";
     /*1)Initialize the algorithm’s data structures. Clear the list
         of candidate vertices. Initialize the shortest-path tree to
         only the root (which is the router doing the calculation).
@@ -1135,15 +1132,15 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
     for(auto it=this->routerLSAList.begin(); it != this->routerLSAList.end(); it++){
         if ((*it)->getHeader().getAdvertisingRouter()==routerID) {
             rootVertex->setVertexLSA((*it));
-            EV_DEBUG << "ROOT:\n";
-            rootVertex->vertexInfo();
+//            EV_DEBUG << "ROOT:\n";
+//            rootVertex->vertexInfo();
             break;
         }
     }
 
     justAddedVertex = rootVertex;
 
-    EV_DEBUG << "SPFTREE:";
+//    EV_DEBUG << "SPFTREE:";
     /*2)Call the vertex just added to the tree vertex V. Examine
         the LSA associated with vertex V. This is a lookup in the
         Area A’s link state database based on the Vertex ID. If
@@ -1154,14 +1151,14 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
         it joins vertex V to vertex W):*/
     do{
         if(justAddedVertex->getVertexType() == ROUTER_VERTEX){
-            EV_DEBUG << "\t\tCurrent Vertex - ROUTER\n";
+//            EV_DEBUG << "\t\tCurrent Vertex - ROUTER\n";
             OSPFv3RouterLSA* currentLSA = justAddedVertex->getVertexLSA()->routerLSA;
             if(currentLSA->getVBit() == true)
                 transitCapability = true;
 
             unsigned int routerCount = currentLSA->getRoutersArraySize();
             for(unsigned int i = 0; i<routerCount; i++){
-                EV_DEBUG << "\t\tExamining Router body\n";
+//                EV_DEBUG << "\t\tExamining Router body\n";
                 OSPFv3RouterLSABody& router = currentLSA->getRouters(i);
                 short int routerType = router.type;
                 OSPFv3SPFVertex* joiningVertex;
@@ -1174,15 +1171,15 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                      it does not have a link back to vertex V, examine the
                      next link in V’s LSA.*/
                 if(routerType == TRANSIT_NETWORK) {
-                    EV_DEBUG << "\t\tRouter is transit\n";
+//                    EV_DEBUG << "\t\tRouter is transit\n";
                     OSPFv3NetworkLSA* joiningLSA=nullptr;
-                    EV_DEBUG << "\t\tInterface id is" << router.interfaceID << "\n";
+//                    EV_DEBUG << "\t\tInterface id is " << router.interfaceID << "\n";
                     OSPFv3Interface* intf = this->getInterfaceByIndex(router.interfaceID);
                     IPv4Address designatedRtr = intf->getDesignatedID();
 
                     for(auto it=this->networkLSAList.begin(); it!=this->networkLSAList.end(); it++){
                         if((*it)->getHeader().getAdvertisingRouter() == designatedRtr) {
-                            EV_DEBUG << "\t\tFound Network LSA originated by " << designatedRtr << "\n";
+//                            EV_DEBUG << "\t\tFound Network LSA originated by " << designatedRtr << "\n";
 //                            EV_DEBUG << "\t\tDesignated Rtr Interface ID is " << intf->getDesignatedIntID() << "\n";
                             joiningLSA = (*it);
                             break;
@@ -1202,12 +1199,12 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                     joiningVertex->setVertexLSA(joiningLSA);
                 }
                 else{
-                    EV_DEBUG << "\t\tRouter is Router";
+//                    EV_DEBUG << "\t\tRouter is Router";
                     OSPFv3RouterLSA* joiningLSA=nullptr;
                     for(auto it=this->routerLSAList.begin(); it!=this->routerLSAList.end(); it++){
                         if((*it)->getHeader().getAdvertisingRouter()==router.neighborRouterID){
                             joiningLSA = (*it);
-                            EV_DEBUG << "\t\tFound Router LSA originated by " << (*it)->getHeader().getAdvertisingRouter() << "\n";
+//                            EV_DEBUG << "\t\tFound Router LSA originated by " << (*it)->getHeader().getAdvertisingRouter() << "\n";
                             break;
                         }
                     }
@@ -1235,11 +1232,11 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                 /*2c)If vertex W is already on the shortest-path tree,
                      examine the next link in the LSA.*/
                 if(alreadyOnTree) {
-                    EV_DEBUG << "\t\tAlready on the tree... skippnig\n";
+//                    EV_DEBUG << "\t\tAlready on the tree... skippnig\n";
                     continue;
                 }
-                else
-                    EV_DEBUG << "\t\tTotaly new to the tree\n";
+//                else
+//                    EV_DEBUG << "\t\tTotaly new to the tree\n";
 
                 /*2d)Calculate the link state cost D of the resulting path
                      from the root to vertex W. D is equal to the sum of the
@@ -1257,14 +1254,14 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                 }
 
                 if(candidate!=nullptr){
-                    EV_DEBUG << "\t\tcandidate found on candidate list\n";
+//                    EV_DEBUG << "\t\tcandidate found on candidate list\n";
                     unsigned long candidateDistance = candidate->getDistance();
 
                     /*  Greater than the value that already appears for
                         vertex W on the candidate list, then examine the
                         next link.*/
                     if (linkStateCost > candidateDistance) {
-                        EV_DEBUG << "\t\tlink state cost greater than candidateDistance\n";
+//                        EV_DEBUG << "\t\tlink state cost greater than candidateDistance\n";
                         continue;
                     }
                     /*  Less than the value that appears for vertex W on the
@@ -1276,7 +1273,7 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                         next hop values for W accordingly.It takes
                         as input the destination (W) and its parent (V)*/
                     if (linkStateCost < candidateDistance) {
-                        EV_DEBUG << "\t\tlink state cost is less than that of candidate\n";
+//                        EV_DEBUG << "\t\tlink state cost is less than that of candidate\n";
                         candidate->setDistance(linkStateCost);
                         candidate->clearNextHops();
                     }
@@ -1296,7 +1293,7 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
 //                    delete newNextHops;
                 }
                 else {
-                    EV_DEBUG << "\t\tcandidate not found on the tree - adding\n";
+//                    EV_DEBUG << "\t\tcandidate not found on the tree - adding\n";
                     joiningVertex->setDistance(linkStateCost);
                     //std::vector<NextHop> *newNextHops = calculateNextHops(joiningVertex, justAddedVertex);    // (destination, parent)
                     //unsigned int nextHopCount = newNextHops->size();
@@ -1307,13 +1304,13 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                     joiningVertex->setParent(justAddedVertex);
 
                     candidates.push_back(joiningVertex);
-                    EV_DEBUG << "\t\tcandidates size: " << candidates.size();
+//                    EV_DEBUG << "\t\tcandidates size: " << candidates.size();
                 }
             }//for
         }
 
         if(justAddedVertex->getVertexType() == NETWORK_VERTEX){
-            EV_DEBUG << "\t\tCurrent Vertex - Network\n";
+//            EV_DEBUG << "\t\tCurrent Vertex - Network\n";
             unsigned int routerCount = justAddedVertex->getVertexLSA()->networkLSA->getAttachedRouterArraySize();
 
             for(int i=0; i<routerCount;i++){
@@ -1360,15 +1357,15 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                 }
 
                 if(candidate!=nullptr){
-                    EV_DEBUG << "\t\tcandidate found on candidate list\n";
+//                    EV_DEBUG << "\t\tcandidate found on candidate list\n";
                     unsigned long candidateDistance = candidate->getDistance();
 
                     if (linkStateCost > candidateDistance) {
-                        EV_DEBUG << "\t\tlink state cost greater than candidateDistance\n";
+//                        EV_DEBUG << "\t\tlink state cost greater than candidateDistance\n";
                         continue;
                     }
                     if (linkStateCost < candidateDistance) {
-                        EV_DEBUG << "\t\tlink state cost is less than that of candidate\n";
+//                        EV_DEBUG << "\t\tlink state cost is less than that of candidate\n";
                         candidate->setDistance(linkStateCost);
                         candidate->clearNextHops();
                     }
@@ -1381,7 +1378,7 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                     //                    delete newNextHops;
                 }
                 else {
-                    EV_DEBUG << "\t\tcandidate not found on the tree - adding\n";
+//                    EV_DEBUG << "\t\tcandidate not found on the tree - adding\n";
                     joiningVertex->setDistance(linkStateCost);
                     //std::vector<NextHop> *newNextHops = calculateNextHops(joiningVertex, justAddedVertex);    // (destination, parent)
                     //unsigned int nextHopCount = newNextHops->size();
@@ -1392,7 +1389,7 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
                     joiningVertex->setParent(justAddedVertex);
 
                     candidates.push_back(joiningVertex);
-                    EV_DEBUG << "\t\tcandidates size: " << candidates.size();
+//                    EV_DEBUG << "\t\tcandidates size: " << candidates.size();
                 }
             }//for
         }
@@ -1597,27 +1594,27 @@ void OSPFv3Area::calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* 
         the path type will be set to intra-area, and the cost will
         be set to the newly discovered shortest path’s calculated
         distance.*/
-    EV_DEBUG << "SPFTree calculation finished\n";
+//    EV_DEBUG << "SPFTree calculation finished\n";
 }
 
 void OSPFv3Area::calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable)
 {
-    EV_DEBUG << "Calculating Inter-Area Routes for Backbone\n";
+//    EV_DEBUG << "Calculating Inter-Area Routes for Backbone\n";
 }
 
 void OSPFv3Area::recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTable)
 {
-    EV_DEBUG << "Rechecking Summary LSA\n";
+//    EV_DEBUG << "Rechecking Summary LSA\n";
 }
 
 std::vector<NextHop> *OSPFv3Area::calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const
 {
-    EV_DEBUG << "Calculating Next Hops\n";
+//    EV_DEBUG << "Calculating Next Hops\n";
 }
 
 std::vector<NextHop> *OSPFv3Area::calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const
 {
-    EV_DEBUG << "Calculating Next Hops\n";
+//    EV_DEBUG << "Calculating Next Hops\n";
 }
 
 void OSPFv3Area::debugDump()
