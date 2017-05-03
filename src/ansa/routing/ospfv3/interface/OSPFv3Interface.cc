@@ -1546,70 +1546,68 @@ std::string OSPFv3Interface::detailedInfo() const
 {
     std::stringstream out;
     IPv4Address neighbor;
+    IPv6Address designatedIP;
+    IPv6Address backupIP;
 
-    out << "Interface " << this->getIntName() << "\n"; //TODO - isUP?
-    out << "IPv6Addresses: \n";//TODO - for over all addresses
-    InterfaceEntry* ie = this->ift->getInterfaceByName(this->getIntName().c_str());
-    IPv6InterfaceData *ipv6int = ie->ipv6Data();
-    out << "\t" << ipv6int->getAddress(0) << "\n";
-    out << "Instance ID " << this->getArea()->getInstance()->getInstanceID() << ", ";
-    out << "Router ID " << this->getArea()->getInstance()->getProcess()->getRouterID() << "\n";
-    out << "Area ID " << this->getArea()->getAreaID().str(false) << ", Cost " << this->getInterfaceCost() << ", Type " << this->OSPFv3IntTypeOutput[this->getType()] << "\n";//TODO - type needs to be a string
-    out << "MTU: " << this->getInterfaceMTU() << "\n";
-    out << "State " << this->OSPFv3IntStateOutput[this->getState()] << ", Transmit Delay " << this->getTransDelayInterval() << " sec, Priority " << this->getRouterPriority() << ", Link-LSA ..\n";//TODO - link lsa??
-    out << "Timer Intervals :\n\tHello " << this->getHelloInterval() << ", Hello Jitter ?? Dead " << this->getDeadInterval() << ", Retransmit " << this->getRetransmissionInterval() << "\n";
-
-    out << "DR: " << this->getDesignatedID().str(false) << " BDR: " << this->getBackupID().str(false) <<"\n";
-    out << "Neighbor Count = " << this->getNeighborCount() << ", Adjacent Neighbor Count = ??\n";
-    out << "\tNeighbor:\n";
+    int adjCount = 0;
     for(auto it=this->neighbors.begin(); it!=this->neighbors.end(); it++) {
-        neighbor = (*it)->getNeighborID();
+        if((*it)->getState()==OSPFv3Neighbor::FULL_STATE)
+            adjCount++;
 
-        switch((*it)->getState()){
-            case OSPFv3Neighbor::DOWN_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(DOWN)\n";
-                break;
-
-            case OSPFv3Neighbor::ATTEMPT_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(ATTEMPT)\n";
-                break;
-
-            case OSPFv3Neighbor::INIT_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(INIT)\n";
-                break;
-
-            case OSPFv3Neighbor::TWOWAY_STATE:
-                if(this->getDesignatedID() == IPv4Address::UNSPECIFIED_ADDRESS)
-                    out << "\t\t" << (*it)->getNeighborID() << "(2WAY)\n";
-                else
-                    out << "\t\t" << (*it)->getNeighborID() << "(2WAY/DROTHER)\n";
-                break;
-
-            case OSPFv3Neighbor::EXCHANGE_START_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(EXSTART)\n";
-                break;
-
-            case OSPFv3Neighbor::EXCHANGE_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(EXCHANGE)\n";
-                break;
-
-            case OSPFv3Neighbor::LOADING_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(LOADING)\n";
-                break;
-
-            case OSPFv3Neighbor::FULL_STATE:
-                if(neighbor == this->DesignatedRouterID)
-                    out << "\t\t" << (*it)->getNeighborID() << "(FULL/DR)\n";
-                else if(neighbor == this->BackupRouterID)
-                    out << "\t\t" << (*it)->getNeighborID() << "(FULL/BDR)\n";
-                else
-                    out << "\t\t" << (*it)->getNeighborID() << "(FULL/DROTHER)\n";
-                break;
-        }
+        if((*it)->getNeighborID() == this->DesignatedRouterID)
+            designatedIP = (*it)->getNeighborIP();
+        if((*it)->getNeighborID() == this->BackupRouterID)
+            backupIP = (*it)->getNeighborIP();
     }
 
+    out << "Interface " << this->getIntName() << "\n"; //TODO - isUP?
+    out << "Link Local Address ";//TODO - for over all addresses
+    InterfaceEntry* ie = this->ift->getInterfaceByName(this->getIntName().c_str());
+    IPv6InterfaceData *ipv6int = ie->ipv6Data();
+    out << ipv6int->getLinkLocalAddress() << ", Interface ID " << this->interfaceId << "\n";
+
+    if(this->getArea()->getInstance()->getAddressFamily() == IPV4INSTANCE) {
+        IPv4InterfaceData* ipv4int = ie->ipv4Data();
+        out << "Internet Address " << ipv4int->getIPAddress() << endl;
+    }
+
+    out << "Area " << this->getArea()->getAreaID().getInt();
+    out << ", Process ID " << this->getArea()->getInstance()->getProcess()->getProcessID();
+    out << ", Instance ID " << this->getArea()->getInstance()->getInstanceID() << ", ";
+    out << "Router ID " << this->getArea()->getInstance()->getProcess()->getRouterID() << endl;
+
+    out << "Network Type " << this->OSPFv3IntTypeOutput[this->getType()];
+    out << ", Cost: " << this->getInterfaceCost() << endl;//TODO - type needs to be a string
+
+    out << "Transmit Delay is " << this->getTransDelayInterval() << " sec, ";
+    out << "State " << this->OSPFv3IntStateOutput[this->getState()];
+    out << ", Priority " << this->getRouterPriority() << endl;
+
+    out << "Designated Router (ID) " << this->getDesignatedID();
+    out << ", local address " << designatedIP << endl;
+
+    out << "Backup Designated router (ID) " << this->getBackupID();
+    out << ", local address " << backupIP << endl;
+
+    out << "Timer intervals configured, Hello " << this->getHelloInterval();
+    out << ", Dead " << this->getDeadInterval();
+    out << ", Wait " << this->getDeadInterval();
+    out << ", Retransmit " << this->getRetransmissionInterval() << endl;
+
+    out << "\tHello due in " << (int)simTime().dbl()%this->helloInterval << endl;
+
+    out << "Neighbor Count is " << this->getNeighborCount();
+    out << ", Adjacent neighbor count is " << adjCount << endl;
+
+    for(auto it=this->neighbors.begin(); it!=this->neighbors.end(); it++) {
+        if((*it)->getNeighborID() == this->DesignatedRouterID)
+            out << "Adjacent with neighbor "<< this->DesignatedRouterID << "(Designated Router)\n";
+        if((*it)->getNeighborID() == this->BackupRouterID)
+            out << "Adjacent with neighbor "<< this->BackupRouterID << "(Backup Designated Router)\n";
+    }
+
+    out << "Suppress Hello for 0 neighbor(s)\n";
 
     return out.str();
-
 }//detailedInfo
 }//namespace inet
