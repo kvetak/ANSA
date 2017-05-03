@@ -26,6 +26,7 @@ void OSPFv3Process::initialize(int stage){
         cMessage* init = new cMessage();
         init->setKind(INIT_PROCESS);
         scheduleAt(simTime(), init);
+        WATCH_PTRVECTOR(this->instances);
     }
 }
 

@@ -32,7 +32,7 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
   public:
     OSPFv3Process();
     virtual ~OSPFv3Process();
-    int getProcessID(){return this->processID;};
+    int getProcessID() const {return this->processID;};
     IPv4Address getRouterID(){return this->routerID;};
     bool isActivated(){return this->isActive;};
     void activateProcess();
@@ -52,7 +52,6 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     IPv6RoutingTable *rt = nullptr;
     IIPv4RoutingTable *rt4 = nullptr;
     cModule* containingModule=nullptr;
-
 
   private:
     void handleTimer(cMessage* msg);
@@ -79,7 +78,6 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     //list of as-external routes
     //routing table
 };
-
 }//namespace inet
 
 #endif

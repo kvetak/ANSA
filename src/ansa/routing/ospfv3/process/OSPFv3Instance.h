@@ -38,10 +38,12 @@ class INET_API OSPFv3Instance : public cObject
     void debugDump();
     void processPacket(OSPFv3Packet* packet);
     void init();
-    OSPFv3Process* getProcess(){return this->containingProcess;}
+    OSPFv3Process* getProcess() const {return this->containingProcess;}
     int getUniqueId(){return OSPFv3IfIndex++;}
     int getAreaCount(){return this->areas.size();}
     void removeFromAllRetransmissionLists(LSAKeyType lsaKey);
+
+    std::string detailedInfo() const override;
 
   public:
     IInterfaceTable* ift = nullptr;
@@ -63,5 +65,11 @@ class INET_API OSPFv3Instance : public cObject
 
 
 };
+
+inline std::ostream& operator<<(std::ostream& ostr, const OSPFv3Instance& instance)
+{
+    ostr << instance.detailedInfo();
+    return ostr;
+}
 }//namespace inet
 #endif

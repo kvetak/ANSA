@@ -172,4 +172,77 @@ void OSPFv3Instance::debugDump()
         (*it)->debugDump();
     }
 }//debugDump
+
+std::string OSPFv3Instance::detailedInfo() const
+{
+    std::stringstream out;
+    int processID = this->getProcess()->getProcessID();
+    IPv4Address routerID = this->getProcess()->getRouterID();
+    out << "OSPFv3 " << processID << " address-family ";
+
+    if(this->addressFamily == IPV4INSTANCE)
+        out << "IPv4 (router-id " << routerID << ")\n\n";
+    else
+        out << "IPv6 (router-id " << routerID << ")\n\n";
+
+    out << "Neighbor ID\tPri\tState\t\tDead Time\tInterface ID\tInterface\n";
+    for(auto it=this->areas.begin(); it!=this->areas.end(); it++){
+        int intfCount = (*it)->getInterfaceCount();
+        for(int i=0; i<intfCount; i++) {
+            OSPFv3Interface* intf = (*it)->getInterface(i);
+            int neiCount = intf->getNeighborCount();
+            for(int n=0; n<neiCount; n++) {
+                OSPFv3Neighbor* neighbor = intf->getNeighbor(n);
+                out << neighbor->getNeighborID() << "\t";
+                out << neighbor->getNeighborPriority() << "\t";
+                switch(neighbor->getState()){
+                    case OSPFv3Neighbor::DOWN_STATE:
+                        out << "DOWN\t\t";
+                        break;
+
+                    case OSPFv3Neighbor::ATTEMPT_STATE:
+                        out << "ATTEMPT\t\t";
+                        break;
+
+                    case OSPFv3Neighbor::INIT_STATE:
+                        out << "INIT\t\t";
+                        break;
+
+                    case OSPFv3Neighbor::TWOWAY_STATE:
+                        if(intf->getDesignatedID() == IPv4Address::UNSPECIFIED_ADDRESS)
+                            out << "2WAY\t\t";
+                        else
+                            out << "2WAY/DROTHER\t";
+                        break;
+
+                    case OSPFv3Neighbor::EXCHANGE_START_STATE:
+                        out << "EXSTART\t\t";
+                        break;
+
+                    case OSPFv3Neighbor::EXCHANGE_STATE:
+                        out << "EXCHANGE\t\t";
+                        break;
+
+                    case OSPFv3Neighbor::LOADING_STATE:
+                        out << "LOADING\t\t";
+                        break;
+
+                    case OSPFv3Neighbor::FULL_STATE:
+                        if(neighbor->getNeighborID() == intf->getDesignatedID())
+                            out << "FULL/DR\t\t";
+                        else if(neighbor->getNeighborID() == intf->getBackupID())
+                            out << "FULL/BDR\t\t";
+                        else
+                            out << "FULL/DROTHER\t";
+                        break;
+                }
+                out << "00:00:40\t\t";
+                out << neighbor->getNeighborInterfaceID() << "\t\t";
+                out << intf->getIntName() << "\n";
+            }
+        }
+    }
+
+    return out.str();
+}
 }//namespace inet

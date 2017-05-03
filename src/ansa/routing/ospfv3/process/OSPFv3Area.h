@@ -49,6 +49,9 @@ class INET_API OSPFv3Area : public cObject
     bool getTransitCapability(){return this->transitCapability;}
     OSPFv3Interface* findVirtualLink(IPv4Address routerID);
 
+    OSPFv3Interface* getInterface(int i) const {return this->interfaceList.at(i);}
+    int getInterfaceCount() const {return this->interfaceList.size();}
+
     OSPFv3LSA* getLSAbyKey(LSAKeyType lsaKey);
 
     void deleteRouterLSA(int index);

@@ -963,21 +963,21 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                                 (this->getDesignatedID() == IPv4Address::UNSPECIFIED_ADDRESS))
                         {
                             EV_DEBUG << "Sending ACK to all\n";//TODO
-                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_ROUTERS_MCAST);
+                            this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_ROUTERS_MCAST);
                         }
                         else {
                             EV_DEBUG << "Sending ACK to Designated mcast\n";//TODO
-                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
+                            this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
                         }
                     }
                     else {
                         if (this->getType() == OSPFv3Interface::POINTTOPOINT_TYPE) {
                             EV_DEBUG << "Sending ACK to all\n";//TODO
-                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_ROUTERS_MCAST);
+                            this->sendLSAcknowledgement(&(currentLSA->getHeader()), IPv6Address::ALL_OSPF_ROUTERS_MCAST);
                         }
                         else {
                             EV_DEBUG << "Sending ACK only to neighbor\n";//TODO
-                            //this->sendLSAcknowledgement(&(currentLSA->getHeader()), neighbor->getNeighborIP());
+                            this->sendLSAcknowledgement(&(currentLSA->getHeader()), neighbor->getNeighborIP());
                         }
                     }
                     //b)discard
@@ -1025,7 +1025,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
 
                     EV_INFO << "    (update installed)\n";
 
-                    //this->acknowledgeLSA(&(currentLSA->getHeader()), ackFlags, lsUpdatePacket->getRouterID());
+                    this->acknowledgeLSA(&(currentLSA->getHeader()), ackFlags, lsUpdatePacket->getRouterID());
                     if ((currentLSA->getHeader().getAdvertisingRouter() == this->getArea()->getInstance()->getProcess()->getRouterID()) ||
                             ((lsaType == NETWORK_LSA)))// &&//TODO
                         //(router->isLocalAddress(currentLSA->getHeader().getLinkStateID()))))
@@ -1096,6 +1096,7 @@ void OSPFv3Interface::acknowledgeLSA(OSPFv3LSAHeader* lsaHeader,
             if ((acknowledgementFlags.lsaIsNewer && (lsaSource == this->getDesignatedID())) ||
                 (acknowledgementFlags.lsaIsDuplicate && acknowledgementFlags.impliedAcknowledgement))
             {
+                EV_DEBUG << "Adding delayed acknowledgement\n";
                 //this->addDelayedAcknowledgement(lsaHeader);
             }
             else {
@@ -1110,6 +1111,7 @@ void OSPFv3Interface::acknowledgeLSA(OSPFv3LSAHeader* lsaHeader,
         }
         else {
             if (acknowledgementFlags.lsaIsNewer) {
+                EV_DEBUG << "Adding delayed acknowledgement\n";
 //                intf->addDelayedAcknowledgement(lsaHeader);
             }
             else {
@@ -1543,6 +1545,7 @@ std::string OSPFv3Interface::info() const
 std::string OSPFv3Interface::detailedInfo() const
 {
     std::stringstream out;
+    IPv4Address neighbor;
 
     out << "Interface " << this->getIntName() << "\n"; //TODO - isUP?
     out << "IPv6Addresses: \n";//TODO - for over all addresses
@@ -1559,7 +1562,9 @@ std::string OSPFv3Interface::detailedInfo() const
     out << "DR: " << this->getDesignatedID().str(false) << " BDR: " << this->getBackupID().str(false) <<"\n";
     out << "Neighbor Count = " << this->getNeighborCount() << ", Adjacent Neighbor Count = ??\n";
     out << "\tNeighbor:\n";
-    for(auto it=this->neighbors.begin(); it!=this->neighbors.end(); it++)
+    for(auto it=this->neighbors.begin(); it!=this->neighbors.end(); it++) {
+        neighbor = (*it)->getNeighborID();
+
         switch((*it)->getState()){
             case OSPFv3Neighbor::DOWN_STATE:
                 out << "\t\t" << (*it)->getNeighborID() << "(DOWN)\n";
@@ -1574,7 +1579,10 @@ std::string OSPFv3Interface::detailedInfo() const
                 break;
 
             case OSPFv3Neighbor::TWOWAY_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(2WAY)\n";
+                if(this->getDesignatedID() == IPv4Address::UNSPECIFIED_ADDRESS)
+                    out << "\t\t" << (*it)->getNeighborID() << "(2WAY)\n";
+                else
+                    out << "\t\t" << (*it)->getNeighborID() << "(2WAY/DROTHER)\n";
                 break;
 
             case OSPFv3Neighbor::EXCHANGE_START_STATE:
@@ -1590,9 +1598,15 @@ std::string OSPFv3Interface::detailedInfo() const
                 break;
 
             case OSPFv3Neighbor::FULL_STATE:
-                out << "\t\t" << (*it)->getNeighborID() << "(FULL)\n";
+                if(neighbor == this->DesignatedRouterID)
+                    out << "\t\t" << (*it)->getNeighborID() << "(FULL/DR)\n";
+                else if(neighbor == this->BackupRouterID)
+                    out << "\t\t" << (*it)->getNeighborID() << "(FULL/BDR)\n";
+                else
+                    out << "\t\t" << (*it)->getNeighborID() << "(FULL/DROTHER)\n";
                 break;
         }
+    }
 
 
     return out.str();
