@@ -44,7 +44,7 @@
 
 		<Interfaces>
 			<Interface name="eth0">
-				<Process id="100">
+				<Process id="1">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.0</Area>

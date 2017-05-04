@@ -129,6 +129,7 @@ void OSPFv3Splitter::parseConfig(cXMLElement* routingConfig, cXMLElement* intCon
 
             this->interfaceToProcess[intName]=procInts;
 
+//            EV_DEBUG << processPosition << endl;
             this->processesModules.at(processPosition)->activateProcess();
 
 
@@ -171,7 +172,7 @@ void OSPFv3Splitter::addNewProcess(cXMLElement* process, cXMLElement* interfaces
     std::istringstream ss(processID);
     int processIdNum;
     ss>>processIdNum;
-    for(auto it=this->processesModules.begin(); it<this->processesModules.end(); it++){
+    for(auto it=this->processesModules.begin(); it!=this->processesModules.end(); it++){
         if((*it)->getProcessID()==processIdNum) {
             //two processes with same ID are defined
             throw cRuntimeError("Duplicate process found, no new process created");
