@@ -1644,11 +1644,13 @@ std::string OSPFv3Area::detailedInfo() const
         out << header.getAdvertisingRouter()<<"\t"<<header.getLsaAge()<<"\t0x8000000"<<header.getLsaSequenceNumber()<<"\t0\t\t1\t\tNone"<<"\n";//TODO Link count and Bits
     }
 
-    out << "\nNet Link States (Area " << this->getAreaID().str(false) << ")\n" ;
-    out << "ADV Router\tAge\tSeq#\t\tLink State ID\tRtr count\n";
-    for(auto it=this->networkLSAList.begin(); it!=this->networkLSAList.end(); it++) {
-        OSPFv3LSAHeader& header = (*it)->getHeader();
-        out << header.getAdvertisingRouter()<<"\t"<<header.getLsaAge()<<"\t0x8000000"<<header.getLsaSequenceNumber()<<"\t"<<header.getLinkStateID().str(false)<<"\t\t" << (*it)->getAttachedRouterArraySize()+1 << "\n";
+    if(this->networkLSAList.size()>0) {
+        out << "\nNet Link States (Area " << this->getAreaID().str(false) << ")\n" ;
+        out << "ADV Router\tAge\tSeq#\t\tLink State ID\tRtr count\n";
+        for(auto it=this->networkLSAList.begin(); it!=this->networkLSAList.end(); it++) {
+            OSPFv3LSAHeader& header = (*it)->getHeader();
+            out << header.getAdvertisingRouter()<<"\t"<<header.getLsaAge()<<"\t0x8000000"<<header.getLsaSequenceNumber()<<"\t"<<header.getLinkStateID().str(false)<<"\t\t" << (*it)->getAttachedRouterArraySize()+1 << "\n";
+        }
     }
 
     out << "\nInter Area Prefix Link States (Area " << this->getAreaID().str(false) << ")\n" ;

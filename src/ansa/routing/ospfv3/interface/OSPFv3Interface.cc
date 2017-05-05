@@ -65,6 +65,7 @@ void OSPFv3Interface::processEvent(OSPFv3Interface::OSPFv3InterfaceEvent event)
 OSPFv3HelloPacket* OSPFv3Interface::prepareHello()
 {
     OSPFv3Options options;
+    int length;
     OSPFv3HelloPacket* helloPacket = new OSPFv3HelloPacket();
     std::vector<IPv4Address> neighbors;
 
@@ -75,25 +76,39 @@ OSPFv3HelloPacket* OSPFv3Interface::prepareHello()
     helloPacket->setRouterID(this->getArea()->getInstance()->getProcess()->getRouterID());
     helloPacket->setAreaID(this->containingArea->getAreaID());
     helloPacket->setInstanceID(this->getArea()->getInstance()->getInstanceID());
-
+    length = 16;
 
     //Hello content
     helloPacket->setInterfaceID(this->interfaceIndex);//TODO - check
     helloPacket->setRouterPriority(this->getRouterPriority());
     memset(&options, 0, sizeof(OSPFv3Options));
+
+    options.rBit = true;
+    options.v6Bit = true;
+    if(this->getArea()->getExternalRoutingCapability())
+        options.eBit = true;
+
+    if(this->getArea()->getAreaType() == NSSA)
+        options.nBit = true;
+
     helloPacket->setOptions(options);
+    length+=8;
     //TODO - set options
     helloPacket->setHelloInterval(this->getHelloInterval());
     helloPacket->setDeadInterval(this->getDeadInterval());
     //TODO - set the DR correctly
-    helloPacket->setDesignatedRouterID(this->DesignatedRouterID);
+    helloPacket->setDesignatedRouterID(this->getDesignatedID());
     helloPacket->setBackupDesignatedRouterID(this->BackupRouterID);
     //TODO - set the neighbor id correctly
 
+    length += 12;
+
     int neighborCount = this->getNeighborCount();
     for(int i=0; i<neighborCount; i++){
-        if(this->getNeighbor(i)->getState() >= OSPFv3Neighbor::INIT_STATE)
+        if(this->getNeighbor(i)->getState() >= OSPFv3Neighbor::INIT_STATE) {
             neighbors.push_back(this->getNeighbor(i)->getNeighborID());
+            length+=4;
+        }
     }
 
     unsigned int initedNeighborCount = neighbors.size();
@@ -102,6 +117,7 @@ OSPFv3HelloPacket* OSPFv3Interface::prepareHello()
         helloPacket->setNeighborID(k, neighbors.at(k));
     }
 
+    helloPacket->setPacketLength(length);
     return helloPacket;
 }
 
@@ -278,6 +294,8 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
                         neighbor->setupDesignatedRouters(true);
                     }
                 }
+
+                neighbor->setLastHelloTime((int)simTime().dbl());
             }
             else {
                 IPv4Address dRouterID;

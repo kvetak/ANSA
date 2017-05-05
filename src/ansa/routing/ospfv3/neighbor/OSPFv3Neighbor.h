@@ -129,6 +129,9 @@ class OSPFv3Neighbor{
     bool isOnTransmittedLSAList(LSAKeyType lsaKey) const;
     void removeFromRetransmissionList(LSAKeyType lsaKey);
 
+    void setLastHelloTime(int time){this->last_hello_received=time;}
+    int getLastHelloTime(){return this->last_hello_received;}
+
 
   private:
     OSPFv3NeighborState* state=nullptr;
@@ -165,6 +168,7 @@ class OSPFv3Neighbor{
     OSPFv3Interface* containingInterface;
     static unsigned long ddSequenceNumberInitSeed;
 
+    int last_hello_received = 0;
 
 
 };

@@ -38,6 +38,11 @@ void OSPFv3NeighborStateDown::processEvent(OSPFv3Neighbor *neighbor, OSPFv3Neigh
     if (event == OSPFv3Neighbor::HELLO_RECEIVED) {
         neighbor->getInterface()->getArea()->getInstance()->getProcess()->clearTimer(neighbor->getPollTimer());
         neighbor->getInterface()->getArea()->getInstance()->getProcess()->setTimer(neighbor->getInactivityTimer(), neighbor->getNeighborDeadInterval());
+        //I should contact the neighbor immediately
+
+        EV_DEBUG << "HELLO_RECEIVED, number of neighbors: " << neighbor->getInterface()->getNeighborCount() << endl;
+        OSPFv3HelloPacket* hello = neighbor->getInterface()->prepareHello();
+        neighbor->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(hello, neighbor->getNeighborIP(),neighbor->getInterface()->getIntName().c_str(), 1);
         changeState(neighbor, new OSPFv3NeighborStateInit, this);
     }
     if (event == OSPFv3Neighbor::POLL_TIMER) {
