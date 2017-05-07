@@ -37,7 +37,9 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
             interface->setTransitNetInt(true);//this interface is in broadcast network
         }
 
-        interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
+        if(interface->getArea()->getInstance()->getAreaCount()==1)
+            interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
+
         shouldRebuildRoutingTable = true;
 
         //OSPFv3RouterLSA *routerLSA = intf->getArea()->getRouterLSA(intf->getArea()->getRouter()->getRouterID());

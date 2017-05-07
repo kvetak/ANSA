@@ -93,6 +93,9 @@ class INET_API OSPFv3Area : public cObject
     uint32_t getCurrentInterAreaPrefixSequence(){return this->interAreaPrefixLSASequenceNumber;}
     void incrementInterAreaPrefixSequence(){this->interAreaPrefixLSASequenceNumber++;}
 
+    void originateDefaultInterAreaPrefixLSA(OSPFv3Area* toArea);
+    void originateInterAreaPrefixLSA(OSPFv3LSA* prefLsa, OSPFv3Area* fromArea);
+
     //* INTRA AREA PREFIX LSA */
     void addIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* newLSA){this->intraAreaPrefixLSAList.push_back(newLSA);}
     OSPFv3IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this originates one router LSA for one area

@@ -307,6 +307,12 @@ void OSPFv3Neighbor::createDatabaseSummary()
         this->databaseSummaryList.push_back(lsaHeader);
     }
 
+    int interAreaPrefixCount = area->getInterAreaPrefixLSACount();
+    for(int i=0; i<interAreaPrefixCount; i++) {
+        OSPFv3LSAHeader* lsaHeader = new OSPFv3LSAHeader(area->getInterAreaPrefixLSA(i)->getHeader());
+        this->databaseSummaryList.push_back(lsaHeader);
+    }
+
     int linkLsaCount = this->getInterface()->getLinkLSACount();
     for(int i=0; i<linkLsaCount; i++) {
         OSPFv3LSAHeader* lsaHeader = new OSPFv3LSAHeader(this->getInterface()->getLinkLSA(i)->getHeader());
@@ -517,6 +523,10 @@ void OSPFv3Neighbor::addToRetransmissionList(OSPFv3LSA *lsa)
 
         case NETWORK_LSA:
             lsaCopy = new OSPFv3NetworkLSA(*(check_and_cast<OSPFv3NetworkLSA *>(lsa)));
+            break;
+
+        case INTER_AREA_PREFIX_LSA:
+            lsaCopy = new OSPFv3InterAreaPrefixLSA(*(check_and_cast<OSPFv3InterAreaPrefixLSA* >(lsa)));
             break;
 
 //        case SUMMARYLSA_NETWORKS_TYPE:

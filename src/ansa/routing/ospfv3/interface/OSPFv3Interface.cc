@@ -118,6 +118,7 @@ OSPFv3HelloPacket* OSPFv3Interface::prepareHello()
     }
 
     helloPacket->setPacketLength(length);
+    helloPacket->setByteLength(length);
     return helloPacket;
 }
 
@@ -811,7 +812,16 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
         }
 
         case INTER_AREA_PREFIX_LSA:
+        {
+            int pos = updatePacket->getInterAreaPrefixLSAsArraySize();
+            OSPFv3InterAreaPrefixLSA* prefixLSA = dynamic_cast<OSPFv3InterAreaPrefixLSA*>(lsa);
+            updatePacket->setInterAreaPrefixLSAsArraySize(pos+1);
+            updatePacket->setInterAreaPrefixLSAs(pos, *prefixLSA);
+            updatePacket->setLsaCount(count+1);
+            packetLength += calculateLSASize(lsa);
+            updatePacket->setPacketLength(packetLength);
             break;
+        }
 
         case INTER_AREA_ROUTER_LSA:
             break;
@@ -879,6 +889,9 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                 break;
 
             case INTER_AREA_PREFIX_LSA:
+                lsaCount = lsUpdatePacket->getInterAreaPrefixLSAsArraySize();
+                EV_DEBUG << "Parsing InterAreaPrefixLSAs, lsaCount = " << lsaCount << endl;
+                break;
             case INTER_AREA_ROUTER_LSA:
                 currentType++;
                 continue;
@@ -922,7 +935,11 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     currentLSA = (&(lsUpdatePacket->getNetworkLSAs(i)));
                     break;
 
-                case INTER_AREA_PREFIX_LSA://TODO - check this whether they are the same and what to do with them
+                case INTER_AREA_PREFIX_LSA:
+                    EV_DEBUG << "Caught INTER_AREA_PREFIX_LSA in Update\n";
+                    currentLSA = (&(lsUpdatePacket->getInterAreaPrefixLSAs(i)));
+                    break;//TODO - check this whether they are the same and what to do with them
+
                 case INTER_AREA_ROUTER_LSA:
 
                     //                    currentLSA = (&(lsUpdatePacket->getSummaryLSAs(i)));
@@ -1038,8 +1055,11 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     EV_DEBUG << "Installing the LSA\n";
                     if(currentType == LINK_LSA)
                         rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID(), this);
-                    else if(currentType == ROUTER_LSA || currentType == NETWORK_LSA || currentType == INTRA_AREA_PREFIX_LSA)
+                    else if(currentType == ROUTER_LSA || currentType == NETWORK_LSA || currentType == INTER_AREA_PREFIX_LSA || currentType == INTRA_AREA_PREFIX_LSA)
                         rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
+
+                    if(currentType == INTER_AREA_PREFIX_LSA)
+                        this->getArea()->originateInterAreaPrefixLSA(currentLSA, this->getArea());
 
                     EV_INFO << "    (update installed)\n";
 

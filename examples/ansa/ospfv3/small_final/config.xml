@@ -23,7 +23,7 @@
 				<Process id="1">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:110/64</IPv6Address>
@@ -57,7 +57,6 @@
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.2</Area>
-						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:210/64</IPv6Address>
@@ -91,21 +90,10 @@
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.3</Area>
-						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:310/64</IPv6Address>
 				<IPv6Address>2001:db8:3::1/64</IPv6Address>
-			</Interface>
-			<Interface name="ppp0">
-				<Process id="1">
-					<Instance AF="IPv6">
-						<InterfaceType>Point-to-point</InterfaceType>
-						<Area>0.0.0.34</Area>
-					</Instance>
-				</Process>
-				<IPv6Address>fe80::a8bb:ccff:fe00:340/64</IPv6Address>
-				<IPv6Address>2001:db8:34::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -135,21 +123,10 @@
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area>0.0.0.4</Area>
-						<PassiveInterface>True</PassiveInterface>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:410/64</IPv6Address>
 				<IPv6Address>2001:db8:4::1/64</IPv6Address>
-			</Interface>
-			<Interface name="ppp0">
-				<Process id="1">
-					<Instance AF="IPv6">
-						<InterfaceType>Point-to-point</InterfaceType>
-						<Area>0.0.0.34</Area>
-					</Instance>
-				</Process>
-				<IPv6Address>fe80::a8bb:ccff:fe00:430/64</IPv6Address>
-				<IPv6Address>2001:db8:34::2/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -168,22 +145,11 @@
 				<Process id="1">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:500/64</IPv6Address>
 				<IPv6Address>2001:db8:1::5/64</IPv6Address>
-			</Interface>
-			<Interface name="eth1">
-				<Process id="1">
-					<Instance AF="IPv6">
-						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.5</Area>
-						<PassiveInterface>True</PassiveInterface>
-					</Instance>
-				</Process>
-				<IPv6Address>fe80::a8bb:ccff:fe00:510/64</IPv6Address>
-				<IPv6Address>2001:db8:5::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>
@@ -202,22 +168,11 @@
 				<Process id="1">
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.1</Area>
+						<Area type="stub">0.0.0.1</Area>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:600/64</IPv6Address>
 				<IPv6Address>2001:db8:1::6/64</IPv6Address>
-			</Interface>
-			<Interface name="eth1">
-				<Process id="1">
-					<Instance AF="IPv6">
-						<InterfaceType>Broadcast</InterfaceType>
-						<Area>0.0.0.6</Area>
-						<PassiveInterface>True</PassiveInterface>
-					</Instance>
-				</Process>
-				<IPv6Address>fe80::a8bb:ccff:fe00:610/64</IPv6Address>
-				<IPv6Address>2001:db8:6::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>

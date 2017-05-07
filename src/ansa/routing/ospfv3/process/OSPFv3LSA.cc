@@ -154,6 +154,13 @@ unsigned int calculateLSASize(OSPFv3LSA *lsa)
 
             break;
         }
+        case INTER_AREA_PREFIX_LSA:
+        {
+            OSPFv3InterAreaPrefixLSA* prefixLSA = dynamic_cast<OSPFv3InterAreaPrefixLSA* >(lsa);
+            lsaLength = OSPFV3_LSA_HEADER_LENGTH + OSPFV3_INTER_AREA_PREFIX_LSA_HEADER_LENGTH + OSPFV3_INTER_AREA_PREFIX_LSA_BODY_LENGTH;
+
+            break;
+        }
         case LINK_LSA:
         {
             OSPFv3LinkLSA* linkLSA = dynamic_cast<OSPFv3LinkLSA* >(lsa);

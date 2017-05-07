@@ -22,6 +22,15 @@ network small_final
     submodules:
         configurator: IPv4NetworkConfigurator {
             parameters:
+                //                            "<interface among='R1 R2 R3 R4' address='192.168.1.x' netmask='255.255.255.0' />"+
+                //							"<interface among='R1 R5 R6' address='192.168.10.x' netmask='255.255.255.0' />"+
+                //							"<interface hosts='R2' names='eth1' address='192.168.20.1' netmask='255.255.255.0' mtu='1500' metric='1'/>" +
+                //							"<interface hosts='Area2' names='eth0' address='192.168.20.2' netmask='255.255.255.0' mtu='1500' metric='1'/>" +
+                ////							"<interface among='R2 Area2' address='192.168.20.x' netmask='255.255.255.0' />"+
+                //							"<interface among='R3 Area3' address='192.168.30.x' netmask='255.255.255.0' />"+
+                //							"<interface among='R4 Area4' address='192.168.40.x' netmask='255.255.255.0' />"+
+                //							"<interface among='R5 Area5' address='192.168.50.x' netmask='255.255.255.0' />"+
+                //							"<interface among='R6 Area6' address='192.168.60.x' netmask='255.255.255.0' />"+
                 config = xml("<config>"+
 //                            "<interface among='R1 R2 R3 R4' address='192.168.1.x' netmask='255.255.255.0' />"+
 //							"<interface among='R1 R5 R6' address='192.168.10.x' netmask='255.255.255.0' />"+
@@ -38,17 +47,17 @@ network small_final
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
                 addSubnetRoutes = false;
-                optimizeRoutes = false;      
+                optimizeRoutes = false;
                 @display("p=89,31");
         }
-        
-        etherSwitch: EtherSwitch {
+
+        S0: EtherSwitch {
             @display("p=451,181");
         }
-        etherSwitch1: EtherSwitch {
+        S1: EtherSwitch {
             @display("p=214,255");
         }
-        
+
         R1: ANSA_OSPFv3_Router {
             parameters:
                 @display("p=339,256");
@@ -83,7 +92,7 @@ network small_final
             gates:
                 ethg[2];
         }
-        
+
         Area2: ANSA_Host {
             @display("p=689,256");
             gates:
@@ -109,26 +118,26 @@ network small_final
             gates:
                 ethg[1];
         }
-        
-        
+
+
     connections:
-        R1.ethg[0] <--> Channel <--> etherSwitch.ethg++;
-        R1.ethg[1] <--> Channel <--> etherSwitch1.ethg++;
-        
-        R2.ethg[0] <--> Channel <--> etherSwitch.ethg++;
+        R1.ethg[0] <--> Channel <--> S0.ethg++;
+        R1.ethg[1] <--> Channel <--> S1.ethg++;
+
+        R2.ethg[0] <--> Channel <--> S0.ethg++;
         R2.ethg[1] <--> Channel <--> Area2.ethg[0];
-        
-        R3.ethg[0] <--> Channel <--> etherSwitch.ethg++;
+
+        R3.ethg[0] <--> Channel <--> S0.ethg++;
         R3.ethg[1] <--> Channel <--> Area3.ethg[0];
-        
+
         R3.pppg[0] <--> Channel <--> R4.pppg[0];
-        
-        R4.ethg[0] <--> Channel <--> etherSwitch.ethg++;
+
+        R4.ethg[0] <--> Channel <--> S0.ethg++;
         R4.ethg[1] <--> Channel <--> Area4.ethg[0];
-        
-        R5.ethg[0] <--> Channel <--> etherSwitch1.ethg++;
+
+        R5.ethg[0] <--> Channel <--> S1.ethg++;
         R5.ethg[1] <--> Channel <--> Area5.ethg[0];
-        
-        R6.ethg[0] <--> Channel <--> etherSwitch1.ethg++;
+
+        R6.ethg[0] <--> Channel <--> S1.ethg++;
         R6.ethg[1] <--> Channel <--> Area6.ethg[0];
 }
