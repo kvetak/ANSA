@@ -1058,8 +1058,25 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     else if(currentType == ROUTER_LSA || currentType == NETWORK_LSA || currentType == INTER_AREA_PREFIX_LSA || currentType == INTRA_AREA_PREFIX_LSA)
                         rebuildRoutingTable=this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
 
-                    if(currentType == INTER_AREA_PREFIX_LSA)
+                    if(currentType == INTER_AREA_PREFIX_LSA) {
                         this->getArea()->originateInterAreaPrefixLSA(currentLSA, this->getArea());
+                        int areaCnt = this->getArea()->getInstance()->getAreaCount();
+                        for(int i=0; i<areaCnt; i++){
+                            OSPFv3Area* area = this->getArea()->getInstance()->getArea(i);
+                            if(area->getAreaID() == this->getArea()->getAreaID())
+                                continue;
+
+                            OSPFv3LSUpdate* updatePacket = this->prepareLSUHeader();
+                            updatePacket->setAreaID(area->getAreaID());
+                            updatePacket = this->prepareUpdatePacket(currentLSA, updatePacket);
+
+                            int intfCnt = area->getInterfaceCount();
+                            for(int j=0; j<intfCnt; j++) {
+                                OSPFv3Interface* intf = area->getInterface(j);
+                                area->getInstance()->getProcess()->sendPacket(updatePacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, intf->getIntName().c_str(), 1);
+                            }
+                        }
+                    }
 
                     EV_INFO << "    (update installed)\n";
 
@@ -1621,11 +1638,11 @@ std::string OSPFv3Interface::detailedInfo() const
     out << "State " << this->OSPFv3IntStateOutput[this->getState()];
     out << ", Priority " << this->getRouterPriority() << endl;
 
-    out << "Designated Router (ID) " << this->getDesignatedID();
-    out << ", local address " << designatedIP << endl;
+    out << "Designated Router (ID) " << this->getDesignatedID().str(false);
+    out << ", local address " << this->getDesignatedIP() << endl;
 
-    out << "Backup Designated router (ID) " << this->getBackupID();
-    out << ", local address " << backupIP << endl;
+    out << "Backup Designated router (ID) " << this->getBackupID().str(false);
+    out << ", local address " << this->getBackupIP() << endl;
 
     out << "Timer intervals configured, Hello " << this->getHelloInterval();
     out << ", Dead " << this->getDeadInterval();

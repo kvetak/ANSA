@@ -382,5 +382,21 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
             }
         }
     }
+
+    if(intf->getDesignatedID() != intf->getArea()->getInstance()->getProcess()->getRouterID()) {
+        OSPFv3Neighbor* designated = intf->getNeighborById(intf->getDesignatedID());
+        if(designated != nullptr)
+            intf->setDesignatedIP(designated->getNeighborIP());
+    }
+    else
+        intf->setDesignatedIP(intf->getInterfaceIP());
+
+    if(intf->getBackupID() != intf->getArea()->getInstance()->getProcess()->getRouterID()) {
+        OSPFv3Neighbor* backup = intf->getNeighborById(intf->getBackupID());
+        if(backup != nullptr)
+            intf->setBackupIP(backup->getNeighborIP());
+    }
+    else
+        intf->setBackupIP(intf->getInterfaceIP());
 }
 }//namespace inet
