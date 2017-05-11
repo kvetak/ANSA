@@ -30,6 +30,7 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
 
 //        EV_DEBUG << "Changing state -> new Router LSA\n";
         interface->getArea()->setSpfTreeRoot(interface->getArea()->originateRouterLSA());
+        interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
 
         if(nextState == OSPFv3Interface::INTERFACE_STATE_BACKUP ||
            nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED ||
@@ -37,8 +38,8 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
             interface->setTransitNetInt(true);//this interface is in broadcast network
         }
 
-        if(interface->getArea()->getInstance()->getAreaCount()==1)
-            interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
+//        if(interface->getArea()->getInstance()->getAreaCount()==1)
+//            interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
 
         shouldRebuildRoutingTable = true;
 

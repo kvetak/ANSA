@@ -202,7 +202,7 @@ class INET_API OSPFv3Interface : public cObject
     short retransmissionInterval;
     short ackDelay;
     int routerPriority;
-    int interfaceCost;
+
     int mtu;
     OSPFv3Area* containingArea;
     IPv4Address transitAreaID;
@@ -222,6 +222,7 @@ class INET_API OSPFv3Interface : public cObject
     IPv4Address DesignatedRouterID;
     IPv4Address BackupRouterID;
     int DesignatedIntID;
+    int interfaceCost;
 
     cMessage *helloTimer;
     cMessage *waitTimer;

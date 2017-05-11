@@ -224,11 +224,8 @@ void OSPFv3Neighbor::sendDDPacket(bool init)
 
     ddPacket->setDdOptions(ddOptions);
 
-
-
-
     ddPacket->setPacketLength(packetSize);
-
+    ddPacket->setByteLength(packetSize);
     //if(this->lastTransmittedDDPacket != nullptr)
         //delete this->lastTransmittedDDPacket;
 
@@ -301,7 +298,6 @@ void OSPFv3Neighbor::createDatabaseSummary()
     }
 
     int networkLSACount = area->getNetworkLSACount();
-
     for(int i=0; i<networkLSACount; i++) {
         OSPFv3LSAHeader* lsaHeader = new OSPFv3LSAHeader(area->getNetworkLSA(i)->getHeader());
         this->databaseSummaryList.push_back(lsaHeader);

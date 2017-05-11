@@ -24,6 +24,7 @@
 					<Instance AF="IPv6">
 						<InterfaceType>Broadcast</InterfaceType>
 						<Area type="stub">0.0.0.1</Area>
+						<RouterPriority>10</RouterPriority>
 					</Instance>
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:110/64</IPv6Address>

@@ -18,7 +18,8 @@ OSPFv3Interface::OSPFv3Interface(const char* name, cModule* routerModule, OSPFv3
         BackupRouterIP(IPv6Address::UNSPECIFIED_ADDRESS),
         DesignatedRouterID(IPv4Address::UNSPECIFIED_ADDRESS),
         BackupRouterID(IPv4Address::UNSPECIFIED_ADDRESS),
-        DesignatedIntID(-1)
+        DesignatedIntID(-1),
+        interfaceCost(10)
 {
     this->interfaceName=std::string(name);
     this->state = new OSPFv3InterfaceStateDown;
@@ -796,6 +797,7 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
             updatePacket->setLsaCount(count+1);
             packetLength += calculateLSASize(lsa);
             updatePacket->setPacketLength(packetLength);
+            updatePacket->setByteLength(packetLength);
             //TODO - check max age
             break;
         }
@@ -808,6 +810,7 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
             updatePacket->setLsaCount(count+1);
             packetLength += calculateLSASize(lsa);
             updatePacket->setPacketLength(packetLength);
+            updatePacket->setByteLength(packetLength);
             break;
         }
 
@@ -820,6 +823,7 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
             updatePacket->setLsaCount(count+1);
             packetLength += calculateLSASize(lsa);
             updatePacket->setPacketLength(packetLength);
+            updatePacket->setByteLength(packetLength);
             break;
         }
 
@@ -844,6 +848,7 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
             updatePacket->setLsaCount(count+1);
             packetLength += calculateLSASize(lsa);
             updatePacket->setPacketLength(packetLength);
+            updatePacket->setByteLength(packetLength);
             break;
         }
 
@@ -856,6 +861,7 @@ OSPFv3LSUpdate* OSPFv3Interface::prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpd
             updatePacket->setLsaCount(count+1);
             packetLength += calculateLSASize(lsa);
             updatePacket->setPacketLength(packetLength);
+            updatePacket->setByteLength(packetLength);
             break;
         }
     }
@@ -1429,7 +1435,7 @@ OSPFv3LinkLSA* OSPFv3Interface::originateLinkLSA()
     OSPFv3LSAHeader& lsaHeader = linkLSA->getHeader();
 
     //First the LSA Header
-    lsaHeader.setLsaAge(0);
+    lsaHeader.setLsaAge((int)simTime().dbl());
     lsaHeader.setLsaType(LINK_LSA);
     lsaHeader.setLinkStateID(IPv4Address(this->getInterfaceIndex()));
     lsaHeader.setAdvertisingRouter(this->getArea()->getInstance()->getProcess()->getRouterID());
@@ -1657,8 +1663,10 @@ std::string OSPFv3Interface::detailedInfo() const
     for(auto it=this->neighbors.begin(); it!=this->neighbors.end(); it++) {
         if((*it)->getNeighborID() == this->DesignatedRouterID)
             out << "Adjacent with neighbor "<< this->DesignatedRouterID << "(Designated Router)\n";
-        if((*it)->getNeighborID() == this->BackupRouterID)
+        else if((*it)->getNeighborID() == this->BackupRouterID)
             out << "Adjacent with neighbor "<< this->BackupRouterID << "(Backup Designated Router)\n";
+        else if((*it)->getState() == OSPFv3Neighbor::FULL_STATE)
+            out << "Adjacent with neighbor " << (*it)->getNeighborID() << endl;
     }
 
     out << "Suppress Hello for 0 neighbor(s)\n";
