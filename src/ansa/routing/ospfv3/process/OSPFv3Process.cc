@@ -449,6 +449,8 @@ void OSPFv3Process::sendPacket(OSPFv3Packet *packet, IPv6Address destination, co
     ipv6ControlInfo->setDestinationAddress(destination);
     ipv6ControlInfo->setInterfaceId(ie->getInterfaceId());
 
+    packet->setByteLength(packet->getByteLength()+54);//This is for the IPv6 Header and Ethernet Header
+
     packet->setControlInfo(ipv6ControlInfo);
     this->send(packet, "splitterOut");
 }//sendPacket

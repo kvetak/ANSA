@@ -880,6 +880,8 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
         OSPFv3Area *area = this->getArea();
         unsigned int currentLSAIndex = 0;
 
+
+
         //First I get count from one array
         while (currentType >= ROUTER_LSA && currentType <= INTRA_AREA_PREFIX_LSA){//AS_EXTERNAL_LSA) {TODO
             unsigned int lsaCount = 0;
