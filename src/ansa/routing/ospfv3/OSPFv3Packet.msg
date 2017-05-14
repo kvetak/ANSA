@@ -329,5 +329,6 @@ packet OSPFv3LSUpdate extends OSPFv3Packet{
 
 //Link State Acknowledgement packet
 packet OSPFv3LSAck extends OSPFv3Packet{
+    uint32_t lsas;
     OSPFv3LSAHeader lsaHeaders[];
 }

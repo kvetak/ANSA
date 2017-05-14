@@ -7,6 +7,7 @@ import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
 import inet.common.misc.ThruputMeteringChannel;
 import inet.node.ethernet.EtherSwitch;
+import inet.common.scenario.ScenarioManager;
 
 
 network small_final
@@ -117,6 +118,9 @@ network small_final
             @display("p=120,123");
             gates:
                 ethg[1];
+        }
+        scenarioManager: ScenarioManager {
+            @display("p=450,357");
         }
 
 

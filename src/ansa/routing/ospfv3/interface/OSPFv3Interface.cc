@@ -880,8 +880,6 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
         OSPFv3Area *area = this->getArea();
         unsigned int currentLSAIndex = 0;
 
-
-
         //First I get count from one array
         while (currentType >= ROUTER_LSA && currentType <= INTRA_AREA_PREFIX_LSA){//AS_EXTERNAL_LSA) {TODO
             unsigned int lsaCount = 0;
@@ -1088,7 +1086,8 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
 
                     EV_INFO << "    (update installed)\n";
 
-                    this->acknowledgeLSA(&(currentLSA->getHeader()), ackFlags, lsUpdatePacket->getRouterID());
+                    this->addDelayedAcknowledgement(currentLSA->getHeader());
+//                    this->acknowledgeLSA(&(currentLSA->getHeader()), ackFlags, lsUpdatePacket->getRouterID());
                     if ((currentLSA->getHeader().getAdvertisingRouter() == this->getArea()->getInstance()->getProcess()->getRouterID()) ||
                             ((lsaType == NETWORK_LSA)))// &&//TODO
                         //(router->isLocalAddress(currentLSA->getHeader().getLinkStateID()))))
@@ -1152,15 +1151,17 @@ void OSPFv3Interface::acknowledgeLSA(OSPFv3LSAHeader* lsaHeader,
         AcknowledgementFlags acknowledgementFlags,
         IPv4Address lsaSource)
 {
+    EV_DEBUG << "AcknowledgeLSA\n";
     bool sendDirectAcknowledgment = false;
 
     if (!acknowledgementFlags.floodedBackOut) {
+        EV_DEBUG << "\tFloodedBackOut is false\n";
         if (this->getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) {
             if ((acknowledgementFlags.lsaIsNewer && (lsaSource == this->getDesignatedID())) ||
                 (acknowledgementFlags.lsaIsDuplicate && acknowledgementFlags.impliedAcknowledgement))
             {
                 EV_DEBUG << "Adding delayed acknowledgement\n";
-                //this->addDelayedAcknowledgement(lsaHeader);
+                this->addDelayedAcknowledgement(*lsaHeader);
             }
             else {
                 if ((acknowledgementFlags.lsaIsDuplicate && !acknowledgementFlags.impliedAcknowledgement) ||
@@ -1175,7 +1176,7 @@ void OSPFv3Interface::acknowledgeLSA(OSPFv3LSAHeader* lsaHeader,
         else {
             if (acknowledgementFlags.lsaIsNewer) {
                 EV_DEBUG << "Adding delayed acknowledgement\n";
-//                intf->addDelayedAcknowledgement(lsaHeader);
+                this->addDelayedAcknowledgement(*lsaHeader);
             }
             else {
                 if ((acknowledgementFlags.lsaIsDuplicate && !acknowledgementFlags.impliedAcknowledgement) ||
@@ -1249,12 +1250,83 @@ void OSPFv3Interface::sendLSAcknowledgement(OSPFv3LSAHeader *lsaHeader, IPv6Addr
 
 void OSPFv3Interface::addDelayedAcknowledgement(OSPFv3LSAHeader& lsaHeader)
 {
+    if (interfaceType == OSPFv3Interface::BROADCAST_TYPE) {
+        if ((getState() == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
+                (getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) ||
+                (this->DesignatedRouterID == IPv4Address::UNSPECIFIED_ADDRESS))
+        {
+            delayedAcknowledgements[IPv6Address::ALL_OSPF_ROUTERS_MCAST].push_back(lsaHeader);
+        }
+        else {
+            delayedAcknowledgements[IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST].push_back(lsaHeader);
+        }
+    }
+    else {
+        long neighborCount = this->neighbors.size();
+        for (long i = 0; i < neighborCount; i++) {
+            if (this->neighbors.at(i)->getState() >= OSPFv3Neighbor::EXCHANGE_STATE) {
+                delayedAcknowledgements[this->neighbors.at(i)->getNeighborIP()].push_back(lsaHeader);
+            }
+        }
+    }
 
+    if(!this->acknowledgementTimer->isScheduled())
+        this->getArea()->getInstance()->getProcess()->setTimer(this->acknowledgementTimer, 1);
 }//addDelayedAcknowledgement
 
 void OSPFv3Interface::sendDelayedAcknowledgements()
 {
+    for (auto & elem : delayedAcknowledgements)
+    {
+        int ackCount = elem.second.size();
+        if (ackCount > 0) {
+            while (!(elem.second.empty())) {
+                OSPFv3LSAck *ackPacket = new OSPFv3LSAck();
+                long packetSize = OSPFV3_HEADER_LENGTH;
 
+                ackPacket->setType(LS_ACK);
+                ackPacket->setRouterID(this->getArea()->getInstance()->getProcess()->getRouterID());
+                ackPacket->setAreaID(this->getArea()->getAreaID());
+                ackPacket->setChecksum(0);
+                ackPacket->setInstanceID(this->getArea()->getInstance()->getInstanceID());
+                ackPacket->setLsas(ackCount);
+
+                while (!elem.second.empty()) {
+                    unsigned long headerCount = ackPacket->getLsaHeadersArraySize();
+                    ackPacket->setLsaHeadersArraySize(headerCount + 1);
+                    ackPacket->setLsaHeaders(headerCount, *(elem.second.begin()));
+                    elem.second.pop_front();
+                    packetSize += OSPFV3_LSA_HEADER_LENGTH;
+                }
+
+                ackPacket->setByteLength(packetSize);
+                ackPacket->setPacketLength(packetSize);
+
+                int ttl = (interfaceType == OSPFv3Interface::VIRTUAL_TYPE) ? VIRTUAL_LINK_TTL : 1;
+
+                if (interfaceType == OSPFv3Interface::BROADCAST_TYPE) {
+                    if ((getState() == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
+                            (getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) ||
+                            (this->DesignatedRouterID == IPv4Address::UNSPECIFIED_ADDRESS))
+                    {
+                        this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getIntName().c_str(), ttl);
+                    }
+                    else {
+                        this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, this->getIntName().c_str(), ttl);
+                    }
+                }
+                else {
+                    if (interfaceType == OSPFv3Interface::POINTTOPOINT_TYPE) {
+                        this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getIntName().c_str(), ttl);
+                    }
+                    else {
+                        this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, elem.first, this->getIntName().c_str(), ttl);
+                    }
+                }
+            }
+        }
+    }
+    this->getArea()->getInstance()->getProcess()->clearTimer(this->acknowledgementTimer);
 }//sendDelayedAcknowledgements
 
 
