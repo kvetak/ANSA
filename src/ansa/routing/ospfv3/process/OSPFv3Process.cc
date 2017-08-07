@@ -324,7 +324,18 @@ void OSPFv3Process::handleTimer(cMessage* msg)
             }
             else {
 //                printEvent("Inactivity Timer expired", neighbor->getInterface(), neighbor);
-                neighbor->processEvent(OSPFv3Neighbor::INACTIVITY_TIMER);
+//                neighbor->processEvent(OSPFv3Neighbor::INACTIVITY_TIMER);
+                OSPFv3Interface* intf = neighbor->getInterface();
+                int neighborCnt = intf->getNeighborCount();
+                for(int i=0; i<neighborCnt; i++){
+                    OSPFv3Neighbor* currNei = intf->getNeighbor(i);
+                    if(currNei->getNeighborID() == neighbor->getNeighborID()){
+                        intf->removeNeighborByID(neighbor->getNeighborID());
+                        break;
+                    }
+                }
+
+                intf->processEvent(OSPFv3Interface::NEIGHBOR_CHANGE_EVENT);
             }
         }
         break;

@@ -85,6 +85,8 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
         ipv6int->assignAddress(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, false, 0, 0);
 
         shouldRebuildRoutingTable = true;
+        interface->getArea()->floodLSA(newLSA, interface);
+        interface->getArea()->floodLSA(prefLSA, interface);
                 //InterfaceEntry* ie = ift->getInterfaceByName(intName);
 //        NetworkLSA *newLSA = interface->getArea()->originateNetworkLSA(intf);
 //        if (newLSA != nullptr) {

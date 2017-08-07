@@ -1494,6 +1494,23 @@ OSPFv3Neighbor* OSPFv3Interface::getNeighborById(IPv4Address neighborId)
     return neighborIt->second;
 }//getNeighborById
 
+void OSPFv3Interface::removeNeighborByID(IPv4Address neighborId)
+{
+    std::map<IPv4Address, OSPFv3Neighbor*>::iterator neighborIt = this->neighborsById.find(neighborId);
+    if(neighborIt != this->neighborsById.end()) {
+        this->neighborsById.erase(neighborIt);
+    }
+
+    int neighborCnt = this->getNeighborCount();
+    for(int i=0; i<neighborCnt; i++){
+        OSPFv3Neighbor* current = this->getNeighbor(i);
+        if(current->getNeighborID() == neighborId) {
+            this->neighbors.erase(this->neighbors.begin()+i);
+            break;
+        }
+    }
+}//getNeighborById
+
 void OSPFv3Interface::addNeighbor(OSPFv3Neighbor* newNeighbor)
 {
     OSPFv3Neighbor* check = this->getNeighborById(newNeighbor->getNeighborID());

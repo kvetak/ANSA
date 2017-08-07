@@ -135,6 +135,7 @@ class INET_API OSPFv3Interface : public cObject
     IPv4Address getDesignatedID() const {return this->DesignatedRouterID;}
     IPv4Address getBackupID() const {return this->BackupRouterID;}
     int getDesignatedIntID() const {return this->DesignatedIntID;}
+    void removeNeighborByID(IPv4Address neighborID);
 
     int calculateInterfaceCost();
     cMessage* getWaitTimer(){return this->waitTimer;}

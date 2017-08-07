@@ -238,6 +238,8 @@ std::string OSPFv3Instance::detailedInfo() const
                 }
 
                 int dead = intf->getDeadInterval() - ((int)simTime().dbl() - neighbor->getLastHelloTime());
+                if(dead < 0)
+                    dead = 0;
                 out << dead << "\t\t";//"00:00:40\t\t";
                 out << neighbor->getNeighborInterfaceID() << "\t\t";
                 out << intf->getIntName() << "\n";

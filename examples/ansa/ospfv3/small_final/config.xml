@@ -96,6 +96,16 @@
 				<IPv6Address>fe80::a8bb:ccff:fe00:310/64</IPv6Address>
 				<IPv6Address>2001:db8:3::1/64</IPv6Address>
 			</Interface>
+			<Interface name="ppp0">
+				<Process id="1">
+					<Instance AF="IPv6">
+						<InterfaceType>PointToPoint</InterfaceType>
+						<Area>0.0.0.34</Area>
+					</Instance>
+				</Process>
+				<IPv6Address>fe80::a8bb:ccff:fe00:340/64</IPv6Address>
+				<IPv6Address>2001:db8:34::1/64</IPv6Address>
+			</Interface>
 		</Interfaces>
 	</Router>
 	
@@ -128,6 +138,16 @@
 				</Process>
 				<IPv6Address>fe80::a8bb:ccff:fe00:410/64</IPv6Address>
 				<IPv6Address>2001:db8:4::1/64</IPv6Address>
+			</Interface>
+			<Interface name="ppp0">
+				<Process id="1">
+					<Instance AF="IPv6">
+						<InterfaceType>PointToPoint</InterfaceType>
+						<Area>0.0.0.34</Area>
+					</Instance>
+				</Process>
+				<IPv6Address>fe80::a8bb:ccff:fe00:430/64</IPv6Address>
+				<IPv6Address>2001:db8:43::1/64</IPv6Address>
 			</Interface>
 		</Interfaces>
 	</Router>

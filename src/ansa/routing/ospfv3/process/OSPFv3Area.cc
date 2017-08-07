@@ -615,6 +615,20 @@ OSPFv3NetworkLSA* OSPFv3Area::originateNetworkLSA(OSPFv3Interface* interface)
     return networkLsa;
 }//originateNetworkLSA
 
+OSPFv3IntraAreaPrefixLSA* OSPFv3Area::getNetIntraAreaPrefixLSA(L3Address prefix, int prefixLen)
+{
+    int intraPrefCnt = this->getIntraAreaPrefixLSACount();
+    for(int i=0; i<intraPrefCnt; i++){
+        OSPFv3IntraAreaPrefixLSA* intraLsa = this->getIntraAreaPrefixLSA(i);
+        if(intraLsa->getReferencedLSType() == NETWORK_LSA){
+            L3Address intraPrefix = intraLsa->getPrefixes(0).addressPrefix;
+            int intraPrefLen = intraLsa->getPrefixes(0).prefixLen;
+            if(prefix.getPrefix(prefixLen) == intraPrefix.getPrefix(intraPrefLen))
+                return intraLsa;
+        }
+    }
+}
+
 bool OSPFv3Area::installNetworkLSA(OSPFv3NetworkLSA *lsa)
 {
     LSAKeyType lsaKey;
@@ -958,8 +972,6 @@ OSPFv3IntraAreaPrefixLSA* OSPFv3Area::originateNetIntraAreaPrefixLSA(OSPFv3Netwo
     newLsa->setReferencedLSType(NETWORK_LSA);
     newLsa->setReferencedLSID(header.getLinkStateID());
     newLsa->setReferencedAdvRtr(header.getAdvertisingRouter());
-
-
 
     InterfaceEntry *ie = this->getInstance()->getProcess()->ift->getInterfaceByName(interface->getIntName().c_str());
     IPv6InterfaceData* ipv6int = ie->ipv6Data();
@@ -1768,7 +1780,7 @@ std::string OSPFv3Area::detailedInfo() const
             OSPFv3LSAHeader& header = (*it)->getHeader();
             bool bitsEmpty = true;
             out << header.getAdvertisingRouter()<<"\t";
-            out << (int)simTime().dbl() - header.getLsaAge() <<"\t0x8000000"<<header.getLsaSequenceNumber()<<"\t0\t\t0\t\t";
+            out << (int)simTime().dbl() - header.getLsaAge() <<"\t0x8000000"<<header.getLsaSequenceNumber()<<"\t0\t\t1\t\t";
             if((*it)->getNtBit()) {
                 out << "Nt ";
                 bitsEmpty = false;

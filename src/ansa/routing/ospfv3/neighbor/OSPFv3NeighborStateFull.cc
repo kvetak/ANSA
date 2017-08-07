@@ -23,7 +23,7 @@ void OSPFv3NeighborStateFull::processEvent(OSPFv3Neighbor *neighbor, OSPFv3Neigh
     if ((event == OSPFv3Neighbor::KILL_NEIGHBOR) || (event == OSPFv3Neighbor::LINK_DOWN)) {
         neighbor->reset();
         neighbor->getInterface()->getArea()->getInstance()->getProcess()->clearTimer(neighbor->getInactivityTimer());
-        changeState(neighbor, new OSPFv3NeighborStateDown, this);
+//        changeState(neighbor, new OSPFv3NeighborStateDown, this);
     }
     if (event == OSPFv3Neighbor::INACTIVITY_TIMER) {
         neighbor->reset();
