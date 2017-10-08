@@ -1066,7 +1066,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
 
                     if(currentType == INTER_AREA_PREFIX_LSA) {
                         this->getArea()->originateInterAreaPrefixLSA(currentLSA, this->getArea());
-                        int areaCnt = this->getArea()->getInstance()->getAreaCount();
+                        /*int areaCnt = this->getArea()->getInstance()->getAreaCount();
                         for(int i=0; i<areaCnt; i++){
                             OSPFv3Area* area = this->getArea()->getInstance()->getArea(i);
                             if(area->getAreaID() == this->getArea()->getAreaID())
@@ -1081,7 +1081,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                                 OSPFv3Interface* intf = area->getInterface(j);
                                 area->getInstance()->getProcess()->sendPacket(updatePacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, intf->getIntName().c_str(), 1);
                             }
-                        }
+                        }*/
                     }
 
                     EV_INFO << "    (update installed)\n";
