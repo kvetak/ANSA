@@ -69,11 +69,6 @@ struct NextHop
     IPv4Address advertisingRouter;
 };
 
-enum VertexType {
-    ROUTER_VERTEX = 0,
-    NETWORK_VERTEX
-};
-
 struct VertexID {
     int interfaceID=-1; //Needed only for Network Vertex
     IPv4Address routerID;

@@ -169,6 +169,7 @@ class INET_API OSPFv3Area : public cObject
     OSPFv3RouterLSA* spfTreeRoot=nullptr;
     //list of summary lsas
     //shortest path tree
+
 };
 
 inline std::ostream& operator<<(std::ostream& ostr, const OSPFv3Area& area)
