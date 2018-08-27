@@ -46,7 +46,7 @@ class TRILLNickname {
     }
 
     TRILLNickname(SystemID sysID){
-      nickname = sysID.toInt() && 0xFFFF;
+      nickname = sysID.toInt() & 0xFFFF;
     }
     TRILLNickname(int nick){
       nickname = nick & 0xFFFF;
