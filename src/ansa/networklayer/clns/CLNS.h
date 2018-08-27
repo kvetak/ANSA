@@ -33,7 +33,7 @@
 #include "inet/common/ProtocolMap.h"
 #include "inet/common/queue/QueueBase.h"
 
-#include "ansa/networklayer/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/CLNSAddress.h"
 //#include "inet/networklayer/common/InterfaceEntry.h"
 
 

@@ -24,7 +24,7 @@
 #include "ansa/networklayer/multi/ANSA_MultiNetworkLayerUpperMultiplexer.h"
 #include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
 #include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
-#include "ansa/networklayer/clns/CLNSControlInfo.h"
+#include "inet/networklayer/contract/clns/CLNSControlInfo.h"
 
 
 namespace inet {

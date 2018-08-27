@@ -31,7 +31,7 @@
 
 #include "inet/common/ModuleAccess.h"
 
-#include "ansa/networklayer/clns/CLNSControlInfo.h"
+#include "inet/networklayer/contract/clns/CLNSControlInfo.h"
 
 //#include "TRILL.h"
 

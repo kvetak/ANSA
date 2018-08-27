@@ -22,7 +22,7 @@
  * @detail Class representing a CLNS Address. It should be probably called NSAPAddress or something similar.
  */
 
-#include "ansa/networklayer/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/CLNSAddress.h"
 #include "ansa/networklayer/isis/ISIStypes.h"
 
 namespace inet{

@@ -26,7 +26,7 @@
 #include "inet/common/ModuleAccess.h"
 #include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
-#include "ansa/networklayer/clns/CLNSControlInfo.h"
+#include "inet/networklayer/contract/clns/CLNSControlInfo.h"
 
 namespace inet {
 

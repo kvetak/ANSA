@@ -25,7 +25,7 @@
 #include "inet/linklayer/common/MACAddress.h"
 #include "inet/networklayer/common/ModuleIdAddress.h"
 #include "inet/networklayer/common/ModulePathAddress.h"
-#include "ansa/networklayer/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/CLNSAddress.h"
 
 namespace inet {
 
@@ -37,7 +37,7 @@ class IL3AddressType;
  * different address implementations should not subclass this class, they should rather provide
  * conversions to and from this class.
  *
- * @see IPv4Address, IPv6Address, MACAddress, ModulePathAddress, ModuleIdAddress, CLNSAddress
+ * @see IPv4Address, IPv6Address, CLNSAddress, MACAddress, ModulePathAddress, ModuleIdAddress
  */
 class INET_API L3Address
 {
@@ -46,10 +46,10 @@ class INET_API L3Address
         NONE,
         IPv4,
         IPv6,
+        CLNS,
         MAC,
         MODULEPATH,
-        MODULEID,
-        CLNS
+        MODULEID
     };
 
   private:

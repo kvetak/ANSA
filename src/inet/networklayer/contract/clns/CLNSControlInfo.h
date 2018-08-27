@@ -18,7 +18,7 @@
 
 
 #include "inet/networklayer/contract/INetworkProtocolControlInfo.h"
-#include "ansa/networklayer/clns/CLNSControInfo_m.h"
+#include "inet/networklayer/contract/clns/CLNSControInfo_m.h"
 
 namespace inet {
 

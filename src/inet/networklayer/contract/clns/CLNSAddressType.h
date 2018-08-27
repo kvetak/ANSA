@@ -27,8 +27,8 @@
 
 #include "inet/common/INETDefs.h"
 #include "inet/networklayer/contract/IL3AddressType.h"
-#include "ansa/networklayer/clns/CLNSAddress.h"
-#include "ansa/networklayer/clns/CLNSControlInfo.h"
+#include "inet/networklayer/contract/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/CLNSControlInfo.h"
 
 namespace inet {
 

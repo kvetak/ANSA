@@ -21,7 +21,7 @@
 #include "inet/linklayer/common/MACAddressType.h"
 #include "inet/networklayer/common/ModuleIdAddressType.h"
 #include "inet/networklayer/common/ModulePathAddressType.h"
-#include "ansa/networklayer/clns/CLNSAddressType.h"
+#include "inet/networklayer/contract/clns/CLNSAddressType.h"
 
 namespace inet {
 

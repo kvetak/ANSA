@@ -28,7 +28,7 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "ansa/networklayer/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/CLNSAddress.h"
 #include "inet/networklayer/contract/IRoute.h"
 
 namespace inet {

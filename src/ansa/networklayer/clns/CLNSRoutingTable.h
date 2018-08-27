@@ -20,7 +20,7 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "ansa/networklayer/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/CLNSAddress.h"
 #include "ansa/networklayer/clns/CLNSRoute.h"
 #include "inet/networklayer/contract/IRoutingTable.h"
 #include "inet/common/lifecycle/ILifecycle.h"

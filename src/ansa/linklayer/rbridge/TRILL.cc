@@ -25,7 +25,7 @@
 
 #include "ansa/networklayer/isis/ISISMain.h"
 #include "ansa/linklayer/rbridge/TRILL.h"
-#include "ansa/networklayer/clns/CLNSControlInfo.h"
+#include "inet/networklayer/contract/clns/CLNSControlInfo.h"
 
 #include "inet/common/ModuleAccess.h"
 
