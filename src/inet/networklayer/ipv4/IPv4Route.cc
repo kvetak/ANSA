@@ -39,7 +39,6 @@ IPv4Route::~IPv4Route()
     delete protocolData;
 }
 
-#ifdef ANSAINET
 const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
     switch (sourceType) {
         case IFACENETMASK:
@@ -66,8 +65,6 @@ const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
             return "???";
     }
 }
-#endif
-
 
 std::string IPv4Route::info() const
 {

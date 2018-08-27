@@ -50,10 +50,7 @@ class INET_API IRoute
         MANET2,    ///< managed by manet, search approximate address
         DYMO,    ///< managed by DYMO routing
         AODV,    ///< managed by AODV routing
-        //XXX: Vesely - Inherit IRoute
-#ifdef ANSAINET
         EIGRP, LISP, BABEL, ODR, UNKNOWN, ISIS
-#endif
     };
 
     /** Field codes for NB_ROUTE_CHANGED notifications */

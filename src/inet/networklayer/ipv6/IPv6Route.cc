@@ -25,7 +25,6 @@ namespace inet {
 
 Register_Abstract_Class(IPv6Route);
 
-#ifdef ANSAINET
 const char* inet::IPv6Route::getSourceTypeAbbreviation() const {
     switch (_sourceType) {
         case IFACENETMASK:
@@ -52,7 +51,6 @@ const char* inet::IPv6Route::getSourceTypeAbbreviation() const {
             return "???";
     }
 }
-#endif
 
 std::string IPv6Route::info() const
 {
@@ -85,7 +83,6 @@ std::string IPv6Route::info() const
         out << " exp:" << getExpiryTime();
 #endif
     return out.str();
-
 }
 
 std::string IPv6Route::detailedInfo() const
