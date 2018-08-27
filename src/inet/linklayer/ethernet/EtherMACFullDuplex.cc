@@ -188,7 +188,6 @@ void EtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
 
 void EtherMACFullDuplex::processMsgFromNetwork(cPacket *pk)
 {
-
     EtherTraffic *msg = check_and_cast<EtherTraffic *>(pk);
 
     EV_INFO << msg << " received." << endl;
