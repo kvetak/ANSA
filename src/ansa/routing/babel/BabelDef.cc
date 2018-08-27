@@ -952,7 +952,7 @@ std::string bstats::str() const
     {
         string << std::setw(10) << tlvT::toStr(i) << ": " << std::setw(8) << tlv[i].getCount();
 
-        if(tlv[i].getClassName() > 0)
+        if(tlv[i].getClassName() != 0)
         {
             string << " (" << tlv[i].getSum() << " B";
             string << ", avg " << tlv[i].getMean() << " B/TLV, min: " << tlv[i].getMin() << ", max: " << tlv[i].getMax() << ")";
