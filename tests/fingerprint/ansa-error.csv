@@ -1,0 +1,46 @@
+# workingdir,                        args,                                          simtimelimit,    fingerprint
+/examples/ansa/Basics/SimpleRelay/,  -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+/examples/ansa/cdp/basicRouter/,     -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+/examples/ansa/cdp/mixedNetwork/,    -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+/examples/ansa/eigrp/basic/,         -f omnetpp.ini -c Scenario1 -r 0,                1000s,         0000-0000/tplx
+/examples/ansa/eigrp/basic/,         -f omnetpp.ini -c Scenario2 -r 0,                1000s,         0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario6/, -f omnetpp.ini -c EIGRP-IPv6_exp1_delay-change -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario6/, -f omnetpp.ini -c EIGRP-IPv6_exp2_interface-down -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario6/, -f omnetpp.ini -c EIGRP-IPv6_exp1_delay-change_global-addr -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario6/, -f omnetpp.ini -c EIGRP-IPv6_exp2_interface-down_global-addr -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario_ds/, -f omnetpp.ini -c EIGRP-IPv6_exp1_delay-change -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario_ds/, -f omnetpp.ini -c EIGRP-IPv6_exp2_interface-down -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario_ds/, -f omnetpp.ini -c EIGRP-IPv6_exp1_delay-change_global-addr -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/eigrp/testing_scenario_ds/, -f omnetpp.ini -c EIGRP-IPv6_exp2_interface-down_global-addr -r 0,   1000s, 0000-0000/tplx
+/examples/ansa/isis/ISIS2/,          -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispHA/,         -f omnetpp.ini -c Pingv4 -r 0,                   1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispIariaFunc/,  -f omnetpp.ini -c Pingv4 -r 0,                   1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c NoSync -r 0,                   1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncNaive -r 0,           1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncSmart -r 0,           1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c NoSync-2outages -r 0,          1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncNaive-2outages -r 0,   1000s,        0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncSmart-2outages -r 0,   1000s,        0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncNaive-wAck -r 0,      1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncSmart-wAck -r 0,      1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncNaive-2outages-wAck -r 0,   1000s,   0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncSmart-2outages-wAck -r 0,   1000s,   0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c NoSync-3outages -r 0,          1000s,         0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncNaive-3outages -r 0,   1000s,        0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncSmart-3outages -r 0,   1000s,        0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncNaive-3outages-wAck -r 0,   1000s,   0000-0000/tplx
+/examples/ansa/lisp/lispSyncTest/,   -f omnetpp.ini -c CacheSyncSmart-3outages-wAck -r 0,   1000s,   0000-0000/tplx
+/examples/ansa/lisp/lisptest/,       -f omnetpp.ini -c Pingv4 -r 0,                   1000s,         0000-0000/tplx
+/examples/ansa/lisp/lisptest/,       -f omnetpp.ini -c Pingv6 -r 0,                   1000s,         0000-0000/tplx
+/examples/ansa/lldp/basicRouter/,    -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+/examples/ansa/lldp/basicSwitch/,    -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+/examples/ansa/lldp/mixedNetwork/,   -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+# /examples/ansa/rBridge/broadcast/a/, -f omnetpp.ini -c a -r 0,                        1000s,         0000-0000/tplx   # a extended
+/examples/ansa/rBridge/broadcast/a/, -f omnetpp.ini -c Ping -r 0,                     1000s,         0000-0000/tplx
+# /examples/ansa/rBridge/broadcast/b/, -f omnetpp.ini -c b -r 0,                        1000s,         0000-0000/tplx   # b extended
+/examples/ansa/rBridge/broadcast/b/, -f omnetpp.ini -c Ping -r 0,                     1000s,         0000-0000/tplx
+# /examples/ansa/rBridge/broadcast/c/, -f omnetpp.ini -c c -r 0,                        1000s,         0000-0000/tplx   # c extended
+/examples/ansa/rBridge/broadcast/c/, -f omnetpp.ini -c Ping -r 0,                     1000s,         0000-0000/tplx
+/examples/ansa/rBridge/broadcast/,   -f omnetpp.ini -c General -r 0,                  1000s,         0000-0000/tplx
+# /examples/ansa/rBridge/multidest/,   -f omnetpp.ini -c MultiDest_base -r 0,           1000s,         0000-0000/tplx   # MultiDest_base extended
+/examples/ansa/rBridge/multidest/,   -f omnetpp.ini -c MultiDest1 -r 0,               1000s,         0000-0000/tplx
