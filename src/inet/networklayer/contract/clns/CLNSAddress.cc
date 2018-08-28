@@ -23,7 +23,6 @@
  */
 
 #include "inet/networklayer/contract/clns/CLNSAddress.h"
-#include "ansa/networklayer/isis/ISIStypes.h"
 
 namespace inet{
 
@@ -68,9 +67,6 @@ CLNSAddress::CLNSAddress(std::string net)
   nsel = 0;
 
   unsigned int dots = 0;
-  unsigned char *area = new unsigned char[ISIS_AREA_ID];
-  unsigned char *systemId = new unsigned char[ISIS_SYSTEM_ID];
-
   size_t found;
 
   //net address (in this module - not according to standard O:-) MUST have the following format:
@@ -90,35 +86,27 @@ CLNSAddress::CLNSAddress(std::string net)
     switch (found) {
       case 2:
         dots++;
-        area[0] = (unsigned char) (atoi(net.substr(0, 2).c_str()));
+        // area[0] = (unsigned char) (atoi(net.substr(0, 2).c_str()));
 //                    cout << "BEZ ATOI" << net.substr(0, 2).c_str() << endl;
         break;
       case 7:
 
-        area[1] = (unsigned char) (atoi(net.substr(3, 2).c_str()));
-        area[2] = (unsigned char) (atoi(net.substr(5, 2).c_str()));
         areaID += strtoul(net.substr(3, 2).c_str(), NULL, 16);
         areaID += strtoul(net.substr(5, 2).c_str(), NULL, 16) << 8;
         dots++;
         break;
       case 12:
         dots++;
-        systemId[0] = (unsigned char) (strtol(net.substr(8, 2).c_str(), NULL, 16));
-        systemId[1] = (unsigned char) (strtol(net.substr(10, 2).c_str(), NULL, 16));
         systemID += strtoul(net.substr(8, 2).c_str(), NULL, 16);
         systemID += strtoul(net.substr(10, 2).c_str(), NULL, 16) << 8;
         break;
       case 17:
         dots++;
-        systemId[2] = (unsigned char) (strtol(net.substr(13, 2).c_str(), NULL, 16));
-        systemId[3] = (unsigned char) (strtol(net.substr(15, 2).c_str(), NULL, 16));
         systemID += strtoul(net.substr(13, 2).c_str(), NULL, 16) << 16;
         systemID += strtoul(net.substr(15, 2).c_str(), NULL, 16) << 24;
         break;
       case 22:
         dots++;
-        systemId[4] = (unsigned char) (strtol(net.substr(18, 2).c_str(), NULL, 16));
-        systemId[5] = (unsigned char) (strtol(net.substr(20, 2).c_str(), NULL, 16));
         systemID += strtoul(net.substr(18, 2).c_str(), NULL, 16) << 32;
         systemID +=strtoul(net.substr(20, 2).c_str(), NULL, 16) << 36;
         break;
