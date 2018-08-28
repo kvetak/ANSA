@@ -524,8 +524,6 @@ L3Address ARP::getL3AddressFor(const MACAddress& macAddr) const
     return IPv4Address::UNSPECIFIED_ADDRESS;
 }
 
-#if defined(ANSAINET)
-
 void ARP::sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode)
 {
     Enter_Method_Silent();
@@ -566,6 +564,6 @@ void ARP::sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Ad
 //    sendPacketToNIC(arp, ie, srcAddr, ETHERTYPE_ARP);
 //    send(arp, nicOutBaseGateId + ie->getNetworkLayerGateIndex());
 }
-#endif
+
 } // namespace inet
 

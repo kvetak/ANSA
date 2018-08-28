@@ -101,9 +101,8 @@ class INET_API ARP : public cSimpleModule, public IARP, public ILifecycle
     virtual MACAddress resolveL3Address(const L3Address& address, const InterfaceEntry *ie) override;
     virtual L3Address getL3AddressFor(const MACAddress& addr) const override;
     /// @}
-#if defined(ANSAINET)
+
     void sendARPGratuitous(const InterfaceEntry *ie, MACAddress srcAddr, IPv4Address ipAddr, int opCode);
-#endif
 
   protected:
     virtual void initialize(int stage) override;
