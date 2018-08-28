@@ -43,11 +43,6 @@
 #include "inet/networklayer/generic/GenericNetworkProtocolInterfaceData.h"
 #endif // ifdef WITH_GENERIC
 
-
-//#ifdef WITH_CLNS
-#include "ansa/networklayer/clns/CLNSInterfaceData.h"
-
-
 namespace inet {
 
 Register_Abstract_Class(InterfaceEntryChangeDetails);
