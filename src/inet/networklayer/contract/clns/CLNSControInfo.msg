@@ -14,7 +14,6 @@
 
 cplusplus {{
 #include "inet/networklayer/contract/clns/CLNSAddress.h"
-//#include "inet/networklayer/common/IPProtocolId_m.h"
 #include "inet/linklayer/common/MACAddress.h"
 }}
 
