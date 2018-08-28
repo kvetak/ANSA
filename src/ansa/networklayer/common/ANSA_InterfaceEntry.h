@@ -47,6 +47,7 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
 
         virtual bool hasMacAddress(const MACAddress& addr) const;
         virtual bool hasIPAddress(const IPv4Address& addr) const;
+        virtual bool hasNetworkAddress(const L3Address& address) const override;
         virtual const MACAddress& getMacVirtualForwarderById(int vforwarderId) const;
         virtual const MACAddress& getMacAddressByIP(const IPv4Address& addr) const;
         virtual int getVirtualForwarderId(const IPv4Address& addr);

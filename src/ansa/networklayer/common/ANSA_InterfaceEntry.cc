@@ -105,6 +105,25 @@ bool ANSA_InterfaceEntry::hasIPAddress(const IPv4Address& addr) const
     return false;
 }
 
+bool ANSA_InterfaceEntry::hasNetworkAddress(const L3Address& address) const
+{
+    if (InterfaceEntry::hasNetworkAddress(address))
+        return true;
+
+    switch(address.getType()) {
+    case L3Address::IPv4:
+        return hasIPAddress(address.toIPv4());
+
+    case L3Address::MAC:
+        return hasMacAddress(address.toMAC());
+
+    default:
+        break;
+    }
+    return false;
+}
+
+
 bool ANSA_InterfaceEntry::hasMacAddress(const MACAddress& addr) const
 {
     if (vforwarder.empty())
