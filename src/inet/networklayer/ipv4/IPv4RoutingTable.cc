@@ -33,9 +33,6 @@
 #include "inet/common/INETUtils.h"
 #include "inet/common/ModuleAccess.h"
 
-#ifdef ANSAINET
-#include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
-#endif
 namespace inet {
 
 using namespace utils;
@@ -245,7 +242,6 @@ void IPv4RoutingTable::deleteInterfaceRoutes(const InterfaceEntry *entry)
 void IPv4RoutingTable::invalidateCache()
 {
     routingCache.clear();
-    localAddresses.clear();
     localBroadcastAddresses.clear();
 }
 
@@ -328,16 +324,8 @@ InterfaceEntry *IPv4RoutingTable::getInterfaceByAddress(const IPv4Address& addr)
         return nullptr;
     for (int i = 0; i < ift->getNumInterfaces(); ++i) {
         InterfaceEntry *ie = ift->getInterface(i);
-        if (ie->ipv4Data()->getIPAddress() == addr)
+        if (ie->hasNetworkAddress(addr))
             return ie;
-#if defined(ANSAINET)
-        if (!ie->isLoopback() && dynamic_cast<ANSA_InterfaceEntry *>(ie))
-        {
-            ANSA_InterfaceEntry* ieVF = dynamic_cast<ANSA_InterfaceEntry *>(ie);
-            if (ieVF->hasIPAddress(addr))
-                return ie;
-        }
-#endif
     }
     return nullptr;
 }
@@ -362,23 +350,11 @@ bool IPv4RoutingTable::isLocalAddress(const IPv4Address& dest) const
 {
     Enter_Method("isLocalAddress(%u.%u.%u.%u)", dest.getDByte(0), dest.getDByte(1), dest.getDByte(2), dest.getDByte(3));    // note: str().c_str() too slow here
 
-    if (localAddresses.empty()) {
-        // collect interface addresses if not yet done
-        for (int i = 0; i < ift->getNumInterfaces(); i++) {
-            IPv4Address interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
-            localAddresses.insert(interfaceAddr);
-        }
-    }
-#if defined(ANSAINET)
-    for (int i=0; i<ift->getNumInterfaces(); i++)
-    {
-        ANSA_InterfaceEntry* ieVF = dynamic_cast<ANSA_InterfaceEntry *>(ift->getInterface(i));
-        if (ieVF && ieVF->hasIPAddress(dest))
+    for (int i = 0; i < ift->getNumInterfaces(); i++) {
+        if (ift->getInterface(i)->hasNetworkAddress(dest))
             return true;
     }
-#endif
-    auto it = localAddresses.find(dest);
-    return it != localAddresses.end();
+    return false;
 }
 
 // JcM add: check if the dest addr is local network broadcast
