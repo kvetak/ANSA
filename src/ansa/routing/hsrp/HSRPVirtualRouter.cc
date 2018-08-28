@@ -72,6 +72,7 @@ void HSRPVirtualRouter::initialize(int stage)
         //get socket ready
         socket = new UDPSocket();
         socket->setOutputGate(gate("udpOut"));
+        socket->setMulticastLoop(false);
 
         //TODO another reactions to different signals (router down and so on..)
         //subscribe to notifications

@@ -40,6 +40,7 @@ void GLBP::initialize(int stage)
         socket = new UDPSocket(); //UDP socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
         socket->setReuseAddress(true);
+        socket->setMulticastLoop(false);
         socket->bind((int) par("glbpUdpPort"));
         this->parseConfig(par(CONFIG_PAR));
         hostname = std::string(containingModule->getName(), strlen(containingModule->getName()));

@@ -44,6 +44,7 @@ void HSRP::initialize(int stage)
         hsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
         socket = new UDPSocket(); //UDP socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
+        socket->setMulticastLoop(false);
         socket->bind(HSRP_UDP_PORT);
         this->parseConfig(par(CONFIG_PAR));
         hostname = std::string(containingModule->getName(), strlen(containingModule->getName()));

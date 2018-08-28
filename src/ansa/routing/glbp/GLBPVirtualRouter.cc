@@ -117,6 +117,7 @@ void GLBPVirtualRouter::initialize(int stage)
         socket = new UDPSocket();
         socket->setOutputGate(gate("udpOut"));
         socket->setReuseAddress(true);
+        socket->setMulticastLoop(false);
         socket->bind(glbpUdpPort);
 
         //needs ARP signal for special ARP responses from AVG

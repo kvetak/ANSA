@@ -1006,6 +1006,7 @@ void BabelMain::activateInterface(BabelInterface *iface)
         {
             iface->setSocket4(createSocket());
         }
+        iface->getSocket4()->setMulticastLoop(false);
         iface->getSocket4()->bind(iface->getInterface()->ipv4Data()->getIPAddress(), port);
 
         //IPv6
@@ -1013,6 +1014,7 @@ void BabelMain::activateInterface(BabelInterface *iface)
         {
             iface->setSocket6(createSocket());
         }
+        iface->getSocket6()->setMulticastLoop(false);
         iface->getSocket6()->bind(iface->getInterface()->ipv6Data()->getLinkLocalAddress(), port);
        break;
     case AF::IPv4:
@@ -1020,6 +1022,7 @@ void BabelMain::activateInterface(BabelInterface *iface)
         {
             iface->setSocket4(createSocket());
         }
+        iface->getSocket4()->setMulticastLoop(false);
         iface->getSocket4()->bind(iface->getInterface()->ipv4Data()->getIPAddress(), port);
        break;
     case AF::IPv6:
@@ -1027,6 +1030,7 @@ void BabelMain::activateInterface(BabelInterface *iface)
         {
             iface->setSocket6(createSocket());
         }
+        iface->getSocket6()->setMulticastLoop(false);
         iface->getSocket6()->bind(iface->getInterface()->ipv6Data()->getLinkLocalAddress(), port);
        break;
     case AF::NONE:
