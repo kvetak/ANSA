@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.glbp.testVgChoose;
+package ansa.examples.ansa.glbp.testVgChoose;
 
 import ansa.node.ANSA_GLBPRouter;
 import ansa.node.ANSA_Host;

@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.lldp.basicSwitch;
+package ansa.examples.ansa.lldp.basicSwitch;
 
 import ansa.node.ANSA_EtherSwitch;
 import inet.node.ethernet.Eth100M;

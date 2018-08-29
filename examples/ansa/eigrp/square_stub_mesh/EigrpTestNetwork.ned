@@ -17,7 +17,7 @@
 // @date 
 // @author 
 
-package inet.examples.ansa.eigrp.square_stub_mesh;
+package ansa.examples.ansa.eigrp.square_stub_mesh;
 
 import ansa.node.ANSA_EIGRPRouter;
 import ansa.node.ANSA_Host;

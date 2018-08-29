@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.vrrpv2.StaticRoutingLoadSharing;
+package ansa.examples.ansa.vrrpv2.StaticRoutingLoadSharing;
 
 import ansa.node.ANSA_Host;
 import ansa.node.ANSA_VRRP_Router;

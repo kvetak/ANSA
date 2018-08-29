@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.lisp.lispIariaFunc;
+package ansa.examples.ansa.lisp.lispIariaFunc;
 
 import ansa.node.ANSA_Host;
 import ansa.node.*;

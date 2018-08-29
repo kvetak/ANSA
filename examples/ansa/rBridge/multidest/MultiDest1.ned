@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-package inet.examples.ansa.rBridge.multidest;
+package ansa.examples.ansa.rBridge.multidest;
 
 import ansa.node.ANSA_RBridge;
 import ansa.node.ANSA_Host;

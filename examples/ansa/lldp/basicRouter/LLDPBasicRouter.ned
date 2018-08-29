@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.lldp.basicRouter;
+package ansa.examples.ansa.lldp.basicRouter;
 
 import ansa.node.ANSA_Host;
 import ansa.node.ANSA_LLDPCDPRouter;

@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.babel.tworouters;
+package ansa.examples.ansa.babel.tworouters;
 
 import ansa.node.ANSA_BabelRouter;
 import ansa.node.ANSA_Host;

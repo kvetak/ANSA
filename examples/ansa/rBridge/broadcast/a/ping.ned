@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.rBridge.broadcast.a;
+package ansa.examples.ansa.rBridge.broadcast.a;
 
 
 import ansa.node.ANSA_Host;

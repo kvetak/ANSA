@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.lldp.mixedNetwork;
+package ansa.examples.ansa.lldp.mixedNetwork;
 
 import ansa.node.ANSA_EtherSwitch;
 import ansa.node.ANSA_LLDPCDPRouter;

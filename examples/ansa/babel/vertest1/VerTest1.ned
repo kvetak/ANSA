@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.babel.vertest1;
+package ansa.examples.ansa.babel.vertest1;
 
 import ansa.node.ANSA_BabelRouter;
 import ansa.node.ANSA_Host;

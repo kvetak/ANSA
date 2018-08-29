@@ -17,7 +17,7 @@
 // @date 
 // @author 
 
-package inet.examples.ansa.eigrp.two_node;
+package ansa.examples.ansa.eigrp.two_node;
 
 import ansa.node.ANSA_EIGRPRouter;
 import ansa.node.ANSA_Host;

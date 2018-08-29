@@ -18,7 +18,7 @@
 // @author xrekvi00@stud.fit.vutbr.cz
 // @brief Network for testing purposes of EIGRP for IPv6-only
 
-package inet.examples.ansa.eigrp.testing_scenario6;
+package ansa.examples.ansa.eigrp.testing_scenario6;
 
 import ansa.node.ANSA_EIGRPRouter;
 import ansa.node.ANSA_Host;

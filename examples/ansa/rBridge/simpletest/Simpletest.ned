@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.rBridge.simpletest;
+package ansa.examples.ansa.rBridge.simpletest;
 
 import ansa.node.ANSA_RBridge;
 //import inet.nodes.ethernet.Eth100M;

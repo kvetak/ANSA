@@ -20,7 +20,7 @@
 
 //testovaci sit pro praci s EIGRP pro IPv6-only
 
-package inet.examples.ansa.eigrp.two_node6;
+package ansa.examples.ansa.eigrp.two_node6;
 
 import ansa.node.ANSA_EIGRPRouter;
 import ansa.node.ANSA_Host;

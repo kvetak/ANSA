@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.babel.square;
+package ansa.examples.ansa.babel.square;
 
 import ansa.node.ANSA_BabelRouter;
 import ansa.node.ANSA_Host;

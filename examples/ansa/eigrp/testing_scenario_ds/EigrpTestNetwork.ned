@@ -18,7 +18,7 @@
 // @author xrekvi00@stud.fit.vutbr.cz
 // @brief Network for testing purposes of EIGRP Dual-stack
 
-package inet.examples.ansa.eigrp.testing_scenario_ds;
+package ansa.examples.ansa.eigrp.testing_scenario_ds;
 
 import ansa.node.ANSA_EIGRPRouter;
 import ansa.node.ANSA_Host;

@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-package inet.examples.ansa.isis.ISIS2;
+package ansa.examples.ansa.isis.ISIS2;
 
 import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;

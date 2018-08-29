@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package inet.examples.ansa.hsrp.testActiveUp;
+package ansa.examples.ansa.hsrp.testActiveUp;
 
 import ansa.node.ANSA_HSRPRouter;
 import ansa.node.ANSA_Host;
