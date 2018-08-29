@@ -45,7 +45,7 @@ MACAddress AnsaARP::getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp)
             if (GLBPVf->isAVG()){
                 emit(recvReqSignal,true);
                 myMACAddress = GLBPVf->getMacAddress();
-                if (myMACAddress.compareTo(MACAddress("00-00-00-00-00-00")) == 0){
+                if (myMACAddress.isUnspecified()) {
                     return myMACAddress;
                 }
             }else if (!GLBPVf->isDisable()){
