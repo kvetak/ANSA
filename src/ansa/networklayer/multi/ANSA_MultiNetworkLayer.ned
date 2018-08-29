@@ -92,6 +92,7 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         clns.routingTableModule = default(absPath(routingTableModule) + ".clns");
         cdp.routingTableModule = default(absPath(routingTableModule) + ".ipv4");
         lldp.routingTableModule = default(absPath(routingTableModule) + ".ipv4");
+        ipv4.arpType = "AnsaARP";
 
     gates:
         input ifIn[] @labels(INetworkDatagram);

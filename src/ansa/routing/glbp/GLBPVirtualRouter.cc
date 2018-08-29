@@ -28,6 +28,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include "ansa/networklayer/arp/ipv4/AnsaARP.h"
 #include "ansa/routing/glbp/GLBPVirtualForwarder.h"
 #include "inet/networklayer/ipv4/IPv4InterfaceData.h"
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
@@ -121,7 +122,7 @@ void GLBPVirtualRouter::initialize(int stage)
         socket->bind(glbpUdpPort);
 
         //needs ARP signal for special ARP responses from AVG
-        arp->subscribe(ARP::recvReqSignal,this);
+        arp->subscribe(AnsaARP::recvReqSignal,this);
 
         //TODO another signals for device down and so on...
         //signal for interface down
@@ -597,7 +598,7 @@ void GLBPVirtualRouter::addOrStartVf(GLBPMessage *msg){
 
 void GLBPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, bool b, cObject *details){
     Enter_Method_Silent("GLBPVirtualRouter::receiveChangeNotification(%s)", notificationCategoryName(signalID));
-    if (signalID == ARP::recvReqSignal){
+    if (signalID == AnsaARP::recvReqSignal){
         //iff Iam active
         if (!vf->isDisable()){
 //            std::cout<<hostname<<" # "<<" Grp "<<glbpGroup<<" got SIGNAL.."<<endl;
