@@ -31,9 +31,11 @@ from StringIO import StringIO
 
 
 inetRoot = os.path.abspath("../..")
+inetfwRoot = inetRoot + "/../inet-3.4.0"
 sep = ";" if sys.platform == 'win32' else ':'
 nedPath = inetRoot + "/src" + sep + inetRoot + "/examples" + sep + inetRoot + "/tests/networks"
-inetLib = inetRoot + "/src/INET"
+nedPath = nedPath + sep + inetfwRoot + "/src" + sep + inetfwRoot + "/examples"
+inetLib = inetRoot + "/src/ansainet"
 opp_run = "opp_run"
 cpuTimeLimit = "300s"
 logFile = "test.out"

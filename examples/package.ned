@@ -1,1 +1,1 @@
-package inet.examples;
+package ansa.examples;
