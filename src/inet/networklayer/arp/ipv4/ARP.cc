@@ -379,43 +379,12 @@ void ARP::processARPPacket(ARPPacket *arp)
         switch (arp->getOpcode()) {
             case ARP_REQUEST: {
                 EV_DETAIL << "Packet was ARP REQUEST, sending REPLY\n";
-                MACAddress myMACAddress;
-
-                #if defined(ANSAINET)
-                if ( dynamic_cast<ANSA_InterfaceEntry *>(ie) != nullptr ) {
-                    ANSA_InterfaceEntry *aie = dynamic_cast<ANSA_InterfaceEntry *>(ie);
-                    int vfn = aie->getVirtualForwarderId(arp->getDestIPAddress());
-                    VirtualForwarder *vf = (vfn == -1 ? nullptr : aie->getVirtualForwarderById(vfn) );
-
-                    //is it GLBP protocol?
-                    if( (vfn != -1) && (dynamic_cast<GLBPVirtualForwarder *>(vf) != nullptr) ){
-                        GLBPVirtualForwarder *GLBPVf = dynamic_cast<GLBPVirtualForwarder *>(vf);
-
-                        //arp req to AVG?
-                        if (GLBPVf->isAVG()){
-                            emit(recvReqSignal,true);
-                            myMACAddress = GLBPVf->getMacAddress();
-                            if (myMACAddress.compareTo(MACAddress("00-00-00-00-00-00")) == 0){
-                                delete arp;
-                                return;
-                            }
-                        }else if (!GLBPVf->isDisable()){
-                            delete arp;
-                            return;
-                        }
-                    }else{
-                        myMACAddress = ie->getMacAddress();
-                    }
+                MACAddress myMACAddress = getMacAddressForArpReply(ie, arp);
+                if (myMACAddress.isUnspecified()) {
+                    delete arp;
+                    return;
                 }
-                else{
-                #endif
 
-                // find our own IPv4 address and MAC address on the given interface
-                myMACAddress = ie->getMacAddress();
-
-                #if defined(ANSAINET)
-                }
-                #endif
                 IPv4Address myIPAddress = ie->ipv4Data()->getIPAddress();
 
                 // "Swap hardware and protocol fields", etc.
@@ -454,6 +423,42 @@ void ARP::processARPPacket(ARPPacket *arp)
         EV_INFO << "IPv4 address " << arp->getDestIPAddress() << " not recognized, dropping ARP packet\n";
         delete arp;
     }
+}
+
+MACAddress ARP::getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp)
+{
+#if defined(ANSAINET)
+    if ( dynamic_cast<ANSA_InterfaceEntry *>(ie) != nullptr ) {
+        ANSA_InterfaceEntry *aie = dynamic_cast<ANSA_InterfaceEntry *>(ie);
+        int vfn = aie->getVirtualForwarderId(arp->getDestIPAddress());
+        VirtualForwarder *vf = (vfn == -1 ? nullptr : aie->getVirtualForwarderById(vfn) );
+
+        //is it GLBP protocol?
+        if( (vfn != -1) && (dynamic_cast<GLBPVirtualForwarder *>(vf) != nullptr) ){
+            GLBPVirtualForwarder *GLBPVf = dynamic_cast<GLBPVirtualForwarder *>(vf);
+            MACAddress myMACAddress;
+
+            //arp req to AVG?
+            if (GLBPVf->isAVG()){
+                emit(recvReqSignal,true);
+                myMACAddress = GLBPVf->getMacAddress();
+                if (myMACAddress.compareTo(MACAddress("00-00-00-00-00-00")) == 0){
+                    return myMACAddress;
+                }
+            }else if (!GLBPVf->isDisable()){
+                return MACAddress::UNSPECIFIED_ADDRESS;
+            }
+            return myMACAddress;
+        }else{
+            return ie->getMacAddress();
+        }
+    }
+    else {
+        return ie->getMacAddress();
+    }
+#else
+    return ie->getMacAddress();
+#endif
 }
 
 void ARP::updateARPCache(ARPCacheEntry *entry, const MACAddress& macAddress)
