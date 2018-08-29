@@ -1,6 +1,6 @@
 .PHONY: all clean cleanall makefiles makefiles-so makefiles-lib makefiles-exe checkmakefiles doxy doc
 
-all: checkmakefiles src/inet/features.h 
+all: checkmakefiles src/ansa/features.h 
 	cd src && $(MAKE) all
 
 clean: checkmakefiles
@@ -9,7 +9,7 @@ clean: checkmakefiles
 cleanall: checkmakefiles
 	@cd src && $(MAKE) MODE=release clean
 	@cd src && $(MAKE) MODE=debug clean
-	@rm -f src/Makefile src/inet/features.h
+	@rm -f src/Makefile src/ansa/features.h
 	@cd tutorials && $(MAKE) clean && rm -rf doc/tutorials
 
 cleantmp:
@@ -17,7 +17,7 @@ cleantmp:
 
 MAKEMAKE_OPTIONS := -f --deep -o INET -O out --no-deep-includes -I.
 
-makefiles: src/inet/features.h makefiles-so
+makefiles: src/ansa/features.h makefiles-so
 
 makefiles-so:
 	@FEATURE_OPTIONS=$$(./inet_featuretool options -f -l -c) && cd src && opp_makemake --make-so $(MAKEMAKE_OPTIONS) $$FEATURE_OPTIONS
@@ -39,8 +39,8 @@ checkmakefiles:
 	fi
 
 # generate an include file that contains all the WITH_FEATURE macros according to the current enablement of features
-src/inet/features.h: $(wildcard .oppfeaturestate) .oppfeatures
-	@./inet_featuretool defines >src/inet/features.h
+src/ansa/features.h: $(wildcard .oppfeaturestate) .oppfeatures
+	@./inet_featuretool defines >src/ansa/features.h
 
 doc:
 	cd tutorials && $(MAKE) && mkdir -p ../doc/tutorials/wireless && cp -r wireless/html/* ../doc/tutorials/wireless
