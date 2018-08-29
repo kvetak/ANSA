@@ -69,7 +69,6 @@ const char* inet::IPv4Route::getSourceTypeAbbreviation() const {
 std::string IPv4Route::info() const
 {
     std::stringstream out;
-#ifdef ANSAINET
     out << getSourceTypeAbbreviation();
     out << " ";
     if (getDestination().isUnspecified())
@@ -92,41 +91,13 @@ std::string IPv4Route::info() const
         out << getGateway();
     }
     out << ", " << getInterfaceName();
-#else
-    out << "dest:";
-    if (dest.isUnspecified())
-        out << "*  ";
-    else
-        out << dest << "  ";
-    out << "gw:";
-    if (gateway.isUnspecified())
-        out << "*  ";
-    else
-        out << gateway << "  ";
-    out << "mask:";
-    if (netmask.isUnspecified())
-        out << "*  ";
-    else
-        out << netmask << "  ";
-    out << "metric:" << metric << " ";
-    out << "if:";
-    if (!interfacePtr)
-        out << "*";
-    else
-        out << interfacePtr->getName();
-    if (interfacePtr && interfacePtr->ipv4Data())
-        out << "(" << interfacePtr->ipv4Data()->getIPAddress() << ")";
-    out << "  ";
-    out << (gateway.isUnspecified() ? "DIRECT" : "REMOTE");
-    out << " " << IRoute::sourceTypeName(sourceType);
 
 #ifdef WITH_AODV
     if (dynamic_cast<AODVRouteData *>(protocolData)) {
         AODVRouteData *data = (AODVRouteData *)protocolData;
-        out << data;
+        out << " " << data;
     }
 #endif // ifdef WITH_AODV
-#endif // ANSAINET
     return out.str();
 }
 

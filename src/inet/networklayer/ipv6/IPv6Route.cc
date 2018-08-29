@@ -55,7 +55,6 @@ const char* inet::IPv6Route::getSourceTypeAbbreviation() const {
 std::string IPv6Route::info() const
 {
     std::stringstream out;
-#ifdef ANSAINET
     out << getSourceTypeAbbreviation();
     out << " ";
     if (getDestPrefix().isUnspecified())
@@ -74,14 +73,6 @@ std::string IPv6Route::info() const
         out << getNextHop();
     }
     out << ", " << getInterface()->getName();
-#else
-    out << getDestPrefix() << "/" << getPrefixLength() << " --> ";
-    out << "if:" << (_interfacePtr ? _interfacePtr->getName() : "*  ");
-    out << " next hop:" << getNextHop();
-    out << " " << IRoute::sourceTypeName(getSourceType());
-    if (getExpiryTime() > 0)
-        out << " exp:" << getExpiryTime();
-#endif
     return out.str();
 }
 
