@@ -29,18 +29,10 @@
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
-#ifdef ANSAINET
-#include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
-#include "ansa/routing/glbp/GLBPVirtualForwarder.h"
-#endif
-
 namespace inet {
 
 simsignal_t ARP::sentReqSignal = registerSignal("sentReq");
 simsignal_t ARP::sentReplySignal = registerSignal("sentReply");
-#ifdef ANSAINET
-simsignal_t ARP::recvReqSignal = registerSignal("recvRequest");
-#endif
 
 static std::ostream& operator<<(std::ostream& out, cMessage *msg)
 {
@@ -427,38 +419,7 @@ void ARP::processARPPacket(ARPPacket *arp)
 
 MACAddress ARP::getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp)
 {
-#if defined(ANSAINET)
-    if ( dynamic_cast<ANSA_InterfaceEntry *>(ie) != nullptr ) {
-        ANSA_InterfaceEntry *aie = dynamic_cast<ANSA_InterfaceEntry *>(ie);
-        int vfn = aie->getVirtualForwarderId(arp->getDestIPAddress());
-        VirtualForwarder *vf = (vfn == -1 ? nullptr : aie->getVirtualForwarderById(vfn) );
-
-        //is it GLBP protocol?
-        if( (vfn != -1) && (dynamic_cast<GLBPVirtualForwarder *>(vf) != nullptr) ){
-            GLBPVirtualForwarder *GLBPVf = dynamic_cast<GLBPVirtualForwarder *>(vf);
-            MACAddress myMACAddress;
-
-            //arp req to AVG?
-            if (GLBPVf->isAVG()){
-                emit(recvReqSignal,true);
-                myMACAddress = GLBPVf->getMacAddress();
-                if (myMACAddress.compareTo(MACAddress("00-00-00-00-00-00")) == 0){
-                    return myMACAddress;
-                }
-            }else if (!GLBPVf->isDisable()){
-                return MACAddress::UNSPECIFIED_ADDRESS;
-            }
-            return myMACAddress;
-        }else{
-            return ie->getMacAddress();
-        }
-    }
-    else {
-        return ie->getMacAddress();
-    }
-#else
     return ie->getMacAddress();
-#endif
 }
 
 void ARP::updateARPCache(ARPCacheEntry *entry, const MACAddress& macAddress)

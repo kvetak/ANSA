@@ -46,12 +46,9 @@ class INET_API ARP : public cSimpleModule, public IARP, public ILifecycle
     class ARPCacheEntry;
     typedef std::map<IPv4Address, ARPCacheEntry *> ARPCache;
     typedef std::vector<cMessage *> MsgPtrVector;
+
     // IPv4Address -> MACAddress table
     // TBD should we key it on (IPv4Address, InterfaceEntry*)?
-#if defined(ANSAINET)
-    static simsignal_t recvReqSignal;
-#endif
-
     class ARPCacheEntry
     {
       public:

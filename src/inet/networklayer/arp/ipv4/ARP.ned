@@ -54,8 +54,7 @@ simple ARP like IARP
         bool respondToProxyARP = default(true);        // reply to proxy ARP requests (i.e. for IP addresses that this node can route)
         @display("i=block/layer");
         @signal[sentReq](type=long);
-        @signal[sentReply](type=long);        
-        @signal[recvRequest](type=bool);//TODO ifdef ANSAINET
+        @signal[sentReply](type=long);
         @signal[initiatedARPResolution](type=IARP::Notification);
         @signal[completedARPResolution](type=IARP::Notification);
         @signal[failedARPResolution](type=IARP::Notification);
