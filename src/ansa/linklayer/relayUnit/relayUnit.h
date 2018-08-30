@@ -20,7 +20,7 @@
 
 #include "inet/common/INETDefs.h"
 #include "inet/networklayer/common/InterfaceTable.h"
-#include "inet/linklayer/ethernet/switch/IMACAddressTable.h"
+#include "inet/linklayer/ethernet/switch/IMacAddressTable.h"
 #include "inet/linklayer/ethernet/EtherFrame_m.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
@@ -40,11 +40,11 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
     relayUnit();
 
   protected:
-    MACAddress bridgeAddress;
-    MACAddress bridgeGroupCDPAddress;
-    MACAddress bridgeGroupLLDPAddress;
+    MacAddress bridgeAddress;
+    MacAddress bridgeGroupCDPAddress;
+    MacAddress bridgeGroupLLDPAddress;
     IInterfaceTable *ifTable = nullptr;
-    IMACAddressTable *macTable = nullptr;
+    IMacAddressTable *macTable = nullptr;
     InterfaceEntry *ie = nullptr;
     bool isOperational = false;
     bool isCDPAware = false;

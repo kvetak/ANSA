@@ -46,7 +46,7 @@ void relayUnit::initialize(int stage)
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
 
-        macTable = check_and_cast<IMACAddressTable *>(getModuleByPath(par("macTablePath")));
+        macTable = check_and_cast<IMacAddressTable *>(getModuleByPath(par("macTablePath")));
         ifTable = check_and_cast<IInterfaceTable *>(getModuleByPath(par("interfaceTablePath")));
 
         if (isOperational) {
@@ -70,8 +70,8 @@ void relayUnit::initialize(int stage)
         WATCH(numDeliveredUpdatesToLLDP);
         WATCH(numDispatchedNonUpdateFrames);
     }
-    bridgeGroupCDPAddress = MACAddress("01-00-0c-cc-cc-cc");
-    bridgeGroupLLDPAddress = MACAddress("01-80-c2-00-00-0e");
+    bridgeGroupCDPAddress = MacAddress("01-00-0c-cc-cc-cc");
+    bridgeGroupLLDPAddress = MacAddress("01-80-c2-00-00-0e");
 }
 
 void relayUnit::handleMessage(cMessage *msg)

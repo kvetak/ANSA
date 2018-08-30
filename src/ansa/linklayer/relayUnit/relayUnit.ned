@@ -22,14 +22,14 @@ import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 // This modul forwards frames (~EtherFrame) based on their destination MAC addresses to appropriate ports.
 //
 // It can work in two mode:
-// - STP unaware mode (If no module connected to its STP gate):
-//     Looks up the frames destination address in the ~MACAddressTable, if it found the address, sends through
+// - Stp unaware mode (If no module connected to its Stp gate):
+//     Looks up the frames destination address in the ~MacAddressTable, if it found the address, sends through
 //	   that port, or otherwise broadcasts it.
-// - STP aware mode (If an ~STP or ~RSTP module connected to its STP gate):
-//     Handles BPDU frames.
+// - Stp aware mode (If an ~Stp or ~Rstp module connected to its Stp gate):
+//     Handles Bpdu frames.
 //     If relaying a message also checks the port's status in the InterfaceTable.
 //
-// @see EtherFrame, MACAddressTable, STP, RSTP
+// @see EtherFrame, MacAddressTable, Stp, Rstp
 //
 
 //from Ieee8021dRelay
@@ -38,7 +38,7 @@ simple relayUnit like ANSA_IMACRelayUnit
     parameters:
         @display("i=block/broadcast;bgb=425,114");
         string interfaceTablePath = default("^.interfaceTable"); // The path to the InterfaceTable module
-        string macTablePath = default("^.macTable");             // The path to the MACAddressTable module
+        string macTablePath = default("^.macTable");             // The path to the MacAddressTable module
     gates:
         input ifIn[];
         output ifOut[];
