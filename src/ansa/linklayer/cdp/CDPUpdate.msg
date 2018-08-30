@@ -21,6 +21,7 @@
 //
 
 import inet.common.TlvOptions;
+import inet.common.packet.chunk.Chunk;
 
 namespace inet;
 
@@ -119,7 +120,7 @@ class CDPOptionODRDef extends TlvOptionBase
 }
 
 //CDP update packet
-packet CDPUpdate
+class CDPUpdate extends FieldsChunk
 {
     @customize(true);
     

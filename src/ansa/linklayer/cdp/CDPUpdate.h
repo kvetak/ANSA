@@ -36,7 +36,7 @@ class INET_API CDPUpdate : public CDPUpdate_Base
     void clean();
 
   public:
-    CDPUpdate(const char *name=nullptr, int kind=0) : CDPUpdate_Base(name,kind) {}
+    CDPUpdate() : CDPUpdate_Base() {}
     CDPUpdate(const CDPUpdate& other) : CDPUpdate_Base(other) {copy(other);}
     CDPUpdate& operator=(const CDPUpdate& other) {if (this==&other) return *this; CDPUpdate_Base::operator=(other); copy(other); return *this;}
     virtual CDPUpdate *dup() const {return new CDPUpdate(*this);}
