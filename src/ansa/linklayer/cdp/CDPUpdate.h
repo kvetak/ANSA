@@ -44,7 +44,7 @@ class INET_API CDPUpdate : public CDPUpdate_Base
     /**
      * Count the standard IP checksum for message.
      */
-    uint16_t countChecksum();
+    uint16_t countChecksum() const;
 
     /**
      * Returns number of TLV in message.

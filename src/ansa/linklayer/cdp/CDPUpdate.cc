@@ -120,7 +120,7 @@ void CDPUpdate::setOptionLength(TlvOptionBase *opt)
 /**
  * Count the standard IP checksum for message.
  */
-uint16_t CDPUpdate::countChecksum()
+uint16_t CDPUpdate::countChecksum() const
 {
     std::string a;
     const char *serialized;

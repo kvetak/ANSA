@@ -114,7 +114,7 @@ protected:
      *
      * @param   msg     message
      */
-    void handleUpdate(CDPUpdate *msg);
+    void handleUpdate(const CDPUpdate *msg);
     /**
      * Send update on interface
      *
@@ -128,7 +128,7 @@ protected:
      * @param   msg     message
      * @param   entry   from which cdp neighbour update came
      */
-    void neighbourUpdate(CDPUpdate *msg);
+    void neighbourUpdate(const CDPUpdate *msg);
 
     /////////////////////////////
     //        routes           //
@@ -233,7 +233,7 @@ private:
      * @param   tlvPosition     positioin of prefix tlv in message
      * @param   neighbour       from which cdp neighbour update came
      */
-    void processPrefixes(CDPUpdate *msg, int tlvPosition, CDPNeighbour *neighbour);
+    void processPrefixes(const CDPUpdate *msg, int tlvPosition, CDPNeighbour *neighbour);
 
     /**
      * Activate interface. Start update timer.

@@ -25,6 +25,9 @@
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 #include "inet/common/lifecycle/ILifecycle.h"
+#include "inet/common/packet/Packet.h"
+#include "inet/linklayer/common/MacAddressTag_m.h"
+#include "inet/linklayer/common/InterfaceTag_m.h"
 #include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
 #include "inet/networklayer/contract/IRoutingTable.h"
 
@@ -335,7 +338,7 @@ InterfaceEntry *CDPMain::getPortInterfaceEntry(unsigned int portNum)
     return gateIfEntry;
 }
 
-void CDPMain::neighbourUpdate(CDPUpdate *msg)
+void CDPMain::neighbourUpdate(const CDPUpdate *msg)
 {
     std::string prefix;
     bool newNeighbour = false;
@@ -365,7 +368,7 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
 
         newNeighbour = true;
         neighbour = new CDPNeighbour();
-        neighbour->setInterface(ift->getInterfaceByNetworkLayerGateIndex(msg->getArrivalGate()->getIndex()));
+        neighbour->setInterface(ift->getInterfaceById(msg->getArrivalGate()->getIndex()));
         neighbour->setPortReceive(msg->getArrivalGateId());
 
         const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
@@ -519,7 +522,7 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
     }
 }
 
-void CDPMain::processPrefixes(CDPUpdate *msg, int tlvPosition, CDPNeighbour *neighbour)
+void CDPMain::processPrefixes(const CDPUpdate *msg, int tlvPosition, CDPNeighbour *neighbour)
 {
     if(!odr)
         return;
@@ -641,15 +644,16 @@ std::string CDPMain::capabilitiesConvert(char cap1, char cap2, char cap3, char c
 
 void CDPMain::sendUpdate(int interfaceId, bool shutDown)
 {
-    CDPUpdate *msg = new CDPUpdate();
+    auto pk = new Packet();
+    auto msg = makeShared<CDPUpdate>();
     if(!shutDown)
     {
-        createTlv(msg, interfaceId); // set all TLV
+        createTlv(msg.get(), interfaceId); // set all TLV
         msg->setTtl((int)holdTime.dbl());
     }
     else
     {
-        setTlvDeviceId(msg, 0);     // set device ID
+        setTlvDeviceId(msg.get(), 0);     // set device ID
         msg->setTtl(0);
     }
 
@@ -661,10 +665,8 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
     msg->setChecksum(msg->countChecksum());
 
     // set control info
-    Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
-    controlInfo->setDest(MacAddress("01-00-0c-cc-cc-cc"));
-    controlInfo->setInterfaceId(interfaceId);
-    msg->setControlInfo(controlInfo);
+    pk->addTag<MacAddressReq>()->setDestAddress(MacAddress("01-00-0c-cc-cc-cc"));
+    pk->addTag<InterfaceReq>()->setInterfaceId(interfaceId);
 
     // update statistics
     if(version == 1) stat.txV1++;
@@ -676,12 +678,14 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
         length += msg->getOptionLength(msg->getOption(i));
     length += sizeof(length)*msg->getOptionArraySize();     // length fields in all TLV
     length += 1 + 1 + 2;               // version, ttl and checksum
-    msg->setByteLength(length);
+    msg->setChunkLength(B(length));
+
+    pk->insertAtFront(msg);
 
     send(msg, "ifOut", ift->getInterfaceById(interfaceId)->getNetworkLayerGateIndex());
 }
 
-void CDPMain::handleUpdate(CDPUpdate *msg)
+void CDPMain::handleUpdate(const CDPUpdate *msg)
 {
     if(msg->getOptionArraySize() == 0  )
     {
@@ -800,9 +804,10 @@ void CDPMain::handleMessage(cMessage *msg)
     {
         handleTimer(check_and_cast<CDPTimer*> (msg));
     }
-    else if(dynamic_cast<CDPUpdate *>(msg))
+    else if(auto pk = dynamic_cast<Packet *>(msg))
     {
-        handleUpdate(check_and_cast<CDPUpdate*> (msg));
+        auto update = pk->peekAtFront<CDPUpdate>();
+        handleUpdate(update.get());
         delete msg;
     }
     else
