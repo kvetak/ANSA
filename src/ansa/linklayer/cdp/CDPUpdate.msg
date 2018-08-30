@@ -20,14 +20,9 @@
 // @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 //
 
-cplusplus {{
-#include "inet/common/TLVOption.h"
-}}
+import inet.common.TlvOptions;
 
 namespace inet;
-
-class noncobject TLVOptionBase;
-class noncobject TLVOptions;
 
 enum CDPTLVType
 {
@@ -48,44 +43,44 @@ enum CDPTLVType
 	CDPTLV_POW_AVA = 26;
 }
 
-class CDPOptionDevId extends TLVOptionBase
+class CDPOptionDevId extends TlvOptionBase
 {
     string	value;
 }
 
-class CDPOptionPortId extends TLVOptionBase
+class CDPOptionPortId extends TlvOptionBase
 {
     string	value;
 }
 
-class CDPOptionVersion extends TLVOptionBase
+class CDPOptionVersion extends TlvOptionBase
 {
     string	value;
 }
 
-class CDPOptionPlatform extends TLVOptionBase
+class CDPOptionPlatform extends TlvOptionBase
 {
     string	value;
 }
 
-class CDPOptionVtp extends TLVOptionBase
+class CDPOptionVtp extends TlvOptionBase
 {
     string	value;
 }
 
-class CDPOptionCapa extends TLVOptionBase
+class CDPOptionCapa extends TlvOptionBase
 {
     type = CDPTLV_CAP;
     char	cap[4];
 }
 
-class CDPOptionDupl extends TLVOptionBase
+class CDPOptionDupl extends TlvOptionBase
 {
     type = CDPTLV_DUPLEX;
     bool	fullDuplex;
 }
 
-class CDPOptionNumb extends TLVOptionBase
+class CDPOptionNumb extends TlvOptionBase
 {
     uint16_t	number;
 }
@@ -99,7 +94,7 @@ class addressType
     string address;			// address of the interface
 };
 
-class CDPOptionAddr extends TLVOptionBase
+class CDPOptionAddr extends TlvOptionBase
 {
     type = CDPTLV_ADDRESS;
     addressType	addresses[];
@@ -111,13 +106,13 @@ class prefixType
     uint8_t		mask;
 };
 
-class CDPOptionPref extends TLVOptionBase
+class CDPOptionPref extends TlvOptionBase
 {
     type = CDPTLV_IP_PREF;
     prefixType	prefixes[];
 }
 
-class CDPOptionODRDef extends TLVOptionBase
+class CDPOptionODRDef extends TlvOptionBase
 {
     type = CDPTLV_IP_PREF;
     string defaultRoute;
@@ -131,5 +126,5 @@ packet CDPUpdate
     uint8_t			version = 2;
     uint8_t			ttl;
     uint16_t		checksum;
-    TLVOptions 		options;
+    TlvOptions 		options;
 }

@@ -209,7 +209,7 @@ private:
      * @param   interfaceId     interface ID
      * @return  ip address
      */
-    IPv4Address ipOnInterface(int interfaceId);
+    Ipv4Address ipOnInterface(int interfaceId);
     /**
      * capabilities char convert to string describing each capability with one letter
      *

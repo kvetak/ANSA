@@ -39,18 +39,18 @@ std::ostream& operator<<(std::ostream& os, const CDPOptionODRDef& e)
     return os;
 }
 
-TLVOptionBase *CDPUpdate::findOptionByType(short int optionType, int index)
+const TlvOptionBase *CDPUpdate::findOptionByType(short int optionType, int index) const
 {
     int i = options.findByType(optionType, index);
-    return i >= 0 ? &getOption(i) : nullptr;
+    return i >= 0 ? getOption(i) : nullptr;
 }
 
-void CDPUpdate::addOption(TLVOptionBase *opt, int atPos)
+void CDPUpdate::addOption(TlvOptionBase *opt, int atPos)
 {
-    options.add(opt, atPos);
+    options.insertTlvOption(atPos, opt);
 }
 
-short CDPUpdate::getOptionLength(TLVOptionBase *opt)
+short CDPUpdate::getOptionLength(const TlvOptionBase *opt) const
 {
     short length = 0;
     if(dynamic_cast<CDPOptionPortId *> (opt))
@@ -122,7 +122,7 @@ short CDPUpdate::getOptionLength(TLVOptionBase *opt)
 }
 
 
-void CDPUpdate::setOptionLength(TLVOptionBase *opt)
+void CDPUpdate::setOptionLength(TlvOptionBase *opt)
 {
     opt->setLength(getOptionLength(opt));
 }
@@ -139,7 +139,7 @@ uint16_t CDPUpdate::countChecksum()
     a += (char)ttl;
     for(unsigned int i=0; i < this->getOptionArraySize(); i++)
     {
-        TLVOptionBase *opt = &this->getOption(i);
+        const TlvOptionBase *opt = this->getOption(i);
         if(dynamic_cast<CDPOptionDevId *> (opt))
         {
             CDPOptionDevId *option = dynamic_cast<CDPOptionDevId *> (opt);

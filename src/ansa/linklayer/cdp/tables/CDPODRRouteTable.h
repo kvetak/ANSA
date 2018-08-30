@@ -24,7 +24,7 @@
 
 #include "ansa/linklayer/cdp/CDPTimer_m.h"
 #include "inet/networklayer/contract/IRoute.h"
-#include "inet/networklayer/ipv4/IPv4RoutingTable.h"
+#include "inet/networklayer/ipv4/Ipv4RoutingTable.h"
 
 
 namespace inet {

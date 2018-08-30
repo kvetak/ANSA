@@ -21,11 +21,11 @@
 */
 
 #include "ansa/linklayer/cdp/CDPMain.h"
-#include "inet/common/NotifierConsts.h"
+#include "inet/common/Simsignals.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 #include "inet/common/lifecycle/ILifecycle.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
 #include "inet/networklayer/contract/IRoutingTable.h"
 
 #include "ansa/linklayer/cdp/CDPDeviceConfigurator.h"
@@ -40,10 +40,10 @@ CDPMain::CDPMain() {
 }
 
 CDPMain::~CDPMain() {
-    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
-    containingModule->unsubscribe(NF_INTERFACE_CREATED, this);
-    containingModule->unsubscribe(NF_INTERFACE_DELETED, this);
-    containingModule->unsubscribe(NF_ROUTE_DELETED, this);
+    containingModule->unsubscribe(interfaceStateChangedSignal, this);
+    containingModule->unsubscribe(interfaceCreatedSignal, this);
+    containingModule->unsubscribe(interfaceDeletedSignal, this);
+    containingModule->unsubscribe(routeDeletedSignal, this);
 }
 
 std::string Statistics::info() const
@@ -114,10 +114,10 @@ void CDPMain::initialize(int stage)
         WATCH(isOperational);
     }
     if (stage == INITSTAGE_LAST) {
-        containingModule->subscribe(NF_INTERFACE_STATE_CHANGED, this);
-        containingModule->subscribe(NF_INTERFACE_CREATED, this);
-        containingModule->subscribe(NF_INTERFACE_DELETED, this);
-        containingModule->subscribe(NF_ROUTE_DELETED, this);
+        containingModule->subscribe(interfaceStateChangedSignal, this);
+        containingModule->subscribe(interfaceCreatedSignal, this);
+        containingModule->subscribe(interfaceDeletedSignal, this);
+        containingModule->subscribe(routeDeletedSignal, this);
 
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(containingModule->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
@@ -143,19 +143,19 @@ void CDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *o
     IRoute *route;
     InterfaceEntry *interface;
 
-    if(signalID == NF_INTERFACE_CREATED)
+    if(signalID == interfaceCreatedSignal)
     {
         //new interface created
         interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
         activateInterface(interface);
     }
-    else if(signalID == NF_INTERFACE_DELETED)
+    else if(signalID == interfaceDeletedSignal)
     {
         //interface deleted
         interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
         deactivateInterface(interface, true);
     }
-    else if(signalID == NF_INTERFACE_STATE_CHANGED)
+    else if(signalID == interfaceStateChangedSignal)
     {
         //interface state changed
         interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
@@ -170,7 +170,7 @@ void CDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *o
         else
             deactivateInterface(interface, false);
     }
-    else if (signalID == NF_ROUTE_DELETED) {
+    else if (signalID == routeDeletedSignal) {
         // remove references to the deleted route and invalidate the RIP route
         route = const_cast<IRoute *>(check_and_cast<const IRoute *>(obj));
         if (route->getSource() != this) {
@@ -339,7 +339,7 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
 {
     std::string prefix;
     bool newNeighbour = false;
-    IPv4Address ipAddress, nextHopeIp;
+    Ipv4Address ipAddress, nextHopeIp;
     L3Address l3Address, defaultRoute, nextHope;
     CDPODRRoute *odrRoute;
 
@@ -393,8 +393,8 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
     neighbour->setLastUpdated(simTime());
     for(unsigned int i=0; i < msg->getOptionArraySize(); i++)
     {
-        const TLVOptionBase *option = &msg->getOption(i);
-        switch(msg->getOption(i).getType())
+        const TlvOptionBase *option = msg->getOption(i);
+        switch(msg->getOption(i)->getType())
         {
             case CDPTLV_DEV_ID: {
                 if(newNeighbour)
@@ -495,7 +495,7 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
                     {
                         const CDPOptionODRDef *opt = check_and_cast<const CDPOptionODRDef *> (option);
 
-                        defaultRoute.set(IPv4Address());
+                        defaultRoute.set(Ipv4Address());
 
                         ipAddress.set(opt->getDefaultRoute());
                         l3Address.set(ipAddress);
@@ -525,12 +525,12 @@ void CDPMain::processPrefixes(CDPUpdate *msg, int tlvPosition, CDPNeighbour *nei
         return;
 
     uint32_t mask;
-    IPv4Address nextHopeIp;
+    Ipv4Address nextHopeIp;
     L3Address nextHope;
     CDPODRRoute *odrRoute;
 
     // get next hope from TLV_ADDRESS
-    const TLVOptionBase *option = msg->findOptionByType(CDPTLV_ADDRESS, 0);
+    const TlvOptionBase *option = msg->findOptionByType(CDPTLV_ADDRESS, 0);
     if(option != nullptr)
     {
         const CDPOptionAddr *optAddress = check_and_cast<const CDPOptionAddr *> (option);
@@ -552,7 +552,7 @@ void CDPMain::processPrefixes(CDPUpdate *msg, int tlvPosition, CDPNeighbour *nei
     nextHope.set(nextHopeIp);
 
     // get tlv prefixes
-    option = &msg->getOption(tlvPosition);
+    option = msg->getOption(tlvPosition);
     const CDPOptionPref *opt = check_and_cast<const CDPOptionPref *> (option);
     const prefixType *prefix;
 
@@ -561,7 +561,7 @@ void CDPMain::processPrefixes(CDPUpdate *msg, int tlvPosition, CDPNeighbour *nei
         prefix = &opt->getPrefixes(i);
         mask = (uint32_t)prefix->getMask();
 
-        IPv4Address destIpAddress(prefix->getNetwork());
+        Ipv4Address destIpAddress(prefix->getNetwork());
         L3Address dest(destIpAddress);
 
         odrRoute = ort->findRoute(dest.getPrefix(mask), mask, nextHope);
@@ -662,7 +662,7 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
 
     // set control info
     Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
-    controlInfo->setDest(MACAddress("01-00-0c-cc-cc-cc"));
+    controlInfo->setDest(MacAddress("01-00-0c-cc-cc-cc"));
     controlInfo->setInterfaceId(interfaceId);
     msg->setControlInfo(controlInfo);
 
@@ -673,7 +673,7 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
     // set packet length
     short length = 0;
     for(unsigned int i = 0; i < msg->getOptionArraySize(); i++)
-        length += msg->getOptionLength(&msg->getOption(i));
+        length += msg->getOptionLength(msg->getOption(i));
     length += sizeof(length)*msg->getOptionArraySize();     // length fields in all TLV
     length += 1 + 1 + 2;               // version, ttl and checksum
     msg->setByteLength(length);
@@ -864,7 +864,7 @@ void CDPMain::rescheduleODRRouteTimer(CDPODRRoute *odrRoute)
 void CDPMain::addDefaultRoute(InterfaceEntry *ie, const L3Address& nextHope)
 {
     L3Address defaultGateway;
-    defaultGateway.set(IPv4Address());
+    defaultGateway.set(Ipv4Address());
     CDPODRRoute *defaultRoute = ort->findRoute(rt->getDefaultRoute());
 
     if(defaultRoute == nullptr || (defaultRoute != nullptr && defaultRoute->isInvalide()))
@@ -915,7 +915,7 @@ IRoute *CDPMain::addRouteToRT(const L3Address& dest, int prefixLength, const Int
     route->setInterface(const_cast<InterfaceEntry *>(ie));
     route->setNextHop(nextHop);
     route->setMetric(1);
-    ((IPv4Route *)route)->setAdminDist(IPv4Route::dODR);
+    ((Ipv4Route *)route)->setAdminDist(Ipv4Route::dODR);
     rt->addRoute(route);
     return route;
 }
@@ -1023,7 +1023,7 @@ void CDPMain::setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId)
     {
         CDPOptionODRDef *tlv = new CDPOptionODRDef();
 
-        tlv->setDefaultRoute(ift->getInterfaceById(interfaceId)->getNetworkAddress().toIPv4().str().c_str());
+        tlv->setDefaultRoute(ift->getInterfaceById(interfaceId)->getNetworkAddress().toIpv4().str().c_str());
 
         msg->setOptionLength(tlv);
         msg->addOption(tlv, pos);
@@ -1073,7 +1073,7 @@ bool CDPMain::ipInterfaceExist(int interfaceId)
     return false;
 }
 
-IPv4Address CDPMain::ipOnInterface(int interfaceId)
+Ipv4Address CDPMain::ipOnInterface(int interfaceId)
 {
     if(ift->getInterfaceById(interfaceId)->ipv4Data() != nullptr &&
             !ift->getInterfaceById(interfaceId)->ipv4Data()->getIPAddress().isUnspecified())
@@ -1081,7 +1081,7 @@ IPv4Address CDPMain::ipOnInterface(int interfaceId)
         return ift->getInterfaceById(interfaceId)->ipv4Data()->getIPAddress();
     }
     else
-        return IPv4Address();
+        return Ipv4Address();
 }
 
 void CDPMain::setTlvAddress(CDPUpdate *msg, int pos, int interfaceId)
