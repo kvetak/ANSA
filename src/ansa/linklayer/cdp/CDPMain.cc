@@ -682,7 +682,7 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
 
     pk->insertAtFront(msg);
 
-    send(msg, "ifOut", ift->getInterfaceById(interfaceId)->getNetworkLayerGateIndex());
+    send(pk, "ifOut");
 }
 
 void CDPMain::handleUpdate(Packet *pk, const CDPUpdate *msg)

@@ -46,6 +46,6 @@ simple CDPMain
         string cdpInterfaceTableModule; 
         string cdpODRRouteTableModule; 
 	gates:
-        input ifIn[];
-        output ifOut[];
+        input ifIn;
+        output ifOut;
 }
