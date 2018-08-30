@@ -28,6 +28,7 @@
 #include "inet/common/INETDefs.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
 #include "inet/common/ModuleAccess.h"
+#include "inet/common/packet/Packet.h"
 
 #include "ansa/linklayer/cdp/CDPUpdate.h"
 #include "ansa/linklayer/cdp/CDPTimer_m.h"
@@ -114,7 +115,7 @@ protected:
      *
      * @param   msg     message
      */
-    void handleUpdate(const CDPUpdate *msg);
+    void handleUpdate(Packet *pk, const CDPUpdate *msg);
     /**
      * Send update on interface
      *
@@ -128,7 +129,7 @@ protected:
      * @param   msg     message
      * @param   entry   from which cdp neighbour update came
      */
-    void neighbourUpdate(const CDPUpdate *msg);
+    void neighbourUpdate(Packet *pk, const CDPUpdate *msg);
 
     /////////////////////////////
     //        routes           //

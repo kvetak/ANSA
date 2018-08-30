@@ -338,7 +338,7 @@ InterfaceEntry *CDPMain::getPortInterfaceEntry(unsigned int portNum)
     return gateIfEntry;
 }
 
-void CDPMain::neighbourUpdate(const CDPUpdate *msg)
+void CDPMain::neighbourUpdate(Packet *pk, const CDPUpdate *msg)
 {
     std::string prefix;
     bool newNeighbour = false;
@@ -347,7 +347,7 @@ void CDPMain::neighbourUpdate(const CDPUpdate *msg)
     CDPODRRoute *odrRoute;
 
     const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
-    CDPNeighbour *neighbour = cnt->findNeighbour(deviceIdOption->getValue(), msg->getArrivalGateId());
+    CDPNeighbour *neighbour = cnt->findNeighbour(deviceIdOption->getValue(), pk->getArrivalGateId());
     // shutdown packet
     if(msg->getTtl() == 0)
     {
@@ -360,7 +360,7 @@ void CDPMain::neighbourUpdate(const CDPUpdate *msg)
     if(neighbour == nullptr)
     {
         //can discover up to 256 neighbors per port
-        if(cnt->countNeighboursOnPort(msg->getArrivalGateId()) > 256)
+        if(cnt->countNeighboursOnPort(pk->getArrivalGateId()) > 256)
         {
             EV_WARN << "Can discover up to 256 neighbors per port" << endl;
             return;
@@ -368,8 +368,8 @@ void CDPMain::neighbourUpdate(const CDPUpdate *msg)
 
         newNeighbour = true;
         neighbour = new CDPNeighbour();
-        neighbour->setInterface(ift->getInterfaceById(msg->getArrivalGate()->getIndex()));
-        neighbour->setPortReceive(msg->getArrivalGateId());
+        neighbour->setInterface(ift->getInterfaceById(pk->getArrivalGate()->getIndex()));
+        neighbour->setPortReceive(pk->getArrivalGateId());
 
         const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
         EV_INFO << "New neighbour " << deviceIdOption->getValue() << " on interface " << neighbour->getInterface()->getFullName() << endl;
@@ -685,7 +685,7 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
     send(msg, "ifOut", ift->getInterfaceById(interfaceId)->getNetworkLayerGateIndex());
 }
 
-void CDPMain::handleUpdate(const CDPUpdate *msg)
+void CDPMain::handleUpdate(Packet *pk, const CDPUpdate *msg)
 {
     if(msg->getOptionArraySize() == 0  )
     {
@@ -693,11 +693,11 @@ void CDPMain::handleUpdate(const CDPUpdate *msg)
         return;
     }
 
-    int ifaceId = ift->getInterfaceByNetworkLayerGateIndex(msg->getArrivalGate()->getIndex())->getInterfaceId();
+    int ifaceId = pk->getTag<InterfaceInd>()->getInterfaceId();
     CDPInterface * interface = cit->findInterfaceById(ifaceId);
     if(interface == nullptr || !interface->isCDPEnabled())
     {
-        EV_INFO << "Receive packet on interface with disabled interface. Dropped packet" << msg->getArrivalGateId() << endl;
+        EV_INFO << "Receive packet on interface with disabled interface. Dropped packet" << ifaceId << endl;
         return;
     }
 
@@ -722,7 +722,7 @@ void CDPMain::handleUpdate(const CDPUpdate *msg)
     }
 
 
-    neighbourUpdate(msg);
+    neighbourUpdate(pk, msg);
 }
 
 void CDPMain::handleTimer(CDPTimer *msg)
@@ -807,7 +807,7 @@ void CDPMain::handleMessage(cMessage *msg)
     else if(auto pk = dynamic_cast<Packet *>(msg))
     {
         auto update = pk->peekAtFront<CDPUpdate>();
-        handleUpdate(update.get());
+        handleUpdate(pk, update.get());
         delete msg;
     }
     else
