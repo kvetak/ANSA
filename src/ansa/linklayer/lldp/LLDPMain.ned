@@ -42,6 +42,7 @@ simple LLDPMain
         string lldpAgentTableModule;
         string lldpNeighbourTableModule;
     gates:
-        input ifIn[];
-        output ifOut[];
+        input ifIn;
+        output ifOut;
 }
+

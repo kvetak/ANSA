@@ -23,12 +23,12 @@
 
 package ansa.linklayer.lldp;
 
-import inet.networklayer.contract.INetworkLayerLower;
+import inet.networklayer.contract.INetworkLayer;
 import ansa.linklayer.lldp.tables.LLDPNeighbourTable;
 import ansa.linklayer.lldp.tables.LLDPAgentTable;
 import ansa.linklayer.lldp.LLDPMain;
 
-module LLDP like INetworkLayerLower
+module LLDP like INetworkLayer
 {
     parameters:
         @display("i=block/network2");
@@ -59,8 +59,8 @@ module LLDP like INetworkLayerLower
         *.lldpNeighbourTableModule = default("^.lldpNeighbourTable");
         *.lldpAgentTableModule = default("^.lldpAgentTable");
     gates:
-        input ifIn[] @labels(INetworkDatagram/up);
-        output ifOut[] @labels(INetworkDatagram/down);
+        input ifIn @labels(INetworkDatagram/up);
+        output ifOut @labels(INetworkDatagram/down);
 
 
     submodules:
@@ -80,11 +80,6 @@ module LLDP like INetworkLayerLower
         }
 
     connections:
-        for i=0..sizeof(ifIn)-1 {
-            ifIn[i] --> { @display("m=w"); } --> lldpMain.ifIn++;
-        }
-
-        for i=0..sizeof(ifOut)-1 {
-            lldpMain.ifOut++ --> { @display("m=w"); } --> ifOut[i];
-        }
+        ifIn --> { @display("m=w"); } --> lldpMain.ifIn;
+        lldpMain.ifOut --> { @display("m=w"); } --> ifOut;
 }

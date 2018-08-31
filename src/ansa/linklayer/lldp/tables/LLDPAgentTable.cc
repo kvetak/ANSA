@@ -363,7 +363,7 @@ void LLDPAgent::txFrame(const Ptr<LLDPUpdate>& update)
         length += update->getOptionLength(update->getOption(i));
     length += sizeof(length)*update->getOptionArraySize();
     update->setChunkLength(B(length));
-    txTTROwner->send(update, "ifOut", interface->getNetworkLayerGateIndex());
+    txTTROwner->send(update, "ifOut");
 }
 
 void LLDPAgent::txInfoFrame()
