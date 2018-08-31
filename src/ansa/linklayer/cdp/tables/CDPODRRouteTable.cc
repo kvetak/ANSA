@@ -44,7 +44,7 @@ std::string CDPODRRoute::info() const
         out << "*";
     else
         out << nextHop;
-    out << ", " <<  ie->getName();
+    out << ", " <<  ie->getInterfaceName();
 
     if(invalide)
         out << ", invalid route (flush in " << round((ODRFlush->getArrivalTime()-simTime()).dbl()) <<  "s)";

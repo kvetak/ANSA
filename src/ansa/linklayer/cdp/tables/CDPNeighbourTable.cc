@@ -53,7 +53,7 @@ std::string CDPNeighbour::info() const
 {
     std::stringstream out;
 
-    out << name << ", local int: " << interface->getName();
+    out << name << ", local int: " << interface->getInterfaceName();
     out << ", holdtime: " << round(ttl.dbl()-(simTime()-lastUpdate).dbl()) << ", cap: " << capabilities;
     out << ", send int: " << portSend;
     return out.str();

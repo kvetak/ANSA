@@ -231,7 +231,7 @@ void CDPMain::startCDP()
 
     for(int i=0; i < ift->getNumInterfaces(); i++)
     {
-        if(isInterfaceSupported(ift->getInterface(i)->getInterfaceModule()->getName()))
+        if(isInterfaceSupported(ift->getInterface(i)->getInterfaceName()))
         {
             interface = ift->getInterface(i);
             activateInterface(interface);
@@ -254,7 +254,7 @@ void CDPMain::activateInterface(InterfaceEntry *interface)
 
     scheduleAt(simTime(), cdpInterface->getUpdateTimer());
 
-    EV_INFO << "Interface " << interface->getName() << " go up, id:" << interface->getInterfaceId() <<  endl;
+    EV_INFO << "Interface " << interface->getInterfaceName() << " go up, id:" << interface->getInterfaceId() <<  endl;
 }
 
 void CDPMain::deactivateInterface(InterfaceEntry *interface, bool removeFromTable)
@@ -278,7 +278,7 @@ void CDPMain::deactivateInterface(InterfaceEntry *interface, bool removeFromTabl
             else
                 ++it;
         }
-        EV_INFO << "Interface " << interface->getName() << " go down, id: " << interface->getInterfaceId() << endl;
+        EV_INFO << "Interface " << interface->getInterfaceName() << " go down, id: " << interface->getInterfaceId() << endl;
     }
 }
 
@@ -417,9 +417,9 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
                     const CDPOptionDupl *opt = check_and_cast<const CDPOptionDupl *> (option);
                     neighbour->setFullDuplex(opt->getFullDuplex());
                     int ifaceId = neighbour->getInterface()->getInterfaceId();
-                    if(ift->getInterfaceById(ifaceId)->getInterfaceModule()->getSubmodule("mac") != nullptr)
+                    if(ift->getInterfaceById(ifaceId)->getSubmodule("mac") != nullptr)
                     {
-                        if(neighbour->getFullDuplex() != (bool)ift->getInterfaceById(ifaceId)->getInterfaceModule()->getSubmodule("mac")->par("duplexMode"))
+                        if(neighbour->getFullDuplex() != (bool)ift->getInterfaceById(ifaceId)->getSubmodule("mac")->par("duplexMode"))
                             EV_WARN << "Duplex mode mismatch on port " << neighbour->getInterface()->getFullName() << endl;
                     }
                 }
@@ -994,7 +994,7 @@ void CDPMain::setTlvCapabilities(CDPUpdate *msg, int pos)
 void CDPMain::setTlvDuplex(CDPUpdate *msg, int pos, int interfaceId)
 {
     CDPOptionDupl *tlv = new CDPOptionDupl();
-    tlv->setFullDuplex(ift->getInterfaceById(interfaceId)->getInterfaceModule()->getSubmodule("mac")->par("duplexMode"));
+    tlv->setFullDuplex(ift->getInterfaceById(interfaceId)->getSubmodule("mac")->par("duplexMode"));
     msg->setOptionLength(tlv);
     msg->addOption(tlv, pos);
 }
@@ -1113,7 +1113,7 @@ void CDPMain::createTlv(CDPUpdate *msg, int interfaceId)
 
     if(version == 2)
     {
-       if(ift->getInterfaceById(interfaceId)->getInterfaceModule()->getSubmodule("mac") != nullptr)
+       if(ift->getInterfaceById(interfaceId)->getSubmodule("mac") != nullptr)
            setTlvDuplex(msg, count++, interfaceId);    //full duplex
        //setTlvNativeVlan(msg, count++, interfaceId);    //TODO: yet not implemented in INET
        //setTlvVtp(msg, count++, interfaceId);           //TODO: yet not implemented in INET
