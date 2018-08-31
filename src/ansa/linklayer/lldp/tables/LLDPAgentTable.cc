@@ -367,7 +367,9 @@ void LLDPAgent::txFrame(const Ptr<LLDPUpdate>& update)
         length += update->getOptionLength(update->getOption(i));
     length += sizeof(length)*update->getOptionArraySize();
     update->setChunkLength(B(length));
-    txTTROwner->send(update, "ifOut");
+    packet->insertAtFront(update);
+
+    txTTROwner->send(packet, "ifOut");
 }
 
 void LLDPAgent::txInfoFrame()
