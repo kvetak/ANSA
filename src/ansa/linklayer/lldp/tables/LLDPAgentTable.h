@@ -131,18 +131,18 @@ protected:
     std::string capabilitiesConvert(char cap1, char cap2);
     void setInterface(InterfaceEntry *i) {interface = i;}
 
-    void setTlvChassisId(LLDPUpdate *msg);
-    void setTlvPortId(LLDPUpdate *msg);
-    void setTlvTtl(LLDPUpdate *msg, bool shutDown);
-    void setTlvEndOf(LLDPUpdate *msg);
-    void setTlvPortDes(LLDPUpdate *msg);
-    void setTlvSystemName(LLDPUpdate *msg);
-    void setTlvSystemDes(LLDPUpdate *msg);
-    void setTlvCap(LLDPUpdate *msg);
-    void setTlvManAdd(LLDPUpdate *msg);
-    void setTlvManAddSpec(LLDPUpdate *msg, std::string add);
-    void setTlvOrgSpec(LLDPUpdate *msg, LLDPOptionOrgSpec *tlv);
-    void setTlvMtu(LLDPUpdate *msg);
+    void setTlvChassisId(const Ptr<LLDPUpdate>& msg);
+    void setTlvPortId(const Ptr<LLDPUpdate>& msg);
+    void setTlvTtl(const Ptr<LLDPUpdate>& msg, bool shutDown);
+    void setTlvEndOf(const Ptr<LLDPUpdate>& msg);
+    void setTlvPortDes(const Ptr<LLDPUpdate>& msg);
+    void setTlvSystemName(const Ptr<LLDPUpdate>& msg);
+    void setTlvSystemDes(const Ptr<LLDPUpdate>& msg);
+    void setTlvCap(const Ptr<LLDPUpdate>& msg);
+    void setTlvManAdd(const Ptr<LLDPUpdate>& msg);
+    void setTlvManAddSpec(const Ptr<LLDPUpdate>& msg, std::string add);
+    void setTlvOrgSpec(const Ptr<LLDPUpdate>& msg, LLDPOptionOrgSpec *tlv);
+    void setTlvMtu(const Ptr<LLDPUpdate>& msg);
 
     void txInitializeLLDP();
     /**
@@ -151,7 +151,7 @@ protected:
      *
      * @return  created LLDPDUs frame
      */
-    LLDPUpdate *constrUpdateLLDPDU();
+    Ptr<LLDPUpdate> constrUpdateLLDPDU();
     /**
      * Create a special shutdown advisory LLDPDU indicating that any information about the local
      * station that is maintained in a remote LLDP agent’s remote systems MIB is now invalid and
@@ -159,13 +159,13 @@ protected:
      *
      * @return  created LLDPDU frame
      */
-    LLDPUpdate *constrShutdownLLDPDU();
+    Ptr<LLDPUpdate> constrShutdownLLDPDU();
     /**
      * Send update
      *
      * @param   update  update frame to be send
      */
-    void txFrame(LLDPUpdate *update);
+    void txFrame(const Ptr<LLDPUpdate>& update);
     /*
      * Schedule next regular transmit
      *

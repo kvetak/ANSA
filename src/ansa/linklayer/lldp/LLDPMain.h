@@ -30,6 +30,7 @@
 #include "inet/linklayer/common/Ieee802Ctrl.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/ILifecycle.h"
+#include "inet/common/packet/Packet.h"
 
 #include "ansa/linklayer/lldp/LLDPTimer_m.h"
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
@@ -92,7 +93,7 @@ class INET_API LLDPMain: public cSimpleModule, protected cListener, public ILife
      *
      * @param   msg     message
      */
-    void handleUpdate(LLDPUpdate *msg);
+    void handleUpdate(Packet* pk, LLDPUpdate *msg);
 
     /*
      * Validate LLDP frame. Returns false if frame is invalid

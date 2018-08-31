@@ -314,9 +314,10 @@ void LLDPMain::handleMessage(cMessage *msg)
     {
         processTimer(check_and_cast<LLDPTimer*> (msg));
     }
-    else if(dynamic_cast<LLDPUpdate *>(msg))
+    else if(auto pk = dynamic_cast<Packet *>(msg))
     {
-        handleUpdate(check_and_cast<LLDPUpdate*> (msg));
+        auto update = pk->peekAtFront<LLDPUpdate>();
+        handleUpdate(pk, update.get());
         delete msg;
     }
     else
@@ -325,7 +326,7 @@ void LLDPMain::handleMessage(cMessage *msg)
     }
 }
 
-void LLDPMain::handleUpdate(LLDPUpdate *msg)
+void LLDPMain::handleUpdate(Packet* pk, LLDPUpdate *msg)
 {
     // get agent
     int ifaceId = ift->getInterfaceByNetworkLayerGateIndex(msg->getArrivalGate()->getIndex())->getInterfaceId();

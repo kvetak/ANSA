@@ -298,9 +298,9 @@ void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
     neighbour->getManagementAdd().removeNotUpdated();
 }
 
-LLDPUpdate *LLDPAgent::constrUpdateLLDPDU()
+Ptr<LLDPUpdate> LLDPAgent::constrUpdateLLDPDU()
 {
-    LLDPUpdate *update = new LLDPUpdate();
+    auto update = makeShared<LLDPUpdate>();
 
     // mandatory
     setTlvChassisId(update);      // chassis ID
@@ -323,9 +323,9 @@ LLDPUpdate *LLDPAgent::constrUpdateLLDPDU()
     return update;
 }
 
-LLDPUpdate *LLDPAgent::constrShutdownLLDPDU()
+Ptr<LLDPUpdate> LLDPAgent::constrShutdownLLDPDU()
 {
-    LLDPUpdate *update = new LLDPUpdate();
+    auto update = makeShared<LLDPUpdate>();
 
     setTlvChassisId(update);      // chassis ID
     setTlvPortId(update);         // port ID
@@ -335,19 +335,19 @@ LLDPUpdate *LLDPAgent::constrShutdownLLDPDU()
     return update;
 }
 
-void LLDPAgent::txFrame(LLDPUpdate *update)
+void LLDPAgent::txFrame(const Ptr<LLDPUpdate>& update)
 {
     if(adminStatus != enabledRxTx && adminStatus != enabledTxOnly)
     {
         EV_ERROR << "Trying send message with not transmitting agent - sending canceled" << endl;
-        delete update;
+        // delete update;
         return;
     }
 
     if (!interface->isUp())
     {// trying send message on DOWN iface -> cancel
         EV_ERROR << "Interface " << interface->getFullName() << " is down, discarding packet" << endl;
-        delete update;
+        // delete update;
         return;
     }
 
@@ -362,7 +362,7 @@ void LLDPAgent::txFrame(LLDPUpdate *update)
     for(unsigned int i = 0; i < update->getOptionArraySize(); i++)
         length += update->getOptionLength(update->getOption(i));
     length += sizeof(length)*update->getOptionArraySize();
-    update->setByteLength(length);
+    update->setChunkLength(B(length));
     txTTROwner->send(update, "ifOut", interface->getNetworkLayerGateIndex());
 }
 
@@ -370,7 +370,7 @@ void LLDPAgent::txInfoFrame()
 {
     if(txCredit > 0)
     {
-        LLDPUpdate *update = constrUpdateLLDPDU();
+        const Ptr<LLDPUpdate>& update = constrUpdateLLDPDU();
         txFrame(update);
 #ifdef CREDIT
         dec(&txCredit);
@@ -390,7 +390,7 @@ void LLDPAgent::txShutdownFrame()
     if(adminStatus != enabledRxTx && adminStatus != enabledTxOnly)
         return;
 
-    LLDPUpdate *update = constrUpdateLLDPDU();
+    const Ptr<LLDPUpdate>& update = constrUpdateLLDPDU();
     txFrame(update);
 }
 
@@ -411,7 +411,7 @@ void LLDPAgent::txFastStart()
 ///************************* START OF TLV *****************************///
 
 
-void LLDPAgent::setTlvChassisId(LLDPUpdate *msg)
+void LLDPAgent::setTlvChassisId(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionChassisId *tlv = new LLDPOptionChassisId();
     tlv->setSubtype((uint8_t)lcisMacAdd);
@@ -425,7 +425,7 @@ void LLDPAgent::setTlvChassisId(LLDPUpdate *msg)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvPortId(LLDPUpdate *msg)
+void LLDPAgent::setTlvPortId(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionPortId *tlv = new LLDPOptionPortId();
     tlv->setSubtype((uint8_t)pcisIfaceNam);
@@ -439,7 +439,7 @@ void LLDPAgent::setTlvPortId(LLDPUpdate *msg)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvTtl(LLDPUpdate *msg, bool shutDown)
+void LLDPAgent::setTlvTtl(const Ptr<LLDPUpdate>& msg, bool shutDown)
 {
     LLDPOptionTTL *tlv = new LLDPOptionTTL();
     if(!shutDown)
@@ -450,13 +450,13 @@ void LLDPAgent::setTlvTtl(LLDPUpdate *msg, bool shutDown)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvEndOf(LLDPUpdate *msg)
+void LLDPAgent::setTlvEndOf(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionEndOf *tlv = new LLDPOptionEndOf();
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvPortDes(LLDPUpdate *msg)
+void LLDPAgent::setTlvPortDes(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionPortDes *tlv = new LLDPOptionPortDes();
 
@@ -469,7 +469,7 @@ void LLDPAgent::setTlvPortDes(LLDPUpdate *msg)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvSystemName(LLDPUpdate *msg)
+void LLDPAgent::setTlvSystemName(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionSystemName *tlv = new LLDPOptionSystemName();
 
@@ -482,7 +482,7 @@ void LLDPAgent::setTlvSystemName(LLDPUpdate *msg)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvSystemDes(LLDPUpdate *msg)
+void LLDPAgent::setTlvSystemDes(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionSystemDes *tlv = new LLDPOptionSystemDes();
 
@@ -495,7 +495,7 @@ void LLDPAgent::setTlvSystemDes(LLDPUpdate *msg)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvCap(LLDPUpdate *msg)
+void LLDPAgent::setTlvCap(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionCap *tlv = new LLDPOptionCap();
 
@@ -511,7 +511,7 @@ void LLDPAgent::setTlvCap(LLDPUpdate *msg)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvManAdd(LLDPUpdate *msg)
+void LLDPAgent::setTlvManAdd(const Ptr<LLDPUpdate>& msg)
 {
     std::stringstream string;
     bool l3Address = false;
@@ -534,7 +534,7 @@ void LLDPAgent::setTlvManAdd(LLDPUpdate *msg)
     }
 }
 
-void LLDPAgent::setTlvManAddSpec(LLDPUpdate *msg, std::string add)
+void LLDPAgent::setTlvManAddSpec(const Ptr<LLDPUpdate>& msg, std::string add)
 {
     LLDPOptionManAdd *tlv = new LLDPOptionManAdd();
     tlv->setAddress(add.c_str());
@@ -545,7 +545,7 @@ void LLDPAgent::setTlvManAddSpec(LLDPUpdate *msg, std::string add)
     msg->addOption(tlv, -1);
 }
 
-void LLDPAgent::setTlvMtu(LLDPUpdate *msg)
+void LLDPAgent::setTlvMtu(const Ptr<LLDPUpdate>& msg)
 {
     LLDPOptionOrgSpec *tlv = new LLDPOptionOrgSpec();
     std::stringstream string;
@@ -558,7 +558,7 @@ void LLDPAgent::setTlvMtu(LLDPUpdate *msg)
     setTlvOrgSpec(msg, tlv);
 }
 
-void LLDPAgent::setTlvOrgSpec(LLDPUpdate *msg, LLDPOptionOrgSpec *tlv)
+void LLDPAgent::setTlvOrgSpec(const Ptr<LLDPUpdate>& msg, LLDPOptionOrgSpec *tlv)
 {
     std::string s = tlv->getValue();
     if(strlen(tlv->getValue()) > 507)
