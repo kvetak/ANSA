@@ -25,6 +25,7 @@
 
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
+#include "inet/linklayer/common/InterfaceTag_m.h"
 
 #include "ansa/linklayer/lldp/LLDPDeviceConfigurator.h"
 
@@ -331,7 +332,7 @@ void LLDPMain::handleMessage(cMessage *msg)
 void LLDPMain::handleUpdate(Packet* pk, LLDPUpdate *msg)
 {
     // get agent
-    int ifaceId = ift->getInterfaceByNetworkLayerGateIndex(msg->getArrivalGate()->getIndex())->getInterfaceId();
+    int ifaceId = pk->getTag<InterfaceInd>()->getInterfaceId();
     LLDPAgent *agent = lat->findAgentById(ifaceId);
     if(agent == nullptr)
     {

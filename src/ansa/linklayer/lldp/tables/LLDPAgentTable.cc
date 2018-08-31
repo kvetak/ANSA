@@ -21,6 +21,10 @@
 * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 */
 
+#include "inet/common/ProtocolTag_m.h"
+#include "inet/linklayer/common/InterfaceTag_m.h"
+#include "inet/linklayer/common/MacAddressTag_m.h"
+
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 #include "ansa/linklayer/lldp/LLDPMain.h"
 
@@ -266,6 +270,7 @@ void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
 
             default: {
                 EV_INFO << "Unknown type of TLV " << msg->getOption(i)->getType() << endl;
+                break;
             }
         }
     }
@@ -351,11 +356,10 @@ void LLDPAgent::txFrame(const Ptr<LLDPUpdate>& update)
         return;
     }
 
-    Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
-    controlInfo->setDestinationAddress(MacAddress("01-80-c2-00-00-0e"));
-    controlInfo->setInterfaceId(interface->getInterfaceId());
-    controlInfo->setEtherType(35020);       // 88-cc
-    update->setControlInfo(controlInfo);
+    auto packet = new Packet();
+    packet->addTag<MacAddressReq>()->setDestAddress(MacAddress("01-80-c2-00-00-0e"));
+    packet->addTag<InterfaceReq>()->setInterfaceId(interface->getInterfaceId());
+    packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::lldp);
 
     st.framesOutTotal++;
     short length = 0;
