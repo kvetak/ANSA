@@ -324,14 +324,7 @@ void CDPMain::finish()
 
 InterfaceEntry *CDPMain::getPortInterfaceEntry(unsigned int portNum)
 {
-    cGate *gate = containingModule->gate("ethg$i", portNum);
-    if (!gate)
-    {
-        gate = containingModule->gate("ppp$i", portNum);
-        if (!gate)
-            throw cRuntimeError("gate is nullptr");
-    }
-    InterfaceEntry *gateIfEntry = ift->getInterfaceByNodeInputGateId(gate->getId());
+    InterfaceEntry *gateIfEntry = ift->getInterfaceById(portNum);
     if (!gateIfEntry)
         throw cRuntimeError("gate's Interface is nullptr");
 
@@ -345,9 +338,10 @@ void CDPMain::neighbourUpdate(Packet *pk, const CDPUpdate *msg)
     Ipv4Address ipAddress, nextHopeIp;
     L3Address l3Address, defaultRoute, nextHope;
     CDPODRRoute *odrRoute;
+    int incomingIeId = pk->getTag<InterfaceInd>()->getInterfaceId();
 
     const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
-    CDPNeighbour *neighbour = cnt->findNeighbour(deviceIdOption->getValue(), pk->getArrivalGateId());
+    CDPNeighbour *neighbour = cnt->findNeighbour(deviceIdOption->getValue(), incomingIeId);
     // shutdown packet
     if(msg->getTtl() == 0)
     {
@@ -360,7 +354,7 @@ void CDPMain::neighbourUpdate(Packet *pk, const CDPUpdate *msg)
     if(neighbour == nullptr)
     {
         //can discover up to 256 neighbors per port
-        if(cnt->countNeighboursOnPort(pk->getArrivalGateId()) > 256)
+        if(cnt->countNeighboursOnPort(incomingIeId) > 256)
         {
             EV_WARN << "Can discover up to 256 neighbors per port" << endl;
             return;
@@ -368,8 +362,8 @@ void CDPMain::neighbourUpdate(Packet *pk, const CDPUpdate *msg)
 
         newNeighbour = true;
         neighbour = new CDPNeighbour();
-        neighbour->setInterface(ift->getInterfaceById(pk->getArrivalGate()->getIndex()));
-        neighbour->setPortReceive(pk->getArrivalGateId());
+        neighbour->setInterface(ift->getInterfaceById(incomingIeId));
+        neighbour->setPortReceive(incomingIeId);
 
         const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
         EV_INFO << "New neighbour " << deviceIdOption->getValue() << " on interface " << neighbour->getInterface()->getFullName() << endl;
