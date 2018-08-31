@@ -53,44 +53,36 @@ void CDPUpdate::addOption(TlvOptionBase *opt, int atPos)
 short CDPUpdate::getOptionLength(const TlvOptionBase *opt) const
 {
     short length = 0;
-    if(dynamic_cast<CDPOptionPortId *> (opt))
+    if(auto option = dynamic_cast<const CDPOptionPortId *>(opt))
     {
-        CDPOptionPortId *option = dynamic_cast<CDPOptionPortId *> (opt);
         length = strlen(option->getValue()) + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionVersion *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionVersion *>(opt))
     {
-        CDPOptionVersion *option = dynamic_cast<CDPOptionVersion *> (opt);
         length = strlen(option->getValue()) + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionPlatform *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionPlatform *> (opt))
     {
-        CDPOptionPlatform *option = dynamic_cast<CDPOptionPlatform *> (opt);
         length = strlen(option->getValue()) + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionVtp *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionVtp *> (opt))
     {
-        CDPOptionVtp *option = dynamic_cast<CDPOptionVtp *> (opt);
         length = strlen(option->getValue()) + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionDevId *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionDevId *> (opt))
     {
-        CDPOptionDevId *option = dynamic_cast<CDPOptionDevId *> (opt);
         length = strlen(option->getValue()) + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionCapa *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionCapa *> (opt))
     {
-        CDPOptionCapa *option = dynamic_cast<CDPOptionCapa *> (opt);
         length = option->getCapArraySize() + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionDupl *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionDupl *> (opt))
     {
-        CDPOptionDupl *option = dynamic_cast<CDPOptionDupl *> (opt);
         length = sizeof(option->getFullDuplex()) + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionAddr *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionAddr *> (opt))
     {
-        CDPOptionAddr *option = dynamic_cast<CDPOptionAddr *> (opt);
         short size = 0;
         addressType address;
 
@@ -102,9 +94,8 @@ short CDPUpdate::getOptionLength(const TlvOptionBase *opt) const
         }
         length = size + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionPref *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionPref *> (opt))
     {
-        CDPOptionPref *option = dynamic_cast<CDPOptionPref *> (opt);
         short size = 0;
 
         for(unsigned int i = 0; i < option->getPrefixesArraySize(); ++i)
@@ -112,9 +103,8 @@ short CDPUpdate::getOptionLength(const TlvOptionBase *opt) const
 
         length = size + TL_SIZE;
     }
-    else if(dynamic_cast<CDPOptionODRDef *> (opt))
+    else if (auto option = dynamic_cast<const CDPOptionODRDef *> (opt))
     {
-        CDPOptionODRDef *option = dynamic_cast<CDPOptionODRDef *> (opt);
         length = strlen(option->getDefaultRoute()) + TL_SIZE;
     }
 
@@ -140,44 +130,38 @@ uint16_t CDPUpdate::countChecksum()
     for(unsigned int i=0; i < this->getOptionArraySize(); i++)
     {
         const TlvOptionBase *opt = this->getOption(i);
-        if(dynamic_cast<CDPOptionDevId *> (opt))
+        if (auto option = dynamic_cast<const CDPOptionDevId *> (opt))
         {
-            CDPOptionDevId *option = dynamic_cast<CDPOptionDevId *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getValue();
         }
-        else if(dynamic_cast<CDPOptionPortId *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionPortId *> (opt))
         {
-            CDPOptionPortId *option = dynamic_cast<CDPOptionPortId *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getValue();
         }
-        else if(dynamic_cast<CDPOptionVersion *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionVersion *> (opt))
         {
-            CDPOptionVersion *option = dynamic_cast<CDPOptionVersion *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getValue();
         }
-        else if(dynamic_cast<CDPOptionPlatform *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionPlatform *> (opt))
         {
-            CDPOptionPlatform *option = dynamic_cast<CDPOptionPlatform *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getValue();
         }
-        else if(dynamic_cast<CDPOptionVtp *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionVtp *> (opt))
         {
-            CDPOptionVtp *option = dynamic_cast<CDPOptionVtp *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getValue();
         }
-        else if(dynamic_cast<CDPOptionCapa *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionCapa *> (opt))
         {
-            CDPOptionCapa *option = dynamic_cast<CDPOptionCapa *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getCap(0);
@@ -185,9 +169,8 @@ uint16_t CDPUpdate::countChecksum()
             a += option->getCap(2);
             a += option->getCap(3);
         }
-        else if(dynamic_cast<CDPOptionDupl *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionDupl *> (opt))
         {
-            CDPOptionDupl *option = dynamic_cast<CDPOptionDupl *> (opt);
             a += option->getType();
             a += option->getLength();
             if(option->getFullDuplex())
@@ -195,9 +178,8 @@ uint16_t CDPUpdate::countChecksum()
             else
                 a += (char) 0;
         }
-        else if(dynamic_cast<CDPOptionAddr *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionAddr *> (opt))
         {
-            CDPOptionAddr *option = dynamic_cast<CDPOptionAddr *> (opt);
             addressType address;
 
             a += option->getType();
@@ -214,9 +196,8 @@ uint16_t CDPUpdate::countChecksum()
             }
 
         }
-        else if(dynamic_cast<CDPOptionPref *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionPref *> (opt))
         {
-            CDPOptionPref *option = dynamic_cast<CDPOptionPref *> (opt);
             prefixType prefix;
 
             a += option->getType();
@@ -228,9 +209,8 @@ uint16_t CDPUpdate::countChecksum()
                 a += prefix.getMask();
             }
         }
-        else if(dynamic_cast<CDPOptionODRDef *> (opt))
+        else if (auto option = dynamic_cast<const CDPOptionODRDef *> (opt))
         {
-            CDPOptionODRDef *option = dynamic_cast<CDPOptionODRDef *> (opt);
             a += option->getType();
             a += option->getLength();
             a += option->getDefaultRoute();

@@ -343,7 +343,7 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
     L3Address l3Address, defaultRoute, nextHope;
     CDPODRRoute *odrRoute;
 
-    CDPOptionDevId *deviceIdOption = check_and_cast<CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
+    const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
     CDPNeighbour *neighbour = cnt->findNeighbour(deviceIdOption->getValue(), msg->getArrivalGateId());
     // shutdown packet
     if(msg->getTtl() == 0)
@@ -368,7 +368,7 @@ void CDPMain::neighbourUpdate(CDPUpdate *msg)
         neighbour->setInterface(ift->getInterfaceByNetworkLayerGateIndex(msg->getArrivalGate()->getIndex()));
         neighbour->setPortReceive(msg->getArrivalGateId());
 
-        CDPOptionDevId *deviceIdOption = check_and_cast<CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
+        const CDPOptionDevId *deviceIdOption = check_and_cast<const CDPOptionDevId *> (msg->findOptionByType(CDPTLV_DEV_ID, 0));
         EV_INFO << "New neighbour " << deviceIdOption->getValue() << " on interface " << neighbour->getInterface()->getFullName() << endl;
 
         // schedule holdtime
