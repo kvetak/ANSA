@@ -49,7 +49,7 @@ class INET_API CDPUpdate : public CDPUpdate_Base
     /**
      * Returns number of TLV in message.
      */
-    unsigned int getOptionArraySize() const { return options.size(); }
+    unsigned int getOptionArraySize() const { return options.getTlvOptionArraySize(); }
 
     /**
      * Get length of the specified option.
