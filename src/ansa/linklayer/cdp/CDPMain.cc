@@ -136,7 +136,7 @@ void CDPMain::initialize(int stage)
 
 ///************************ CDP OPERATION ****************************///
 
-void CDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG)
+void CDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details)
 {
     Enter_Method_Silent();
 
