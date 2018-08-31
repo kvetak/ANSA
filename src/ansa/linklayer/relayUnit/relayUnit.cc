@@ -21,6 +21,11 @@
 #include "inet/linklayer/configurator/Ieee8021dInterfaceData.h"
 #include "inet/common/ModuleAccess.h"
 
+#include "inet/common/ProtocolTag_m.h"
+#include "inet/linklayer/common/InterfaceTag_m.h"
+#include "inet/linklayer/common/MacAddressTag_m.h"
+#include "inet/linklayer/ethernet/EtherEncap.h"
+
 namespace inet {
 
 Define_Module(relayUnit);
@@ -36,11 +41,6 @@ void relayUnit::initialize(int stage)
         numDispatchedUpdateFrames = numDispatchedNonUpdateFrames = numDeliveredUpdatesToCDP = 0;
         numReceivedUpdatesFromCDP = numReceivedNetworkFrames = numDroppedFrames = 0;
         numDeliveredUpdatesToLLDP = numReceivedUpdatesFromLLDP = 0;
-
-        // number of ports
-        portCount = gate("ifOut", 0)->size();
-        if (gate("ifIn", 0)->size() != (int)portCount)
-            throw cRuntimeError("the sizes of the ifIn[] and ifOut[] gate vectors must be the same");
     }
     else if (stage == INITSTAGE_LINK_LAYER_2) {
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
@@ -87,210 +87,197 @@ void relayUnit::handleMessage(cMessage *msg)
         if (strcmp(msg->getArrivalGate()->getName(), "cdpIn") == 0) {
             numReceivedUpdatesFromCDP++;
             EV_INFO << "Received " << msg << " from CDP module." << endl;
-            CDPUpdate *cdpUpdate = check_and_cast<CDPUpdate *>(msg);
-            dispatchCDPUpdate(cdpUpdate, msg->getArrivalGate()->getIndex());
+            Packet *packet = check_and_cast<Packet *>(msg);
+            dispatchCDPUpdate(packet);
         }
         // messages from LLDP process
         else if (strcmp(msg->getArrivalGate()->getName(), "lldpIn") == 0) {
             numReceivedUpdatesFromLLDP++;
             EV_INFO << "Received " << msg << " from LLDP module." << endl;
-            LLDPUpdate *lldpUpdate = check_and_cast<LLDPUpdate *>(msg);
-            dispatchLLDPUpdate(lldpUpdate, msg->getArrivalGate()->getIndex());
+            Packet *packet = check_and_cast<Packet *>(msg);
+            dispatchLLDPUpdate(packet);
         }
         // messages from network
         else if (strcmp(msg->getArrivalGate()->getName(), "ifIn") == 0) {
             numReceivedNetworkFrames++;
             EV_INFO << "Received " << msg << " from network." << endl;
-            EtherFrame *frame = check_and_cast<EtherFrame *>(msg);
-            handleAndDispatchFrame(frame);
+            Packet *packet = check_and_cast<Packet *>(msg);
+            handleAndDispatchFrame(packet);
         }
     }
     else
         throw cRuntimeError("This module doesn't handle self-messages!");
 }
 
-void relayUnit::broadcast(EtherFrame *frame)
+void relayUnit::broadcast(Packet *packet)
 {
-    EV_DETAIL << "Broadcast frame " << frame << endl;
+    EV_DETAIL << "Broadcast frame " << packet << endl;
 
-    unsigned int arrivalGate = frame->getArrivalGate()->getIndex();
+    int inputInterfaceId = packet->getTag<InterfaceInd>()->getInterfaceId();
 
-    for (unsigned int i = 0; i < portCount; i++)
-        if (i != arrivalGate && (!isCDPAware) && (!isLLDPAware))
-            dispatch(frame->dup(), i);
-
-
-    delete frame;
+    int numPorts = ifTable->getNumInterfaces();
+    for (int i = 0; i < numPorts; i++) {
+        InterfaceEntry *ie = ifTable->getInterface(i);
+        if (ie->isLoopback() || !ie->isBroadcast())
+            continue;
+        if (ie->getInterfaceId() != inputInterfaceId && (!isCDPAware) && (!isLLDPAware)) {
+            dispatch(packet->dup(), ie->getInterfaceId());
+        }
+    }
+    delete packet;
 }
 
-void relayUnit::handleAndDispatchFrame(EtherFrame *frame)
+void relayUnit::handleAndDispatchFrame(Packet *packet)
 {
-    int arrivalGate = frame->getArrivalGate()->getIndex();
+    const auto& frame = packet->peekAtFront<EthernetMacHeader>();
+    int arrivalInterfaceId = packet->getTag<InterfaceInd>()->getInterfaceId();
+    InterfaceEntry *arrivalInterface = ifTable->getInterfaceById(arrivalInterfaceId);
     //Ieee8021dInterfaceData *arrivalPortData = getPortInterfaceData(arrivalGate);
-    learn(frame);
+
+    learn(frame->getSrc(), arrivalInterfaceId);
 
     // BPDU Handling
     if ( frame->getDest() == bridgeGroupCDPAddress) {
         EV_DETAIL << "Deliver update to the CDP module" << endl;
-        deliverCDPUpdate(frame);    // deliver to the CDP module
+        deliverCDPUpdate(packet);    // deliver to the CDP module
     }
     else if ( frame->getDest() == bridgeGroupLLDPAddress) {
         EV_DETAIL << "Deliver update to the LLDP module" << endl;
-        deliverLLDPUpdate(frame);    // deliver to the LLDP module
+        deliverLLDPUpdate(packet);    // deliver to the LLDP module
     }
     else if (!isCDPAware && !isLLDPAware) {
         EV_INFO << "The arrival port is not forwarding! Discarding it!" << endl;
         numDroppedFrames++;
-        delete frame;
+        delete packet;
     }
     else if (frame->getDest().isBroadcast()) {    // broadcast address
-        broadcast(frame);
+        broadcast(packet);
     }
     else {
-        int outGate = macTable->getPortForAddress(frame->getDest());
+        int outInterfaceId = macTable->getPortForAddress(frame->getDest());
         // Not known -> broadcast
-        if (outGate == -1) {
+        if (outInterfaceId == -1) {
             EV_DETAIL << "Destination address = " << frame->getDest() << " unknown, broadcasting frame " << frame << endl;
-            broadcast(frame);
+            broadcast(packet);
         }
         else {
-            if (outGate != arrivalGate) {
-                //Ieee8021dInterfaceData *outPortData = getPortInterfaceData(outGate);
+            if (outInterfaceId != arrivalInterfaceId) {
+                //Ieee8021dInterfaceData *outPortData = getPortInterfaceData(outInterfaceId);
 
                 if (!isCDPAware && !isLLDPAware)
-                    dispatch(frame, outGate);
+                    dispatch(packet, outInterfaceId);
                 else {
-                    EV_INFO << "Output port " << outGate << " is not forwarding. Discarding!" << endl;
+                    EV_INFO << "Output port " << outInterfaceId << " is not forwarding. Discarding!" << endl;
                     numDroppedFrames++;
-                    delete frame;
+                    delete packet;
                 }
             }
             else {
                 EV_DETAIL << "Output port is same as input port, " << frame->getFullName() << " destination = " << frame->getDest() << ", discarding frame " << frame << endl;
                 numDroppedFrames++;
-                delete frame;
+                delete packet;
             }
         }
     }
 }
 
-void relayUnit::dispatch(EtherFrame *frame, unsigned int portNum)
+void relayUnit::dispatch(Packet *packet, unsigned int portNum)
 {
-    EV_INFO << "Sending frame " << frame << " on output port " << portNum << "." << endl;
+    const auto& frame = packet->peekAtFront<EthernetMacHeader>();
+    EV_INFO << "Sending frame " << packet << " on output port " << portNum << "." << endl;
 
-    if (portNum >= portCount)
-        throw cRuntimeError("Output port %d doesn't exist!", portNum);
-
-    EV_INFO << "Sending " << frame << " with destination = " << frame->getDest() << ", port = " << portNum << endl;
+    EV_INFO << "Sending " << packet << " with destination = " << frame->getDest() << ", port = " << portNum << endl;
 
     numDispatchedNonUpdateFrames++;
-    send(frame, "ifOut", portNum);
+    auto oldPacketProtocolTag = packet->removeTag<PacketProtocolTag>();
+    packet->clearTags();
+    auto newPacketProtocolTag = packet->addTag<PacketProtocolTag>();
+    *newPacketProtocolTag = *oldPacketProtocolTag;
+    delete oldPacketProtocolTag;
+    packet->addTag<InterfaceReq>()->setInterfaceId(portNum);
+    send(packet, "ifOut");
 }
 
-void relayUnit::learn(EtherFrame *frame)
+void relayUnit::learn(MacAddress srcAddr, int arrivalInterfaceId)
 {
-    int arrivalGate = frame->getArrivalGate()->getIndex();
-    //Ieee8021dInterfaceData *port = getPortInterfaceData(arrivalGate);
-
     if (!isCDPAware && !isLLDPAware)
-        macTable->updateTableWithAddress(arrivalGate, frame->getSrc());
+        macTable->updateTableWithAddress(arrivalInterfaceId, srcAddr);
 }
 
-void relayUnit::dispatchLLDPUpdate(LLDPUpdate *lldpUpdate, int port)
+void relayUnit::dispatchLLDPUpdate(Packet *packet)
 {
-    if (port >= portCount)
-        throw cRuntimeError("Output port %d doesn't exist!", port);
+    const auto& lldpUpdate = packet->peekAtFront<LLDPUpdate>(); // verify packet type
+    (void)lldpUpdate;       // unused variable
 
-    // TODO: use LLCFrame
-    EthernetIIFrame *frame = new EthernetIIFrame(lldpUpdate->getName());
+    // TODO: use LLCFrame       // see the inet::Ieee8021dRelay::dispatchBPDU()
+    const auto& header = makeShared<EthernetMacHeader>();
+    unsigned int portNum = packet->getTag<InterfaceReq>()->getInterfaceId();
+    MacAddress destAddress = packet->getTag<MacAddressReq>()->getDestAddress();
+    const Protocol *protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
+    ASSERT(protocol == &Protocol::lldp);
+    int ethType = ProtocolGroup::ethertype.getProtocolNumber(protocol);
 
-    frame->setKind(lldpUpdate->getKind());
-    frame->setSrc(bridgeAddress);
-    Ieee802Ctrl *controlInfo = check_and_cast<Ieee802Ctrl *>(lldpUpdate->getControlInfo());
-    frame->setDest(controlInfo->getDest());
-    frame->setEtherType(controlInfo->getEtherType());
-    frame->setByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
-    //frame->setFrameByteLength(ETHER_MAC_FRAME_BYTES + lldpUpdate->getByteLength());
-    frame->encapsulate(lldpUpdate);
+    header->setSrc(bridgeAddress);
+    header->setDest(destAddress);
+    header->setTypeOrLength(ethType);
+    packet->insertAtFront(header);
+    EtherEncap::addPaddingAndFcs(packet, FCS_DECLARED_CORRECT); //TODO add/use fcsMode parameter
+    packet->addTagIfAbsent<PacketProtocolTag>()->setProtocol(&Protocol::ethernetMac);
 
-    if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
-        frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
-
-    EV_INFO << "Sending LLDP packet " << frame << " with destination = " << frame->getDest() << ", port = " << port << endl;
+    EV_INFO << "Sending LLDP packet " << packet << " with destination = " << header->getDest() << ", interface = " << portNum << endl;
     numDispatchedUpdateFrames++;
-    send(frame, "ifOut", port);
+    send(packet, "ifOut");
 }
 
-void relayUnit::dispatchCDPUpdate(CDPUpdate *cdpUpdate, int port)
+void relayUnit::dispatchCDPUpdate(Packet *packet)
 {
-    if (port >= portCount)
-        throw cRuntimeError("Output port %d doesn't exist!", port);
+    const auto& cdpUpdate = packet->peekAtFront<CDPUpdate>(); // verify packet type
+    (void)cdpUpdate;       // unused variable
 
-    // TODO: use LLCFrame
-    EthernetIIFrame *frame = new EthernetIIFrame(cdpUpdate->getName());
+    const auto& header = makeShared<EthernetMacHeader>();
+    unsigned int portNum = packet->getTag<InterfaceReq>()->getInterfaceId();
+    MacAddress destAddress = packet->getTag<MacAddressReq>()->getDestAddress();
+    const Protocol *protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
+    ASSERT(protocol == &Protocol::cdp);
+    int ethType = ProtocolGroup::ethertype.getProtocolNumber(protocol);
 
-    frame->setKind(cdpUpdate->getKind());
-    frame->setSrc(bridgeAddress);
-    Ieee802Ctrl *controlInfo = check_and_cast<Ieee802Ctrl *>(cdpUpdate->getControlInfo());
-    frame->setDest(controlInfo->getDest());
-    frame->setByteLength(ETHER_MAC_FRAME_BYTES);
-    frame->setEtherType(8192);        // 0x2000
-    frame->encapsulate(cdpUpdate);
+    header->setSrc(bridgeAddress);
+    header->setDest(destAddress);
+    header->setTypeOrLength(ethType);
+    packet->insertAtFront(header);
+    EtherEncap::addPaddingAndFcs(packet, FCS_DECLARED_CORRECT); //TODO add/use fcsMode parameter
+    packet->addTagIfAbsent<PacketProtocolTag>()->setProtocol(&Protocol::ethernetMac);
 
-    if (frame->getByteLength() < MIN_ETHERNET_FRAME_BYTES)
-        frame->setByteLength(MIN_ETHERNET_FRAME_BYTES);
-
-    EV_INFO << "Sending CDP packet " << frame << " with destination = " << frame->getDest() << ", port = " << port << endl;
+    EV_INFO << "Sending CDP packet " << packet << " with destination = " << header->getDest() << ", port = " << portNum << endl;
     numDispatchedUpdateFrames++;
-    send(frame, "ifOut", port);
+    send(packet, "ifOut");
 }
 
-void relayUnit::deliverLLDPUpdate(EtherFrame *frame)
+void relayUnit::deliverLLDPUpdate(Packet *packet)
 {
-    LLDPUpdate *lldpUpdate = check_and_cast<LLDPUpdate *>(frame->decapsulate());
+    auto eth = EtherEncap::decapsulateMacHeader(packet);
+    ASSERT(isEth2Header(*eth));    //TODO use LLC header
+    //ASSERT(isIeee8023Header(*eth));
 
-    Ieee802Ctrl *controlInfo = nullptr;
-    if(lldpUpdate->getControlInfo() != nullptr)
-        controlInfo = check_and_cast<Ieee802Ctrl *>(lldpUpdate->getControlInfo());
-    if(controlInfo == nullptr)
-    {
-        controlInfo = new Ieee802Ctrl();
-        lldpUpdate->setControlInfo(controlInfo);
-    }
-    controlInfo->setSrc(frame->getSrc());
-    controlInfo->setSwitchPort(frame->getArrivalGate()->getIndex());
-    controlInfo->setDest(frame->getDest());
+    const auto& lldpUpdate = packet->peekAtFront<LLDPUpdate>();
 
-    delete frame;    // we have the BPDU packet, so delete the frame
-
-    EV_INFO << "Sending BPDU frame " << lldpUpdate << " to the STP/RSTP module" << endl;
+    EV_INFO << "Sending LLDP frame " << lldpUpdate << " to the LLDP module" << endl;
     numDeliveredUpdatesToLLDP++;
-    send(lldpUpdate, "lldpOut", controlInfo->getSwitchPort());
+    send(packet, "lldpOut");
 }
 
-void relayUnit::deliverCDPUpdate(EtherFrame *frame)
+void relayUnit::deliverCDPUpdate(Packet *packet)
 {
-    CDPUpdate *cdpUpdate = check_and_cast<CDPUpdate *>(frame->decapsulate());
+    auto eth = EtherEncap::decapsulateMacHeader(packet);
+    ASSERT(isEth2Header(*eth));    //TODO use LLC header
+    //ASSERT(isIeee8023Header(*eth));
 
-    Ieee802Ctrl *controlInfo = nullptr;
-    if(cdpUpdate->getControlInfo() != nullptr)
-        controlInfo = check_and_cast<Ieee802Ctrl *>(cdpUpdate->getControlInfo());
-    if(controlInfo == nullptr)
-    {
-        controlInfo = new Ieee802Ctrl();
-        cdpUpdate->setControlInfo(controlInfo);
-    }
-    controlInfo->setSrc(frame->getSrc());
-    controlInfo->setSwitchPort(frame->getArrivalGate()->getIndex());
-    controlInfo->setDest(frame->getDest());
+    const auto& cdpUpdate = packet->peekAtFront<CDPUpdate>();
 
-    delete frame;    // we have the BPDU packet, so delete the frame
-
-    EV_INFO << "Sending BPDU frame " << cdpUpdate << " to the STP/RSTP module" << endl;
+    EV_INFO << "Sending CDP frame " << cdpUpdate << " to the CDP module" << endl;
     numDeliveredUpdatesToCDP++;
-    send(cdpUpdate, "cdpOut", controlInfo->getSwitchPort());
+    send(packet, "cdpOut");
 }
-
 
 void relayUnit::start()
 {

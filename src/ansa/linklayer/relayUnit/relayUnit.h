@@ -24,6 +24,7 @@
 #include "inet/linklayer/ethernet/EtherFrame_m.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
+#include "inet/common/packet/Packet.h"
 
 #include "ansa/linklayer/cdp/CDPUpdate.h"
 #include "ansa/linklayer/lldp/LLDPUpdate.h"
@@ -49,7 +50,6 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
     bool isOperational = false;
     bool isCDPAware = false;
     bool isLLDPAware = false;
-    unsigned int portCount = 0;    // number of ports in the switch
 
     // statistics: see finish() for details.
     int numReceivedNetworkFrames = 0;
@@ -74,16 +74,16 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
      * Includes calls to updateTableWithAddress() and getPortForAddress().
      *
      */
-    void handleAndDispatchFrame(EtherFrame *frame);
-    void dispatch(EtherFrame *frame, unsigned int portNum);
-    void learn(EtherFrame *frame);
-    void broadcast(EtherFrame *frame);
+    void handleAndDispatchFrame(Packet *packet);
+    void dispatch(Packet *packet, unsigned int interfaceId);
+    void learn(MacAddress srcAddr, int arrivalInterfaceId);
+    void broadcast(Packet *packet);
 
-    void dispatchCDPUpdate(CDPUpdate *cdpUpdate, int port);
-    void deliverCDPUpdate(EtherFrame *frame);
+    void dispatchCDPUpdate(Packet *packet);
+    void deliverCDPUpdate(Packet *packet);
 
-    void dispatchLLDPUpdate(LLDPUpdate *lldpUpdate, int port);
-    void deliverLLDPUpdate(EtherFrame *frame);
+    void dispatchLLDPUpdate(Packet *packet);
+    void deliverLLDPUpdate(Packet *packet);
 
     // For lifecycle
     virtual void start();
