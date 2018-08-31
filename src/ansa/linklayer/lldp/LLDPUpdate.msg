@@ -21,14 +21,9 @@
 // @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 
 
-cplusplus {{
-#include "inet/common/TLVOption.h"
-}}
+import inet.common.TlvOptions;
 
 namespace inet;
-
-class noncobject TLVOptionBase;
-class noncobject TLVOptions;
 
 enum LLDPTLVType
 {
@@ -70,51 +65,51 @@ enum LLDPPortIdSubtype	//pcis
     pcisLocAss = 7;
 }
 
-class LLDPOptionChassisId extends TLVOptionBase
+class LLDPOptionChassisId extends TlvOptionBase
 {
     type = LLDPTLV_CHASSIS_ID;
     uint8_t	subtype;
     string	value;
 }
 
-class LLDPOptionPortId extends TLVOptionBase
+class LLDPOptionPortId extends TlvOptionBase
 {
     type = LLDPTLV_PORT_ID;
     uint8_t	subtype;
     string	value;
 }
 
-class LLDPOptionTTL extends TLVOptionBase
+class LLDPOptionTTL extends TlvOptionBase
 {
     type = LLDPTLV_TTL;
     uint16_t	ttl;
 }
 
-class LLDPOptionEndOf extends TLVOptionBase
+class LLDPOptionEndOf extends TlvOptionBase
 {
     type = LLDPTLV_END_OF;
     length = 1;				//TODO: should be 0
 }
 
-class LLDPOptionPortDes extends TLVOptionBase
+class LLDPOptionPortDes extends TlvOptionBase
 {
     type = LLDPTLV_PORT_DES;
     string	value;
 }
 
-class LLDPOptionSystemName extends TLVOptionBase
+class LLDPOptionSystemName extends TlvOptionBase
 {
     type = LLDPTLV_SYSTEM_NAME;
     string	value;
 }
 
-class LLDPOptionSystemDes extends TLVOptionBase
+class LLDPOptionSystemDes extends TlvOptionBase
 {
     type = LLDPTLV_SYSTEM_DES;
     string	value;
 }
 
-class LLDPOptionCap extends TLVOptionBase
+class LLDPOptionCap extends TlvOptionBase
 {
     type = LLDPTLV_SYSTEM_CAP;
     uint8_t	chasId = 0;
@@ -122,7 +117,7 @@ class LLDPOptionCap extends TLVOptionBase
     char	enCap[2];		// enabled capabilities
 }
 
-class LLDPOptionManAdd extends TLVOptionBase
+class LLDPOptionManAdd extends TlvOptionBase
 {
     type = LLDPTLV_MAN_ADD;
     uint8_t		addLength;			// length, in octets, of the (management addresssubtype + management address) fields
@@ -134,7 +129,7 @@ class LLDPOptionManAdd extends TLVOptionBase
     string		oid;				// object identifier
 }
 
-class LLDPOptionOrgSpec extends TLVOptionBase
+class LLDPOptionOrgSpec extends TlvOptionBase
 {
     type = LLDPTLV_ORG_SPEC;
     uint32_t	oui;			// organizationally unique identifier
@@ -148,5 +143,5 @@ packet LLDPUpdate
 {
     @customize(true);
     
-    TLVOptions		options;
+    TlvOptions		options;
 }
