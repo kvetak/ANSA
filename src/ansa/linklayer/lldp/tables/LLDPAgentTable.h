@@ -241,7 +241,7 @@ public:
     LLDPStatistics *getSt() {return &st;}
     InterfaceEntry *getInterface() {return interface;}
     int getInterfaceId() {return (interface) ? interface->getInterfaceId() : -1;}
-    const char *getIfaceName() const {return (interface) ? interface->getName() : "-";}
+    const char *getIfaceName() const {return (interface) ? interface->getInterfaceName() : "-";}
     LLDPTimer* getTxTTRTimer() {return txTTR;}
     LLDPTimer* getTxShutdownWhile() {return txShutdownWhile;}
     AS getAdminStatus() {return adminStatus;}

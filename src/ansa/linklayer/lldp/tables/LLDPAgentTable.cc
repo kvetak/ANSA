@@ -460,7 +460,7 @@ void LLDPAgent::setTlvPortDes(LLDPUpdate *msg)
 {
     LLDPOptionPortDes *tlv = new LLDPOptionPortDes();
 
-    std::string s = interface->getFullPath();
+    std::string s = interface->getInterfaceFullPath();
     if(s.size() > 255)
         s.resize(255);
 

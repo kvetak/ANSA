@@ -219,7 +219,7 @@ bool LLDPMain::handleOperationStage(LifecycleOperation *operation, int stage, ID
 void LLDPMain::startLLDP()
 {
     for(int i=0; i < ift->getNumInterfaces(); i++)
-        if(isInterfaceSupported(ift->getInterface(i)->getInterfaceModule()->getName()))
+        if(isInterfaceSupported(ift->getInterface(i)->cModule::getName()))
             createAgent(ift->getInterface(i));
 
     for (auto & agent : lat->getAgents())
