@@ -30,15 +30,15 @@ namespace inet {
 
 Register_Class(LLDPUpdate);
 
-TlvOptionBase *LLDPUpdate::findOptionByType(short int optionType, int index)
+const TlvOptionBase *LLDPUpdate::findOptionByType(short int optionType, int index)
 {
     int i = options.findByType(optionType, index);
-    return i >= 0 ? &getOption(i) : nullptr;
+    return i >= 0 ? getOption(i) : nullptr;
 }
 
 void LLDPUpdate::addOption(TlvOptionBase *opt, int atPos)
 {
-    options.add(opt, atPos);
+    options.insertTlvOption(atPos, opt);
 }
 
 short LLDPUpdate::getOptionLength(TlvOptionBase *opt)

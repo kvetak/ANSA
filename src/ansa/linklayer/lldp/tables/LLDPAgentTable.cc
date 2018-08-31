@@ -202,8 +202,8 @@ void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
 
     for(unsigned int i=3; i < msg->getOptionArraySize(); i++)
     {
-        const TlvOptionBase *option = &msg->getOption(i);
-        switch(msg->getOption(i).getType())
+        const TlvOptionBase *option = msg->getOption(i);
+        switch(msg->getOption(i)->getType())
         {
             case LLDPTLV_PORT_DES: {
                 const LLDPOptionPortDes *opt = check_and_cast<const LLDPOptionPortDes *> (option);
@@ -265,7 +265,7 @@ void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
             }
 
             default: {
-                EV_INFO << "Unknown type of TLV " << msg->getOption(i).getType() << endl;
+                EV_INFO << "Unknown type of TLV " << msg->getOption(i)->getType() << endl;
             }
         }
     }
@@ -360,7 +360,7 @@ void LLDPAgent::txFrame(LLDPUpdate *update)
     st.framesOutTotal++;
     short length = 0;
     for(unsigned int i = 0; i < update->getOptionArraySize(); i++)
-        length += update->getOptionLength(&update->getOption(i));
+        length += update->getOptionLength(update->getOption(i));
     length += sizeof(length)*update->getOptionArraySize();
     update->setByteLength(length);
     txTTROwner->send(update, "ifOut", interface->getNetworkLayerGateIndex());

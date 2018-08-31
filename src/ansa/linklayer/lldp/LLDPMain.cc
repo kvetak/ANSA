@@ -365,8 +365,8 @@ bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
 
     for(i=0; i < msg->getOptionArraySize(); i++)
     {
-        TlvOptionBase *option = &msg->getOption(i);
-        type = msg->getOption(i).getType();
+        const TlvOptionBase *option = msg->getOption(i);
+        type = msg->getOption(i)->getType();
 
         // validation of option position/occurrence
         switch(type)
@@ -407,7 +407,7 @@ bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
                 if(count[type] > 0)
                 {
                     EV_WARN << "An LLDPDU should contain one " << getNameOfTlv(type) << " TLV. TLV deleted" << endl;
-                    msg->getOptions().remove(option);
+                    msg->getOptionsForUpdate().eraseTlvOption(i);
                     i--;
                     st->tlvsDiscardedTotal++;
                 }
@@ -447,7 +447,7 @@ bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
             else
             {
                 EV_WARN << "TLV length of " << getNameOfTlv(type) << " TLV is different than actually length. TLV deleted" << endl;
-                msg->getOptions().remove(option);
+                msg->getOptionsForUpdate().eraseTlvOption(i);
                 i--;
                 st->tlvsDiscardedTotal++;
             }
@@ -459,12 +459,7 @@ bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
     }
 
     // remove options after End Of TLV
-    for(; i < msg->getOptionArraySize(); i++)
-    {
-        TlvOptionBase *option = &msg->getOption(i);
-        msg->getOptions().remove(option);
-        st->tlvsDiscardedTotal++;
-    }
+    msg->getOptionsForUpdate().setTlvOptionArraySize(i);
 
     return true;
 }
