@@ -22,6 +22,7 @@
 */
 
 #include "ansa/linklayer/lldp/LLDPMain.h"
+
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 
@@ -316,8 +317,9 @@ void LLDPMain::handleMessage(cMessage *msg)
     }
     else if(auto pk = dynamic_cast<Packet *>(msg))
     {
-        auto update = pk->peekAtFront<LLDPUpdate>();
-        handleUpdate(pk, update.get());
+        auto update = pk->peekAtFront<LLDPUpdate>().get()->dup();
+        handleUpdate(pk, update);
+        delete update;
         delete msg;
     }
     else
