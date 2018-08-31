@@ -202,7 +202,7 @@ void LLDPAgent::neighbourUpdate(LLDPUpdate *msg)
 
     for(unsigned int i=3; i < msg->getOptionArraySize(); i++)
     {
-        const TLVOptionBase *option = &msg->getOption(i);
+        const TlvOptionBase *option = &msg->getOption(i);
         switch(msg->getOption(i).getType())
         {
             case LLDPTLV_PORT_DES: {
@@ -352,7 +352,7 @@ void LLDPAgent::txFrame(LLDPUpdate *update)
     }
 
     Ieee802Ctrl *controlInfo = new Ieee802Ctrl();
-    controlInfo->setDestinationAddress(MACAddress("01-80-c2-00-00-0e"));
+    controlInfo->setDestinationAddress(MacAddress("01-80-c2-00-00-0e"));
     controlInfo->setInterfaceId(interface->getInterfaceId());
     controlInfo->setEtherType(35020);       // 88-cc
     update->setControlInfo(controlInfo);
@@ -549,7 +549,7 @@ void LLDPAgent::setTlvMtu(LLDPUpdate *msg)
 {
     LLDPOptionOrgSpec *tlv = new LLDPOptionOrgSpec();
     std::stringstream string;
-    string << interface->getMTU();
+    string << interface->getMtu();
 
     tlv->setOui(OUI_IEEE_802_3);            // IEEE 802.3
     tlv->setSubtype(4);                     // subtype to MTU

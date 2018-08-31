@@ -30,18 +30,18 @@ namespace inet {
 
 Register_Class(LLDPUpdate);
 
-TLVOptionBase *LLDPUpdate::findOptionByType(short int optionType, int index)
+TlvOptionBase *LLDPUpdate::findOptionByType(short int optionType, int index)
 {
     int i = options.findByType(optionType, index);
     return i >= 0 ? &getOption(i) : nullptr;
 }
 
-void LLDPUpdate::addOption(TLVOptionBase *opt, int atPos)
+void LLDPUpdate::addOption(TlvOptionBase *opt, int atPos)
 {
     options.add(opt, atPos);
 }
 
-short LLDPUpdate::getOptionLength(TLVOptionBase *opt)
+short LLDPUpdate::getOptionLength(TlvOptionBase *opt)
 {
     short length = 0;
     if(dynamic_cast<LLDPOptionEndOf *> (opt))
@@ -132,7 +132,7 @@ const char *LLDPUpdate::getPortId()
 }
 
 
-void LLDPUpdate::setOptionLength(TLVOptionBase *opt)
+void LLDPUpdate::setOptionLength(TlvOptionBase *opt)
 {
     opt->setLength(getOptionLength(opt));
 }

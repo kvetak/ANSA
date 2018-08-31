@@ -49,7 +49,7 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     /**
      * Get length of the specified option.
      */
-    short getOptionLength(TLVOptionBase *opt);
+    short getOptionLength(TlvOptionBase *opt);
 
     // getters
     std::string getMsap();
@@ -60,26 +60,26 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     /**
      * Set length of the specified option.
      */
-    virtual void setOptionLength(TLVOptionBase *opt);
+    virtual void setOptionLength(TlvOptionBase *opt);
 
     /**
      * Returns option
      */
-    virtual TLVOptionBase& getOption(unsigned int k) { return *check_and_cast<TLVOptionBase *>(&(options.at(k))); }
-    virtual const TLVOptionBase& getOption(unsigned int k) const { return const_cast<LLDPUpdate*>(this)->getOption(k); }
+    virtual TlvOptionBase& getOption(unsigned int k) { return *check_and_cast<TlvOptionBase *>(&(options.at(k))); }
+    virtual const TlvOptionBase& getOption(unsigned int k) const { return const_cast<LLDPUpdate*>(this)->getOption(k); }
 
     /**
-     * Returns the TLVOptionBase of the specified type,
+     * Returns the TlvOptionBase of the specified type,
      * or nullptr. If index is 0, then the first, if 1 then the
      * second option is returned.
      */
-    virtual TLVOptionBase *findOptionByType(short int optionType, int index = 0);
+    virtual TlvOptionBase *findOptionByType(short int optionType, int index = 0);
 
     /**
-     * Adds an TLVOptionBase to the update.
+     * Adds an TlvOptionBase to the update.
      * default atPos means add to the end.
      */
-    virtual void addOption(TLVOptionBase *opt, int atPos = -1);
+    virtual void addOption(TlvOptionBase *opt, int atPos = -1);
 
 };
 } /* namespace inet */

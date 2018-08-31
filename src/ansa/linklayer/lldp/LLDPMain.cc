@@ -33,9 +33,9 @@ Define_Module(LLDPMain);
 
 LLDPMain::~LLDPMain()
 {
-    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
-    containingModule->unsubscribe(NF_INTERFACE_CREATED, this);
-    containingModule->unsubscribe(NF_INTERFACE_DELETED, this);
+    containingModule->unsubscribe(interfaceStateChangedSignal, this);
+    containingModule->unsubscribe(interfaceCreatedSignal, this);
+    containingModule->unsubscribe(interfaceDeletedSignal, this);
 
     cancelAndDelete(tickTimer);
 }
@@ -69,9 +69,9 @@ void LLDPMain::initialize(int stage)
         WATCH_PTRVECTOR(lnt->getNeighbours());
     }
     if (stage == INITSTAGE_LAST) {
-        containingModule->subscribe(NF_INTERFACE_STATE_CHANGED, this);
-        containingModule->subscribe(NF_INTERFACE_CREATED, this);
-        containingModule->subscribe(NF_INTERFACE_DELETED, this);
+        containingModule->subscribe(interfaceStateChangedSignal, this);
+        containingModule->subscribe(interfaceCreatedSignal, this);
+        containingModule->subscribe(interfaceDeletedSignal, this);
 
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(containingModule->getSubmodule("status"));
         isOperational = (!nodeStatus) || nodeStatus->getState() == NodeStatus::UP;
@@ -163,13 +163,13 @@ void LLDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *
     InterfaceEntry *interface;
     LLDPAgent *agent;
 
-    if(signalID == NF_INTERFACE_CREATED)
+    if(signalID == interfaceCreatedSignal)
     {
         //new interface created
         interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
         createAgent(interface);
     }
-    else if(signalID == NF_INTERFACE_DELETED)
+    else if(signalID == interfaceDeletedSignal)
     {
         //interface deleted
         interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
@@ -177,7 +177,7 @@ void LLDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *
         agent->txShutdownFrame();
         delete agent;
     }
-    else if(signalID == NF_INTERFACE_STATE_CHANGED)
+    else if(signalID == interfaceStateChangedSignal)
     {
         //interface state changed
         interface = check_and_cast<const InterfaceEntryChangeDetails *>(obj)->getInterfaceEntry();
@@ -365,7 +365,7 @@ bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
 
     for(i=0; i < msg->getOptionArraySize(); i++)
     {
-        TLVOptionBase *option = &msg->getOption(i);
+        TlvOptionBase *option = &msg->getOption(i);
         type = msg->getOption(i).getType();
 
         // validation of option position/occurrence
@@ -461,7 +461,7 @@ bool LLDPMain::frameValidation(LLDPUpdate *msg, LLDPAgent *agent)
     // remove options after End Of TLV
     for(; i < msg->getOptionArraySize(); i++)
     {
-        TLVOptionBase *option = &msg->getOption(i);
+        TlvOptionBase *option = &msg->getOption(i);
         msg->getOptions().remove(option);
         st->tlvsDiscardedTotal++;
     }
