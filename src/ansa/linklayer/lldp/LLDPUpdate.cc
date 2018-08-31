@@ -41,58 +41,49 @@ void LLDPUpdate::addOption(TlvOptionBase *opt, int atPos)
     options.insertTlvOption(atPos, opt);
 }
 
-short LLDPUpdate::getOptionLength(TlvOptionBase *opt)
+short LLDPUpdate::getOptionLength(const TlvOptionBase *opt)
 {
     short length = 0;
-    if(dynamic_cast<LLDPOptionEndOf *> (opt))
+    if(dynamic_cast<const LLDPOptionEndOf *> (opt))
     {
         length = 1;         //can't be 0
     }
-    else if(dynamic_cast<LLDPOptionChassisId *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionChassisId *> (opt))
     {
-        LLDPOptionChassisId *option = dynamic_cast<LLDPOptionChassisId *> (opt);
         length = strlen(option->getValue()) + sizeof(option->getSubtype());
     }
-    else if(dynamic_cast<LLDPOptionPortId *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionPortId *> (opt))
     {
-        LLDPOptionPortId *option = dynamic_cast<LLDPOptionPortId *> (opt);
         length = strlen(option->getValue()) + sizeof(option->getSubtype());
     }
-    else if(dynamic_cast<LLDPOptionTTL *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionTTL *> (opt))
     {
-        LLDPOptionTTL *option = dynamic_cast<LLDPOptionTTL *> (opt);
         length = sizeof(option->getTtl());
     }
-    else if(dynamic_cast<LLDPOptionPortDes *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionPortDes *> (opt))
     {
-        LLDPOptionPortDes *option = dynamic_cast<LLDPOptionPortDes *> (opt);
         length = strlen(option->getValue());
     }
-    else if(dynamic_cast<LLDPOptionSystemName *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionSystemName *> (opt))
     {
-        LLDPOptionSystemName *option = dynamic_cast<LLDPOptionSystemName *> (opt);
         length = strlen(option->getValue());
     }
-    else if(dynamic_cast<LLDPOptionSystemDes *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionSystemDes *> (opt))
     {
-        LLDPOptionSystemDes *option = dynamic_cast<LLDPOptionSystemDes *> (opt);
         length = strlen(option->getValue());
     }
-    else if(dynamic_cast<LLDPOptionCap *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionCap *> (opt))
     {
-        LLDPOptionCap *option = dynamic_cast<LLDPOptionCap *> (opt);
         length = option->getEnCapArraySize() + option->getSysCapArraySize() + sizeof(option->getChasId());
     }
-    else if(dynamic_cast<LLDPOptionManAdd *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionManAdd *> (opt))
     {
-        LLDPOptionManAdd *option = dynamic_cast<LLDPOptionManAdd *> (opt);
         length = sizeof(option->getAddLength()) + sizeof(option->getAddSubtype()) + strlen(option->getAddress());
         length += sizeof(option->getIfaceSubtype()) + sizeof(option->getIfaceNum());
         length += sizeof(option->getOidLength()) + strlen(option->getOid());
     }
-    else if(dynamic_cast<LLDPOptionOrgSpec *> (opt))
+    else if (auto option = dynamic_cast<const LLDPOptionOrgSpec *> (opt))
     {
-        LLDPOptionOrgSpec *option = dynamic_cast<LLDPOptionOrgSpec *> (opt);
         length = sizeof(option->getOui()) + sizeof(option->getSubtype()) + strlen(option->getValue());
     }
 
@@ -112,21 +103,21 @@ std::string LLDPUpdate::getMsap()
 
 uint16_t LLDPUpdate::getTtl()
 {
-    LLDPOptionTTL *ttl = dynamic_cast<LLDPOptionTTL *> (&getOption(2));
+    const LLDPOptionTTL *ttl = check_and_cast<const LLDPOptionTTL *> (getOption(2));
 
     return ttl->getTtl();
 }
 
 const char *LLDPUpdate::getChassisId()
 {
-    LLDPOptionChassisId *chassisId = dynamic_cast<LLDPOptionChassisId *> (&getOption(0));
+    const LLDPOptionChassisId *chassisId = check_and_cast<const LLDPOptionChassisId *> (getOption(0));
 
     return chassisId->getValue();
 }
 
 const char *LLDPUpdate::getPortId()
 {
-    LLDPOptionPortId *portId = dynamic_cast<LLDPOptionPortId *> (&getOption(1));
+    const LLDPOptionPortId *portId = check_and_cast<const LLDPOptionPortId *> (getOption(1));
 
     return portId->getValue();
 }

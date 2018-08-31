@@ -49,7 +49,7 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     /**
      * Get length of the specified option.
      */
-    short getOptionLength(TlvOptionBase *opt);
+    short getOptionLength(const TlvOptionBase *opt);
 
     // getters
     std::string getMsap();
@@ -73,7 +73,7 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
      * or nullptr. If index is 0, then the first, if 1 then the
      * second option is returned.
      */
-    virtual TlvOptionBase *findOptionByType(short int optionType, int index = 0);
+    virtual const TlvOptionBase *findOptionByType(short int optionType, int index = 0);
 
     /**
      * Adds an TlvOptionBase to the update.
