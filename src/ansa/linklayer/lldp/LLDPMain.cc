@@ -156,7 +156,7 @@ int LLDPMain::capabilitiesPosition(std::string capability)
 }
 
 
-void LLDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG)
+void LLDPMain::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details)
 {
     Enter_Method_Silent();
 
