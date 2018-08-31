@@ -37,7 +37,7 @@ class INET_API LLDPUpdate : public LLDPUpdate_Base
     void clean();
 
   public:
-    LLDPUpdate(const char *name=nullptr, int kind=0) : LLDPUpdate_Base(name,kind) {}
+    LLDPUpdate() : LLDPUpdate_Base() {}
     LLDPUpdate(const LLDPUpdate& other) : LLDPUpdate_Base(other) {copy(other);}
     LLDPUpdate& operator=(const LLDPUpdate& other) {if (this==&other) return *this; LLDPUpdate_Base::operator=(other); copy(other); return *this;}
     virtual LLDPUpdate *dup() const {return new LLDPUpdate(*this);}

@@ -22,6 +22,7 @@
 
 
 import inet.common.TlvOptions;
+import inet.common.packet.chunk.Chunk;
 
 namespace inet;
 
@@ -139,7 +140,7 @@ class LLDPOptionOrgSpec extends TlvOptionBase
 
 
 //LLDP update packet
-packet LLDPUpdate
+class LLDPUpdate extends FieldsChunk
 {
     @customize(true);
     
