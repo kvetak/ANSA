@@ -84,27 +84,27 @@ module ANSA_EtherSwitch
         }
         relayUnit: <relayUnitType> like ANSA_IMACRelayUnit {
             parameters:
-                @display("p=263,50;is=m");
+                @display("p=405,96;is=m");
         }
         nl: MessageDispatcher {
             parameters:
-                @display("p=800,200;b=1200,5");
+                @display("p=405,159;b=550,5");
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IEthernetInterface {
             parameters:
                 mac.promiscuous = true;
-                @display("p=263,150,row;q=txQueue");
+                @display("p=156,227,row;q=txQueue");
         }
         cdp: CDP if hasCDP {
             parameters:
-                @display("p=168,111");
+                @display("p=286,34");
             gates:
                 ifIn;
                 ifOut;
         }
         lldp: LLDP if hasLLDP {
             parameters:
-                @display("p=168,50");
+                @display("p=527,34");
             gates:
                 ifIn;
                 ifOut;
