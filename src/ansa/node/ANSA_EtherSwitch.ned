@@ -23,13 +23,11 @@
 package ansa.node;
 
 import ansa.linklayer.cdp.CDP;
+import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 import ansa.linklayer.lldp.LLDP;
 import inet.common.lifecycle.NodeStatus;
-import inet.linklayer.contract.IMACAddressTable;
-import ansa.linklayer.contract.ANSA_IMACRelayUnit;
-import inet.linklayer.contract.ISpanningTree;
-import inet.linklayer.contract.IWiredNic;
-import inet.linklayer.configurator.L2NodeConfigurator;
+import inet.linklayer.contract.IEthernetInterface;
+import inet.linklayer.contract.IMacAddressTable;
 import inet.networklayer.common.InterfaceTable;
 
 
@@ -57,15 +55,14 @@ module ANSA_EtherSwitch
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
         bool hasSTP= default(false);
-        string macType = default(csmacdSupport ? "EtherMAC" : "EtherMACFullDuplex"); // ~EtherMAC or ~EtherMACFullDuplex
 
         string relayUnitType = default("relayUnit"); // type of the ~IMACRelayUnit;
-        string macTableType = default("MACAddressTable"); // type of the ~IMACAddressTable
-        eth[*].encapType = "EtherEncapDummy";
+        string macTableType = default("MacAddressTable"); // type of the ~IMACAddressTable
+        eth[*].encap.typename = "EtherEncapDummy";
         eth[*].csmacdSupport = csmacdSupport;
-        eth[*].macType = macType;
+        eth[*].mac.typename = default(csmacdSupport ? "EtherMac" : "EtherMacFullDuplex");
         *.interfaceTableModule = default(absPath(".interfaceTable"));
-        
+
         string deviceId = default("");
         xml configFile = default(xmldoc("config.xml"));
         string deviceType = default("Switch"); 
@@ -81,7 +78,7 @@ module ANSA_EtherSwitch
         interfaceTable: InterfaceTable {
             @display("p=73,65;is=s");
         }
-        macTable: <macTableType> like IMACAddressTable {
+        macTable: <macTableType> like IMacAddressTable {
             @display("p=73,19;is=s");
         }
         relayUnit: <relayUnitType> like ANSA_IMACRelayUnit {
@@ -91,7 +88,7 @@ module ANSA_EtherSwitch
                 ifIn[sizeof(ethg)];
                 ifOut[sizeof(ethg)];
         }
-        eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
+        eth[sizeof(ethg)]: <default("EthernetInterface")> like IEthernetInterface {
             parameters:
                 mac.promiscuous = true;
                 @display("p=263,150,row;q=txQueue");
