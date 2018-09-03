@@ -65,8 +65,8 @@ module CDP like INetworkLayerLower
         *.maxDestinationPaths = maxDestinationPaths;
         *.defaultRouteInvalide = defaultRouteInvalide;
     gates:
-        input ifIn[] @labels(INetworkDatagram/up);
-        output ifOut[] @labels(INetworkDatagram/down);
+        input ifIn @labels(INetworkDatagram/up);
+        output ifOut @labels(INetworkDatagram/down);
 
     submodules:
         cdpNeighbourTable: CDPNeighbourTable {
@@ -90,11 +90,6 @@ module CDP like INetworkLayerLower
         }
 
     connections:
-        for i=0..sizeof(ifIn)-1 {
-            ifIn[i] --> { @display("m=w"); } --> cdpMain.ifIn++;
-        }
-
-        for i=0..sizeof(ifOut)-1 {
-            cdpMain.ifOut++ --> { @display("m=w"); } --> ifOut[i];
-        }
+        ifIn --> { @display("m=w"); } --> cdpMain.ifIn;
+        cdpMain.ifOut --> { @display("m=w"); } --> ifOut;
 }

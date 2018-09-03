@@ -90,8 +90,6 @@ module ANSA_EtherSwitch
             gates:
                 ifIn[sizeof(ethg)];
                 ifOut[sizeof(ethg)];
-                cdpIn[sizeof(ethg)];
-                cdpOut[sizeof(ethg)];
                 lldpIn[sizeof(ethg)];
                 lldpOut[sizeof(ethg)];
         }
@@ -104,8 +102,8 @@ module ANSA_EtherSwitch
             parameters:
                 @display("p=168,111");
             gates:
-                ifIn[sizeof(ethg)];
-                ifOut[sizeof(ethg)];
+                ifIn;
+                ifOut;
         }
         lldp: LLDP if hasLLDP {
             parameters:
@@ -118,11 +116,12 @@ module ANSA_EtherSwitch
         for i=0..sizeof(ethg)-1 {
             eth[i].upperLayerIn <-- relayUnit.ifOut++;
             eth[i].upperLayerOut --> relayUnit.ifIn++;
-            cdp.ifIn[i] <-- relayUnit.cdpOut[i] if hasCDP;
-            cdp.ifOut[i] --> relayUnit.cdpIn[i] if hasCDP;
             lldp.ifIn[i] <-- relayUnit.lldpOut[i] if hasLLDP;
             lldp.ifOut[i] --> relayUnit.lldpIn[i] if hasLLDP;
             eth[i].phys <--> ethg[i];
         }
+        cdp.ifIn <-- relayUnit.cdpOut if hasCDP;
+        cdp.ifOut --> relayUnit.cdpIn if hasCDP;
 
 }
+

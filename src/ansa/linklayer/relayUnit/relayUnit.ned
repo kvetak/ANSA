@@ -42,8 +42,8 @@ simple relayUnit like ANSA_IMACRelayUnit
     gates:
         input ifIn[];
         output ifOut[];
-        input cdpIn[] @loose;
-        output cdpOut[] @loose;
+        input cdpIn @loose;
+        output cdpOut @loose;
         input lldpIn[] @loose;
         output lldpOut[] @loose;
 }
