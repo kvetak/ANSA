@@ -39,8 +39,6 @@ package ansa.node;
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-package ansa.node;
-
 import inet.common.lifecycle.NodeStatus;
 import inet.common.packet.PcapRecorder;
 import inet.linklayer.contract.IExternalNic;

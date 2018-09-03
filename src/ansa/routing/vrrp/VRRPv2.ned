@@ -20,9 +20,9 @@
 
 package ansa.routing.vrrp;
 
-import inet.routing.contract.IIPRouting;
+import inet.routing.contract.IManetRouting;
 
-simple VRRPv2 like IIPRouting
+simple VRRPv2 like IManetRouting
 {
     parameters:
         @display("i=block/network2");

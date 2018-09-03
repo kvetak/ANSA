@@ -15,15 +15,15 @@
 
 package ansa.linklayer.rbridge;
 
-import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.IEthernetInterface;
 import inet.common.queue.IOutputQueue;
 import inet.linklayer.ethernet.EtherEncap;
-import inet.linklayer.ethernet.EtherMAC;
+import inet.linklayer.ethernet.EtherMac;
 //import inet.ansa.linklayer.ethernet.AnsaEtherMAC;
 //
 // TODO auto-generated type
 //
-module RBEthernetInterface  like IWiredNic
+module RBEthernetInterface  like IEthernetInterface
 {
 
     parameters:

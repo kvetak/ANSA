@@ -21,9 +21,9 @@
 
 package ansa.routing.glbp;
 
-import inet.applications.contract.IUDPApp;
+import inet.applications.contract.IApp;
 
-simple GLBP like IUDPApp
+simple GLBP like IApp
 {
     parameters:
         @display("i=block/routing");
@@ -36,6 +36,6 @@ simple GLBP like IUDPApp
     gates:
         input glbpIn[];		/// from GLBPVR module to GLBP
         output glbpOut[]; 	/// from GLBP module to GLBPVR	 
-        input udpIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
-        output udpOut @lables(UDPControlInfo/down);	///form GLBP module to UDP
+        input socketIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
+        output socketOut @lables(UDPControlInfo/down);	///form GLBP module to UDP
 }

@@ -20,9 +20,9 @@
 
 
 package ansa.routing.glbp;
-import inet.applications.contract.IUDPApp;
+import inet.applications.contract.IApp;
 
-simple GLBPVirtualRouter like IUDPApp
+simple GLBPVirtualRouter like IApp
 {
     parameters:
         @display("i=block/routing");
@@ -60,6 +60,6 @@ simple GLBPVirtualRouter like IUDPApp
         string glbpMulticastAddress = default("224.0.0.102");
 
     gates:
-        input udpIn;	///to GLBP module
-        output udpOut;  ///from GLBP module
+        input socketIn;	///to GLBP module
+        output socketOut;  ///from GLBP module
 }

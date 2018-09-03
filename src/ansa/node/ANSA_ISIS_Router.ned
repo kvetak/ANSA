@@ -24,8 +24,6 @@
 
 package ansa.node;
 
-package ansa.node;
-
 import ansa.node.ANSA_Router;
 
 module ANSA_ISISRouter extends ANSA_Router

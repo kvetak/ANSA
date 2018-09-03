@@ -21,9 +21,9 @@
 
 package ansa.routing.hsrp;
 
-import inet.applications.contract.IUDPApp;
+import inet.applications.contract.IApp;
 
-simple HSRP like IUDPApp
+simple HSRP like IApp
 {
     parameters:
         @display("i=block/routing");
@@ -33,6 +33,6 @@ simple HSRP like IUDPApp
     gates:
         input hsrpIn[];					///from HSRPVR to GLBP
         output hsrpOut[];    			///from GLBP module to HSRPVR
-        input udpIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
-        output udpOut @lables(UDPControlInfo/down);	///from GLBP module to UDP
+        input socketIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
+        output socketOut @lables(UDPControlInfo/down);	///from GLBP module to UDP
 }

@@ -95,10 +95,10 @@ module ANSA_MultiNetworkLayer like INetworkLayer
         ipv4.arpType = "AnsaARP";
 
     gates:
-        input ifIn[] @labels(INetworkDatagram);
-        output ifOut[] @labels(INetworkDatagram);
-        input transportIn[] @labels(IPv4ControlInfo/down);
-        output transportOut[] @labels(IPv4ControlInfo/up);
+        input ifIn @labels(INetworkDatagram);
+        output ifOut @labels(INetworkDatagram);
+        input transportIn @labels(IPv4ControlInfo/down);
+        output transportOut @labels(IPv4ControlInfo/up);
         input pingIn[] @labels(PingPayload/down);
         output pingOut[] @labels(PingPayload/up);
 

@@ -22,7 +22,7 @@
 
 package ansa.linklayer.ethernet;
 
-import inet.linklayer.contract.IEtherMAC;
+import inet.linklayer.contract.IEtherMac;
 
 
 //
@@ -119,7 +119,7 @@ import inet.linklayer.contract.IEtherMAC;
 // @see ~EtherMAC, ~EthernetInterface, ~IOutputQueue, ~EtherEncap, ~EtherLLC
 // @see ~EtherFrame, ~EthernetIIFrame, ~EtherFrameWithLLC, ~Ieee802Ctrl
 //
-simple ANSA_EtherMACFullDuplex like IEtherMAC
+simple ANSA_EtherMACFullDuplex like IEtherMac
 {
     parameters:
         string interfaceTableModule;        // The path to the InterfaceTable module

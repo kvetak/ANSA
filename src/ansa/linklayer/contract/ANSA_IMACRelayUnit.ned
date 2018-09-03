@@ -55,4 +55,3 @@ moduleinterface ANSA_IMACRelayUnit
         output lldpOut @loose;
 }
 
-

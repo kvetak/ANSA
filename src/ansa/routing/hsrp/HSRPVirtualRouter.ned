@@ -20,9 +20,9 @@
 
 
 package ansa.routing.hsrp;
-import inet.applications.contract.IUDPApp;
+import inet.applications.contract.IApp;
 
-simple HSRPVirtualRouter like IUDPApp
+simple HSRPVirtualRouter like IApp
 {
     parameters:
         @display("i=block/routing");
@@ -46,6 +46,6 @@ simple HSRPVirtualRouter like IUDPApp
         string virtualIP = default("0.0.0.0");	//virtual IP address of actual HSRP device        	
 
     gates:
-        input udpIn; 	///to HSRP module
-        output udpOut;	///from HSRP module
+        input socketIn; 	///to HSRP module
+        output socketOut;	///from HSRP module
 }

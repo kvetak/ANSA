@@ -23,15 +23,15 @@
 package ansa.linklayer.ethernet;
 
 import inet.common.IHook;
-import inet.linklayer.contract.IEtherMAC;
+import inet.linklayer.contract.IEtherMac;
 import inet.linklayer.contract.ITrafficConditioner;
-import inet.linklayer.contract.IWiredNic;
+import inet.linklayer.contract.IEthernetInterface;
 import inet.linklayer.ethernet.*;
 //
 // Ethernet network interface. Complements ~EtherMAC and ~EtherEncap
 // with an output queue for QoS and RED support.
 //
-module ANSA_EthernetInterface like IWiredNic
+module ANSA_EthernetInterface like IEthernetInterface
 {
     parameters:
         string interfaceTableModule;

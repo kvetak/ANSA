@@ -25,10 +25,10 @@ import ansa.routing.babel.BabelMain;
 import ansa.routing.babel.cost.CostKoutofj;
 import ansa.routing.babel.cost.CostEtx;
 
-import inet.applications.contract.IUDPApp;
+import inet.applications.contract.IApp;
 
 
-module BabelRouting like IUDPApp
+module BabelRouting like IApp
 {
     parameters:
         @display("i=block/network2;bgb=205,215,white");
@@ -39,8 +39,8 @@ module BabelRouting like IUDPApp
         string routingTableModule;
         
     gates:
-        input udpIn @labels(UDPControlInfo/up);
-        output udpOut @labels(UDPControlInfo/down);        
+        input socketIn @labels(UDPControlInfo/up);
+        output socketOut @labels(UDPControlInfo/down);        
 
     submodules:
         babelMain: BabelMain {

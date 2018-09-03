@@ -18,7 +18,7 @@
 
 package ansa.networklayer.arp.ipv4;
 
-import inet.networklayer.arp.ipv4.ARP;
+import inet.networklayer.arp.ipv4.Arp;
 
 
 //
@@ -43,7 +43,7 @@ import inet.networklayer.arp.ipv4.ARP;
 // these files don't contain the word <tt>BROADCAST</tt> e.g. for PPP
 // interfaces.
 //
-simple AnsaARP extends ARP
+simple AnsaARP extends Arp
 {
     parameters:
         @class(AnsaARP);

@@ -39,10 +39,10 @@ module CLNSNetworkLayer like INetworkLayer
 
         @display("i=block/fork");
     gates:
-        input ifIn[] @labels(INetworkDatagram);
-        output ifOut[] @labels(INetworkDatagram);
-        input transportIn[] @labels(CLNSControlInfo/down);
-        output transportOut[] @labels(CLNSControlInfo/up);
+        input ifIn @labels(INetworkDatagram);
+        output ifOut @labels(INetworkDatagram);
+        input transportIn @labels(CLNSControlInfo/down);
+        output transportOut @labels(CLNSControlInfo/up);
         input pingIn[] @labels(PingPayload/down);
         output pingOut[] @labels(PingPayload/up);
 //        input igmpIn;

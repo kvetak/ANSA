@@ -16,10 +16,9 @@
 package ansa.examples.ansa.cdp.basicSwitch;
 
 import ansa.node.ANSA_EtherSwitch;
-import inet.node.ethernet.Eth100M;
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
-import inet.common.lifecycle.LifecycleController;
+import inet.node.ethernet.Eth100M;
+
 
 network CDPSimpleSwitch
 {
@@ -44,15 +43,11 @@ network CDPSimpleSwitch
             gates:
                 ethg[3];
         }
-        
-        lifecycleController: LifecycleController {
-            @display("p=48,68");
-        }
 
         scenarioManager: ScenarioManager {
             @display("p=48,123");
         }
-        
+
 
     connections allowunconnected:
         S1.ethg[0] <--> Eth100M <--> S2.ethg[0];
