@@ -21,12 +21,12 @@
 
 
 package ansa.linklayer.cdp;
-import ansa.linklayer.cdp.tables.CDPNeighbourTable;
-import ansa.linklayer.cdp.tables.CDPInterfaceTable;
-import ansa.linklayer.cdp.tables.CDPODRRouteTable;
-import ansa.linklayer.cdp.CDPMain;
 
+import ansa.linklayer.cdp.tables.CDPInterfaceTable;
+import ansa.linklayer.cdp.tables.CDPNeighbourTable;
+import ansa.linklayer.cdp.tables.CDPODRRouteTable;
 import inet.networklayer.contract.INetworkLayerLower;
+
 
 module CDP like INetworkLayerLower
 {
@@ -37,17 +37,17 @@ module CDP like INetworkLayerLower
         string deviceId = default("");
         string deviceType = default("");
         xml configFile = default(xmldoc("config.xml"));
-        
+
         bool odr = default(false);
-    	int timer @unit(s) = default(60s);
-    	int holdTime @unit(s) = default(180s);
-    	int version = default(2);
-    	int ODRRouteInvalidTime = default(180);
-    	int ODRRouteHolddownTime = default(0);
-    	int ODRRouteFlushTime = default(240);
-    	int maxDestinationPaths = default(4);
+        int timer @unit(s) = default(60s);
+        int holdTime @unit(s) = default(180s);
+        int version = default(2);
+        int ODRRouteInvalidTime = default(180);
+        int ODRRouteHolddownTime = default(0);
+        int ODRRouteFlushTime = default(240);
+        int maxDestinationPaths = default(4);
         int defaultRouteInvalide = default(180);
-	
+
         **.deviceId = deviceId;
         **.deviceType = deviceType;
         **.configFile = default(xmldoc("config.xml"));
@@ -93,3 +93,4 @@ module CDP like INetworkLayerLower
         ifIn --> { @display("m=w"); } --> cdpMain.ifIn;
         cdpMain.ifOut --> { @display("m=w"); } --> ifOut;
 }
+
