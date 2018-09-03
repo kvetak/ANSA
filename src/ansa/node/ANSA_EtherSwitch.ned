@@ -44,17 +44,17 @@ module ANSA_EtherSwitch
 {
     parameters:
         @networkNode();
-        
-        @capabilities("Repeater", "MAC Bridge", "Switch");
-        @capabilitiesEnabled("Repeater", "MAC Bridge", "Switch");
-        
+
+        @capabilities("Repeater","MAC Bridge","Switch");
+        @capabilitiesEnabled("Repeater","MAC Bridge","Switch");
+
         @labels(node,ethernet-node);
         @display("i=device/switch");
         bool hasStatus = default(true);
         bool csmacdSupport = default(true);  // by default use CSMA/CD
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
-        bool hasSTP= default(false);
+        bool hasSTP = default(false);
 
         string relayUnitType = default("relayUnit"); // type of the ~IMACRelayUnit;
         string macTableType = default("MacAddressTable"); // type of the ~IMACAddressTable
@@ -65,7 +65,7 @@ module ANSA_EtherSwitch
 
         string deviceId = default("");
         xml configFile = default(xmldoc("config.xml"));
-        string deviceType = default("Switch"); 
+        string deviceType = default("Switch");
         **.deviceId = deviceId;
         **.deviceType = deviceType;
         **.configFile = default(xmldoc("config.xml"));
