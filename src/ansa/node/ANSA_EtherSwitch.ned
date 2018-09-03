@@ -90,8 +90,6 @@ module ANSA_EtherSwitch
             gates:
                 ifIn[sizeof(ethg)];
                 ifOut[sizeof(ethg)];
-                lldpIn[sizeof(ethg)];
-                lldpOut[sizeof(ethg)];
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
             parameters:
@@ -109,19 +107,18 @@ module ANSA_EtherSwitch
             parameters:
                 @display("p=168,50");
             gates:
-                ifIn[sizeof(ethg)];
-                ifOut[sizeof(ethg)];
+                ifIn;
+                ifOut;
         }
     connections allowunconnected:
         for i=0..sizeof(ethg)-1 {
             eth[i].upperLayerIn <-- relayUnit.ifOut++;
             eth[i].upperLayerOut --> relayUnit.ifIn++;
-            lldp.ifIn[i] <-- relayUnit.lldpOut[i] if hasLLDP;
-            lldp.ifOut[i] --> relayUnit.lldpIn[i] if hasLLDP;
             eth[i].phys <--> ethg[i];
         }
         cdp.ifIn <-- relayUnit.cdpOut if hasCDP;
         cdp.ifOut --> relayUnit.cdpIn if hasCDP;
-
+        lldp.ifIn <-- relayUnit.lldpOut if hasLLDP;
+        lldp.ifOut --> relayUnit.lldpIn if hasLLDP;
 }
 

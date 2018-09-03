@@ -51,8 +51,8 @@ moduleinterface ANSA_IMACRelayUnit
         output ifOut[] @labels(EtherFrame);
         input cdpIn @loose;
         output cdpOut @loose;
-        input lldpIn[] @loose;
-        output lldpOut[] @loose;
+        input lldpIn @loose;
+        output lldpOut @loose;
 }
 
 

@@ -44,6 +44,6 @@ simple relayUnit like ANSA_IMACRelayUnit
         output ifOut[];
         input cdpIn @loose;
         output cdpOut @loose;
-        input lldpIn[] @loose;
-        output lldpOut[] @loose;
+        input lldpIn @loose;
+        output lldpOut @loose;
 }
