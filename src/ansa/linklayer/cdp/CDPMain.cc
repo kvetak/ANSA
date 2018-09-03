@@ -21,6 +21,7 @@
 */
 
 #include "ansa/linklayer/cdp/CDPMain.h"
+#include "inet/common/ProtocolTag_m.h"
 #include "inet/common/Simsignals.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
@@ -661,6 +662,7 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
     // set control info
     pk->addTag<MacAddressReq>()->setDestAddress(MacAddress("01-00-0c-cc-cc-cc"));
     pk->addTag<InterfaceReq>()->setInterfaceId(interfaceId);
+    pk->addTag<PacketProtocolTag>()->setProtocol(&Protocol::cdp);
 
     // update statistics
     if(version == 1) stat.txV1++;
