@@ -87,15 +87,15 @@ void CDPMain::initialize(int stage)
 
         getCapabilities(containingModule->getProperties()->get("capabilities"));
 
-        updateTime = par("timer").doubleValue();
-        holdTime = par("holdTime").doubleValue();
+        updateTime = par("timer");
+        holdTime = par("holdTime");
         version = par("version");
         odr = par("odr");
-        routeInvalidTime = par("ODRRouteInvalidTime").doubleValue();
-        routeHolddownTime = par("ODRRouteHolddownTime").doubleValue();
-        routeFlushTime = par("ODRRouteFlushTime").doubleValue();
-        maxDestinationPaths = par("maxDestinationPaths").doubleValue();
-        defaultRouteInvalide = par("defaultRouteInvalide").doubleValue();
+        routeInvalidTime = par("ODRRouteInvalidTime");
+        routeHolddownTime = par("ODRRouteHolddownTime");
+        routeFlushTime = par("ODRRouteFlushTime");
+        maxDestinationPaths = par("maxDestinationPaths");
+        defaultRouteInvalide = par("defaultRouteInvalide");
         validateVariable();
 
         cnt = getModuleFromPar<CDPNeighbourTable>(par("cdpNeighbourTableModule"), this);

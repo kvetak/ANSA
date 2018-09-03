@@ -26,15 +26,14 @@ simple CDPMain
 {
     parameters:
     	@display("i=block/network2");
-    	
-    	int timer @unit(s);
-    	int holdTime @unit(s);
+        double timer @unit(s);
+        double holdTime @unit(s);
     	int version;
-    	int ODRRouteInvalidTime;
-    	int ODRRouteHolddownTime;
-    	int ODRRouteFlushTime;
-    	int maxDestinationPaths;
-        int defaultRouteInvalide;
+        double ODRRouteInvalidTime;
+        double ODRRouteHolddownTime;
+        double ODRRouteFlushTime;
+        int maxDestinationPaths;
+        double defaultRouteInvalide;
     	bool odr;
         string routingTableModule;
         
