@@ -231,7 +231,7 @@ void CDPMain::startCDP()
 
     for(int i=0; i < ift->getNumInterfaces(); i++)
     {
-        if(isInterfaceSupported(ift->getInterface(i)->getInterfaceName()))
+        if(isInterfaceSupported(ift->getInterface(i)->cModule::getName()))
         {
             interface = ift->getInterface(i);
             activateInterface(interface);
