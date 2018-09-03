@@ -47,8 +47,8 @@ moduleinterface ANSA_IMACRelayUnit
     parameters:
         @display("i=block/switch");
     gates:
-        input ifIn[] @labels(EtherFrame);
-        output ifOut[] @labels(EtherFrame);
+        input ifIn @labels(EtherFrame);
+        output ifOut @labels(EtherFrame);
         input cdpIn @loose;
         output cdpOut @loose;
         input lldpIn @loose;

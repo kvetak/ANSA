@@ -40,8 +40,8 @@ simple relayUnit like ANSA_IMACRelayUnit
         string interfaceTablePath = default("^.interfaceTable"); // The path to the InterfaceTable module
         string macTablePath = default("^.macTable");             // The path to the MacAddressTable module
     gates:
-        input ifIn[];
-        output ifOut[];
+        input ifIn;
+        output ifOut;
         input cdpIn @loose;
         output cdpOut @loose;
         input lldpIn @loose;

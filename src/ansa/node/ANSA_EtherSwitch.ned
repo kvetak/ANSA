@@ -25,6 +25,7 @@ package ansa.node;
 import ansa.linklayer.cdp.CDP;
 import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 import ansa.linklayer.lldp.LLDP;
+import inet.common.MessageDispatcher;
 import inet.common.lifecycle.NodeStatus;
 import inet.linklayer.contract.IEthernetInterface;
 import inet.linklayer.contract.IMacAddressTable;
@@ -84,9 +85,10 @@ module ANSA_EtherSwitch
         relayUnit: <relayUnitType> like ANSA_IMACRelayUnit {
             parameters:
                 @display("p=263,50;is=m");
-            gates:
-                ifIn[sizeof(ethg)];
-                ifOut[sizeof(ethg)];
+        }
+        nl: MessageDispatcher {
+            parameters:
+                @display("p=800,200;b=1200,5");
         }
         eth[sizeof(ethg)]: <default("EthernetInterface")> like IEthernetInterface {
             parameters:
@@ -108,10 +110,12 @@ module ANSA_EtherSwitch
                 ifOut;
         }
     connections allowunconnected:
+        relayUnit.ifOut --> nl.in++;
+        relayUnit.ifIn <-- nl.out++;
         for i=0..sizeof(ethg)-1 {
-            eth[i].upperLayerIn <-- relayUnit.ifOut++;
-            eth[i].upperLayerOut --> relayUnit.ifIn++;
-            eth[i].phys <--> ethg[i];
+            nl.out++ --> eth[i].upperLayerIn;
+            nl.in++ <-- eth[i].upperLayerOut;
+            eth[i].phys <--> { @display("m=s"); } <--> ethg[i];
         }
         cdp.ifIn <-- relayUnit.cdpOut if hasCDP;
         cdp.ifOut --> relayUnit.cdpIn if hasCDP;
