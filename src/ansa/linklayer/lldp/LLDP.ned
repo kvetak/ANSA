@@ -23,12 +23,12 @@
 
 package ansa.linklayer.lldp;
 
-import inet.networklayer.contract.INetworkLayer;
-import ansa.linklayer.lldp.tables.LLDPNeighbourTable;
 import ansa.linklayer.lldp.tables.LLDPAgentTable;
-import ansa.linklayer.lldp.LLDPMain;
+import ansa.linklayer.lldp.tables.LLDPNeighbourTable;
+import inet.networklayer.contract.INetworkLayerLower;
 
-module LLDP like INetworkLayer
+
+module LLDP like INetworkLayerLower
 {
     parameters:
         @display("i=block/network2");
