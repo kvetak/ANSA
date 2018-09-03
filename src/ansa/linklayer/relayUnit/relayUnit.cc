@@ -21,6 +21,7 @@
 #include "inet/linklayer/configurator/Ieee8021dInterfaceData.h"
 #include "inet/common/ModuleAccess.h"
 
+#include "inet/common/IProtocolRegistrationListener.h"
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/linklayer/common/InterfaceTag_m.h"
 #include "inet/linklayer/common/MacAddressTag_m.h"
@@ -41,6 +42,12 @@ void relayUnit::initialize(int stage)
         numDispatchedUpdateFrames = numDispatchedNonUpdateFrames = numDeliveredUpdatesToCDP = 0;
         numReceivedUpdatesFromCDP = numReceivedNetworkFrames = numDroppedFrames = 0;
         numDeliveredUpdatesToLLDP = numReceivedUpdatesFromLLDP = 0;
+    }
+    else if (stage == INITSTAGE_LINK_LAYER) {
+        registerService(Protocol::ethernetMac, gate("cdpIn"), gate("ifIn"));
+        registerProtocol(Protocol::ethernetMac, gate("ifOut"), gate("cdpOut"));
+        registerService(Protocol::ethernetMac, gate("lldpIn"), nullptr);
+        registerProtocol(Protocol::ethernetMac, nullptr, gate("lldpOut"));
     }
     else if (stage == INITSTAGE_LINK_LAYER_2) {
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
