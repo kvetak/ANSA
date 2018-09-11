@@ -36,6 +36,10 @@
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 #include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 
+//FIX REMOVE ANSA_RelayUnit references
+
+#include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
+
 namespace inet {
 
 struct Statistics
@@ -70,6 +74,8 @@ protected:
     CDPInterfaceTable *cit;          // cdp interface table
     CDPODRRouteTable *ort;           // cdp odr route table
     char cap[4];
+
+    ANSA_RelayUnit* relayUnit;
 
     simtime_t holdTime;             // neighbour is deleted after this period of time is elapsed
     simtime_t updateTime;           // time between regular updates

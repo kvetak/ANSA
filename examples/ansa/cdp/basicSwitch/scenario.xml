@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <scenario>
+
 	<at t="30">
         <disconnect src-module="S1" src-gate="ethg$o[0]" />
         <disconnect src-module="S2" src-gate="ethg$o[0]" />		
@@ -11,10 +12,12 @@
                  channel-type="inet.node.ethernet.Eth100M">
         </connect>		
   	</at>
+  	
     <at t="100">
         <shutdown module="S1"/>
     </at>
     <at t="290">
         <startup module="S1"/>
     </at>
+    
 </scenario>

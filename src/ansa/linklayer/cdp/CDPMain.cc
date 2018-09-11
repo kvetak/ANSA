@@ -34,6 +34,8 @@
 
 #include "ansa/linklayer/cdp/CDPDeviceConfigurator.h"
 
+#include "inet/common/IProtocolRegistrationListener.h"
+
 namespace inet {
 
 Define_Module(CDPMain);
@@ -102,6 +104,10 @@ void CDPMain::initialize(int stage)
         cnt = getModuleFromPar<CDPNeighbourTable>(par("cdpNeighbourTableModule"), this);
         cit = getModuleFromPar<CDPInterfaceTable>(par("cdpInterfaceTableModule"), this);
         ort = getModuleFromPar<CDPODRRouteTable>(par("cdpODRRouteTableModule"), this);
+
+        //TODO FIX remove the direct call
+        relayUnit = getModuleFromPar<ANSA_RelayUnit>(par("relayUnitModule"), this);
+
         if(containingModule->getSubmodule("routingTable") != nullptr)
             rt = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
 
@@ -117,7 +123,16 @@ void CDPMain::initialize(int stage)
         WATCH(stat);
         WATCH(isOperational);
     }
-    if (stage == INITSTAGE_LAST) {
+    else if (stage == INITSTAGE_LINK_LAYER)
+    {
+        //register sservice and protocol
+        registerService(Protocol::cdp, nullptr, gate("ifIn"));
+        registerProtocol(Protocol::cdp, gate("ifOut"), nullptr);
+
+        relayUnit->registerAddress(MacAddress::CDP_MULTICAST_ADDRESS);
+
+    }
+    else if (stage == INITSTAGE_LAST) {
         containingModule->subscribe(interfaceStateChangedSignal, this);
         containingModule->subscribe(interfaceCreatedSignal, this);
         containingModule->subscribe(interfaceDeletedSignal, this);
@@ -639,7 +654,7 @@ std::string CDPMain::capabilitiesConvert(char cap1, char cap2, char cap3, char c
 
 void CDPMain::sendUpdate(int interfaceId, bool shutDown)
 {
-    auto pk = new Packet();
+    auto pk = new Packet("CDPUpdate");
     auto msg = makeShared<CDPUpdate>();
     if(!shutDown)
     {
@@ -663,6 +678,7 @@ void CDPMain::sendUpdate(int interfaceId, bool shutDown)
     pk->addTag<MacAddressReq>()->setDestAddress(MacAddress("01-00-0c-cc-cc-cc"));
     pk->addTag<InterfaceReq>()->setInterfaceId(interfaceId);
     pk->addTag<PacketProtocolTag>()->setProtocol(&Protocol::cdp);
+    pk->addTag<DispatchProtocolReq>()->setProtocol(&Protocol::ethernetMac);
 
     // update statistics
     if(version == 1) stat.txV1++;

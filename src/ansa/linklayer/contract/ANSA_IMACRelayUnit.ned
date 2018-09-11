@@ -15,7 +15,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-package ansa.linklayer.contract;
+package ansa.linklayer.contract;//ANSA_IMACRelayUnit
 
 //
 // Prototype for modules providing Ethernet switch functionality.
@@ -46,12 +46,17 @@ moduleinterface ANSA_IMACRelayUnit
 {
     parameters:
         @display("i=block/switch");
+        bool hasStp;
+        bool hasCDP;
+        bool hasLLDP;
     gates:
         input ifIn @labels(EtherFrame);
         output ifOut @labels(EtherFrame);
-        input cdpIn @loose;
-        output cdpOut @loose;
-        input lldpIn @loose;
-        output lldpOut @loose;
+        input upperLayerIn;
+        output upperLayerOut;
+//        input cdpIn @loose;
+//        output cdpOut @loose;
+//        input lldpIn @loose;
+//        output lldpOut @loose;
 }
 

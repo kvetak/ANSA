@@ -41,6 +41,8 @@ simple LLDPMain
 
         string lldpAgentTableModule;
         string lldpNeighbourTableModule;
+        
+        string relayUnitModule = default("^.^.relayUnit");
     gates:
         input ifIn;
         output ifOut;

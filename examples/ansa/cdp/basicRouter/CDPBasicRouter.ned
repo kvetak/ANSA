@@ -17,9 +17,10 @@ package ansa.examples.ansa.cdp.basicRouter;
 
 import ansa.node.ANSA_Host;
 import ansa.node.ANSA_LLDPCDPRouter;
-import inet.common.lifecycle.LifecycleController;
+//import inet.common.lifecycle.LifecycleController;
+import inet.common.scenario.ScenarioManager;
 import inet.node.ethernet.Eth100M;
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
 
 network CDPBasicRouter
@@ -31,7 +32,7 @@ network CDPBasicRouter
         }
 
     submodules:
-        configurator: IPv4NetworkConfigurator {
+        configurator: Ipv4NetworkConfigurator {
             parameters:
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
@@ -71,9 +72,9 @@ network CDPBasicRouter
                 pppg[1];
         }
         
-        lifecycleController: LifecycleController {
-            @display("p=48,68");
-        }
+//        lifecycleController: LifecycleController {
+//            @display("p=48,68");
+//        }
 
         scenarioManager: ScenarioManager {
             @display("p=48,123");

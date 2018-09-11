@@ -35,10 +35,13 @@ namespace inet {
 // This module forward frames (~EtherFrame) based on their destination MAC addresses to appropriate ports.
 // See the NED definition for details.
 //
-class INET_API relayUnit : public cSimpleModule, public ILifecycle
+class INET_API ANSA_RelayUnit : public cSimpleModule, public ILifecycle
 {
   public:
-    relayUnit();
+    ANSA_RelayUnit();
+
+    void registerAddress(MacAddress mac);
+    void registerAddresses(MacAddress startMac, MacAddress endMac);
 
   protected:
     MacAddress bridgeAddress;
@@ -50,6 +53,27 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
     bool isOperational = false;
     bool isCDPAware = false;
     bool isLLDPAware = false;
+    bool isSTPAware = false;
+
+
+    typedef std::pair<MacAddress, MacAddress> MacAddressPair;
+
+
+    struct Comp
+    {
+        bool operator() (const MacAddressPair& first, const MacAddressPair& second) const
+        {
+            return (first.first < second.first && first.second < second.first);
+        }
+    };
+
+    bool in_range(const std::set<MacAddressPair, Comp>& ranges, MacAddress value)
+    {
+        return ranges.find(MacAddressPair(value, value)) != ranges.end();
+    }
+
+
+    std::set<MacAddressPair, Comp> registeredMacAddresses;
 
     // statistics: see finish() for details.
     int numReceivedNetworkFrames = 0;
@@ -75,6 +99,9 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
      *
      */
     void handleAndDispatchFrame(Packet *packet);
+
+    void handleAndDispatchFrameFromHL(Packet *packet);
+
     void dispatch(Packet *packet, unsigned int interfaceId);
     void learn(MacAddress srcAddr, int arrivalInterfaceId);
     void broadcast(Packet *packet);
@@ -84,6 +111,8 @@ class INET_API relayUnit : public cSimpleModule, public ILifecycle
 
     void dispatchLLDPUpdate(Packet *packet);
     void deliverLLDPUpdate(Packet *packet);
+    void sendUp(Packet *packet);
+    void sendDown(Packet *packet);
 
     // For lifecycle
     virtual void start();

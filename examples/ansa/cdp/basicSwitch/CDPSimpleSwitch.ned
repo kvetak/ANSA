@@ -14,10 +14,12 @@
 // 
 
 package ansa.examples.ansa.cdp.basicSwitch;
-
 import ansa.node.ANSA_EtherSwitch;
 import inet.common.scenario.ScenarioManager;
 import inet.node.ethernet.Eth100M;
+
+import inet.linklayer.configurator.L2NetworkConfigurator;
+
 
 
 network CDPSimpleSwitch
@@ -45,7 +47,11 @@ network CDPSimpleSwitch
         }
 
         scenarioManager: ScenarioManager {
-            @display("p=48,123");
+            @display("p=77,43;is=s");
+        }
+
+        l2NetworkConfigurator: L2NetworkConfigurator {
+            @display("p=77,99;is=s");
         }
 
 

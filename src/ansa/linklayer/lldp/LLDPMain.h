@@ -36,6 +36,10 @@
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 #include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 
+//FIX REMOVE ANSA_RelayUnit references
+
+#include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
+
 //#define CREDIT            // uncomment to enable credit system
 
 namespace inet {
@@ -48,6 +52,8 @@ class INET_API LLDPMain: public cSimpleModule, protected cListener, public ILife
     IInterfaceTable *ift;        // interface table
     LLDPAgentTable *lat;         // LLDP agent table
     LLDPNeighbourTable *lnt;     // LLDP neighbour table
+
+    ANSA_RelayUnit* relayUnit;
 
     char enCap[2];              // system capabilities
     char sysCap[2];             // enabled capabilities

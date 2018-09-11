@@ -38,6 +38,9 @@ const TlvOptionBase *LLDPUpdate::findOptionByType(short int optionType, int inde
 
 void LLDPUpdate::addOption(TlvOptionBase *opt, int atPos)
 {
+    if(atPos < 0){
+        atPos = options.getTlvOptionArraySize();
+    }
     options.insertTlvOption(atPos, opt);
 }
 

@@ -17,9 +17,9 @@ package ansa.examples.ansa.lldp.basicSwitch;
 
 import ansa.node.ANSA_EtherSwitch;
 import inet.node.ethernet.Eth100M;
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
-import inet.common.lifecycle.LifecycleController;
+//import inet.common.lifecycle.LifecycleController;
 
 network LLDPSimpleSwitch
 {
@@ -45,9 +45,9 @@ network LLDPSimpleSwitch
                 ethg[3];
         }
         
-        lifecycleController: LifecycleController {
-            @display("p=48,68");
-        }
+//        lifecycleController: LifecycleController {
+//            @display("p=48,68");
+//        }
 
         scenarioManager: ScenarioManager {
             @display("p=48,123");

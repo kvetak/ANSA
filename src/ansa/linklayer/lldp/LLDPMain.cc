@@ -25,9 +25,13 @@
 
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
+#include "inet/common/IProtocolRegistrationListener.h"
 #include "inet/linklayer/common/InterfaceTag_m.h"
 
 #include "ansa/linklayer/lldp/LLDPDeviceConfigurator.h"
+
+#include "inet/common/IProtocolRegistrationListener.h"
+
 
 namespace inet {
 
@@ -67,8 +71,20 @@ void LLDPMain::initialize(int stage)
         lat = getModuleFromPar<LLDPAgentTable>(par("lldpAgentTableModule"), this);
         lnt = getModuleFromPar<LLDPNeighbourTable>(par("lldpNeighbourTableModule"), this);
 
+        //TODO FIX remove the direct call
+                relayUnit = getModuleFromPar<ANSA_RelayUnit>(par("relayUnitModule"), this);
+
         WATCH_PTRVECTOR(lat->getAgents());
         WATCH_PTRVECTOR(lnt->getNeighbours());
+    }
+    else if (stage == INITSTAGE_LINK_LAYER)
+    {
+        //register sservice and protocol
+        registerService(Protocol::lldp, nullptr, gate("ifIn"));
+        registerProtocol(Protocol::lldp, gate("ifOut"), nullptr);
+
+        relayUnit->registerAddress(MacAddress::LLDP_MULTICAST_ADDRESS);
+
     }
     if (stage == INITSTAGE_LAST) {
         containingModule->subscribe(interfaceStateChangedSignal, this);

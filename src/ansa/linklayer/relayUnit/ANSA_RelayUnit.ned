@@ -17,6 +17,8 @@ package ansa.linklayer.relayUnit;
 
 import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 
+//import inet.linklayer.contract.IMacRelayUnit;
+
 
 //
 // This modul forwards frames (~EtherFrame) based on their destination MAC addresses to appropriate ports.
@@ -33,18 +35,25 @@ import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 //
 
 //from Ieee8021dRelay
-simple relayUnit like ANSA_IMACRelayUnit
+simple ANSA_RelayUnit like ANSA_IMACRelayUnit
 {
     parameters:
         @display("i=block/broadcast;bgb=425,114");
         string interfaceTablePath = default("^.interfaceTable"); // The path to the InterfaceTable module
         string macTablePath = default("^.macTable");             // The path to the MacAddressTable module
+        
+        bool hasStp;
+        bool hasCDP;
+        bool hasLLDP;
     gates:
         input ifIn;
         output ifOut;
-        input cdpIn @loose;
-        output cdpOut @loose;
-        input lldpIn @loose;
-        output lldpOut @loose;
+        input upperLayerIn;
+        output upperLayerOut;
+        
+//        input cdpIn @loose;
+//        output cdpOut @loose;
+//        input lldpIn @loose;
+//        output lldpOut @loose;
 }
 

@@ -44,7 +44,9 @@ simple CDPMain
         string cdpNeighbourTableModule; 
         string cdpInterfaceTableModule; 
         string cdpODRRouteTableModule; 
-	gates:
+        
+        string relayUnitModule = default("^.^.relayUnit");
+       	gates:
         input ifIn;
         output ifOut;
 }

@@ -356,10 +356,11 @@ void LLDPAgent::txFrame(const Ptr<LLDPUpdate>& update)
         return;
     }
 
-    auto packet = new Packet();
-    packet->addTag<MacAddressReq>()->setDestAddress(MacAddress("01-80-c2-00-00-0e"));
+    auto packet = new Packet("LLDPUpdate");
+    packet->addTag<MacAddressReq>()->setDestAddress(MacAddress::LLDP_MULTICAST_ADDRESS);
     packet->addTag<InterfaceReq>()->setInterfaceId(interface->getInterfaceId());
     packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::lldp);
+    packet->addTag<DispatchProtocolReq>()->setProtocol(&Protocol::ethernetMac);
 
     st.framesOutTotal++;
     short length = 0;
