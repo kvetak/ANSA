@@ -36,7 +36,7 @@
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 #include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 
-//FIX REMOVE ANSA_RelayUnit references
+//TODO FIX REMOVE ANSA_RelayUnit references
 
 #include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
 

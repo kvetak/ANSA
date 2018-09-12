@@ -22,7 +22,7 @@
 namespace inet {
 
 /**
- * TODO - Generated class
+ * To be moved to INET
  */
 class INET_API ANSA_EtherEncap : public EtherEncap
 {
@@ -30,7 +30,6 @@ class INET_API ANSA_EtherEncap : public EtherEncap
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
     virtual void initialize(int stage) override;
 
-//    virtual void handleMessage(cMessage *msg);
 };
 
 } //namespace

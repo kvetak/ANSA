@@ -14,20 +14,7 @@
 // 
 
 #include "ansa/linklayer/relayUnit/ANSA_EtherEncap.h"
-//#include "inet/common/INETUtils.h"
-//#include "inet/common/ModuleAccess.h"
-//#include "inet/common/ProtocolTag_m.h"
-//#include "inet/common/checksum/EthernetCRC.h"
-//#include "inet/linklayer/common/FcsMode_m.h"
-//#include "inet/linklayer/common/Ieee802Ctrl.h"
-//#include "inet/linklayer/common/Ieee802SapTag_m.h"
-//#include "inet/linklayer/common/InterfaceTag_m.h"
-//#include "inet/linklayer/common/MacAddressTag_m.h"
-//#include "inet/linklayer/ethernet/EtherEncap.h"
-//#include "inet/linklayer/ethernet/EtherFrame_m.h"
-//#include "inet/linklayer/ethernet/EtherPhyFrame_m.h"
-//#include "inet/linklayer/ieee8022/Ieee8022LlcHeader_m.h"
-//#include "inet/networklayer/contract/IInterfaceTable.h"
+
 
 #include "inet/common/IProtocolRegistrationListener.h"
 
@@ -43,19 +30,12 @@ void ANSA_EtherEncap::initialize(int stage)
     {
         //register sservice and protocol
         registerService(Protocol::ethernetMac, gate("upperLayerIn"), nullptr);
-//        registerService
         registerProtocol(Protocol::ethernetMac, nullptr, gate("upperLayerOut"));
-
-        //TODO register for 'commandFromHigherLayer' as well?
 
     }
 
 
 }
 
-//void ANSA_EtherEncap::handleMessage(cMessage *msg)
-//{
-//    // TODO - Generated method body
-//}
 
 } //namespace

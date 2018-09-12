@@ -54,11 +54,11 @@ void ANSA_RelayUnit::initialize(int stage)
     else if (stage == INITSTAGE_LINK_LAYER) {
         registerService(Protocol::ethernetMac, nullptr, gate("ifIn"));
         registerProtocol(Protocol::ethernetMac, gate("ifOut"), nullptr);
-//        registerService(Protocol::ethernetMac, gate("upperLayerIn"), nullptr);
-//        registerProtocol(Protocol::ethernetMac, nullptr, gate("upperLayerOut"));
 
         //TODO FIX
-        registerAddress(MacAddress::STP_MULTICAST_ADDRESS);
+        if(isSTPAware) {
+            registerAddress(MacAddress::STP_MULTICAST_ADDRESS);
+        }
     }
     else if (stage == INITSTAGE_LINK_LAYER_2) {
         NodeStatus *nodeStatus = dynamic_cast<NodeStatus *>(findContainingNode(this)->getSubmodule("status"));
@@ -91,8 +91,7 @@ void ANSA_RelayUnit::initialize(int stage)
         WATCH(numDeliveredUpdatesToLLDP);
         WATCH(numDispatchedNonUpdateFrames);
     }
-    bridgeGroupCDPAddress = MacAddress("01-00-0c-cc-cc-cc");
-    bridgeGroupLLDPAddress = MacAddress("01-80-c2-00-00-0e");
+
 }
 
 void ANSA_RelayUnit::registerAddress(MacAddress mac)
@@ -117,20 +116,7 @@ void ANSA_RelayUnit::handleMessage(cMessage *msg)
     }
 
     if (!msg->isSelfMessage()) {
-//        // messages from CDP process
-//        if (strcmp(msg->getArrivalGate()->getName(), "cdpIn") == 0) {
-//            numReceivedUpdatesFromCDP++;
-//            EV_INFO << "Received " << msg << " from CDP module." << endl;
-//            Packet *packet = check_and_cast<Packet *>(msg);
-//            dispatchCDPUpdate(packet);
-//        }
-//        // messages from LLDP process
-//        else if (strcmp(msg->getArrivalGate()->getName(), "lldpIn") == 0) {
-//            numReceivedUpdatesFromLLDP++;
-//            EV_INFO << "Received " << msg << " from LLDP module." << endl;
-//            Packet *packet = check_and_cast<Packet *>(msg);
-//            dispatchLLDPUpdate(packet);
-//        }
+
         if (strcmp(msg->getArrivalGate()->getName(), "upperLayerIn") == 0)
         {
             handleAndDispatchFrameFromHL(check_and_cast<Packet *>(msg));
@@ -149,75 +135,38 @@ void ANSA_RelayUnit::handleMessage(cMessage *msg)
 
 void ANSA_RelayUnit::handleAndDispatchFrameFromHL(Packet *packet)
 {
-    // dunno
     const auto& frame = packet->peekAtFront<EthernetMacHeader>();
-//        int arrivalInterfaceId = packet->getTag<InterfaceInd>()->getInterfaceId();
-//        InterfaceEntry *arrivalInterface = ifTable->getInterfaceById(arrivalInterfaceId);
-        //Ieee8021dInterfaceData *arrivalPortData = getPortInterfaceData(arrivalGate);
 
-//        learn(frame->getSrc(), arrivalInterfaceId);
+    InterfaceReq* interfaceReq = packet->findTag<InterfaceReq>();
+    int interfaceId =
+            interfaceReq == nullptr ? -1 : interfaceReq->getInterfaceId();
 
-        // BPDU Handling
-//        if ( frame->getDest() == bridgeGroupCDPAddress) {
-//            EV_DETAIL << "Deliver update to the CDP module" << endl;
-//            deliverCDPUpdate(packet);    // deliver to the CDP module
-//        }
-//        else if ( frame->getDest() == bridgeGroupLLDPAddress) {
-//            EV_DETAIL << "Deliver update to the LLDP module" << endl;
-//            deliverLLDPUpdate(packet);    // deliver to the LLDP module
-//        }
-//        else if (!isCDPAware && !isLLDPAware) {
-//            EV_INFO << "The arrival port is not forwarding! Discarding it!" << endl;
-//            numDroppedFrames++;
-//            delete packet;
-//        }
-//        else
-
-        InterfaceReq* interfaceReq = packet->findTag<InterfaceReq>();
-        int interfaceId = interfaceReq == nullptr ? -1 : interfaceReq->getInterfaceId();
-
-        if (interfaceId != -1)
-        {
-            dispatch(packet, interfaceId);
-        }
-        else if (frame->getDest().isBroadcast()) {    // broadcast address
+    if (interfaceId != -1) {
+        dispatch(packet, interfaceId);
+    } else if (frame->getDest().isBroadcast()) {    // broadcast address
+        broadcast(packet);
+    } else {
+        int outInterfaceId = macTable->getPortForAddress(frame->getDest());
+        // Not known -> broadcast
+        if (outInterfaceId == -1) {
+            EV_DETAIL << "Destination address = " << frame->getDest()
+                             << " unknown, broadcasting frame " << frame
+                             << endl;
             broadcast(packet);
-        }
-        else {
-            int outInterfaceId = macTable->getPortForAddress(frame->getDest());
-            // Not known -> broadcast
-            if (outInterfaceId == -1) {
-                EV_DETAIL << "Destination address = " << frame->getDest() << " unknown, broadcasting frame " << frame << endl;
-                broadcast(packet);
-            }
-            else
-            {
+        } else {
 
-                dispatch(packet, outInterfaceId);
+            dispatch(packet, outInterfaceId);
 
-            }
         }
+    }
 }
-
-//namespace {
-//    bool isBpdu(Packet *packet, const Ptr<const EthernetMacHeader>& hdr)
-//    {
-//        if (isIeee8023Header(*hdr)) {
-//            const auto& llc = packet->peekDataAt<Ieee8022LlcHeader>(hdr->getChunkLength());
-//            return (llc->getSsap() == 0x42 && llc->getDsap() == 0x42 && llc->getControl() == 3);
-//        }
-//        else
-//            return false;
-//    }
-//}
 
 void ANSA_RelayUnit::broadcast(Packet *packet)
 {
     EV_DETAIL << "Broadcast frame " << packet << endl;
 
-//    int inputInterfaceId
+
     InterfaceInd* interfaceInd = packet->findTag<InterfaceInd>();
-//    ->getInterfaceId();
     int inputInterfaceId = interfaceInd == nullptr ? -1 : interfaceInd->getInterfaceId();
 
     int numPorts = ifTable->getNumInterfaces();
@@ -229,7 +178,7 @@ void ANSA_RelayUnit::broadcast(Packet *packet)
             dispatch(packet->dup(), ie->getInterfaceId());
         }
     }
-//    delete packet;
+    delete packet;
 }
 
 void ANSA_RelayUnit::handleAndDispatchFrame(Packet *packet)
@@ -239,7 +188,6 @@ void ANSA_RelayUnit::handleAndDispatchFrame(Packet *packet)
     InterfaceEntry *arrivalInterface = ifTable->getInterfaceById(arrivalInterfaceId);
     Ieee8021dInterfaceData *arrivalPortData = arrivalInterface->ieee8021dData();
 
-    const Protocol *payloadProtocol = nullptr;
 
     learn(frame->getSrc(), arrivalInterfaceId);
 
@@ -250,35 +198,11 @@ void ANSA_RelayUnit::handleAndDispatchFrame(Packet *packet)
                && arrivalPortData->getRole() != Ieee8021dInterfaceData::DISABLED) { // removed "&& isBpdu(packet, frame)"
            EV_DETAIL << "Deliver BPDU to the STP/RSTP module" << endl;
            sendUp(packet);
-    }
-
-//    if (isCDPAware && frame->getDest() == MacAddress::STP_MULTICAST_ADDRESS )
-//    {
-//        EV_DETAIL << "Deliver CDP packet to upper module for decapsulation" << endl;
-//                   sendUp(packet);
-//    }
-
-    // destination MAC address is registered, send it up
-    else if(in_range(registeredMacAddresses, frame->getDest()))
-    {
+    } else if (in_range(registeredMacAddresses, frame->getDest())) {
+        // destination MAC address is registered, send it up
         sendUp(packet);
-        return;
-    }
 
-//    if ( frame->getDest() == bridgeGroupCDPAddress) {
-//        EV_DETAIL << "Deliver update to the CDP module" << endl;
-//        deliverCDPUpdate(packet);    // deliver to the CDP module
-//    }
-//    else if ( frame->getDest() == bridgeGroupLLDPAddress) {
-//        EV_DETAIL << "Deliver update to the LLDP module" << endl;
-//        deliverLLDPUpdate(packet);    // deliver to the LLDP module
-//    }
-//    else if (!isCDPAware && !isLLDPAware) {
-//        EV_INFO << "The arrival port is not forwarding! Discarding it!" << endl;
-//        numDroppedFrames++;
-//        delete packet;
-//    }
-    else if (frame->getDest().isBroadcast()) {    // broadcast address
+    } else if (frame->getDest().isBroadcast()) {    // broadcast address
         broadcast(packet);
     }
     else {
@@ -292,13 +216,13 @@ void ANSA_RelayUnit::handleAndDispatchFrame(Packet *packet)
             if (outInterfaceId != arrivalInterfaceId) {
                 //Ieee8021dInterfaceData *outPortData = getPortInterfaceData(outInterfaceId);
 
-                if (!isCDPAware && !isLLDPAware)
+//                if (!isCDPAware && !isLLDPAware)
                     dispatch(packet, outInterfaceId);
-                else {
-                    EV_INFO << "Output port " << outInterfaceId << " is not forwarding. Discarding!" << endl;
-                    numDroppedFrames++;
-                    delete packet;
-                }
+//                else {
+//                    EV_INFO << "Output port " << outInterfaceId << " is not forwarding. Discarding!" << endl;
+//                    numDroppedFrames++;
+//                    delete packet;
+//                }
             }
             else {
                 EV_DETAIL << "Output port is same as input port, " << frame->getFullName() << " destination = " << frame->getDest() << ", discarding frame " << frame << endl;
@@ -330,92 +254,6 @@ void ANSA_RelayUnit::learn(MacAddress srcAddr, int arrivalInterfaceId)
 {
     if (!isCDPAware && !isLLDPAware)
         macTable->updateTableWithAddress(arrivalInterfaceId, srcAddr);
-}
-
-void ANSA_RelayUnit::dispatchLLDPUpdate(Packet *packet)
-{
-    const auto& lldpUpdate = packet->peekAtFront<LLDPUpdate>(); // verify packet type
-    (void)lldpUpdate;       // unused variable
-
-    // TODO: use LLCFrame       // see the inet::Ieee8021dRelay::dispatchBPDU()
-    const auto& header = makeShared<EthernetMacHeader>();
-    unsigned int portNum = packet->getTag<InterfaceReq>()->getInterfaceId();
-    MacAddress destAddress = packet->getTag<MacAddressReq>()->getDestAddress();
-    const Protocol *protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
-    ASSERT(protocol == &Protocol::lldp);
-    int ethType = ProtocolGroup::ethertype.getProtocolNumber(protocol);
-
-    header->setSrc(bridgeAddress);
-    header->setDest(destAddress);
-    header->setTypeOrLength(ethType);
-    packet->insertAtFront(header);
-    EtherEncap::addPaddingAndFcs(packet, FCS_DECLARED_CORRECT); //TODO add/use fcsMode parameter
-    packet->addTagIfAbsent<PacketProtocolTag>()->setProtocol(&Protocol::ethernetMac);
-
-    EV_INFO << "Sending LLDP packet " << packet << " with destination = " << header->getDest() << ", interface = " << portNum << endl;
-    numDispatchedUpdateFrames++;
-    send(packet, "ifOut");
-}
-
-void ANSA_RelayUnit::dispatchCDPUpdate(Packet *packet)
-{
-//    const auto& cdpUpdate = packet->peekAtFront<CDPUpdate>(); // verify packet type
-//    (void)cdpUpdate;       // unused variable
-//
-//    const auto& header = makeShared<EthernetMacHeader>();
-//    unsigned int portNum = packet->getTag<InterfaceReq>()->getInterfaceId();
-    MacAddress destAddress = packet->getTag<MacAddressReq>()->getDestAddress();
-//    const Protocol *protocol = packet->getTag<PacketProtocolTag>()->getProtocol();
-//    ASSERT(protocol == &Protocol::cdp);
-//    int ethType = ProtocolGroup::ethertype.getProtocolNumber(protocol);
-//
-//    header->setSrc(bridgeAddress);
-//    header->setDest(destAddress);
-//    header->setTypeOrLength(ethType);
-//    packet->insertAtFront(header);
-//    EtherEncap::addPaddingAndFcs(packet, FCS_DECLARED_CORRECT); //TODO add/use fcsMode parameter
-//    packet->addTagIfAbsent<PacketProtocolTag>()->setProtocol(&Protocol::ethernetMac);
-
-    EV_INFO << "Sending CDP packet " << packet << " with destination = " << destAddress << endl;
-    numDispatchedUpdateFrames++;
-
-//    send(packet, "ifOut");
-
-    sendDown(packet);
-}
-
-void ANSA_RelayUnit::deliverLLDPUpdate(Packet *packet)
-{
-//    auto eth = EtherEncap::decapsulateMacHeader(packet);
-//    ASSERT(isEth2Header(*eth));    //TODO use LLC header
-//    //ASSERT(isIeee8023Header(*eth));
-//
-//    const auto& lldpUpdate = packet->peekAtFront<LLDPUpdate>();
-
-    EV_INFO << "Sending LLDP frame " << packet << " to upper module for decapsulation" << endl;
-    numDeliveredUpdatesToLLDP++;
-
-//    send(packet, "lldpOut");
-
-    sendUp(packet);
-
-
-}
-
-void ANSA_RelayUnit::deliverCDPUpdate(Packet *packet)
-{
-//    auto eth = EtherEncap::decapsulateMacHeader(packet);
-//    ASSERT(isEth2Header(*eth));    //TODO use LLC header
-//    //ASSERT(isIeee8023Header(*eth));
-//
-//    const auto& cdpUpdate = packet->peekAtFront<CDPUpdate>();
-
-    EV_INFO << "Sending CDP frame " << packet << " to upper module for decapsulation" << endl;
-    numDeliveredUpdatesToCDP++;
-
-//    send(packet, "cdpOut");
-
-    sendUp(packet);
 }
 
 void ANSA_RelayUnit::sendUp(Packet *packet)

@@ -18,7 +18,7 @@ package ansa.linklayer.relayUnit;
 import inet.linklayer.ethernet.EtherEncap;
 
 //
-// TODO auto-generated module
+// To be moved to INET
 //
 simple ANSA_EtherEncap extends EtherEncap
 {

@@ -45,8 +45,6 @@ class INET_API ANSA_RelayUnit : public cSimpleModule, public ILifecycle
 
   protected:
     MacAddress bridgeAddress;
-    MacAddress bridgeGroupCDPAddress;
-    MacAddress bridgeGroupLLDPAddress;
     IInterfaceTable *ifTable = nullptr;
     IMacAddressTable *macTable = nullptr;
     InterfaceEntry *ie = nullptr;
@@ -106,11 +104,6 @@ class INET_API ANSA_RelayUnit : public cSimpleModule, public ILifecycle
     void learn(MacAddress srcAddr, int arrivalInterfaceId);
     void broadcast(Packet *packet);
 
-    void dispatchCDPUpdate(Packet *packet);
-    void deliverCDPUpdate(Packet *packet);
-
-    void dispatchLLDPUpdate(Packet *packet);
-    void deliverLLDPUpdate(Packet *packet);
     void sendUp(Packet *packet);
     void sendDown(Packet *packet);
 

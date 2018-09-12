@@ -51,9 +51,5 @@ simple ANSA_RelayUnit like ANSA_IMACRelayUnit
         input upperLayerIn;
         output upperLayerOut;
         
-//        input cdpIn @loose;
-//        output cdpOut @loose;
-//        input lldpIn @loose;
-//        output lldpOut @loose;
 }
 

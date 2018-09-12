@@ -36,7 +36,7 @@
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 #include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 
-//FIX REMOVE ANSA_RelayUnit references
+//TODO FIX REMOVE ANSA_RelayUnit references
 
 #include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
 
