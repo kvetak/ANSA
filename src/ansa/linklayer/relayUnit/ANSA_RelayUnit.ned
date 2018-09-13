@@ -43,8 +43,8 @@ simple ANSA_RelayUnit like ANSA_IMACRelayUnit
         string macTablePath = default("^.macTable");             // The path to the MacAddressTable module
         
         bool hasStp;
-        bool hasCDP;
-        bool hasLLDP;
+//        bool hasCDP;
+//        bool hasLLDP;
     gates:
         input ifIn;
         output ifOut;

@@ -49,8 +49,8 @@ class INET_API ANSA_RelayUnit : public cSimpleModule, public ILifecycle
     IMacAddressTable *macTable = nullptr;
     InterfaceEntry *ie = nullptr;
     bool isOperational = false;
-    bool isCDPAware = false;
-    bool isLLDPAware = false;
+//    bool isCDPAware = false;
+//    bool isLLDPAware = false;
     bool isSTPAware = false;
 
 
@@ -103,6 +103,8 @@ class INET_API ANSA_RelayUnit : public cSimpleModule, public ILifecycle
     void dispatch(Packet *packet, unsigned int interfaceId);
     void learn(MacAddress srcAddr, int arrivalInterfaceId);
     void broadcast(Packet *packet);
+
+    Ieee8021dInterfaceData *getPortInterfaceData(unsigned int portNum);
 
     void sendUp(Packet *packet);
     void sendDown(Packet *packet);

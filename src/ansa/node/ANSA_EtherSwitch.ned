@@ -23,13 +23,14 @@
 package ansa.node;
 
 import ansa.linklayer.cdp.CDP;
-import ansa.linklayer.contract.ANSA_IMACRelayUnit;
+//import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 import ansa.linklayer.lldp.LLDP;
 import inet.common.MessageDispatcher;
 import inet.common.lifecycle.NodeStatus;
 import inet.linklayer.contract.IEthernetInterface;
 import inet.linklayer.contract.IMacAddressTable;
 import inet.networklayer.common.InterfaceTable;
+import inet.node.ethernet.EtherSwitch;
 
 
 
@@ -63,69 +64,69 @@ import inet.linklayer.ethernet.IEtherEncap;
 // By default used half duples CSMA/CD mac
 //
 //
-module ANSA_EtherSwitch
+module ANSA_EtherSwitch extends EtherSwitch
 {
     parameters:
-        @networkNode();
-        @labels(node,ethernet-node);
-        @display("i=device/switch");
-        bool hasStatus = default(false);
+//        @networkNode();
+//        @labels(node,ethernet-node);
+//        @display("i=device/switch");
+//        bool hasStatus = default(false);
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
-        bool hasStp = default(false);
-        bool csmacdSupport = default(true);  // by default use CSMA/CD --FIXME remove
-        string fcsMode @enum("declared","computed") = default("declared");
-        string spanningTreeProtocol = default("Stp");
-        eth[*].encap.typename = "EtherEncapDummy";
-        eth[*].csmacdSupport = csmacdSupport;
-        eth[*].mac.typename = default(csmacdSupport ? "EtherMac" : "EtherMacFullDuplex");
-        *.fcsMode = fcsMode;
-        *.interfaceTableModule = default(absPath(".interfaceTable"));
-        *.macTableModule = default(absPath(".macTable"));
+//        bool hasStp = default(false);
+//        bool csmacdSupport = default(true);  // by default use CSMA/CD --FIXME remove
+//        string fcsMode @enum("declared","computed") = default("declared");
+//        string spanningTreeProtocol = default("Stp");
+//        eth[*].encap.typename = "EtherEncapDummy";
+//        eth[*].csmacdSupport = csmacdSupport;
+//        eth[*].mac.typename = default(csmacdSupport ? "EtherMac" : "EtherMacFullDuplex");
+//        *.fcsMode = fcsMode;
+//        *.interfaceTableModule = default(absPath(".interfaceTable"));
+//        *.macTableModule = default(absPath(".macTable"));
         
-        relayUnit.hasStp = hasStp;
-        relayUnit.hasCDP = hasCDP;
-        relayUnit.hasLLDP = hasLLDP;
+//        relayUnit.hasStp = hasStp;
+//        relayUnit.hasCDP = hasCDP;
+//        relayUnit.hasLLDP = hasLLDP;
 
     gates:
-        inout ethg[] @labels(EtherFrame-conn);
+//        inout ethg[] @labels(EtherFrame-conn);
     submodules:
              
-        status: NodeStatus if hasStatus {
-            @display("p=100,400;is=s");
-        }
-        l2NodeConfigurator: L2NodeConfigurator if hasStp {
-            @display("p=100,300;is=s");
-        }
-        interfaceTable: InterfaceTable {
-            @display("p=100,200;is=s");
-        }
-        macTable: <default("MacAddressTable")> like IMacAddressTable {
-            @display("p=100,100;is=s");
-        }
-        relayUnit: <default(firstAvailable("ANSA_RelayUnit", "Ieee8021dRelay","MacRelayUnit"))> like ANSA_IMACRelayUnit {
-            @display("p=800,300;is=m");
-
-        }
-        stp: <spanningTreeProtocol> like ISpanningTree if hasStp {
-            @display("p=474,92");
-        }
-        up: MessageDispatcher {
-            parameters:
-                @display("p=800,160;b=1200,5");
-        }
-        down: MessageDispatcher {
-            parameters:
-                @display("p=800,380;b=1200,5");
-        }
-        eth[sizeof(ethg)]: <default("EthernetInterface")> like IEthernetInterface {
-            parameters:
-                mac.promiscuous = true;
-                @display("p=250,450,row,150;q=txQueue");
-        }
-        encap: <default("ANSA_EtherEncap")> like IEtherEncap {
-            @display("p=800,220");
-        }
+//        status: NodeStatus if hasStatus {
+//            @display("p=100,400;is=s");
+//        }
+//        l2NodeConfigurator: L2NodeConfigurator if hasStp {
+//            @display("p=100,300;is=s");
+//        }
+//        interfaceTable: InterfaceTable {
+//            @display("p=100,200;is=s");
+//        }
+//        macTable: <default("MacAddressTable")> like IMacAddressTable {
+//            @display("p=100,100;is=s");
+//        }
+//        relayUnit: <default(firstAvailable("ANSA_RelayUnit", "Ieee8021dRelay","MacRelayUnit"))> like ANSA_IMACRelayUnit {
+//            @display("p=800,300;is=m");
+//
+//        }
+//        stp: <spanningTreeProtocol> like ISpanningTree if hasStp {
+//            @display("p=474,92");
+//        }
+//        up: MessageDispatcher {
+//            parameters:
+//                @display("p=800,160;b=1200,5");
+//        }
+//        down: MessageDispatcher {
+//            parameters:
+//                @display("p=800,380;b=1200,5");
+//        }
+//        eth[sizeof(ethg)]: <default("EthernetInterface")> like IEthernetInterface {
+//            parameters:
+//                mac.promiscuous = true;
+//                @display("p=250,450,row,150;q=txQueue");
+//        }
+//        encap: <default("ANSA_EtherEncap")> like IEtherEncap {
+//            @display("p=800,220");
+//        }
         cdp: CDP if hasCDP {
             parameters:
                 @display("p=800,100");
@@ -141,14 +142,14 @@ module ANSA_EtherSwitch
                 ifOut;
         }
     connections:
-        relayUnit.ifOut --> down.in++;
-        relayUnit.ifIn <-- down.out++;
+//        relayUnit.ifOut --> down.in++;
+//        relayUnit.ifIn <-- down.out++;
 
-        encap.lowerLayerIn <-- relayUnit.upperLayerOut;
-        encap.lowerLayerOut --> relayUnit.upperLayerIn;
+//        encap.lowerLayerIn <-- relayUnit.upperLayerOut;
+//        encap.lowerLayerOut --> relayUnit.upperLayerIn;
 
-        encap.upperLayerIn <-- up.out++;
-        encap.upperLayerOut --> up.in++;
+//        encap.upperLayerIn <-- up.out++;
+//        encap.upperLayerOut --> up.in++;
 
         for i=0..sizeof(ethg)-1 {
             down.out++ --> eth[i].upperLayerIn;

@@ -46,9 +46,9 @@ moduleinterface ANSA_IMACRelayUnit
 {
     parameters:
         @display("i=block/switch");
-        bool hasStp;
-        bool hasCDP;
-        bool hasLLDP;
+//        bool hasStp;
+//        bool hasCDP;
+//        bool hasLLDP;
     gates:
         input ifIn @labels(EtherFrame);
         output ifOut @labels(EtherFrame);

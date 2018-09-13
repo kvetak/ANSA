@@ -26,13 +26,13 @@ void ANSA_EtherEncap::initialize(int stage)
 {
 
     EtherEncap::initialize(stage);
-    if (stage == INITSTAGE_LINK_LAYER)
-    {
-        //register sservice and protocol
-        registerService(Protocol::ethernetMac, gate("upperLayerIn"), nullptr);
-        registerProtocol(Protocol::ethernetMac, nullptr, gate("upperLayerOut"));
-
-    }
+//    if (stage == INITSTAGE_LINK_LAYER)
+//    {
+//        //register sservice and protocol
+//        registerService(Protocol::ethernetMac, gate("upperLayerIn"), nullptr);
+//        registerProtocol(Protocol::ethernetMac, nullptr, gate("upperLayerOut"));
+//
+//    }
 
 
 }

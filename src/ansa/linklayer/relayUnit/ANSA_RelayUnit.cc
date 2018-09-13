@@ -48,8 +48,8 @@ void ANSA_RelayUnit::initialize(int stage)
         numDeliveredUpdatesToLLDP = numReceivedUpdatesFromLLDP = 0;
 
         isSTPAware = par("hasStp");// true;
-        isCDPAware = par("hasCDP"); //true;    // if the cdpIn is not connected then the switch is CDP unaware
-        isLLDPAware = par("hasLLDP"); //true;    // if the cdpIn is not connected then the switch is CDP unaware
+//        isCDPAware = par("hasCDP"); //true;    // if the cdpIn is not connected then the switch is CDP unaware
+//        isLLDPAware = par("hasLLDP"); //true;    // if the cdpIn is not connected then the switch is CDP unaware
     }
     else if (stage == INITSTAGE_LINK_LAYER) {
         registerService(Protocol::ethernetMac, nullptr, gate("ifIn"));
@@ -252,10 +252,24 @@ void ANSA_RelayUnit::dispatch(Packet *packet, unsigned int interfaceId)
 
 void ANSA_RelayUnit::learn(MacAddress srcAddr, int arrivalInterfaceId)
 {
-    if (!isCDPAware && !isLLDPAware)
+    Ieee8021dInterfaceData *port = getPortInterfaceData(arrivalInterfaceId);
+    if (!isSTPAware || port->isLearning())
         macTable->updateTableWithAddress(arrivalInterfaceId, srcAddr);
 }
 
+Ieee8021dInterfaceData *ANSA_RelayUnit::getPortInterfaceData(unsigned int interfaceId)
+{
+    if (isSTPAware) {
+        InterfaceEntry *gateIfEntry = ifTable->getInterfaceById(interfaceId);
+        Ieee8021dInterfaceData *portData = gateIfEntry ? gateIfEntry->ieee8021dData() : nullptr;
+
+        if (!portData)
+            throw cRuntimeError("Ieee8021dInterfaceData not found for port = %d", interfaceId);
+
+        return portData;
+    }
+    return nullptr;
+}
 void ANSA_RelayUnit::sendUp(Packet *packet)
 {
 
