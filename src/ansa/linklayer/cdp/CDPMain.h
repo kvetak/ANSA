@@ -39,6 +39,8 @@
 //TODO FIX REMOVE ANSA_RelayUnit references
 
 #include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
+//TODO Remove after direct call fix
+#include "inet/linklayer/ieee8021d/relay/Ieee8021dRelay.h"
 
 namespace inet {
 
@@ -75,7 +77,7 @@ protected:
     CDPODRRouteTable *ort;           // cdp odr route table
     char cap[4];
 
-    ANSA_RelayUnit* relayUnit;
+    Ieee8021dRelay* relayUnit;
 
     simtime_t holdTime;             // neighbour is deleted after this period of time is elapsed
     simtime_t updateTime;           // time between regular updates

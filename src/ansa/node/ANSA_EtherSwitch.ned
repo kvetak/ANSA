@@ -18,12 +18,12 @@
 //
 // @author Tomas Rajca
 // @author Vladimir Vesely (ivesely@fit.vutbr.cz)
+// @author Marcel Marek (imarek@fit.vutbr.cz)
 // @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 
 package ansa.node;
 
 import ansa.linklayer.cdp.CDP;
-//import ansa.linklayer.contract.ANSA_IMACRelayUnit;
 import ansa.linklayer.lldp.LLDP;
 import inet.common.MessageDispatcher;
 import inet.common.lifecycle.NodeStatus;
@@ -44,16 +44,9 @@ import inet.node.ethernet.EtherSwitch;
 //
 //
 
-
-//import inet.common.MessageDispatcher;
-//import inet.common.lifecycle.NodeStatus;
 import inet.linklayer.configurator.L2NodeConfigurator;
-//import inet.linklayer.contract.IEthernetInterface;
-//import inet.linklayer.contract.IMacAddressTable;
-//import inet.linklayer.contract.IMacRelayUnit;
 import inet.linklayer.contract.ISpanningTree;
 import inet.linklayer.ethernet.IEtherEncap;
-//import inet.networklayer.common.InterfaceTable;
 
 //
 // Model of an Ethernet switch.
@@ -150,17 +143,17 @@ module ANSA_EtherSwitch extends EtherSwitch
 
 //        encap.upperLayerIn <-- up.out++;
 //        encap.upperLayerOut --> up.in++;
-
-        for i=0..sizeof(ethg)-1 {
-            down.out++ --> eth[i].upperLayerIn;
-            down.in++ <-- eth[i].upperLayerOut;
-            eth[i].phys <--> { @display("m=s"); } <--> ethg[i];
-        }
-
-        if hasStp {
-            stp.relayIn <-- up.out++; // relayUnit.stpOut;
-            stp.relayOut --> up.in++; // relayUnit.stpIn;
-        }
+//
+//        for i=0..sizeof(ethg)-1 {
+//            down.out++ --> eth[i].upperLayerIn;
+//            down.in++ <-- eth[i].upperLayerOut;
+//            eth[i].phys <--> { @display("m=s"); } <--> ethg[i];
+//        }
+//
+//        if hasStp {
+//            stp.relayIn <-- up.out++; // relayUnit.stpOut;
+//            stp.relayOut --> up.in++; // relayUnit.stpIn;
+//        }
 
         if hasCDP {
             cdp.ifIn <-- up.out++; // relayUnit.stpOut;

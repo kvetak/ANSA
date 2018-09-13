@@ -36,6 +36,7 @@
 
 #include "inet/common/IProtocolRegistrationListener.h"
 
+
 namespace inet {
 
 Define_Module(CDPMain);
@@ -106,7 +107,7 @@ void CDPMain::initialize(int stage)
         ort = getModuleFromPar<CDPODRRouteTable>(par("cdpODRRouteTableModule"), this);
 
         //TODO FIX remove the direct call
-        relayUnit = getModuleFromPar<ANSA_RelayUnit>(par("relayUnitModule"), this);
+        relayUnit = getModuleFromPar<Ieee8021dRelay>(par("relayUnitModule"), this);
 
         if(containingModule->getSubmodule("routingTable") != nullptr)
             rt = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);

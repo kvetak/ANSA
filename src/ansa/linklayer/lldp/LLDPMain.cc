@@ -33,6 +33,7 @@
 #include "inet/common/IProtocolRegistrationListener.h"
 
 
+
 namespace inet {
 
 Define_Module(LLDPMain);
@@ -72,7 +73,7 @@ void LLDPMain::initialize(int stage)
         lnt = getModuleFromPar<LLDPNeighbourTable>(par("lldpNeighbourTableModule"), this);
 
         //TODO FIX remove the direct call
-                relayUnit = getModuleFromPar<ANSA_RelayUnit>(par("relayUnitModule"), this);
+                relayUnit = getModuleFromPar<Ieee8021dRelay>(par("relayUnitModule"), this);
 
         WATCH_PTRVECTOR(lat->getAgents());
         WATCH_PTRVECTOR(lnt->getNeighbours());

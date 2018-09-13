@@ -39,6 +39,7 @@
 //TODO FIX REMOVE ANSA_RelayUnit references
 
 #include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
+#include "inet/linklayer/ieee8021d/relay/Ieee8021dRelay.h"
 
 //#define CREDIT            // uncomment to enable credit system
 
@@ -53,7 +54,7 @@ class INET_API LLDPMain: public cSimpleModule, protected cListener, public ILife
     LLDPAgentTable *lat;         // LLDP agent table
     LLDPNeighbourTable *lnt;     // LLDP neighbour table
 
-    ANSA_RelayUnit* relayUnit;
+    Ieee8021dRelay* relayUnit;
 
     char enCap[2];              // system capabilities
     char sysCap[2];             // enabled capabilities
