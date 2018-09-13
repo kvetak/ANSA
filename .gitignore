@@ -33,7 +33,7 @@ src/Makefile.vc
 # local files not to be committed
 .oppfeaturestate
 .nedexclusions
-src/inet/features.h
+src/ansa/features.h
 # ignore binary files
 out/
 *.so
