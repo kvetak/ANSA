@@ -36,9 +36,8 @@
 #include "ansa/linklayer/lldp/tables/LLDPAgentTable.h"
 #include "ansa/linklayer/lldp/tables/LLDPNeighbourTable.h"
 
-//TODO FIX REMOVE ANSA_RelayUnit references
-
-#include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
+//TODO FIX REMOVE RelayUnit references
+// KLUDGE from INET
 #include "inet/linklayer/ieee8021d/relay/Ieee8021dRelay.h"
 
 //#define CREDIT            // uncomment to enable credit system

@@ -36,10 +36,8 @@
 #include "ansa/linklayer/cdp/tables/CDPInterfaceTable.h"
 #include "ansa/linklayer/cdp/tables/CDPODRRouteTable.h"
 
-//TODO FIX REMOVE ANSA_RelayUnit references
 
-#include "ansa/linklayer/relayUnit/ANSA_RelayUnit.h"
-//TODO Remove after direct call fix
+//TODO Remove after direct call fix (KLUDGE from INET)
 #include "inet/linklayer/ieee8021d/relay/Ieee8021dRelay.h"
 
 namespace inet {
