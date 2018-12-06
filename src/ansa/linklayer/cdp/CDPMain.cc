@@ -1058,15 +1058,15 @@ void CDPMain::setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId)
         {
             // add to prefixes only interfaces with specified IPv4 address, that are
             // not loopback and are not outgoing interface for this message
-            if(ift->getInterface(i)->ipv4Data() != nullptr &&
-                    !ift->getInterface(i)->ipv4Data()->getIPAddress().isUnspecified() &&
+            if(ift->getInterface(i)->findProtocolData<Ipv4InterfaceData>() != nullptr &&
+                    !ift->getInterface(i)->getProtocolData<Ipv4InterfaceData>()->getIPAddress().isUnspecified() &&
                     ift->getInterface(i)->getInterfaceId() != interfaceId &&
                     !ift->getInterface(i)->isLoopback())
             {
-                mask = ift->getInterface(i)->ipv4Data()->getNetmask().getInt();
+                mask = ift->getInterface(i)->getProtocolData<Ipv4InterfaceData>()->getNetmask().getInt();
                 for(maskShort = 0; mask; mask &= mask - 1) maskShort++;
 
-                prefix.setNetwork(ift->getInterface(i)->ipv4Data()->getIPAddress().str().c_str());
+                prefix.setNetwork(ift->getInterface(i)->getProtocolData<Ipv4InterfaceData>()->getIPAddress().str().c_str());
                 prefix.setMask(maskShort);
 
                 tlv->setPrefixesArraySize(count);
@@ -1083,8 +1083,8 @@ void CDPMain::setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId)
 bool CDPMain::ipInterfaceExist(int interfaceId)
 {
     for(int i=0; i < ift->getNumInterfaces(); i++)
-        if(ift->getInterface(i)->ipv4Data() != nullptr &&
-                !ift->getInterface(i)->ipv4Data()->getIPAddress().isUnspecified() &&
+        if(ift->getInterface(i)->findProtocolData<Ipv4InterfaceData>() != nullptr &&
+                !ift->getInterface(i)->getProtocolData<Ipv4InterfaceData>()->getIPAddress().isUnspecified() &&
                 ift->getInterface(i)->getInterfaceId() != interfaceId &&
                 !ift->getInterface(i)->isLoopback())
             return true;
@@ -1093,10 +1093,10 @@ bool CDPMain::ipInterfaceExist(int interfaceId)
 
 Ipv4Address CDPMain::ipOnInterface(int interfaceId)
 {
-    if(ift->getInterfaceById(interfaceId)->ipv4Data() != nullptr &&
-            !ift->getInterfaceById(interfaceId)->ipv4Data()->getIPAddress().isUnspecified())
+    if(ift->getInterfaceById(interfaceId)->findProtocolData<Ipv4InterfaceData>() != nullptr &&
+            !ift->getInterfaceById(interfaceId)->getProtocolData<Ipv4InterfaceData>()->getIPAddress().isUnspecified())
     {
-        return ift->getInterfaceById(interfaceId)->ipv4Data()->getIPAddress();
+        return ift->getInterfaceById(interfaceId)->getProtocolData<Ipv4InterfaceData>()->getIPAddress();
     }
     else
         return Ipv4Address();

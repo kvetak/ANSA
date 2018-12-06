@@ -523,10 +523,10 @@ void LLDPAgent::setTlvManAdd(const Ptr<LLDPUpdate>& msg)
     std::stringstream string;
     bool l3Address = false;
 
-    if(interface->ipv4Data() != nullptr && !interface->ipv4Data()->getIPAddress().isUnspecified())
+    if(interface->findProtocolData<Ipv4InterfaceData>() != nullptr && !interface->getProtocolData<Ipv4InterfaceData>()->getIPAddress().isUnspecified())
     {
         l3Address = true;
-        string << interface->ipv4Data()->getIPAddress().getInt();
+        string << interface->getProtocolData<Ipv4InterfaceData>()->getIPAddress().getInt();
         setTlvManAddSpec(msg, string.str());
     }
     //if(interface->ipv6Data() != nullptr && !interface->ipv6Data()->getLinkLocalAddress().isUnspecified())
