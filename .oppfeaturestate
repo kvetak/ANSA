@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featurestates>
+    <feature enabled="true" id="CDP"/>
+    <feature enabled="false" id="ETH"/>
+    <feature enabled="true" id="LLDP"/>
+    <feature enabled="false" id="rbridge"/>
+    <feature enabled="true" id="relayUnit"/>
+    <feature enabled="false" id="networkLayer"/>
+    <feature enabled="false" id="routing"/>
+</featurestates>

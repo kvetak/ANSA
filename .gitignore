@@ -31,7 +31,7 @@ src/Makefile.vc
 *.vci
 .buildlog*
 # local files not to be committed
-.oppfeaturestate
+#.oppfeaturestate
 .nedexclusions
 src/ansa/features.h
 # ignore binary files
