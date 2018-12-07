@@ -48,18 +48,6 @@
         linkerFlags = ""
         />
     <feature
-        id="relayUnit"
-        name="relayUnit"
-        description = "relayUnit"
-        initiallyEnabled = "true"
-        requires = ""
-        labels = ""
-        nedPackages = "ansa.linklayer.relayUnit"
-        extraSourceFolders = ""
-        compileFlags = "-DANSA_WITH_relayUnit"
-        linkerFlags = ""
-        />
-    <feature
         id="networkLayer"
         name="networkLayer"
         description = "networkLayer"
