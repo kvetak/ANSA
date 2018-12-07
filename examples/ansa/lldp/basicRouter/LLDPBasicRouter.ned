@@ -17,9 +17,9 @@ package ansa.examples.ansa.lldp.basicRouter;
 
 import ansa.node.ANSA_Host;
 import ansa.node.ANSA_LLDPCDPRouter;
-import inet.common.lifecycle.LifecycleController;
+//import inet.common.lifecycle.LifecycleController;
 import inet.node.ethernet.Eth100M;
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
 
 network LLDPBasicRouter
@@ -31,7 +31,7 @@ network LLDPBasicRouter
         }
 
     submodules:
-        configurator: IPv4NetworkConfigurator {
+        configurator: Ipv4NetworkConfigurator {
             parameters:
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
@@ -71,9 +71,9 @@ network LLDPBasicRouter
                 pppg[1];
         }
         
-        lifecycleController: LifecycleController {
-            @display("p=48,68");
-        }
+//        lifecycleController: LifecycleController {
+//            @display("p=48,68");
+//        }
 
         scenarioManager: ScenarioManager {
             @display("p=48,123");

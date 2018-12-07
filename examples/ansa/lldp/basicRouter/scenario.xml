@@ -13,9 +13,9 @@
   	</at>
   	
     <at t="160">
-        <tell module="lifecycleController" target="R1" operation="NodeShutdownOperation"/>
+        <shutdown module="R1"/>
     </at>
     <at t="250">
-        <tell module="lifecycleController" target="R1" operation="NodeStartOperation"/>
+        <startup module="R1"/>
     </at>
 </scenario>

@@ -18,9 +18,9 @@ package ansa.examples.ansa.lldp.mixedNetwork;
 import ansa.node.ANSA_EtherSwitch;
 import ansa.node.ANSA_LLDPCDPRouter;
 import ansa.node.ANSA_Host;
-import inet.common.lifecycle.LifecycleController;
+//import inet.common.lifecycle.LifecycleController;
 import inet.node.ethernet.Eth100M;
-import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.common.scenario.ScenarioManager;
 
 network LLDPMixedNetwork
@@ -32,7 +32,7 @@ network LLDPMixedNetwork
         }
 
     submodules:
-        configurator: IPv4NetworkConfigurator {
+        configurator: Ipv4NetworkConfigurator {
             parameters:
                 addStaticRoutes = false;
                 addDefaultRoutes = false;
@@ -61,9 +61,9 @@ network LLDPMixedNetwork
             gates:
                 ethg[3];
         }
-        lifecycleController: LifecycleController {
-            @display("p=48,68");
-        }
+//        lifecycleController: LifecycleController {
+//            @display("p=48,68");
+//        }
 
         scenarioManager: ScenarioManager {
             @display("p=48,123");
