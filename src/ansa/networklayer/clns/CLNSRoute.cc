@@ -110,9 +110,9 @@ std::string CLNSRoute::info() const
     if (!interfacePtr)
         out << "*";
     else
-        out << interfacePtr->getName();
-    if (interfacePtr && interfacePtr->ipv4Data())
-        out << "(" << interfacePtr->ipv4Data()->getIPAddress() << ")";
+        out << getInterfaceName();
+//    if (interfacePtr && interfacePtr->ipv4Data())
+//        out << "(" << interfacePtr->ipv4Data()->getIPAddress() << ")";
     out << "  ";
     out << (gateway.isUnspecified() ? "DIRECT" : "REMOTE");
     out << " " << IRoute::sourceTypeName(sourceType);
@@ -128,7 +128,7 @@ std::string CLNSRoute::detailedInfo() const
 
 const char *CLNSRoute::getInterfaceName() const
 {
-    return interfacePtr ? interfacePtr->getName() : "";
+    return interfacePtr ? interfacePtr->getInterfaceName() : "";
 }
 
 void CLNSRoute::changed(int fieldCode)
@@ -142,10 +142,10 @@ IRoutingTable *CLNSRoute::getRoutingTableAsGeneric() const
     return getRoutingTable();
 }
 
-//void CLNSAddress::_checkNetmaskLength(int length)
+//void ClnsAddress::_checkNetmaskLength(int length)
 //{
 //    if (length < 0 || length > 64)
-//        throw cRuntimeError("CLNSAddress: wrong netmask length %d (not in 0..64)", length);
+//        throw cRuntimeError("ClnsAddress: wrong netmask length %d (not in 0..64)", length);
 //}
 
 

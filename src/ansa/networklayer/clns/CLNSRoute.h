@@ -28,7 +28,7 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "inet/networklayer/contract/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/ClnsAddress.h"
 #include "inet/networklayer/contract/IRoute.h"
 
 namespace inet {
@@ -65,9 +65,9 @@ class INET_API CLNSRoute : public cObject, public IRoute
 
   private:
     CLNSRoutingTable *rt;    ///< the routing table in which this route is inserted, or nullptr
-    CLNSAddress dest;    ///< Destination
-//    CLNSAddress netmask;
-    CLNSAddress gateway;    ///< Next hop
+    ClnsAddress dest;    ///< Destination
+//    ClnsAddress netmask;
+    ClnsAddress gateway;    ///< Next hop
     InterfaceEntry *interfacePtr;    ///< interface
     SourceType sourceType;    ///< manual, routing prot, etc.
     unsigned int adminDist;    ///< Cisco like administrative distance
@@ -101,9 +101,9 @@ class INET_API CLNSRoute : public cObject, public IRoute
     /** test validity of route entry, e.g. check expiry */
     virtual bool isValid() const { return true; }
 
-    virtual void setDestination(CLNSAddress _dest) { if (dest != _dest) { dest = _dest; changed(F_DESTINATION); } }
+    virtual void setDestination(ClnsAddress _dest) { if (dest != _dest) { dest = _dest; changed(F_DESTINATION); } }
 //    virtual void setNetmask(NET _netmask) { if (netmask != _netmask) { netmask = _netmask; changed(F_PREFIX_LENGTH); } }
-    virtual void setGateway(CLNSAddress _gateway) { if (gateway != _gateway) { gateway = _gateway; changed(F_NEXTHOP); } }
+    virtual void setGateway(ClnsAddress _gateway) { if (gateway != _gateway) { gateway = _gateway; changed(F_NEXTHOP); } }
     virtual void setInterface(InterfaceEntry *_interfacePtr) override { if (interfacePtr != _interfacePtr) { interfacePtr = _interfacePtr; changed(F_IFACE); } }
     virtual void setSourceType(SourceType _source) override { if (sourceType != _source) { sourceType = _source; changed(F_SOURCE); } }
 #ifdef ANSAINET
@@ -113,13 +113,13 @@ class INET_API CLNSRoute : public cObject, public IRoute
     virtual void setMetric(int _metric) override { if (metric != _metric) { metric = _metric; changed(F_METRIC); } }
 
     /** Destination address prefix to match */
-    CLNSAddress getDestination() const { return dest; }
+    ClnsAddress getDestination() const { return dest; }
 
 //    /** Represents length of prefix to match */
-//    CLNSAddress getNetmask() const { return netmask; }
+//    ClnsAddress getNetmask() const { return netmask; }
 
     /** Next hop address */
-    CLNSAddress getGateway() const { return gateway; }
+    ClnsAddress getGateway() const { return gateway; }
 
     /** Next hop interface */
     InterfaceEntry *getInterface() const override { return interfacePtr; }
@@ -143,17 +143,17 @@ class INET_API CLNSRoute : public cObject, public IRoute
     void setProtocolData(cObject *protocolData) override { this->protocolData = protocolData; }
 
     virtual IRoutingTable *getRoutingTableAsGeneric() const override;
-    virtual void setDestination(const L3Address& dest) override { setDestination(dest.toCLNS()); }
-    virtual void setPrefixLength(int len) override { /*setNetmask(CLNSAddress::makeNetmask(len));*/ }
-    virtual void setNextHop(const L3Address& nextHop) override { setGateway(nextHop.toCLNS()); }    //TODO rename IPv4 method
+    virtual void setDestination(const L3Address& dest) override { setDestination(dest.toClns()); }
+    virtual void setPrefixLength(int len) override { /*setNetmask(ClnsAddress::makeNetmask(len));*/ }
+    virtual void setNextHop(const L3Address& nextHop) override { setGateway(nextHop.toClns()); }    //TODO rename Ipv4 method
 
     virtual L3Address getDestinationAsGeneric() const override { return getDestination(); }
     virtual int getPrefixLength() const override { return 0; /*getNetmask().getNetmaskLength();*/ }
-    virtual L3Address getNextHopAsGeneric() const override { return getGateway(); }    //TODO rename IPv4 method
+    virtual L3Address getNextHopAsGeneric() const override { return getGateway(); }    //TODO rename Ipv4 method
 };
 
 ///**
-// * IPv4 multicast route in IIPv4RoutingTable.
+// * Ipv4 multicast route in IIpv4RoutingTable.
 // * Multicast routing protocols may extend this class to store protocol
 // * specific fields.
 // *
@@ -172,15 +172,15 @@ class INET_API CLNSRoute : public cObject, public IRoute
 // * routing tree), then the datagram is forwarded only if there are listeners
 // * of the multicast group on that link (TRPB routing).
 // *
-// * @see IIPv4RoutingTable, IPv4RoutingTable
+// * @see IIpv4RoutingTable, Ipv4RoutingTable
 // */
-//class INET_API IPv4MulticastRoute : public cObject, public IMulticastRoute
+//class INET_API Ipv4MulticastRoute : public cObject, public IMulticastRoute
 //{
 //  private:
-//    IIPv4RoutingTable *rt;    ///< the routing table in which this route is inserted, or nullptr
-//    IPv4Address origin;    ///< Source network
-//    IPv4Address originNetmask;    ///< Source network mask
-//    IPv4Address group;    ///< Multicast group, if unspecified then matches any
+//    IIpv4RoutingTable *rt;    ///< the routing table in which this route is inserted, or nullptr
+//    Ipv4Address origin;    ///< Source network
+//    Ipv4Address originNetmask;    ///< Source network mask
+//    Ipv4Address group;    ///< Multicast group, if unspecified then matches any
 //    InInterface *inInterface;    ///< In interface (upstream)
 //    OutInterfaceVector outInterfaces;    ///< Out interfaces (downstream)
 //    SourceType sourceType;    ///< manual, routing prot, etc.
@@ -196,31 +196,31 @@ class INET_API CLNSRoute : public cObject, public IRoute
 //
 //  private:
 //    // copying not supported: following are private and also left undefined
-//    IPv4MulticastRoute(const IPv4MulticastRoute& obj);
-//    IPv4MulticastRoute& operator=(const IPv4MulticastRoute& obj);
+//    Ipv4MulticastRoute(const Ipv4MulticastRoute& obj);
+//    Ipv4MulticastRoute& operator=(const Ipv4MulticastRoute& obj);
 //
 //  public:
-//    IPv4MulticastRoute() : rt(nullptr), inInterface(nullptr), sourceType(MANUAL), source(nullptr), metric(0) {}
-//    virtual ~IPv4MulticastRoute();
+//    Ipv4MulticastRoute() : rt(nullptr), inInterface(nullptr), sourceType(MANUAL), source(nullptr), metric(0) {}
+//    virtual ~Ipv4MulticastRoute();
 //    virtual std::string info() const override;
 //    virtual std::string detailedInfo() const override;
 //
 //    /** To be called by the routing table when this route is added or removed from it */
-//    virtual void setRoutingTable(IIPv4RoutingTable *rt) { this->rt = rt; }
-//    IIPv4RoutingTable *getRoutingTable() const { return rt; }
+//    virtual void setRoutingTable(IIpv4RoutingTable *rt) { this->rt = rt; }
+//    IIpv4RoutingTable *getRoutingTable() const { return rt; }
 //
 //    /** test validity of route entry, e.g. check expiry */
 //    virtual bool isValid() const { return true; }
 //
-//    virtual bool matches(const IPv4Address& origin, const IPv4Address& group) const
+//    virtual bool matches(const Ipv4Address& origin, const Ipv4Address& group) const
 //    {
 //        return (this->group.isUnspecified() || this->group == group) &&
-//               IPv4Address::maskedAddrAreEqual(origin, this->origin, this->originNetmask);
+//               Ipv4Address::maskedAddrAreEqual(origin, this->origin, this->originNetmask);
 //    }
 //
-//    virtual void setOrigin(IPv4Address _origin) { if (origin != _origin) { origin = _origin; changed(F_ORIGIN); } }
-//    virtual void setOriginNetmask(IPv4Address _netmask) { if (originNetmask != _netmask) { originNetmask = _netmask; changed(F_ORIGINMASK); } }
-//    virtual void setMulticastGroup(IPv4Address _group) { if (group != _group) { group = _group; changed(F_MULTICASTGROUP); } }
+//    virtual void setOrigin(Ipv4Address _origin) { if (origin != _origin) { origin = _origin; changed(F_ORIGIN); } }
+//    virtual void setOriginNetmask(Ipv4Address _netmask) { if (originNetmask != _netmask) { originNetmask = _netmask; changed(F_ORIGINMASK); } }
+//    virtual void setMulticastGroup(Ipv4Address _group) { if (group != _group) { group = _group; changed(F_MULTICASTGROUP); } }
 //    virtual void setInInterface(InInterface *_inInterface) override;
 //    virtual void clearOutInterfaces() override;
 //    virtual void addOutInterface(OutInterface *outInterface) override;
@@ -230,13 +230,13 @@ class INET_API CLNSRoute : public cObject, public IRoute
 //    virtual void setMetric(int _metric) override { if (metric != _metric) { metric = _metric; changed(F_METRIC); } }
 //
 //    /** Source address prefix to match */
-//    IPv4Address getOrigin() const { return origin; }
+//    Ipv4Address getOrigin() const { return origin; }
 //
 //    /** Represents length of prefix to match */
-//    IPv4Address getOriginNetmask() const { return originNetmask; }
+//    Ipv4Address getOriginNetmask() const { return originNetmask; }
 //
 //    /** Multicast group address */
-//    IPv4Address getMulticastGroup() const { return group; }
+//    Ipv4Address getMulticastGroup() const { return group; }
 //
 //    /** In interface */
 //    InInterface *getInInterface() const { return inInterface; }
@@ -259,11 +259,11 @@ class INET_API CLNSRoute : public cObject, public IRoute
 //    virtual IRoutingTable *getRoutingTableAsGeneric() const override;
 //    virtual void setEnabled(bool enabled) override {    /*TODO: setEnabled(enabled);*/ }
 //    virtual void setOrigin(const L3Address& origin) override { setOrigin(origin.toIPv4()); }
-//    virtual void setPrefixLength(int len) override { setOriginNetmask(IPv4Address::makeNetmask(len)); }    //TODO inconsistent naming
+//    virtual void setPrefixLength(int len) override { setOriginNetmask(Ipv4Address::makeNetmask(len)); }    //TODO inconsistent naming
 //    virtual void setMulticastGroup(const L3Address& group) override { setMulticastGroup(group.toIPv4()); }
 //
 //    virtual bool isEnabled() const override { return true;    /*TODO: isEnabled();*/ }
-//    virtual bool isExpired() const override { return !isValid(); }    //TODO rename IPv4 method
+//    virtual bool isExpired() const override { return !isValid(); }    //TODO rename Ipv4 method
 //    virtual L3Address getOriginAsGeneric() const override { return getOrigin(); }
 //    virtual int getPrefixLength() const override { return getOriginNetmask().getNetmaskLength(); }    //TODO inconsistent naming
 //    virtual L3Address getMulticastGroupAsGeneric() const override { return getMulticastGroup(); }

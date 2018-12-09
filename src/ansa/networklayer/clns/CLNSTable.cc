@@ -152,11 +152,11 @@ namespace inet {
 ///*
 //        nb = NotificationBoardAccess().get();
 //
-//        nb->subscribe(this, NF_INTERFACE_CREATED);
-//        nb->subscribe(this, NF_INTERFACE_DELETED);
-//        nb->subscribe(this, NF_INTERFACE_STATE_CHANGED);
-//        nb->subscribe(this, NF_INTERFACE_CONFIG_CHANGED);
-//        nb->subscribe(this, NF_INTERFACE_IPv6CONFIG_CHANGED);
+//        nb->subscribe(this, interfaceCreatedSignal);
+//        nb->subscribe(this, interfaceDeletedSignal);
+//        nb->subscribe(this, interfaceStateChangedSignal);
+//        nb->subscribe(this, interfaceConfigChangedSignal);
+//        nb->subscribe(this, interfaceIpv6ConfigChangedSignal);
 //*/
 //
 //        WATCH_VECTOR(table);
@@ -194,28 +194,28 @@ namespace inet {
 //    Enter_Method_Silent();
 //    printNotificationBanner(category, details);
 
-//    if (category==NF_INTERFACE_CREATED)
+//    if (category==interfaceCreatedSignal)
 //    {
 //        // add netmask route for the new interface
 //        updateNetmaskRoutes();
 //    }
-//    else if (category==NF_INTERFACE_DELETED)
+//    else if (category==interfaceDeletedSignal)
 //    {
 //        // remove all routes that point to that interface
 //        InterfaceEntry *entry = check_and_cast<InterfaceEntry*>(details);
 //        deleteInterfaceRoutes(entry);
 //    }
-//    else if (category==NF_INTERFACE_STATE_CHANGED)
+//    else if (category==interfaceStateChangedSignal)
 //    {
 //        invalidateCache();
 //    }
-//    else if (category==NF_INTERFACE_CONFIG_CHANGED)
+//    else if (category==interfaceConfigChangedSignal)
 //    {
 //        invalidateCache();
 //    }
-//    else if (category==NF_INTERFACE_IPv4CONFIG_CHANGED)
+//    else if (category==interfaceIpv4ConfigChangedSignal)
 //    {
-//        // if anything IPv4-related changes in the interfaces, interface netmask
+//        // if anything Ipv4-related changes in the interfaces, interface netmask
 //        // based routes have to be re-built.
 //        updateNetmaskRoutes();
 //    }

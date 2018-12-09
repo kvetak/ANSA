@@ -21,7 +21,7 @@
 #include "inet/common/INETDefs.h"
 
 #include "inet/networklayer/common/InterfaceEntry.h"
-#include "inet/networklayer/contract/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/ClnsAddress.h"
 
 namespace inet {
 
@@ -37,7 +37,7 @@ class INET_API CLNSInterfaceData : public InterfaceProtocolData
     virtual ~CLNSInterfaceData();
 
   protected:
-    void changed1(int fieldId) { changed(NF_INTERFACE_CLNSCONFIG_CHANGED, fieldId); }
+    void changed1(int fieldId) { changed(interfaceClnsConfigChangedSignal, fieldId); }
 
 
   public:
