@@ -15,7 +15,7 @@
 //
 
 /**
- * @file ISISInterfaceData.cc
+ * @file IsisInterfaceData.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 1.4.2013
  * @brief Stores IS-IS interface related data.
@@ -23,12 +23,12 @@
  * @todo Z9
  */
 
-#include "ansa/networklayer/isis/ISISInterfaceData.h"
+#include "ansa/networklayer/isis/IsisInterfaceData.h"
 
 namespace inet {
 
 
-ISISInterfaceData::ISISInterfaceData()
+IsisInterfaceData::IsisInterfaceData()
 {
     // TODO Auto-generated constructor stub
 
@@ -62,29 +62,29 @@ ISISInterfaceData::ISISInterfaceData()
     l2PsnpInterval = -1; /*!< Interval in seconds between generating PSNP message.*/
 }
 
-void ISISInterfaceData::init(void){
+void IsisInterfaceData::init(void){
 
 
 }
 
-ISISMessage *ISISInterfaceData::getHello()
+ISISMessage *IsisInterfaceData::getHello()
 {
     return hellos.front();
 }
 
-std::vector<ISISMessage *> ISISInterfaceData::getHellos()
+std::vector<ISISMessage *> IsisInterfaceData::getHellos()
 {
     return hellos;
 }
 
-void ISISInterfaceData::setHello(ISISMessage *hello)
+void IsisInterfaceData::setHello(ISISMessage *hello)
 {
     this->hellos.clear();
     this->hellos.push_back(hello);
 
 }
 
-void ISISInterfaceData::clearHello(void){
+void IsisInterfaceData::clearHello(void){
     for(std::vector<ISISMessage *>::iterator it = this->hellos.begin(); it != this->hellos.end();){
         delete (*it);
         it = this->hellos.erase(it);
@@ -92,21 +92,21 @@ void ISISInterfaceData::clearHello(void){
 //    this->hellos.clear();
 }
 
-void ISISInterfaceData::addHello(ISISMessage *hello){
+void IsisInterfaceData::addHello(ISISMessage *hello){
     this->hellos.push_back(hello);
 }
 
-bool ISISInterfaceData::isHelloValid() const
+bool IsisInterfaceData::isHelloValid() const
 {
     return helloValid;
 }
 
-ISISCircuitType ISISInterfaceData::getCircuitType() const
+ISISCircuitType IsisInterfaceData::getCircuitType() const
 {
     return circuitType;
 }
 
-void ISISInterfaceData::setCircuitType(ISISCircuitType circuitType)
+void IsisInterfaceData::setCircuitType(ISISCircuitType circuitType)
 {
     if(this->circuitType != circuitType){
         this->setHelloValid(false);
@@ -114,12 +114,12 @@ void ISISInterfaceData::setCircuitType(ISISCircuitType circuitType)
     this->circuitType = circuitType;
 }
 
-int ISISInterfaceData::getGateIndex() const
+int IsisInterfaceData::getGateIndex() const
 {
     return gateIndex;
 }
 
-void ISISInterfaceData::setGateIndex(int gateIndex)
+void IsisInterfaceData::setGateIndex(int gateIndex)
 {
     if(this->gateIndex != gateIndex){
         this->setHelloValid(false);
@@ -127,12 +127,12 @@ void ISISInterfaceData::setGateIndex(int gateIndex)
     this->gateIndex = gateIndex;
 }
 
-int ISISInterfaceData::getIfaceId() const
+int IsisInterfaceData::getIfaceId() const
 {
     return ifaceId;
 }
 
-void ISISInterfaceData::setIfaceId(int ifaceId)
+void IsisInterfaceData::setIfaceId(int ifaceId)
 {
     if(this->ifaceId != ifaceId){
         this->setHelloValid(false);
@@ -140,12 +140,12 @@ void ISISInterfaceData::setIfaceId(int ifaceId)
     this->ifaceId = ifaceId;
 }
 
-bool ISISInterfaceData::isIsisEnabled() const
+bool IsisInterfaceData::isIsisEnabled() const
 {
     return isisEnabled;
 }
 
-void ISISInterfaceData::setIsisEnabled(bool isisEnabled)
+void IsisInterfaceData::setIsisEnabled(bool isisEnabled)
 {
     if(this->isisEnabled != isisEnabled){
         this->setHelloValid(false);
@@ -153,44 +153,44 @@ void ISISInterfaceData::setIsisEnabled(bool isisEnabled)
     this->isisEnabled = isisEnabled;
 }
 
-int ISISInterfaceData::getL1CsnpInterval() const
+int IsisInterfaceData::getL1CsnpInterval() const
 {
     return l1CsnpInterval;
 }
 
-void ISISInterfaceData::setL1CsnpInterval(int l1CsnpInterval)
+void IsisInterfaceData::setL1CsnpInterval(int l1CsnpInterval)
 {
 
     this->l1CsnpInterval = l1CsnpInterval;
 }
 
-const PseudonodeID ISISInterfaceData::getL1Dis() const
+const PseudonodeID IsisInterfaceData::getL1Dis() const
 {
     return l1DIS;
 }
 
-void ISISInterfaceData::setL1Dis(const PseudonodeID& l1DIS)
+void IsisInterfaceData::setL1Dis(const PseudonodeID& l1DIS)
 {
   this->l1DIS = PseudonodeID(l1DIS);
 //    memcpy(this->l1DIS, l1DIS, ISIS_LAN_ID);
 }
 
-unsigned int ISISInterfaceData::getL1DisPriority() const
+unsigned int IsisInterfaceData::getL1DisPriority() const
 {
     return l1DISPriority;
 }
 
-void ISISInterfaceData::setL1DisPriority(unsigned int l1DisPriority)
+void IsisInterfaceData::setL1DisPriority(unsigned int l1DisPriority)
 {
     l1DISPriority = l1DisPriority;
 }
 
-int ISISInterfaceData::getL1HelloInterval() const
+int IsisInterfaceData::getL1HelloInterval() const
 {
     return L1HelloInterval;
 }
 
-void ISISInterfaceData::setL1HelloInterval(int l1HelloInterval)
+void IsisInterfaceData::setL1HelloInterval(int l1HelloInterval)
 {
     if(this->L1HelloInterval != l1HelloInterval){
         this->setHelloValid(false);
@@ -198,13 +198,13 @@ void ISISInterfaceData::setL1HelloInterval(int l1HelloInterval)
     L1HelloInterval = l1HelloInterval;
 }
 
-short ISISInterfaceData::getL1HelloMultiplier() const
+short IsisInterfaceData::getL1HelloMultiplier() const
 {
 
     return L1HelloMultiplier;
 }
 
-void ISISInterfaceData::setL1HelloMultiplier(short l1HelloMultiplier)
+void IsisInterfaceData::setL1HelloMultiplier(short l1HelloMultiplier)
 {
     if(this->L1HelloMultiplier != l1HelloMultiplier){
             this->setHelloValid(false);
@@ -212,53 +212,53 @@ void ISISInterfaceData::setL1HelloMultiplier(short l1HelloMultiplier)
     L1HelloMultiplier = l1HelloMultiplier;
 }
 
-int ISISInterfaceData::getL1PsnpInterval() const
+int IsisInterfaceData::getL1PsnpInterval() const
 {
     return l1PsnpInterval;
 }
 
-void ISISInterfaceData::setL1PsnpInterval(int l1PsnpInterval)
+void IsisInterfaceData::setL1PsnpInterval(int l1PsnpInterval)
 {
     this->l1PsnpInterval = l1PsnpInterval;
 }
 
-int ISISInterfaceData::getL2CsnpInterval() const
+int IsisInterfaceData::getL2CsnpInterval() const
 {
     return l2CsnpInterval;
 }
 
-void ISISInterfaceData::setL2CsnpInterval(int l2CsnpInterval)
+void IsisInterfaceData::setL2CsnpInterval(int l2CsnpInterval)
 {
     this->l2CsnpInterval = l2CsnpInterval;
 }
 
-const PseudonodeID ISISInterfaceData::getL2Dis() const
+const PseudonodeID IsisInterfaceData::getL2Dis() const
 {
     return l2DIS;
 }
 
-void ISISInterfaceData::setL2Dis(const PseudonodeID& l2DIS)
+void IsisInterfaceData::setL2Dis(const PseudonodeID& l2DIS)
 {
   this->l2DIS = PseudonodeID(l2DIS);
 //    memcpy(this->l2DIS, l2DIS, ISIS_LAN_ID);
 }
 
-unsigned int ISISInterfaceData::getL2DisPriority() const
+unsigned int IsisInterfaceData::getL2DisPriority() const
 {
     return l2DISPriority;
 }
 
-void ISISInterfaceData::setL2DisPriority(unsigned int l2DisPriority)
+void IsisInterfaceData::setL2DisPriority(unsigned int l2DisPriority)
 {
     l2DISPriority = l2DisPriority;
 }
 
-int ISISInterfaceData::getL2HelloInterval() const
+int IsisInterfaceData::getL2HelloInterval() const
 {
     return L2HelloInterval;
 }
 
-void ISISInterfaceData::setL2HelloInterval(int l2HelloInterval)
+void IsisInterfaceData::setL2HelloInterval(int l2HelloInterval)
 {
     if(this->L2HelloInterval != l2HelloInterval){
             this->setHelloValid(false);
@@ -266,12 +266,12 @@ void ISISInterfaceData::setL2HelloInterval(int l2HelloInterval)
     L2HelloInterval = l2HelloInterval;
 }
 
-short ISISInterfaceData::getL2HelloMultiplier() const
+short IsisInterfaceData::getL2HelloMultiplier() const
 {
     return L2HelloMultiplier;
 }
 
-void ISISInterfaceData::setL2HelloMultiplier(short l2HelloMultiplier)
+void IsisInterfaceData::setL2HelloMultiplier(short l2HelloMultiplier)
 {
     if(this->L2HelloMultiplier != l2HelloMultiplier){
             this->setHelloValid(false);
@@ -279,42 +279,42 @@ void ISISInterfaceData::setL2HelloMultiplier(short l2HelloMultiplier)
     L2HelloMultiplier = l2HelloMultiplier;
 }
 
-int ISISInterfaceData::getL2PsnpInterval() const
+int IsisInterfaceData::getL2PsnpInterval() const
 {
     return l2PsnpInterval;
 }
 
-void ISISInterfaceData::setL2PsnpInterval(int l2PsnpInterval)
+void IsisInterfaceData::setL2PsnpInterval(int l2PsnpInterval)
 {
     this->l2PsnpInterval = l2PsnpInterval;
 }
 
-int ISISInterfaceData::getLspInterval() const
+int IsisInterfaceData::getLspInterval() const
 {
     return lspInterval;
 }
 
-void ISISInterfaceData::setLspInterval(int lspInterval)
+void IsisInterfaceData::setLspInterval(int lspInterval)
 {
     this->lspInterval = lspInterval;
 }
 
-unsigned int ISISInterfaceData::getMetric() const
+unsigned int IsisInterfaceData::getMetric() const
 {
     return metric;
 }
 
-void ISISInterfaceData::setMetric(unsigned int metric)
+void IsisInterfaceData::setMetric(unsigned int metric)
 {
     this->metric = metric;
 }
 
-ISISNetworkType ISISInterfaceData::getNetwork() const
+ISISNetworkType IsisInterfaceData::getNetwork() const
 {
     return network;
 }
 
-void ISISInterfaceData::setNetwork(ISISNetworkType network)
+void IsisInterfaceData::setNetwork(ISISNetworkType network)
 {
     if(this->network != network){
             this->setHelloValid(false);
@@ -322,12 +322,12 @@ void ISISInterfaceData::setNetwork(ISISNetworkType network)
     this->network = network;
 }
 
-bool ISISInterfaceData::isPassive() const
+bool IsisInterfaceData::isPassive() const
 {
     return passive;
 }
 
-void ISISInterfaceData::setPassive(bool passive)
+void IsisInterfaceData::setPassive(bool passive)
 {
     if(this->passive != passive){
             this->setHelloValid(false);
@@ -335,12 +335,12 @@ void ISISInterfaceData::setPassive(bool passive)
     this->passive = passive;
 }
 
-unsigned int ISISInterfaceData::getPriority() const
+unsigned int IsisInterfaceData::getPriority() const
 {
     return priority;
 }
 
-void ISISInterfaceData::setPriority(unsigned int priority)
+void IsisInterfaceData::setPriority(unsigned int priority)
 {
     if(this->priority != priority){
             this->setHelloValid(false);
@@ -348,12 +348,12 @@ void ISISInterfaceData::setPriority(unsigned int priority)
     this->priority = priority;
 }
 
-void ISISInterfaceData::setHelloValid(bool helloValid)
+void IsisInterfaceData::setHelloValid(bool helloValid)
 {
     this->helloValid = helloValid;
 }
 
-ISISInterfaceData::~ISISInterfaceData()
+IsisInterfaceData::~IsisInterfaceData()
 {
     // TODO Auto-generated destructor stub
 }

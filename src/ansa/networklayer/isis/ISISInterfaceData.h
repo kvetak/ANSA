@@ -15,7 +15,7 @@
 //
 
 /**
- * @file ISISInterfaceData.h
+ * @file IsisInterfaceData.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 1.4.2013
  * @brief Stores IS-IS interface related data.
@@ -32,7 +32,7 @@
 
 namespace inet {
 
-class ISISInterfaceData : public InterfaceProtocolData
+class IsisInterfaceData : public InterfaceProtocolData
 {
 
 
@@ -68,8 +68,8 @@ class ISISInterfaceData : public InterfaceProtocolData
 
 
     public:
-        ISISInterfaceData();
-        virtual ~ISISInterfaceData();
+        IsisInterfaceData();
+        virtual ~IsisInterfaceData();
         void init(void);
         ISISMessage* getHello();
         std::vector<ISISMessage *> getHellos();
