@@ -54,7 +54,7 @@ public:
     {
 
         char buf[SYSTEMID_STRING_SIZE + 1];
-        sprintf(buf, "%04lX.%04lX.%04lX", (systemID >> 32) & (0xFFFF), (systemID >> 16) & (0xFFFF), systemID & (0xFFFF));
+        sprintf(buf, "%04llX.%04lX.%04lX", (systemID >> 32) & (0xFFFF), (systemID >> 16) & (0xFFFF), systemID & (0xFFFF));
         buf[SYSTEMID_STRING_SIZE] = 0;
         return std::string(buf);
     }
@@ -78,17 +78,17 @@ inline std::ostream& operator<<(std::ostream& os, const SystemID& sysID)
     return os << sysID.str();
 }
 
-class AreaID {
+class AreaId {
 
 
 private:
     uint64 areaID;
 public:
 
-    AreaID(){
+    AreaId(){
         areaID = 0;
     }
-    AreaID(const AreaID& areaId)
+    AreaId(const AreaId& areaId)
     {
       areaID = areaId.getAreaId();
     }
@@ -151,19 +151,19 @@ public:
     }
 
 
-    bool operator==(const AreaID& other) const {return areaID == other.getAreaId();}
-    bool operator!=(const AreaID& other) const {return areaID != other.getAreaId();}
+    bool operator==(const AreaId& other) const {return areaID == other.getAreaId();}
+    bool operator!=(const AreaId& other) const {return areaID != other.getAreaId();}
 
-    bool operator<(const AreaID& other) const {return areaID < other.getAreaId();}
-    bool operator<=(const AreaID& other) const {return areaID <= other.getAreaId();}
+    bool operator<(const AreaId& other) const {return areaID < other.getAreaId();}
+    bool operator<=(const AreaId& other) const {return areaID <= other.getAreaId();}
 
-    bool operator>(const AreaID& other) const {return areaID > other.getAreaId();}
-    bool operator>=(const AreaID& other) const {return areaID >= other.getAreaId();}
+    bool operator>(const AreaId& other) const {return areaID > other.getAreaId();}
+    bool operator>=(const AreaId& other) const {return areaID >= other.getAreaId();}
 
 };
 
 
-inline std::ostream& operator<<(std::ostream& os, const AreaID& areaID)
+inline std::ostream& operator<<(std::ostream& os, const AreaId& areaID)
 {
     return os << areaID.str();
 }

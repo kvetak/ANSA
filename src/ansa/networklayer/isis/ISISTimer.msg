@@ -21,9 +21,21 @@ cplusplus {{
 }}
 namespace inet;
 
-class noncobject AreaID;
-class noncobject SystemID;
-class noncobject LspID;
+//class noncobject AreaId;
+class AreaId
+{
+    @existingClass;
+}
+//class noncobject SystemID;
+class SystemID
+{
+    @existingClass;
+}
+//class noncobject LspID;
+class LspID
+{
+    @existingClass;
+}
 
 enum ISISTimerType
 {
@@ -56,7 +68,7 @@ message ISISTimer
       SystemID sysID;
       unsigned short isType;	//L1 / L2
 //      unsigned char areaID[3];	//areaID; relevant for L2 dead timer
-      AreaID areaID;
+      AreaId areaID;
 //      unsigned char LSPid[8];	//for use as LSP dead timer
       LspID LSPid;
       

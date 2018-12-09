@@ -80,7 +80,7 @@ void ISISDeviceConfigurator::prepareAddress( ISISMain::ISIS_MODE isisMode)
       }
       else
       {
-        //TODO set AreaID and systemID in ISIS module
+        //TODO set AreaId and systemID in ISIS module
       }
 
     }
@@ -113,10 +113,10 @@ void ISISDeviceConfigurator::loadISISConfig(ISISMain *isisModule, ISISMain::ISIS
 
 
     }else if(isisMode == ISISMain::L3_ISIS_MODE){
-        //IPv4
+        //Ipv4
         //TODO C2
 
-        //IPv6
+        //Ipv6
         //TODO C2
 
     }else{
@@ -172,7 +172,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISISMain *isisModule, ISISMain::ISIS
             {
                 throw cRuntimeError("Unable to parse NET address.");
             }else{
-              //TODO set AreaID and systemID in ISIS module
+              //TODO set AreaId and systemID in ISIS module
             }
 
         }
@@ -365,7 +365,7 @@ void ISISDeviceConfigurator::generateNetAddr() {
 
 //    //    unsigned char *a = new unsigned char[6];
 //        char *tmp = new char[25];
-//        MACAddress address;
+//        MacAddress address;
 //
 //        for (int i = 0; i < ift->getNumInterfaces(); i++)
 //        {
@@ -517,7 +517,7 @@ void ISISDeviceConfigurator::loadISISCoreDefaultConfig(ISISMain *isisModule){
 
 void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule, InterfaceEntry *ie){
 
-    ISISInterfaceData *d = new ISISInterfaceData();
+    IsisInterfaceData *d = new IsisInterfaceData();
         ISISinterface newIftEntry;
         newIftEntry.intID = ie->getInterfaceId();
         d->setIfaceId(ie->getInterfaceId());

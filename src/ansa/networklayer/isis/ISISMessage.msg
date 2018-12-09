@@ -18,21 +18,20 @@
 //namespace inet;
 
 cplusplus {{
-    
-//#include "ISISLSPPacket.h"
-//class ISISLSPPacket;
+
 #include "ansa/networklayer/isis/ISISCommon.h"
 }}
 namespace inet;
+
 cplusplus {{
 //using namespace inet;
-//    typedef struct NSAP_t
-//    {
-//        unsigned char AreaAddr[3];
-//        unsigned char sysID[6];
-//        unsigned char NSEL;
-//        
-//    } NSAP_t;
+    typedef struct NSAP_t
+    {
+        unsigned char AreaAddr[3];
+        unsigned char sysID[6];
+        unsigned char NSEL;
+        
+    } NSAP_t;
     
     typedef struct TLV_t
     {
@@ -46,14 +45,35 @@ cplusplus {{
    
 
 }}
-class noncobject charP;
-class noncobject TLV_t;
-//class noncobject NSAP_t;
+//class charP;
 
-class noncobject PseudonodeID;
-class noncobject SystemID;
-class noncobject LspID;
+//class noncobject TLV_t;
+class TLV_t
+{
+    @existingClass;
+}
+////class noncobject NSAP_t;
+class NSAP_t
+{
+    @existingClass;
+}
+//
+//class noncobject ;
+class PseudonodeID
+{
+    @existingClass;
+}
+//class noncobject SystemID;
 
+class SystemID
+{
+    @existingClass;
+}
+//class noncobject LspID;
+class LspID
+{
+    @existingClass;
+}
 
 
 enum PDU_Type
