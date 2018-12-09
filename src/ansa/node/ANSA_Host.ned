@@ -41,10 +41,10 @@ package ansa.node;
 
 import inet.common.lifecycle.NodeStatus;
 import inet.common.packet.PcapRecorder;
-import inet.linklayer.contract.IExternalNic;
-import inet.linklayer.contract.ITunNic;
-import inet.linklayer.contract.IWiredNic;
-import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IExternalInterface;
+import inet.linklayer.contract.ITunnelInterface;
+import inet.linklayer.contract.IWiredInterface;
+import inet.linklayer.contract.IWirelessInterface;
 import inet.linklayer.loopback.LoopbackInterface;
 import inet.mobility.contract.IMobility;
 import inet.networklayer.contract.IRoutingTable;
@@ -57,9 +57,9 @@ import inet.applications.contract.IPingApp;
 import inet.applications.contract.ISCTPApp;
 import inet.applications.contract.ITCPApp;
 import inet.applications.contract.IUDPApp;
-import inet.transportlayer.contract.ISCTP;
-import inet.transportlayer.contract.ITCP;
-import inet.transportlayer.contract.IUDP;
+import inet.transportlayer.contract.ISctp;
+import inet.transportlayer.contract.ITcp;
+import inet.transportlayer.contract.IUdp;
 import inet.applications.contract.ITunApp;
 
 import ansa.node.ANSA_NodeBase;
@@ -67,17 +67,17 @@ import ansa.node.ANSA_NodeBase;
 module ANSA_Host extends ANSA_NodeBase
 {
     parameters:
-        int numTcpApps = default(0);  // no of TCP apps. Specify the app types in INI file with tcpApp[0..1].typename="TCPEchoApp" syntax
-        int numUdpApps = default(0);  // no of UDP apps. Specify the app types in INI file with udpApp[0..1].typename="UDPVideoStreamCli" syntax
-        int numSctpApps = default(0); // no of SCTP apps. Specify the app types in INI file with sctpApp[0..1].typename="SCTPServer" syntax
+        int numTcpApps = default(0);  // no of Tcp apps. Specify the app types in INI file with tcpApp[0..1].typename="TcpEchoApp" syntax
+        int numUdpApps = default(0);  // no of Udp apps. Specify the app types in INI file with udpApp[0..1].typename="UdpVideoStreamClient" syntax
+        int numSctpApps = default(0); // no of Sctp apps. Specify the app types in INI file with sctpApp[0..1].typename="SctpServer" syntax
         int numPingApps = default(0);  // no of PING apps. Specify the app types in INI file with pingApp[0..1].typename="PingApp" syntax
         bool hasTcp = default(numTcpApps > 0);
         bool hasUdp = default(numUdpApps > 0);
         bool hasSctp = default(numSctpApps > 0);
         bool hasTun = default(numTunInterfaces > 0);
-        string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
-        string udpType = default(firstAvailableOrEmpty("UDP"));
-        string sctpType = default(firstAvailableOrEmpty("SCTP"));
+        string tcpType = default(firstAvailableOrEmpty("Tcp", "TcpLwip", "TcpNsc"));  // tcp implementation (e.g. ~Tcp, ~TcpLwip, ~TcpNsc) or ~TcpSpoof
+        string udpType = default(firstAvailableOrEmpty("Udp"));
+        string sctpType = default(firstAvailableOrEmpty("Sctp"));
 
         forwarding = default(false);
         multicastForwarding = default(false);
@@ -102,7 +102,7 @@ module ANSA_Host extends ANSA_NodeBase
             parameters:
                 @display("p=201,50,row,60");
         }
-        tcp: <tcpType> like ITCP if hasTcp {
+        tcp: <tcpType> like ITcp if hasTcp {
             parameters:
                 @display("p=201,138");
         }
@@ -110,7 +110,7 @@ module ANSA_Host extends ANSA_NodeBase
             parameters:
                 @display("p=345,54,row,60");
         }
-        udp: <udpType> like IUDP if hasUdp {
+        udp: <udpType> like IUdp if hasUdp {
             parameters:
                 @display("p=345,142");
         }
@@ -118,7 +118,7 @@ module ANSA_Host extends ANSA_NodeBase
             parameters:
                 @display("p=500,54,row,60");
         }
-        sctp: <sctpType> like ISCTP if hasSctp {
+        sctp: <sctpType> like ISctp if hasSctp {
             @display("p=500,142");
         }
         pingApp[numPingApps]: <default("PingApp")> like IPingApp {

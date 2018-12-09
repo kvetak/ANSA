@@ -34,7 +34,7 @@ class TAfiAddr {
     TAfiAddr(L3Address addr) : address(addr) {};
 
     L3Address address;
-    LISPCommon::Afi afi() const { return address.getType() == L3Address::IPv6 ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4; };
+    LISPCommon::Afi afi() const { return address.getType() == L3Address::Ipv6 ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4; };
 
     std::string info() const;
 };

@@ -33,11 +33,11 @@ namespace inet{
 class VirtualForwarder : public cObject
 {
     public:
-        typedef std::vector<IPv4Address> IPv4AddressVector;
+        typedef std::vector<Ipv4Address> Ipv4AddressVector;
 
     protected:
-        IPv4AddressVector ipAddr;
-        MACAddress macAddr;
+        Ipv4AddressVector ipAddr;
+        MacAddress macAddr;
         bool disable;
 
     public:
@@ -46,14 +46,14 @@ class VirtualForwarder : public cObject
 
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
         //@{
-        bool hasIPAddress(const IPv4Address& addr) const;
-        const MACAddress& getMacAddress() const  {return macAddr;}
+        bool hasIPAddress(const Ipv4Address& addr) const;
+        const MacAddress& getMacAddress() const  {return macAddr;}
         bool isDisable() { return disable; };
         //@}
 
         /** @name Field setters */
         //@{
-        virtual void setMACAddress(const MACAddress& addr) { macAddr = addr; };
+        virtual void setMACAddress(const MacAddress& addr) { macAddr = addr; };
         virtual void setDisable() { disable = true; };
         virtual void setEnable() { disable = false; };
         //@}
@@ -64,13 +64,13 @@ class VirtualForwarder : public cObject
          * Adding IP address to Virtual Forwarder
          * @param addr
          */
-        virtual void addIPAddress(const IPv4Address &addr);
+        virtual void addIPAddress(const Ipv4Address &addr);
 
         /**
          * Deleting IP addresses from Virtual Forwarder
          * @param addr
          */
-        virtual void removeIPAddress(const IPv4Address &addr);
+        virtual void removeIPAddress(const Ipv4Address &addr);
 
         virtual std::string info() const;
 };

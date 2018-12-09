@@ -37,7 +37,7 @@ void GLBP::initialize(int stage)
         containingModule = getContainingNode(this);
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
         glbpMulticastAddress = new L3Address(par("glbpMulticastAddress"));
-        socket = new UDPSocket(); //UDP socket used for sending messages
+        socket = new UdpSocket(); //Udp socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
         socket->setReuseAddress(true);
         socket->setMulticastLoop(false);

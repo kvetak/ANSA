@@ -26,13 +26,13 @@ namespace inet {
 
 Register_Class(GLBPMessage);
 
-TLVOptionBase *GLBPMessage::findOptionByType(short int optionType, int index)
+TlvOptionBase *GLBPMessage::findOptionByType(short int optionType, int index)
 {
     int i = getTLV().findByType(optionType, index);
     return i >= 0 ? &getTlvOption(i) : nullptr;
 }
 
-void GLBPMessage::addOption(TLVOptionBase *opt, int atPos)
+void GLBPMessage::addOption(TlvOptionBase *opt, int atPos)
 {
     getTLV().add(opt, atPos);
 }

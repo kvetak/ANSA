@@ -25,7 +25,7 @@
 
 #include "ansa/routing/vrrp/VRRPv2.h"
 #include "ansa/routing/vrrp/VRRPv2DeviceConfigurator.h"
-#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "inet/networklayer/contract/ipv4/Ipv4ControlInfo.h"
 #include "inet/common/ModuleAccess.h"
 
 namespace inet {
@@ -114,7 +114,7 @@ void VRRPv2::handleMessage(cMessage *msg)
 
             for (int i = 0; i < (int) virtualRouterTable.size(); i++)
                 if (virtualRouterTable.at(i)->getVrid() == advert->getVrid() &&
-                        ((IPv4ControlInfo *) msg->getControlInfo())->getInterfaceId() ==
+                        ((Ipv4ControlInfo *) msg->getControlInfo())->getInterfaceId() ==
                                 virtualRouterTable.at(i)->getInterface()->getInterfaceId()
                 )
                 {

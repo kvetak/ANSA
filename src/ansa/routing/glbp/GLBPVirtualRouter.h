@@ -28,8 +28,8 @@
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 #include "ansa/routing/glbp/GLBPVirtualForwarder.h"
 
-#include "inet/networklayer/arp/ipv4/ARP.h"
-#include "inet/transportlayer/contract/udp/UDPSocket.h"
+#include "inet/networklayer/arp/ipv4/Arp.h"
+#include "inet/transportlayer/contract/udp/UdpSocket.h"
 #include "inet/common/INETDefs.h"
 
 namespace inet {
@@ -64,13 +64,13 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
 
         std::string hostname;    //!< Hostname of the router device
 
-        /* Variable needed for UDP */
-        UDPSocket *socket;      //!< UDP socket used for sending messages
+        /* Variable needed for Udp */
+        UdpSocket *socket;      //!< Udp socket used for sending messages
         int glbpUdpPort;        //!< glbp udp port (usually 3222)
 
         /* Variables needed for  OMNET */
         IInterfaceTable *ift = nullptr;                 //!< usable interfaces of this router
-        ARP *arp = nullptr;                             //!< arp table for sending arp gratuious.
+        Arp *arp = nullptr;                             //!< arp table for sending arp gratuious.
         ANSA_InterfaceEntry *ie = nullptr;               //!< Interface which is running GLBP group
         std::vector<GLBPVirtualForwarder *> vfVector;   //!< Vector of VF's this Virtual Router is using (up to 4)
         cModule *containingModule = nullptr;            //!< helper for looking for particular module
@@ -80,8 +80,8 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         int glbpState;                      //!< state of glbp virtual router
         int glbpGroup;                      //!< group of glbp virtual router
         L3Address *glbpMulticast = nullptr; //!< multicast address of GLBP (224.0.0.102)
-        IPv4Address *virtualIP = nullptr;   //!< Primary IP of the GLBP group
-        MACAddress *virtualMAC = nullptr;   //!< MAC of the GLBP group
+        Ipv4Address *virtualIP = nullptr;   //!< Primary IP of the GLBP group
+        MacAddress *virtualMAC = nullptr;   //!< MAC of the GLBP group
         bool preempt;                       //!< preemption flag
         unsigned int priority;              //!< priority value of hsrp group
         unsigned int helloTime;             //!< hello time interval
@@ -131,9 +131,9 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
          * GLBP group number.
          * @param n an integer argument which is typically
          * in range <1,4>.
-         * @return pointer to MACAddress object.
+         * @return pointer to MacAddress object.
          */
-        MACAddress *setVirtualMAC(int n);
+        MacAddress *setVirtualMAC(int n);
 
         /**
          * Schedule of different GLBP timers.
@@ -194,7 +194,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
          * @param type GLBPMessageType but just REQUESTm or RESPONSEm
          * @param IP address where to send unicast.
          */
-        void sendMessageRequestResponse(GLBPMessageType type, IPv4Address *IP);
+        void sendMessageRequestResponse(GLBPMessageType type, Ipv4Address *IP);
 
         /**
          * Learn hellotimer and holdtimer from AVG
@@ -219,16 +219,16 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         /**
          * Helper for AVG to getting another MAC Address
          * of VF which is working.
-         * @return MACAddress pointer
+         * @return MacAddress pointer
          * @see receiveSignal(cComponent *source, simsignal_t signalID, bool b)
          */
-        MACAddress *getNextActiveMac();
+        MacAddress *getNextActiveMac();
 
         /**
          * Load balancing mechanism
          * @param type Type of the loadbalancing algorithm
          */
-        MACAddress *loadBalancingNext(GLBPLoadBalancingType type);
+        MacAddress *loadBalancingNext(GLBPLoadBalancingType type);
 
         /**
          * VF state machine functions.
@@ -236,7 +236,7 @@ class GLBPVirtualRouter: public cSimpleModule, public cListener{
         //@{
         void startVf(int n);
         void stopVf();
-        void addVf(int n, MACAddress *macOfPrimary);
+        void addVf(int n, MacAddress *macOfPrimary);
         int isVfSelfMessage(cMessage *msg);
         void handleVfSelfMessage(cMessage *msg);
         bool isVfActive();

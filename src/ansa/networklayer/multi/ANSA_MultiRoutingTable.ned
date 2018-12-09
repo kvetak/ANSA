@@ -34,19 +34,19 @@ module ANSA_MultiRoutingTable like IRoutingTable
         string interfaceTableModule;
         *.interfaceTableModule = default(absPath(interfaceTableModule));
         @display("i=block/table");
-        bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
-        bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
+        bool enableIPv4 = default(haveClass("inet::Ipv4RoutingTable"));
+        bool enableIPv6 = default(haveClass("inet::Ipv6RoutingTable"));
         bool enableCLNS = default(haveClass("inet::CLNSRoutingTable"));
         bool forwarding;
         bool multicastForwarding;
 
     submodules:
-        ipv4: <"IPv4RoutingTable"> like IRoutingTable if enableIPv4 {
+        ipv4: <"Ipv4RoutingTable"> like IRoutingTable if enableIPv4 {
             @display("p=50,50;is=s");
             forwarding = forwarding;
             multicastForwarding = multicastForwarding;
         }
-        ipv6: <"IPv6RoutingTable"> like IRoutingTable if enableIPv6 {
+        ipv6: <"Ipv6RoutingTable"> like IRoutingTable if enableIPv6 {
             @display("p=50,100;is=s");
             forwarding = forwarding;
             multicastForwarding = multicastForwarding;

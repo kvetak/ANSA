@@ -25,7 +25,7 @@ namespace inet {
 
 LISPRLocator::LISPRLocator() :
     //FIXME: Create L3Address:: unspecified address const
-    rloc (IPv4Address::UNSPECIFIED_ADDRESS),
+    rloc (Ipv4Address::UNSPECIFIED_ADDRESS),
     state(DOWN),
     priority(DEFAULT_PRIORITY_VAL), weight(DEFAULT_WEIGHT_VAL),
     mpriority(DEFAULT_MPRIORITY_VAL), mweight(DEFAULT_MWEIGHT_VAL),
@@ -171,9 +171,9 @@ void LISPRLocator::updateRlocator(const LISPRLocator& rloc) {
 }
 
 bool LISPRLocator::operator< (const LISPRLocator& other) const {
-    if ( !(rloc.getType() == L3Address::IPv6) && (other.rloc.getType() == L3Address::IPv6) )
+    if ( !(rloc.getType() == L3Address::Ipv6) && (other.rloc.getType() == L3Address::Ipv6) )
         return true;
-    else if ( (rloc.getType() == L3Address::IPv6) && !(other.rloc.getType() == L3Address::IPv6) )
+    else if ( (rloc.getType() == L3Address::Ipv6) && !(other.rloc.getType() == L3Address::Ipv6) )
         return false;
 
     if (rloc < other.rloc) return true;
@@ -192,7 +192,7 @@ bool LISPRLocator::operator< (const LISPRLocator& other) const {
 }
 
 LISPCommon::Afi LISPRLocator::getRlocAfi() const {
-    return rloc.getType() == L3Address::IPv6 ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+    return rloc.getType() == L3Address::Ipv6 ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
 }
 
 }

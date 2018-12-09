@@ -45,13 +45,13 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
 
         virtual std::string info() const override;
 
-        virtual bool hasMacAddress(const MACAddress& addr) const;
-        virtual bool hasIPAddress(const IPv4Address& addr) const;
+        virtual bool hasMacAddress(const MacAddress& addr) const;
+        virtual bool hasIPAddress(const Ipv4Address& addr) const;
         virtual bool hasNetworkAddress(const L3Address& address) const override;
-        virtual const MACAddress& getMacVirtualForwarderById(int vforwarderId) const;
-        virtual const MACAddress& getMacAddressByIP(const IPv4Address& addr) const;
-        virtual int getVirtualForwarderId(const IPv4Address& addr);
-        virtual int getVirtualForwarderId(const MACAddress& addr);
+        virtual const MacAddress& getMacVirtualForwarderById(int vforwarderId) const;
+        virtual const MacAddress& getMacAddressByIP(const Ipv4Address& addr) const;
+        virtual int getVirtualForwarderId(const Ipv4Address& addr);
+        virtual int getVirtualForwarderId(const MacAddress& addr);
         virtual VirtualForwarder *getVirtualForwarderById(int id) { return vforwarder[id]; };
 
         /**
@@ -73,11 +73,11 @@ class INET_API ANSA_InterfaceEntry : public InterfaceEntry
         int getTransLoad() const        { return transLoad; }
 
         virtual void setDatarate(double d) override;
-        void setBandwidth(uint64_t bandwidth){ if (this->bandwidth != bandwidth) { this->bandwidth = bandwidth; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
-        void setDelay(uint64_t delay)        { if (this->delay != delay) { this->delay = delay; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
-        void setReliability(int reliability) { if (this->reliability != reliability) { this->reliability = reliability; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
-        void setRecvLoad(int recvLoad)       { if (this->recvLoad != recvLoad) { this->recvLoad = recvLoad; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
-        void setTransLoad(int transLoad)     { if (this->transLoad != transLoad) { this->transLoad = transLoad; configChanged(NF_INTERFACE_CONFIG_CHANGED); } }
+        void setBandwidth(uint64_t bandwidth){ if (this->bandwidth != bandwidth) { this->bandwidth = bandwidth; configChanged(interfaceConfigChangedSignal); } }
+        void setDelay(uint64_t delay)        { if (this->delay != delay) { this->delay = delay; configChanged(interfaceConfigChangedSignal); } }
+        void setReliability(int reliability) { if (this->reliability != reliability) { this->reliability = reliability; configChanged(interfaceConfigChangedSignal); } }
+        void setRecvLoad(int recvLoad)       { if (this->recvLoad != recvLoad) { this->recvLoad = recvLoad; configChanged(interfaceConfigChangedSignal); } }
+        void setTransLoad(int transLoad)     { if (this->transLoad != transLoad) { this->transLoad = transLoad; configChanged(interfaceConfigChangedSignal); } }
 };
 }
 #endif /* ANSAINTERFACEENTRY_H_ */

@@ -33,10 +33,10 @@ module LISPRouting
         string routingTableModule;        
 
     gates:
-        input udpContrIn @labels(UDPControlInfo/up);
-        output udpContrOut @labels(UDPControlInfo/down);
-        input udpDataIn @labels(UDPControlInfo/up);
-        output udpDataOut @labels(UDPControlInfo/down);
+        input udpContrIn @labels(UdpControlInfo/up);
+        output udpContrOut @labels(UdpControlInfo/down);
+        input udpDataIn @labels(UdpControlInfo/up);
+        output udpDataOut @labels(UdpControlInfo/down);
         output ipv4Out;
         input ipv4In;
         output ipv6Out;

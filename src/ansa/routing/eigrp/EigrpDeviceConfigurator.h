@@ -30,9 +30,9 @@
 #include "InterfaceTableAccess.h"
 #include "RoutingTableAccess.h"
 #include "PimInterfaceTable.h"*/
-//#include "IPv4InterfaceData.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
-#include "inet/networklayer/ipv6/IPv6InterfaceData.h"
+//#include "Ipv4InterfaceData.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
+#include "inet/networklayer/ipv6/Ipv6InterfaceData.h"
 //#include "AnsaRoutingTableAccess.h"
 
 #include "ansa/routing/eigrp/pdms/IEigrpModule.h"
@@ -55,27 +55,27 @@ class INET_API EigrpDeviceConfigurator
       // configuration for EIGRP //
       /////////////////////////////
       /**< Gets interfaces that correspond to the IP address and mask */
-      EigrpNetwork<IPv4Address> *isEigrpInterface(std::vector<EigrpNetwork<IPv4Address> *>& networks, ANSA_InterfaceEntry* interface);
+      EigrpNetwork<Ipv4Address> *isEigrpInterface(std::vector<EigrpNetwork<Ipv4Address> *>& networks, ANSA_InterfaceEntry* interface);
       /**< Converts wildcard to netmask and check validity */
-      bool wildcardToMask(const char *wildcard, IPv4Address& result);
+      bool wildcardToMask(const char *wildcard, Ipv4Address& result);
       /**< Loads configuration of EIGRP process */
-      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpProcessesConfig(cXMLElement *device, IEigrpModule<Ipv4Address> *eigrpModule);
       /**< Loads configuration of interfaces for EIGRP */
-      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<IPv4Address> *eigrpModule);
-      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<IPv4Address> *eigrpModule, int ifaceId, const char *ifaceName);
+      void loadEigrpInterfacesConfig(cXMLElement *device, IEigrpModule<Ipv4Address> *eigrpModule);
+      void loadEigrpInterface(cXMLElement *eigrpIface, IEigrpModule<Ipv4Address> *eigrpModule, int ifaceId, const char *ifaceName);
       /**< Loads networks added to EIGRP */
-      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpIPv4Networks(cXMLElement *processElem, IEigrpModule<Ipv4Address> *eigrpModule);
       /**< Loads K-value and converts it to number */
       int loadEigrpKValue(cXMLElement *node, const char *attrName, const char *attrValue);
       /**< Loads stub configuration */
       bool loadEigrpStubConf(cXMLElement *node, const char *attrName);
 
-      /**< Loads configuration of EIGRP IPv6 process */
-      void loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule);
-      /**< Loads configuration of interfaces for EIGRP IPv6 */
-      void loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<IPv6Address> *eigrpModule);
-      /**< Loads interfaces for EIGRP IPv6 */
-      void loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<IPv6Address> *eigrpModule, int ifaceId, const char *ifaceName);
+      /**< Loads configuration of EIGRP Ipv6 process */
+      void loadEigrpProcesses6Config(cXMLElement *device, IEigrpModule<Ipv6Address> *eigrpModule);
+      /**< Loads configuration of interfaces for EIGRP Ipv6 */
+      void loadEigrpInterfaces6Config(cXMLElement *device, IEigrpModule<Ipv6Address> *eigrpModule);
+      /**< Loads interfaces for EIGRP Ipv6 */
+      void loadEigrpInterface6(cXMLElement *eigrpIface, IEigrpModule<Ipv6Address> *eigrpModule, int ifaceId, const char *ifaceName);
 
    public:
       EigrpDeviceConfigurator();
@@ -100,14 +100,14 @@ class INET_API EigrpDeviceConfigurator
        * Loads configuration for EIGRP
        * @param eigrpModule [in]
        */
-      void loadEigrpIPv4Config(IEigrpModule<IPv4Address> *eigrpModule);
+      void loadEigrpIPv4Config(IEigrpModule<Ipv4Address> *eigrpModule);
 
 
       /**
-       * Loads configuration for EIGRP IPv6
+       * Loads configuration for EIGRP Ipv6
        * @param eigrpModule [in]
        */
-      void loadEigrpIPv6Config(IEigrpModule<IPv6Address> *eigrpModule);
+      void loadEigrpIPv6Config(IEigrpModule<Ipv6Address> *eigrpModule);
 
       static cXMLElement *GetEigrpProcess(cXMLElement *process, cXMLElement *device);
       static cXMLElement *GetEigrpIPv4Network(cXMLElement *network, cXMLElement *process);

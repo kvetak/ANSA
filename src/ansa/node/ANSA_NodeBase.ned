@@ -24,10 +24,10 @@ package ansa.node;
 
 import inet.common.lifecycle.NodeStatus;
 import inet.common.packet.PcapRecorder;
-import inet.linklayer.contract.IExternalNic;
-import inet.linklayer.contract.ITunNic;
-import inet.linklayer.contract.IWiredNic;
-import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IExternalInterface;
+import inet.linklayer.contract.ITunnelInterface;
+import inet.linklayer.contract.IWiredInterface;
+import inet.linklayer.contract.IWirelessInterface;
 import inet.linklayer.loopback.LoopbackInterface;
 import inet.mobility.contract.IMobility;
 import inet.networklayer.contract.IRoutingTable;
@@ -72,7 +72,7 @@ module ANSA_NodeBase
         string energyGeneratorType = default("");
 
         routingTable.forwarding = forwarding;
-        routingTable.multicastForwarding = multicastForwarding;   // for IPv4, IPv6, Generic
+        routingTable.multicastForwarding = multicastForwarding;   // for Ipv4, Ipv6, Generic
 
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
@@ -83,7 +83,7 @@ module ANSA_NodeBase
         networkLayer.configurator.configData = configData;
     gates:
         input radioIn[numRadios] @directIn;
-        inout pppg[] @labels(PPPFrame-conn);
+        inout pppg[] @labels(PppFrame-conn);
         inout ethg[] @labels(EtherFrame-conn);
 
     submodules:
@@ -124,23 +124,23 @@ module ANSA_NodeBase
         lo[numLoopbacks]: LoopbackInterface {
             @display("p=192,496");
         }
-        wlan[numRadios]: <default("Ieee80211Nic")> like IWirelessNic {
+        wlan[numRadios]: <default("Ieee80211Interface")> like IWirelessInterface {
             parameters:
                 @display("p=313,496,row,60;q=queue");
         }
-        eth[sizeof(ethg)]: <ethernetType> like IWiredNic {
+        eth[sizeof(ethg)]: <ethernetType> like IWiredInterface {
             parameters:
                 @display("p=424,496,row,60;q=txQueue");
         }
-        ppp[sizeof(pppg)]: <default("PPPInterface")> like IWiredNic {
+        ppp[sizeof(pppg)]: <default("PppInterface")> like IWiredInterface {
             parameters:
                 @display("p=531,496,row,60;q=txQueue");
         }
-        ext[numExtInterfaces]: <default("ExtInterface")> like IExternalNic {
+        ext[numExtInterfaces]: <default("ExtInterface")> like IExternalInterface {
             parameters:
                 @display("p=666,496,row,10;q=txQueue;i=block/ifcard");
         }
-        tun[numTunInterfaces]: <default("TunInterface")> like ITunNic {
+        tun[numTunInterfaces]: <default("TunInterface")> like ITunnelInterface {
             parameters:
                 @display("p=802,496,row,10;q=txQueue;i=block/ifcard");
         }

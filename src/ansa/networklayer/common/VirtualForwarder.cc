@@ -27,13 +27,13 @@ VirtualForwarder::VirtualForwarder()
     disable = false;
 }
 
-void VirtualForwarder::addIPAddress(const IPv4Address &addr)
+void VirtualForwarder::addIPAddress(const Ipv4Address &addr)
 {
     if (!hasIPAddress(addr))
         ipAddr.push_back(addr);
 }
 
-void VirtualForwarder::removeIPAddress(const IPv4Address &addr)
+void VirtualForwarder::removeIPAddress(const Ipv4Address &addr)
 {
     int n = ipAddr.size();
     int i;
@@ -44,7 +44,7 @@ void VirtualForwarder::removeIPAddress(const IPv4Address &addr)
         ipAddr.erase(ipAddr.begin() + i);
 }
 
-bool VirtualForwarder::hasIPAddress(const IPv4Address& addr) const
+bool VirtualForwarder::hasIPAddress(const Ipv4Address& addr) const
 {
     return find(ipAddr.begin(), ipAddr.end(), addr) != ipAddr.end();
 }

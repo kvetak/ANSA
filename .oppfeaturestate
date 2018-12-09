@@ -4,7 +4,10 @@
     <feature enabled="false" id="ETH"/>
     <feature enabled="true" id="LLDP"/>
     <feature enabled="false" id="rbridge"/>
-    <feature enabled="true" id="relayUnit"/>
-    <feature enabled="false" id="networkLayer"/>
+    <feature enabled="true" id="clns"/>
+    <feature enabled="false" id="isis"/>
+    <feature enabled="false" id="arp"/>
+    <feature enabled="false" id="common"/>
+    <feature enabled="false" id="multi"/>
     <feature enabled="false" id="routing"/>
 </featurestates>

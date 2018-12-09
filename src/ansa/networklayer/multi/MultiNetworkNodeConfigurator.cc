@@ -23,8 +23,8 @@
 #include "inet/common/ModuleAccess.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 #include "inet/common/lifecycle/NodeOperations.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
-#include "inet/networklayer/ipv6/IPv6InterfaceData.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
+#include "inet/networklayer/ipv6/Ipv6InterfaceData.h"
 
 namespace inet {
 
@@ -42,8 +42,8 @@ void MultiNetworkNodeConfigurator::initialize(int stage)
         nodeStatus = dynamic_cast<NodeStatus*>(node->getSubmodule("status"));
         interfaceTable = dynamic_cast<IInterfaceTable*>(node->getSubmodule("interfaceTable"));
 
-        rt4 = ( par(PAR_ENAIP4) ? (dynamic_cast<IIPv4RoutingTable*>(node->getSubmodule("routingTable")->getSubmodule("ipv4"))) : nullptr);
-        rt6 = ( par(PAR_ENAIP6) ? (dynamic_cast<IPv6RoutingTable*>(node->getSubmodule("routingTable")->getSubmodule("ipv6"))) : nullptr);
+        rt4 = ( par(PAR_ENAIP4) ? (dynamic_cast<IIpv4RoutingTable*>(node->getSubmodule("routingTable")->getSubmodule("ipv4"))) : nullptr);
+        rt6 = ( par(PAR_ENAIP6) ? (dynamic_cast<Ipv6RoutingTable*>(node->getSubmodule("routingTable")->getSubmodule("ipv6"))) : nullptr);
     }
     else if (stage == INITSTAGE_NETWORK_LAYER_3 && par("enableANSAConfig").boolValue() ) {
         if (!nodeStatus || nodeStatus->getState() == NodeStatus::UP) {
@@ -125,7 +125,7 @@ void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
 
             // IPV4 configuration
             if (par(PAR_ENAIP4).boolValue() && nodeName == XML_IPADDR) {
-                IPv4Address ipv4addr = IPv4Address((*ifElemIt)->getNodeValue());
+                Ipv4Address ipv4addr = Ipv4Address((*ifElemIt)->getNodeValue());
                 if (ipv4addr.isUnicast()) {
                     ie->ipv4Data()->setIPAddress(ipv4addr);
                 }
@@ -134,7 +134,7 @@ void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
                 }
             }
             if (par(PAR_ENAIP4).boolValue() && nodeName == XML_MASK) {
-                IPv4Address ipv4mask = IPv4Address((*ifElemIt)->getNodeValue());
+                Ipv4Address ipv4mask = Ipv4Address((*ifElemIt)->getNodeValue());
                 if (ipv4mask.isValidNetmask()) {
                     ie->ipv4Data()->setNetmask(ipv4mask);
                 }
@@ -151,21 +151,21 @@ void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
                 }
 
                 std::string addrFull = (*ifElemIt)->getNodeValue();
-                IPv6Address ipv6;
+                Ipv6Address ipv6;
                 int prefixLen;
 
-                // Check IPv6 address validity and initialize prefixLen variable
+                // Check Ipv6 address validity and initialize prefixLen variable
                 if (!ipv6.tryParseAddrWithPrefix(addrFull.c_str(), prefixLen)){
-                    EV_ERROR << "Unable to set IPv6 address." << endl;
+                    EV_ERROR << "Unable to set Ipv6 address." << endl;
                 }
 
-                //Initialize IPv6 address and add it to interface
-                ipv6 = IPv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
+                //Initialize Ipv6 address and add it to interface
+                ipv6 = Ipv6Address(addrFull.substr(0, addrFull.find_last_of('/')).c_str());
                 ie->ipv6Data()->assignAddress(ipv6, false, 0, 0);
 
                 //Do not add link-local addresses to routing table
                 if (!ipv6.isLinkLocal() ) {
-                    IPv6Route* ipv6route = new IPv6Route(ipv6.getPrefix(prefixLen), prefixLen, IRoute::IFACENETMASK);
+                    Ipv6Route* ipv6route = new Ipv6Route(ipv6.getPrefix(prefixLen), prefixLen, IRoute::IFACENETMASK);
                     ipv6route->setInterface(ie);
                     rt6->addRoutingProtocolRoute(ipv6route);
                 }
@@ -207,80 +207,80 @@ void MultiNetworkNodeConfigurator::parseInterfaces(cXMLElement* config) {
 }
 
 void MultiNetworkNodeConfigurator::parseDefaultRoutes(cXMLElement* config) {
-    //Add default route for IPv4
+    //Add default route for Ipv4
     parseDefaultRoute4(config);
 
-    //Add default route for IPv6
+    //Add default route for Ipv6
     parseDefaultRoute6(config);
 }
 
 void MultiNetworkNodeConfigurator::parseDefaultRoute4(cXMLElement* config) {
-    //Add default route for IPv4
+    //Add default route for Ipv4
     cXMLElement* defrou = config->getFirstChildWithTag(XML_DEFROUTER);
     if (defrou) {
         //Parse XML
-        IPv4Address ipv4addr = IPv4Address(defrou->getNodeValue());
+        Ipv4Address ipv4addr = Ipv4Address(defrou->getNodeValue());
         //EV << "Def Route addrese is " << ipv4addr << endl;
         InterfaceEntry* ie = findInterfaceByAddress(ipv4addr);
         if (ie) {
             //EV << "!!!!!!!!!!" << ie->getName() << endl;
             //Prepare default route
-            IPv4Route* ipv4rou = prepareIPv4Route(
-                    IPv4Address::UNSPECIFIED_ADDRESS,
-                    IPv4Address::UNSPECIFIED_ADDRESS, ipv4addr, ie, 0,
-                    IPv4Route::dStatic, IPv4Route::MANUAL);
+            Ipv4Route* ipv4rou = prepareIPv4Route(
+                    Ipv4Address::UNSPECIFIED_ADDRESS,
+                    Ipv4Address::UNSPECIFIED_ADDRESS, ipv4addr, ie, 0,
+                    Ipv4Route::dStatic, Ipv4Route::MANUAL);
             //Add default route as static
             rt4->addRoute(ipv4rou);
         } else {
             EV_ERROR
-                            << "None of node's interfaces has the same IPv4 subnet as default router address!"
+                            << "None of node's interfaces has the same Ipv4 subnet as default router address!"
                             << endl;
         }
     } else {
         EV
-                  << "Node configuration does not contain IPv4 default route configuration!"
+                  << "Node configuration does not contain Ipv4 default route configuration!"
                   << endl;
     }
 }
 
 void MultiNetworkNodeConfigurator::parseDefaultRoute6(cXMLElement* config) {
-    //Add default route for IPv6
+    //Add default route for Ipv6
     cXMLElement* defrou6 = config->getFirstChildWithTag(XML_DEFROUTER6);
     if (defrou6) {
         //Parse XML
-        IPv6Address ipv6addr = IPv6Address(defrou6->getNodeValue());
+        Ipv6Address ipv6addr = Ipv6Address(defrou6->getNodeValue());
         //EV << "Def Route addrese is " << ipv4addr << endl;
         InterfaceEntry* ie = findInterfaceByAddress(ipv6addr);
         if (ie) {
             //EV << "!!!!!!!!!!" << ie->getName() << endl;
             //Prepare default route
-            IPv6Route* ipv6rou = prepareIPv6Route(
-                    IPv6Address::UNSPECIFIED_ADDRESS, 0, ipv6addr, ie, 0,
-                    IPv6Route::dStatic, IPv6Route::MANUAL);
+            Ipv6Route* ipv6rou = prepareIPv6Route(
+                    Ipv6Address::UNSPECIFIED_ADDRESS, 0, ipv6addr, ie, 0,
+                    Ipv6Route::dStatic, Ipv6Route::MANUAL);
             //Add default route as static
             rt6->addRoute(ipv6rou);
             //rt6->addDefaultRoute(ipv6addr,ie->getInterfaceId(),0);
         } else {
             EV_ERROR
-                            << "None of node's interfaces has the same IPv6 subnet as default router address!"
+                            << "None of node's interfaces has the same Ipv6 subnet as default router address!"
                             << endl;
         }
     } else {
         EV
-                  << "Node configuration does not contain IPv6 default route configuration!"
+                  << "Node configuration does not contain Ipv6 default route configuration!"
                   << endl;
     }
 }
 
 void MultiNetworkNodeConfigurator::parseStaticRoutes(cXMLElement* config) {
-    //Parse IPv4 static routes
+    //Parse Ipv4 static routes
     parseStaticRoutes4(config);
-    //Parse IPv6 static routes
+    //Parse Ipv6 static routes
     parseStaticRoutes6(config);
 }
 
 void MultiNetworkNodeConfigurator::parseStaticRoutes4(cXMLElement* config) {
-    //Parse IPv4 static routes
+    //Parse Ipv4 static routes
     std::stringstream exp;
     exp << XML_ROUTING << "/" << XML_STATIC;
     cXMLElement* stat = config->getElementByPath(exp.str().c_str());
@@ -292,42 +292,42 @@ void MultiNetworkNodeConfigurator::parseStaticRoutes4(cXMLElement* config) {
             cXMLElement* xmlnhaddr = rou->getFirstChildWithTag(XML_NHADDR);
             cXMLElement* xmladist  = rou->getFirstChildWithTag(XML_ADMINDIST);
 
-            IPv4Address addr =
+            Ipv4Address addr =
                     xmladdr ?
-                            IPv4Address(xmladdr->getNodeValue()) :
-                            IPv4Address::UNSPECIFIED_ADDRESS;
-            IPv4Address mask =
+                            Ipv4Address(xmladdr->getNodeValue()) :
+                            Ipv4Address::UNSPECIFIED_ADDRESS;
+            Ipv4Address mask =
                     xmlmask ?
-                            IPv4Address(xmlmask->getNodeValue()) :
-                            IPv4Address::UNSPECIFIED_ADDRESS;
-            IPv4Address nhaddr =
+                            Ipv4Address(xmlmask->getNodeValue()) :
+                            Ipv4Address::UNSPECIFIED_ADDRESS;
+            Ipv4Address nhaddr =
                     xmlnhaddr ?
-                            IPv4Address(xmlnhaddr->getNodeValue()) :
-                            IPv4Address::UNSPECIFIED_ADDRESS;
+                            Ipv4Address(xmlnhaddr->getNodeValue()) :
+                            Ipv4Address::UNSPECIFIED_ADDRESS;
             int adist = 1;
             Str2Int(&adist, xmladist ? xmladist->getNodeValue() : nullptr);
 
             InterfaceEntry* ie = findInterfaceByAddress(nhaddr);
             if (ie) {
-                IPv4Route* ipv4rou = prepareIPv4Route(addr,
+                Ipv4Route* ipv4rou = prepareIPv4Route(addr,
                                                       mask,
                                                       nhaddr,
                                                       ie,
                                                       0,
                                                       adist,
-                                                      IPv4Route::MANUAL);
+                                                      Ipv4Route::MANUAL);
                 rt4->addRoute(ipv4rou);
             } else {
-                EV_ERROR << "None of node's interfaces has the same IPv4 subnet as the next hop address!" << endl;
+                EV_ERROR << "None of node's interfaces has the same Ipv4 subnet as the next hop address!" << endl;
             }
         }
     } else {
-        EV << "No IPv4 static routing configuration!" << endl;
+        EV << "No Ipv4 static routing configuration!" << endl;
     }
 }
 
 void MultiNetworkNodeConfigurator::parseStaticRoutes6(cXMLElement* config) {
-    //Parse IPv4 static routes
+    //Parse Ipv4 static routes
     std::stringstream exp;
     exp << XML_ROUTING6 << "/" << XML_STATIC;
     cXMLElement* stat = config->getElementByPath(exp.str().c_str());
@@ -337,43 +337,43 @@ void MultiNetworkNodeConfigurator::parseStaticRoutes6(cXMLElement* config) {
             cXMLElement* xmlnhaddr = rou->getFirstChildWithTag(XML_NHADDR);
             cXMLElement* xmladist  = rou->getFirstChildWithTag(XML_ADMINDIST);
 
-            IPv6Address addr =
+            Ipv6Address addr =
                     xmladdr ?
-                            IPv6Address(xmladdr->getNodeValue()) :
-                            IPv6Address::UNSPECIFIED_ADDRESS;
+                            Ipv6Address(xmladdr->getNodeValue()) :
+                            Ipv6Address::UNSPECIFIED_ADDRESS;
             //FIXME: Vesely - Assumption that PLEN is 64 bits long
             int plen = 64;
 
-            IPv6Address nhaddr =
+            Ipv6Address nhaddr =
                     xmlnhaddr ?
-                            IPv6Address(xmlnhaddr->getNodeValue()) :
-                            IPv6Address::UNSPECIFIED_ADDRESS;
+                            Ipv6Address(xmlnhaddr->getNodeValue()) :
+                            Ipv6Address::UNSPECIFIED_ADDRESS;
 
             int adist = 1;
             Str2Int(&adist, xmladist ? xmladist->getNodeValue() : nullptr);
 
             InterfaceEntry* ie = findInterfaceByAddress(nhaddr);
             if (ie) {
-                IPv6Route* ipv6rou = prepareIPv6Route(addr,
+                Ipv6Route* ipv6rou = prepareIPv6Route(addr,
                                                       plen,
                                                       nhaddr,
                                                       ie,
                                                       0,
                                                       adist,
-                                                      IPv6Route::MANUAL);
+                                                      Ipv6Route::MANUAL);
                 rt6->addRoute(ipv6rou);
             } else {
-                EV_ERROR << "None of node's interfaces has the same IPv4 subnet as the next hop address!" << endl;
+                EV_ERROR << "None of node's interfaces has the same Ipv4 subnet as the next hop address!" << endl;
             }
         }
     } else {
-        EV << "No IPv4 static routing configuration!" << endl;
+        EV << "No Ipv4 static routing configuration!" << endl;
     }
 
 }
 
 InterfaceEntry* MultiNetworkNodeConfigurator::findInterfaceByAddress(
-        IPv4Address address) {
+        Ipv4Address address) {
     InterfaceEntry* ie = nullptr;
     for (int i = 0; i < interfaceTable->getNumInterfaces(); i++) {
         InterfaceEntry* ietmp = interfaceTable->getInterface(i);
@@ -387,14 +387,14 @@ InterfaceEntry* MultiNetworkNodeConfigurator::findInterfaceByAddress(
 }
 
 InterfaceEntry* MultiNetworkNodeConfigurator::findInterfaceByAddress(
-        IPv6Address address) {
+        Ipv6Address address) {
     InterfaceEntry* ie = nullptr;
     for (int i = 0; i < interfaceTable->getNumInterfaces(); i++) {
         InterfaceEntry* ietmp = interfaceTable->getInterface(i);
         if (ietmp->isLoopback()) continue;
 
         for (int j = 0; j < ietmp->ipv6Data()->getNumAddresses(); j++) {
-            IPv6Address ipv6tmp = ietmp->ipv6Data()->getAddress(j);
+            Ipv6Address ipv6tmp = ietmp->ipv6Data()->getAddress(j);
             //FIXME: Vesely - Ugly assumption that prefix length is 64 bits
             if (ipv6tmp.matches(address,64)) {
                 ie = ietmp;
@@ -405,10 +405,10 @@ InterfaceEntry* MultiNetworkNodeConfigurator::findInterfaceByAddress(
     return ie;
 }
 
-IPv4Route* MultiNetworkNodeConfigurator::prepareIPv4Route(IPv4Address address,
-        IPv4Address netmask, IPv4Address nexthop, InterfaceEntry* ie,
+Ipv4Route* MultiNetworkNodeConfigurator::prepareIPv4Route(Ipv4Address address,
+        Ipv4Address netmask, Ipv4Address nexthop, InterfaceEntry* ie,
         int metric, unsigned int admindist, IRoute::SourceType srctype) {
-    IPv4Route* ipv4rou = new IPv4Route();
+    Ipv4Route* ipv4rou = new Ipv4Route();
     ipv4rou->setDestination(address);
     ipv4rou->setNetmask(netmask);
     ipv4rou->setGateway(nexthop);
@@ -419,17 +419,17 @@ IPv4Route* MultiNetworkNodeConfigurator::prepareIPv4Route(IPv4Address address,
     return ipv4rou;
 }
 
-IPv6Route* MultiNetworkNodeConfigurator::prepareIPv6Route(IPv6Address address,
-        int prefixlength, IPv6Address nexthop, InterfaceEntry* ie, int metric,
+Ipv6Route* MultiNetworkNodeConfigurator::prepareIPv6Route(Ipv6Address address,
+        int prefixlength, Ipv6Address nexthop, InterfaceEntry* ie, int metric,
         unsigned int admindist, IRoute::SourceType srctype) {
-    IPv6Route* ipv6rou = new IPv6Route(address, prefixlength, srctype);
+    Ipv6Route* ipv6rou = new Ipv6Route(address, prefixlength, srctype);
     ipv6rou->setNextHop(nexthop);
     ipv6rou->setInterface(ie);
     ipv6rou->setMetric(metric);
     ipv6rou->setAdminDist(admindist);
     return ipv6rou;
 }
-//TODO: Vesely - I am not sure that ANSA configs has this syntax for IPv6
+//TODO: Vesely - I am not sure that ANSA configs has this syntax for Ipv6
 bool MultiNetworkNodeConfigurator::Str2Int(int* retValue, const char* str) {
     if (retValue == NULL || str == NULL){
        return false;

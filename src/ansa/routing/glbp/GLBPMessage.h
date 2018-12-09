@@ -50,21 +50,21 @@ class GLBPMessage : public GLBPMessage_Base
       /**
        * Returns the kth extension header in this datagram
        */
-      virtual TLVOptionBase& getTlvOption(unsigned int k) { return *check_and_cast<TLVOptionBase *>(&(getTLV().at(k))); }
-      virtual const TLVOptionBase& getTlvOption(unsigned int k) const { return const_cast<GLBPMessage*>(this)->getTlvOption(k); }
+      virtual TlvOptionBase& getTlvOption(unsigned int k) { return *check_and_cast<TlvOptionBase *>(&(getTLV().at(k))); }
+      virtual const TlvOptionBase& getTlvOption(unsigned int k) const { return const_cast<GLBPMessage*>(this)->getTlvOption(k); }
 
       /**
-       * Returns the TLVOptionBase of the specified type,
+       * Returns the TlvOptionBase of the specified type,
        * or nullptr. If index is 0, then the first, if 1 then the
        * second option is returned.
        */
-      virtual TLVOptionBase *findOptionByType(short int optionType, int index = 0);
+      virtual TlvOptionBase *findOptionByType(short int optionType, int index = 0);
 
       /**
-       * Adds an TLVOptionBase to the datagram.
+       * Adds an TlvOptionBase to the datagram.
        * default atPos means add to the end.
        */
-      virtual void addOption(TLVOptionBase *opt, int atPos = -1);
+      virtual void addOption(TlvOptionBase *opt, int atPos = -1);
 };
 
 } /* namespace inet */

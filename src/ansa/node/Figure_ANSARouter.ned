@@ -30,18 +30,18 @@ package ansa.node;
 import ansa.routing.eigrp.EigrpProcessDS;
 import ansa.routing.lisp.LISPRouting;
 import inet.applications.contract.IUDPApp;
-import inet.routing.contract.IBGPRouting;
-import inet.routing.contract.IIPRouting;
-import inet.routing.contract.IPIMRouting;
-import inet.transportlayer.contract.ITCP;
-import inet.transportlayer.contract.IUDP;
+import inet.routing.contract.IBgpRouting;
+import inet.routing.contract.IIpRouting;
+import inet.routing.contract.IPimRouting;
+import inet.transportlayer.contract.ITcp;
+import inet.transportlayer.contract.IUdp;
 import ansa.networklayer.isis.ISIS;
 import inet.common.lifecycle.NodeStatus;
 import inet.common.packet.PcapRecorder;
-import inet.linklayer.contract.IExternalNic;
-import inet.linklayer.contract.ITunNic;
-import inet.linklayer.contract.IWiredNic;
-import inet.linklayer.contract.IWirelessNic;
+import inet.linklayer.contract.IExternalInterface;
+import inet.linklayer.contract.ITunnelInterface;
+import inet.linklayer.contract.IWiredInterface;
+import inet.linklayer.contract.IWirelessInterface;
 import inet.linklayer.loopback.LoopbackInterface;
 import inet.mobility.contract.IMobility;
 import inet.networklayer.contract.IRoutingTable;
@@ -88,7 +88,7 @@ module ANSARouter
         string energyGeneratorType = default("");
 
         routingTable.forwarding = forwarding;
-        routingTable.multicastForwarding = multicastForwarding;   // for IPv4, IPv6, Generic
+        routingTable.multicastForwarding = multicastForwarding;   // for Ipv4, Ipv6, Generic
 
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(routingTableType != "" ? absPath(".routingTable") : "");
@@ -113,8 +113,8 @@ module ANSARouter
         bool hasLLDP = default(false);
         bool hasISIS = default(false);
 
-        string tcpType = default(firstAvailableOrEmpty("TCP", "TCP_lwIP", "TCP_NSC"));  // tcp implementation (e.g. ~TCP, ~TCP_lwIP, ~TCP_NSC) or ~TCPSpoof
-        string udpType = default("UDP");
+        string tcpType = default(firstAvailableOrEmpty("Tcp", "TcpLwip", "TcpNsc"));  // tcp implementation (e.g. ~Tcp, ~TcpLwip, ~TcpNsc) or ~TcpSpoof
+        string udpType = default("Udp");
 
         //ethernetType = default("ANSA_EthernetInterface");
 
@@ -123,7 +123,7 @@ module ANSARouter
 
     gates:
         input radioIn[numRadios] @directIn;
-        inout pppg[] @labels(PPPFrame-conn);
+        inout pppg[] @labels(PppFrame-conn);
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
 
@@ -164,41 +164,41 @@ module ANSARouter
         lo[_]: LoopbackInterface {
             @display("p=63.392002,530.908;is=s");
         }
-        wlan[_]: <default("Ieee80211Nic")> like IWirelessNic {
+        wlan[_]: <default("Ieee80211Interface")> like IWirelessInterface {
             parameters:
                 @display("p=122.256004,530.908,row,60;q=queue");
         }
-        eth[_]: <ethernetType> like IWiredNic {
+        eth[_]: <ethernetType> like IWiredInterface {
             parameters:
                 @display("p=187.912,530.908,row,60;q=txQueue");
         }
-        ppp[_]: <default("PPPInterface")> like IWiredNic {
+        ppp[_]: <default("PppInterface")> like IWiredInterface {
             parameters:
                 @display("p=250.172,530.908,row,60;q=txQueue");
         }
-        ext[_]: <default("ExtInterface")> like IExternalNic {
+        ext[_]: <default("ExtInterface")> like IExternalInterface {
             parameters:
                 @display("p=312.432,530.908;q=txQueue;i=block/ifcard;is=s");
         }
-        tun[_]: <default("TunInterface")> like ITunNic {
+        tun[_]: <default("TunInterface")> like ITunnelInterface {
             parameters:
                 @display("p=367.9,530.908;q=txQueue;i=block/ifcard;is=s");
         }
 
-        ospf: <"OSPFRouting"> like IIPRouting if hasOSPF {
+        ospf: <"OspfRouting"> like IIpRouting if hasOSPF {
             parameters:
                 @display("p=330.544,304.508;i=block/network2;is=s");
         }
-        bgp: <"BGPRouting"> like IBGPRouting if hasBGP {
+        bgp: <"BgpRouting"> like IBgpRouting if hasBGP {
             parameters:
                 ospfRoutingModule = default(hasOSPF ? "^.ospf" : "");
                 @display("p=122.256004,114.332;i=block/network;is=s");
         }
-        tcp: <tcpType> like ITCP if hasBGP && tcpType != "" {
+        tcp: <tcpType> like ITcp if hasBGP && tcpType != "" {
             parameters:
                 @display("p=122.256004,216.212;i=block/transport;is=s");
         }
-        rip: <"RIPRouting"> like IUDPApp if hasRIP {
+        rip: <"RipRouting"> like IUDPApp if hasRIP {
             parameters:
                 @display("p=241.116,114.332;is=s");
         }
@@ -218,17 +218,17 @@ module ANSARouter
                 @display("p=419.97202,114.332;i=block/routing");
         }
 
-        vrrp: <"VRRPv2"> like IIPRouting if hasVRRP {
+        vrrp: <"VRRPv2"> like IIpRouting if hasVRRP {
             parameters:
                 @display("p=37.356,304.508;i=block/routing");
         }
 
-        udp: <udpType> like IUDP if (hasRIP || hasBABEL || hasHSRP || hasGLBP || hasLISP) {
+        udp: <udpType> like IUdp if (hasRIP || hasBABEL || hasHSRP || hasGLBP || hasLISP) {
             parameters:
                 @display("p=268.284,216.212");
         }
 
-        pim: <"PIMRouting"> like IPIMRouting if hasPIM {
+        pim: <"PimRouting"> like IPimRouting if hasPIM {
             parameters:
                 @display("p=110.936005,304.508;i=block/network2;is=s");
         }

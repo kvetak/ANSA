@@ -28,8 +28,8 @@
 #include "inet/common/lifecycle/ILifecycle.h"
 #include "inet/common/lifecycle/NodeStatus.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
-#include "inet/networklayer/ipv4/IIPv4RoutingTable.h"
-#include "inet/networklayer/ipv6/IPv6RoutingTable.h"
+#include "inet/networklayer/ipv4/IIpv4RoutingTable.h"
+#include "inet/networklayer/ipv6/Ipv6RoutingTable.h"
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 
 using namespace omnetpp;
@@ -55,7 +55,7 @@ class INET_API MultiNetworkNodeConfigurator : public cSimpleModule, public ILife
     const char* XML_STATIC = "Static";
     const char* XML_ROUTE = "Route";
     const char* XML_IPADDR = "IPAddress";
-    const char* XML_IPADDR6 = "IPv6Address";
+    const char* XML_IPADDR6 = "Ipv6Address";
     const char* XML_MASK = "Mask";
     const char* XML_MTU = "MTU";
     const char* XML_METRIC = "Metric";
@@ -67,8 +67,8 @@ class INET_API MultiNetworkNodeConfigurator : public cSimpleModule, public ILife
 
     NodeStatus *nodeStatus;
     IInterfaceTable *interfaceTable;
-    IIPv4RoutingTable *rt4;
-    IPv6RoutingTable *rt6;
+    IIpv4RoutingTable *rt4;
+    Ipv6RoutingTable *rt6;
 
 
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
@@ -88,11 +88,11 @@ class INET_API MultiNetworkNodeConfigurator : public cSimpleModule, public ILife
     void parseStaticRoutes4(cXMLElement* config);
     void parseStaticRoutes6(cXMLElement* config);
 
-    InterfaceEntry* findInterfaceByAddress(IPv4Address address);
-    InterfaceEntry* findInterfaceByAddress(IPv6Address address);
+    InterfaceEntry* findInterfaceByAddress(Ipv4Address address);
+    InterfaceEntry* findInterfaceByAddress(Ipv6Address address);
 
-    IPv4Route* prepareIPv4Route(IPv4Address address, IPv4Address netmask, IPv4Address nexthop, InterfaceEntry* ie, int metric, unsigned int admindist, IRoute::SourceType srctype);
-    IPv6Route* prepareIPv6Route(IPv6Address address, int prefixlength, IPv6Address nexthop, InterfaceEntry* ie, int metric, unsigned int admindist, IRoute::SourceType srctype);
+    Ipv4Route* prepareIPv4Route(Ipv4Address address, Ipv4Address netmask, Ipv4Address nexthop, InterfaceEntry* ie, int metric, unsigned int admindist, IRoute::SourceType srctype);
+    Ipv6Route* prepareIPv6Route(Ipv6Address address, int prefixlength, Ipv6Address nexthop, InterfaceEntry* ie, int metric, unsigned int admindist, IRoute::SourceType srctype);
 
     static bool Str2Int(int *retValue, const char *str);
     static bool Str2Bool(bool *ret, const char *str);

@@ -28,15 +28,15 @@ import inet.linklayer.contract.ITrafficConditioner;
 import inet.linklayer.contract.IEthernetInterface;
 import inet.linklayer.ethernet.*;
 //
-// Ethernet network interface. Complements ~EtherMAC and ~EtherEncap
+// Ethernet network interface. Complements ~EtherMac and ~EtherEncap
 // with an output queue for QoS and RED support.
 //
 module ANSA_EthernetInterface like IEthernetInterface
 {
     parameters:
         string interfaceTableModule;
-        bool csmacdSupport = default(false);  // by default CSMA/CD is turned off, so only point-to-point duplex links are supported.
-        string macType = default(csmacdSupport ? "EtherMAC" : "ANSA_EtherMACFullDuplex"); 
+        bool csmacdSupport = default(false);  // by default Ieee802154Mac/CD is turned off, so only point-to-point duplex links are supported.
+        string macType = default(csmacdSupport ? "EtherMac" : "ANSA_EtherMACFullDuplex"); 
         string queueType = default(""); // ~DropTailQueue, or a Diffserv queue; set to "" for use of an internal queue
         string ingressTCType = default(""); // a module type implementing ~ITrafficConditioner for optional traffic conditioning of incoming traffic
         string egressTCType = default(""); // a module type implementing ~ITrafficConditioner for optional traffic conditioning of outgoing traffic
@@ -62,12 +62,12 @@ module ANSA_EthernetInterface like IEthernetInterface
         egressTC: <egressTCType> like ITrafficConditioner if egressTCType != "" {
             @display("p=53,158");
         }
-        queue: EtherQoSQueue if queueType != "" {
+        queue: EtherQosQueue if queueType != "" {
             parameters:
                 dataQueueType = queueType;
                 @display("p=107,263;q=l2queue");
         }
-        mac: <macType> like IEtherMAC {
+        mac: <macType> like IEtherMac {
             parameters:
                 queueModule = (queueType == "" ? "" : "^.queue");
                 txQueueLimit = (queueType == "" ? 10000 : 1); // queue sends one packet at a time

@@ -22,25 +22,25 @@ import inet.networklayer.arp.ipv4.Arp;
 
 
 //
-// Implements the Address Resolution Protocol for IPv4 and IEEE 802 6-byte
+// Implements the Address Resolution Protocol for Ipv4 and IEEE 802 6-byte
 // MAC addresses.
 //
-// ARP packets are represented by the ~ARPPacket class.
+// Arp packets are represented by the ~ArpPacket class.
 //
-// Communication Between ARP and IPv4 modules:
-// IPv4 module call the ARP::getMACAddressFor(ipv4Address) method for get the MACAddress
-// of next hop. If this method could not resolve an IPv4 address to MAC address, then IPv4
-// uses the ARP::startAddressResolution() method.
-// ARP emit a completedARPResolution signal, when added/modified an entry in ARP table.
-// ARP emit a failedARPResolution signal when an ARP request failed (ARP request sent
+// Communication Between Arp and Ipv4 modules:
+// Ipv4 module call the Arp::getMACAddressFor(ipv4Address) method for get the MacAddress
+// of next hop. If this method could not resolve an Ipv4 address to MAC address, then Ipv4
+// uses the Arp::startAddressResolution() method.
+// Arp emit a completedArpResolution signal, when added/modified an entry in Arp table.
+// Arp emit a failedArpResolution signal when an Arp request failed (Arp request sent
 // retryCount times and retryTimeout elapsed).
 //
-// ARP resolution is used over <i>broadcast</i> interfaces only,
+// Arp resolution is used over <i>broadcast</i> interfaces only,
 // that is, over interfaces that have the <tt>isBroadcast()</tt> flag set in
 // <tt>InterfaceEntry</tt> (see ~InterfaceTable). Since routing files
-// (<tt>.irt</tt> or <tt>.mrt</tt> files, given as parameter to ~IPv4RoutingTable)
+// (<tt>.irt</tt> or <tt>.mrt</tt> files, given as parameter to ~Ipv4RoutingTable)
 // may modify the default interface configuration, you must take care that
-// these files don't contain the word <tt>BROADCAST</tt> e.g. for PPP
+// these files don't contain the word <tt>BROADCAST</tt> e.g. for Ppp
 // interfaces.
 //
 simple AnsaARP extends Arp

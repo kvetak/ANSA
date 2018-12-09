@@ -15,7 +15,7 @@
 //
 
 /**
- * @file TRILLInterfaceData.cc
+ * @file TrillInterfaceData.cc
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 24.3.2013
  * @brief Represents TRILL related data on interface.
@@ -23,11 +23,11 @@
  * @todo Z9
  */
 
-#include "TRILLInterfaceData.h"
+#include "TrillInterfaceData.h"
 
 namespace inet {
 
-TRILLInterfaceData::TRILLInterfaceData()
+TrillInterfaceData::TrillInterfaceData()
 {
 
 
@@ -36,12 +36,12 @@ TRILLInterfaceData::TRILLInterfaceData()
 
 }
 
-TRILLInterfaceData::~TRILLInterfaceData()
+TrillInterfaceData::~TrillInterfaceData()
 {
     // TODO Auto-generated destructor stub
 }
 
-void TRILLInterfaceData::setDefaults(void){
+void TrillInterfaceData::setDefaults(void){
 
     this->disabled = false;
 
@@ -70,73 +70,73 @@ void TRILLInterfaceData::setDefaults(void){
     this->vlanMapping = false;
 }
 
-int TRILLInterfaceData::getVlanId() const
+int TrillInterfaceData::getVlanId() const
 {
     return vlanId;
 }
 
-bool TRILLInterfaceData::isAccess() const
+bool TrillInterfaceData::isAccess() const
 {
     return access;
 }
 
-bool TRILLInterfaceData::isDisLearning() const
+bool TrillInterfaceData::isDisLearning() const
 {
     return disLearning;
 }
 
-bool TRILLInterfaceData::isDisabled() const
+bool TrillInterfaceData::isDisabled() const
 {
     return disabled;
 }
 
-bool TRILLInterfaceData::isP2p() const
+bool TrillInterfaceData::isP2p() const
 {
     return p2p;
 }
 
-bool TRILLInterfaceData::isTrunk() const
+bool TrillInterfaceData::isTrunk() const
 {
     return trunk;
 }
 
-void TRILLInterfaceData::setAccess(bool access)
+void TrillInterfaceData::setAccess(bool access)
 {
     this->access = access;
 }
 
-void TRILLInterfaceData::setDisLearning(bool disLearning)
+void TrillInterfaceData::setDisLearning(bool disLearning)
 {
     this->disLearning = disLearning;
 }
 
-void TRILLInterfaceData::setDisabled(bool disabled)
+void TrillInterfaceData::setDisabled(bool disabled)
 {
     this->disabled = disabled;
 }
 
-void TRILLInterfaceData::setP2p(bool p2p)
+void TrillInterfaceData::setP2p(bool p2p)
 {
     this->p2p = p2p;
 }
 
-void TRILLInterfaceData::setTrunk(bool trunk)
+void TrillInterfaceData::setTrunk(bool trunk)
 {
     this->trunk = trunk;
 }
 
-void TRILLInterfaceData::setVlanId(int vlanId)
+void TrillInterfaceData::setVlanId(int vlanId)
 {
     this->vlanId = vlanId;
 }
 
 
-bool TRILLInterfaceData::isInhibited() const
+bool TrillInterfaceData::isInhibited() const
 {
     return inhibited;
 }
 
-bool TRILLInterfaceData::isEnabled(int vlanId)
+bool TrillInterfaceData::isEnabled(int vlanId)
 {
     for(VLANVector::iterator it = this->enabledgSet.begin(); it != this->enabledgSet.end(); ++it){
         if((*it) == vlanId){
@@ -146,42 +146,42 @@ bool TRILLInterfaceData::isEnabled(int vlanId)
     return false;
 }
 
-int TRILLInterfaceData::getDesigVlan() const
+int TrillInterfaceData::getDesigVlan() const
 {
     return desigVLAN;
 }
 
-bool TRILLInterfaceData::isVlanMapping() const
+bool TrillInterfaceData::isVlanMapping() const
 {
     return vlanMapping;
 }
 
-int TRILLInterfaceData::getDesiredDesigVlan() const
+int TrillInterfaceData::getDesiredDesigVlan() const
 {
     return desiredDesigVLAN;
 }
 
-void TRILLInterfaceData::setDesiredDesigVlan(int desiredDesigVlan)
+void TrillInterfaceData::setDesiredDesigVlan(int desiredDesigVlan)
 {
     desiredDesigVLAN = desiredDesigVlan;
 }
 
-void TRILLInterfaceData::setVlanMapping(bool vlanMapping)
+void TrillInterfaceData::setVlanMapping(bool vlanMapping)
 {
     this->vlanMapping = vlanMapping;
 }
 
-void TRILLInterfaceData::setDesigVlan(int desigVlan)
+void TrillInterfaceData::setDesigVlan(int desigVlan)
 {
     desigVLAN = desigVlan;
 }
 
-void TRILLInterfaceData::setInhibited(bool inhibited)
+void TrillInterfaceData::setInhibited(bool inhibited)
 {
     this->inhibited = inhibited;
 }
 
-bool TRILLInterfaceData::isAppointedForwarder(int vlanId, TRILLNickname nickname){
+bool TrillInterfaceData::isAppointedForwarder(int vlanId, TRILLNickname nickname){
 
     //TODO A2
 //    if(nickname == 0){
@@ -204,25 +204,25 @@ bool TRILLInterfaceData::isAppointedForwarder(int vlanId, TRILLNickname nickname
     return false;
 }
 
-void TRILLInterfaceData::setAppointedForwarder(int vlanId, TRILLNickname nickname)
+void TrillInterfaceData::setAppointedForwarder(int vlanId, TRILLNickname nickname)
 {
     this->appointedForwarder.clear();
     this->appointedForwarder.insert(std::make_pair(vlanId, nickname));
 }
 
-void TRILLInterfaceData::addAppointedForwarder(int vlanId, TRILLNickname nickname)
+void TrillInterfaceData::addAppointedForwarder(int vlanId, TRILLNickname nickname)
 {
     this->appointedForwarder.insert(std::make_pair(vlanId, nickname));
 }
 
-void TRILLInterfaceData::clearAppointedForwarder(){
+void TrillInterfaceData::clearAppointedForwarder(){
     this->appointedForwarder.clear();
 }
 
 /*
  * TODO B2 To be determined if nickname has to match too.
  */
-void TRILLInterfaceData::removeAppointedFowrwarder(int vlanId, TRILLNickname nickname)
+void TrillInterfaceData::removeAppointedFowrwarder(int vlanId, TRILLNickname nickname)
 {
     std::map<int, TRILLNickname>::iterator it = this->appointedForwarder.find(vlanId);
     if(it != this->appointedForwarder.end()){

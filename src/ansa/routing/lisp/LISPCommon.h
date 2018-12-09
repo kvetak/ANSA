@@ -172,8 +172,8 @@ class LISPCommon {
     static void parseIpAddress(const char* str, std::string &address, std::string &length);
 
     static int doPrefixMatch(L3Address addr1, L3Address addr2);
-    static int getNumMatchingPrefixBits4(IPv4Address addr1, IPv4Address addr2);
-    static int getNumMatchingPrefixBits6(IPv6Address addr1, IPv6Address addr2);
+    static int getNumMatchingPrefixBits4(Ipv4Address addr1, Ipv4Address addr2);
+    static int getNumMatchingPrefixBits6(Ipv6Address addr1, Ipv6Address addr2);
 
     static L3Address getNetworkAddress(L3Address address, int length);
 

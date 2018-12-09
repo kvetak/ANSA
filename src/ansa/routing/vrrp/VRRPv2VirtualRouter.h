@@ -27,14 +27,14 @@
 
 #include <omnetpp.h>
 
-#include "inet/networklayer/arp/ipv4/ARP.h"
+#include "inet/networklayer/arp/ipv4/Arp.h"
 //#include "NotificationBoard.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
-#include "inet/networklayer/contract/ipv4/IPv4Address.h"
-#include "inet/linklayer/common/MACAddress.h"
+#include "inet/networklayer/contract/ipv4/Ipv4Address.h"
+#include "inet/linklayer/common/MacAddress.h"
 #include "ansa/routing/vrrp/VRRPv2Advertisement_m.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
 #include "inet/networklayer/common/IPSocket.h"
 
 
@@ -115,19 +115,19 @@ class VRRPv2VirtualRouter : public cSimpleModule
         const char*         hostname;
         IInterfaceTable     *ift = nullptr;
         ANSA_InterfaceEntry *ie = nullptr;
-        ARP                 *arp = nullptr;
+        Arp                 *arp = nullptr;
         VirtualForwarder    *vf = nullptr;
 
-        IPv4Address multicastIP;
-        MACAddress  virtualMAC;
+        Ipv4Address multicastIP;
+        MacAddress  virtualMAC;
         VRRPArpType arpType;
         bool        own;
         std::string description;
         double      arpDelay;
 
         int         vrid;
-        IPv4Address IPprimary;
-        std::vector<IPv4Address> IPsecondary;
+        Ipv4Address IPprimary;
+        std::vector<Ipv4Address> IPsecondary;
         int         version;
         int         priority;
         int         protocol;
@@ -157,14 +157,14 @@ class VRRPv2VirtualRouter : public cSimpleModule
         /** @name Field setters */
         //@{
         virtual void setArp(int a) { arpType = (enum VRRPArpType) a; };
-        virtual void setIPPrimary(IPv4Address addr) { IPprimary = addr; };
+        virtual void setIPPrimary(Ipv4Address addr) { IPprimary = addr; };
         virtual void setIPPrimary(const char* addr) { IPprimary.set(addr); };
         virtual void setPriority(int p) { priority = p; };
         virtual void setPreemtion(bool p) { preemtion = p; };
         virtual void setLearn(bool l) { learn = l; }
         virtual void setAdvertisement(int advert) { advertisementInterval = advert; };
-        virtual void addIPSecondary(IPv4Address addr) { IPsecondary.push_back(addr); };
-        virtual void addIPSecondary(const char* addr) { IPsecondary.push_back(IPv4Address(addr)); };
+        virtual void addIPSecondary(Ipv4Address addr) { IPsecondary.push_back(addr); };
+        virtual void addIPSecondary(const char* addr) { IPsecondary.push_back(Ipv4Address(addr)); };
         virtual void setDescription(std::string d) { description = d; };
         virtual void setPreemtionDelay(int d) { preemtionDelay = true; preemTimerInit = d; }
         //@}
@@ -172,8 +172,8 @@ class VRRPv2VirtualRouter : public cSimpleModule
         /** @name Field getters. Note they are non-virtual and inline, for performance reasons. */
         //@{
         virtual ANSA_InterfaceEntry* getInterface() { return ie; };
-        IPv4Address getPrimaryIP() { return IPprimary; };
-        MACAddress getVirtualMAC() { return virtualMAC; }
+        Ipv4Address getPrimaryIP() { return IPprimary; };
+        MacAddress getVirtualMAC() { return virtualMAC; }
         int getVrid() const { return vrid; };
         int getArp() { return arpType; };
         int getPriority() { return priority; };
@@ -206,7 +206,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
          * @param address
          * @return
          */
-        virtual uint16_t getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<IPv4Address> address);
+        virtual uint16_t getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<Ipv4Address> address);
 
 
     protected:
@@ -276,7 +276,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
         virtual void sendAdvertisement();
 
         /**
-         * Sends ARP packets to all IP addresses associated with the virtual router.
+         * Sends Arp packets to all IP addresses associated with the virtual router.
          */
         virtual void sendBroadcast();
 
@@ -323,7 +323,7 @@ class VRRPv2VirtualRouter : public cSimpleModule
         virtual std::string debugEvent() const;
         virtual std::string debugStateMachine(std::string from, std::string to) const;
         virtual std::string debugPacketMaster(uint16_t checksum) const;
-        virtual std::string debugPacketBackup(int priority, IPv4Address ipaddr) const;
+        virtual std::string debugPacketBackup(int priority, Ipv4Address ipaddr) const;
         //@}
 };
 

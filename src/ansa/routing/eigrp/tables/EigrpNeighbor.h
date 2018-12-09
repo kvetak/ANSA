@@ -27,7 +27,7 @@
 #ifndef EIGRPNEIGHBOR_H_
 #define EIGRPNEIGHBOR_H_
 
-//IPv6 ready
+//Ipv6 ready
 
 #include <omnetpp.h>
 

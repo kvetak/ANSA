@@ -121,7 +121,7 @@ Etrs LISPSite::findAllRecordsByEid(const L3Address& address) {
 bool LISPSite::isEidMaintained(const L3Address& address) {
     for (MapStorageCItem it = MappingStorage.begin(); it != MappingStorage.end(); ++it) {
         //IF non-comparable AFIs THEN skip
-        if ( (address.getType() == L3Address::IPv6) xor (it->getEidPrefix().getEidAddr().getType() == L3Address::IPv6) )
+        if ( (address.getType() == L3Address::Ipv6) xor (it->getEidPrefix().getEidAddr().getType() == L3Address::Ipv6) )
             continue;
         //Count number of common bits and if greater than Maintained EID length then return true
         int commonbits = LISPCommon::doPrefixMatch(it->getEidPrefix().getEidAddr(), address);

@@ -65,6 +65,7 @@ NF_INTERFACE_DELETED -> interfaceDeletedSignal
 NF_INTERFACE_GENERICNETWORKPROTOCOLCONFIG_CHANGED -> interfaceGenericnetworkprotocolconfigChangedSignal
 NF_INTERFACE_IPv4CONFIG_CHANGED -> interfaceIpv4ConfigChangedSignal
 NF_INTERFACE_IPv6CONFIG_CHANGED -> interfaceIpv6ConfigChangedSignal
+NF_INTERFACE_CLNSCONFIG_CHANGED -> interfaceClnsConfigChangedSignal
 NF_INTERFACE_STATE_CHANGED -> interfaceStateChangedSignal
 NF_IPv4_DATA_ON_NONRPF -> ipv4DataOnNonrpfSignal
 NF_IPv4_DATA_ON_RPF -> ipv4DataOnRpfSignal

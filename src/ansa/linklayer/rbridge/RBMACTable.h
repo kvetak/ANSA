@@ -36,7 +36,7 @@
 
 #include "inet/linklayer/ethernet/Ethernet.h"
 #include "inet/linklayer/ethernet/EtherFrame.h"
-#include "inet/linklayer/common/MACAddress.h"
+#include "inet/linklayer/common/MacAddress.h"
 
 #include "ansa/linklayer/rbridge/macTable.h"
 #include "ansa/linklayer/rbridge/TRILLCommon.h"
@@ -55,7 +55,7 @@ public:
 
   typedef std::vector<int> tPortList;
 
-  typedef std::pair<MACAddress, int> ESTKey;
+  typedef std::pair<MacAddress, int> ESTKey;
 
   typedef enum {
       EST_EMPTY, //empty record
@@ -82,7 +82,7 @@ public:
           ESTInputType inputType; //specify inserting method
           SimTime insertTime;
           //little bit of redundancy
-          MACAddress address;
+          MacAddress address;
           int vlanId;
   }ESTRecord;
 
@@ -122,12 +122,12 @@ public:
   /* special definition */
   typedef enum e_spec {
       NONE = 0,
-      STP = 1, // switching to STP ports
+      Stp = 1, // switching to Stp ports
   } tSpec;
 
   /* enahanced MAC table record */
   typedef struct s_record {
-      MACAddress addr; // mac address
+      MacAddress addr; // mac address
       simtime_t insert_time; // time of insertion of update for ageing process
       tPortList portList; // list of destination ports (multiple ports for group adresses)
       tType type; // record type = {static, dynamic, group}
@@ -135,20 +135,20 @@ public:
   } tRecord;
 
   /* compare structure for std::map */
-  struct MAC_compare{
-      bool operator()(const MACAddress& u1, const MACAddress& u2) const
+  struct MacCompare{
+      bool operator()(const MacAddress& u1, const MacAddress& u2) const
           {return u1.compareTo(u2) < 0;}
   };
 
   /* table map type */
-  typedef std::map<MACAddress, tRecord, MAC_compare> AddressTable;
+  typedef std::map<MacAddress, tRecord, MacCompare> AddressTable;
 
   /* PUBLIC METHODS */
-  void update(MACAddress& addr, int port);
-  void updateNative(MACAddress& addr, int vlanId, int gateId);
-  void updateTRILLData(MACAddress& addr, int vlanId, TRILLNickname ingressNickname);
-  tSpec getSpec(MACAddress& addr);
-  tPortList& getPorts(MACAddress& addr);
+  void update(MacAddress& addr, int port);
+  void updateNative(MacAddress& addr, int vlanId, int gateId);
+  void updateTRILLData(MacAddress& addr, int vlanId, TRILLNickname ingressNickname);
+  tSpec getSpec(MacAddress& addr);
+  tPortList& getPorts(MacAddress& addr);
   void flush();
   void enableFasterAging(); // Aging ~ Ageing by Longman dictionary of contemporary english http://ldoceonline.com/
   void resetAging();
@@ -163,17 +163,17 @@ private:
   /* MGMT */
   void flushAged();
   void removeOldest();
-  void add(MACAddress addr, int port, tType type, tSpec spec);
-  void remove(MACAddress addr);
-  void removePort(MACAddress addr, int port);
-  void addStatic(MACAddress addr, tPortList ports);
+  void add(MacAddress addr, int port, tType type, tSpec spec);
+  void remove(MacAddress addr);
+  void removePort(MacAddress addr, int port);
+  void addStatic(MacAddress addr, tPortList ports);
 
   /* mCast */
-  void addGroup(MACAddress addr, tPortList ports); // TODO B2
-  void addGroupPort(MACAddress addr, int port); // TODO B2
-  void removeGroup(MACAddress addr); // TODO B2
-  void removeGroupPort(MACAddress addr, int port); // TODO B2
-  void alterGroup(MACAddress addr, tPortList ports); // TODO B2
+  void addGroup(MacAddress addr, tPortList ports); // TODO B2
+  void addGroupPort(MacAddress addr, int port); // TODO B2
+  void removeGroup(MacAddress addr); // TODO B2
+  void removeGroupPort(MacAddress addr, int port); // TODO B2
+  void alterGroup(MacAddress addr, tPortList ports); // TODO B2
 
 protected:
   ESTable eSTable; //end station table
@@ -184,8 +184,8 @@ protected:
 
   int addressTableSize;       // Maximum size of the Address Table
   simtime_t agingTime;        // Determines when Ethernet entries are to be removed
-  unsigned int uAgingTime;        // user defined value (or default) for STP aging reset
-  simtime_t fasterAging;      // for STP topology change faster Aging
+  unsigned int uAgingTime;        // user defined value (or default) for Stp aging reset
+  simtime_t fasterAging;      // for Stp topology change faster Aging
 
   virtual void initialize(); // TODO B2
   virtual void finish(); // TODO B2
@@ -282,8 +282,8 @@ inline std::ostream& operator<<(std::ostream& os, const RBMACTable::tSpec s) {
     case RBMACTable::NONE:
         os << "None";
         break;
-    case RBMACTable::STP:
-        os << "STP";
+    case RBMACTable::Stp:
+        os << "Stp";
         break;
     default:
         os << "???";

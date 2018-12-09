@@ -36,6 +36,6 @@ simple GLBP like IApp
     gates:
         input glbpIn[];		/// from GLBPVR module to GLBP
         output glbpOut[]; 	/// from GLBP module to GLBPVR	 
-        input socketIn @labels(UDPControlInfo/up);		///from UDP module to GLBP
-        output socketOut @lables(UDPControlInfo/down);	///form GLBP module to UDP
+        input socketIn @labels(UdpControlInfo/up);		///from Udp module to GLBP
+        output socketOut @lables(UdpControlInfo/down);	///form GLBP module to Udp
 }

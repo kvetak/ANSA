@@ -20,45 +20,45 @@
 * @author Vladimir Vesely (ivesely@fit.vutbr.cz)
 * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
 * @date 27. 10. 2014
-* @brief EIGRP Dual-stack (IPv4/IPv6) support
-* @detail Contains functions for dual-stack (IPv4/IPv6) support
+* @brief EIGRP Dual-stack (Ipv4/Ipv6) support
+* @detail Contains functions for dual-stack (Ipv4/Ipv6) support
 */
 
 #include "ansa/routing/eigrp/EigrpDualStack.h"
 namespace inet {
 /**
- * Uses IPv4Address.getNetmaskLength() method
+ * Uses Ipv4Address.getNetmaskLength() method
  */
-int getNetmaskLength(const IPv4Address &netmask)
+int getNetmaskLength(const Ipv4Address &netmask)
 {
     return netmask.getNetmaskLength();
 }
 
 
 /**
- * Uses four times IPv4Address.getNetmaskLength() method on four parts of IPv6 address
+ * Uses four times Ipv4Address.getNetmaskLength() method on four parts of Ipv6 address
  */
-int getNetmaskLength(const IPv6Address &netmask)
+int getNetmaskLength(const Ipv6Address &netmask)
 {
     int length = 0;
 
     for(int i = 0; i <= 3; ++i)
     {
-        //length += IPv4Address(netmask.words()[i]).getNetmaskLength();
+        //length += Ipv4Address(netmask.words()[i]).getNetmaskLength();
 
-        length += (static_cast<IPv4Address> (netmask.words()[i])).getNetmaskLength();      //TODO - verify!
+        length += (static_cast<Ipv4Address> (netmask.words()[i])).getNetmaskLength();      //TODO - verify!
     }
 
     return length;
 }
 
-bool maskedAddrAreEqual(const IPv4Address& addr1, const IPv4Address& addr2, const IPv4Address& netmask)
+bool maskedAddrAreEqual(const Ipv4Address& addr1, const Ipv4Address& addr2, const Ipv4Address& netmask)
 {
     //return !(bool)((addr1.addr ^ addr2.addr) & netmask.addr);
-    return IPv4Address::maskedAddrAreEqual(addr1, addr2, netmask);
+    return Ipv4Address::maskedAddrAreEqual(addr1, addr2, netmask);
 }
 
-bool maskedAddrAreEqual(const IPv6Address& addr1, const IPv6Address& addr2, const IPv6Address& netmask)
+bool maskedAddrAreEqual(const Ipv6Address& addr1, const Ipv6Address& addr2, const Ipv6Address& netmask)
 {
     const uint32 *a1 = addr1.words();
     const uint32 *a2 = addr2.words();
@@ -74,15 +74,15 @@ bool maskedAddrAreEqual(const IPv6Address& addr1, const IPv6Address& addr2, cons
 
 }
 
-IPv6Address getPrefix(const IPv6Address& addr, const IPv6Address& netmask)
+Ipv6Address getPrefix(const Ipv6Address& addr, const Ipv6Address& netmask)
 {
     const uint32 *addrp = addr.words();
     const uint32 *netmaskp = netmask.words();
 
-    return IPv6Address(addrp[0] & netmaskp[0], addrp[1] & netmaskp[1], addrp[2] & netmaskp[2], addrp[3] & netmaskp[3]); //TODO - verify
+    return Ipv6Address(addrp[0] & netmaskp[0], addrp[1] & netmaskp[1], addrp[2] & netmaskp[2], addrp[3] & netmaskp[3]); //TODO - verify
 }
 
-IPv6Address makeNetmask(int length) //TODO - verify
+Ipv6Address makeNetmask(int length) //TODO - verify
 {
     uint32 netmask[4] = {0, 0, 0, 0};
 
@@ -100,6 +100,6 @@ IPv6Address makeNetmask(int length) //TODO - verify
         }
     }
 
-    return IPv6Address(netmask[0], netmask[1], netmask[2], netmask[3]);
+    return Ipv6Address(netmask[0], netmask[1], netmask[2], netmask[3]);
 }
 }

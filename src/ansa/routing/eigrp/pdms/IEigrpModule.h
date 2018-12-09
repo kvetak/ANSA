@@ -45,7 +45,7 @@ class IEigrpModule
     virtual void addInterface(int interfaceId, int networkId, bool enabled) = 0;
 
     /**
-     * Adds interface to EIGRP for IPv6
+     * Adds interface to EIGRP for Ipv6
      *
      * @param   interfaceId     ID of interface
      * @param   enabled         state of interface in EIGRP process, enabled or disabled
@@ -71,17 +71,17 @@ class IEigrpModule
     /**
      * Sets router ID
      *
-     * @param   routerID        EIGRP process routerID, represented as IPv4 address
+     * @param   routerID        EIGRP process routerID, represented as Ipv4 address
      */
-    virtual void setRouterId(IPv4Address routerID) = 0;
+    virtual void setRouterId(Ipv4Address routerID) = 0;
 
     /**
-     * Adds information about IPv6 network prefix
+     * Adds information about Ipv6 network prefix
      *
      * @param   network     network prefix
      * @param   prefixLen   length of network prefix
      * @param   ifaceId     ID of interface contains network prefix
-     * @return  True if successfully added, otherwise false (e.g. same IPv6 prefix on different interfaces)
+     * @return  True if successfully added, otherwise false (e.g. same Ipv6 prefix on different interfaces)
      * @note    Checks duplicates
      */
     virtual bool addNetPrefix(const IPAddress &network, const short int prefixLen, const int ifaceId) = 0;

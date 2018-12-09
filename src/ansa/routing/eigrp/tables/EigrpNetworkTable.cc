@@ -71,9 +71,9 @@ EigrpNetwork<IPAddress> *EigrpNetworkTable<IPAddress>::findNetworkById(int netId
 
 
 template<>
-bool EigrpNetworkTable<IPv4Address>::isInterfaceIncluded(const IPv4Address& ifAddress, const IPv4Address& ifMask, int *resultNetId)
+bool EigrpNetworkTable<Ipv4Address>::isInterfaceIncluded(const Ipv4Address& ifAddress, const Ipv4Address& ifMask, int *resultNetId)
 {
-    typename std::vector<EigrpNetwork<IPv4Address> *>::iterator it;
+    typename std::vector<EigrpNetwork<Ipv4Address> *>::iterator it;
     int netMaskLen, ifMaskLen;
 
     if (ifAddress.isUnspecified())
@@ -81,8 +81,8 @@ bool EigrpNetworkTable<IPv4Address>::isInterfaceIncluded(const IPv4Address& ifAd
 
     for (it = networkVec.begin(); it != networkVec.end(); it++)
     {
-        IPv4Address netPrefix = (*it)->getAddress();
-        IPv4Address netMask = (*it)->getMask();
+        Ipv4Address netPrefix = (*it)->getAddress();
+        Ipv4Address netMask = (*it)->getMask();
 
         netMaskLen = (netMask.isUnspecified()) ? getNetmaskLength(netPrefix.getNetworkMask()) : getNetmaskLength(netMask);
         ifMaskLen = getNetmaskLength(ifMask);
@@ -109,14 +109,14 @@ bool EigrpNetworkTable<IPv4Address>::isInterfaceIncluded(const IPv4Address& ifAd
  * @param   resultNetId ID of network
  * @return  True (and set resultNetId) if address is included in network, which is enabled in Eigrp process, otherwise false (resultNetId is undefined).
  *
- * In IPv6 is netmask always specified, because it is strictly classless.
+ * In Ipv6 is netmask always specified, because it is strictly classless.
  * Configuration is defined per interfaces, and there is no wildcard.
- * In other words matching is much simpler that in the IPv4.
+ * In other words matching is much simpler that in the Ipv4.
  */
 template<>
-bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAddress, const IPv6Address& ifMask, int *resultNetId)
+bool EigrpNetworkTable<Ipv6Address>::isInterfaceIncluded(const Ipv6Address& ifAddress, const Ipv6Address& ifMask, int *resultNetId)
 {
-    typename std::vector<EigrpNetwork<IPv6Address> *>::iterator it;
+    typename std::vector<EigrpNetwork<Ipv6Address> *>::iterator it;
     int netMaskLen, ifMaskLen;
 
     if (ifAddress.isUnspecified())
@@ -124,8 +124,8 @@ bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAd
 
     for (it = networkVec.begin(); it != networkVec.end(); it++)
     {//go through all networks and determine if ifAddress is from that network
-        IPv6Address netPrefix = (*it)->getAddress();    //network address
-        IPv6Address netMask = (*it)->getMask();         //network mask
+        Ipv6Address netPrefix = (*it)->getAddress();    //network address
+        Ipv6Address netMask = (*it)->getMask();         //network mask
 
         netMaskLen = getNetmaskLength(netMask);
         ifMaskLen = getNetmaskLength(ifMask);
@@ -133,7 +133,7 @@ bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAd
         // prefix isUnspecified -> network = 0.0.0.0 -> all interfaces, or
         // prefix is specified -> classless match
         if (netPrefix.isUnspecified() ||
-                (maskedAddrAreEqual(netPrefix, ifAddress, netMask) && netMaskLen <= ifMaskLen)) //TODO - PROB-02 - reused from IPv4 version, is it ok?
+                (maskedAddrAreEqual(netPrefix, ifAddress, netMask) && netMaskLen <= ifMaskLen)) //TODO - PROB-02 - reused from Ipv4 version, is it ok?
         {// IP address of the interface match the prefix
             (*resultNetId) = (*it)->getNetworkId();
             return true;
@@ -143,9 +143,9 @@ bool EigrpNetworkTable<IPv6Address>::isInterfaceIncluded(const IPv6Address& ifAd
     return false;
 }
 
-template class EigrpNetworkTable<IPv4Address>;
+template class EigrpNetworkTable<Ipv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpNetworkTable<IPv6Address>;
+template class EigrpNetworkTable<Ipv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */
 }

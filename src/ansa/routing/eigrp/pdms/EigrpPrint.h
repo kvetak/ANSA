@@ -32,8 +32,8 @@
 #include "ansa/routing/eigrp/tables/EigrpNetworkTable.h"
 #include "ansa/routing/eigrp/messages/EigrpMessage_m.h"
 namespace inet {
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv4Address>& network);
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv6Address>& network);
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<Ipv4Address>& network);
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<Ipv6Address>& network);
 std::ostream& operator<<(std::ostream& os, const EigrpKValues& kval);
 std::ostream& operator<<(std::ostream& os, const EigrpStub& stub);
 

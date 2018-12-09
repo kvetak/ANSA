@@ -27,23 +27,23 @@ import inet.linklayer.contract.IEtherMac;
 
 //
 // Ethernet MAC which supports full-duplex operation ONLY.
-// See the ~IEtherMAC for general informations.
+// See the ~IEtherMac for general informations.
 //
 // Most of today's Ethernet networks are switched, and operate
 // in full-duplex mode. Full-duplex transmission can be used for
 // point-to-point connections only. Since full-duplex connections
 // cannot be shared, collisions are eliminated. This setup eliminates
-// most of the need for the CSMA/CD access control mechanism because
+// most of the need for the Ieee802154Mac/CD access control mechanism because
 // there is no need to determine whether the connection is already
 // being used. This allows for a much simpler simulation model
 // for MAC. (In "traditional" Ethernet simulations, most of the code
-// deals with the shared medium and the CSMA/CD mechanism.)
-// ~EtherMACFullDuplex implements Ethernet without shared medium and CSMA/CD.
-// (If you need half-duplex operation, see ~EtherMAC which is for a full-blown
+// deals with the shared medium and the Ieee802154Mac/CD mechanism.)
+// ~EtherMacFullDuplex implements Ethernet without shared medium and Ieee802154Mac/CD.
+// (If you need half-duplex operation, see ~EtherMac which is for a full-blown
 // and therefore more complicated Ethernet MAC model.)
 //
-// ~EtherMACFullDuplex performs transmission and reception of frames.
-// It does not do encapsulation/decapsulation; see ~EtherLLC and ~EtherEncap
+// ~EtherMacFullDuplex performs transmission and reception of frames.
+// It does not do encapsulation/decapsulation; see ~EtherLlc and ~EtherEncap
 // for that.
 //
 // Supported variations:
@@ -76,7 +76,7 @@ import inet.linklayer.contract.IEtherMac;
 //   broadcast frames are passed up.
 //
 // The module does not perform encapsulation or decapsulation of frames --
-// this is done by higher layers (~EtherLLC or ~EtherEncap).
+// this is done by higher layers (~EtherLlc or ~EtherEncap).
 //
 // When a frame is received from the higher layers, it must be an ~EtherFrame,
 // and with all protocol fields filled out
@@ -116,8 +116,8 @@ import inet.linklayer.contract.IEtherMac;
 //
 // Please see <a href="physical.html">Messaging on the physical layer</a>.
 //
-// @see ~EtherMAC, ~EthernetInterface, ~IOutputQueue, ~EtherEncap, ~EtherLLC
-// @see ~EtherFrame, ~EthernetIIFrame, ~EtherFrameWithLLC, ~Ieee802Ctrl
+// @see ~EtherMac, ~EthernetInterface, ~IOutputQueue, ~EtherEncap, ~EtherLlc
+// @see ~EtherFrame, ~EthernetIIFrame, ~EtherFrameWithLlc, ~Ieee802Ctrl
 //
 simple ANSA_EtherMACFullDuplex like IEtherMac
 {
@@ -128,7 +128,7 @@ simple ANSA_EtherMACFullDuplex like IEtherMac
         string address = default("auto");   // MAC address as hex string (12 hex digits), or
                                             // "auto". "auto" values will be replaced by
                                             // a generated MAC address in init stage 0.
-        bool duplexMode = default(true);    // must be set to "true", as EtherMACFullDuplex does not support half-duplex operation
+        bool duplexMode = default(true);    // must be set to "true", as EtherMacFullDuplex does not support half-duplex operation
                                             // (parameter is present to reduce the risk of accidental misconfiguration)
         int txQueueLimit = default(1000);   // maximum number of frames queued up for transmission in the internal queue
                                             // (only used if queueModule==""); additional frames cause a runtime error
@@ -141,7 +141,7 @@ simple ANSA_EtherMACFullDuplex like IEtherMac
         @signal[rxPkOk](type=EtherFrame);
         @signal[txPausePkUnits](type=long);
         @signal[rxPausePkUnits](type=long);
-        @signal[rxPkFromHL](type=EtherFrame);
+        @signal[rxPkFromHl](type=EtherFrame);
         @signal[dropPkNotForUs](type=EtherFrame);
         @signal[dropPkBitError](type=EtherFrame);
         @signal[dropPkIfaceDown](type=EtherTraffic);        // emitted at end of receiving
@@ -150,22 +150,22 @@ simple ANSA_EtherMACFullDuplex like IEtherMac
         @signal[packetReceivedFromLower](type=EtherFrame);
         @signal[packetSentToUpper](type=EtherFrame);
         @signal[packetReceivedFromUpper](type=EtherFrame);
-		@signal[transmitState](type=long); // enum=MACTransmitState
-        @signal[receiveState](type=long); // enum=MACReceiveState
+		@signal[transmitState](type=long); // enum=MacTransmitState
+        @signal[receiveState](type=long); // enum=MacReceiveState
 
         @statistic[txPk](title="packets transmitted"; source=txPk; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[rxPkOk](title="packets received OK"; source=rxPkOk; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[passedUpPk](title="packets passed to higher layer"; source=packetSentToUpper; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[txPausePkUnits](title="pause units sent"; record=count,sum,vector; interpolationmode=none);
         @statistic[rxPausePkUnits](title="pause units received"; record=count,sum,vector; interpolationmode=none);
-        @statistic[rxPkFromHL](title="packet bytes from higher layer"; source=rxPkFromHL; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
+        @statistic[rxPkFromHl](title="packet bytes from higher layer"; source=rxPkFromHl; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[droppedPkIfaceDown](title="packets dropped/interface down"; source=dropPkIfaceDown; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[droppedPkBitError](title="packets dropped/bit error"; source=dropPkBitError; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
         @statistic[droppedPkNotForUs](title="packets dropped/not for us"; source=dropPkNotForUs; record=count,"sum(packetBytes)","vector(packetBytes)"; interpolationmode=none);
 
     gates:
-        input upperLayerIn @labels(EtherFrame);    // to ~EtherLLC or ~EtherEncap or ~MACRelayUnitPP
-        output upperLayerOut @labels(EtherFrame);  // to ~EtherLLC or ~EtherEncap or ~MACRelayUnitPP
+        input upperLayerIn @labels(EtherFrame);    // to ~EtherLlc or ~EtherEncap or ~MACRelayUnitPP
+        output upperLayerOut @labels(EtherFrame);  // to ~EtherLlc or ~EtherEncap or ~MACRelayUnitPP
         inout phys @labels(EtherFrame);            // to physical layer or the network
 }
 

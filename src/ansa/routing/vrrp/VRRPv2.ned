@@ -32,6 +32,6 @@ simple VRRPv2 like IManetRouting
     gates:
         input vrIn[] @labels(IPv4Datagram);
         output vrOut[] @labels(IPv4Datagram);       
-        input ipIn @labels(IPv4ControlInfo/up);
-        output ipOut @labels(IPv4ControlInfo/down);
+        input ipIn @labels(Ipv4ControlInfo/up);
+        output ipOut @labels(Ipv4ControlInfo/down);
 }

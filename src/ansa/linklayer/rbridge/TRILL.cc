@@ -39,7 +39,7 @@ TRILL::~TRILL(){
 
 }
 
-MACAddress TRILL::getBridgeAddress() {
+MacAddress TRILL::getBridgeAddress() {
     Enter_Method_Silent();
     return bridgeAddress;
 }
@@ -78,9 +78,9 @@ void TRILL::initialize(int stage) {
 //        clnsTable = CLNSTableAccess().get();
         clnsTable = check_and_cast<CLNSRoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("clns"));
 
-        bridgeGroupAddress = MACAddress("01-80-C2-00-00-00");
+        bridgeGroupAddress = MacAddress("01-80-C2-00-00-00");
         //TODO two modes, MAC per rBridge vs. MAC per interface
-        bridgeAddress = MACAddress::generateAutoAddress();
+        bridgeAddress = MacAddress::generateAutoAddress();
 
         WATCH(bridgeAddress);
     }
@@ -88,7 +88,7 @@ void TRILL::initialize(int stage) {
         /* Only default init for now */
         for(int i = 0; i < ift->getNumInterfaces(); i++){
             InterfaceEntry *ie = ift->getInterface(i);
-            TRILLInterfaceData *d = new TRILLInterfaceData();
+            TrillInterfaceData *d = new TrillInterfaceData();
             d->setDefaults();
             ie->setTRILLInterfaceData(d);
 
@@ -107,7 +107,7 @@ void TRILL::handleMessage(cMessage *msg) {
         const char * inGate = msg->getArrivalGate()->getName();
 
         if (strcmp(msg->getArrivalGate()->getName(), "stpIn") == 0) {
-            /* Messages from STP process */
+            /* Messages from Stp process */
             dispatchBPDU(msg, msg->getArrivalGate()->getIndex());
             return;
         }else if (strcmp(msg->getArrivalGate()->getName(), "isisIn") == 0){
@@ -245,7 +245,7 @@ bool TRILL::reception(TRILL::tFrameDescriptor& frame, cMessage *msg) {
 //
 //void TRILL::relay(TRILL::tFrameDescriptor& frame) {
 //
-//    // BPDU Handling
+//    // Bpdu Handling
 //    if (frame.dest == bridgeGroupAddress) {
 //        deliverBPDU(frame);
 //        return;
@@ -391,7 +391,7 @@ bool TRILL::egressNativeLocal(TRILL::tFrameDescriptor& frameDesc){
     frameDesc.portList.clear();
 
     for (unsigned int i = 0; i < tmp.size(); i++) {
-        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(tmp.at(i).port)->trillData();
+        TrillInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(tmp.at(i).port)->trillData();
         if (d->isEnabled(frameDesc.VID) && tmp.at(i).port != frameDesc.rPort && d->isAppointedForwarder(frameDesc.VID, this->isis->getNickname())) {
             frameDesc.portList.push_back(tmp.at(i));
         }
@@ -461,7 +461,7 @@ bool TRILL::egressTRILLDataMultiDestNative(TRILL::tFrameDescriptor &innerFrameDe
     innerFrameDesc.portList = vlanTable->getPorts(innerFrameDesc.VID);
 
     for(RBVLANTable::tVIDPortList::iterator it = innerFrameDesc.portList.begin(); it != innerFrameDesc.portList.end();){
-        TRILLInterfaceData *d = ift->getInterfaceByNetworkLayerGateIndex((*it).port)->trillData();
+        TrillInterfaceData *d = ift->getInterfaceByNetworkLayerGateIndex((*it).port)->trillData();
         if(!d->isAppointedForwarder(innerFrameDesc.VID, this->isis->getNickname())){
             it = innerFrameDesc.portList.erase(it);
         }else{
@@ -552,7 +552,7 @@ bool TRILL::dispatchTRILLControl(ISISMessage* isisMsg){
         untaggedFrame->setByteLength(MIN_ETHERNET_FRAME_BYTES); // "padding"
     }
 
-    MACAddress ma;
+    MacAddress ma;
     switch (isisMsg->getType())
         {
 
@@ -572,7 +572,7 @@ bool TRILL::dispatchTRILLControl(ISISMessage* isisMsg){
     ctrl->setEtherType(ETHERTYPE_L2_ISIS);
     ctrl->setDsap(SAP_CLNS);
     ctrl->setSsap(SAP_CLNS);
-    ctrl->setDest(MACAddress(ALL_IS_IS_RBRIDGES)); //ALL-IS-IS-RBridges
+    ctrl->setDest(MacAddress(ALL_IS_IS_RBRIDGES)); //ALL-IS-IS-RBridges
 
 
     taggedFrame->setControlInfo(ctrl->dup());
@@ -694,7 +694,7 @@ bool TRILL::dispatchNativeRemote(tFrameDescriptor &frameDesc){
 //    tmpSysId[ISIS_SYSTEM_ID - 2] = frameDesc.record.ingressNickname.getNickname() >> 8;
 //    tmpSysId[ISIS_SYSTEM_ID - 1] = frameDesc.record.ingressNickname.getNickname() & 0xFF;
 
-    CLNSAddress clnsAddress;
+    ClnsAddress clnsAddress;
     SystemID tmpSystemID;
     uint64 tmpInt = isis->getSystemId().getSystemId() >>16;
     tmpInt = tmpInt << 16;
@@ -764,7 +764,7 @@ bool TRILL::dispatchNativeRemote(tFrameDescriptor &frameDesc){
 //        }
 
 
-        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
+        TrillInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
         it->action = vlanTable->getTag(d->getDesigVlan(), it->port);
         if (it->action == RBVLANTable::INCLUDE) {
 
@@ -808,7 +808,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
 //        return false;
 //    }
 
-    CLNSAddress clnsAddress;
+    ClnsAddress clnsAddress;
 //    SystemID tmpSystemID;
     uint64 tmpInt = isis->getSystemId().getSystemId() >>16;
     tmpInt = tmpInt << 16;
@@ -854,7 +854,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
     untaggedFrame->setKind(frameDesc.payload->getKind());
 //    untaggedFrame->setSrc(frameDesc.src);//will be set by underlying MAC module
 
-    untaggedFrame->setDest(MACAddress(adj->mac));
+    untaggedFrame->setDest(MacAddress(adj->mac));
     untaggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
     untaggedFrame->setEtherType(ETHERTYPE_TRILL);
 
@@ -875,7 +875,7 @@ bool TRILL::dispatchTRILLDataUnicastRemote(tFrameDescriptor &frameDesc){
 //        }
 
 
-        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
+        TrillInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
         it->action = vlanTable->getTag(d->getDesigVlan(), it->port);
         if (it->action == RBVLANTable::INCLUDE) {
 
@@ -931,7 +931,7 @@ bool TRILL::dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc){
 
     taggedFrame->setKind(frameDesc.payload->getKind());
 //    taggedFrame->setSrc(frameDesc.src); ////will be set by underlying MAC module
-    taggedFrame->setDest(MACAddress(ALL_RBRIDGES));
+    taggedFrame->setDest(MacAddress(ALL_RBRIDGES));
     taggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
 //    taggedFrame->setVlan(frameDesc.VID);//vlanId is set below during send
     taggedFrame->setEtherType(ETHERTYPE_TRILL);
@@ -944,7 +944,7 @@ bool TRILL::dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc){
 
     untaggedFrame->setKind(frameDesc.payload->getKind());
 //    untaggedFrame->setSrc(frameDesc.src);//will be set by underlying MAC module
-    untaggedFrame->setDest(MACAddress(ALL_RBRIDGES));
+    untaggedFrame->setDest(MacAddress(ALL_RBRIDGES));
     untaggedFrame->setByteLength(ETHER_MAC_FRAME_BYTES);
     untaggedFrame->setEtherType(ETHERTYPE_TRILL);
 
@@ -965,7 +965,7 @@ bool TRILL::dispatchNativeMultiDestRemote(tFrameDescriptor &frameDesc){
 //        }
 
 
-        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
+        TrillInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
         it->action = vlanTable->getTag(d->getDesigVlan(), it->port);
         if (it->action == RBVLANTable::INCLUDE) {
 
@@ -1024,7 +1024,7 @@ bool TRILL::dispatchTRILLDataMultiDestRemote(tFrameDescriptor &frameDesc){
         //            continue;
         //        }
 
-        TRILLInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
+        TrillInterfaceData *d = this->ift->getInterfaceByNetworkLayerGateIndex(it->port)->trillData();
         it->action = vlanTable->getTag(d->getDesigVlan(), it->port);
         if (it->action == RBVLANTable::INCLUDE)
         {
@@ -1282,11 +1282,11 @@ EthernetIIFrame * TRILL::untagMsg(AnsaEtherFrame * _frame) {
 /* NEW */
 TRILL::FrameCategory TRILL::classify(tFrameDescriptor &frameDesc){
 
-    if(frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-00")) >=0 && frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-21")) <=0){
+    if(frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-00")) >=0 && frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-21")) <=0){
         frameDesc.category = TRILL_L2_CONTROL;
         return TRILL::TRILL_L2_CONTROL;
     }else if (frameDesc.etherType != ETHERTYPE_L2_ISIS && frameDesc.etherType != ETHERTYPE_TRILL &&
-            (frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-40")) < 0 || frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-4F")) > 0)){
+            (frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-40")) < 0 || frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-4F")) > 0)){
         frameDesc.category = TRILL_NATIVE;
         return TRILL::TRILL_NATIVE;
     }else if(frameDesc.etherType == ETHERTYPE_TRILL){
@@ -1295,7 +1295,7 @@ TRILL::FrameCategory TRILL::classify(tFrameDescriptor &frameDesc){
     }else if(frameDesc.etherType == ETHERTYPE_L2_ISIS){
         frameDesc.category = TRILL_CONTROL;
         return TRILL::TRILL_CONTROL;
-    }else if (frameDesc.dest.compareTo(MACAddress(ALL_IS_IS_RBRIDGES)) > 0 && frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-4F")) <= 0){
+    }else if (frameDesc.dest.compareTo(MacAddress(ALL_IS_IS_RBRIDGES)) > 0 && frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-4F")) <= 0){
         frameDesc.category = TRILL_OTHER;
         return TRILL::TRILL_OTHER; //these will get discarded
     }else{
@@ -1316,7 +1316,7 @@ bool TRILL::processNative(tFrameDescriptor &frameDesc){
         //TODO A0 unicast RFC 6325 4.6.1.1
 
 //    rbMACTable->get
-    frameDesc.record = rbMACTable->getESTRecordByESTKey(std::make_pair(MACAddress(frameDesc.dest), frameDesc.VID));
+    frameDesc.record = rbMACTable->getESTRecordByESTKey(std::make_pair(MacAddress(frameDesc.dest), frameDesc.VID));
 
 
     switch(frameDesc.record.type){
@@ -1404,7 +1404,7 @@ bool TRILL::processTRILLData(tFrameDescriptor &frameDesc){
     //skipping L2_ISIS frames are handled earlier
 
     //RFC 6325 4.6.2. 2.
-    if(frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-40")) >= 0 && frameDesc.dest.compareTo(MACAddress("01-80-C2-00-00-4F")) <= 0 && frameDesc.dest.compareTo(MACAddress(ALL_RBRIDGES)) != 0){
+    if(frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-40")) >= 0 && frameDesc.dest.compareTo(MacAddress("01-80-C2-00-00-4F")) <= 0 && frameDesc.dest.compareTo(MacAddress(ALL_RBRIDGES)) != 0){
         //discard
         return false;
     }
@@ -1485,7 +1485,7 @@ bool TRILL::processTRILLDataUnicast(tFrameDescriptor &frameDesc){
         }
 
 
-        innerFrameDesc.record = rbMACTable->getESTRecordByESTKey(std::make_pair(MACAddress(innerFrameDesc.dest), innerFrameDesc.VID));
+        innerFrameDesc.record = rbMACTable->getESTRecordByESTKey(std::make_pair(MacAddress(innerFrameDesc.dest), innerFrameDesc.VID));
 
         switch (innerFrameDesc.record.type)
             {
@@ -1637,7 +1637,7 @@ bool TRILL::processTRILLDataMultiDest(tFrameDescriptor &frameDesc){
 
 
     for(int i = 0; i < ift->getNumInterfaces(); i++){
-        TRILLInterfaceData *d = ift->getInterface(i)->trillData();
+        TrillInterfaceData *d = ift->getInterface(i)->trillData();
         if(d->isAppointedForwarder(innerFrameDesc.VID, this->isis->getNickname())){
             //learn
 
@@ -1684,7 +1684,7 @@ bool TRILL::processTRILLDataMultiDest(tFrameDescriptor &frameDesc){
 
 bool TRILL::isNativeAllowed(tFrameDescriptor &frameDesc){
 
-    TRILLInterfaceData *d = (ift->getInterfaceByNetworkLayerGateIndex(frameDesc.rPort))->trillData();
+    TrillInterfaceData *d = (ift->getInterfaceByNetworkLayerGateIndex(frameDesc.rPort))->trillData();
     //RFC 6325 4.6.1
     if(d->isDisabled() || d->isTrunk() || d->isP2p()){
         //frame should be discarded

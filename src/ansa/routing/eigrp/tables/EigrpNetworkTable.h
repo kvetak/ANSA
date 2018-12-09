@@ -24,8 +24,8 @@
 #ifndef EIGRPNETWORKTABLE_H_
 #define EIGRPNETWORKTABLE_H_
 
-//#include "IPv4Address.h"
-//#include "IPv6Address.h"
+//#include "Ipv4Address.h"
+//#include "Ipv6Address.h"
 #include "ansa/routing/eigrp/EigrpDualStack.h"
 namespace inet {
 /**

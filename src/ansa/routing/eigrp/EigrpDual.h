@@ -26,7 +26,7 @@
 
 #include <omnetpp.h>
 
-//#include "IPv4Address.h"
+//#include "Ipv4Address.h"
 #include "inet/networklayer/common/L3Address.h"
 #include "ansa/routing/eigrp/tables/EigrpRoute.h"
 #include "ansa/routing/eigrp/pdms/IEigrpPdm.h"

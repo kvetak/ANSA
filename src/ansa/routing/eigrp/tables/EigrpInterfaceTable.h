@@ -41,7 +41,7 @@ class EigrpInterface: public cObject
     int interfaceId;        /**< ID of interface */
     const char *interfaceName;  /**< Name of interface */
     int networkId;          /**< ID of network in RoutingOfNetworks table */ //TODO - PROB-03 - only 1 network per interface
-    std::set<int>networksIds; /**< IDs of IPv6 networks in RoutingOfNetworks table */
+    std::set<int>networksIds; /**< IDs of Ipv6 networks in RoutingOfNetworks table */
     int helloInt;           /**< Hello interval in seconds (<1-65535>) */
     int holdInt;            /**< Router's hold interval in seconds (<1-65535>) */
     EigrpTimer *hellot;     /**< pointer to hello timer */

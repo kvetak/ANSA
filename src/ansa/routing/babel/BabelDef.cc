@@ -214,11 +214,11 @@ std::string AF::toStr(int af)
     case AF::IPvX:
         afstr = "IPvX";
         break;
-    case AF::IPv4:
-        afstr = "IPv4";
+    case AF::Ipv4:
+        afstr = "Ipv4";
         break;
-    case AF::IPv6:
-        afstr = "IPv6";
+    case AF::Ipv6:
+        afstr = "Ipv6";
         break;
     default:
         afstr = "<unknown-af>";
@@ -236,7 +236,7 @@ std::string AF::toStr(int af)
  */
 int Babel::getAeOfAddr(const L3Address& addr)
 {
-    if(addr.getType()==L3Address::IPv6)
+    if(addr.getType()==L3Address::Ipv6)
     {
         if(isLinkLocal64(addr.toIPv6()))
         {
@@ -244,12 +244,12 @@ int Babel::getAeOfAddr(const L3Address& addr)
         }
         else
         {
-            return AE::IPv6;
+            return AE::Ipv6;
         }
     }
     else
-    {//IPv4
-        return AE::IPv4;
+    {//Ipv4
+        return AE::Ipv4;
     }
 }
 
@@ -261,25 +261,25 @@ int Babel::getAeOfAddr(const L3Address& addr)
  */
 int Babel::getAeOfPrefix(const L3Address& prefix)
 {
-    if(prefix.getType()==L3Address::IPv6)
-    {// IPv6
-        return AE::IPv6;
+    if(prefix.getType()==L3Address::Ipv6)
+    {// Ipv6
+        return AE::Ipv6;
     }
     else
-    {//IPv4
-        return AE::IPv4;
+    {//Ipv4
+        return AE::Ipv4;
     }
 }
 
 /**
- * Copies IPv4 address to memory
+ * Copies Ipv4 address to memory
  *
  * @param   addr    Address to copy
  * @param   dst     Destination memory
  * @param   aedst   Destination of AE field
  * @return  Number copied bytes
  */
-int Babel::copyRawAddr(const IPv4Address& addr, char *dst, uint8_t *aedst)
+int Babel::copyRawAddr(const Ipv4Address& addr, char *dst, uint8_t *aedst)
 {
     ASSERT(dst != NULL);
 
@@ -290,21 +290,21 @@ int Babel::copyRawAddr(const IPv4Address& addr, char *dst, uint8_t *aedst)
 
     if(aedst != NULL)
     {
-        *aedst = AE::IPv4;
+        *aedst = AE::Ipv4;
     }
 
-    return AE::maxLen(AE::IPv4);
+    return AE::maxLen(AE::Ipv4);
 }
 
 /**
- * Copies IPv6 address to memory
+ * Copies Ipv6 address to memory
  *
  * @param   addr    Address to copy
  * @param   dst     Destination memory
  * @param   aedst   Destination of AE field
  * @return  Number copied bytes
  */
-int Babel::copyRawAddr(const IPv6Address& addr, char *dst, uint8_t *aedst)
+int Babel::copyRawAddr(const Ipv6Address& addr, char *dst, uint8_t *aedst)
 {
     ASSERT(dst != NULL);
 
@@ -323,11 +323,11 @@ int Babel::copyRawAddr(const IPv6Address& addr, char *dst, uint8_t *aedst)
     }
     else
     {
-        bytes = AE::maxLen(AE::IPv6);
+        bytes = AE::maxLen(AE::Ipv6);
 
         if(aedst != NULL)
         {
-            *aedst = AE::IPv6;
+            *aedst = AE::Ipv6;
         }
     }
 
@@ -352,7 +352,7 @@ int Babel::copyRawAddr(const IPv6Address& addr, char *dst, uint8_t *aedst)
  */
 int Babel::copyRawAddr(const L3Address& addr, char *dst, uint8_t *aedst)
 {
-    return (addr.getType()==L3Address::IPv6) ? copyRawAddr(addr.toIPv6(), dst, aedst) : copyRawAddr(addr.toIPv4(), dst, aedst);
+    return (addr.getType()==L3Address::Ipv6) ? copyRawAddr(addr.toIPv6(), dst, aedst) : copyRawAddr(addr.toIPv4(), dst, aedst);
 }
 
 /**
@@ -374,20 +374,20 @@ L3Address Babel::readRawAddr(uint8_t ae, char *src)
     {
     case AE::WILDCARD:
        break;
-    case AE::IPv4:
+    case AE::Ipv4:
 
-        bytes = AE::maxLen(AE::IPv4);
+        bytes = AE::maxLen(AE::Ipv4);
 
         for(unsigned int i = 0; i < bytes; ++i)
         {
             a[0] |= static_cast<uint8_t>(src[i]) << (24 - (8 * i));
         }
 
-        addr.set(IPv4Address(a[0]));
+        addr.set(Ipv4Address(a[0]));
        break;
-    case AE::IPv6:
+    case AE::Ipv6:
 
-        bytes = AE::maxLen(AE::IPv6);
+        bytes = AE::maxLen(AE::Ipv6);
 
         for(unsigned int j = 0; j * sizeof(uint32_t) < bytes; ++j)
         {
@@ -396,7 +396,7 @@ L3Address Babel::readRawAddr(uint8_t ae, char *src)
                 a[j] |= static_cast<uint8_t>(src[(j * sizeof(uint32_t)) + i]) << (24 - (8 * i));
             }
         }
-        addr.set(IPv6Address(a[0], a[1], a[2], a[3]));
+        addr.set(Ipv6Address(a[0], a[1], a[2], a[3]));
        break;
     case AE::LLIPv6:
 
@@ -412,7 +412,7 @@ L3Address Babel::readRawAddr(uint8_t ae, char *src)
                 a[j + 2] |= static_cast<uint8_t>(src[(j * sizeof(uint32_t)) + i]) << (24 - (8 * i));
             }
         }
-        addr.set(IPv6Address(a[0], a[1], a[2], a[3]));
+        addr.set(Ipv6Address(a[0], a[1], a[2], a[3]));
        break;
     default:
         break;
@@ -434,10 +434,10 @@ int AE::maxLen(int ae)
     case AE::WILDCARD:
         len = 0;
         break;
-    case AE::IPv4:
+    case AE::Ipv4:
         len = 4;
         break;
-    case AE::IPv6:
+    case AE::Ipv6:
         len = 16;
         break;
     case AE::LLIPv6:
@@ -466,14 +466,14 @@ int AE::toAF(int ae)
     case AE::WILDCARD:
         af = -1;
         break;
-    case AE::IPv4:
-        af = AF::IPv4;
+    case AE::Ipv4:
+        af = AF::Ipv4;
         break;
-    case AE::IPv6:
-        af = AF::IPv6;
+    case AE::Ipv6:
+        af = AF::Ipv6;
         break;
     case AE::LLIPv6:
-        af = AF::IPv6;
+        af = AF::Ipv6;
         break;
     default:
         af = -1;
@@ -498,14 +498,14 @@ std::string AE::toStr(int ae)
     case AE::WILDCARD:
         aestr = "WILDCARD";
         break;
-    case AE::IPv4:
-        aestr = "IPv4";
+    case AE::Ipv4:
+        aestr = "Ipv4";
         break;
-    case AE::IPv6:
-        aestr = "IPv6";
+    case AE::Ipv6:
+        aestr = "Ipv6";
         break;
     case AE::LLIPv6:
-        aestr = "LL-IPv6";
+        aestr = "LL-Ipv6";
         break;
     default:
         aestr = "<unknown-ae>";
@@ -638,7 +638,7 @@ std::string BabelMessage::carriedTlvsDetails() const
                     out << ".";
                 }
 
-                if(af == AF::IPv4)
+                if(af == AF::Ipv4)
                 {
                     out << static_cast<unsigned int>(*reinterpret_cast<uint8_t *>(msgbody + tlvoffset + 1 + i));
                 }
@@ -672,7 +672,7 @@ std::string BabelMessage::carriedTlvsDetails() const
                     out << ".";
                 }
 
-                if(af == AF::IPv4)
+                if(af == AF::Ipv4)
                 {
                     out << static_cast<unsigned int>(*reinterpret_cast<uint8_t *>(msgbody + tlvoffset + 1 + i));
                 }
@@ -701,7 +701,7 @@ std::string BabelMessage::carriedTlvsDetails() const
                     out << ".";
                 }
 
-                if(af == AF::IPv4)
+                if(af == AF::Ipv4)
                 {
                     out << static_cast<unsigned int>(*reinterpret_cast<uint8_t *>(msgbody + tlvoffset + 1 + i));
                 }
@@ -726,7 +726,7 @@ std::string BabelMessage::carriedTlvsDetails() const
                     out << ".";
                 }
 
-                if(af == AF::IPv4)
+                if(af == AF::Ipv4)
                 {
                     out << static_cast<unsigned int>(*reinterpret_cast<uint8_t *>(msgbody + tlvoffset + 1 + i));
                 }
@@ -761,7 +761,7 @@ std::string BabelMessage::carriedTlvsDetails() const
                     out << ".";
                 }
 
-                if(af == AF::IPv4)
+                if(af == AF::Ipv4)
                 {
                     out << static_cast<unsigned int>(*reinterpret_cast<uint8_t *>(msgbody + tlvoffset + 1 + i));
                 }
@@ -1027,37 +1027,37 @@ void netPrefix<IPAddress>::copy(const netPrefix<IPAddress>& other)
 }
 
 template<>
-netPrefix<IPv4Address>::netPrefix()
+netPrefix<Ipv4Address>::netPrefix()
 {
-    addr = IPv4Address();
+    addr = Ipv4Address();
     len = 0;
 }
 
 template<>
-netPrefix<IPv6Address>::netPrefix()
+netPrefix<Ipv6Address>::netPrefix()
 {
-    addr = IPv6Address();
+    addr = Ipv6Address();
     len = 0;
 }
 
 template<>
 netPrefix<L3Address>::netPrefix()
 {
-    addr = L3Address(IPv6Address());   // default L3Address Constructor uses IPv4 -> force IPv6
+    addr = L3Address(Ipv6Address());   // default L3Address Constructor uses Ipv4 -> force Ipv6
     len = 0;
 }
 
 template<>
-void netPrefix<IPv4Address>::set(IPv4Address a, uint8_t plen)
+void netPrefix<Ipv4Address>::set(Ipv4Address a, uint8_t plen)
 {
     ASSERT(plen >= 0 && plen <= 32);
 
-    addr = a.doAnd(IPv4Address::makeNetmask(plen));
+    addr = a.doAnd(Ipv4Address::makeNetmask(plen));
     len = plen;
 }
 
 template<>
-void netPrefix<IPv6Address>::set(IPv6Address a, uint8_t plen)
+void netPrefix<Ipv6Address>::set(Ipv6Address a, uint8_t plen)
 {
     ASSERT(plen >= 0 && plen <= 128);
 
@@ -1071,13 +1071,13 @@ void netPrefix<L3Address>::set(L3Address a, uint8_t plen)
 {
     ASSERT(plen >= 0 && plen <= 128);
 
-    if(a.getType()==L3Address::IPv6)
+    if(a.getType()==L3Address::Ipv6)
     {
-        addr.set(IPv6Address().setPrefix(a.toIPv6(), plen));
+        addr.set(Ipv6Address().setPrefix(a.toIPv6(), plen));
     }
     else
     {
-        addr.set(a.toIPv4().doAnd(IPv4Address::makeNetmask(plen)));
+        addr.set(a.toIPv4().doAnd(Ipv4Address::makeNetmask(plen)));
     }
 
     len = plen;
@@ -1092,9 +1092,9 @@ void netPrefix<L3Address>::set(L3Address a, uint8_t plen)
  *
  */
 template<>
-void netPrefix<IPv4Address>::set(uint8_t ae, char *prefix, uint8_t plen)
+void netPrefix<Ipv4Address>::set(uint8_t ae, char *prefix, uint8_t plen)
 {
-    ASSERT(ae == AE::IPv4);
+    ASSERT(ae == AE::Ipv4);
     ASSERT(prefix != NULL);
     ASSERT(plen >= 0 && plen <= 32);
 
@@ -1108,7 +1108,7 @@ void netPrefix<IPv4Address>::set(uint8_t ae, char *prefix, uint8_t plen)
         p |= static_cast<uint8_t>(prefix[i]) << (24 - (8 * i));
     }
 
-    addr = IPv4Address(p).doAnd(IPv4Address::makeNetmask(plen));
+    addr = Ipv4Address(p).doAnd(Ipv4Address::makeNetmask(plen));
     len = plen;
 }
 
@@ -1121,9 +1121,9 @@ void netPrefix<IPv4Address>::set(uint8_t ae, char *prefix, uint8_t plen)
  *
  */
 template<>
-void netPrefix<IPv6Address>::set(uint8_t ae, char *prefix, uint8_t plen)
+void netPrefix<Ipv6Address>::set(uint8_t ae, char *prefix, uint8_t plen)
 {
-    ASSERT(ae == AE::IPv6);
+    ASSERT(ae == AE::Ipv6);
     ASSERT(prefix != NULL);
     ASSERT(plen >= 0 && plen <= 128);
 
@@ -1140,7 +1140,7 @@ void netPrefix<IPv6Address>::set(uint8_t ae, char *prefix, uint8_t plen)
         }
     }
 
-    addr.setPrefix(IPv6Address(p[0], p[1], p[2], p[3]), plen);
+    addr.setPrefix(Ipv6Address(p[0], p[1], p[2], p[3]), plen);
     len = plen;
 }
 
@@ -1155,13 +1155,13 @@ void netPrefix<IPv6Address>::set(uint8_t ae, char *prefix, uint8_t plen)
 template<>
 void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen)
 {
-    ASSERT((ae == AE::IPv4 && (plen >= 0 && plen <= 32)) || (ae == AE::IPv6 && (plen >= 0 && plen <= 128)));
+    ASSERT((ae == AE::Ipv4 && (plen >= 0 && plen <= 32)) || (ae == AE::Ipv6 && (plen >= 0 && plen <= 128)));
     ASSERT(prefix != NULL);
 
     unsigned int plenbytes = static_cast<unsigned int>(bitsToBytesLen(plen));
 
-    if(ae == AE::IPv4)
-    {// IPv4 prefix
+    if(ae == AE::Ipv4)
+    {// Ipv4 prefix
         uint32_t p = 0;
 
         for(unsigned int i = 0; i < plenbytes; ++i)
@@ -1169,11 +1169,11 @@ void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen)
             p |= static_cast<uint8_t>(prefix[i]) << (24 - (8 * i));
         }
 
-        addr = IPv4Address(p).doAnd(IPv4Address::makeNetmask(plen));
+        addr = Ipv4Address(p).doAnd(Ipv4Address::makeNetmask(plen));
 
     }
-    else if(ae == AE::IPv6)
-    {// IPv6 prefix
+    else if(ae == AE::Ipv6)
+    {// Ipv6 prefix
         uint32_t p[4] = { 0, 0, 0, 0 };
 
         for(unsigned int j = 0; j * sizeof(uint32_t) < plenbytes; ++j)
@@ -1185,7 +1185,7 @@ void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen)
             }
         }
 
-        addr = IPv6Address().setPrefix(IPv6Address(p[0], p[1], p[2], p[3]), plen);
+        addr = Ipv6Address().setPrefix(Ipv6Address(p[0], p[1], p[2], p[3]), plen);
     }
 
     len = plen;
@@ -1202,9 +1202,9 @@ void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen)
  *
  */
 template<>
-void netPrefix<IPv4Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t omitted, netPrefix<IPv4Address> *prevprefix)
+void netPrefix<Ipv4Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t omitted, netPrefix<Ipv4Address> *prevprefix)
 {
-    ASSERT(ae == AE::IPv4);
+    ASSERT(ae == AE::Ipv4);
     ASSERT(prefix != NULL);
     ASSERT(plen >= 0 && plen <= 32);
     ASSERT(omitted >= 0 && omitted <= sizeof(uint32_t));
@@ -1227,7 +1227,7 @@ void netPrefix<IPv4Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t
         }
     }
 
-    addr = IPv4Address(p).doAnd(IPv4Address::makeNetmask(plen));
+    addr = Ipv4Address(p).doAnd(Ipv4Address::makeNetmask(plen));
     len = plen;
 }
 
@@ -1242,9 +1242,9 @@ void netPrefix<IPv4Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t
  *
  */
 template<>
-void netPrefix<IPv6Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t omitted, netPrefix<IPv6Address> *prevprefix)
+void netPrefix<Ipv6Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t omitted, netPrefix<Ipv6Address> *prevprefix)
 {
-    ASSERT(ae == AE::IPv6);
+    ASSERT(ae == AE::Ipv6);
     ASSERT(prefix != NULL);
     ASSERT(plen >= 0 && plen <= 128);
     ASSERT(omitted >= 0 && omitted <= (4 * sizeof(uint32_t)));
@@ -1270,7 +1270,7 @@ void netPrefix<IPv6Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t
     }
 
 
-    addr.setPrefix(IPv6Address(p[0], p[1], p[2], p[3]), plen);
+    addr.setPrefix(Ipv6Address(p[0], p[1], p[2], p[3]), plen);
     len = plen;
 }
 
@@ -1287,15 +1287,15 @@ void netPrefix<IPv6Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t
 template<>
 void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t omitted, netPrefix<L3Address> *prevprefix)
 {
-    ASSERT((ae == AE::IPv4 && (plen >= 0 && plen <= 32) && (omitted >= 0 && omitted <= sizeof(uint32_t))) ||
-            (ae == AE::IPv6 && (plen >= 0 && plen <= 128) && (omitted >= 0 && omitted <= (4 * sizeof(uint32_t)))));
+    ASSERT((ae == AE::Ipv4 && (plen >= 0 && plen <= 32) && (omitted >= 0 && omitted <= sizeof(uint32_t))) ||
+            (ae == AE::Ipv6 && (plen >= 0 && plen <= 128) && (omitted >= 0 && omitted <= (4 * sizeof(uint32_t)))));
     ASSERT(prefix != NULL);
     ASSERT(omitted == 0 || (omitted > 0 && prevprefix != NULL));
 
     unsigned int plenbytes = static_cast<unsigned int>(bitsToBytesLen(plen));
 
-    if(ae == AE::IPv4)
-    {// IPv4 prefix
+    if(ae == AE::Ipv4)
+    {// Ipv4 prefix
         uint32_t p = 0;
 
         for(unsigned int i = 0; i < plenbytes; ++i)
@@ -1310,11 +1310,11 @@ void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t o
             }
         }
 
-        addr = IPv4Address(p).doAnd(IPv4Address::makeNetmask(plen));
+        addr = Ipv4Address(p).doAnd(Ipv4Address::makeNetmask(plen));
 
     }
-    else if(ae == AE::IPv6)
-    {// IPv6 prefix
+    else if(ae == AE::Ipv6)
+    {// Ipv6 prefix
         uint32_t p[4] = { 0, 0, 0, 0 };
 
         for(unsigned int j = 0; j * sizeof(uint32_t) < plenbytes; ++j)
@@ -1332,7 +1332,7 @@ void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t o
             }
         }
 
-        addr = IPv6Address().setPrefix(IPv6Address(p[0], p[1], p[2], p[3]), plen);
+        addr = Ipv6Address().setPrefix(Ipv6Address(p[0], p[1], p[2], p[3]), plen);
     }
 
     len = plen;
@@ -1347,7 +1347,7 @@ void netPrefix<L3Address>::set(uint8_t ae, char *prefix, uint8_t plen, uint8_t o
  * @return  Number of copied bytes
  */
 template<>
-int netPrefix<IPv4Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) const
+int netPrefix<Ipv4Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) const
 {
 
     ASSERT(dst != NULL);
@@ -1382,7 +1382,7 @@ int netPrefix<IPv4Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) con
  * @return  Number of copied bytes
  */
 template<>
-int netPrefix<IPv6Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) const
+int netPrefix<Ipv6Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) const
 {
     ASSERT(dst != NULL);
     ASSERT(toomit >= 0 && static_cast<unsigned int>(toomit) <= (4 * sizeof(uint32_t)));
@@ -1422,13 +1422,13 @@ template<>
 int netPrefix<L3Address>::copyRaw(char *dst, uint8_t *plendst, int toomit) const
 {
     ASSERT(dst != NULL);
-    ASSERT(toomit >= 0 && ( ( (addr.getType()==L3Address::IPv6) && static_cast<unsigned int>(toomit) <= (4 * sizeof(uint32_t)))
+    ASSERT(toomit >= 0 && ( ( (addr.getType()==L3Address::Ipv6) && static_cast<unsigned int>(toomit) <= (4 * sizeof(uint32_t)))
                           ||
-                            (!(addr.getType()==L3Address::IPv6) && static_cast<unsigned int>(toomit) <=      sizeof(uint32_t)))
+                            (!(addr.getType()==L3Address::Ipv6) && static_cast<unsigned int>(toomit) <=      sizeof(uint32_t)))
                           );
 
     uint32_t ad[4];
-    if (addr.getType()==L3Address::IPv6) {
+    if (addr.getType()==L3Address::Ipv6) {
         ad[0] = addr.toIPv6().words()[0];
         ad[1] = addr.toIPv6().words()[1];
         ad[3] = addr.toIPv6().words()[2];
@@ -1480,7 +1480,7 @@ std::string netPrefix<IPAddress>::str() const
  * @return  Number of bytes to omit
  */
 template<>
-int netPrefix<IPv4Address>::bytesToOmit(const netPrefix<IPv4Address>& prevprefix) const
+int netPrefix<Ipv4Address>::bytesToOmit(const netPrefix<Ipv4Address>& prevprefix) const
 {
     // maximally compare length of shorter prefix bytes
     unsigned int plenbytes = static_cast<unsigned int>((lenInBytes() < prevprefix.lenInBytes()) ? lenInBytes() : prevprefix.lenInBytes());
@@ -1508,7 +1508,7 @@ int netPrefix<IPv4Address>::bytesToOmit(const netPrefix<IPv4Address>& prevprefix
  * @return  Number of bytes to omit
  */
 template<>
-int netPrefix<IPv6Address>::bytesToOmit(const netPrefix<IPv6Address>& prevprefix) const
+int netPrefix<Ipv6Address>::bytesToOmit(const netPrefix<Ipv6Address>& prevprefix) const
 {
     // maximally compare length of shorter prefix bytes
     unsigned int plenbytes = static_cast<unsigned int>((lenInBytes() < prevprefix.lenInBytes()) ? lenInBytes() : prevprefix.lenInBytes());
@@ -1555,22 +1555,22 @@ int netPrefix<L3Address>::bytesToOmit(const netPrefix<L3Address>& prevprefix) co
     unsigned int i = 0;
     int toomit = 0;
 
-    if((addr.getType()==L3Address::IPv6) != (prevprefix.getAddr().getType()==L3Address::IPv6))
+    if((addr.getType()==L3Address::Ipv6) != (prevprefix.getAddr().getType()==L3Address::Ipv6))
     {// different AF
         return 0;
     }
 
-    ASSERT(    (  addr.getType()==L3Address::IPv6  && plenbytes <= 16)
-            || (!(addr.getType()==L3Address::IPv6) && plenbytes <= 4)
+    ASSERT(    (  addr.getType()==L3Address::Ipv6  && plenbytes <= 16)
+            || (!(addr.getType()==L3Address::Ipv6) && plenbytes <= 4)
           );
 
-    if(addr.getType()==L3Address::IPv6 && isLinkLocal64(addr.toIPv6()) && isLinkLocal64(prevprefix.getAddr().toIPv6()))
-    {// both are link-local IPv6 -> compare only last 64 bits
+    if(addr.getType()==L3Address::Ipv6 && isLinkLocal64(addr.toIPv6()) && isLinkLocal64(prevprefix.getAddr().toIPv6()))
+    {// both are link-local Ipv6 -> compare only last 64 bits
         j = 2;
     }
 
     uint32_t ad[4];
-    if (addr.getType()==L3Address::IPv6) {
+    if (addr.getType()==L3Address::Ipv6) {
         ad[0] = addr.toIPv6().words()[0];
         ad[1] = addr.toIPv6().words()[1];
         ad[3] = addr.toIPv6().words()[2];
@@ -1583,7 +1583,7 @@ int netPrefix<L3Address>::bytesToOmit(const netPrefix<L3Address>& prevprefix) co
         ad[3] = 0;
     }
     uint32_t prev[4];
-    if (addr.getType()==L3Address::IPv6) {
+    if (addr.getType()==L3Address::Ipv6) {
         prev[0] = prevprefix.getAddr().toIPv6().words()[0];
         prev[1] = prevprefix.getAddr().toIPv6().words()[1];
         prev[3] = prevprefix.getAddr().toIPv6().words()[2];
@@ -1611,8 +1611,8 @@ int netPrefix<L3Address>::bytesToOmit(const netPrefix<L3Address>& prevprefix) co
     return toomit;
 }
 
-template class netPrefix<IPv4Address>;
-template class netPrefix<IPv6Address>;
+template class netPrefix<Ipv4Address>;
+template class netPrefix<Ipv6Address>;
 template class netPrefix<L3Address>;
 
 }

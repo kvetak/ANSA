@@ -140,7 +140,7 @@ class EigrpRtpT : public cSimpleModule
 
 };
 
-class EigrpRtp : public EigrpRtpT<IPv4Address>
+class EigrpRtp : public EigrpRtpT<Ipv4Address>
 {
 //container class for IPv4RTP, must exist because of Define_Module()
 public:
@@ -148,7 +148,7 @@ public:
 };
 
 #ifndef DISABLE_EIGRP_IPV6
-class EigrpRtp6 : public EigrpRtpT<IPv6Address>
+class EigrpRtp6 : public EigrpRtpT<Ipv6Address>
 {
 //container class for IPv6RTP, must exist because of Define_Module()
 public:

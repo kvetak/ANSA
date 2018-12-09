@@ -30,7 +30,7 @@ simple VRRPv2VirtualRouter
         @signal[sentAdvert](type=long);  // enum
         @signal[recvAdvert](type=long);  // enum
         @statistic[vrState](title="State ID";source=state;record=count,vector);
-        @statistic[sentARP](title="ARP Gratuitous";source=sentARP;record=count,vector);
+        @statistic[sentARP](title="Arp Gratuitous";source=sentARP;record=count,vector);
         @statistic[sentAdvert](title="Advertisement sent";source=sentAdvert;record=count,vector);
         @statistic[recvAdvert](title="Received Advertisement";source=recvAdvert;record=count,vector);
 
@@ -42,7 +42,7 @@ simple VRRPv2VirtualRouter
 		int vrid;
 		int interface;
 
-		int arpType				= default(2);			// 1 = ARP Request (RFC) 2 = ARP Response (Cisco)
+		int arpType				= default(2);			// 1 = Arp Request (RFC) 2 = Arp Response (Cisco)
 		string multicastIPv4	= default("224.0.0.18");
 		string virtualMAC		= default("00-00-5E-00-01-00"); // + {VRID}
 		int version 			= default(2);			// current version

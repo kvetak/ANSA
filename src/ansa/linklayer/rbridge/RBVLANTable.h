@@ -28,7 +28,7 @@
 
 #include <omnetpp.h>
 
-#include "inet/networklayer/contract/ipv4/IPv4Address.h"
+#include "inet/networklayer/contract/ipv4/Ipv4Address.h"
 //#include "IPvXAddressResolver.h"
 #include "inet/networklayer/contract/IRoutingTable.h"
 //#include "RoutingTableAccess.h"
@@ -36,10 +36,10 @@
 //#include "InterfaceTableAccess.h"
 //#include "inet/networklayer/ipv4/IPv4Datagram.h"
 //#include "inet/transportlayer/udp/UDPPacket.h"
-//#include "TCPSegment.h"
+//#include "TcpHeader.h"
 //#include "UDPPacket.h"
 //#include "NotificationBoard.h"
-#include "inet/linklayer/common/MACAddress.h"
+#include "inet/linklayer/common/MacAddress.h"
 //#include "inet/linklayer/ethernet/Ethernet.h"
 //#include "inet/linklayer/ethernet/EtherFrame.h"
 

@@ -48,8 +48,8 @@ const uint8_t MAGIC = 42;
 const uint8_t VERSION = 2;
 
 const int PORT = 6696;
-const L3Address MCASTG6 = IPv6Address("ff02::1:6");
-const L3Address MCASTG4 = IPv4Address("224.0.0.111");
+const L3Address MCASTG6 = Ipv6Address("ff02::1:6");
+const L3Address MCASTG4 = Ipv4Address("224.0.0.111");
 
 //Default intervals (in CENTIseconds!!!)
 const uint16_t HELLO_INTERVAL_CS = 400;
@@ -99,8 +99,8 @@ inline int bitsToBytesLen(T plen)
 int getAeOfAddr(const L3Address& addr);
 int getAeOfPrefix(const L3Address& prefix);
 
-int copyRawAddr(const IPv4Address& addr, char *dst, uint8_t *aedst=NULL);
-int copyRawAddr(const IPv6Address& addr, char *dst, uint8_t *aedst=NULL);
+int copyRawAddr(const Ipv4Address& addr, char *dst, uint8_t *aedst=NULL);
+int copyRawAddr(const Ipv6Address& addr, char *dst, uint8_t *aedst=NULL);
 int copyRawAddr(const L3Address& addr, char *dst, uint8_t *aedst=NULL);
 
 L3Address readRawAddr(uint8_t ae, char *src);
@@ -112,13 +112,13 @@ L3Address readRawAddr(uint8_t ae, char *src);
 //uint16_t etx(uint16_t history, uint16_t nominalrxcost, uint16_t txcost);
 
 const uint16_t COST_INF = 0xFFFF;                       ///< Cost infinity
-const uint32_t LINK_LOCAL_PREFIX = 0xFE800000;          ///< First 32 bits of IPv6 Link-local prefix
+const uint32_t LINK_LOCAL_PREFIX = 0xFE800000;          ///< First 32 bits of Ipv6 Link-local prefix
 const uint16_t HISTORY_LEN = sizeof(uint16_t) * 8;      ///< Size of bit vector maintaining history of receiving Hello TLVs
 
 
-const int IPV4_HEADER_SIZE = 20;        ///< Size of IPv4 datagram header
-const int IPV6_HEADER_SIZE = 40;        ///< Size of IPv6 datagram header
-const int UDP_HEADER_SIZE = 8;          ///< Size of UDP packet header
+const int IPV4_HEADER_SIZE = 20;        ///< Size of Ipv4 datagram header
+const int IPV6_HEADER_SIZE = 40;        ///< Size of Ipv6 datagram header
+const int UDP_HEADER_SIZE = 8;          ///< Size of Udp packet header
 const int BABEL_HEADER_SIZE = 4;        ///< Size of Babel message header
 
 
@@ -128,7 +128,7 @@ const double SEND_URGENT = 0.2;         ///< Send TLV with short buffering
 const double SEND_BUFFERED = DBL_MAX;   ///< Send TLV with buffering
 
 
-inline bool isLinkLocal64(const IPv6Address& addr)
+inline bool isLinkLocal64(const Ipv6Address& addr)
 {
     return (addr.words()[0] == LINK_LOCAL_PREFIX && addr.words()[1] == 0);
 }
@@ -247,9 +247,9 @@ struct AF
     enum
     {
         NONE = 0,
-        IPvX = 1,       ///< Both IPv4 and IPv6
-        IPv4 = 4,       ///< IPv4 only
-        IPv6 = 6        ///< IPv6 only
+        IPvX = 1,       ///< Both Ipv4 and Ipv6
+        Ipv4 = 4,       ///< Ipv4 only
+        Ipv6 = 6        ///< Ipv6 only
     };
 
     static std::string toStr(int af);
@@ -263,9 +263,9 @@ struct AE
     enum
     {
         WILDCARD = 0,   ///< Wildcard
-        IPv4 = 1,       ///< IPv4
-        IPv6 = 2,       ///< IPv6
-        LLIPv6 = 3      ///< link-local IPv6
+        Ipv4 = 1,       ///< Ipv4
+        Ipv6 = 2,       ///< Ipv6
+        LLIPv6 = 3      ///< link-local Ipv6
     };
 
     static int maxLen(int ae);
@@ -330,7 +330,7 @@ public:
         id[1] = l;
     }
 
-    rid(const IPv6Address& a)
+    rid(const Ipv6Address& a)
     {
         id[0] = a.words()[2];
         id[1] = a.words()[3];
@@ -366,7 +366,7 @@ public:
     std::string str() const;
     const uint32_t* getRid() const {return id;}
     void setRid(uint32_t h, uint32_t l) {id[0] = h; id[1] = l;}
-    void setRid(const IPv6Address& a) {id[0] = a.words()[2]; id[1] = a.words()[3];}
+    void setRid(const Ipv6Address& a) {id[0] = a.words()[2]; id[1] = a.words()[3];}
 };
 
 

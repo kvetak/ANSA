@@ -22,7 +22,7 @@
 #ifndef ANSAETHERMACBASEVF_H_
 #define ANSAETHERMACBASEVF_H_
 
-#include "inet/linklayer/ethernet/EtherMACBase.h"
+#include "inet/linklayer/ethernet/EtherMacBase.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 
 namespace inet{
@@ -33,7 +33,7 @@ class InterfaceEntry;
 class ANSA_InterfaceEntry;
 
 
-class ANSA_EtherMACBaseVF: public EtherMACBase {
+class ANSA_EtherMACBaseVF: public EtherMacBase {
   public:
     ANSA_EtherMACBaseVF() {};
 

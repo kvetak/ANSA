@@ -42,7 +42,7 @@ void HSRP::initialize(int stage)
         containingModule = getContainingNode(this);
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this); //usable interfaces of tihs router
         hsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
-        socket = new UDPSocket(); //UDP socket used for sending messages
+        socket = new UdpSocket(); //Udp socket used for sending messages
         socket->setOutputGate(gate("udpOut"));
         socket->setMulticastLoop(false);
         socket->bind(HSRP_UDP_PORT);

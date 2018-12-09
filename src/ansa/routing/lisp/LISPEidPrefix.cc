@@ -24,7 +24,7 @@
 namespace inet {
 
 LISPEidPrefix::LISPEidPrefix() {
-    eidAddr = IPv4Address::UNSPECIFIED_ADDRESS;
+    eidAddr = Ipv4Address::UNSPECIFIED_ADDRESS;
     eidLen = DEFAULT_EIDLENGTH_VAL;
     eidNetwork = LISPCommon::getNetworkAddress(eidAddr, eidLen);
 }
@@ -63,9 +63,9 @@ std::string LISPEidPrefix::info() const {
     std::stringstream os;
 
     /*
-    if (eid.getType() == L3Address::IPv6 && eid == IPv6Address::UNSPECIFIED_ADDRESS)
+    if (eid.getType() == L3Address::Ipv6 && eid == Ipv6Address::UNSPECIFIED_ADDRESS)
         os << "::0";
-    else if (!eid.getType() == L3Address::IPv6 && eid == IPv4Address::UNSPECIFIED_ADDRESS)
+    else if (!eid.getType() == L3Address::Ipv6 && eid == Ipv4Address::UNSPECIFIED_ADDRESS)
         os << "0.0.0.0";
     else
     */
@@ -88,7 +88,7 @@ std::ostream& operator <<(std::ostream& os, const LISPEidPrefix& ep) {
 }
 
 LISPCommon::Afi LISPEidPrefix::getEidAfi() const {
-    return (eidAddr.getType() == L3Address::IPv6) ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
+    return (eidAddr.getType() == L3Address::Ipv6) ? LISPCommon::AFI_IPV6 : LISPCommon::AFI_IPV4;
 }
 
 bool LISPEidPrefix::operator <(const LISPEidPrefix& other) const {

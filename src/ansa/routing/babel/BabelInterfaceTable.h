@@ -29,8 +29,8 @@
 #include "inet/common/INETDefs.h"
 
 #include "ansa/routing/babel/BabelDef.h"
-//#include "UDPSocket.h"
-#include "inet/transportlayer/contract/udp/UDPSocket.h"
+//#include "UdpSocket.h"
+#include "inet/transportlayer/contract/udp/UdpSocket.h"
 //#include "InterfaceEntry.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/routing/babel/cost/IBabelCostComputation.h"
@@ -48,8 +48,8 @@ class BabelInterface : public cObject
     uint16_t updateInterval;    ///< Update interval (centiseconds)
     Babel::BabelTimer* helloTimer;     ///< Hello timer
     Babel::BabelTimer* updateTimer;    ///< Update timer
-    UDPSocket* socket4;         ///< UDP socket for unicast IPv4
-    UDPSocket* socket6;         ///< UDP socket for unicast IPv6
+    UdpSocket* socket4;         ///< Udp socket for unicast Ipv4
+    UdpSocket* socket6;         ///< Udp socket for unicast Ipv6
     bool enabled;               ///< Interface status
     uint16_t nominalrxcost;
     std::vector<Babel::netPrefix<L3Address> > directlyconn;
@@ -62,8 +62,8 @@ class BabelInterface : public cObject
 
     BabelInterface() :
         interface(NULL),
-        afsend(Babel::AF::IPv6),
-        afdist(Babel::AF::IPv6),
+        afsend(Babel::AF::Ipv6),
+        afdist(Babel::AF::Ipv6),
         splitHorizon(false),
         wired(false),
         helloSeqno(0),
@@ -80,8 +80,8 @@ class BabelInterface : public cObject
 
     BabelInterface(InterfaceEntry *iface, uint16_t hellSeq) :
         interface(iface),
-        afsend(Babel::AF::IPv6),
-        afdist(Babel::AF::IPv6),
+        afsend(Babel::AF::Ipv6),
+        afdist(Babel::AF::Ipv6),
         splitHorizon(false),
         wired(false),
         helloSeqno(hellSeq),
@@ -147,11 +147,11 @@ class BabelInterface : public cObject
     Babel::BabelTimer* getUTimer() {return updateTimer;}
     void setUTimer(Babel::BabelTimer* t) {updateTimer = t;}
 
-    UDPSocket* getSocket4() {return socket4;}
-    void setSocket4(UDPSocket* s) {socket4 = s;}
+    UdpSocket* getSocket4() {return socket4;}
+    void setSocket4(UdpSocket* s) {socket4 = s;}
 
-    UDPSocket* getSocket6() {return socket6;}
-    void setSocket6(UDPSocket* s) {socket6 = s;}
+    UdpSocket* getSocket6() {return socket6;}
+    void setSocket6(UdpSocket* s) {socket6 = s;}
 
     bool getEnabled() {return enabled;}
     void setEnabled(bool e) {enabled = e;}

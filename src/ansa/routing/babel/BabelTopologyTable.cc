@@ -247,16 +247,16 @@ bool BabelTopologyTable::containShorterCovRoute(const Babel::netPrefix<L3Address
             ((*it)->getPrefix().getLen() < p.getLen())
           )
         {// same AF and shorter
-            if((*it)->getPrefix().getAddr().getType()==L3Address::IPv6)
-            {// IPv6
+            if((*it)->getPrefix().getAddr().getType()==L3Address::Ipv6)
+            {// Ipv6
                 if((*it)->getPrefix().getAddr().toIPv6() == p.getAddr().toIPv6().getPrefix((*it)->getPrefix().getLen()))
                 {
                     return true;
                 }
             }
             else
-            {// IPv4
-                if((*it)->getPrefix().getAddr().toIPv4() == p.getAddr().toIPv4().doAnd(IPv4Address::makeNetmask((*it)->getPrefix().getLen())))
+            {// Ipv4
+                if((*it)->getPrefix().getAddr().toIPv4() == p.getAddr().toIPv4().doAnd(Ipv4Address::makeNetmask((*it)->getPrefix().getLen())))
                 {
                     return true;
                 }

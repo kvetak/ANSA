@@ -85,7 +85,7 @@ int ANSA_MultiNetworkLayerLowerMultiplexer::getProtocolIndex(cMessage *message)
     if (false)
         ;
 #ifdef WITH_IPv4
-    else if (dynamic_cast<IPv4Datagram *>(message) || dynamic_cast<ARPPacket *>(message))
+    else if (dynamic_cast<IPv4Datagram *>(message) || dynamic_cast<ArpPacket *>(message))
         return (getParentModule()->par("enableIPv4")) ? 0 : -1;
 #endif // ifdef WITH_IPv4
 #ifdef WITH_IPv6

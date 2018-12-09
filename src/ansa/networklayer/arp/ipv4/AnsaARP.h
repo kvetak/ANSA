@@ -22,19 +22,19 @@
 
 #include "inet/common/INETDefs.h"
 
-#include "inet/networklayer/arp/ipv4/ARP.h"
+#include "inet/networklayer/arp/ipv4/Arp.h"
 
 namespace inet {
 
 /**
- * ARP implementation.
+ * Arp implementation.
  */
-class INET_API AnsaARP : public ARP
+class INET_API AnsaARP : public Arp
 {
   public:
     static simsignal_t recvReqSignal;
   protected:
-    virtual MACAddress getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp) override;
+    virtual MacAddress getMacAddressForArpReply(InterfaceEntry *ie, ArpPacket *arp) override;
 };
 
 } // namespace inet

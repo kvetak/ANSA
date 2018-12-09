@@ -47,16 +47,64 @@
         compileFlags = "-DANSA_WITH_RBRIDGE"
         linkerFlags = ""
         />
-    <feature
-        id="networkLayer"
-        name="networkLayer"
-        description = "networkLayer"
-        initiallyEnabled = "true"
+     <feature
+        id="clns"
+        name="CLNS"
+        description = "CLNS"
+        initiallyEnabled = "false"
         requires = ""
         labels = ""
-        nedPackages = "ansa.networklayer"
+        nedPackages = "ansa.networklayer.clns"
         extraSourceFolders = ""
-        compileFlags = "-DANSA_WITH_networkLayer"
+        compileFlags = "-DANSA_WITH_clns"
+        linkerFlags = ""
+        />
+     <feature
+        id="isis"
+        name="ISIS"
+        description = "IS-IS"
+        initiallyEnabled = "false"
+        requires = ""
+        labels = ""
+        nedPackages = "ansa.networklayer.isis"
+        extraSourceFolders = ""
+        compileFlags = "-DANSA_WITH_isis"
+        linkerFlags = ""
+        />
+     <feature
+        id="arp"
+        name="ARP"
+        description = "ARP"
+        initiallyEnabled = "false"
+        requires = ""
+        labels = ""
+        nedPackages = "ansa.networklayer.arp"
+        extraSourceFolders = ""
+        compileFlags = "-DANSA_WITH_arp"
+        linkerFlags = ""
+        />
+     <feature
+        id="common"
+        name="networkLayerCommon"
+        description = "NetworkLayerCommon"
+        initiallyEnabled = "false"
+        requires = ""
+        labels = ""
+        nedPackages = "ansa.networklayer.common"
+        extraSourceFolders = ""
+        compileFlags = "-DANSA_WITH_common"
+        linkerFlags = ""
+        />
+     <feature
+        id="multi"
+        name="multi"
+        description = "Multi"
+        initiallyEnabled = "false"
+        requires = ""
+        labels = ""
+        nedPackages = "ansa.networklayer.multi"
+        extraSourceFolders = ""
+        compileFlags = "-DANSA_WITH_multi"
         linkerFlags = ""
         />
     <feature

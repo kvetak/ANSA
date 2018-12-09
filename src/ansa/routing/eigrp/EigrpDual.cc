@@ -898,9 +898,9 @@ void EigrpDual<IPAddress>::processTransition18(int event, EigrpRouteSource<IPAdd
         invalidateRoute(source);
 }
 
-template class EigrpDual<IPv4Address>;
+template class EigrpDual<Ipv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpDual<IPv6Address>;
+template class EigrpDual<Ipv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */
 }

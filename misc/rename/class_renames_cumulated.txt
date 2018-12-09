@@ -111,6 +111,7 @@ BVHTree -> BvhTree
 BVHTreeVisitor -> BvhTreeVisitor
 CallbackInterface -> ICallback
 CCCVariant -> CccVariant
+CLNSAddress -> ClnsAddress
 CNList -> CnList
 CSMAHeader -> Ieee802154MacHeader
 CSMA -> Ieee802154Mac

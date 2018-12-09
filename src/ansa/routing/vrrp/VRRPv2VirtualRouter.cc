@@ -27,8 +27,8 @@
 
 #include "inet/common/ModuleAccess.h"
 //#include "InterfaceTableAccess.h"
-#include "inet/common/serializer/TCPIPchecksum.h"
-#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "inet/common/serializer/TcpIpChecksum.h"
+#include "inet/networklayer/contract/ipv4/Ipv4ControlInfo.h"
 
 namespace inet {
 
@@ -78,7 +78,7 @@ void VRRPv2VirtualRouter::initialize(int stage)
         WATCH(preemtion);
 
         ift = getModuleFromPar<IInterfaceTable>(par(IFT_PAR), this);
-        arp = getModuleFromPar<ARP>(par(ARP_PAR), this);
+        arp = getModuleFromPar<Arp>(par(ARP_PAR), this);
         ie = dynamic_cast<ANSA_InterfaceEntry*>(ift->getInterfaceById((int) par(INTERFACE_PAR)));
 
         //set default configuration
@@ -346,7 +346,7 @@ void VRRPv2VirtualRouter::handleMessage(cMessage *msg)
 bool VRRPv2VirtualRouter::handleAdvertisement(VRRPv2Advertisement* msg)
 {
     // MUST verify the TTL is 255
-    IPv4ControlInfo* controlInfo = check_and_cast<IPv4ControlInfo *>(msg->getControlInfo());
+    Ipv4ControlInfo* controlInfo = check_and_cast<Ipv4ControlInfo *>(msg->getControlInfo());
 
     if (controlInfo->getTimeToLive() != 255)
     {
@@ -412,7 +412,7 @@ void VRRPv2VirtualRouter::handleAdvertisementBackup(VRRPv2Advertisement* msg)
     {
         //Remain Backup
         if (msg->getPriority() == priority
-                && ((IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()) {
+                && ((Ipv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()) {
             masterDownTimerInit = getMasterDownInterval();
             stateBackup(TIMER_START);
             return;
@@ -437,7 +437,7 @@ void VRRPv2VirtualRouter::handleAdvertisementMaster(VRRPv2Advertisement* msg)
     }
     else if ((((int) msg->getPriority()) > priority)
             || (msg->getPriority() == priority
-                    && ((IPv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()))
+                    && ((Ipv4ControlInfo *) msg->getControlInfo())->getSrcAddr() > ie->ipv4Data()->getIPAddress()))
     {
         cancelAdverTimer();
         masterDownTimerInit = getMasterDownInterval();
@@ -459,7 +459,7 @@ void VRRPv2VirtualRouter::handleAdvertisementMaster(VRRPv2Advertisement* msg)
 
 void VRRPv2VirtualRouter::sendAdvertisement() {
 
-    IPv4ControlInfo* controlInfo = new IPv4ControlInfo();
+    Ipv4ControlInfo* controlInfo = new Ipv4ControlInfo();
     //TODO: Vesely - Is it correct to comment?
     //controlInfo->setMacSrc(virtualMAC);
     controlInfo->setSrcAddr(ie->ipv4Data()->getIPAddress());
@@ -547,7 +547,7 @@ void VRRPv2VirtualRouter::createVirtualMAC()
     virtualMAC.setAddressByte(5, vrid);
 }
 
-uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<IPv4Address> address) {
+uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, int priority, int advert, std::vector<Ipv4Address> address) {
 
     uint32_t vrrpHead1 = 0;
     vrrpHead1 = version;
@@ -577,7 +577,7 @@ uint16_t VRRPv2VirtualRouter::getAdvertisementChecksum(int version, int vrid, in
     for (int i = 0; i < (int) address.size(); i++)
         data.push_back(address.at(i).getInt());
 
-    return serializer::TCPIPchecksum::checksum(data.data(), data.size() * 4);
+    return serializer::TcpIpChecksum::checksum(data.data(), data.size() * 4);
 }
 /***
  *   PRINT
@@ -647,7 +647,7 @@ std::string VRRPv2VirtualRouter::debugPacketMaster(uint16_t checksum) const
     return result.str();
 }
 
-std::string VRRPv2VirtualRouter::debugPacketBackup(int priority, IPv4Address ipaddr) const
+std::string VRRPv2VirtualRouter::debugPacketBackup(int priority, Ipv4Address ipaddr) const
 {
     std::stringstream result;
     result << "Grp " << vrid << " Advertisement priority " << priority << ", ipaddr " << ipaddr;

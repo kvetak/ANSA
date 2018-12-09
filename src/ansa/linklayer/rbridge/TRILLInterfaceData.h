@@ -15,7 +15,7 @@
 //
 
 /**
- * @file TRILLInterfaceData.h
+ * @file TrillInterfaceData.h
  * @author Marcel Marek (mailto:xscrew02@gmail.com), Vladimir Vesely (mailto:ivesely@fit.vutbr.cz)
  * @date 24.3.2013
  * @brief Represents TRILL related data on interface.
@@ -32,7 +32,7 @@
 
 namespace inet {
 
-class TRILLInterfaceData : public InterfaceProtocolData
+class TrillInterfaceData : public InterfaceProtocolData
 {
     public:
         //        typedef enum{
@@ -42,8 +42,8 @@ class TRILLInterfaceData : public InterfaceProtocolData
         //        } RBPType;
 
         typedef std::vector<int> VLANVector;
-        TRILLInterfaceData();
-        virtual ~TRILLInterfaceData();
+        TrillInterfaceData();
+        virtual ~TrillInterfaceData();
         void setDefaults(void);
         int getVlanId() const;
         bool isAccess() const;

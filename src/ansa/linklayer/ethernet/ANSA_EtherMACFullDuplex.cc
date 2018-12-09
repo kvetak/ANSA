@@ -42,7 +42,7 @@ void ANSA_EtherMACFullDuplex::initialize(int stage)
 
     if (stage == INITSTAGE_LOCAL) {
         if (!par("duplexMode").boolValue())
-            throw cRuntimeError("Half duplex operation is not supported by EtherMACFullDuplex, use the EtherMAC module for that! (Please enable csmacdSupport on EthernetInterface)");
+            throw cRuntimeError("Half duplex operation is not supported by EtherMacFullDuplex, use the EtherMac module for that! (Please enable csmacdSupport on EthernetInterface)");
     }
     else if (stage == INITSTAGE_LINK_LAYER) {
         beginSendFrames();    //FIXME choose an another stage for it
@@ -51,7 +51,7 @@ void ANSA_EtherMACFullDuplex::initialize(int stage)
 
 void ANSA_EtherMACFullDuplex::initializeStatistics()
 {
-    EtherMACBase::initializeStatistics();
+    EtherMacBase::initializeStatistics();
 
     // initialize statistics
     totalSuccessfulRxTime = 0.0;
@@ -59,7 +59,7 @@ void ANSA_EtherMACFullDuplex::initializeStatistics()
 
 void ANSA_EtherMACFullDuplex::initializeFlags()
 {
-    EtherMACBase::initializeFlags();
+    EtherMacBase::initializeFlags();
 
     duplexMode = true;
     physInGate->setDeliverOnReceptionStart(false);
@@ -207,7 +207,7 @@ void ANSA_EtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
                         }//while
                     }
                 }// glbp Mess
-            }// UDP packet
+            }// Udp packet
         }//IPv4Datagram
     }//Ether killnig frame
 
@@ -219,7 +219,7 @@ void ANSA_EtherMACFullDuplex::processFrameFromUpperLayer(EtherFrame *frame)
 
     if (!isPauseFrame) {
         numFramesFromHL++;
-        emit(rxPkFromHLSignal, frame);
+        emit(rxPkFromHlSignal, frame);
     }
 
     if (txQueue.extQueue) {
@@ -267,8 +267,8 @@ void ANSA_EtherMACFullDuplex::processMsgFromNetwork(cPacket *pk)
 
     EtherPhyFrame *phyFrame = dynamic_cast<EtherPhyFrame *>(msg);
     if (!phyFrame) {
-        if (dynamic_cast<EtherFilledIFG *>(msg))
-            throw cRuntimeError("There is no burst mode in full-duplex operation: EtherFilledIFG is unexpected");
+        if (dynamic_cast<EtherFilledIfg *>(msg))
+            throw cRuntimeError("There is no burst mode in full-duplex operation: EtherFilledIfg is unexpected");
         else
             throw cRuntimeError("Unexpected ethernet traffic: %s", msg->getClassName());
     }
@@ -359,7 +359,7 @@ void ANSA_EtherMACFullDuplex::handleEndTxPeriod()
 
 void ANSA_EtherMACFullDuplex::finish()
 {
-    EtherMACBase::finish();
+    EtherMacBase::finish();
 
     simtime_t t = simTime();
     simtime_t totalRxChannelIdleTime = t - totalSuccessfulRxTime;

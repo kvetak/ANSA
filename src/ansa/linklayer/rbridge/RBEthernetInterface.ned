@@ -38,7 +38,7 @@ module RBEthernetInterface  like IEthernetInterface
             parameters:
                 @display("p=92,71;q=l2queue");
         }
-        mac: EtherMAC {
+        mac: EtherMac {
             parameters:
                 queueModule = "queue";
                 txQueueLimit = 1; // queue sends one packet at a time

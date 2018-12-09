@@ -21,8 +21,8 @@
  */
 #include "ansa/networklayer/common/ANSA_InterfaceEntry.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
-#include "inet/networklayer/ipv6/IPv6InterfaceData.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
+#include "inet/networklayer/ipv6/Ipv6InterfaceData.h"
 
 namespace inet{
 
@@ -49,7 +49,7 @@ void ANSA_InterfaceEntry::removeVirtualForwarder(VirtualForwarder* vforw)
     delete vforw;
 }
 
-int ANSA_InterfaceEntry::getVirtualForwarderId(const IPv4Address& addr)
+int ANSA_InterfaceEntry::getVirtualForwarderId(const Ipv4Address& addr)
 {
     if (vforwarder.empty())
         return -1;
@@ -61,7 +61,7 @@ int ANSA_InterfaceEntry::getVirtualForwarderId(const IPv4Address& addr)
     return -1;
 }
 
-int ANSA_InterfaceEntry::getVirtualForwarderId(const MACAddress& addr)
+int ANSA_InterfaceEntry::getVirtualForwarderId(const MacAddress& addr)
 {
     if (vforwarder.empty())
         return -1;
@@ -73,7 +73,7 @@ int ANSA_InterfaceEntry::getVirtualForwarderId(const MACAddress& addr)
     return -1;
 }
 
-const MACAddress& ANSA_InterfaceEntry::getMacAddressByIP(const IPv4Address& addr) const
+const MacAddress& ANSA_InterfaceEntry::getMacAddressByIP(const Ipv4Address& addr) const
 {
     if (vforwarder.empty())
         return getMacAddress();
@@ -85,15 +85,15 @@ const MACAddress& ANSA_InterfaceEntry::getMacAddressByIP(const IPv4Address& addr
     return getMacAddress();
 }
 
-const MACAddress& ANSA_InterfaceEntry::getMacVirtualForwarderById(int vforwarderId) const
+const MacAddress& ANSA_InterfaceEntry::getMacVirtualForwarderById(int vforwarderId) const
 {
     if (vforwarder.empty())
-        return MACAddress::UNSPECIFIED_ADDRESS;
+        return MacAddress::UNSPECIFIED_ADDRESS;
 
     return vforwarder.at(vforwarderId)->getMacAddress();
 }
 
-bool ANSA_InterfaceEntry::hasIPAddress(const IPv4Address& addr) const
+bool ANSA_InterfaceEntry::hasIPAddress(const Ipv4Address& addr) const
 {
     if (vforwarder.empty())
         return false;
@@ -111,7 +111,7 @@ bool ANSA_InterfaceEntry::hasNetworkAddress(const L3Address& address) const
         return true;
 
     switch(address.getType()) {
-    case L3Address::IPv4:
+    case L3Address::Ipv4:
         return hasIPAddress(address.toIPv4());
 
     case L3Address::MAC:
@@ -124,7 +124,7 @@ bool ANSA_InterfaceEntry::hasNetworkAddress(const L3Address& address) const
 }
 
 
-bool ANSA_InterfaceEntry::hasMacAddress(const MACAddress& addr) const
+bool ANSA_InterfaceEntry::hasMacAddress(const MacAddress& addr) const
 {
     if (vforwarder.empty())
         return false;
@@ -165,7 +165,7 @@ std::string ANSA_InterfaceEntry::info() const {
         out << "n/a";
     else
         out << getMacAddress();
-    //IPv4
+    //Ipv4
     if (ipv4data != nullptr) {
         out << "\nIPv4 ucast:\t" << ipv4data->getIPAddress() << "/" << ipv4data->getNetmask().getNetmaskLength();
         out << "\nIPv4 mcast:\t";
@@ -175,7 +175,7 @@ std::string ANSA_InterfaceEntry::info() const {
     }
 
     if (ipv6data != nullptr) {
-        //IPv6
+        //Ipv6
         out << "\nIPv6 ucast:\t";
         for (int i = 0; i < ipv6data->getNumAddresses(); i++) {
             out << (i > 0 ? ", " : "") << ipv6data->getAddress(i);

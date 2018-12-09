@@ -21,11 +21,11 @@
  * @copyright Brno University of Technology (www.fit.vutbr.cz) under GPLv3
  */
 
-//IPv6 ready
+//Ipv6 ready
 #include "ansa/routing/eigrp/tables/EigrpNeighborTable.h"
 namespace inet {
 
-Define_Module(EigrpIpv4NeighborTable);      //TODO - PROB-01 - How to register template class? Define_Module(EigrpNeighborTable<IPv4Address>)
+Define_Module(EigrpIpv4NeighborTable);      //TODO - PROB-01 - How to register template class? Define_Module(EigrpNeighborTable<Ipv4Address>)
 
 #ifndef DISABLE_EIGRP_IPV6
 Define_Module(EigrpIpv6NeighborTable);
@@ -190,9 +190,9 @@ int EigrpNeighborTable<IPAddress>::setAckOnIface(int ifaceId, uint32_t ackNum)
     return neighCnt;
 }
 
-template class EigrpNeighborTable<IPv4Address>;
+template class EigrpNeighborTable<Ipv4Address>;
 
 #ifndef DISABLE_EIGRP_IPV6
-template class EigrpNeighborTable<IPv6Address>;
+template class EigrpNeighborTable<Ipv6Address>;
 #endif /* DISABLE_EIGRP_IPV6 */
 }

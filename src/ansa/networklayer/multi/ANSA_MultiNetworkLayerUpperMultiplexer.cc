@@ -22,8 +22,8 @@
  */
 
 #include "ansa/networklayer/multi/ANSA_MultiNetworkLayerUpperMultiplexer.h"
-#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
-#include "inet/networklayer/contract/ipv6/IPv6ControlInfo.h"
+#include "inet/networklayer/contract/ipv4/Ipv4ControlInfo.h"
+#include "inet/networklayer/contract/ipv6/Ipv6ControlInfo.h"
 #include "inet/networklayer/contract/clns/CLNSControlInfo.h"
 
 
@@ -111,9 +111,9 @@ int ANSA_MultiNetworkLayerUpperMultiplexer::getProtocolIndex(
     // Vesely - resolved: handle the case when some network protocols are disabled
 
     //Return -1 if appropriate L3 is not present
-    if (dynamic_cast<IPv4ControlInfo *>(controlInfo))
+    if (dynamic_cast<Ipv4ControlInfo *>(controlInfo))
         return (getParentModule()->par("enableIPv4")) ? 0 : -1;
-    else if (dynamic_cast<IPv6ControlInfo *>(controlInfo))
+    else if (dynamic_cast<Ipv6ControlInfo *>(controlInfo))
         return (getParentModule()->par("enableIPv6")) ? 1 : -1;
     else if (dynamic_cast<CLNSControlInfo *>(controlInfo))
         return (getParentModule()->par("enableCLNS")) ? 2 : -1;

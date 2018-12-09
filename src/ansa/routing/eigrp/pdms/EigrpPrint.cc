@@ -61,13 +61,13 @@ const char *UserMsgs[] =
 
 }; // end of namespace eigrp
 
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv4Address>& network)
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<Ipv4Address>& network)
 {
     os << "Address:" << network.getAddress() << " Mask:" << network.getMask();
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const EigrpNetwork<IPv6Address>& network)
+std::ostream& operator<<(std::ostream& os, const EigrpNetwork<Ipv6Address>& network)
 {
     os << "Address:" << network.getAddress() << " Mask: /" << getNetmaskLength(network.getMask());
     return os;

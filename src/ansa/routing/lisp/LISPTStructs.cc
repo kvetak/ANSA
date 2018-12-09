@@ -38,7 +38,7 @@ std::ostream& operator <<(std::ostream& os, const TRecs& recs) {
 
 std::string TAfiAddr::info() const {
     std::stringstream os;
-    os << (afi() == 2 ? "(IPv6) ": "(IPv4) ") << address;
+    os << (afi() == 2 ? "(Ipv6) ": "(Ipv4) ") << address;
     return os.str();
 }
 

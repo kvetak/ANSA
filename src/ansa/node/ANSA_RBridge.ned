@@ -28,9 +28,9 @@ package ansa.node;
 //import inet.ansa.linklayer.switch.stp.Stp;
 //import inet.nodes.inet.BurstHost;
 //import inet.base.NotificationBoard;
-import inet.linklayer.ethernet.EtherMAC;
+import inet.linklayer.ethernet.EtherMac;
 //import inet.ansa.linklayer.ethernet.AnsaEtherMAC;
-//import inet.linklayer.IWiredNic;
+//import inet.linklayer.IWiredInterface;
 //import inet.ansa.linklayer.switch.ANSASwitchCore;
 import ansa.linklayer.rbridge.RBMACTable;
 import ansa.linklayer.rbridge.RBridgeSplitter;
@@ -50,9 +50,9 @@ import inet.linklayer.ethernet.EthernetInterface;
 //import inet.nodes.inet.NetworkLayer;
 import inet.networklayer.contract.INetworkLayer; 
 //import inet.ansa.TrafficGenerator.TrafGen;
-//import inet.ansa.rip.RIPRouting;
-//import inet.transport.udp.UDP;
-//import inet.networklayer.ospfv2.OSPFRouting;
+//import inet.ansa.rip.RipRouting;
+//import inet.transport.udp.Udp;
+//import inet.networklayer.ospfv2.OspfRouting;
 //import inet.ansa.InterfaceStateManager.InterfaceStateManager;
 import inet.networklayer.common.InterfaceTable;
 //import inet.ansa.routingTable.AnsaInterfaceTable;
@@ -142,7 +142,7 @@ module ANSA_RBridge
         //                @display("p=154,416,row,110;q=l2queue;is=l");
         //                promiscuous = true;
         //        }
-//        eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredNic {
+//        eth[sizeof(ethg)]: <default("EthernetInterface")> like IWiredInterface {
 
         eth[sizeof(ethg)]: EthernetInterface {
             parameters:

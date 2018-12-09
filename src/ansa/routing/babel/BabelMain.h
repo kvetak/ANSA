@@ -46,8 +46,8 @@
 //#include "NotificationBoard.h"
 //#include "AnsaRoutingTable.h"
 //#include "ANSARoutingTable6.h"
-#include "inet/networklayer/ipv4/IPv4RoutingTable.h"
-#include "inet/networklayer/ipv6/IPv6RoutingTable.h"
+#include "inet/networklayer/ipv4/Ipv4RoutingTable.h"
+#include "inet/networklayer/ipv6/Ipv6RoutingTable.h"
 
 namespace inet {
 
@@ -57,12 +57,12 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
   protected:
     Babel::rid routerId;    ///< Router's identifier
     uint16_t seqno;         ///< Router's sequence number
-    int port;               ///< UDP port number
+    int port;               ///< Udp port number
 
     cModule *host = nullptr;    // the host module that owns this module
     InterfaceEntry *mainInterface;
-    UDPSocket *socket4mcast;                ///< IPv4 socket for receive multicast
-    UDPSocket *socket6mcast;                ///< IPv6 socket for receive multicast
+    UdpSocket *socket4mcast;                ///< Ipv4 socket for receive multicast
+    UdpSocket *socket6mcast;                ///< Ipv6 socket for receive multicast
     std::vector<Babel::BabelTimer *> timers;       ///< Pointers to all timers //TODO - uz nepouzivane - SMAZAT
     std::vector<BabelBuffer *> buffers;
     Babel::BabelTimer *buffgc;
@@ -73,8 +73,8 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
     //NotificationBoard *nb;
     //AnsaRoutingTable *rt4;
     //ANSARoutingTable6 *rt6;
-    IPv4RoutingTable *rt4 = nullptr;
-    IPv6RoutingTable *rt6 = nullptr;
+    Ipv4RoutingTable *rt4 = nullptr;
+    Ipv6RoutingTable *rt6 = nullptr;
 
     BabelInterfaceTable bit;
     BabelNeighbourTable bnt;
@@ -127,7 +127,7 @@ class INET_API BabelMain : protected cListener, public cSimpleModule
     void processSourceGCTimer(BabelSource *source);
     void processRSResendTimer(BabelPenSR *request);
 
-    UDPSocket *createSocket();
+    UdpSocket *createSocket();
 
     void activateInterface(BabelInterface *iface);
     void deactivateInterface(BabelInterface *iface);

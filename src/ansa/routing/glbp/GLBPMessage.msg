@@ -20,9 +20,9 @@
 
 
 cplusplus {{
-#include "inet/common/TLVOption.h"
-#include "inet/networklayer/contract/ipv4/IPv4Address.h"
-#include "inet/linklayer/common/MACAddress.h"
+#include "inet/common/TlvOptions.h"
+#include "inet/networklayer/contract/ipv4/Ipv4Address.h"
+#include "inet/linklayer/common/MacAddress.h"
 //#include "inet/networklayer/common/IPProtocolId_m.h"
 }}
 
@@ -35,11 +35,11 @@ const short GLBP_HELLO_BYTES = 28;
 }}
 
 
-class noncobject TLVOptionBase;
-class noncobject TLVOptions;
+class noncobject TlvOptionBase;
+class noncobject TlvOptions;
 
-class noncobject IPv4Address;
-class noncobject MACAddress;
+class noncobject Ipv4Address;
+class noncobject MacAddress;
 
 ///
 /// GLBP TLV type
@@ -54,8 +54,8 @@ enum GLBPType{
 /// GLBP Hello Address Type
 ///
 enum GLBPAddressType{
-	IPv4 = 1;
-//	IPv6 = 2;
+	Ipv4 = 1;
+//	Ipv6 = 2;
 }
 
 ///
@@ -71,7 +71,7 @@ enum GLBPState{
     ACTIVE = 32;
 }
 
-class GLBPOption extends TLVOptionBase
+class GLBPOption extends TlvOptionBase
 {
 }
 
@@ -89,9 +89,9 @@ class GLBPHello extends GLBPOption
 	uint32_t holdint;		///holdtimer
 	uint16_t redirect;		///redirecttimer
 	uint16_t timeout;		///timeout timer
-	short addressType = IPv4;///address type (IPv4 or IPv6)
-	short addresLength = 4;	///address length; 4 for IPv4
-	IPv4Address address;	///IPv4 address of glbp group
+	short addressType = Ipv4;///address type (Ipv4 or Ipv6)
+	short addresLength = 4;	///address length; 4 for Ipv4
+	Ipv4Address address;	///Ipv4 address of glbp group
 }
 
 ///
@@ -105,7 +105,7 @@ class GLBPRequestResponse extends GLBPOption{
 	short vfState;		///VF state of this forwarder
 	short priority;		///priority of this VF (167 for primary, 135 for secondary)
 	short weight;		///Weight of this VF
-	MACAddress macAddress; ///MAC address of this VF 
+	MacAddress macAddress; ///MAC address of this VF 
 }
 
 ///
@@ -116,7 +116,7 @@ packet GLBPMessage {
     
     short version = 1;	///version is always 1
 	uint16_t group;		///group id
-	MACAddress ownerId;	///owner id which is MAC of interface
+	MacAddress ownerId;	///owner id which is MAC of interface
 	  
-	TLVOptions TLV; 	///array of tlvs	
+	TlvOptions TLV; 	///array of tlvs	
 }

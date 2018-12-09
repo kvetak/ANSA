@@ -77,8 +77,8 @@ module ANSA_MultiNetworkLayer like INetworkLayer
 {
     parameters:
         @display("i=block/fork;bgb=665,680");
-        bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
-        bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
+        bool enableIPv4 = default(haveClass("inet::Ipv4RoutingTable"));
+        bool enableIPv6 = default(haveClass("inet::Ipv6RoutingTable"));
         bool enableCLNS = default(haveClass("inet::CLNSRoutingTable"));
         bool enableCDP = default(false);
         bool enableLLDP = default(false);
@@ -97,16 +97,16 @@ module ANSA_MultiNetworkLayer like INetworkLayer
     gates:
         input ifIn @labels(INetworkDatagram);
         output ifOut @labels(INetworkDatagram);
-        input transportIn @labels(IPv4ControlInfo/down);
-        output transportOut @labels(IPv4ControlInfo/up);
+        input transportIn @labels(Ipv4ControlInfo/down);
+        output transportOut @labels(Ipv4ControlInfo/up);
         input pingIn[] @labels(PingPayload/down);
         output pingOut[] @labels(PingPayload/up);
 
     submodules:
-        ipv4: <"IPv4NetworkLayer"> like INetworkLayer if enableIPv4 {
+        ipv4: <"Ipv4NetworkLayer"> like INetworkLayer if enableIPv4 {
             @display("p=100,361");
         }
-        ipv6: <"IPv6NetworkLayer"> like INetworkLayer if enableIPv6 {
+        ipv6: <"Ipv6NetworkLayer"> like INetworkLayer if enableIPv6 {
             @display("p=300,361");
         }
         clns: <"CLNSNetworkLayer"> like INetworkLayer if enableCLNS {

@@ -40,7 +40,7 @@ import inet.node.ethernet.EtherSwitch;
 // The duplexChannel attributes of the MACs must be set according to the
 // medium connected to the port; if collisions are possible (it's a bus or hub)
 // it must be set to false, otherwise it can be set to true.
-// By default used half duples CSMA/CD mac
+// By default used half duples Ieee802154Mac/CD mac
 //
 //
 
@@ -54,7 +54,7 @@ import inet.linklayer.ethernet.IEtherEncap;
 // The duplexChannel attributes of the MACs must be set according to the
 // medium connected to the port; if collisions are possible (it's a bus or hub)
 // it must be set to false, otherwise it can be set to true.
-// By default used half duples CSMA/CD mac
+// By default used half duples Ieee802154Mac/CD mac
 //
 //
 module ANSA_EtherSwitch extends EtherSwitch
@@ -67,7 +67,7 @@ module ANSA_EtherSwitch extends EtherSwitch
         bool hasCDP = default(false);
         bool hasLLDP = default(false);
 //        bool hasStp = default(false);
-//        bool csmacdSupport = default(true);  // by default use CSMA/CD --FIXME remove
+//        bool csmacdSupport = default(true);  // by default use Ieee802154Mac/CD --FIXME remove
 //        string fcsMode @enum("declared","computed") = default("declared");
 //        string spanningTreeProtocol = default("Stp");
 //        eth[*].encap.typename = "EtherEncapDummy";
@@ -185,13 +185,13 @@ module ANSA_EtherSwitch extends EtherSwitch
 //        @labels(node,ethernet-node);
 //        @display("i=device/switch;bgb=715,395");
 //        bool hasStatus = default(true);
-//        bool csmacdSupport = default(true);  // by default use CSMA/CD
+//        bool csmacdSupport = default(true);  // by default use Ieee802154Mac/CD
 //        bool hasCDP = default(false);
 //        bool hasLLDP = default(false);
 //        bool hasSTP = default(false);
 //
-//        string relayUnitType = default("relayUnit"); // type of the ~IMACRelayUnit;
-//        string macTableType = default("MacAddressTable"); // type of the ~IMACAddressTable
+//        string relayUnitType = default("relayUnit"); // type of the ~IMacRelayUnit;
+//        string macTableType = default("MacAddressTable"); // type of the ~IMacAddressTable
 //        eth[*].encap.typename = "EtherEncapDummy";
 //        eth[*].csmacdSupport = csmacdSupport;
 //        eth[*].mac.typename = default(csmacdSupport ? "EtherMac" : "EtherMacFullDuplex");

@@ -25,8 +25,8 @@ simple MultiNetworkNodeConfigurator
     parameters:
     	@display("i=block/cogwheel");
 
-        bool enableIPv4 = default(haveClass("inet::IPv4RoutingTable"));
-        bool enableIPv6 = default(haveClass("inet::IPv6RoutingTable"));
+        bool enableIPv4 = default(haveClass("inet::Ipv4RoutingTable"));
+        bool enableIPv6 = default(haveClass("inet::Ipv6RoutingTable"));
     	bool enableANSAConfig = default(false);
     	bool replaceIPv6Addresses = default(false);
     	xml configData = default(xml("<Interfaces />"));

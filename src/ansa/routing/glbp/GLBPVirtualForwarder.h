@@ -46,9 +46,9 @@ public:
         int priority;   //!< Priority of this forwarder
         int weight;     //!< Weight of this forwarder
         int forwarder;  //!< ID of this forwarder
-        bool AVG;       //!< AVG flag. Needed for ARP response
+        bool AVG;       //!< AVG flag. Needed for Arp response
         bool available; //!< Availability flag for AVG (after redirect timeout is set to false)
-        MACAddress *primaryRouter = nullptr;
+        MacAddress *primaryRouter = nullptr;
 
     public:
         /**
@@ -67,7 +67,7 @@ public:
         int getPriority() { return priority; };
         bool getWeight() { return weight; };
         int getForwarder() { return forwarder; };
-        const MACAddress *getPrimary() {return primaryRouter; };
+        const MacAddress *getPrimary() {return primaryRouter; };
         bool isAVG() { return AVG; };
         bool isAvailable() { return available; };
         //@}
@@ -78,7 +78,7 @@ public:
         virtual void setPriority(int p) { priority = p; };
         virtual void setWeight(int w) { weight = w; };
         virtual void setForwarder (int n) { forwarder = n; };
-        virtual void setPrimary (MACAddress *mac) {primaryRouter = mac; };
+        virtual void setPrimary (MacAddress *mac) {primaryRouter = mac; };
         virtual void enableAVG() {AVG = true;};
         virtual void disableAVG() {AVG = false;};
         virtual void setAvailable(bool val) {available = val;};

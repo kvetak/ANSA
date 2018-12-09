@@ -40,15 +40,15 @@
 #include <string>
 
 //#include "NotificationBoard.h"
-//#include "MACAddress.h"
-#include "inet/linklayer/common/MACAddress.h"
+//#include "MacAddress.h"
+#include "inet/linklayer/common/MacAddress.h"
 #include "inet/linklayer/ethernet/Ethernet.h"
 #include "inet/linklayer/ethernet/EtherFrame.h"
 #include "AnsaEtherFrame_m.h"
 
 #include "ansa/linklayer/rbridge/RBMACTable.h"
 #include "ansa/linklayer/rbridge/RBVLANTable.h"
-#include "ansa/linklayer/rbridge/TRILLInterfaceData.h"
+#include "ansa/linklayer/rbridge/TrillInterfaceData.h"
 #include "ansa/linklayer/rbridge/TRILLFrame.h"
 #include "ansa/linklayer/rbridge/TRILLCommon.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
@@ -87,12 +87,12 @@ class TRILL : public cSimpleModule
           int VID; // frame's VLAN ID
           int rPort; // reception port
           RBVLANTable::tVIDPortList portList; // suggested(then applied) list of destination ports
-          MACAddress src; // source MAC address of the original frame
-          MACAddress dest; // destination MAC address of the original frame
+          MacAddress src; // source MAC address of the original frame
+          MacAddress dest; // destination MAC address of the original frame
           int etherType; // EtherType from EthernetIIFrame
           std::string name; // for simulation frame name
           RBMACTable::ESTRecord record;
-          TRILLInterfaceData *d;
+          TrillInterfaceData *d;
           TRILL::FrameCategory category;
 //          std::vector<unsigned char *> systemIDs; //for forwarding TRILL MultiDest (maybe even TRILL unicast)
 //          InterfaceEntry *ie
@@ -102,7 +102,7 @@ class TRILL : public cSimpleModule
 
 
 
-        MACAddress getBridgeAddress();
+        MacAddress getBridgeAddress();
 
         bool isAllowedByGate(int vlan, int gateId);//returns true if vlan is allowed on interface specified by gateId
         void learn(AnsaEtherFrame * frame);
@@ -126,8 +126,8 @@ class TRILL : public cSimpleModule
 
 
       protected:
-      MACAddress bridgeGroupAddress;
-      MACAddress bridgeAddress;
+      MacAddress bridgeGroupAddress;
+      MacAddress bridgeAddress;
 
       RBMACTable * rbMACTable;
       RBVLANTable * vlanTable;

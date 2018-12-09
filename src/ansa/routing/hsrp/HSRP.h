@@ -26,8 +26,8 @@
 #include "ansa/routing/hsrp/HSRPMessage_m.h"
 #include "ansa/routing/hsrp/HSRPVirtualRouter.h"
 
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
-#include "inet/networklayer/contract/ipv4/IPv4ControlInfo.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
+#include "inet/networklayer/contract/ipv4/Ipv4ControlInfo.h"
 #include "inet/common/ModuleAccess.h"
 
 namespace inet {
@@ -42,7 +42,7 @@ class HSRP : public cSimpleModule{
         std::vector<HSRPVirtualRouter *> virtualRouterTable;        //!< HSRP groups on this router
         std::vector<int> multicastInterfaces;                       //!< Joined multicast interfaces for HSRP listening
         L3Address *hsrpMulticast = nullptr;                         //!< HSRP multicast address
-        UDPSocket *socket;                                          //!< bound to the HSRP port (see udpPort parameter)
+        UdpSocket *socket;                                          //!< bound to the HSRP port (see udpPort parameter)
         std::string hostname;                                       //!< hostname of the device
         cModule *containingModule;                                  //!< Pointer to router which contain HSRP module
 

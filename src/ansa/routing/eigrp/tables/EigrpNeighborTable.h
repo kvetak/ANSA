@@ -24,12 +24,12 @@
 #ifndef __INET_EIGRPNEIGHBORTABLE_H_
 #define __INET_EIGRPNEIGHBORTABLE_H_
 
-//IPv6 ready
+//Ipv6 ready
 
 #include <omnetpp.h>
 
-//#include "IPv4Address.h"
-//#include "IPv6Address.h"    //IPv6 - ADDED for IPv6 support ... or Should I use IPvX ???
+//#include "Ipv4Address.h"
+//#include "Ipv6Address.h"    //Ipv6 - ADDED for Ipv6 support ... or Should I use IPvX ???
 //#include "ModuleAccess.h"
 
 #include "ansa/routing/eigrp/tables/EigrpNeighbor.h"
@@ -83,9 +83,9 @@ class EigrpNeighborTable : public cSimpleModule
 };
 
 //TODO - mozna predelat kontejnery do samostatnych souboru
-//typedef EigrpNeighborTable<IPv4Address> EigrpIpv4NeighborTable;       //IPv6 - ADDED for backward compatibility with old IPv4-only version
+//typedef EigrpNeighborTable<Ipv4Address> EigrpIpv4NeighborTable;       //Ipv6 - ADDED for backward compatibility with old Ipv4-only version
 
-class EigrpIpv4NeighborTable : public EigrpNeighborTable<IPv4Address>
+class EigrpIpv4NeighborTable : public EigrpNeighborTable<Ipv4Address>
 {
 //container class for IPv4NT, must exist because of Define_Module()
 public:
@@ -102,7 +102,7 @@ class INET_API Eigrpv4NeighTableAccess : public ModuleAccess<EigrpIpv4NeighborTa
 
 
 #ifndef DISABLE_EIGRP_IPV6
-class EigrpIpv6NeighborTable : public EigrpNeighborTable<IPv6Address>
+class EigrpIpv6NeighborTable : public EigrpNeighborTable<Ipv6Address>
 {
 //container class for IPv6NT, must exist because of Define_Module()
 public:

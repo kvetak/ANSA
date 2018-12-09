@@ -27,10 +27,10 @@
 #include "inet/networklayer/ipv6/IPv6Datagram.h"
 #include "inet/networklayer/ipv4/IPv4Datagram.h"
 #include "inet/networklayer/common/IPProtocolId_m.h"
-#include "inet/transportlayer/udp/UDP.h"
+#include "inet/transportlayer/udp/Udp.h"
 #include "inet/transportlayer/udp/UDPPacket.h"
-#include "inet/transportlayer/contract/udp/UDPSocket.h"
-#include "inet/transportlayer/contract/udp/UDPControlInfo.h"
+#include "inet/transportlayer/contract/udp/UdpSocket.h"
+#include "inet/transportlayer/contract/udp/UdpControlInfo.h"
 
 #include "ansa/routing/lisp/LISPServerEntry.h"
 #include "ansa/routing/lisp/LISPMapCache.h"
@@ -129,8 +129,8 @@ class LISPCore : public LISPCoreBase
     ServerAddresses     MapResolvers;
     ServerCItem         MapResolverQueue;
 
-    UDPSocket controlTraf;
-    UDPSocket dataTraf;
+    UdpSocket controlTraf;
+    UdpSocket dataTraf;
 
     bool mapServerV4;
     bool mapServerV6;

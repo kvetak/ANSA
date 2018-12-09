@@ -24,7 +24,7 @@
 #ifndef IEIGRPPDM_H_
 #define IEIGRPPDM_H_
 
-//#include "IPv4Address.h"
+//#include "Ipv4Address.h"
 
 #include "ansa/routing/eigrp/tables/EigrpRoute.h"
 namespace inet {

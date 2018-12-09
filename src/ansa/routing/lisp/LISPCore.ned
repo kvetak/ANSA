@@ -26,17 +26,17 @@ simple LISPCore
     parameters:
         @display("i=block/switch");                  
         xml configData = default(xml("<LISP />"));
-        bool mapServerV4 = default(false);				//Node acts as Map Server for IPv4 EIDs, overriden by XML config
-        bool mapServerV6 = default(false);				//Node acts as Map Server for IPv6 EIDs, overriden by XML config
-		bool mapResolverV4 = default(false);			//Node acts as Map Resolver for IPv4 EIDs, overriden by XML config
-        bool mapResolverV6 = default(false);    		//Node acts as Map Resolver for IPv6 EIDs, overriden by XML config
+        bool mapServerV4 = default(false);				//Node acts as Map Server for Ipv4 EIDs, overriden by XML config
+        bool mapServerV6 = default(false);				//Node acts as Map Server for Ipv6 EIDs, overriden by XML config
+		bool mapResolverV4 = default(false);			//Node acts as Map Resolver for Ipv4 EIDs, overriden by XML config
+        bool mapResolverV6 = default(false);    		//Node acts as Map Resolver for Ipv6 EIDs, overriden by XML config
         
         string rlocProbingAlgo = default("Cisco"); 		// Cisco OR Simple OR Sophisticated
         bool acceptMapRequestMapping = default(false);	//Whether MapReplyRecord from Map-Request should be cached
         int mapCacheTtl = default(1440); 				//CacheTTL in minutes for send Map-Replies
         
         bool echoNonceAlgo = default(false);			//Whether EchoNonceAlgorithm is on or off
-        bool ciscoStartupDelays = default(false);		//Shift rloc probing of IPv4 and IPv6
+        bool ciscoStartupDelays = default(false);		//Shift rloc probing of Ipv4 and Ipv6
         
         @signal[sigLispForward](type=bool);
         @signal[sigLispDrop](type=bool);        
@@ -45,10 +45,10 @@ simple LISPCore
         
                 
     gates:
-        input udpContrIn @labels(UDPControlInfo/up);
-        output udpContrOut @labels(UDPControlInfo/down);
-        input udpDataIn @labels(UDPControlInfo/up);
-        output udpDataOut @labels(UDPControlInfo/down);
+        input udpContrIn @labels(UdpControlInfo/up);
+        output udpContrOut @labels(UdpControlInfo/down);
+        input udpDataIn @labels(UdpControlInfo/up);
+        output udpDataOut @labels(UdpControlInfo/down);
         input  ipv4In;
         output ipv4Out;
         input  ipv6In;

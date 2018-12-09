@@ -12,7 +12,7 @@
 
 #include "inet/common/ModuleAccess.h"
 #include "inet/networklayer/arp/ipv4/ARPPacket_m.h"
-#include "inet/networklayer/ipv4/IPv4InterfaceData.h"
+#include "inet/networklayer/ipv4/Ipv4InterfaceData.h"
 
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
@@ -42,7 +42,7 @@ void HSRPVirtualRouter::initialize(int stage)
         hsrpUdpPort = HSRP_UDP_PORT;
         hsrpMulticast = new L3Address(HSRP_MULTICAST_ADDRESS.c_str());
         hsrpGroup = (int)par("group");
-        virtualIP = new IPv4Address(par("virtualIP").stringValue());
+        virtualIP = new Ipv4Address(par("virtualIP").stringValue());
         priority = (int)par("priority");
         preempt = (bool)par("preempt");
         hsrpState = DISABLED;
@@ -60,7 +60,7 @@ void HSRPVirtualRouter::initialize(int stage)
 
         //get neccessary OMNET parameters
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
-        arp = getModuleFromPar<ARP>(par("arp"), this);
+        arp = getModuleFromPar<Arp>(par("arp"), this);
         ie = dynamic_cast<ANSA_InterfaceEntry *>(ift->getInterfaceById((int) par("interface")));
 
         //add another VF to the interface
@@ -70,15 +70,15 @@ void HSRPVirtualRouter::initialize(int stage)
         ie->addVirtualForwarder(vf);
 
         //get socket ready
-        socket = new UDPSocket();
+        socket = new UdpSocket();
         socket->setOutputGate(gate("udpOut"));
         socket->setMulticastLoop(false);
 
         //TODO another reactions to different signals (router down and so on..)
         //subscribe to notifications
-//        containingModule->subscribe(NF_INTERFACE_CREATED, this);
-//        containingModule->subscribe(NF_INTERFACE_DELETED, this);
-        containingModule->subscribe(NF_INTERFACE_STATE_CHANGED, this);
+//        containingModule->subscribe(interfaceCreatedSignal, this);
+//        containingModule->subscribe(interfaceDeletedSignal, this);
+        containingModule->subscribe(interfaceStateChangedSignal, this);
 
         //start HSRP
         scheduleAt(simTime() , initmessage);
@@ -252,7 +252,7 @@ void HSRPVirtualRouter::listenState(){
  */
 void HSRPVirtualRouter::handleMessageLearn(HSRPMessage *msg)
 {
-//    zkontroluj zda msg obsahuje IPv4 adresu - sli jo, tak si ji uloz jako virtual
+//    zkontroluj zda msg obsahuje Ipv4 adresu - sli jo, tak si ji uloz jako virtual
 //    a prejdi do stavu listen
 //    msg->getAddress();
     if (msg->getAddress().isUnspecified()){
@@ -486,7 +486,7 @@ void HSRPVirtualRouter::handleMessageListen(HSRPMessage *msg)
 
 void HSRPVirtualRouter::setVirtualMAC()
 {
-    virtualMAC = new MACAddress("00-00-0C-07-AC-00");
+    virtualMAC = new MacAddress("00-00-0C-07-AC-00");
     virtualMAC->setAddressByte(5, hsrpGroup);
 //    EV_DEBUG<<"routerID:"<<par("deviceId").str()<<"vMAC:"<<virtualMAC->str()<<"\n";
 }
@@ -538,7 +538,7 @@ void HSRPVirtualRouter::sendMessage(OP_CODE opCode)
     HSRPMessage *packet = generateMessage(opCode);
     packet->setBitLength(HSRP_HEADER_SIZE);
 
-    UDPSocket::SendOptions options;
+    UdpSocket::SendOptions options;
     options.outInterfaceId = ie->getInterfaceId();
     options.srcAddr = ie->ipv4Data()->getIPAddress();
 
@@ -584,9 +584,9 @@ HSRPVirtualRouter::~HSRPVirtualRouter() {
     cancelAndDelete(initmessage);
 
     // unsubscribe to notifications
-//    containingModule->unsubscribe(NF_INTERFACE_CREATED, this);
-//    containingModule->unsubscribe(NF_INTERFACE_DELETED, this);
-    containingModule->unsubscribe(NF_INTERFACE_STATE_CHANGED, this);
+//    containingModule->unsubscribe(interfaceCreatedSignal, this);
+//    containingModule->unsubscribe(interfaceDeletedSignal, this);
+    containingModule->unsubscribe(interfaceStateChangedSignal, this);
 
 //    This is the end
 //    Beautiful friend
@@ -605,7 +605,7 @@ void HSRPVirtualRouter::receiveSignal(cComponent *source, simsignal_t signalID, 
     const ANSA_InterfaceEntry *ief;
     const InterfaceEntryChangeDetails *change;
 
-    if (signalID == NF_INTERFACE_STATE_CHANGED) {
+    if (signalID == interfaceStateChangedSignal) {
 
         change = check_and_cast<const InterfaceEntryChangeDetails *>(obj);
         ief = check_and_cast<const ANSA_InterfaceEntry *>(change->getInterfaceEntry());

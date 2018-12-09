@@ -24,7 +24,7 @@
 
 #include "inet/common/INETDefs.h"
 #include "ansa/linklayer/ethernet/ANSA_EtherMACBaseVF.h"
-#include "inet/linklayer/ethernet/EtherMACBase.h"
+#include "inet/linklayer/ethernet/EtherMacBase.h"
 
 namespace inet{
 class INET_API ANSA_EtherMACFullDuplex : public ANSA_EtherMACBaseVF

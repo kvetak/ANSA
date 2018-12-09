@@ -22,14 +22,14 @@
 
 
 cplusplus {{
-    #include "inet/networklayer/contract/ipv4/IPv4Address.h"
-    #include "inet/networklayer/contract/ipv6/IPv6Address.h"   
+    #include "inet/networklayer/contract/ipv4/Ipv4Address.h"
+    #include "inet/networklayer/contract/ipv6/Ipv6Address.h"   
     
     using namespace inet;
 }}
 
-class noncobject IPv4Address;
-class noncobject IPv6Address;
+class noncobject Ipv4Address;
+class noncobject Ipv6Address;
 
 // Codes of EIGRP messages
 enum HeaderOpcode
@@ -112,7 +112,7 @@ struct EigrpTlvParameter
     uint16_t holdTimer;
 };
 
-// IPv4 TLV Internal route
+// Ipv4 TLV Internal route
 //struct EigrpIpv4Internal
 //{
 //    // type
@@ -121,51 +121,51 @@ struct EigrpTlvParameter
 //    // length
 //    uint16_t length = 28;
 //    // value
-//    IPv4Address routerID;		// IP of originating router (also in exterior TLV)
-// 	IPv4Address nextHop;   
+//    Ipv4Address routerID;		// IP of originating router (also in exterior TLV)
+// 	Ipv4Address nextHop;   
 // 	EigrpMetricPar metric;
 // 	EigrpRouteFlags flags;
-// 	IPv4Address destMask;	 	// Destination
-// 	IPv4Address destAddress;
+// 	Ipv4Address destMask;	 	// Destination
+// 	Ipv4Address destAddress;
 //};
 
-// Multiprotocol Ipv4 (IPv4Address used) Internal TLV route
+// Multiprotocol Ipv4 (Ipv4Address used) Internal TLV route
 struct EigrpMpIpv4Internal
 {
     // type
     char typeHigh = 6;
     char typeLow = EIGRP_TLV_ROUTE;
     // value
-    uint16_t afi;				// Address Family ID, IPv4 = 1, Ipv6 = 2
+    uint16_t afi;				// Address Family ID, Ipv4 = 1, Ipv6 = 2
     uint16_t tid;				// Topology ID
-    IPv4Address routerID;		// Router ID
+    Ipv4Address routerID;		// Router ID
 
  	EigrpWideMetricPar metric;
  	EigrpRouteFlags flags;
  	
- 	IPv4Address nextHop;
- 	IPv4Address destMask;
- 	IPv4Address destAddress;
+ 	Ipv4Address nextHop;
+ 	Ipv4Address destMask;
+ 	Ipv4Address destAddress;
 };
 
 
-// Multiprotocol Ipv6 (IPv6Address used) Internal TLV route
+// Multiprotocol Ipv6 (Ipv6Address used) Internal TLV route
 struct EigrpMpIpv6Internal
 {
     // type
     char typeHigh = 6;
     char typeLow = EIGRP_TLV_ROUTE;
     // value
-    uint16_t afi = 2;				// Address Family ID, IPv4 = 1, Ipv6 = 2
+    uint16_t afi = 2;				// Address Family ID, Ipv4 = 1, Ipv6 = 2
     uint16_t tid;				// Topology ID
-    IPv4Address routerID;		// Router ID
+    Ipv4Address routerID;		// Router ID
 
  	EigrpWideMetricPar metric;
  	EigrpRouteFlags flags;
  	
- 	IPv6Address nextHop;
- 	IPv6Address destMask;
- 	IPv6Address destAddress;
+ 	Ipv6Address nextHop;
+ 	Ipv6Address destMask;
+ 	Ipv6Address destAddress;
 };
 
 
@@ -217,7 +217,7 @@ packet EigrpIpv4Message extends EigrpMessage
 
 packet EigrpIpv6Message extends EigrpMessage
 {
-    EigrpMpIpv6Internal interRoutes[]; //TODO - dost zvlastni pouziti, jestli bude cas tak predelat - pouze kopiruji pristup z IPv4
+    EigrpMpIpv6Internal interRoutes[]; //TODO - dost zvlastni pouziti, jestli bude cas tak predelat - pouze kopiruji pristup z Ipv4
 };
 
 // EIGRP Update Message
@@ -251,7 +251,7 @@ packet EigrpIpv6Reply extends EigrpIpv6Message
 };
 
 //
-// EIGRP RTP
+// EIGRP Rtp
 //
 struct EigrpMsgRoute
 {
@@ -259,7 +259,7 @@ struct EigrpMsgRoute
     int routeId;           	// ID of route 
     bool unreachable;       // Route with maximal metric 
     bool invalid;
-    IPv4Address originator;
+    Ipv4Address originator;
 };
 
 // Message request

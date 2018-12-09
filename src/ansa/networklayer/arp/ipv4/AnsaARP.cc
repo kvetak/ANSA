@@ -29,7 +29,7 @@ Define_Module(AnsaARP);
 
 simsignal_t AnsaARP::recvReqSignal = registerSignal("recvRequest");
 
-MACAddress AnsaARP::getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp)
+MacAddress AnsaARP::getMacAddressForArpReply(InterfaceEntry *ie, ArpPacket *arp)
 {
     if ( dynamic_cast<ANSA_InterfaceEntry *>(ie) != nullptr ) {
         ANSA_InterfaceEntry *aie = dynamic_cast<ANSA_InterfaceEntry *>(ie);
@@ -39,7 +39,7 @@ MACAddress AnsaARP::getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp)
         //is it GLBP protocol?
         if( (vfn != -1) && (dynamic_cast<GLBPVirtualForwarder *>(vf) != nullptr) ){
             GLBPVirtualForwarder *GLBPVf = dynamic_cast<GLBPVirtualForwarder *>(vf);
-            MACAddress myMACAddress;
+            MacAddress myMACAddress;
 
             //arp req to AVG?
             if (GLBPVf->isAVG()){
@@ -49,7 +49,7 @@ MACAddress AnsaARP::getMacAddressForArpReply(InterfaceEntry *ie, ARPPacket *arp)
                     return myMACAddress;
                 }
             }else if (!GLBPVf->isDisable()){
-                return MACAddress::UNSPECIFIED_ADDRESS;
+                return MacAddress::UNSPECIFIED_ADDRESS;
             }
             return myMACAddress;
         }else{
