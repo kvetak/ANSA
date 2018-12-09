@@ -1012,7 +1012,7 @@ void CDPMain::setTlvCapabilities(CDPUpdate *msg, int pos)
 void CDPMain::setTlvDuplex(CDPUpdate *msg, int pos, int interfaceId)
 {
     CDPOptionDupl *tlv = new CDPOptionDupl();
-    tlv->setFullDuplex(ift->getInterfaceById(interfaceId)->getSubmodule("mac")->par("duplexMode"));
+    tlv->setFullDuplex(ift->getInterfaceById(interfaceId)->getSubmodule("mac")->par("duplexMode").boolValue());
     msg->setOptionLength(tlv);
     msg->addOption(tlv, pos);
 }
@@ -1056,7 +1056,7 @@ void CDPMain::setTlvIpPrefix(CDPUpdate *msg, int pos, int interfaceId)
 
         for(int i=0, count = 1; i < ift->getNumInterfaces(); ++i)
         {
-            // add to prefixes only interfaces with specified IPv4 address, that are
+            // add to prefixes only interfaces with specified Ipv4 address, that are
             // not loopback and are not outgoing interface for this message
             if(ift->getInterface(i)->findProtocolData<Ipv4InterfaceData>() != nullptr &&
                     !ift->getInterface(i)->getProtocolData<Ipv4InterfaceData>()->getIPAddress().isUnspecified() &&
