@@ -24,9 +24,10 @@
 #include "ansa/networklayer/clns/CLNSRoutingTable.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/common/ModuleAccess.h"
-#include "ansa/networklayer/isis/ISISMessage_m.h"
+//#include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "inet/linklayer/common/Ieee802Ctrl.h"
-#include "inet/networklayer/contract/clns/CLNSControlInfo.h"
+#include "inet/linklayer/common/InterfaceTag_m.h"
+//#include "inet/networklayer/contract/clns/ClnsControlInfo.h"
 
 namespace inet {
 
@@ -43,6 +44,11 @@ void CLNS::initialize(int stage)
 
     transportInGateBaseId = gateBaseId("transportIn");
     queueOutGateBaseId = gateBaseId("queueOut");
+
+
+    registerService(Protocol::clns, gate("transportIn"), gate("queueIn"));
+    registerProtocol(Protocol::clns, gate("queueOut"), gate("transportOut"));
+
   }
   else if (stage == INITSTAGE_LAST) {
     isUp = true;
@@ -51,12 +57,14 @@ void CLNS::initialize(int stage)
 
 void CLNS::handleMessage(cMessage *msg)
 {
-  if (dynamic_cast<RegisterTransportProtocolCommand *>(msg)) {
-    RegisterTransportProtocolCommand *command = check_and_cast<RegisterTransportProtocolCommand *>(msg);
-    mapping.addProtocolMapping(command->getProtocol(), msg->getArrivalGate()->getIndex());
-    delete msg;
-  }
-  else if (!msg->isSelfMessage() && msg->getArrivalGate()->isName("arpIn"))
+    //TODO This was replaces by the protocol register?
+//  if (dynamic_cast<RegisterTransportProtocolCommand *>(msg)) {
+//    RegisterTransportProtocolCommand *command = check_and_cast<RegisterTransportProtocolCommand *>(msg);
+//    mapping.addProtocolMapping(command->getProtocol(), msg->getArrivalGate()->getIndex());
+//    delete msg;
+//  }
+//  else
+      if (!msg->isSelfMessage() && msg->getArrivalGate()->isName("arpIn"))
     endService(PK(msg));
   else
     QueueBase::handleMessage(msg);
@@ -71,16 +79,16 @@ void CLNS::endService(cPacket *packet)
     return;
   }
   if (packet->getArrivalGate()->isName("transportIn")) { //TODO packet->getArrivalGate()->getBaseId() == transportInGateBaseId
-    handlePacketFromHL(packet);
+    handlePacketFromHL(check_and_cast<Packet*>(packet));
   }
 //  else if (packet->getArrivalGate() == arpInGate) {
 //    handlePacketFromARP(packet);
 //  }
   else {    // from network
     EV_INFO << "Received " << packet << " from network.\n";
-    const InterfaceEntry *fromIE = getSourceInterfaceFrom(packet);
-    if (dynamic_cast<ISISMessage *>(packet))
-      handleIncomingISISMessage((ISISMessage *) packet, fromIE);
+    const InterfaceEntry *fromIE = getSourceInterfaceFrom(check_and_cast<Packet*>(packet));
+    if (dynamic_cast<Packet *>(packet))
+      handleIncomingISISMessage(check_and_cast<Packet*>(packet), fromIE);
 //    else if (dynamic_cast<IPv4Datagram *>(packet))
 //      handleIncomingDatagram((IPv4Datagram *) packet, fromIE);
     else
@@ -91,64 +99,83 @@ void CLNS::endService(cPacket *packet)
     updateDisplayString();
 }
 
-void CLNS::handleIncomingISISMessage(ISISMessage* packet, const InterfaceEntry* fromIE)
+void CLNS::handleIncomingISISMessage(Packet* packet, const InterfaceEntry* fromIE)
 {
-  int protocol = 1234;
-  Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(packet->getControlInfo());
-  ctrl->setInterfaceId(fromIE->getInterfaceId());
+    send(packet, "transportOut");
+//  int protocol = 1234;
+//  Ieee802Ctrl* ctrl = static_cast<Ieee802Ctrl*>(packet->getControlInfo());
+//  ctrl->setInterfaceId(fromIE->getInterfaceId());
 
 
 
-  int gateindex = mapping.findOutputGateForProtocol(protocol);
+//  int gateindex = mapping.findOutputGateForProtocol(protocol);
       // check if the transportOut port are connected, otherwise discard the packet
-  if (gateindex >= 0) {
-    cGate *outGate = gate("transportOut", gateindex);
-    if (outGate->isPathOK()) {
-      send(packet, outGate);
-      numLocalDeliver++;
-      return;
-    }
-  }
-
-  EV_ERROR << "Transport protocol ID=" << protocol << " not connected, discarding packet\n";
+//  if (gateindex >= 0) {
+//    cGate *outGate = gate("transportOut", gateindex);
+//    if (outGate->isPathOK()) {
+//      send(packet, outGate);
+//      numLocalDeliver++;
+//      return;
+//    }
+//  }
+//
+//  EV_ERROR << "Transport protocol ID=" << protocol << " not connected, discarding packet\n";
 
 }
 
-const InterfaceEntry *CLNS::getSourceInterfaceFrom(cPacket *packet)
+const InterfaceEntry *CLNS::getSourceInterfaceFrom(Packet *packet)
 {
-    cGate *g = packet->getArrivalGate();
-    return g ? ift->getInterfaceByNetworkLayerGateIndex(g->getIndex()) : nullptr;
+    int interfaceId = packet->getTag<InterfaceInd>()->getInterfaceId();
+    return ift->getInterfaceById(interfaceId);
+//    cGate *g = packet->getArrivalGate();
+//    return g ? ift->getInterfaceByNetworkLayerGateIndex(g->getIndex()) : nullptr;
 }
 
 
-void CLNS::handlePacketFromHL(cPacket *packet)
+void CLNS::handlePacketFromHL(Packet *packet)
 {
     EV_INFO << "Received " << packet << " from upper layer.\n";
 
-    // if no interface exists, do not send datagram
-    if (ift->getNumInterfaces() == 0) {
-        EV_ERROR << "No interfaces exist, dropping packet\n";
-        numDropped++;
-        delete packet;
-        return;
-    }
 
-    if(dynamic_cast<ISISMessage*>(packet)){
-      CLNSControlInfo* info = static_cast<CLNSControlInfo*>(packet->removeControlInfo());
-      int id = info->getInterfaceId();
-      InterfaceEntry *ie = ift->getInterfaceById(id);
-      if(ie != nullptr){
-        Ieee802Ctrl* ctrl = new Ieee802Ctrl();
-        ctrl->setSrc(info->getSrc());
-        ctrl->setDest(info->getDest());
-        ctrl->setSsap(SAP_CLNS);
-        ctrl->setDsap(SAP_CLNS);
-        ctrl->setInterfaceId(id);
-        packet->setControlInfo(ctrl);
-        send(packet, queueOutGateBaseId + ie->getNetworkLayerGateIndex());
-      }
-      delete info;
-    }
+    //TODO Fix it properly, use Ieee802SapTag with SAP_CLNS (see EtherFrameWithLlc)
+    send(packet, queueOutGateBaseId);
+
+//    // if no interface exists, do not send datagram
+//    if (ift->getNumInterfaces() == 0) {
+//        EV_ERROR << "No interfaces exist, dropping packet\n";
+//        numDropped++;
+//        delete packet;
+//        return;
+//    }
+//
+//    if(dynamic_cast<ISISMessage*>(packet)){
+//      CLNSControlInfo* info = static_cast<CLNSControlInfo*>(packet->removeControlInfo());
+//      int id = info->getInterfaceId();
+//      InterfaceEntry *ie = ift->getInterfaceById(id);
+//      if(ie != nullptr){
+//        Ieee802Ctrl* ctrl = new Ieee802Ctrl();
+//        ctrl->setSrc(info->getSrc());
+//        ctrl->setDest(info->getDest());
+//        ctrl->setSsap(SAP_CLNS);
+//        ctrl->setDsap(SAP_CLNS);
+//        ctrl->setInterfaceId(id);
+//        packet->setControlInfo(ctrl);
+//        send(packet, queueOutGateBaseId + ie->getNetworkLayerGateIndex());
+//      }
+//      delete info;
+//    }
+}
+
+void CLNS::handleRegisterService(const Protocol& protocol, cGate *out, ServicePrimitive servicePrimitive)
+{
+    Enter_Method("handleRegisterService");
+}
+
+void CLNS::handleRegisterProtocol(const Protocol& protocol, cGate *in, ServicePrimitive servicePrimitive)
+{
+    Enter_Method("handleRegisterProtocol");
+    if (in->isName("transportIn"))
+            upperProtocols.insert(&protocol);
 }
 
 void CLNS::updateDisplayString()
@@ -167,7 +194,7 @@ void CLNS::updateDisplayString()
 //    getDisplayString().setTagArg("t", 0, buf);
 }
 
-CLNSAddress CLNS::getKAddress(unsigned int k) const {
+ClnsAddress CLNS::getKAddress(unsigned int k) const {
 
     if(k< localAddresses.size())
     {

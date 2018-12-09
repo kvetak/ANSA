@@ -25,9 +25,9 @@ simple CLNS
         double procDelay @unit("s") = default(0s);
     gates:
         
-        input transportIn[] @labels(CLNSControlInfo/down,ISISMessage);
-        output transportOut[] @labels(CLNSControlInfo/up,ISISMessage);
+        input transportIn @labels(CLNSControlInfo/down,ISISMessage);
+        output transportOut @labels(CLNSControlInfo/up,ISISMessage);
         
-        input queueIn[] @labels(ISISMessage,Ieee802Ctrl);
-        output queueOut[] @labels(ISISMessage,Ieee802Ctrl);
+        input queueIn @labels(ISISMessage,Ieee802Ctrl);
+        output queueOut @labels(ISISMessage,Ieee802Ctrl);
 }

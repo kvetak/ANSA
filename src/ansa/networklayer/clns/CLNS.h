@@ -28,12 +28,14 @@
 
 #include "inet/common/INETDefs.h"
 
+#include "inet/common/IProtocolRegistrationListener.h"
 #include "inet/networklayer/contract/INetworkProtocol.h"
 //#include "ansa/networklayer/isis/ISISMessage_m.h"
-#include "inet/common/ProtocolMap.h"
+//#include "inet/common/ProtocolMap.h"
 #include "inet/common/queue/QueueBase.h"
+#include "inet/common/packet/Packet.h"
 
-#include "inet/networklayer/contract/clns/CLNSAddress.h"
+#include "inet/networklayer/contract/clns/ClnsAddress.h"
 //#include "inet/networklayer/common/InterfaceEntry.h"
 
 
@@ -41,7 +43,7 @@ using namespace omnetpp;
 
 namespace inet {
 
-class ISISMessage;
+//class ISISMessage;
 class IInterfaceTable;
 class CLNSRoutingTable;
 class InterfaceEntry;
@@ -49,10 +51,10 @@ class InterfaceEntry;
 /**
  * TODO - Generated class
  */
-class INET_API CLNS : public QueueBase, public INetworkProtocol
+class INET_API CLNS : public QueueBase, public INetworkProtocol, public IProtocolRegistrationListener
 {
   public:
-    typedef std::vector<CLNSAddress> CLNSAddressVector;
+    typedef std::vector<ClnsAddress> CLNSAddressVector;
 
   private:
 
@@ -69,7 +71,7 @@ class INET_API CLNS : public QueueBase, public INetworkProtocol
     int transportInGateBaseId = -1;
     int queueOutGateBaseId = -1;
 
-    ProtocolMapping mapping;
+//    ProtocolMapping mapping;
     bool isUp = false;
 
 
@@ -79,6 +81,9 @@ class INET_API CLNS : public QueueBase, public INetworkProtocol
     int numDropped = 0;    // forwarding off, no outgoing interface, too large but "don't fragment" is set, TTL exceeded, etc
     int numUnroutable = 0;
     int numForwarded = 0;
+
+    std::set<const Protocol *> upperProtocols;    // where to send packets after decapsulation
+
 
 
 
@@ -90,13 +95,17 @@ class INET_API CLNS : public QueueBase, public INetworkProtocol
 
     virtual void endService(cPacket *packet) override;
 
-    virtual void handlePacketFromHL(cPacket *packet);
-    virtual void handleIncomingISISMessage(ISISMessage* packet, const InterfaceEntry *fromIE);
-    virtual const InterfaceEntry *getSourceInterfaceFrom(cPacket *packet);
+    virtual void handlePacketFromHL(Packet *packet);
+    virtual void handleIncomingISISMessage(Packet* packet, const InterfaceEntry *fromIE);
+    virtual const InterfaceEntry *getSourceInterfaceFrom(Packet *packet);
 
 
   public:
-    CLNSAddress getKAddress(unsigned int k) const;
+    ClnsAddress getKAddress(unsigned int k) const;
+
+    virtual void handleRegisterService(const Protocol& protocol, cGate *out, ServicePrimitive servicePrimitive) override;
+    virtual void handleRegisterProtocol(const Protocol& protocol, cGate *in, ServicePrimitive servicePrimitive) override;
+
 };
 
 } //namespace

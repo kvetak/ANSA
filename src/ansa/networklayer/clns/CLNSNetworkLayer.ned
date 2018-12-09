@@ -15,7 +15,8 @@
 
 package ansa.networklayer.clns;
 
-//import inet.networklayer.configurator.ipv4.IPv4NodeConfigurator;
+import inet.common.MessageDispatcher;
+//import inet.networklayer.configurator.ipv4.Ipv4NodeConfigurator;
 import inet.networklayer.contract.INetworkLayer;
 
 
@@ -43,56 +44,51 @@ module CLNSNetworkLayer like INetworkLayer
         output ifOut @labels(INetworkDatagram);
         input transportIn @labels(CLNSControlInfo/down);
         output transportOut @labels(CLNSControlInfo/up);
-        input pingIn[] @labels(PingPayload/down);
-        output pingOut[] @labels(PingPayload/up);
+//        input pingIn[] @labels(PingPayload/down);
+//        output pingOut[] @labels(PingPayload/up);
 //        input igmpIn;
 //        output igmpOut;
 
     submodules:
-//        configurator: IPv4NodeConfigurator {
+//        configurator: Ipv4NodeConfigurator {
 //            @display("p=39,158");
 //        }
         clns: CLNS {
             parameters:
                 
                 @display("p=85,95;q=queue");
-            gates:
-                queueIn[sizeof(ifIn)];
-                queueOut[sizeof(ifOut)];
+            
+        }
+        up: MessageDispatcher {
+            parameters:
+                @display("p=550,100;b=600,5");
+        }
+                lp: MessageDispatcher {
+            parameters:
+                @display("p=550,500;b=600,5");
         }
         
 
     connections allowunconnected:
-        for i=0..sizeof(transportIn)-1 {
-            transportIn[i] --> { @display("m=n"); } --> clns.transportIn++;
-        }
-        for i=0..sizeof(transportOut)-1 {
-            clns.transportOut++ --> { @display("m=n"); } --> transportOut[i];
-        }
-
+        transportIn --> { @display("m=n"); } --> up.in++;
+        transportOut <-- { @display("m=n"); } <-- up.out++;
         
-
-        
-//        for i=0..sizeof(pingOut)-1 {
-//            icmp.pingOut++ --> { @display("m=n"); } --> pingOut[i];
+//        for i=0..sizeof(transportIn)-1 {
+//            transportIn[i] --> { @display("m=n"); } --> clns.transportIn++;
 //        }
-//        for i=0..sizeof(pingIn)-1 {
-//            icmp.pingIn++ <-- { @display("m=n"); } <-- pingIn[i];
+//        for i=0..sizeof(transportOut)-1 {
+//            clns.transportOut++ --> { @display("m=n"); } --> transportOut[i];
 //        }
 
-//        icmp.errorOut --> errorHandling.in;
+		up.out++ --> clns.transportIn;
+        up.in++ <-- clns.transportOut;
+        
 
-//        ip.arpOut --> arp.netwIn;
-//        ip.arpIn <-- arp.netwOut;
-
-//        igmp.routerOut --> igmpOut;
-//        igmp.routerIn <-- igmpIn;
-
-        for i=0..sizeof(ifIn)-1 {
-            clns.queueIn[i] <-- { @display("m=s"); } <-- ifIn[i];
-        }
-        for i=0..sizeof(ifOut)-1 {
-            clns.queueOut[i] --> { @display("m=s"); } --> ifOut[i];
-        }
+		clns.queueOut --> lp.in++;
+        clns.queueIn <-- lp.out++;
+        
+        
+        lp.out++ --> { @display("m=s"); } --> ifOut;
+        lp.in++ <-- { @display("m=s"); } <-- ifIn;
 }
 
