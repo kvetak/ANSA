@@ -25,6 +25,6 @@ simple CLNSRoutingTable like IRoutingTable
         string interfaceTableModule;   // The path to the InterfaceTable module
         bool forwarding = default(true);
         bool multicastForwarding = default(false);
-        @signal[NF_ROUTE_ADDED](type=CLNSRoute);
-        @signal[NF_ROUTE_CHANGED](type=CLNSRoute);
+        @signal[routeAddedSignal](type=CLNSRoute);
+        @signal[routeChangedSignal](type=CLNSRoute);
 }

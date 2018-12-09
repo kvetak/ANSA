@@ -21,7 +21,7 @@
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "ansa/networklayer/clns/CLNSInterfaceData.h"
 #include "ansa/networklayer/clns/CLNSRoute.h"
-#include "inet/common/NotifierConsts.h"
+#include "inet/common/Simsignals.h"
 //#include "inet/networklayer/ipv4/RoutingTableParser.h"
 #include "inet/common/lifecycle/NodeOperations.h"
 #include "inet/common/lifecycle/NodeStatus.h"
@@ -43,12 +43,12 @@ std::ostream& operator<<(std::ostream& os, const CLNSRoute& e)
     return os;
 };
 
-const CLNSAddress& CLNSRoutingTable::getRouterId() const
+const ClnsAddress& CLNSRoutingTable::getRouterId() const
 {
   return routerId;
 }
 
-void CLNSRoutingTable::setRouterId(const CLNSAddress& routerId)
+void CLNSRoutingTable::setRouterId(const ClnsAddress& routerId)
 {
   this->routerId = routerId;
 }
@@ -67,11 +67,11 @@ void CLNSRoutingTable::initialize(int stage)
   if (stage == INITSTAGE_LOCAL) {
       // get a pointer to the host module and IInterfaceTable
       cModule *host = getContainingNode(this);
-      host->subscribe(NF_INTERFACE_CREATED, this);
-      host->subscribe(NF_INTERFACE_DELETED, this);
-      host->subscribe(NF_INTERFACE_STATE_CHANGED, this);
-      host->subscribe(NF_INTERFACE_CONFIG_CHANGED, this);
-      host->subscribe(NF_INTERFACE_CLNSCONFIG_CHANGED, this);
+      host->subscribe(interfaceCreatedSignal, this);
+      host->subscribe(interfaceDeletedSignal, this);
+      host->subscribe(interfaceStateChangedSignal, this);
+      host->subscribe(interfaceConfigChangedSignal, this);
+      host->subscribe(interfaceClnsConfigChangedSignal, this);
 
       ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
 
@@ -96,10 +96,10 @@ void CLNSRoutingTable::initialize(int stage)
         //TODO: A1 What about routerID?
 //          const char *routerIdStr = par("routerId").stringValue();
 //          if (strcmp(routerIdStr, "") && strcmp(routerIdStr, "auto"))
-//              routerId = CLNSAddress(routerIdStr);
+//              routerId = ClnsAddress(routerIdStr);
       }
   }
-  else if (stage == INITSTAGE_NETWORK_LAYER_3) {
+  else if (stage == INITSTAGE_NETWORK_LAYER) {//used to be INITSTAGE_NETWORK_LAYER3
       if (isNodeUp) {
           // read routing table file (and interface configuration)
 
@@ -126,14 +126,14 @@ void CLNSRoutingTable::invalidateCache()
 //    localBroadcastAddresses.clear();
 }
 
-bool CLNSRoutingTable::isLocalAddress(const CLNSAddress& dest) const
+bool CLNSRoutingTable::isLocalAddress(const ClnsAddress& dest) const
 {
     Enter_Method("isLocalAddress()");    // note: str().c_str() too slow here
 //
 //    if (localAddresses.empty()) {
 //        // collect interface addresses if not yet done
 //        for (int i = 0; i < ift->getNumInterfaces(); i++) {
-//            CLNSAddress interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
+//            ClnsAddress interfaceAddr = ift->getInterface(i)->ipv4Data()->getIPAddress();
 //            localAddresses.insert(interfaceAddr);
 //        }
 //    }
@@ -149,7 +149,7 @@ bool CLNSRoutingTable::isLocalAddress(const CLNSAddress& dest) const
     return it != localAddresses.end();
 }
 
-void CLNSRoutingTable::addLocalAddress(const CLNSAddress& address)
+void CLNSRoutingTable::addLocalAddress(const ClnsAddress& address)
 {
     localAddresses.insert(address);
 }
@@ -162,17 +162,17 @@ void CLNSRoutingTable::printRoutingTable() const
     EV << stringf("%-16s %-16s %-4s %-16s %s\n",
             "Destination", "Gateway", "Iface", "", "Metric");
 
-    for (int i = 0; i < getNumRoutes(); i++) {
-        CLNSRoute *route = getRoute(i);
-        InterfaceEntry *interfacePtr = route->getInterface();
-        EV << stringf("%-26s %-26s %-4s (.%d) %d\n",
-                route->getDestination().isUnspecified() ? "*" : route->getDestination().str().c_str(),
-                route->getGateway().isUnspecified() ? "*" : route->getGateway().str().c_str(),
-                !interfacePtr ? "*" : interfacePtr->getName(),
-                !interfacePtr ? 99 : interfacePtr->clnsData()->getCircuitId(),
-                route->getMetric());
-    }
-    EV << "\n";
+//    for (int i = 0; i < getNumRoutes(); i++) {
+//        CLNSRoute *route = getRoute(i);
+//        InterfaceEntry *interfacePtr = route->getInterface();
+//        EV << stringf("%-26s %-26s %-4s (.%d) %d\n",
+//                route->getDestination().isUnspecified() ? "*" : route->getDestination().str().c_str(),
+//                route->getGateway().isUnspecified() ? "*" : route->getGateway().str().c_str(),
+//                !interfacePtr ? "*" : interfacePtr->getName(),
+//                !interfacePtr ? 99 : interfacePtr->clnsData()->getCircuitId(),
+//                route->getMetric());
+//    }
+//    EV << "\n";
 }
 
 
@@ -192,7 +192,7 @@ void CLNSRoutingTable::addRoute(CLNSRoute *entry)
     invalidateCache();
     updateDisplayString();
 
-    emit(NF_ROUTE_ADDED, entry);
+    emit(routeAddedSignal, entry);
 }
 
 CLNSRoute *CLNSRoutingTable::internalRemoveRoute(CLNSRoute *entry)
@@ -245,7 +245,7 @@ void CLNSRoutingTable::internalAddRoute(CLNSRoute *entry)
     entry->setRoutingTable(this);
 }
 
-CLNSRoute *CLNSRoutingTable::findBestMatchingRoute(const CLNSAddress& dest) const
+CLNSRoute *CLNSRoutingTable::findBestMatchingRoute(const ClnsAddress& dest) const
 {
     Enter_Method("findBestMatchingRoute");
 
@@ -260,7 +260,7 @@ CLNSRoute *CLNSRoutingTable::findBestMatchingRoute(const CLNSAddress& dest) cons
     CLNSRoute *bestRoute = nullptr;
     for (auto e : routes) {
         if (e->isValid()) {
-//            if (CLNSAddress::maskedAddrAreEqual(dest, e->getDestination(), e->getNetmask())) {    // match
+//            if (ClnsAddress::maskedAddrAreEqual(dest, e->getDestination(), e->getNetmask())) {    // match
           if (dest == e->getDestination()) {    // match
                 bestRoute = const_cast<CLNSRoute *>(e);
                 break;
@@ -304,31 +304,31 @@ void CLNSRoutingTable::handleMessage(cMessage *msg)
   throw cRuntimeError("This module doesn't process messages");
 }
 
-void CLNSRoutingTable::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj DETAILS_ARG)
+void CLNSRoutingTable::receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details)
 {
     if (getSimulation()->getContextType() == CTX_INITIALIZE)
         return; // ignore notifications during initialize
 
     Enter_Method_Silent();
-    printNotificationBanner(signalID, obj);
+//    printNotificationBanner(signalID, obj);
 
-    if (signalID == NF_INTERFACE_CREATED) {
+    if (signalID == interfaceCreatedSignal) {
         // add netmask route for the new interface
       //TODO A1 NETMASK
 //        updateNetmaskRoutes();
     }
-    else if (signalID == NF_INTERFACE_DELETED) {
+    else if (signalID == interfaceDeletedSignal) {
         // remove all routes that point to that interface
         const InterfaceEntry *entry = check_and_cast<const InterfaceEntry *>(obj);
 //        deleteInterfaceRoutes(entry);
     }
-    else if (signalID == NF_INTERFACE_STATE_CHANGED) {
+    else if (signalID == interfaceStateChangedSignal) {
         invalidateCache();
     }
-    else if (signalID == NF_INTERFACE_CONFIG_CHANGED) {
+    else if (signalID == interfaceConfigChangedSignal) {
         invalidateCache();
     }
-    else if (signalID == NF_INTERFACE_CLNSCONFIG_CHANGED) {
+    else if (signalID == interfaceClnsConfigChangedSignal) {
         // if anything CLNS-related changes in the interfaces, interface netmask
         // based routes have to be re-built.
 //        updateNetmaskRoutes();
@@ -384,7 +384,13 @@ void CLNSRoutingTable::routeChanged(CLNSRoute *entry, int fieldCode)
         invalidateCache();
         updateDisplayString();
     }
-    emit(NF_ROUTE_CHANGED, entry);    // TODO include fieldCode in the notification
+    emit(routeChangedSignal, entry);    // TODO include fieldCode in the notification
+}
+
+bool CLNSRoutingTable::isAdminDistEnabled() const
+{
+    //TODO I have no idea!
+    return false;
 }
 
 void CLNSRoutingTable::updateDisplayString()
