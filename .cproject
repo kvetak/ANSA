@@ -57,7 +57,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="ansa/networklayer/multi|ansa/networklayer/common|ansa/networklayer/arp|ansa/linklayer/ethernet|ansa/routing|ansa/linklayer/rbridge|inet/applications/voipstream|inet/linklayer/ext|inet/transportlayer/tcp_nsc|inet/transportlayer/tcp_lwip|transport/tcp_lwip|transport/tcp_nsc|inet/routing/extras" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="ansa/linklayer/rbridge|ansa/networklayer/multi|ansa/networklayer/common|ansa/networklayer/arp|ansa/linklayer/ethernet|ansa/routing|inet/applications/voipstream|inet/linklayer/ext|inet/transportlayer/tcp_nsc|inet/transportlayer/tcp_lwip|transport/tcp_lwip|transport/tcp_nsc|inet/routing/extras" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -110,7 +110,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="ansa/networklayer/multi|ansa/networklayer/common|ansa/networklayer/arp|ansa/linklayer/ethernet|ansa/routing|ansa/linklayer/rbridge|inet/applications/voipstream|inet/linklayer/ext|inet/transportlayer/tcp_nsc|inet/transportlayer/tcp_lwip|transport/tcp_lwip|transport/tcp_nsc|inet/routing/extras" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="ansa/linklayer/rbridge|ansa/networklayer/multi|ansa/networklayer/common|ansa/networklayer/arp|ansa/linklayer/ethernet|ansa/routing|inet/applications/voipstream|inet/linklayer/ext|inet/transportlayer/tcp_nsc|inet/transportlayer/tcp_lwip|transport/tcp_lwip|transport/tcp_nsc|inet/routing/extras" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

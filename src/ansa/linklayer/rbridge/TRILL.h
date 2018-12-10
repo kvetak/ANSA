@@ -42,8 +42,8 @@
 //#include "NotificationBoard.h"
 //#include "MacAddress.h"
 #include "inet/linklayer/common/MacAddress.h"
-#include "inet/linklayer/ethernet/Ethernet.h"
-#include "inet/linklayer/ethernet/EtherFrame.h"
+//#include "inet/linklayer/ethernet/Ethernet.h"
+#include "inet/linklayer/ethernet/EtherFrame_m.h"
 #include "AnsaEtherFrame_m.h"
 
 #include "ansa/linklayer/rbridge/RBMACTable.h"
@@ -96,7 +96,7 @@ class TRILL : public cSimpleModule
           TRILL::FrameCategory category;
 //          std::vector<unsigned char *> systemIDs; //for forwarding TRILL MultiDest (maybe even TRILL unicast)
 //          InterfaceEntry *ie
-          Ieee802Ctrl *ctrl;
+//          Ieee802Ctrl *ctrl;
         } tFrameDescriptor;
 
 

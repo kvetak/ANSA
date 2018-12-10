@@ -17,6 +17,8 @@
 //
 //namespace inet;
 
+import inet.common.packet.chunk.Chunk;
+
 cplusplus {{
 
 #include "ansa/networklayer/isis/ISISCommon.h"
@@ -154,7 +156,7 @@ enum TLVtypes
 // DO NOT USE INSTANCE OF THIS PACKET TYPE
 // USE PACKET TYPES DERIVED FROM THIS ONE -> SEE BELOW
 
-packet ISISMessage extends cPacket
+class ISISMessage extends FieldsChunk
 {
     unsigned char IRPD = 0x83; 			//Intradomain Routing Protocol Discriminator = 0x83 for IS-IS
     unsigned char length; 				//Specifies the length of the PDU Header in bytes.
@@ -167,7 +169,7 @@ packet ISISMessage extends cPacket
     TLV_t TLV[];
 };
 
-packet ISISMTUPDU extends ISISMessage
+class ISISMTUPDU extends ISISMessage
 {
     uint16_t pduLength; //gives length of whole message (including size of ISISMessage a.k.a common header)
     unsigned char probeID[6]; //arbitary value set by IS issuing the MTU-probe
@@ -175,18 +177,18 @@ packet ISISMTUPDU extends ISISMessage
     unsigned char ackSourceID[6]; //issuing IS set this to zero. IS issuing response sets this to itself System ID
 }
 
-packet ISISMTUProbe extends ISISMTUPDU
+class ISISMTUProbe extends ISISMTUPDU
 {
     type = MTU_PROBE_PDU;
 }
 
-packet ISISMTUAck extends ISISMTUPDU
+class ISISMTUAck extends ISISMTUPDU
 {
     type = MTU_ACK_PDU;
     
 }
 
-packet ISISLANHelloPacket extends ISISMessage
+class ISISLANHelloPacket extends ISISMessage
 {
     unsigned char circuitType enum(CIRCUIT_TYPES);	//Defines whether the link is Level 1 and/or Level 2.
 //	unsigned char sourceID[6];						//Is the same as the system identifier (SysID).  address in format 0123.4567.89AB
@@ -201,7 +203,7 @@ packet ISISLANHelloPacket extends ISISMessage
 }
 
 //IS-IS Level1 LAN Hello Message
-packet ISISL1HelloPacket extends ISISLANHelloPacket
+class ISISL1HelloPacket extends ISISLANHelloPacket
 {
 	type = LAN_L1_HELLO;							//set PDU type
 	
@@ -211,13 +213,13 @@ packet ISISL1HelloPacket extends ISISLANHelloPacket
 
 
 //IS-IS Level2 LAN Hello Message
-packet ISISL2HelloPacket extends ISISLANHelloPacket
+class ISISL2HelloPacket extends ISISLANHelloPacket
 {
 	type = LAN_L2_HELLO;							//set PDU type
 }
 
 //TRILL Hello
-packet TRILLHelloPacket extends ISISLANHelloPacket
+class TRILLHelloPacket extends ISISLANHelloPacket
 {
     type = TRILL_HELLO;
     circuitType = L1_TYPE;
@@ -226,7 +228,7 @@ packet TRILLHelloPacket extends ISISLANHelloPacket
 }
 
 //IS-IS PTP Hello Message
-packet ISISPTPHelloPacket extends ISISMessage
+class ISISPTPHelloPacket extends ISISMessage
 {
     type = PTP_HELLO;								//set PDU type
 	unsigned char circuitType enum(CIRCUIT_TYPES);	//Defines whether the link is Level 1 and/or Level 2.
@@ -239,7 +241,7 @@ packet ISISPTPHelloPacket extends ISISMessage
 }
 
 //IS-IS LSP  message
-packet ISISLSPPacket extends ISISMessage
+class ISISLSPPacket extends ISISMessage
 {
 //    @customize(true);
 	//type = L1_LSP;
@@ -259,19 +261,19 @@ packet ISISLSPPacket extends ISISMessage
 }
 
 //IS-IS LSP Level1 message
-packet ISISLSPL1Packet extends ISISLSPPacket
+class ISISLSPL1Packet extends ISISLSPPacket
 {
 	type = L1_LSP;
 }
 
 //IS-IS LSP Level2 message
-packet ISISLSPL2Packet extends ISISLSPPacket
+class ISISLSPL2Packet extends ISISLSPPacket
 {
 	type = L2_LSP;
 }
 
 
-packet ISISCSNPPacket extends ISISMessage
+class ISISCSNPPacket extends ISISMessage
 {
     unsigned short pduLength;						//Length of the entire PDU in bytes.
 //	unsigned char sourceID[7];						// Source ID + zero circuit number  e.g. 0000.0000.0002.00
@@ -283,7 +285,7 @@ packet ISISCSNPPacket extends ISISMessage
     
 }
 //IS-IS CSNP Level1 message
-packet ISISCSNPL1Packet extends ISISCSNPPacket
+class ISISCSNPL1Packet extends ISISCSNPPacket
 {
 	type = L1_CSNP;
 	
@@ -292,12 +294,12 @@ packet ISISCSNPL1Packet extends ISISCSNPPacket
 
 
 //IS-IS CSNP Level2 message
-packet ISISCSNPL2Packet extends ISISCSNPPacket
+class ISISCSNPL2Packet extends ISISCSNPPacket
 {
 	type = L2_CSNP;
 }
 
-packet ISISPSNPPacket extends ISISMessage
+class ISISPSNPPacket extends ISISMessage
 {
     unsigned short pduLength;						//Length of the entire PDU in bytes.
 //	unsigned char sourceID[7];						// Source ID + zero circuit number  e.g. 0000.0000.0002.00
@@ -306,14 +308,14 @@ packet ISISPSNPPacket extends ISISMessage
 
 
 //IS-IS PSNP Level1 message
-packet ISISPSNPL1Packet extends ISISPSNPPacket
+class ISISPSNPL1Packet extends ISISPSNPPacket
 {
 	type = L1_PSNP;
 //	TLV_t TLV[];									//Consists of Type (or code), Length, and Value fields. Also known as variable-length fields.
 }  
 
 //IS-IS PSNP Level2 message
-packet ISISPSNPL2Packet extends ISISPSNPPacket
+class ISISPSNPL2Packet extends ISISPSNPPacket
 {
 	type = L2_PSNP;
 }

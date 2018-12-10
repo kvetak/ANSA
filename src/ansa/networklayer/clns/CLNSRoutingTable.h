@@ -63,8 +63,8 @@ class CLNSRoutingTable : public cSimpleModule, public IRoutingTable, protected c
 
   protected:
     virtual int numInitStages() const override { return NUM_INIT_STAGES; }
-    virtual void initialize(int stage);
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize(int stage) override;
+    virtual void handleMessage(cMessage *msg) override;
     virtual void receiveSignal(cComponent *source, simsignal_t signalID, cObject *obj, cObject *details) override;
     // helper functions:
     void internalAddRoute(CLNSRoute *entry);

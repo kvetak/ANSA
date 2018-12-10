@@ -204,7 +204,7 @@ struct LSPrecord
 
 struct LSPRecord
 {
-    ISISLSPPacket* LSP; //link-state protocol data unit
+    Ptr<ISISLSPPacket> LSP; //link-state protocol data unit
     ISISTimer *deadTimer; //dead timer
     std::vector<bool> SRMflags;
     std::vector<bool> SSNflags;
@@ -253,7 +253,8 @@ struct LSPRecord
       this->LSP->setTLVArraySize(0);
       if (this->LSP != NULL)
       {
-        delete this->LSP;
+          //TODO ANSAINET4.0 Uncomment
+//        delete this->LSP;
       }
       //            if(this->deadTimer != NULL){
       //                drop(this->deadTimer);

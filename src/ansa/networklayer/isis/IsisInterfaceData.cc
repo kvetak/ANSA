@@ -67,17 +67,17 @@ void IsisInterfaceData::init(void){
 
 }
 
-ISISMessage *IsisInterfaceData::getHello()
+Ptr<ISISMessage> IsisInterfaceData::getHello()
 {
     return hellos.front();
 }
 
-std::vector<ISISMessage *> IsisInterfaceData::getHellos()
+std::vector<Ptr<ISISMessage>> IsisInterfaceData::getHellos()
 {
     return hellos;
 }
 
-void IsisInterfaceData::setHello(ISISMessage *hello)
+void IsisInterfaceData::setHello(Ptr<ISISMessage> hello)
 {
     this->hellos.clear();
     this->hellos.push_back(hello);
@@ -85,14 +85,15 @@ void IsisInterfaceData::setHello(ISISMessage *hello)
 }
 
 void IsisInterfaceData::clearHello(void){
-    for(std::vector<ISISMessage *>::iterator it = this->hellos.begin(); it != this->hellos.end();){
-        delete (*it);
+    for(std::vector<Ptr<ISISMessage>>::iterator it = this->hellos.begin(); it != this->hellos.end();){
+        //TODO ANSAINET4.0 Uncomment
+//        delete (*it);
         it = this->hellos.erase(it);
     }
 //    this->hellos.clear();
 }
 
-void IsisInterfaceData::addHello(ISISMessage *hello){
+void IsisInterfaceData::addHello(Ptr<ISISMessage> hello){
     this->hellos.push_back(hello);
 }
 

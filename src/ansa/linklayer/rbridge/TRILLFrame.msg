@@ -17,15 +17,20 @@
 // TODO generated message class
 //
 
+import inet.common.packet.chunk.Chunk;
 cplusplus {{
     
 #include "ansa/linklayer/rbridge/TRILLCommon.h"
 }}
 namespace inet;
 
-class noncobject TRILLNickname;
+//class noncobject TRILLNickname;
+class TRILLNickname
+{
+    @existingClass;
+}
 
-packet TRILLFrame {
+class TRILLFrame extends FieldsChunk{
     @customize(true);  // see the generated C++ header for more info
 //    abstract int anotherField;
     uint16_t Ethertype; //this field is only present if IEEE 802.3 layer is used

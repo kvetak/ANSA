@@ -59,7 +59,8 @@
 #include "ansa/networklayer/isis/ISIStypes.h"
 //#include <cmessage.h>
 //#include <crng.h>
-#include "ansa/linklayer/rbridge/TRILL.h"
+//TODO ANSAINET4.0 Uncomment
+//#include "ansa/linklayer/rbridge/TRILL.h"
 
 
 
@@ -79,8 +80,8 @@ namespace inet {
  */
 class ISISMain : public cSimpleModule
 {
-
-        friend class TRILL;
+    //TODO ANSAINET4.0 Uncomment
+//        friend class TRILL;
     public:
         enum ISIS_MODE
         {
@@ -94,8 +95,8 @@ class ISISMain : public cSimpleModule
         CLNSRoutingTable *clnsrt;
 //        NotificationBoard *nb; /*!< Provides access to the notification board */
 
-
-        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
+        //TODO ANSAINET4.0 Uncomment
+//        TRILL *trill; /*!< Pointer to TRILL module, NULL if mode is L3_ISIS_MODE */
         ISIS_MODE mode;
 
         std::string deviceType; /*!< device type specified in .ned when using this module */
@@ -110,8 +111,8 @@ class ISISMain : public cSimpleModule
 //        unsigned char *areaId; /*!< first 3Bytes of netAddr as area ID */
 //        unsigned char *sysId; /*!< next 6Bytes of NetAddr as system ID */
 //        unsigned char *NSEL; /*!< last 1Byte of Netaddr as NSEL identifier */
-
-        TRILLNickname nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
+        //TODO ANSAINET4.0 Uncomment
+//        TRILLNickname nickname; /*!<16b long RBridge's nickname (L2_ISIS_MODE only) */
         AdjTab_t adjL1Table; /*!< table of L1 adjacencies */
         AdjTab_t adjL2Table; /*!< table of L2 adjacencies */
         short isType; /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
@@ -160,9 +161,9 @@ class ISISMain : public cSimpleModule
         ISISTimer *spfL2Timer; /*!< Reference to timer that initiate full spf for L2*/
         ISISTimer *periodicL1Timer;
         ISISTimer *periodicL2Timer;
-
-        /* TRILL related */
-        std::map<TRILLNickname, ISISPaths_t *> distribTrees;
+        //TODO ANSAINET4.0 Uncomment
+//        /* TRILL related */
+//        std::map<TRILLNickname, ISISPaths_t *> distribTrees;
 
         /* Init */
         void initISIS(); // main init
@@ -176,11 +177,11 @@ class ISISMain : public cSimpleModule
         void initSPF(); /*!< Initiate Full SPF timers*/
 
         /* Hello */
-        void handlePTPHelloMsg(ISISMessage *inMsg); //
+        void handlePTPHelloMsg(Ptr<ISISMessage> inMsg); //
         void sendHelloMsg(ISISTimer *timer); // send hello messages
-        void handleL1HelloMsg(ISISMessage *inMsg); // handle L1 hello messages
-        void handleL2HelloMsg(ISISMessage *inMsg); // handle L2 hello messages
-        void handleTRILLHelloMsg(ISISMessage *inMsg); // handles TRILL hello messages
+        void handleL1HelloMsg(Ptr<ISISMessage> inMsg); // handle L1 hello messages
+        void handleL2HelloMsg(Ptr<ISISMessage> inMsg); // handle L2 hello messages
+        void handleTRILLHelloMsg(Ptr<ISISMessage> inMsg); // handles TRILL hello messages
         void sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circuitType);
         void sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType);
         void sendTRILLHelloMsg(ISISTimer *timer); //mimic the sendHelloMsg functionality
@@ -190,7 +191,7 @@ class ISISMain : public cSimpleModule
         double getHelloInterval(int interfaceIndex, short circuitType); //return hello interval for specified interface and circuitType. For DIS interface returns only 1/3 of actual value;
         ISISadj *getAdjByGateIndex(int gateIndex, short circuitType, int offset = 0); // return something corresponding to adjacency on specified link
         ISISadj *getAdjBySystemID(SystemID systemID, short circuitType, int gateIndex = -1);
-        ISISadj *getAdj(ISISMessage *inMsg, short circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
+        ISISadj *getAdj(Ptr<ISISMessage> inMsg, short circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
         ISISadj *getAdjByMAC(const MacAddress &address, short circuitType, int gateIndex = -1);
         ISISinterface *getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
         bool isAdjBySystemID(SystemID systemID, short circuitType); //do we have adjacency for systemID on specified circuitType
@@ -198,30 +199,30 @@ class ISISMain : public cSimpleModule
         bool amIL1DIS(int interfaceIndex); //returns true if specified interface is DIS
         bool amIL2DIS(int interfaceIndex); //returns true if specified interface is DIS
         bool amIDIS(int interfaceIndex, short circuitType);
-        void electDIS(ISISLANHelloPacket *msg);
+        void electDIS(Ptr<ISISLANHelloPacket> msg);
         std::vector<ISISadj> *getAdjTab(short circuitType);
 
         void genTRILLHello(int interfaceId, ISISCircuitType circuitType); //generates Hello(s) for specified interface and places them into IsisInterfaceData
 
         /* LSP */
-        unsigned char *getLanID(ISISLANHelloPacket *msg);
-        void handleLsp(ISISLSPPacket *lsp);
-        void handleCsnp(ISISCSNPPacket *csnp);
-        void handlePsnp(ISISPSNPPacket *psnp);
+        unsigned char *getLanID(Ptr<ISISLANHelloPacket> msg);
+        void handleLsp(Ptr<ISISLSPPacket>lsp);
+        void handleCsnp(Ptr<ISISCSNPPacket> csnp);
+        void handlePsnp(Ptr<ISISPSNPPacket> psnp);
         std::vector<LspID> *getLspRange(LspID startLspID, LspID endLspID, short circuitType);
-//        unsigned char *getStartLspID(ISISCSNPPacket *csnp);
-//        unsigned char *getEndLspID(ISISCSNPPacket *csnp);
-//        unsigned char *getLspID(ISISLSPPacket *msg);
-        void setLspID(ISISLSPPacket *msg, unsigned char *lspID);
+//        unsigned char *getStartLspID(Ptr<ISISCSNPPacket> csnp);
+//        unsigned char *getEndLspID(Ptr<ISISCSNPPacket> csnp);
+//        unsigned char *getLspID(Ptr<ISISLSPPacket>msg);
+        void setLspID(Ptr<ISISLSPPacket>msg, unsigned char *lspID);
 //    void updateLSP(ISISLSPPacket *lsp, short  circuitType);
-        void replaceLSP(ISISLSPPacket *lsp, LSPRecord *lspRecord, short circuitType);
+        void replaceLSP(Ptr<ISISLSPPacket> lsp, LSPRecord *lspRecord, short circuitType);
         void purgeRemainLSP(LspID lspId, short circuitType);
         void purgeLSP(LspID lspId, short circuitType); //purge in-memory LSP
-        void purgeLSP(ISISLSPPacket *lsp, short circuitType); //purge incomming LSP
+        void purgeLSP(Ptr<ISISLSPPacket> lsp, short circuitType); //purge incomming LSP
         void purgeMyLSPs(short circuitType);
         void deleteLSP(ISISTimer *timer); //delete (already purged)LSP from DB when appropriate timer expires
         void sendLSP(LSPRecord *lspRec, ISISinterface* isisInterface);
-        std::vector<ISISLSPPacket*> *genLSP(short circuitType);
+        std::vector<Ptr<ISISLSPPacket>> *genLSP(short circuitType);
         void generateLSP(ISISTimer *timer);
         void generateLSP(short circuitType);
         void refreshLSP(ISISTimer *timer);
@@ -234,8 +235,8 @@ class ISISMain : public cSimpleModule
         LspID getLSPID();
         //double getHoldtimeInterval(int interfaceIndex, short circuitType); //return hold time interval for specified interface and circuitType.
         LSPRecord *getLSPFromDbByID(LspID LSPID, short circuitType);
-        bool compareLSP(ISISLSPPacket *lsp1, ISISLSPPacket *lsp2);
-        LSPRecord *installLSP(ISISLSPPacket *lsp, short circuitType); //install lsp into local LSP database
+        bool compareLSP(Ptr<ISISLSPPacket> lsp1, Ptr<ISISLSPPacket> lsp2);
+        LSPRecord *installLSP(Ptr<ISISLSPPacket> lsp, short circuitType); //install lsp into local LSP database
         void updateAtt(bool action); /*!< Action specify whether this method has been called to set (true - new adjacency) or clear (false - removing adjacency) Attached flag. */
         void setClosestAtt(void); /*!< Find and set the closest L1L2 attached IS */
         std::map<SystemID, int> getAllSystemIdsFromLspDb(short circuitType);
@@ -262,9 +263,9 @@ class ISISMain : public cSimpleModule
         void moveToTentDT(ISISCons_t *initial, ISISPath *path, PseudonodeID from, uint32_t metric,
                 ISISPaths_t *ISISTent);
         void bestToPathDT(ISISCons_t *init, ISISPaths_t *ISISTent, ISISPaths_t *ISISPaths);
-
-        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(TRILLNickname nickname, SystemID systemId);
-        std::vector<SystemID> *getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId);
+        //TODO ANSAINET4.0 Uncomment
+//        std::vector<SystemID> *getSystemIDsFromTreeOnlySource(TRILLNickname nickname, SystemID systemId);
+//        std::vector<SystemID> *getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId);
 
         /* Flags */
         FlagRecQQ_t *getSRMPTPQueue(short circuitType);
@@ -288,33 +289,33 @@ class ISISMain : public cSimpleModule
         void addFlags(LSPRecord *lspRec, short circuitType); //add and set SRM and SSN flags for lspRec
 
         /* Print */
-        void printLSP(ISISLSPPacket *lsp, char *from);
+        void printLSP(Ptr<ISISLSPPacket>lsp, char *from);
         void printSysId(SystemID sysId);
         void printLspId(LspID lspId);
         void printPaths(ISISPaths_t *paths);
         void printAPaths(ISISAPaths_t *paths);
         void schedule(ISISTimer *timer, double timee = -1); //if timer needs additional information there is msg
-        SystemID getSysID(ISISMessage *msg);
+        SystemID getSysID(Ptr<ISISMessage> msg);
 //        unsigned char *getSysID(ISISTimer *timer);
 //        unsigned char *getLspID(ISISTimer *timer);
 
         /* TLV */
-        void addTLV(ISISMessage *inMsg, enum TLVtypes tlvType, short circuitType, int gateIndex = -1); //generate and add this tlvType LSP to message
-        void addTLV(ISISMessage *inMsg, TLV_t *tlv); //add this TLV in message
+        void addTLV(Ptr<ISISMessage> inMsg, enum TLVtypes tlvType, short circuitType, int gateIndex = -1); //generate and add this tlvType LSP to message
+        void addTLV(Ptr<ISISMessage>inMsg, TLV_t *tlv); //add this TLV in message
         void addTLV(std::vector<TLV_t*> *tlvtable, enum TLVtypes tlvType, short circuitType, InterfaceEntry *ie = NULL);
         std::vector<TLV_t *> genTLV(enum TLVtypes tlvType, short circuitType, int gateIndex = -1,
                 enum TLVtypes subTLVType = TLV_RESERVED, InterfaceEntry *ie = NULL);
         bool isAdjUp(short circuitType); //returns true if ANY adjacency is up on specified circuit level
-        bool isAdjUp(ISISMessage *msg, short circuitType);
-        TLV_t *getTLVByType(ISISMessage *inMsg, enum TLVtypes tlvType, int offset = 0);
+        bool isAdjUp(Ptr<ISISMessage> msg, short circuitType);
+        TLV_t *getTLVByType(Ptr<ISISMessage> inMsg, enum TLVtypes tlvType, int offset = 0);
         unsigned char *getSubTLVByType(TLV_t *tlv, enum TLVtypes subTLVType, int offset = 0);
 
-        bool isMessageOK(ISISMessage *inMsg);
+        bool isMessageOK(Ptr<ISISMessage> inMsg);
         bool isAreaIDOK(TLV_t *areaAddressTLV, AreaId compare); //if compare is NULL then use this->areaId for comparison
         int getIfaceIndex(ISISinterface *interface); //returns index to ISISIft
 
         /* General */
-        short getLevel(ISISMessage *msg); //returns level (circuitType) of the message
+        short getLevel(Ptr<ISISMessage> msg); //returns level (circuitType) of the message
 
 //        bool parseNetAddr(); // validate and parse net address format
 
@@ -326,17 +327,17 @@ class ISISMain : public cSimpleModule
 //    void sendMyL2LSPs(); //send content of my L2 link-state DB
 //    void floodFurtherL1LSP(ISISLSPL1Packet *msg); //send recived LSP packet further to all other neighbours
 //    void sendSpecificL1LSP(unsigned char *LSPid); //send only specific LSP
-//    void handleL1LSP(ISISMessage *msg); //handle L1 LSP packets
-//    void handleL2LSP(ISISMessage *msg); //handle L2 LSP packets
+//    void handleL1LSP(Ptr<ISISMessage> msg); //handle L1 LSP packets
+//    void handleL2LSP(Ptr<ISISMessage> msg); //handle L2 LSP packets
 //    void sendL1CSNP(); //send L1 CSNP packets
 //    void sendL2CSNP(); //send L2 CSNP packets
-//    void handleL1CSNP(ISISMessage *msg); //handle L1 CSNP packets
-//    void handleL2CSNP(ISISMessage *msg); //handle L2 CSNP packets
+//    void handleL1CSNP(Ptr<ISISMessage> msg); //handle L1 CSNP packets
+//    void handleL2CSNP(Ptr<ISISMessage> msg); //handle L2 CSNP packets
 //    void sendL1PSNP(std::vector<unsigned char*> *LSPlist, int gateIndex); //send L1 PSNP packets
 //    void sendL2PSNP(); //send L2 PSNP packets
-//    void handleL1PSNP(ISISMessage *msg); //handle L1 PSNP packets
-//    void handleL2PSNP(ISISMessage *msg); //handle L2 PSNP packets
-        bool checkDuplicateSysID(ISISMessage *msg); //check sysId field from received hello packet for duplicated sysId
+//    void handleL1PSNP(Ptr<ISISMessage> msg); //handle L1 PSNP packets
+//    void handleL2PSNP(Ptr<ISISMessage> msg); //handle L2 PSNP packets
+        bool checkDuplicateSysID(Ptr<ISISMessage> msg); //check sysId field from received hello packet for duplicated sysId
 //    void removeDeadLSP(ISISTimer *msg); //remove expired LSP
 //    void updateMyLSP(); //create or update my own LSPs
 
@@ -351,7 +352,9 @@ class ISISMain : public cSimpleModule
         bool compareArrays(unsigned char *first, unsigned char *second, unsigned int size); //method for comparison of two unsigned int arrays
         void copyArrayContent(unsigned char *src, unsigned char *dst, unsigned int size, unsigned int startSrc,
                 unsigned int startDst); //copy content from one array to another
-        virtual void receiveChangeNotification(int category, cObject *details);
+
+        virtual void receiveChangeNotification(cComponent *source, simsignal_t signalID, cObject *details);
+//        virtual void receiveChangeNotification(int category, cObject *details);
 
     public:
         ISISMain();
@@ -361,8 +364,8 @@ class ISISMain : public cSimpleModule
         void printAdjTable(); //print adjacency table
         void printLSPDB(); //print content of link-state database
 //        void setClnsTable(CLNSTable *clnsTable);
-
-        void setTrill(TRILL *trill);
+        //TODO ANSAINET4.0 Uncomment
+//        void setTrill(TRILL *trill);
         void setIft(IInterfaceTable *ift);
 //        void setNb(NotificationBoard *nb);
         void subscribeNb(void);
@@ -409,7 +412,8 @@ class ISISMain : public cSimpleModule
         ISIS_MODE getMode() const;
         unsigned int getISISIftSize();
         void setAtt(bool att);
-        TRILLNickname getNickname() const;
+        //TODO ANSAINET4.0 Uncomment
+//        TRILLNickname getNickname() const;
     AreaId getAreaId() const;
     void setAreaId(AreaId areaId);
     void setSystemId(const SystemID& systemId);

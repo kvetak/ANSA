@@ -5,7 +5,7 @@
     <feature enabled="true" id="LLDP"/>
     <feature enabled="false" id="rbridge"/>
     <feature enabled="true" id="clns"/>
-    <feature enabled="false" id="isis"/>
+    <feature enabled="true" id="isis"/>
     <feature enabled="false" id="arp"/>
     <feature enabled="false" id="common"/>
     <feature enabled="false" id="multi"/>

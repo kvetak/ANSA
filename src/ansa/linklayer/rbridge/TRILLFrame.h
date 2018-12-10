@@ -92,7 +92,8 @@ class INET_API TRILLFrame : public TRILLFrame_Base
     bool operator==(const TRILLFrame&);
 
   public:
-    TRILLFrame(const char *name=NULL, int kind=0);
+    TRILLFrame();
+//    TRILLFrame(const char *name=NULL, int kind=0);
     TRILLFrame(const TRILLFrame& other);
     virtual ~TRILLFrame();
 //    TRILLFrame& operator=(const TRILLFrame& other);

@@ -71,23 +71,23 @@ void RBridgeSplitter::handleMessage(cMessage *msg)
             this->send(msg, "trillOut", gateIndex);
 
         }
-
-        else if (dynamic_cast<EthernetIIFrame *>(msg))
-        {
-            EthernetIIFrame * frame = (EthernetIIFrame *) msg;
-            //if src unicast
-            //trillModule->learn(msg);
-
-            //check integrity, ...
-
-            //if ethertype == L2_ISIS AND Outer.MacDA == ALL-IS-IS-RBridges
-            if (frame->getEtherType() == ETHERTYPE_L2_ISIS)
-            {
-                trillModule->learn(frame);
-                this->send(msg, "isisOut", gateIndex);
-
-                return;
-            }
+//TODO ANSAINET4.0 Uncomment and fix the code below
+//        else if (dynamic_cast<EthernetIIFrame *>(msg))
+//        {
+//            EthernetIIFrame * frame = (EthernetIIFrame *) msg;
+//            //if src unicast
+//            //trillModule->learn(msg);
+//
+//            //check integrity, ...
+//
+//            //if ethertype == L2_ISIS AND Outer.MacDA == ALL-IS-IS-RBridges
+//            if (frame->getEtherType() == ETHERTYPE_L2_ISIS)
+//            {
+//                trillModule->learn(frame);
+//                this->send(msg, "isisOut", gateIndex);
+//
+//                return;
+//            }
 
             else
             {

@@ -1075,7 +1075,7 @@ void TRILL::learn(EthernetIIFrame *frame){
 
 }
 
-void TRILL::learn(TRILL::tFrameDescriptor& frame) {
+void TRILL::(TRILL::tFrameDescriptor& frame) {
     if (!frame.src.isBroadcast() && !frame.src.isMulticast()) {
       rbMACTable->updateNative(frame.src, frame.VID, frame.rPort);
     }

@@ -49,10 +49,13 @@ Register_Class(TRILLFrame);
 
 
 
-
-
-TRILLFrame::TRILLFrame(const char *name, int kind) : TRILLFrame_Base(name,kind)
+TRILLFrame::TRILLFrame()
 {
+
+}
+
+//TRILLFrame::TRILLFrame(const char *name, int kind) : TRILLFrame_Base(name,kind)
+//{
 //    this->Ethertype_var = 0;
 //    this->version_var = 0;
 //    this->reserved_var = 0;
@@ -63,7 +66,7 @@ TRILLFrame::TRILLFrame(const char *name, int kind) : TRILLFrame_Base(name,kind)
 //    this->ingressRBNickname_var = 0;
 //    options_arraysize = 0;
 //    this->options_var = 0;
-}
+//}
 
 TRILLFrame::TRILLFrame(const TRILLFrame& other) : TRILLFrame_Base(other)
 {

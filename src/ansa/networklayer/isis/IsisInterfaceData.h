@@ -38,7 +38,7 @@ class IsisInterfaceData : public InterfaceProtocolData
 
     private:
         //TODO for normal ISIS, there needsto be two sets of Hellos (L1 L2)
-        std::vector<ISISMessage *> hellos;
+        std::vector<Ptr<ISISMessage>> hellos;
         bool helloValid; // mark the Hello message invalid so during next Hello send it needs to be re-generated
 
         /* From ISISinterface */
@@ -71,11 +71,11 @@ class IsisInterfaceData : public InterfaceProtocolData
         IsisInterfaceData();
         virtual ~IsisInterfaceData();
         void init(void);
-        ISISMessage* getHello();
-        std::vector<ISISMessage *> getHellos();
-        void setHello(ISISMessage *hello);
+        Ptr<ISISMessage> getHello();
+        std::vector<Ptr<ISISMessage>> getHellos();
+        void setHello(Ptr<ISISMessage> hello);
         void clearHello(void);
-        void addHello(ISISMessage *hello);
+        void addHello(Ptr<ISISMessage>hello);
         bool isHelloValid() const;
         void setHelloValid(bool helloValid);
         ISISCircuitType getCircuitType() const;

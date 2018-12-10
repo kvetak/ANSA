@@ -109,7 +109,7 @@ class INET_API CLNSRoute : public cObject, public IRoute
 #ifdef ANSAINET
     const char* getSourceTypeAbbreviation() const;
 #endif
-    virtual void setAdminDist(unsigned int _adminDist) { if (adminDist != _adminDist) { adminDist = _adminDist; changed(F_ADMINDIST); } }
+    virtual void setAdminDist(unsigned int _adminDist) override { if (adminDist != _adminDist) { adminDist = _adminDist; changed(F_ADMINDIST); } }
     virtual void setMetric(int _metric) override { if (metric != _metric) { metric = _metric; changed(F_METRIC); } }
 
     /** Destination address prefix to match */

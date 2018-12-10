@@ -54,7 +54,7 @@ public:
     {
 
         char buf[SYSTEMID_STRING_SIZE + 1];
-        sprintf(buf, "%04llX.%04lX.%04lX", (systemID >> 32) & (0xFFFF), (systemID >> 16) & (0xFFFF), systemID & (0xFFFF));
+        sprintf(buf, "%04llX.%04llX.%04llX", (systemID >> 32) & (0xFFFF), (systemID >> 16) & (0xFFFF), systemID & (0xFFFF));
         buf[SYSTEMID_STRING_SIZE] = 0;
         return std::string(buf);
     }
@@ -146,7 +146,7 @@ public:
     {
 
         char buf[SYSTEMID_STRING_SIZE];
-        sprintf(buf, "%02lX.%04lX", (areaID >> 16) & (0xFF), areaID & (0xFFFF));
+        sprintf(buf, "%02llX.%04llX", (areaID >> 16) & (0xFF), areaID & (0xFFFF));
         return std::string(buf);
     }
 
@@ -262,7 +262,7 @@ public:
       return (systemID << 8) + circuitID;
     }
 
-    virtual std::string str() const
+    virtual std::string str() const override
     {
 
         char buf[LANID_STRING_SIZE];
@@ -335,7 +335,7 @@ public:
       fragmentID = UINT_MAX;
     }
 
-    virtual std::string str() const
+    virtual std::string str() const override
     {
 
         char buf[LANID_STRING_SIZE];

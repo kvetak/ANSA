@@ -34,8 +34,8 @@
 #include <utility>
 
 
-#include "inet/linklayer/ethernet/Ethernet.h"
-#include "inet/linklayer/ethernet/EtherFrame.h"
+//#include "inet/linklayer/ethernet/Ethernet.h"
+#include "inet/linklayer/ethernet/EtherFrame_m.h"
 #include "inet/linklayer/common/MacAddress.h"
 
 #include "ansa/linklayer/rbridge/macTable.h"
