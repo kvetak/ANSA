@@ -64,17 +64,24 @@ class NSAP_t
 class PseudonodeID
 {
     @existingClass;
+     @opaque;
+    @toString(.str());
 }
 //class noncobject SystemID;
 
 class SystemID
 {
     @existingClass;
+     @opaque;
+    @toString(.str());
 }
 //class noncobject LspID;
 class LspID
 {
     @existingClass;
+    @opaque;
+    @toString(.str());
+   
 }
 
 

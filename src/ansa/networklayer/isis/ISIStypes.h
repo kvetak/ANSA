@@ -253,7 +253,7 @@ struct LSPRecord
       this->LSP->setTLVArraySize(0);
       if (this->LSP != NULL)
       {
-          //TODO ANSAINET4.0 Uncomment
+          //TODO ANSAINET4.0 Uncomment delete?
 //        delete this->LSP;
       }
       //            if(this->deadTimer != NULL){

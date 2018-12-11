@@ -21,6 +21,7 @@
  */
 
 #include "ansa/networklayer/isis/ISISDeviceConfigurator.h"
+#include "ansa/networklayer/isis/IsisInterfaceData.h"
 
 
 namespace inet {
@@ -106,7 +107,7 @@ void ISISDeviceConfigurator::loadISISConfig(ISISMain *isisModule, ISISMain::ISIS
 
 
       cModule * tmp_trill = isisModule->getParentModule()->getParentModule()->getSubmodule("trill");
-      //TODO ANSAINET4.0 Uncomment
+      //TODO ANSAINET4.0 Uncomment with TRILL
 //              isisModule->setTrill(check_and_cast<TRILL *>(tmp_trill));
 
 
@@ -518,13 +519,14 @@ void ISISDeviceConfigurator::loadISISCoreDefaultConfig(ISISMain *isisModule){
 
 void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule, InterfaceEntry *ie){
 
-    IsisInterfaceData *d = new IsisInterfaceData();
+
+    IsisInterfaceData *d = ie->addProtocolData<IsisInterfaceData>();
         ISISinterface newIftEntry;
         newIftEntry.intID = ie->getInterfaceId();
         d->setIfaceId(ie->getInterfaceId());
-        //TODO ANSAINET4.0 Uncomment
-//        newIftEntry.gateIndex = ie->getNetworkLayerGateIndex();
-//        d->setGateIndex(ie->getNetworkLayerGateIndex());
+        //TODO ANSAINET4.0 Uncomment; only interfaceId; right?
+        newIftEntry.gateIndex = ie->getInterfaceId();
+        d->setGateIndex(ie->getInterfaceId());
         EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " <<newIftEntry.gateIndex <<endl;
 
         //set interface priority
@@ -619,7 +621,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule
         /* By this time the trillData should be initialized.
          * So set the intial appointedForwaders to itself for configured VLAN(s).
          * TODO B5 add RFC reference and do some magic with vlanId, desiredVlanId, enabledVlans, ... */
-        //TODO ANSAINET4.0 Uncomment
+        //TODO ANSAINET4.0 Uncomment with TRILL
 //        if(isisModule->getMode() == ISISMain::L2_ISIS_MODE){
 //            ie->trillData()->addAppointedForwarder( ie->trillData()->getVlanId(), isisModule->getNickname());
 //        }
@@ -629,8 +631,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule
 
     //    this->ISISIft.push_back(newIftEntry);
         isisModule->appendISISInterface(newIftEntry);
-        //TODO ANSAINET4.0 Uncomment
-//        ie->setISISInterfaceData(d);
+
 }
 
 
@@ -644,8 +645,8 @@ void ISISDeviceConfigurator::loadISISInterfaceConfig(ISISMain *isisModule, Inter
     }
     ISISinterface newIftEntry;
     newIftEntry.intID = entry->getInterfaceId();
-    //TODO ANSAINET4.0 Uncomment
-//    newIftEntry.gateIndex = entry->getNetworkLayerGateIndex();
+
+    newIftEntry.gateIndex = entry->getInterfaceId();
     EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " <<newIftEntry.gateIndex <<endl;
 
     //set interface priority

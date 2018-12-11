@@ -33,6 +33,7 @@ simple ISISMain
     gates:
         input lowerLayerIn;
         output lowerLayerOut;
+        //TODO ANSAINET4.0 Remove trill specific gates? Not necessary with message dispatcher
         input trillIn;
         output trillOut;
 }

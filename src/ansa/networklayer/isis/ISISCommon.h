@@ -68,6 +68,11 @@ public:
     bool operator>(const SystemID& sysID) const {return systemID > sysID.getSystemId();}
     bool operator>=(const SystemID& sysID) const {return systemID >= sysID.getSystemId();}
 
+    virtual ~SystemID()
+    {
+
+    }
+
 
 
 };
@@ -142,7 +147,7 @@ public:
         return buffer;
     }
 
-    virtual std::string str() const
+    std::string str() const
     {
 
         char buf[SYSTEMID_STRING_SIZE];
@@ -177,7 +182,10 @@ protected:
 
 public:
 
+    virtual ~PseudonodeID()
+    {
 
+    }
     PseudonodeID() {
 //        pseudoID = 0;
       circuitID = 0;
@@ -300,13 +308,16 @@ public:
     LspID(){
         fragmentID = 0;
     }
+    virtual ~LspID(){};
 
     LspID(SystemID sysID):PseudonodeID(sysID, 0){
       LspID();
+      fragmentID = 0;
     }
 
     LspID(PseudonodeID pseudoID):PseudonodeID(pseudoID){
           LspID();
+          fragmentID = 0;
     }
 
     void set(const SystemID sysID){
@@ -335,7 +346,7 @@ public:
       fragmentID = UINT_MAX;
     }
 
-    virtual std::string str() const override
+    std::string str() const override
     {
 
         char buf[LANID_STRING_SIZE];

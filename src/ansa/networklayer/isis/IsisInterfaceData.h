@@ -29,6 +29,7 @@
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "ansa/networklayer/isis/ISISMessage_m.h"
 #include "ansa/networklayer/isis/ISIStypes.h"
+#include "inet/common/packet/Packet.h"
 
 namespace inet {
 
@@ -38,7 +39,7 @@ class IsisInterfaceData : public InterfaceProtocolData
 
     private:
         //TODO for normal ISIS, there needsto be two sets of Hellos (L1 L2)
-        std::vector<Ptr<ISISMessage>> hellos;
+        std::vector<Packet*> hellos;
         bool helloValid; // mark the Hello message invalid so during next Hello send it needs to be re-generated
 
         /* From ISISinterface */
@@ -71,11 +72,11 @@ class IsisInterfaceData : public InterfaceProtocolData
         IsisInterfaceData();
         virtual ~IsisInterfaceData();
         void init(void);
-        Ptr<ISISMessage> getHello();
-        std::vector<Ptr<ISISMessage>> getHellos();
-        void setHello(Ptr<ISISMessage> hello);
+        Packet* getHello();
+        std::vector<Packet*> getHellos();
+        void setHello(Packet* hello);
         void clearHello(void);
-        void addHello(Ptr<ISISMessage>hello);
+        void addHello(Packet* hello);
         bool isHelloValid() const;
         void setHelloValid(bool helloValid);
         ISISCircuitType getCircuitType() const;
