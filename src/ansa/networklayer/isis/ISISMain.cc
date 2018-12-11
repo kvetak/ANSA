@@ -1014,11 +1014,9 @@ void ISISMain::handleMessage(cMessage* msg) {
         cPacket *cpacket = check_and_cast<cPacket *>(msg);
         Packet *packet = check_and_cast<Packet*>(cpacket);
 
-//        b offset = packet->getFrontOffset();
-//        packet->setFrontOffset(b(0));
-        packet->trimFront();
+        packet->trimFront(); // why though?
         const Ptr<const ISISMessage> inMsg = packet->peekAtFront<ISISMessage>();
-//        Ptr<ISISMessage> inMsg = static_cast<Ptr<ISISMessage> >(packet);
+
         if (!this->isMessageOK(inMsg)) {
             EV << "ISIS: Warning: discarding message" << endl;
             //TODO schedule event discarding message
@@ -2509,7 +2507,7 @@ void ISISMain::handleTRILLHelloMsg(Packet* packet) {
 void ISISMain::handlePTPHelloMsg(Packet* packet)
 {
 //    auto inMsg = packet->peekAtFront<ISISMessage>();
-    auto msg = packet->removeAtFront<ISISLANHelloPacket>();
+    auto msg = packet->removeAtFront<ISISPTPHelloPacket>();
 
   int gateIndex = packet->getTag<InterfaceInd>()->getInterfaceId();// = ift->getInterfaceById(ctrl->getInterfaceId())->getNetworkLayerGateIndex();
   ISISinterface *iface = this->getIfaceByGateIndex(gateIndex);
