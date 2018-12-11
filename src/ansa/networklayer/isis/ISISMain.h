@@ -310,7 +310,7 @@ class ISISMain : public cSimpleModule
         TLV_t *getTLVByType(const ISISMessage* inMsg, enum TLVtypes tlvType, int offset = 0);
         unsigned char *getSubTLVByType(TLV_t *tlv, enum TLVtypes subTLVType, int offset = 0);
 
-        bool isMessageOK(Ptr<ISISMessage> inMsg);
+        bool isMessageOK(const Ptr<const ISISMessage> inMsg);
         bool isAreaIDOK(TLV_t *areaAddressTLV, AreaId compare); //if compare is NULL then use this->areaId for comparison
         int getIfaceIndex(ISISinterface *interface); //returns index to ISISIft
 

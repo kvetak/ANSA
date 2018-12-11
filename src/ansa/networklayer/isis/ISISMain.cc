@@ -35,6 +35,8 @@
 #include "inet/linklayer/common/InterfaceTag_m.h"
 
 #include "inet/common/IProtocolRegistrationListener.h"
+#include "inet/linklayer/common/Ieee802SapTag_m.h"
+#include "inet/common/ProtocolTag_m.h"
 
 
 //#include "TRILL.h"
@@ -284,7 +286,7 @@ void ISISMain::initialize(int stage) {
 //         nb->subscribe(this, NF_ISIS_ADJ_CHANGED);
 
         ift = getModuleFromPar<IInterfaceTable>(par("interfaceTableModule"), this);
-        clnsrt = check_and_cast<CLNSRoutingTable*>(getModuleByPath(par("routingTableModule"))->getSubmodule("clns"));
+        clnsrt = check_and_cast<CLNSRoutingTable*>(getModuleByPath(par("routingTableModule")));
 
 
         deviceType = std::string((const char *) par("deviceType"));
@@ -1012,7 +1014,10 @@ void ISISMain::handleMessage(cMessage* msg) {
         cPacket *cpacket = check_and_cast<cPacket *>(msg);
         Packet *packet = check_and_cast<Packet*>(cpacket);
 
-        Ptr<ISISMessage> inMsg = packet->removeAtFront<ISISMessage>();
+//        b offset = packet->getFrontOffset();
+//        packet->setFrontOffset(b(0));
+        packet->trimFront();
+        const Ptr<const ISISMessage> inMsg = packet->peekAtFront<ISISMessage>();
 //        Ptr<ISISMessage> inMsg = static_cast<Ptr<ISISMessage> >(packet);
         if (!this->isMessageOK(inMsg)) {
             EV << "ISIS: Warning: discarding message" << endl;
@@ -1335,6 +1340,11 @@ void ISISMain::sendPTPHelloMsg(int interfaceIndex, int gateIndex,
 //    // set DSAP & NSAP fields
 //    ctrlPtp->setDsap(SAP_CLNS);
 //    ctrlPtp->setSsap(SAP_CLNS);
+    auto sapTag = packet->addTag<Ieee802SapReq>();
+    sapTag->setDsap(SAP_CLNS);
+    sapTag->setSsap(SAP_CLNS);
+
+    packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
     //set appropriate destination MAC addresses
     MacAddress ma;
@@ -6403,7 +6413,7 @@ unsigned char* ISISMain::getSubTLVByType(TLV_t *tlv, enum TLVtypes subTLVType,
  * @pram inMsg is incomming message
  * @return true if message is OK.
  */
-bool ISISMain::isMessageOK(Ptr<ISISMessage> inMsg) {
+bool ISISMain::isMessageOK(const Ptr<const ISISMessage> inMsg) {
 
     if (inMsg->getIdLength() != ISIS_SYSTEM_ID && inMsg->getIdLength() != 0) {
         return false;

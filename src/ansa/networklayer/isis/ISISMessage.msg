@@ -165,6 +165,7 @@ enum TLVtypes
 
 class ISISMessage extends FieldsChunk
 {
+    chunkLength = B(20);
     unsigned char IRPD = 0x83; 			//Intradomain Routing Protocol Discriminator = 0x83 for IS-IS
     unsigned char length; 				//Specifies the length of the PDU Header in bytes.
     unsigned char version = 0x01;		//Version/Protocol ID Extension Applies to the IS-IS protocol (defined as 1).

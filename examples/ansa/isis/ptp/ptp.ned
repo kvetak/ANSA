@@ -1,4 +1,4 @@
-//
+ //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -20,6 +20,7 @@ import inet.node.ethernet.Eth100M;
 //import inet.node.ethernet.EtherSwitch;
 //import ansa.networklayer.isis.AnsaISISRouter;
 import ansa.node.ANSA_ISISRouter;
+import ansa.node.IsisRouter;
 //import inet.ansa.ANSARouter;
 //import inet.networklayer.autorouting.FlatNetworkConfigurator;
 //import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
@@ -31,13 +32,13 @@ network ptp
     @display("bgb=701,389");
 
     submodules:
-        router1: ANSA_ISISRouter {
+        router1: IsisRouter {
             parameters:
                 @display("p=124,156");
             gates:
                 ethg[2];
         }
-        router2: ANSA_ISISRouter {
+        router2: IsisRouter {
             parameters:
                 @display("p=494,156");
             gates:

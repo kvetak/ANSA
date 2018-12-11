@@ -28,8 +28,7 @@ import inet.networklayer.contract.INetworkLayer;
 module CLNSNetworkLayer like INetworkLayer
 {
     parameters:
-
-
+         @display("i=block/fork");
 
         string interfaceTableModule;
         string routingTableModule;
@@ -38,7 +37,7 @@ module CLNSNetworkLayer like INetworkLayer
 
 
 
-        @display("i=block/fork");
+       
     gates:
         input ifIn @labels(INetworkDatagram);
         output ifOut @labels(INetworkDatagram);
@@ -53,26 +52,30 @@ module CLNSNetworkLayer like INetworkLayer
 //        configurator: Ipv4NodeConfigurator {
 //            @display("p=39,158");
 //        }
+
+        routingTable: CLNSRoutingTable {
+            @display("p=96,101");
+        }
         clns: CLNS {
             parameters:
-                
-                @display("p=85,95;q=queue");
-            
+
+                @display("p=550,312;q=queue");
+
         }
         up: MessageDispatcher {
             parameters:
                 @display("p=550,100;b=600,5");
         }
-                lp: MessageDispatcher {
+        lp: MessageDispatcher {
             parameters:
                 @display("p=550,500;b=600,5");
         }
-        
+
 
     connections allowunconnected:
         transportIn --> { @display("m=n"); } --> up.in++;
         transportOut <-- { @display("m=n"); } <-- up.out++;
-        
+
 //        for i=0..sizeof(transportIn)-1 {
 //            transportIn[i] --> { @display("m=n"); } --> clns.transportIn++;
 //        }
@@ -80,14 +83,14 @@ module CLNSNetworkLayer like INetworkLayer
 //            clns.transportOut++ --> { @display("m=n"); } --> transportOut[i];
 //        }
 
-		up.out++ --> clns.transportIn;
+        up.out++ --> clns.transportIn;
         up.in++ <-- clns.transportOut;
-        
 
-		clns.queueOut --> lp.in++;
+
+        clns.queueOut --> lp.in++;
         clns.queueIn <-- lp.out++;
-        
-        
+
+
         lp.out++ --> { @display("m=s"); } --> ifOut;
         lp.in++ <-- { @display("m=s"); } <-- ifIn;
 }
