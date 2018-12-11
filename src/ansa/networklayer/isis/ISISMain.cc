@@ -1060,8 +1060,8 @@ void ISISMain::handleMessage(cMessage* msg) {
                           << packet->getId() << endl;
 
             }
-        //TODO ANSAINET4.0 Uncomment delete?
-//            delete inMsg;
+
+        delete msg;
             break;
 
         case (LAN_L2_HELLO):
@@ -1074,8 +1074,8 @@ void ISISMain::handleMessage(cMessage* msg) {
                           << ": ISIS: WARNING: Discarding LAN_L2_HELLO message on unsupported circuit type interface "
                           << packet->getId() << endl;
             }
-        //TODO ANSAINET4.0 Uncomment delete?
-//            delete inMsg;
+
+        delete msg;
             break;
 
         case (PTP_HELLO):
@@ -1088,8 +1088,8 @@ void ISISMain::handleMessage(cMessage* msg) {
                           << ": ISIS: WARNING: Discarding PTP_HELLO message. Received RESERVED_TYPE circuit type "
                           << packet->getId() << endl;
             }
-        //TODO ANSAINET4.0 Uncomment delete?
-//            delete inMsg;
+
+            delete msg;
             break;
 
         case (TRILL_HELLO):
@@ -1102,8 +1102,8 @@ void ISISMain::handleMessage(cMessage* msg) {
                           << ": ISIS: WARNING: Discarding PTP_HELLO message. Received RESERVED_TYPE circuit type "
                           << packet->getId() << endl;
             }
-        //TODO ANSAINET4.0 Uncomment delete?
-//            delete inMsg;
+
+        delete msg;
             break;
 
         case (L1_LSP):
@@ -1244,6 +1244,7 @@ void ISISMain::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex,
      ISISL2HelloPacket *helloL2 = new ISISL2HelloPacket("L2 Hello");
      */
     Packet *packet = new Packet("ISIS LAN Hello");
+
     auto hello = makeShared<ISISLANHelloPacket>();
     //set appropriate destination MAC addresses
     MacAddress ma;
@@ -1266,11 +1267,12 @@ void ISISMain::sendBroadcastHelloMsg(int interfaceIndex, int gateIndex,
 
     hello->setSourceID(systemId);
 
-    //TODO DSAP NSAP
-
 //    // set DSAP & NSAP fields
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
+    auto sapTag = packet->addTag<Ieee802SapReq>();
+    sapTag->setDsap(SAP_CLNS);
+    sapTag->setSsap(SAP_CLNS);
+
+    packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
     auto macTag = packet->addTag<MacAddressReq>();
     macTag->setDestAddress(ma);
@@ -1336,8 +1338,6 @@ void ISISMain::sendPTPHelloMsg(int interfaceIndex, int gateIndex,
 
     //TODO change to appropriate layer-2 protocol
 //    // set DSAP & NSAP fields
-//    ctrlPtp->setDsap(SAP_CLNS);
-//    ctrlPtp->setSsap(SAP_CLNS);
     auto sapTag = packet->addTag<Ieee802SapReq>();
     sapTag->setDsap(SAP_CLNS);
     sapTag->setSsap(SAP_CLNS);
@@ -1563,26 +1563,28 @@ void ISISMain::sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex,
     for (std::vector<Packet * >::iterator it = hellos.begin();
             it != hellos.end(); ++it) {
 
-        Packet * trillHello = ((*it))->dup();
+        Packet * packet = ((*it))->dup();
 //
         //TODO Fix encapsulation
-//        CLNSControlInfo* ctrl = new CLNSControlInfo();
 //        // set DSAP & NSAP fields
-//        ctrl->setDsap(SAP_CLNS);
-//        ctrl->setSsap(SAP_CLNS);
+        auto sapTag = packet->addTag<Ieee802SapReq>();
+        sapTag->setDsap(SAP_CLNS);
+        sapTag->setSsap(SAP_CLNS);
+
+        packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
         //set appropriate destination MAC addresses
         MacAddress ma;
         //TODO ANSAINET4.0 Uncomment with TRILL;
 //        ma.setAddress(ALL_IS_IS_RBRIDGES);
 
-        auto macTag = trillHello->addTag<MacAddressReq>();
+        auto macTag = packet->addTag<MacAddressReq>();
         macTag->setDestAddress(ma);
 
-        auto interfaceTag = trillHello->addTag<InterfaceReq>();
+        auto interfaceTag = packet->addTag<InterfaceReq>();
         interfaceTag->setInterfaceId(ie->getInterfaceId());
 
-        this->send(trillHello, "lowerLayerOut");
+        this->send(packet, "lowerLayerOut");
 
     }
 
@@ -1603,14 +1605,14 @@ void ISISMain::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex,
     if (iface->passive || !iface->ISISenabled) {
         return;
     }
-
+    Packet *packet = new Packet("PTP Hello");
     //TODO change to appropriate layer-2 protocol
-//    CLNSControlInfo* ctrlPtp = new CLNSControlInfo();
-//    Ieee802Ctrl *ctrlPtp = new Ieee802Ctrl();
-//
 //    // set DSAP & NSAP fields
-//    ctrlPtp->setDsap(SAP_CLNS);
-//    ctrlPtp->setSsap(SAP_CLNS);
+    auto sapTag = packet->addTag<Ieee802SapReq>();
+    sapTag->setDsap(SAP_CLNS);
+    sapTag->setSsap(SAP_CLNS);
+
+    packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
     //set appropriate destination MAC addresses
     MacAddress ma;
@@ -1622,7 +1624,7 @@ void ISISMain::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex,
 
 
     //type
-    Packet *packet = new Packet("PTP Hello");
+
     auto ptpHello = makeShared<ISISPTPHelloPacket>();
 
     auto macTag = packet->addTag<MacAddressReq>();
@@ -1631,8 +1633,7 @@ void ISISMain::sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex,
     auto interfaceTag = packet->addTag<InterfaceReq>();
     interfaceTag->setInterfaceId(iface->entry->getInterfaceId());
 
-    //assign Ethernet control info
-//    ptpHello->setControlInfo(ctrlPtp);
+
     //circuitType
     ptpHello->setCircuitType(iface->circuitType);
 
@@ -3865,6 +3866,7 @@ void ISISMain::handleLsp(Packet *packet) {
             this->installLSP(tmplsp, circuitType);
             this->schedulePeriodicSend(circuitType);
 //            delete[]   lspID;
+            delete packet;
             return;
 
         } else {
@@ -3875,6 +3877,7 @@ void ISISMain::handleLsp(Packet *packet) {
                 this->replaceLSP(tmplsp, lspRec, circuitType);
                 this->schedulePeriodicSend(circuitType);
 //                delete[] lspID;
+                delete packet;
                 return;
 
             }
@@ -3947,12 +3950,13 @@ void ISISMain::sendCsnp(ISISTimer *timer) {
         }
         header->setLength(0); //TODO set to length of header
 
-        //add Ethernet control info
-        //TODO DSAP NSAP
 
 //        // set DSAP & NSAP fields
-//        ctrl->setDsap(SAP_CLNS);
-//        ctrl->setSsap(SAP_CLNS);
+        auto sapTag = packet->addTag<Ieee802SapReq>();
+        sapTag->setDsap(SAP_CLNS);
+        sapTag->setSsap(SAP_CLNS);
+
+        packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
         //set destination broadcast address
         //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
@@ -4122,13 +4126,14 @@ void ISISMain::sendPsnp(ISISTimer *timer) {
     }
     header->setLength(0); //TODO set to length of header
 
-    //add Ethernet control info
     //TODO Proper L2 encap
 
-//
 //    // set DSAP & NSAP fields
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
+    auto sapTag = packet->addTag<Ieee802SapReq>();
+    sapTag->setDsap(SAP_CLNS);
+    sapTag->setSsap(SAP_CLNS);
+
+    packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
     //set destination broadcast address
     //It should be multicast 01-80-C2-00-00-14 MAC address, but it doesn't work in OMNeT
@@ -4798,8 +4803,11 @@ void ISISMain::sendLSP(LSPRecord *lspRec, ISISinterface* iface) {
 //    //TODO add proper control Info for point-to-point
 //
 //    // set DSAP & NSAP fields
-//    ctrl->setDsap(SAP_CLNS);
-//    ctrl->setSsap(SAP_CLNS);
+    auto sapTag = packet->addTag<Ieee802SapReq>();
+    sapTag->setDsap(SAP_CLNS);
+    sapTag->setSsap(SAP_CLNS);
+
+    packet->addTag<PacketProtocolTag>()->setProtocol(&Protocol::isis);
 
     //set destination multicast address
     MacAddress ma;
@@ -5390,6 +5398,7 @@ void ISISMain::purgeLSP(Packet *packet, short circuitType) {
                 this->replaceLSP(lsp, lspRec, circuitType);
                 //lsp is installed in DB => don't delete it, so early return
 //                delete[] lspId;
+                delete packet;
                 return;
             }
             /* 7.3.16.4. b) 2)*/
