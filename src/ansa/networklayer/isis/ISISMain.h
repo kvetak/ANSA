@@ -116,8 +116,8 @@ class ISISMain : public cSimpleModule
         AdjTab_t adjL1Table; /*!< table of L1 adjacencies */
         AdjTab_t adjL2Table; /*!< table of L2 adjacencies */
         short isType; /*!< defines router IS-IS operational mode (L1,L2,L1L2) */
-        std::vector<LSPrecord> L1LSP; /*!< L1 LSP database */
-        std::vector<LSPrecord> L2LSP; /*!< L2 LSP database */
+//        std::vector<LSPrecord> L1LSP; /*!< L1 LSP database */ //TODO Delete unused
+//        std::vector<LSPrecord> L2LSP; /*!< L2 LSP database */
         LSPRecQ_t *L1LSPDb; /*!< L1 LSP database */
         LSPRecQ_t *L2LSPDb; /*!< L2 LSP database */
         FlagRecQQ_t *L1SRMBQueue; /*!< Vector with vector for each interface containing LSPRecords with SRMflag set */
@@ -182,18 +182,18 @@ class ISISMain : public cSimpleModule
         void handleL1HelloMsg(Packet* inMsg); // handle L1 hello messages
         void handleL2HelloMsg(Packet* inMsg); // handle L2 hello messages
         void handleTRILLHelloMsg(Packet* inMsg); // handles TRILL hello messages
-        void sendBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circuitType);
-        void sendPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType);
+        void sendBroadcastHelloMsg(int interfaceId, short circuitType);
+        void sendPTPHelloMsg(int interfaceId, short circuitType);
         void sendTRILLHelloMsg(ISISTimer *timer); //mimic the sendHelloMsg functionality
-        void sendTRILLBroadcastHelloMsg(int interfaceIndex, int gateIndex, short circuitType);
-        void sendTRILLPTPHelloMsg(int interfaceIndex, int gateIndex, short circuitType);
+        void sendTRILLBroadcastHelloMsg(int interfaceId, short circuitType);
+        void sendTRILLPTPHelloMsg(int interfaceId, short circuitType);
         unsigned short getHoldTime(int interfaceIndex, short circuitType = L1_TYPE);
         double getHelloInterval(int interfaceIndex, short circuitType); //return hello interval for specified interface and circuitType. For DIS interface returns only 1/3 of actual value;
-        ISISadj *getAdjByGateIndex(int gateIndex, short circuitType, int offset = 0); // return something corresponding to adjacency on specified link
-        ISISadj *getAdjBySystemID(SystemID systemID, short circuitType, int gateIndex = -1);
+        ISISadj *getAdjByInterfaceId(int interfaceId, short circuitType, int offset = 0); // return something corresponding to adjacency on specified link
+        ISISadj *getAdjBySystemID(SystemID systemID, short circuitType, int interfaceId = -1);
         ISISadj *getAdj(Packet* packet, Ptr<ISISMessage> inMsg, short circuitType = L1_TYPE); //returns adjacency representing sender of inMsg or NULL when ANY parameter of System-ID, MAC address and gate index doesn't match
-        ISISadj *getAdjByMAC(const MacAddress &address, short circuitType, int gateIndex = -1);
-        ISISinterface *getIfaceByGateIndex(int gateIndex); //return ISISinterface for specified gateIndex
+        ISISadj *getAdjByMAC(const MacAddress &address, short circuitType, int interfaceId = -1);
+        ISISinterface *getIfaceById(int interfaceId); //return ISISinterface for specified gateIndex
         bool isAdjBySystemID(SystemID systemID, short circuitType); //do we have adjacency for systemID on specified circuitType
         bool isUp(int gateIndex, short circuitType); //returns true if ISISInterface specified by the corresponding gateIndex have at least one adjacency in state UP
         bool amIL1DIS(int interfaceIndex); //returns true if specified interface is DIS
@@ -268,6 +268,7 @@ class ISISMain : public cSimpleModule
 //        std::vector<SystemID> *getSystemIDsFromTree(TRILLNickname nickname, SystemID systemId);
 
         /* Flags */
+        FlagRecQ_t *findQueue(FlagRecQQ_t *queue, int interfaceId);
         FlagRecQQ_t *getSRMPTPQueue(short circuitType);
         FlagRecQQ_t *getSRMBQueue(short circuitType);
         FlagRecQQ_t *getSSNPTPQueue(short circuitType);
@@ -312,7 +313,7 @@ class ISISMain : public cSimpleModule
 
         bool isMessageOK(const Ptr<const ISISMessage> inMsg);
         bool isAreaIDOK(TLV_t *areaAddressTLV, AreaId compare); //if compare is NULL then use this->areaId for comparison
-        int getIfaceIndex(ISISinterface *interface); //returns index to ISISIft
+//        int getIfaceIndex(ISISinterface *interface); //returns index to ISISIft
 
         /* General */
         short getLevel(const ISISMessage* msg); //returns level (circuitType) of the message

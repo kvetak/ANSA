@@ -60,40 +60,7 @@ namespace inet {
 
 
 
-/**
- * Structure for storing info about all active interfaces.
- */
-struct ISISinterface
-{
-    int intID;                /*!<interface ID*/
-    int gateIndex;            /*!<gate index*/
-    bool network;             /*!< network type, true = broadcast, false = point-to-point */
-    //bool broadcast;         /*!<broadcast enabled?*/
-    //bool loopback;          /*!<is it loopback?*/
-    bool passive;             /*!<is it passive intf?*/
-    bool ISISenabled;         /*!<is IS-IS activated on this interface? (default yes for all ifts)*/
-    short circuitType;        /*!<circuit type  L1, L2, L1L2*/
-    uint priority;   /*!<interface priority for being designated IS*/
-    uint L1DISpriority;    /*!<priority of current L1 DIS*/
-    uint L2DISpriority;    /*!<priority of currend L2 DIS*/
-//    unsigned char L1DIS[ISIS_SYSTEM_ID + 1];   /*!<L1 designated router ID for ift*/
-//    unsigned char L2DIS[ISIS_SYSTEM_ID + 1];   /*!<L2 designated router ID for ift*/
-    PseudonodeID L1DIS;
-    PseudonodeID L2DIS;
-    unsigned char metric;     /*!<interface metric (default 10)*/
-    int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
-    int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
-    short L1HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
-    short L2HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
-    int lspInterval;                            /*!< Minimum delay in ms between sending two successive LSPs.*/
-    int L1CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
-    int L2CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
-    int L1PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
-    int L2PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
 
-    InterfaceEntry *entry;    /*!< other interface info*/
-};
-typedef std::vector<ISISinterface> ISISInterTab_t;
 
 /* Adjacency state types according to TRILL specs in RFC6327 3.2
  *
@@ -120,7 +87,8 @@ struct ISISadj
     ISISAdjState state;                         /*!<adjacency state has to be 2-way; 0 = only 1 way, 1 = 2-way (hello received from adj router)*/
     ISISTimer *timer;                   /*!<timer set to hold time and reseted every time hello from neighbour is received. For L2_MODE works as designated VLAN holding timer*/
     ISISTimer *nonDesTimer;              /*!< nonDesignated VLAN holding timer */
-    int gateIndex;                      /*!<index of gate, which is neighbour connected to*/
+    int interfaceId;                    /*!< interface id, which is neighbour connected to*/
+//    int gateIndex;                      /*!<index of gate, which is neighbour connected to*/
     bool network;                       /*!<network type, true = broadcast, false = point-to-point*/
 //    ISISTimer *desVLANTimer;  //see above
 //    ISISTimer *nonDesVLANTimer;
@@ -139,33 +107,6 @@ struct ISISadj
         }else{
             return areaID < adj2.areaID;
         }
-
-//        for (unsigned int j = 0; j < ISIS_AREA_ID; j++){
-//            if(areaID[j] < adj2.areaID[j]){
-//                return true; //first is smaller, so return true
-//            }else if(areaID[j] > adj2.areaID[j]){
-//                return false; //first is bigger, so return false
-//            }
-//            //if it's equal then continue to next one
-//        }
-//        //AreaIDs match, so compare system IDs
-//
-//        for (unsigned int i = 0; i < ISIS_SYSTEM_ID; i++){
-//            if(sysID[i] < adj2.sysID[i]){
-//                return true; //first is smaller, so return true
-//            }else if(sysID[i] > adj2.sysID[i]){
-//                return false; //first is bigger, so return false
-//            }
-//            //if it's equal then continue to next one
-//        }
-//
-//        //if the first MAC address is smaller, return true
-//        if(mac.compareTo(adj2.mac) < 0){
-//            return true;
-//        }
-//
-//        //if they're equal, return false
-//        return false;
     }
 };
 
@@ -193,75 +134,101 @@ struct LSPneighbour
 
 };
 
-struct LSPrecord
-{
-    std::vector<LSPneighbour> neighbours;    //list of neighbours
-//    unsigned char LSPid[8];             //ID of LSP
-    LspID LSPid;
-    unsigned long seq;                  //sequence number
-    ISISTimer *deadTimer;               //dead timer - 1200s
-};
+
+//TODO Delete unused
+//struct LSPrecord
+//{
+//    std::vector<LSPneighbour> neighbours;    //list of neighbours
+////    unsigned char LSPid[8];             //ID of LSP
+//    LspID LSPid;
+//    unsigned long seq;                  //sequence number
+//    ISISTimer *deadTimer;               //dead timer - 1200s
+//};
+
+
 
 struct LSPRecord
 {
+public:
     Ptr<ISISLSPPacket> LSP; //link-state protocol data unit
     ISISTimer *deadTimer; //dead timer
-    std::vector<bool> SRMflags;
-    std::vector<bool> SSNflags;
+private:
+    std::vector<bool> srmFlags;
+    std::vector<bool> ssnFlags;
+    std::vector<int> interfaceIds;
+public:
     double simLifetime; /*!< specify deadTi */
-
-    /*        LSPRecord(){
-     for (std::vector<ISISinterface>::iterator intIt = this->ISISIft.begin(); intIt != this->ISISIft.end(); ++intIt)
-     {
-
-     this->SRMflags.push_back(false);
-     this->SSNflags.push_back(false);
-
-     }
-     }*/
 
     //bool operator for sorting
     bool operator<(const LSPRecord& lspRec2) const
     {
       return LSP->getLspID() < lspRec2.LSP->getLspID();
-//      for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-//      {
-//        if (this->LSP->getLspID(i) < lspRec2.LSP->getLspID(i))
-//        {
-//          return true; //first is smaller, so return true
-//        }
-//        else if (this->LSP->getLspID(i) > lspRec2.LSP->getLspID(i))
-//        {
-//          return false; //first is bigger, so return false
-//        }
-//        //if it's equal then continue to next one
-//      }
-//
-//      //if they're equal, return false
-//      return false;
+
+    }
+
+    int getFlagsSize(){
+        return srmFlags.size();
+    }
+
+    bool getSrmFlag(int interfaceId){
+        return srmFlags.at(getIndex(interfaceId));
+    }
+
+    void setSrmFlag(int interfaceId, bool value){
+        srmFlags.at(getIndex(interfaceId)) = value;
+    }
+
+    void clearSrmFlag(int interfaceId){
+        srmFlags.at(getIndex(interfaceId)) = false;
+    }
+
+    bool getSsnFlag(int interfaceId){
+        return ssnFlags.at(getIndex(interfaceId));
+    }
+
+    void setSsnFlag(int interfaceId, bool value){
+        ssnFlags.at(getIndex(interfaceId)) = value;
+    }
+
+    void clearSsnFlag(int interfaceId){
+        ssnFlags.at(getIndex(interfaceId)) = false;
+    }
+
+    int getInterfaceId(int iterator){
+        return interfaceIds.at(iterator);
+    }
+
+    void addFlags(bool srmFlag, bool ssnFlag, int interfaceId){
+        srmFlags.push_back(false);
+        ssnFlags.push_back(false);
+        interfaceIds.push_back(interfaceId);
+
     }
 
     ~LSPRecord()
     {
 
-      /*            for (unsigned int i = 0; i < this->LSP->getTLVArraySize(); i++)
-       {
-       if(this->LSP->getTLV(i).value != NULL){
-       delete this->LSP->getTLV(i).value;
-       }
-       }*/
       this->LSP->setTLVArraySize(0);
       if (this->LSP != NULL)
       {
           //TODO ANSAINET4.0 Uncomment delete?
 //        delete this->LSP;
       }
-      //            if(this->deadTimer != NULL){
-      //                drop(this->deadTimer);
-      //                delete this->deadTimer;
-      //            }
-      this->SRMflags.clear();
-      this->SSNflags.clear();
+
+      this->srmFlags.clear();
+      this->ssnFlags.clear();
+      this->interfaceIds.clear();
+    }
+
+private:
+    int getIndex(int interfaceId){
+        for(int i = 0; i < interfaceIds.size(); i++){
+            if(interfaceIds.at(i) == interfaceId){
+                return i;
+            }
+        }
+
+        return -1;
     }
 
 };
@@ -273,28 +240,14 @@ struct cmpLSPRecord
     bool operator()(const LSPRecord *lspRec1, const LSPRecord *lspRec2)
     {
       return lspRec1->LSP->getLspID() < lspRec2->LSP->getLspID();
-//      for (unsigned int i = 0; i < ISIS_SYSTEM_ID + 2; i++)
-//      {
-//        if (lspRec1->LSP->getLspID(i) < lspRec2->LSP->getLspID(i))
-//        {
-//          return true; //first is smaller, so return true
-//        }
-//        else if (lspRec1->LSP->getLspID(i) > lspRec2->LSP->getLspID(i))
-//        {
-//          return false; //first is bigger, so return false
-//        }
-//        //if it's equal then continue to next one
-//      }
-//
-//      //if they're equal, return false
-//      return false;
+
     }
 };
 
 struct FlagRecord
 {
         LSPRecord *lspRec;
-        int index;
+        int interfaceId;
         //destructor!!
         ~FlagRecord(){
 
@@ -302,6 +255,7 @@ struct FlagRecord
 };
 typedef std::vector<FlagRecord*> FlagRecQ_t;
 typedef std::vector<std::vector<FlagRecord*> *> FlagRecQQ_t;
+
 struct ISISNeighbour
 {
 //        unsigned char *id;
@@ -477,7 +431,48 @@ typedef enum
     ISIS_CIRCUIT_L1L2
 } ISISCircuitType;
 
+/**
+ * Structure for storing info about all active interfaces.
+ */
+struct ISISinterface
+{
+    int interfaceId;                /*!<interface ID*/
+//    int gateIndex;            /*!<gate index*/
+    bool network;             /*!< network type, true = broadcast, false = point-to-point */
+    //bool broadcast;         /*!<broadcast enabled?*/
+    //bool loopback;          /*!<is it loopback?*/
+    bool passive;             /*!<is it passive intf?*/
+    bool ISISenabled;         /*!<is IS-IS activated on this interface? (default yes for all ifts)*/
+    short circuitType;        /*!<circuit type  L1, L2, L1L2*/
+    uint priority;   /*!<interface priority for being designated IS*/
+    uint L1DISpriority;    /*!<priority of current L1 DIS*/
+    uint L2DISpriority;    /*!<priority of currend L2 DIS*/
+//    unsigned char L1DIS[ISIS_SYSTEM_ID + 1];   /*!<L1 designated router ID for ift*/
+//    unsigned char L2DIS[ISIS_SYSTEM_ID + 1];   /*!<L2 designated router ID for ift*/
+    PseudonodeID L1DIS;
+    PseudonodeID L2DIS;
+    unsigned char metric;     /*!<interface metric (default 10)*/
+    int L1HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L1HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+    int L2HelloInterval;                        /*!< Hello interval for Level 1, 1 - 65535, 0 value causes the system to compute the hello interval based on the hello multiplier (specified by the L2HelloMultiplier ) so that the resulting hold time is 1 second. On designated intermediate system (DIS) interfaces, only one third of the configured value is used. Default is 10. */
+    short L1HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L1HelloMultiplier times the L1HelloInterval. Default is 3. */
+    short L2HelloMultiplier;                    /*!< Value between 3 - 1000. The advertised hold time in IS-IS hello packets will be set to the L2HelloMultiplier times the L2HelloInterval. Default is 3. */
+    int lspInterval;                            /*!< Minimum delay in ms between sending two successive LSPs.*/
+    int L1CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
+    int L2CsnpInterval;                           /*!< Interval in seconds between generating CSNP message.*/
+    int L1PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
+    int L2PsnpInterval;                           /*!< Interval in seconds between generating PSNP message.*/
+    FlagRecQ_t* l1srmBQueue;
+    FlagRecQ_t* l1srmPTPQueue;
+    FlagRecQ_t* l2srmBQueue;
+    FlagRecQ_t* l2srmPTPQueue;
+    FlagRecQ_t* l1ssnBQueue;
+    FlagRecQ_t* l1ssnPTPQueue;
+    FlagRecQ_t* l2ssnBQueue;
+    FlagRecQ_t* l2ssnPTPQueue;
 
+    InterfaceEntry *entry;    /*!< other interface info*/
+};
+typedef std::vector<ISISinterface> ISISInterTab_t;
 
 
 

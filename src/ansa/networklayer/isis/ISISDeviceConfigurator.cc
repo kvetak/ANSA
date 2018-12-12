@@ -520,14 +520,14 @@ void ISISDeviceConfigurator::loadISISCoreDefaultConfig(ISISMain *isisModule){
 void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule, InterfaceEntry *ie){
 
 
-    IsisInterfaceData *d = ie->addProtocolData<IsisInterfaceData>();
+        IsisInterfaceData *d = ie->addProtocolData<IsisInterfaceData>();
         ISISinterface newIftEntry;
-        newIftEntry.intID = ie->getInterfaceId();
+        newIftEntry.interfaceId = ie->getInterfaceId();
         d->setIfaceId(ie->getInterfaceId());
         //TODO ANSAINET4.0 Uncomment; only interfaceId; right?
-        newIftEntry.gateIndex = ie->getInterfaceId();
-        d->setGateIndex(ie->getInterfaceId());
-        EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " <<newIftEntry.gateIndex <<endl;
+//        newIftEntry.gateIndex = ie->getInterfaceId();
+//        d->setGateIndex(ie->getInterfaceId());
+        EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, interfaceId: " <<newIftEntry.interfaceId <<endl;
 
         //set interface priority
         newIftEntry.priority = ISIS_DIS_PRIORITY;  //default value
@@ -601,7 +601,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule
 
         //set initial designated IS as itself
 
-        newIftEntry.L1DIS.set(isisModule->getSystemId(), isisModule->getISISIftSize() + 1);
+        newIftEntry.L1DIS.set(isisModule->getSystemId(), ie->getInterfaceId());
 
 //        memcpy(newIftEntry.L1DIS, isisModule->getSysId(), ISIS_SYSTEM_ID);
         //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
@@ -612,7 +612,7 @@ void ISISDeviceConfigurator::loadISISInterfaceDefaultConfig(ISISMain *isisModule
 
         //do the same for L2 DIS
 
-        newIftEntry.L2DIS.set(isisModule->getSystemId(), isisModule->getISISIftSize() + 1);
+        newIftEntry.L2DIS.set(isisModule->getSystemId(), ie->getInterfaceId());
 //        memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
 //        //newIftEntry.L2DIS[6] = ie->getInterfaceId() - 99;
 //        newIftEntry.L2DIS[ISIS_SYSTEM_ID] = isisModule->getISISIftSize() + 1;
@@ -644,10 +644,10 @@ void ISISDeviceConfigurator::loadISISInterfaceConfig(ISISMain *isisModule, Inter
         return;
     }
     ISISinterface newIftEntry;
-    newIftEntry.intID = entry->getInterfaceId();
+    newIftEntry.interfaceId = entry->getInterfaceId();
 
-    newIftEntry.gateIndex = entry->getInterfaceId();
-    EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, gateIndex: " <<newIftEntry.gateIndex <<endl;
+//    newIftEntry.gateIndex = entry->getInterfaceId();
+    EV <<"deviceId: " << this->deviceId << "ISIS: adding interface, interfaceID: " <<newIftEntry.interfaceId <<endl;
 
     //set interface priority
     newIftEntry.priority = ISIS_DIS_PRIORITY;  //default value
@@ -847,14 +847,14 @@ void ISISDeviceConfigurator::loadISISInterfaceConfig(ISISMain *isisModule, Inter
 
     //set initial designated IS as itself
 //    this->copyArrayContent((unsigned char*)this->sysId, newIftEntry.L1DIS, ISIS_SYSTEM_ID, 0, 0);
-    newIftEntry.L1DIS.set(isisModule->getSystemId(), newIftEntry.gateIndex + 1);
+    newIftEntry.L1DIS.set(isisModule->getSystemId(), newIftEntry.interfaceId);
 //    memcpy(newIftEntry.L1DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
 //    //set LAN identifier; -99 is because, OMNeT starts numbering interfaces from 100 -> interfaceID 100 means LAN ID 0; and we want to start numbering from 1
 //    //newIftEntry.L1DIS[6] = entry->getInterfaceId() - 99;
 //    newIftEntry.L1DIS[ISIS_SYSTEM_ID] = newIftEntry.gateIndex + 1;
 
     //do the same for L2 DIS
-    newIftEntry.L2DIS.set(isisModule->getSystemId(), newIftEntry.gateIndex + 1);
+    newIftEntry.L2DIS.set(isisModule->getSystemId(), newIftEntry.interfaceId);
 ////    memcpy((unsigned char*)isisModule->getSy, newIftEntry.L2DIS, ISIS_SYSTEM_ID);
 //    memcpy(newIftEntry.L2DIS,isisModule->getSysId(), ISIS_SYSTEM_ID);
 //    //newIftEntry.L2DIS[6] = entry->getInterfaceId() - 99;

@@ -40,7 +40,7 @@ IsisInterfaceData::IsisInterfaceData()
 
 
     ifaceId = -1;
-    gateIndex = -1;
+//    gateIndex = -1;
     network = ISIS_NETWORK_BROADCAST; //previously broadcast = true
     passive = false;
     isisEnabled = true; /*!<is IS-IS activated on this interface? (default yes for all ifts)*/
@@ -114,18 +114,18 @@ void IsisInterfaceData::setCircuitType(ISISCircuitType circuitType)
     this->circuitType = circuitType;
 }
 
-int IsisInterfaceData::getGateIndex() const
-{
-    return gateIndex;
-}
-
-void IsisInterfaceData::setGateIndex(int gateIndex)
-{
-    if(this->gateIndex != gateIndex){
-        this->setHelloValid(false);
-    }
-    this->gateIndex = gateIndex;
-}
+//int IsisInterfaceData::getGateIndex() const
+//{
+//    return gateIndex;
+//}
+//
+//void IsisInterfaceData::setGateIndex(int gateIndex)
+//{
+//    if(this->gateIndex != gateIndex){
+//        this->setHelloValid(false);
+//    }
+//    this->gateIndex = gateIndex;
+//}
 
 int IsisInterfaceData::getIfaceId() const
 {

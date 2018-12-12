@@ -19,14 +19,12 @@ import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;
 import inet.node.ethernet.EtherSwitch;
 //import ansa.networklayer.isis.AnsaISISRouter;
-import ansa.node.ANSA_ISISRouter;
-//import inet.ansa.ANSARouter;
-//import inet.networklayer.autorouting.FlatNetworkConfigurator;
-import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
+import ansa.node.IsisRouter;
+//import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
 //import inet.networklayer.autorouting.FlatNetworkConfigurator6;
-import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
-import inet.node.ethernet.EtherSwitch;
-import inet.node.mpls.LDP_LSR;
+//import inet.networklayer.configurator.ipv6.FlatNetworkConfigurator6;
+//import inet.node.ethernet.EtherSwitch;
+//import inet.node.mpls.LDP_LSR;
 import ned.DatarateChannel;
 
 network lan
@@ -38,20 +36,20 @@ network lan
             delay = 0.1us;
         }
     submodules:
-        router1: ANSA_ISISRouter {
+        router1: IsisRouter {
             parameters:
                 @display("p=57,191");
 
             gates:
                 ethg[1];
         }
-        router2: ANSA_ISISRouter {
+        router2: IsisRouter {
             parameters:
                 @display("p=269,293");
             gates:
                 ethg[1];
         }
-        router3: ANSA_ISISRouter {
+        router3: IsisRouter {
             parameters:
                 @display("p=44,347");
             gates:

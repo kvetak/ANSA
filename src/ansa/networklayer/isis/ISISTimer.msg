@@ -69,8 +69,8 @@ enum ISISTimerType
 message ISISTimer
 {
       char 		timerKind enum(ISISTimerType);
-      int		interfaceIndex; //index to ISISIft maybe change to gateway index CHANGED TO gateIndex
-      int		gateIndex; //network layer gate eg. physical interface
+      int		interfaceId; //index to ISISIft maybe change to gateway index CHANGED TO gateIndex
+//      int		gateIndex; //network layer gate eg. physical interface
 //      unsigned char	sysID[6];	//for specific timers eg. neighbour timeout
       SystemID sysID;
       unsigned short isType;	//L1 / L2

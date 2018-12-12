@@ -44,7 +44,7 @@ class IsisInterfaceData : public InterfaceProtocolData
 
         /* From ISISinterface */
         int ifaceId = -1; //previously intID
-        int gateIndex = -1;
+//        int gateIndex = -1;
         ISISNetworkType network; //previously broadcast = true
         bool passive;
         bool isisEnabled; /*!<is IS-IS activated on this interface? (default yes for all ifts)*/
@@ -81,8 +81,8 @@ class IsisInterfaceData : public InterfaceProtocolData
         void setHelloValid(bool helloValid);
         ISISCircuitType getCircuitType() const;
         void setCircuitType(ISISCircuitType circuitType);
-        int getGateIndex() const;
-        void setGateIndex(int gateIndex);
+//        int getGateIndex() const;
+//        void setGateIndex(int gateIndex);
         int getIfaceId() const;
         void setIfaceId(int ifaceId);
         bool isIsisEnabled() const;
