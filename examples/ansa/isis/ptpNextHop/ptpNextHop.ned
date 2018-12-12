@@ -19,7 +19,7 @@ import inet.node.ethernet.Eth100M;
 //import inet.ansa.ANSASwitch;
 //import inet.node.ethernet.EtherSwitch;
 //import ansa.networklayer.isis.AnsaISISRouter;
-import ansa.node.ANSA_ISISRouter;
+import ansa.node.IsisRouter;
 //import inet.ansa.ANSARouter;
 //import inet.networklayer.autorouting.FlatNetworkConfigurator;
 //import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
@@ -31,19 +31,19 @@ network ptpNextHop
     @display("bgb=701,389");
 
     submodules:
-        router1: ANSA_ISISRouter {
+        router1: IsisRouter {
             parameters:
                 @display("p=124,156");
             gates:
                 ethg[1];
         }
-        router2: ANSA_ISISRouter {
+        router2: IsisRouter {
             parameters:
                 @display("p=357,156");
             gates:
                 ethg[2];
         }
-        router3: ANSA_ISISRouter {
+        router3: IsisRouter {
             parameters:
                 @display("p=594,156");
             gates:

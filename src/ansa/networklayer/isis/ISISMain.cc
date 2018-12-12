@@ -3860,9 +3860,8 @@ void ISISMain::handleLsp(Packet *packet) {
         lspRec = this->getLSPFromDbByID(lspID, circuitType);
         if (lspRec == NULL) {
             /* 7.3.15.1 e) 1) i. */
-            //TODO Check might need to remove it from the packet
             auto tmplsp = packet->removeAtFront<ISISLSPPacket>();
-            tmplsp->addTag<InterfaceInd>()->setInterfaceId(packet->getTag<InterfaceInd>()->getInterfaceId());
+//            tmplsp->addTagIfAbsent<InterfaceInd>()->setInterfaceId(packet->getTag<InterfaceInd>()->getInterfaceId());
             this->installLSP(tmplsp, circuitType);
             this->schedulePeriodicSend(circuitType);
 //            delete[]   lspID;
@@ -3873,7 +3872,7 @@ void ISISMain::handleLsp(Packet *packet) {
             if (lsp->getSeqNumber() > lspRec->LSP->getSeqNumber()) {
                 /* 7.3.15.1 e) 1) i. */
                 auto tmplsp = packet->removeAtFront<ISISLSPPacket>();
-                tmplsp->addTag<InterfaceInd>()->setInterfaceId(packet->getTag<InterfaceInd>()->getInterfaceId());
+//                tmplsp->addTag<InterfaceInd>()->setInterfaceId(packet->getTag<InterfaceInd>()->getInterfaceId());
                 this->replaceLSP(tmplsp, lspRec, circuitType);
                 this->schedulePeriodicSend(circuitType);
 //                delete[] lspID;
