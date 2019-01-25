@@ -36,12 +36,14 @@ class INET_API OSPFv3Area : public cObject
     void addInterface(OSPFv3Interface*);
     void init();
     void debugDump();
+    void ageDatabase();
     int getInstanceType(){return this->instanceType;};
     void setiInstanceType(int type){this->instanceType = type;};
     void setExternalRoutingCapability(bool capable){this->externalRoutingCapability=capable;}
     void setStubDefaultCost(int newCost){this->stubDefaultCost=newCost;}
     void setTransitCapability(bool capable){this->transitCapability=capable;}
     OSPFv3Interface* getInterfaceById(int id);
+    OSPFv3Interface* getNetworkLSAInterface(IPv4Address id);
     OSPFv3Interface* getInterfaceByIndex(int id);
     OSPFv3Instance* getInstance() const {return this->containingInstance;};
     bool getExternalRoutingCapability(){return this->externalRoutingCapability;}
@@ -50,43 +52,56 @@ class INET_API OSPFv3Area : public cObject
     OSPFv3Interface* findVirtualLink(IPv4Address routerID);
 
     OSPFv3Interface* getInterface(int i) const {return this->interfaceList.at(i);}
+    OSPFv3Interface* getInterfaceByIndex (IPv4Address address);
     int getInterfaceCount() const {return this->interfaceList.size();}
 
     OSPFv3LSA* getLSAbyKey(LSAKeyType lsaKey);
 
     void deleteRouterLSA(int index);
-    void addRouterLSA(OSPFv3RouterLSA* newLSA){this->routerLSAList.push_back(newLSA);}
-    OSPFv3RouterLSA* originateRouterLSA();//this originates one router LSA for one area
+    void addRouterLSA(RouterLSA* newLSA){this->routerLSAList.push_back(newLSA);}
+
+
+
+
+
+    /* ROUTER LSA */
+    RouterLSA* originateRouterLSA();//this originates one router LSA for one area
     int getRouterLSACount(){return this->routerLSAList.size();}
-    OSPFv3RouterLSA* getRouterLSA(int i){return this->routerLSAList.at(i);}
-    OSPFv3RouterLSA* getRouterLSAbyKey(LSAKeyType lsaKey);
+    RouterLSA* getRouterLSA(int i){return this->routerLSAList.at(i);}
+    RouterLSA* getRouterLSAbyKey(LSAKeyType lsaKey);
     bool installRouterLSA(OSPFv3RouterLSA *lsa);
-    bool updateRouterLSA(OSPFv3RouterLSA* currentLsa, OSPFv3RouterLSA* newLsa);
+    bool updateRouterLSA(RouterLSA* currentLsa, OSPFv3RouterLSA* newLsa);
     bool routerLSADiffersFrom(OSPFv3RouterLSA* currentLsa, OSPFv3RouterLSA* newLsa);
     IPv4Address getNewRouterLinkStateID();
     IPv4Address getRouterLinkStateID(){return this->routerLsID;}
     uint32_t getCurrentRouterSequence(){return this->routerLSASequenceNumber;}
     void incrementRouterSequence(){this->routerLSASequenceNumber++;}
+    RouterLSA* findRouterLSAByID(IPv4Address linkStateID);
+    RouterLSA* findRouterLSA(IPv4Address routerID);
 
-    void addNetworkLSA(OSPFv3NetworkLSA* newLSA){this->networkLSAList.push_back(newLSA);}
-    OSPFv3NetworkLSA* originateNetworkLSA(OSPFv3Interface* interface);//this originates one router LSA for one area
+    /*NETWORK LSA */
+    void addNetworkLSA(NetworkLSA* newLSA){this->networkLSAList.push_back(newLSA);}
+    NetworkLSA* originateNetworkLSA(OSPFv3Interface* interface);//this originates one router LSA for one area
     int getNetworkLSACount(){return this->networkLSAList.size();}
-    OSPFv3NetworkLSA* getNetworkLSA(int i){return this->networkLSAList.at(i);}
+    NetworkLSA* getNetworkLSA(int i){return this->networkLSAList.at(i);}
     bool installNetworkLSA(OSPFv3NetworkLSA *lsa);
-    bool updateNetworkLSA(OSPFv3NetworkLSA* currentLsa, OSPFv3NetworkLSA* newLsa);
+    bool updateNetworkLSA(NetworkLSA* currentLsa, OSPFv3NetworkLSA* newLsa);
     bool networkLSADiffersFrom(OSPFv3NetworkLSA* currentLsa, OSPFv3NetworkLSA* newLsa);
     IPv4Address getNewNetworkLinkStateID();
     IPv4Address getNetworkLinkStateID(){return this->networkLsID;}
     uint32_t getCurrentNetworkSequence(){return this->networkLSASequenceNumber;}
     void incrementNetworkSequence(){this->networkLSASequenceNumber++;}
+    NetworkLSA* findNetworkLSAByLSID(IPv4Address linkStateID);
+    NetworkLSA* getNetworkLSAbyKey(LSAKeyType LSAKey);
+    NetworkLSA* findNetworkLSA(uint32_t intID, IPv4Address routerID);
 
     /* INTER AREA PREFIX LSA */
-    void addInterAreaPrefixLSA(OSPFv3InterAreaPrefixLSA* newLSA){this->interAreaPrefixLSAList.push_back(newLSA);};
+    void addInterAreaPrefixLSA(InterAreaPrefixLSA* newLSA){this->interAreaPrefixLSAList.push_back(newLSA);};
     void originateInterAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* lsa, OSPFv3Area* fromArea);
     int getInterAreaPrefixLSACount(){return this->interAreaPrefixLSAList.size();}
-    OSPFv3InterAreaPrefixLSA* getInterAreaPrefixLSA(int i){return this->interAreaPrefixLSAList.at(i);}
+    InterAreaPrefixLSA* getInterAreaPrefixLSA(int i){return this->interAreaPrefixLSAList.at(i);}
     bool installInterAreaPrefixLSA(OSPFv3InterAreaPrefixLSA* lsa);
-    bool updateInterAreaPrefixLSA(OSPFv3InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa);
+    bool updateInterAreaPrefixLSA(InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa);      // TODO: resetInstallTime
     bool interAreaPrefixLSADiffersFrom(OSPFv3InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa);
     IPv4Address getNewInterAreaPrefixLinkStateID();
     IPv4Address getInterAreaPrefixLinkStateID(){return this->interAreaPrefixLsID;}
@@ -97,32 +112,36 @@ class INET_API OSPFv3Area : public cObject
     void originateInterAreaPrefixLSA(OSPFv3LSA* prefLsa, OSPFv3Area* fromArea);
 
     //* INTRA AREA PREFIX LSA */
-    void addIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* newLSA){this->intraAreaPrefixLSAList.push_back(newLSA);}
-    OSPFv3IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this originates one router LSA for one area
+    void addIntraAreaPrefixLSA(IntraAreaPrefixLSA* newLSA){this->intraAreaPrefixLSAList.push_back(newLSA);}
+    IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this originates one router LSA for one area
     int getIntraAreaPrefixLSACount(){return this->intraAreaPrefixLSAList.size();}
-    OSPFv3IntraAreaPrefixLSA* getIntraAreaPrefixLSA(int i){return this->intraAreaPrefixLSAList.at(i);}
-    OSPFv3IntraAreaPrefixLSA* getNetIntraAreaPrefixLSA(L3Address prefix, int prefLen);
+    IntraAreaPrefixLSA* getIntraAreaPrefixLSA(int i){return this->intraAreaPrefixLSAList.at(i);}
+    IntraAreaPrefixLSA* getNetIntraAreaPrefixLSA(L3Address prefix, int prefLen);
     bool installIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA *lsa);
-    bool updateIntraAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* currentLsa, OSPFv3IntraAreaPrefixLSA* newLsa);
+    bool updateIntraAreaPrefixLSA(IntraAreaPrefixLSA* currentLsa, OSPFv3IntraAreaPrefixLSA* newLsa);
     bool intraAreaPrefixLSADiffersFrom(OSPFv3IntraAreaPrefixLSA* currentLsa, OSPFv3IntraAreaPrefixLSA* newLsa);
     IPv4Address getNewIntraAreaPrefixLinkStateID();
     IPv4Address getIntraAreaPrefixLinkStateID(){return this->intraAreaPrefixLsID;}
     uint32_t getCurrentIntraAreaPrefixSequence(){return this->intraAreaPrefixLSASequenceNumber;}
     void incrementIntraAreaPrefixSequence(){this->intraAreaPrefixLSASequenceNumber++;}
 
-    OSPFv3IntraAreaPrefixLSA* originateNetIntraAreaPrefixLSA(OSPFv3NetworkLSA* networkLSA, OSPFv3Interface* interface);//this originates one router LSA for one area
+    IntraAreaPrefixLSA* originateNetIntraAreaPrefixLSA(NetworkLSA* networkLSA, OSPFv3Interface* interface);//this originates one router LSA for one area
     IPv4Address getNewNetIntraAreaPrefixLinkStateID();
     IPv4Address getNetIntraAreaPrefixLinkStateID(){return this->netIntraAreaPrefixLsID;}
     uint32_t getCurrentNetIntraAreaPrefixSequence(){return this->netIntraAreaPrefixLSASequenceNumber;}
     void incrementNetIntraAreaPrefixSequence(){this->netIntraAreaPrefixLSASequenceNumber++;}
+    IntraAreaPrefixLSA*  findIntraAreaPrefixByAdvRouter(IPv4Address advRouter);
+    IntraAreaPrefixLSA* findNetIntraAreaPrefixLSAByReference(IPv4Address refLSID, IPv4Address refAdvRouter);
 
     OSPFv3LSAHeader* findLSA(LSAKeyType lsaKey);
     bool floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface=nullptr, OSPFv3Neighbor* neighbor=nullptr);
 
     void removeFromAllRetransmissionLists(LSAKeyType lsaKey);
+    bool isOnAnyRetransmissionList(LSAKeyType lsaKey) const;
+    bool hasAnyNeighborInStates(int states) const;
 
 
-    void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* > newTable);
+    void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* >& newTable);
     void calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
     void recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTable);
     bool hasLink(OSPFv3LSA *fromLSA, OSPFv3LSA *toLSA) const;
@@ -132,7 +151,7 @@ class INET_API OSPFv3Area : public cObject
 
     std::string detailedInfo() const override;
 
-    void setSpfTreeRoot(OSPFv3RouterLSA* routerLSA){this->spfTreeRoot = routerLSA;};
+    void setSpfTreeRoot(RouterLSA* routerLSA){spfTreeRoot = routerLSA;};
 
   private:
     IPv4Address areaID;
@@ -147,26 +166,30 @@ class INET_API OSPFv3Area : public cObject
     int stubDefaultCost;
     bool transitCapability;
 
-    std::vector<OSPFv3RouterLSA* > routerLSAList;
+    std::map<IPv4Address, RouterLSA *> routerLSAsByID;
+    std::map<IPv4Address, NetworkLSA *> networkLSAsByID;
+    std::map<IPv4Address, IntraAreaPrefixLSA *> intraAreaPrefixLSAByID;
+
+    std::vector<RouterLSA* > routerLSAList;
     IPv4Address routerLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t routerLSASequenceNumber = 1;
 
-    std::vector<OSPFv3NetworkLSA* > networkLSAList;
+    std::vector<NetworkLSA* > networkLSAList;
     IPv4Address networkLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t networkLSASequenceNumber = 1;
 
-    std::vector<OSPFv3InterAreaPrefixLSA* > interAreaPrefixLSAList;
+    std::vector<InterAreaPrefixLSA* > interAreaPrefixLSAList;
     IPv4Address interAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t interAreaPrefixLSASequenceNumber = 1;
 
-    std::vector<OSPFv3IntraAreaPrefixLSA*> intraAreaPrefixLSAList;
-    IPv4Address intraAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
+    std::vector<IntraAreaPrefixLSA*> intraAreaPrefixLSAList;
+    IPv4Address intraAreaPrefixLsID = (IPv4Address) 1; //in simulaiton, zero print as <unspec>
     uint32_t intraAreaPrefixLSASequenceNumber = 1;
 
     IPv4Address netIntraAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t netIntraAreaPrefixLSASequenceNumber = 1;
 
-    OSPFv3RouterLSA* spfTreeRoot=nullptr;
+    RouterLSA* spfTreeRoot=nullptr;
     //list of summary lsas
     //shortest path tree
 

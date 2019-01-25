@@ -163,8 +163,44 @@ std::ostream& operator<<(std::ostream& out, const OSPFv3RoutingTableEntry& entry
     out << ", iface: " << entry.getInterface()->getName();
     out << ", Cost: " << entry.getCost()
         << ", Type2Cost: " << entry.getType2Cost()
-        //TODO<< ", Origin: [" << entry.getLinkStateOrigin()->getHeader()
-        << "], NextHops: ";
+        << ", Origin: [";// << entry.getLinkStateOrigin()->getHeader().getLinkStateID()
+
+
+
+    OSPFv3LSAHeader lsaHeader = entry.getLinkStateOrigin()->getHeader();
+        out << "LSAHeader: age=" << lsaHeader.getLsaAge()
+            << ", type=";
+       switch (lsaHeader.getLsaType()) {
+           case ROUTER_LSA:
+               out << "RouterLSA";
+               break;
+
+           case NETWORK_LSA:
+               out << "NetworkLSA";
+               break;
+
+           case INTER_AREA_PREFIX_LSA:
+               out << "SummaryLSA_Networks";
+               break;
+
+           case INTER_AREA_ROUTER_LSA:
+               out << "SummaryLSA_ASBoundaryRouters";
+               break;
+
+           case AS_EXTERNAL_LSA:
+               out << "ASExternalLSA";
+               break;
+
+           default:
+               out << "Unknown";
+               break;
+       }
+       out << ", LSID=" << lsaHeader.getLinkStateID().str(false)
+            << ", advertisingRouter=" << lsaHeader.getAdvertisingRouter().str(false)
+            << ", seqNumber=" << lsaHeader.getLsaSequenceNumber()
+            << endl
+       << "], NextHops: ";
+
 
     unsigned int hopCount = entry.getNextHopCount();
     for (unsigned int i = 0; i < hopCount; i++) {

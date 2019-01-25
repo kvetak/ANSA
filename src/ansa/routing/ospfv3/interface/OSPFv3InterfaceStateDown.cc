@@ -18,7 +18,8 @@ void OSPFv3InterfaceStateDown::processEvent(OSPFv3Interface* interface, OSPFv3In
     {
         EV_DEBUG <<"Interface " << interface->getIntName() << " is in up state\n";
         if(!interface->isInterfacePassive()){
-            interface->originateLinkLSA();
+            LinkLSA *lsa = interface->originateLinkLSA();
+            interface->installLinkLSA(lsa);
             interface->getArea()->getInstance()->getProcess()->setTimer(interface->getHelloTimer(), 0);
             interface->getArea()->getInstance()->getProcess()->setTimer(interface->getAcknowledgementTimer(), interface->getAckDelay());
 
@@ -62,7 +63,8 @@ void OSPFv3InterfaceStateDown::processEvent(OSPFv3Interface* interface, OSPFv3In
             }
         }
         else if(interface->isInterfacePassive()) {
-            interface->originateLinkLSA();
+            LinkLSA *lsa = interface->originateLinkLSA();
+            interface->installLinkLSA(lsa);
             changeState(interface, new OSPFv3InterfacePassive, this);
         }
         if (event == OSPFv3Interface::LOOP_IND_EVENT) {

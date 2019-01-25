@@ -119,7 +119,15 @@ class OSPFv3Neighbor{
     void createDatabaseSummary();
     void deleteLastSentDDPacket();
     void retransmitUpdatePacket();
+
     void addToRetransmissionList(OSPFv3LSA *lsa);
+    void removeFromRetransmissionList(LSAKeyType lsaKey);
+    OSPFv3LSA* findOnRetransmissionList(LSAKeyType lsaKey);
+    bool isRetransmissionListEmpty() const { return linkStateRetransmissionList.empty();}
+    void ageTransmittedLSAList();
+
+    bool isLinkStateRequestListEmpty(LSAKeyType lsaKey) const;
+
     void addToRequestList(OSPFv3LSAHeader *lsaHeader);
     bool retransmitDatabaseDescriptionPacket();
     bool isLSAOnRequestList(LSAKeyType lsaKey);
@@ -127,7 +135,6 @@ class OSPFv3Neighbor{
     void removeFromRequestList(LSAKeyType lsaKey);
     void addToTransmittedLSAList(LSAKeyType lsaKey);
     bool isOnTransmittedLSAList(LSAKeyType lsaKey) const;
-    void removeFromRetransmissionList(LSAKeyType lsaKey);
 
     void setLastHelloTime(int time){this->last_hello_received=time;}
     int getLastHelloTime(){return this->last_hello_received;}

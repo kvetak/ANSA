@@ -14,6 +14,7 @@ OSPFv3Process::~OSPFv3Process()
 }
 
 void OSPFv3Process::initialize(int stage){
+
     if(stage == INITSTAGE_ROUTING_PROTOCOLS){
         this->containingModule=findContainingNode(this);
         ift = check_and_cast<IInterfaceTable* >(containingModule->getSubmodule("interfaceTable"));
@@ -27,6 +28,14 @@ void OSPFv3Process::initialize(int stage){
         init->setKind(INIT_PROCESS);
         scheduleAt(simTime(), init);
         WATCH_PTRVECTOR(this->instances);
+        WATCH_PTRVECTOR(this->routingTable);
+
+        ageTimer = new cMessage();
+        ageTimer->setKind(DATABASE_AGE_TIMER);
+        ageTimer->setContextPointer(this);
+        ageTimer->setName("OSPFv3Process::DatabaseAgeTimer");
+    //    std::cout << "ageTimer->getOwner = " << ageTimer->getOwner()->getName() << endl;
+        this->setTimer(ageTimer, 1.0);
     }
 }
 
@@ -254,6 +263,7 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
                         }
 
                         newInterface->setArea(area);
+                        std::cout << "I am " << this->getOwner()->getOwner()->getName() << " on int " << newInterface->getInterfaceIP() << " with area " << area->getAreaID() << endl;
                         area->addInterface(newInterface);
                     }
                 }
@@ -261,6 +271,29 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
         }
     }
 }//parseConfig
+
+
+void OSPFv3Process::ageDatabase()
+{
+    bool shouldRebuildRoutingTable = false;
+
+    long instanceCount = instances.size();
+    for (long i = 0; i < instanceCount; i++)
+    {
+        long areaCount = instances[i]->getAreaCount();
+
+        for (long j = 0; j < areaCount; j++)
+        {
+            instances[i]->getArea(j)->ageDatabase();
+        }
+
+//        messageHandler->startTimer(ageTimer, 1.0);
+
+        if (shouldRebuildRoutingTable) {
+            rebuildRoutingTable();
+        }
+    }
+} // ageDatabase
 
 void OSPFv3Process::handleTimer(cMessage* msg)
 {
@@ -397,8 +430,9 @@ void OSPFv3Process::handleTimer(cMessage* msg)
         break;
 
         case DATABASE_AGE_TIMER: {
-//            printEvent("Ageing the database");
-//            router->ageDatabase();
+            EV_DEBUG << "Ageing the database\n";
+            this->setTimer(ageTimer, 1.0);
+            this->ageDatabase();
         }
         break;
 
@@ -552,6 +586,7 @@ bool OSPFv3Process::floodLSA(OSPFv3LSA* lsa, IPv4Address areaID, OSPFv3Interface
 
 bool OSPFv3Process::installLSA(OSPFv3LSA *lsa, int instanceID, IPv4Address areaID    /*= BACKBONE_AREAID*/, OSPFv3Interface* intf)
 {
+    EV_DEBUG << "OSPFv3Process::installLSA\n";
     switch (lsa->getHeader().getLsaType()) {
         case ROUTER_LSA: {
             OSPFv3Instance* instance = this->getInstanceById(instanceID);
@@ -651,7 +686,6 @@ void OSPFv3Process::rebuildRoutingTable()
                 hasTransitAreas = true;
             }
         }
-
         //3)Inter-area routes are calculated by examining summary-LSAs (on backbone only)
         if (areaCount > 1) {
             OSPFv3Area *backbone = currInst->getAreaById(BACKBONE_AREAID);
@@ -721,9 +755,10 @@ void OSPFv3Process::rebuildRoutingTable()
 
         routeCount = routingTable.size();
         for (i = 0; i < routeCount; i++) {
-            //EV_INFO << *routingTable[i]
-              //                       << "\n";
+            EV_INFO << *routingTable[i] << "\n";
         }
     }
 }
 }//namespace inet
+
+

@@ -175,7 +175,7 @@ void OSPFv3Neighbor::setLastReceivedDDPacket(OSPFv3DatabaseDescription* ddPacket
 
 void OSPFv3Neighbor::sendDDPacket(bool init)
 {
-    EV_DEBUG << "Send DD Packet\n";
+    EV_DEBUG << "Start of function send DD Packet\n";
     OSPFv3DatabaseDescription* ddPacket = new OSPFv3DatabaseDescription();
 
     //common header first
@@ -233,10 +233,14 @@ void OSPFv3Neighbor::sendDDPacket(bool init)
     //TODO - virtual link hopLimit
     //TODO - checksum
 
-    if(this->getInterface()->getType() == OSPFv3Interface::POINTTOPOINT_TYPE)
+    if(this->getInterface()->getType() == OSPFv3Interface::POINTTOPOINT_TYPE){
+        EV_DEBUG << "(P2P link ) Send DD Packet to OSPF MCAST, which is FF02::5\n";
         this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(ddPacket,IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getInterface()->getIntName().c_str());
-    else
+    }
+    else{
+        EV_DEBUG << "Send DD Packet to " <<  this->getNeighborIP() << "\n";
         this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(ddPacket,this->getNeighborIP(), this->getInterface()->getIntName().c_str());
+    }
 
 }
 
@@ -322,7 +326,7 @@ void OSPFv3Neighbor::createDatabaseSummary()
     }
 }
 
-void OSPFv3Neighbor::retransmitUpdatePacket()
+void OSPFv3Neighbor::retransmitUpdatePacket() //vyprsi timer Acku a zasle znovu
 {
     EV_DEBUG << "Retransmitting update packet\n";
     OSPFv3LSUpdate *updatePacket = new OSPFv3LSUpdate();
@@ -556,6 +560,47 @@ void OSPFv3Neighbor::addToRetransmissionList(OSPFv3LSA *lsa)
     }
 }
 
+void OSPFv3Neighbor::removeFromRetransmissionList(LSAKeyType lsaKey)
+{
+    auto it = linkStateRetransmissionList.begin();
+    while (it != linkStateRetransmissionList.end()) {
+        if (((*it)->getHeader().getLinkStateID() == lsaKey.linkStateID) &&
+            ((*it)->getHeader().getAdvertisingRouter() == lsaKey.advertisingRouter))
+        {
+            delete (*it);
+            it = linkStateRetransmissionList.erase(it);
+        }
+        else {
+            it++;
+        }
+    }
+}//removeFromRetransmissionList
+
+bool OSPFv3Neighbor::isLinkStateRequestListEmpty(LSAKeyType lsaKey) const
+{
+    for (auto lsa : linkStateRetransmissionList) {
+        if ((lsa->getHeader().getLinkStateID() == lsaKey.linkStateID) &&
+            (lsa->getHeader().getAdvertisingRouter() == lsaKey.advertisingRouter))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+OSPFv3LSA *OSPFv3Neighbor::findOnRetransmissionList(LSAKeyType lsaKey)
+{
+    for (auto & elem : linkStateRetransmissionList) {
+        if (((elem)->getHeader().getLinkStateID() == lsaKey.linkStateID) &&
+            ((elem)->getHeader().getAdvertisingRouter() == lsaKey.advertisingRouter))
+        {
+            return elem;
+        }
+    }
+    return nullptr;
+}
+
+
 bool OSPFv3Neighbor::retransmitDatabaseDescriptionPacket()
 {
     EV_DEBUG << "Retransmitting DD Packet\n";
@@ -597,6 +642,7 @@ bool OSPFv3Neighbor::isLSAOnRequestList(LSAKeyType lsaKey)
 
 OSPFv3LSAHeader* OSPFv3Neighbor::findOnRequestList(LSAKeyType lsaKey)
 {
+    //linkStateRequestList - list of LSAs that need to be received from the neighbor
     for (auto it = linkStateRequestList.begin(); it != linkStateRequestList.end(); it++) {
         if (((*it)->getLinkStateID() == lsaKey.linkStateID) &&
                 ((*it)->getAdvertisingRouter() == lsaKey.advertisingRouter))
@@ -653,6 +699,22 @@ bool OSPFv3Neighbor::isOnTransmittedLSAList(LSAKeyType lsaKey) const
     return false;
 }//isOnTransmittedLSAList
 
+void OSPFv3Neighbor::ageTransmittedLSAList()
+{
+    auto it = transmittedLSAs.begin();
+    while ((it != transmittedLSAs.end()) && (it->age == MIN_LS_ARRIVAL)) {
+        transmittedLSAs.pop_front();
+        it = transmittedLSAs.begin();
+    }
+//    for (long i = 0; i < transmittedLSAs.size(); i++)
+//    {
+//        transmittedLSAs[i].age++;
+//    }
+    for (it = transmittedLSAs.begin(); it != transmittedLSAs.end(); it++) {
+        it->age++;
+    }
+}//ageTransmittedLSAList
+
 void OSPFv3Neighbor::deleteLastSentDDPacket()
 {
     if (lastTransmittedDDPacket != nullptr) {
@@ -661,19 +723,4 @@ void OSPFv3Neighbor::deleteLastSentDDPacket()
     }
 }//deleteLastSentDDPacket
 
-void OSPFv3Neighbor::removeFromRetransmissionList(LSAKeyType lsaKey)
-{
-    auto it = linkStateRetransmissionList.begin();
-    while (it != linkStateRetransmissionList.end()) {
-        if (((*it)->getHeader().getLinkStateID() == lsaKey.linkStateID) &&
-            ((*it)->getHeader().getAdvertisingRouter() == lsaKey.advertisingRouter))
-        {
-            delete (*it);
-            it = linkStateRetransmissionList.erase(it);
-        }
-        else {
-            it++;
-        }
-    }
-}//removeFromRetransmissionList
 }

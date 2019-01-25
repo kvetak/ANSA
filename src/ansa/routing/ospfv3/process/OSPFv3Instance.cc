@@ -11,6 +11,7 @@ OSPFv3Instance::OSPFv3Instance(int instanceId, OSPFv3Process* parentProcess, int
     this->addressFamily = addressFamily;
     this->containingModule=findContainingNode(this->containingProcess);
     this->ift = check_and_cast<IInterfaceTable *>(containingModule->getSubmodule("interfaceTable"));
+
 }
 
 OSPFv3Instance::~OSPFv3Instance()
@@ -136,7 +137,7 @@ void OSPFv3Instance::processPacket(OSPFv3Packet* packet)
 
                 case OSPFv3PacketType::LS_ACK:
                     if (neighbor != nullptr) {
-                        intf->processLSAck(packet);
+                        intf->processLSAck(packet, neighbor);
                     }
                     break;
 

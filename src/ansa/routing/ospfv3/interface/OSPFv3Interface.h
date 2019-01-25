@@ -13,6 +13,7 @@
 #include "ansa/routing/ospfv3/OSPFv3Packet_m.h"
 #include "ansa/routing/ospfv3/process/OSPFv3Area.h"
 #include "ansa/routing/ospfv3/neighbor/OSPFv3Neighbor.h"
+#include "ansa/routing/ospfv3/process/OSPFv3LSA.h"
 
 
 namespace inet{
@@ -156,9 +157,12 @@ class INET_API OSPFv3Interface : public cObject
     OSPFv3LSUpdate* prepareLSUHeader();
     OSPFv3LSUpdate* prepareUpdatePacket(OSPFv3LSA *lsa, OSPFv3LSUpdate* updatePacket);
     void processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor);
-    void processLSAck(OSPFv3Packet* packet);
+    void processLSAck(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor);
     bool floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface=nullptr, OSPFv3Neighbor* neighbor=nullptr);
     void removeFromAllRetransmissionLists(LSAKeyType lsaKey);
+    bool isOnAnyRetransmissionList(LSAKeyType lsaKey) const;
+    bool hasAnyNeighborInStates(int states) const;
+    void ageTransmittedLSALists();
 
     OSPFv3HelloPacket* prepareHello();
 
@@ -167,15 +171,16 @@ class INET_API OSPFv3Interface : public cObject
 
     std::string info() const override;
     std::string detailedInfo() const override;
-    void acknowledgeLSA(OSPFv3LSAHeader* lsaHeader, AcknowledgementFlags ackFlags, IPv4Address routerID);
+    void acknowledgeLSA(OSPFv3LSAHeader& lsaHeader, AcknowledgementFlags ackFlags, IPv4Address routerID);
 
-    OSPFv3LinkLSA* originateLinkLSA();
-    void addLinkLSA(OSPFv3LinkLSA* newLSA){this->linkLSAList.push_back(newLSA);}
-    int getLinkLSACount(){return this->linkLSAList.size();}
-    OSPFv3LinkLSA* getLinkLSA(int i){return this->linkLSAList.at(i);}
-    OSPFv3LinkLSA* getLinkLSAbyKey(LSAKeyType lsaKey);
+    LinkLSA* originateLinkLSA();
     bool installLinkLSA(OSPFv3LinkLSA *lsa);
-    bool updateLinkLSA(OSPFv3LinkLSA* currentLsa, OSPFv3LinkLSA* newLsa);
+    void addLinkLSA(LinkLSA* newLSA){this->linkLSAList.push_back(newLSA);}
+    int getLinkLSACount(){return this->linkLSAList.size();}
+    LinkLSA* getLinkLSA(int i){return this->linkLSAList.at(i);}
+    LinkLSA* getLinkLSAbyKey(LSAKeyType lsaKey);
+    void installLinkLSA(LinkLSA *lsa);
+    bool updateLinkLSA(LinkLSA* currentLsa, OSPFv3LinkLSA* newLsa);
     bool linkLSADiffersFrom(OSPFv3LinkLSA* currentLsa, OSPFv3LinkLSA* newLsa);
 
     void sendLSAcknowledgement(OSPFv3LSAHeader *lsaHeader, IPv6Address destination);
@@ -185,6 +190,7 @@ class INET_API OSPFv3Interface : public cObject
     bool getTransitNetInt(){return this->transitNetworkInterface;}
 
 
+    bool ageDatabase();
   private:
     friend class OSPFv3InterfaceState;
 
@@ -211,11 +217,12 @@ class INET_API OSPFv3Interface : public cObject
     std::vector<OSPFv3Neighbor*> neighbors;
     std::map<IPv4Address, OSPFv3Neighbor*> neighborsById;
     std::map<IPv6Address, std::list<OSPFv3LSAHeader> > delayedAcknowledgements;
+    std::map<IPv4Address, LinkLSA *> linkLSAsByID;
 
     //for Intra-Area-Prefix LSA
     bool transitNetworkInterface;
 
-    std::vector<OSPFv3LinkLSA*> linkLSAList;
+    std::vector<LinkLSA*> linkLSAList;
     uint32_t linkLSASequenceNumber = 1;
 
     IPv6Address DesignatedRouterIP;

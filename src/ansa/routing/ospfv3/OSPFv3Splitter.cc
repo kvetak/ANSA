@@ -142,6 +142,16 @@ void OSPFv3Splitter::parseConfig(cXMLElement* routingConfig, cXMLElement* intCon
             EV_DEBUG << "FOR \n";
             InterfaceEntry* ie = ift->getInterfaceByName(intName);
             IPv6InterfaceData *ipv6int = ie->ipv6Data();
+            std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+            std::cout << "ie = " << endl;
+            std::cout << "getNumAddresses() = " << ie->ipv6Data()->getNumAddresses() << endl;
+            for (int i = 0; i < ie->ipv6Data()->getNumAddresses(); i++)
+            {
+                std::cout << "getAddress(i) = " << ie->ipv6Data()->getAddress(i) << endl;
+//                std::cout << "getAdvPrefix(i)" << ie->ipv6Data()->getAdvPrefix(i).prefixLength<< endl;
+//                std::cout << "getAdvPrefix(i)" << ie->ipv6Data()->getAdvPrefix(i).prefix << endl;
+            }
+
             ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_ROUTERS_MCAST);//TODO - join only once
             ipv6int->assignAddress(IPv6Address::ALL_OSPF_ROUTERS_MCAST, false, 0, 0);
         }

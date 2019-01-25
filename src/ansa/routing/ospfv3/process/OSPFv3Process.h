@@ -47,6 +47,9 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     void rebuildRoutingTable();
     void calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
 
+    void ageDatabase();
+    cMessage* getAgeTimer(){return this->ageTimer;}
+
   public:
     IInterfaceTable* ift = nullptr;
     IPv6RoutingTable *rt = nullptr;
@@ -64,6 +67,7 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     bool isActive=false;
     void debugDump();
     std::vector<OSPFv3RoutingTableEntry *> routingTable;
+    cMessage *ageTimer;
 
   protected:
     virtual void initialize(int stage) override;

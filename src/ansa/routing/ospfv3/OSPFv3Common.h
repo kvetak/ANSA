@@ -24,10 +24,15 @@ namespace inet{
 #define MAX_AGE_DIFF            900
 #define MIN_LS_ARRIVAL          1
 #define MIN_LS_INTERVAL         5
+#define INITIAL_SEQUENCE_NUMBER 0              //TODO: -2147483647
 #define MAX_SEQUENCE_NUMBER     2147483647
 #define MAX_SPF_WAIT_TIME       10000
 #define MIN_SPF_WAIT_TIME       10000
 #define REFERENCE_BANDWIDTH     100
+
+#define LS_REFRESH_TIME         1800
+#define CHECK_AGE               300
+#define LS_INFINITY             16777215
 
 #define OSPFV3_ROUTER_LSA_HEADER_LENGTH 4
 #define OSPFV3_ROUTER_LSA_BODY_LENGTH 16
@@ -54,6 +59,9 @@ const IPv4Address NULL_IPV4ADDRESS(0, 0, 0, 0);
 typedef IPv4Address AreaID;
 typedef unsigned int Metric;
 
+
+//individual LSAs are identified by a combination
+//of their LS type, Link State ID, and Advertising Router fields
 struct LSAKeyType
 {
     uint16_t LSType;
@@ -66,7 +74,7 @@ struct NextHop
 {
     int ifIndex;
     IPv6Address hopAddress;
-    IPv4Address advertisingRouter;
+    IPv4Address advertisingRouter;      // Router ID
 };
 
 struct VertexID {

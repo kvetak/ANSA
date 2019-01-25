@@ -227,6 +227,10 @@ packet OSPFv3ASExternalLSA  extends OSPFv3LSA
 }
 
 //******************   NSSA-LSAs  ******************//
+// Routers in a Not-so-stubby-area (NSSA) do not receive external LSAs from Area Border Routers,
+// but are allowed to send external routing information for redistribution.
+// They use type 7 LSAs to tell the ABRs about these external routes,
+// which the Area Border Router then translates to type 5 external LSAs and floods as normal to the rest of the OSPF network
 packet OSPFv3NssaLSA  extends OSPFv3LSA
 {//basically the same as the AS External LSA
     bool eBit;
@@ -243,6 +247,8 @@ packet OSPFv3NssaLSA  extends OSPFv3LSA
 }
 
 //*************** Link-LSAs ************************//
+// A link-local only LSA for OSPFv3. A Type 8 LSA is used to give 
+// information about link-local addresses and a list of IPv6 addresses on the link.
 packet OSPFv3LinkLSA  extends OSPFv3LSA
 {
     uint8_t routerPriority;
