@@ -54,14 +54,12 @@ class INET_API OSPFv3Area : public cObject
     OSPFv3Interface* getInterface(int i) const {return this->interfaceList.at(i);}
     OSPFv3Interface* getInterfaceByIndex (IPv4Address address);
     int getInterfaceCount() const {return this->interfaceList.size();}
-
     OSPFv3LSA* getLSAbyKey(LSAKeyType lsaKey);
 
-    void deleteRouterLSA(int index);
-    void addRouterLSA(RouterLSA* newLSA){this->routerLSAList.push_back(newLSA);}
-
-
-
+    void addAddressRange(IPv6AddressRange addressRange, bool advertise);
+    bool hasAddressRange(IPv6AddressRange addressRange) const;
+    void addAddressRange(IPv4AddressRange addressRange, bool advertise);
+    bool hasAddressRange(IPv4AddressRange addressRange) const;
 
 
     /* ROUTER LSA */
@@ -78,6 +76,8 @@ class INET_API OSPFv3Area : public cObject
     void incrementRouterSequence(){this->routerLSASequenceNumber++;}
     RouterLSA* findRouterLSAByID(IPv4Address linkStateID);
     RouterLSA* findRouterLSA(IPv4Address routerID);
+    void deleteRouterLSA(int index);
+    void addRouterLSA(RouterLSA* newLSA){this->routerLSAList.push_back(newLSA);}
 
     /*NETWORK LSA */
     void addNetworkLSA(NetworkLSA* newLSA){this->networkLSAList.push_back(newLSA);}
@@ -97,23 +97,22 @@ class INET_API OSPFv3Area : public cObject
 
     /* INTER AREA PREFIX LSA */
     void addInterAreaPrefixLSA(InterAreaPrefixLSA* newLSA){this->interAreaPrefixLSAList.push_back(newLSA);};
-    void originateInterAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* lsa, OSPFv3Area* fromArea);
     int getInterAreaPrefixLSACount(){return this->interAreaPrefixLSAList.size();}
     InterAreaPrefixLSA* getInterAreaPrefixLSA(int i){return this->interAreaPrefixLSAList.at(i);}
+    void originateDefaultInterAreaPrefixLSA(OSPFv3Area* toArea);
+    void originateInterAreaPrefixLSA(OSPFv3IntraAreaPrefixLSA* lsa, OSPFv3Area* fromArea);
+    void originateInterAreaPrefixLSA(OSPFv3LSA* prefLsa, OSPFv3Area* fromArea);
     bool installInterAreaPrefixLSA(OSPFv3InterAreaPrefixLSA* lsa);
     bool updateInterAreaPrefixLSA(InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa);      // TODO: resetInstallTime
     bool interAreaPrefixLSADiffersFrom(OSPFv3InterAreaPrefixLSA* currentLsa, OSPFv3InterAreaPrefixLSA* newLsa);
     IPv4Address getNewInterAreaPrefixLinkStateID();
-    IPv4Address getInterAreaPrefixLinkStateID(){return this->interAreaPrefixLsID;}
     uint32_t getCurrentInterAreaPrefixSequence(){return this->interAreaPrefixLSASequenceNumber;}
     void incrementInterAreaPrefixSequence(){this->interAreaPrefixLSASequenceNumber++;}
 
-    void originateDefaultInterAreaPrefixLSA(OSPFv3Area* toArea);
-    void originateInterAreaPrefixLSA(OSPFv3LSA* prefLsa, OSPFv3Area* fromArea);
 
     //* INTRA AREA PREFIX LSA */
     void addIntraAreaPrefixLSA(IntraAreaPrefixLSA* newLSA){this->intraAreaPrefixLSAList.push_back(newLSA);}
-    IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this originates one router LSA for one area
+    IntraAreaPrefixLSA* originateIntraAreaPrefixLSA();//this is for non-BROADCAST links
     int getIntraAreaPrefixLSACount(){return this->intraAreaPrefixLSAList.size();}
     IntraAreaPrefixLSA* getIntraAreaPrefixLSA(int i){return this->intraAreaPrefixLSAList.at(i);}
     IntraAreaPrefixLSA* getNetIntraAreaPrefixLSA(L3Address prefix, int prefLen);
@@ -141,9 +140,26 @@ class INET_API OSPFv3Area : public cObject
     bool hasAnyNeighborInStates(int states) const;
 
 
-    void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* >& newTable);
-    void calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
-    void recheckSummaryLSAs(std::vector<OSPFv3RoutingTableEntry* > newTable);
+    void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* >& newTableIPv6, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
+    void calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* >& newTable, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
+
+    bool findSameOrWorseCostRoute(const std::vector<OSPFv3RoutingTableEntry *>& newTable, // TODO >  PRE IPV4 SPRAVIT SAMOSTATNU METODU
+            const InterAreaPrefixLSA& interAreaPrefixLSA,
+            unsigned short currentCost,
+            bool& destinationInRoutingTable,
+            std::list<OSPFv3RoutingTableEntry *>& sameOrWorseCost) const;
+    bool findSameOrWorseCostRoute(const std::vector<OSPFv3IPv4RoutingTableEntry *>& newTable,
+            const InterAreaPrefixLSA& interAreaPrefixLSA,
+            unsigned short currentCost,
+            bool& destinationInRoutingTable,
+            std::list<OSPFv3IPv4RoutingTableEntry *>& sameOrWorseCost) const;
+    OSPFv3RoutingTableEntry *createRoutingTableEntryFromInterAreaPrefixLSA(const InterAreaPrefixLSA& interAreaPrefixLSA,
+            unsigned short entryCost,
+            const OSPFv3RoutingTableEntry& borderRouterEntry) const;
+    OSPFv3IPv4RoutingTableEntry *createRoutingTableEntryFromInterAreaPrefixLSA(const InterAreaPrefixLSA& interAreaPrefixLSA,
+            unsigned short entryCost,
+            const OSPFv3IPv4RoutingTableEntry& borderRouterEntry) const;
+    void recheckInterAreaPrefixLSAs(std::vector<OSPFv3RoutingTableEntry* >& newTable, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
     bool hasLink(OSPFv3LSA *fromLSA, OSPFv3LSA *toLSA) const;
     std::vector<NextHop> *calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const;
     std::vector<NextHop> *calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const;
@@ -154,9 +170,18 @@ class INET_API OSPFv3Area : public cObject
     void setSpfTreeRoot(RouterLSA* routerLSA){spfTreeRoot = routerLSA;};
 
   private:
+    bool v6; // for IPv6 AF is this set to true, for IPv4 to false
+
     IPv4Address areaID;
     OSPFv3AreaType areaType;
     std::vector<OSPFv3Interface*> interfaceList;//associated router interfaces
+
+    //address ranges - networks where router within this area have a direct connection
+    std::vector<IPv6AddressRange> IPv6areaAddressRanges;
+    std::map<IPv6AddressRange, bool> IPv6advertiseAddressRanges;
+    std::vector<IPv4AddressRange> IPv4areaAddressRanges;
+    std::map<IPv4AddressRange, bool> IPv4advertiseAddressRanges;
+
     std::map<std::string, OSPFv3Interface*> interfaceByName;//interfaces by ids
     std::map<int, OSPFv3Interface*> interfaceById;
     std::map<int, OSPFv3Interface*> interfaceByIndex;
@@ -179,7 +204,6 @@ class INET_API OSPFv3Area : public cObject
     uint32_t networkLSASequenceNumber = 1;
 
     std::vector<InterAreaPrefixLSA* > interAreaPrefixLSAList;
-    IPv4Address interAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
     uint32_t interAreaPrefixLSASequenceNumber = 1;
 
     std::vector<IntraAreaPrefixLSA*> intraAreaPrefixLSAList;

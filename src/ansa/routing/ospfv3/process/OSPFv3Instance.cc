@@ -174,6 +174,14 @@ void OSPFv3Instance::debugDump()
     }
 }//debugDump
 
+IPv4Address OSPFv3Instance::getNewInterAreaPrefixLinkStateID()
+{
+    IPv4Address currIP = this->interAreaPrefixLsID;
+    int newIP = currIP.getInt()+1;
+    this->interAreaPrefixLsID = IPv4Address(newIP);
+    return currIP;
+}
+
 std::string OSPFv3Instance::detailedInfo() const
 {
     std::stringstream out;

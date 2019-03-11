@@ -45,10 +45,18 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     bool floodLSA(OSPFv3LSA* lsa, IPv4Address areaID=IPv4Address::UNSPECIFIED_ADDRESS, OSPFv3Interface* intf=nullptr, OSPFv3Neighbor* neighbor=nullptr);
     bool installLSA(OSPFv3LSA *lsa, int instanceID, IPv4Address areaID=IPv4Address::UNSPECIFIED_ADDRESS, OSPFv3Interface* intf=nullptr);
     void rebuildRoutingTable();
-    void calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable);
+    void calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTableIPv6, std::vector<OSPFv3IPv4RoutingTableEntry* > newTableIPv4);
 
     void ageDatabase();
     cMessage* getAgeTimer(){return this->ageTimer;}
+
+    /**
+     * Returns true if one of the Router's Areas the same address range configured as the
+     * input address , false otherwise.
+     * @param addressRange [in] The IPv6 address  to look for.
+     */
+    bool hasAddressRange(const IPv6AddressRange& addressRange) const;
+    bool hasAddressRange(const IPv4AddressRange& addressRange) const;
 
   public:
     IInterfaceTable* ift = nullptr;
@@ -66,7 +74,8 @@ class INET_API OSPFv3Process : protected cListener, public cSimpleModule
     IPv4Address routerID;
     bool isActive=false;
     void debugDump();
-    std::vector<OSPFv3RoutingTableEntry *> routingTable;
+    std::vector<OSPFv3RoutingTableEntry *> routingTableIPv6;
+    std::vector<OSPFv3IPv4RoutingTableEntry *> routingTableIPv4;
     cMessage *ageTimer;
 
   protected:

@@ -31,8 +31,8 @@ OSPFv3Interface::OSPFv3Interface(const char* name, cModule* routerModule, OSPFv3
     InterfaceEntry *ie = this->ift->getInterfaceByName(this->interfaceName.c_str());
     IPv6InterfaceData *ipv6int = ie->ipv6Data();
     this->interfaceId = ift->getInterfaceById(ie->getInterfaceId())->getInterfaceId();
-    this->interfaceIP = ipv6int->getLinkLocalAddress();//TODO - check
-    EV_DEBUG << "Interface IP: " << ipv6int->getLinkLocalAddress() << "\n";
+    this->interfaceLLIP = ipv6int->getLinkLocalAddress();//TODO - check
+    EV_DEBUG << "Interface Link Local IP: " << ipv6int->getLinkLocalAddress() << "\n";
     this->interfaceType = interfaceType;
     this->passiveInterface = passive;
     this->transitNetworkInterface = false; //false at first
@@ -60,7 +60,7 @@ OSPFv3Interface::~OSPFv3Interface()
 
 void OSPFv3Interface::processEvent(OSPFv3Interface::OSPFv3InterfaceEvent event)
 {
-    std::cout << "Passing event number " << event << " to state" << this->state->getInterfaceStateString() << "\n";
+//    std::cout << "Passing event number " << event << " to state" << this->state->getInterfaceStateString() << "\n";
     EV_DEBUG << "Passing event number " << event << " to state" << this->state->getInterfaceStateString() << "\n";
     this->state->processEvent(this, event);
 }
@@ -1231,8 +1231,8 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                     else if(currentType == ROUTER_LSA || currentType == NETWORK_LSA || currentType == INTER_AREA_PREFIX_LSA || currentType == INTRA_AREA_PREFIX_LSA)
                         rebuildRoutingTable |= this->getArea()->getInstance()->getProcess()->installLSA(currentLSA, this->getArea()->getInstance()->getInstanceID(), this->getArea()->getAreaID());
 
-                    if(currentType == INTER_AREA_PREFIX_LSA) {
-                        this->getArea()->originateInterAreaPrefixLSA(currentLSA, this->getArea());
+//                    if(currentType == INTER_AREA_PREFIX_LSA) {
+//                        this->getArea()->originateInterAreaPrefixLSA(currentLSA, this->getArea());
                         /*int areaCnt = this->getArea()->getInstance()->getAreaCount();
                         for(int i=0; i<areaCnt; i++){
                             OSPFv3Area* area = this->getArea()->getInstance()->getArea(i);
@@ -1249,7 +1249,7 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
                                 area->getInstance()->getProcess()->sendPacket(updatePacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, intf->getIntName().c_str(), 1);
                             }
                         }*/
-                    }
+//                    }
 
                     EV_INFO << "    (update installed)\n";
 
@@ -1639,9 +1639,8 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
                                 for (long k = 0; k < neighborCount; k++) {
                                     this->neighbors.at(k)->addToTransmittedLSAList(lsaKey);
                                     if (!this->neighbors.at(k)->isUpdateRetransmissionTimerActive()) {
-                                        EV_DEBUG << "The timer is not active\n";
+                                        EV_DEBUG << "The timer need to be active\n";
                                         this->neighbors.at(k)->startUpdateRetransmissionTimer();
-                                        EV_DEBUG << "Takze ho nastavim\n";
                                     }
                                 }
                             }
@@ -1782,7 +1781,7 @@ LinkLSA* OSPFv3Interface::originateLinkLSA()
 
     InterfaceEntry* ie = this->ift->getInterfaceByName(this->interfaceName.c_str());
     IPv6InterfaceData* ipv6Data = ie->ipv6Data();
-    linkLSA->setLinkLocalInterfaceAdd(ipv6Data->getLinkLocalAddress());
+
 
     cout << "----------------------------------------------------------------------" << endl;
     cout << "V ORINGIN LINK LOCAL LSA" << endl;
@@ -1790,23 +1789,34 @@ LinkLSA* OSPFv3Interface::originateLinkLSA()
     cout << "pocet adries = " << ipv6Data->getNumAddresses() << endl;
     for (int p = 0; p < ipv6Data->getNumAddresses(); p++ ) {
         cout << "ipv6Data->(" << p << ") = " << ipv6Data->getAddress(p) << endl;
-        cout << "ipv6Data->getNumAdvPrefixes() = " << ipv6Data->getNumAdvPrefixes() << endl;
-        cout << "ipv6Data->getNumAddresses() = " << ipv6Data->getNumAddresses() << endl;
+//        cout << "ipv6Data->getNumAdvPrefixes() = " << ipv6Data->getNumAdvPrefixes() << endl;
+//        cout << "ipv6Data->getNumAddresses() = " << ipv6Data->getNumAddresses() << endl;
 //        cout << "prefix = " << ipv6Data->getAdvPrefix(p+1).prefix << endl;
 //        cout << "prefixLength = " << ipv6Data->getAdvPrefix(p+1).prefixLength << endl;
     }
     cout << endl << endl;
 
-    int numPrefixes;
+   int numPrefixes;
     if(this->getArea()->getInstance()->getAddressFamily() == IPV4INSTANCE)
+    {
         numPrefixes = 1;
+    }
     else
+    {
+        linkLSA->setLinkLocalInterfaceAdd(ipv6Data->getLinkLocalAddress());
         numPrefixes = ipv6Data->getNumAddresses();
+    }
+//        numPrefixes = ipv6Data->getNumAdvPrefixes();
 
+//    cout << "getNumAddresses() = " << ipv6Data->getNumAddresses() << "\n";
+//    cout << "getNumAdvPrefixes() = " << ipv6Data->getNumAdvPrefixes() << "\n";
     for(int i=0; i<numPrefixes; i++) {
         if(this->getArea()->getInstance()->getAddressFamily() == IPV4INSTANCE) {
             IPv4InterfaceData* ipv4Data = ie->ipv4Data();
             IPv4Address ipAdd = ipv4Data->getIPAddress();
+
+            // set also ipv4 link local address
+            linkLSA->setLinkLocalInterfaceAdd(ipAdd);
 
             OSPFv3LinkLSAPrefix prefix;
             prefix.dnBit = false;
@@ -1814,8 +1824,8 @@ LinkLSA* OSPFv3Interface::originateLinkLSA()
             prefix.nuBit = false;
             prefix.pBit = false;
             prefix.xBit = false;
-            prefix.prefixLen = ipAdd.getNetmaskLength();
-            prefix.addressPrefix = L3Address(ipAdd);//TODO - this is smaller than 16B
+            prefix.prefixLen = ipv4Data->getNetmask().getNetmaskLength();
+            prefix.addressPrefix = L3Address(ipAdd.getPrefix(prefix.prefixLen));//TODO - this is smaller than 16B
 
             linkLSA->setPrefixesArraySize(linkLSA->getPrefixesArraySize()+1);
             linkLSA->setPrefixes(i, prefix);
@@ -1824,9 +1834,11 @@ LinkLSA* OSPFv3Interface::originateLinkLSA()
         else {
             EV_DEBUG << "Creating Link LSA for address: " << ipv6Data->getLinkLocalAddress() << "\n";
 
+//            IPv6Address ipv6 = ipv6Data->getAdvPrefix(i).prefix;
             IPv6Address ipv6 = ipv6Data->getAddress(i);
+//            short ipv6len = ipv6Data->getAdvPrefix(i).prefixLength;
 
-            // numPrefixes include also linkLocal and Multicast adresses. So there need to  be chceck, if writing ipv6 is global
+            // this also includes linkLocal and Multicast adresses. So there need to  be chceck, if writing ipv6 is global
             if(ipv6.isGlobal()) {//Only all the global prefixes belong to the Intra-Area-Prefix LSA
                 OSPFv3LinkLSAPrefix prefix;
                 prefix.dnBit = false;
@@ -1835,11 +1847,13 @@ LinkLSA* OSPFv3Interface::originateLinkLSA()
                 prefix.pBit = false;
                 prefix.xBit = false;
 
-                prefix.prefixLen=64;//TODO - this will never work until the prefix can be gathered from IPv6Address
+                prefix.prefixLen=64;
                 prefix.addressPrefix=ipv6;
 
+                cout << "linkLSA->getPrefixesArraySize()+1" << i << " - " << linkLSA->getPrefixesArraySize() << endl;
+
                 linkLSA->setPrefixesArraySize(linkLSA->getPrefixesArraySize()+1);
-                linkLSA->setPrefixes(i, prefix);
+                linkLSA->setPrefixes(linkLSA->getPrefixesArraySize()-1, prefix);
                 packetLength+=20;
             }
         }
@@ -2016,6 +2030,12 @@ std::string OSPFv3Interface::detailedInfo() const
     }
 
     out << "Suppress Hello for 0 neighbor(s)\n";
+
+    out << "TOTO JE NAVYSE\n";
+    for (int index = 0; index < interfaceAddresses.size(); index++)
+    {
+        out << index << " - " <<  interfaceAddresses[index].prefix.str() << "/" << interfaceAddresses[index].prefixLength  << "\n";
+    }
 
     return out.str();
 }//detailedInfo

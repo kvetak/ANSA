@@ -275,7 +275,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
         backupDeclared = false;
 
         IPv4Address highestRouter = NULL_IPV4ADDRESS;
-        IPv6Address highestRouterIP = IPv6Address::UNSPECIFIED_ADDRESS;
+        L3Address highestRouterIP = IPv6Address::UNSPECIFIED_ADDRESS;
         int highestPriority = 0;
 
         for (i = 0; i < neighborCount; i++) {
@@ -331,7 +331,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
                                     (routerID > declaredBackupID)))
                     {
                         declaredBackupID = routerID;
-                        declaredBackupIP = intf->getInterfaceIP();
+                        declaredBackupIP = intf->getInterfaceLLIP();
                         declaredBackupPriority = intf->getRouterPriority();
                         backupDeclared = true;
                     }
@@ -342,7 +342,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
                                     (routerID > highestRouter)))
                     {
                         declaredBackupID = routerID;
-                        declaredBackupIP = intf->getInterfaceIP();
+                        declaredBackupIP = intf->getInterfaceLLIP();
                         declaredBackupPriority = intf->getRouterPriority();
                         backupDeclared = true;
                     }
@@ -396,7 +396,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
                                 (routerID > declaredDesignatedRouterID)))
                 {
                     declaredDesignatedRouterID = routerID;
-                    declaredDesignatedRouterIP = intf->getInterfaceIP();
+                    declaredDesignatedRouterIP = intf->getInterfaceLLIP();
                     declaredDesignatedRouterPriority = intf->getRouterPriority();
                     designatedRouterDeclared = true;
                 }
@@ -536,7 +536,7 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
             intf->setDesignatedIP(designated->getNeighborIP());
     }
     else
-        intf->setDesignatedIP(intf->getInterfaceIP());
+        intf->setDesignatedIP(intf->getInterfaceLLIP());
 
     if(intf->getBackupID() != intf->getArea()->getInstance()->getProcess()->getRouterID()) {
         OSPFv3Neighbor* backup = intf->getNeighborById(intf->getBackupID());
@@ -544,6 +544,6 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
             intf->setBackupIP(backup->getNeighborIP());
     }
     else
-        intf->setBackupIP(intf->getInterfaceIP());
+        intf->setBackupIP(intf->getInterfaceLLIP());
 }
 }//namespace inet

@@ -118,7 +118,10 @@ bool ANSA_InterfaceEntry::hasMacAddress(const MACAddress& addr) const
 }
 
 std::string ANSA_InterfaceEntry::info() const {
-    std::stringstream out;
+
+    return InterfaceEntry::detailedInfo();
+
+    /*std::stringstream out;
     out << (getName()[0] ? getName() : "*");
     out << " id=" << getInterfaceId();
     if (getNetworkLayerGateIndex() == -1)
@@ -168,7 +171,7 @@ std::string ANSA_InterfaceEntry::info() const {
             comma = true;
         }
     }
-    return out.str();
+    return out.str();*/
 }
 
 void ANSA_InterfaceEntry::setDatarate(double d) {

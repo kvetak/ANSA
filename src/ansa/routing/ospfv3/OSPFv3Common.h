@@ -56,9 +56,147 @@ const IPv4Address BACKBONE_AREAID(0, 0, 0, 0);
 const IPv4Address NULL_LINKSTATEID(0, 0, 0, 0);
 const IPv4Address NULL_IPV4ADDRESS(0, 0, 0, 0);
 
+
 typedef IPv4Address AreaID;
 typedef unsigned int Metric;
 
+
+struct IPv6AddressRange
+{
+    IPv6Address prefix;
+    short prefixLength;
+    IPv6AddressRange() : prefix(), prefixLength() {}
+    IPv6AddressRange(IPv6Address prefixPar, int prefixLengthPar) : prefix(prefixPar), prefixLength(prefixLengthPar) {}
+
+    bool operator<(const IPv6AddressRange& other) const
+    {
+        return (prefixLength > other.prefixLength) || ((prefixLength == other.prefixLength) && (prefix < other.prefix));
+    }
+
+    bool operator==(const IPv6AddressRange& other) const
+    {
+        return (prefix == other.prefix) && (prefixLength == other.prefixLength);
+    }
+
+    bool contains(const IPv6Address& other) const // ma to robit to, ze vezme other a zisti, ci patri pod adresu siete ,respektive ci maju prefix a other rovnaku siet (cize prefix s dlzkou prefixlen musi byt rovnaky ako other s dlzkou prefixlen)
+    {
+        return (prefix.getPrefix(prefixLength) == other.getPrefix(prefixLength));
+    }
+
+    bool contains(const IPv6AddressRange& other) const
+    {
+
+        return prefix.getPrefix(prefixLength) == other.prefix.getPrefix(prefixLength)&& (prefixLength <= other.prefixLength);
+    }
+
+    bool containsRange(const IPv6Address& otherAddress, const int otherMask) const
+    {
+        return prefix.getPrefix(prefixLength) == otherAddress.getPrefix(prefixLength) && (prefixLength <= otherMask);
+    }
+
+    bool containedByRange(const IPv6Address& otherAddress, const int otherMask) const
+    {
+        return prefix.getPrefix(otherMask) == otherAddress.getPrefix(otherMask) && (otherMask <= prefixLength);
+    }
+
+    bool operator!=(IPv6AddressRange other) const
+    {
+        return !operator==(other);
+    }
+
+    std::string str() const;
+};
+
+inline std::string IPv6AddressRange::str() const
+{
+    std::string str(prefix.str());
+    str += "/";
+    str += prefixLength;
+    return str;
+}
+
+const IPv6AddressRange NULL_IPV6ADDRESSRANGE(IPv6Address(0, 0, 0, 0), 0);
+
+inline bool isSameNetwork(IPv6Address address1, int prefixLen1, IPv6Address address2, int prefixLen2)
+{
+    return (prefixLen1 == prefixLen2) && (address1.getPrefix(prefixLen1) == address2.getPrefix(prefixLen2) );
+}
+
+//-------------------------------------------------------------------------------------
+// Address range for IPv4
+struct IPv4AddressRange
+{
+    IPv4Address address;
+    IPv4Address mask;
+    IPv4AddressRange() : address(), mask() {}
+    IPv4AddressRange(IPv4Address addressPar, IPv4Address maskPar) : address(addressPar), mask(maskPar) {}
+
+    bool operator<(const IPv4AddressRange& other) const
+    {
+        return (mask > other.mask) || ((mask == other.mask) && (address < other.address));
+    }
+
+    bool operator==(const IPv4AddressRange& other) const
+    {
+        return (address == other.address) && (mask == other.mask);
+    }
+
+    bool contains(const IPv4Address& other) const
+    {
+        return IPv4Address::maskedAddrAreEqual(address, other, mask);
+    }
+
+    bool contains(const IPv4AddressRange& other) const
+    {
+        return IPv4Address::maskedAddrAreEqual(address, other.address, mask) && (mask <= other.mask);
+    }
+
+    bool containsRange(const IPv4Address& otherAddress, const IPv4Address& otherMask) const
+    {
+        return IPv4Address::maskedAddrAreEqual(address, otherAddress, mask) && (mask <= otherMask);
+    }
+
+    bool containedByRange(const IPv4Address& otherAddress, const IPv4Address& otherMask) const
+    {
+        return IPv4Address::maskedAddrAreEqual(otherAddress, address, otherMask) && (otherMask <= mask);
+    }
+
+    bool operator!=(IPv4AddressRange other) const
+    {
+        return !operator==(other);
+    }
+
+    std::string str() const;
+};
+
+inline std::string IPv4AddressRange::str() const
+{
+    std::string str(address.str(false));
+    str += "/";
+    str += mask.str(false);
+    return str;
+}
+
+const IPv4AddressRange NULL_IPV4ADDRESSRANGE(IPv4Address(0, 0, 0, 0), IPv4Address(0, 0, 0, 0));
+
+inline IPv4Address operator&(IPv4Address address, IPv4Address mask)
+{
+    IPv4Address maskedAddress;
+    maskedAddress.set(address.getInt() & mask.getInt());
+    return maskedAddress;
+}
+
+inline IPv4Address operator|(IPv4Address address, IPv4Address match)
+{
+    IPv4Address matchAddress;
+    matchAddress.set(address.getInt() | match.getInt());
+    return matchAddress;
+}
+
+inline bool isSameNetwork(IPv4Address address1, IPv4Address mask1, IPv4Address address2, IPv4Address mask2)
+{
+    return (mask1 == mask2) && ((address1 & mask1) == (address2 & mask2));
+}
 
 //individual LSAs are identified by a combination
 //of their LS type, Link State ID, and Advertising Router fields
@@ -73,7 +211,8 @@ struct LSAKeyType
 struct NextHop
 {
     int ifIndex;
-    IPv6Address hopAddress;
+    //IPv6Address hopAddress;
+    L3Address hopAddress;
     IPv4Address advertisingRouter;      // Router ID
 };
 

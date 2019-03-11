@@ -36,6 +36,7 @@ class INET_API OSPFv3Instance : public cObject
     OSPFv3Area* getAreaById(IPv4Address areaId);
     OSPFv3Area* getArea(int i){return this->areas.at(i);}
     void debugDump();
+    IPv4Address getNewInterAreaPrefixLinkStateID();
     void processPacket(OSPFv3Packet* packet);
     void init();
     OSPFv3Process* getProcess() const {return this->containingProcess;}
@@ -61,6 +62,7 @@ class INET_API OSPFv3Instance : public cObject
     cModule* containingModule=nullptr;
     std::map<IPv4Address , OSPFv3Area*> areasById; //mapping the area id to area
     int OSPFv3IfIndex = 0; //unique number for interfaces
+    IPv4Address interAreaPrefixLsID = IPv4Address::UNSPECIFIED_ADDRESS;
 
 
 

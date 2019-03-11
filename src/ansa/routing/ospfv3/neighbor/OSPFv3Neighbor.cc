@@ -12,12 +12,21 @@ OSPFv3Neighbor::OSPFv3Neighbor(IPv4Address newId, OSPFv3Interface* parent)
     this->neighborId = newId;
     this->state = new OSPFv3NeighborStateDown;
     this->containingInterface = parent;
-    this->neighborIPAddress = IPv6Address::UNSPECIFIED_ADDRESS;
     this->neighborsDesignatedRouter = NULL_IPV4ADDRESS;
     this->neighborsBackupDesignatedRouter = NULL_IPV4ADDRESS;
-    this->neighborsDesignatedIP = IPv6Address::UNSPECIFIED_ADDRESS;
-    this->neighborsBackupIP = IPv6Address::UNSPECIFIED_ADDRESS;
     this->neighborsRouterDeadInterval = DEFAULT_DEAD_INTERVAL;
+    //this is always only link local address
+    this->neighborIPAddress = IPv6Address::UNSPECIFIED_ADDRESS;
+    if (this->getInterface()->getArea()->getInstance()->getAddressFamily() == IPV6INSTANCE)
+    {
+        this->neighborsDesignatedIP = IPv6Address::UNSPECIFIED_ADDRESS;
+        this->neighborsBackupIP = IPv6Address::UNSPECIFIED_ADDRESS;
+    }
+    else
+    {
+        this->neighborsDesignatedIP = IPv4Address::UNSPECIFIED_ADDRESS;
+        this->neighborsBackupIP = IPv4Address::UNSPECIFIED_ADDRESS;
+    }
 
     inactivityTimer = new cMessage();
     inactivityTimer->setKind(NEIGHBOR_INACTIVITY_TIMER);
@@ -234,8 +243,10 @@ void OSPFv3Neighbor::sendDDPacket(bool init)
     //TODO - checksum
 
     if(this->getInterface()->getType() == OSPFv3Interface::POINTTOPOINT_TYPE){
-        EV_DEBUG << "(P2P link ) Send DD Packet to OSPF MCAST, which is FF02::5\n";
-        this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(ddPacket,IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getInterface()->getIntName().c_str());
+        EV_DEBUG << "(P2P link ) Send DD Packet to OSPF MCAST\n";
+            this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(ddPacket,IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getInterface()->getIntName().c_str());
+
+
     }
     else{
         EV_DEBUG << "Send DD Packet to " <<  this->getNeighborIP() << "\n";
@@ -286,9 +297,13 @@ void OSPFv3Neighbor::sendLinkStateRequestPacket()
     //TODO - ttl and checksum
 
     if(this->getInterface()->getType() == OSPFv3Interface::POINTTOPOINT_TYPE)
-        this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(requestPacket,IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getInterface()->getIntName().c_str());
+    {
+            this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(requestPacket,IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getInterface()->getIntName().c_str());
+    }
     else
+    {
         this->getInterface()->getArea()->getInstance()->getProcess()->sendPacket(requestPacket,this->getNeighborIP(), this->getInterface()->getIntName().c_str());
+    }
 }
 
 void OSPFv3Neighbor::createDatabaseSummary()

@@ -254,7 +254,7 @@ packet OSPFv3LinkLSA  extends OSPFv3LSA
     uint8_t routerPriority;
     OSPFv3Options ospfOptions;
     
-    IPv6Address linkLocalInterfaceAdd;
+    L3Address linkLocalInterfaceAdd;
     
     uint32_t numPrefixes;
     OSPFv3LinkLSAPrefix prefixes[];

@@ -78,8 +78,8 @@ class OSPFv3Neighbor{
     IPv4Address getNeighborsDR(){return this->neighborsDesignatedRouter;}
     IPv4Address getNeighborsBackup(){return this->neighborsBackupDesignatedRouter;}
     IPv6Address getNeighborIP(){return this->neighborIPAddress;}
-    IPv6Address getNeighborBackupIP(){return this->neighborsBackupIP;};
-    IPv6Address getNeighborDesignatedIP(){return this->neighborsDesignatedIP;}
+    L3Address getNeighborBackupIP(){return this->neighborsBackupIP;};
+    L3Address getNeighborDesignatedIP(){return this->neighborsDesignatedIP;}
     uint32_t getNeighborInterfaceID(){return this->neighborInterfaceID;}
     OSPFv3Options getOptions() const { return this->neighborOptions; }
     OSPFv3DatabaseExchangeRelationshipType getDatabaseExchangeRelationship(){return this->databaseExchangeRelationship;}
@@ -161,8 +161,8 @@ class OSPFv3Neighbor{
     OSPFv3Options neighborOptions;//options supported by the neighbor
     IPv4Address neighborsDesignatedRouter;//DR advertised by the neighbor
     IPv4Address neighborsBackupDesignatedRouter;///Backup advertised by the router
-    IPv6Address neighborsBackupIP;
-    IPv6Address neighborsDesignatedIP;
+    L3Address neighborsBackupIP;
+    L3Address neighborsDesignatedIP;
     uint32_t neighborInterfaceID;
     bool designatedRoutersSetUp = false;
     short neighborsRouterDeadInterval = 0;

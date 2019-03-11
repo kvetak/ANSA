@@ -125,7 +125,7 @@ class INET_API OSPFv3Interface : public cObject
     int getNeighborCount() const {return this->neighbors.size();}
     int getInterfaceMTU() const;
     int getInterfaceIndex(){return this->interfaceIndex;}
-    IPv6Address getInterfaceIP() const {return this->interfaceIP;}
+    IPv6Address getInterfaceLLIP() const {return this->interfaceLLIP;}
     bool isInterfacePassive(){return this->passiveInterface;}
     IPv4Address getTransitAreaID() const { return this->transitAreaID; }
 
@@ -173,6 +173,8 @@ class INET_API OSPFv3Interface : public cObject
     std::string detailedInfo() const override;
     void acknowledgeLSA(OSPFv3LSAHeader& lsaHeader, AcknowledgementFlags ackFlags, IPv4Address routerID);
 
+
+    // LINK LSA
     LinkLSA* originateLinkLSA();
     bool installLinkLSA(OSPFv3LinkLSA *lsa);
     void addLinkLSA(LinkLSA* newLSA){this->linkLSAList.push_back(newLSA);}
@@ -189,19 +191,25 @@ class INET_API OSPFv3Interface : public cObject
     void setTransitNetInt(bool isTransit){this->transitNetworkInterface=isTransit;}
     bool getTransitNetInt(){return this->transitNetworkInterface;}
 
+    void addInterfaceAddress(IPv6AddressRange address) {this->interfaceAddresses.push_back(address);}
+    int getInterfaceAddressCount(){return this->interfaceAddresses.size();}
+    IPv6AddressRange getInterfaceAddress(int i) {return this->interfaceAddresses[i];}
+
+
 
     bool ageDatabase();
   private:
     friend class OSPFv3InterfaceState;
 
   private:
-    IPv6Address interfaceIP;
+    int interfaceId;//physical id in the simulation
+    int interfaceIndex;//unique value that appears in hello packet
+    std::vector<LinkLSA*> linkLSAList;
+    IPv6Address interfaceLLIP; // link-local ip address
     std::string interfaceName;
     bool passiveInterface;
     OSPFv3InterfaceState* state;
     OSPFv3InterfaceState* previousState=nullptr;
-    int interfaceId;//physical id in the simulation
-    int interfaceIndex;//unique value that appears in hello packet
     short helloInterval;
     short deadInterval;
     short pollInterval;
@@ -214,6 +222,8 @@ class INET_API OSPFv3Interface : public cObject
     OSPFv3Area* containingArea;
     IPv4Address transitAreaID;
     OSPFv3Interface::OSPFv3InterfaceType interfaceType;
+
+    std::vector<IPv6AddressRange> interfaceAddresses; // List of link prefixes
     std::vector<OSPFv3Neighbor*> neighbors;
     std::map<IPv4Address, OSPFv3Neighbor*> neighborsById;
     std::map<IPv6Address, std::list<OSPFv3LSAHeader> > delayedAcknowledgements;
@@ -222,7 +232,6 @@ class INET_API OSPFv3Interface : public cObject
     //for Intra-Area-Prefix LSA
     bool transitNetworkInterface;
 
-    std::vector<LinkLSA*> linkLSAList;
     uint32_t linkLSASequenceNumber = 1;
 
     IPv6Address DesignatedRouterIP;
@@ -237,6 +246,7 @@ class INET_API OSPFv3Interface : public cObject
     cMessage *acknowledgementTimer;
 
     //TODO - E-bit
+    // TODO - instance ID missing (?)
 };
 
 inline std::ostream& operator<<(std::ostream& ostr, const OSPFv3Interface& interface)

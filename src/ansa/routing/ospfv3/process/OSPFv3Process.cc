@@ -19,6 +19,7 @@ void OSPFv3Process::initialize(int stage){
         this->containingModule=findContainingNode(this);
         ift = check_and_cast<IInterfaceTable* >(containingModule->getSubmodule("interfaceTable"));
         rt = check_and_cast<IPv6RoutingTable* >(containingModule->getSubmodule("routingTable")->getSubmodule("ipv6"));
+        rt4 = check_and_cast<IPv4RoutingTable* >(containingModule->getSubmodule("routingTable")->getSubmodule("ipv4"));
 
         this->routerID = IPv4Address(par("routerID").stringValue());
         this->processID = (int)par("processID");
@@ -28,7 +29,8 @@ void OSPFv3Process::initialize(int stage){
         init->setKind(INIT_PROCESS);
         scheduleAt(simTime(), init);
         WATCH_PTRVECTOR(this->instances);
-        WATCH_PTRVECTOR(this->routingTable);
+        WATCH_PTRVECTOR(this->routingTableIPv6);
+        WATCH_PTRVECTOR(this->routingTableIPv4);
 
         ageTimer = new cMessage();
         ageTimer->setKind(DATABASE_AGE_TIMER);
@@ -76,7 +78,16 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
     cXMLElementList intList = interfaceConfig->getElementsByTagName("Interface");
     for(auto interfaceIt=intList.begin(); interfaceIt!=intList.end(); interfaceIt++)
     {
+
         const char* interfaceName = (*interfaceIt)->getAttribute("name");
+        std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n";
+        std::cout << "VYPIS IFT NA ZAC PARSECONFIG\n";
+        InterfaceEntry *myInterface = (ift->getInterfaceByName(interfaceName));
+        std::cout <<  myInterface->info();
+        std::cout << "\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n";
+
+
+
         const char* routerPriority = nullptr;
         const char* helloInterval = nullptr;
         const char* deadInterval = nullptr;
@@ -263,7 +274,96 @@ void OSPFv3Process::parseConfig(cXMLElement* interfaceConfig)
                         }
 
                         newInterface->setArea(area);
-                        std::cout << "I am " << this->getOwner()->getOwner()->getName() << " on int " << newInterface->getInterfaceIP() << " with area " << area->getAreaID() << endl;
+
+
+//                        std::cout << "IPCka = " << newInterface->getInterfaceIP() << "  " << endl;
+
+                        // parse IPv6 adresses and add them into area's addressRanges and into interface IP addresses
+                        cXMLElementList ipAddrList = (*interfaceIt)->getElementsByTagName("IPv6Address");
+                        for (auto & ipv6Rec : ipAddrList) {
+                               const char * addr6c = ipv6Rec->getNodeValue();
+
+                               std::string add6 = addr6c;
+                               std::string prefix6 = add6.substr(0, add6.find("/"));
+
+                               //IPv6InterfaceData * intfData6 = myInterface->ipv6Data(); LG
+
+                               int prefLength;
+                               IPv6Address address6;
+                               if (!(address6.tryParseAddrWithPrefix(addr6c, prefLength)))
+                                    throw cRuntimeError("Cannot parse Ipv6 address: '%s", addr6c);
+                   //                std::cout << "parsed prefix = " << prefLength << std::endl;
+
+                               address6 = IPv6Address(prefix6.c_str());
+
+                               IPv6InterfaceData::AdvPrefix p;
+                               p.prefix = address6;
+                               p.prefixLength = prefLength;
+//                               intfData6->addAdvPrefix(p);
+
+                               IPv6AddressRange ipv6addRange;
+                               ipv6addRange.prefix = address6; //add only network prefix
+                               ipv6addRange.prefixLength = prefLength;
+                               area->addAddressRange(ipv6addRange, true); //TODO:  add tag Advertise and exclude link-local (?)
+                        }
+
+                        // create addressRange for IPv4
+                        cXMLElementList ipv4AddrList = (*interfaceIt)->getElementsByTagName("IPAddress");
+                        if (ipv4AddrList.size() == 1)
+                        {
+                            IPv4AddressRange ipv4addRange;
+                            for (auto & ipv4Rec : ipv4AddrList)
+                            {
+                                const char * addr4c = ipv4Rec->getNodeValue();
+                                ipv4addRange.address = IPv4Address(addr4c);
+                            }
+                            cXMLElementList ipv4MaskList = (*interfaceIt)->getElementsByTagName("Mask");
+                            if (ipv4MaskList.size() != 1)
+                                throw cRuntimeError("Interface %s has more or less than one mask address ", interfaceName);
+
+                            for (auto & ipv4Rec : ipv4MaskList)
+                            {
+                               const char * mask4c = ipv4Rec->getNodeValue();
+                               ipv4addRange.mask = IPv4Address(mask4c);
+                            }
+                            area->addAddressRange(ipv4addRange, true); //TODO:  add tag Advertise and exclude link-local (?)
+
+                        }
+                        else if (ipv4AddrList.size() > 1)
+                            throw cRuntimeError("Interface %s has more than one IPv4 address ", interfaceName);
+
+                        std::cout << "som za FOROM"  << endl;
+                        std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+
+                        std::cout << "VYPIS IFT ZA FOROM\n";
+                        std::cout <<  myInterface->info();
+                        std::cout << "\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n";
+
+//                        IPv6Address *addr = new IPv6Address();
+//                        int prefixlen;
+//                        for(auto ipIt=ipAddrList.begin(); ipIt!=ipAddrList.end(); ipIt++)
+//                        {
+//                            const char* value = (*ipIt)->getNodeValue();
+//                            std::cout << "IPcka = " << value << endl;
+//                            addr->tryParseAddrWithPrefix(value,prefixlen);
+//                            std::cout << "PO PREVOLANI : " << addr->str()  <<  "  "  << prefixlen << endl;
+//
+//                            // add to area's addressRange
+//                            IPv6AddressRange addressRange;
+//                            addressRange.prefix = addr->getPrefix(prefixlen); //add only network prefix
+//                            addressRange.prefixLength = prefixlen;
+//                            area->addAddressRange(addressRange, true); //TODO:  add tag Advertise and exclude link-local (?)
+//
+//                            // add to interface's IPv6 addresses
+//                            IPv6AddressRange intAddress;
+//                            intAddress.prefix = *addr;
+//                            intAddress.prefixLength = prefixlen;
+//                            newInterface->addInterfaceAddress(intAddress);
+//
+//                        }
+
+
+                        std::cout << "I am " << this->getOwner()->getOwner()->getName() << " on int " << newInterface->getInterfaceLLIP() << " with area " << area->getAreaID() << endl;
                         area->addInterface(newInterface);
                     }
                 }
@@ -294,6 +394,43 @@ void OSPFv3Process::ageDatabase()
         }
     }
 } // ageDatabase
+
+/// for IPv6 AF
+bool OSPFv3Process::hasAddressRange(const IPv6AddressRange& addressRange) const
+{
+    long instanceCount = instances.size();
+    for (long i = 0; i < instanceCount; i++)
+    {
+        long areaCount = instances[i]->getAreaCount();
+
+        for (long j = 0; j < areaCount; j++)
+        {
+           if(instances[i]->getArea(j)->hasAddressRange(addressRange))
+           {
+               return true;
+           }
+        }
+    }
+    return false;
+}
+// for IPv4 AF
+bool OSPFv3Process::hasAddressRange(const IPv4AddressRange& addressRange) const
+{
+    long instanceCount = instances.size();
+    for (long i = 0; i < instanceCount; i++)
+    {
+        long areaCount = instances[i]->getAreaCount();
+
+        for (long j = 0; j < areaCount; j++)
+        {
+           if(instances[i]->getArea(j)->hasAddressRange(addressRange))
+           {
+               return true;
+           }
+        }
+    }
+    return false;
+}
 
 void OSPFv3Process::handleTimer(cMessage* msg)
 {
@@ -660,7 +797,7 @@ bool OSPFv3Process::installLSA(OSPFv3LSA *lsa, int instanceID, IPv4Address areaI
     return false;
 }
 
-void OSPFv3Process::calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTable)
+void OSPFv3Process::calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntry* > newTableIPv6, std::vector<OSPFv3IPv4RoutingTableEntry* > newTableIPv4)
 {
     EV_DEBUG << "Calculating AS External Routes\n";
 }
@@ -668,7 +805,8 @@ void OSPFv3Process::calculateASExternalRoutes(std::vector<OSPFv3RoutingTableEntr
 void OSPFv3Process::rebuildRoutingTable()
 {
     unsigned long instanceCount = this->instances.size();
-    std::vector<OSPFv3RoutingTableEntry *> newTable;
+    std::vector<OSPFv3RoutingTableEntry *> newTableIPv6;
+    std::vector<OSPFv3IPv4RoutingTableEntry *> newTableIPv4;
 
     for(unsigned int k=0; k<instanceCount; k++) {
         OSPFv3Instance* currInst = this->instances.at(k);
@@ -681,82 +819,195 @@ void OSPFv3Process::rebuildRoutingTable()
 
         //2)Intra area routes are calculated using SPF algo
         for (i = 0; i < areaCount; i++) {
-            currInst->getArea(i)->calculateShortestPathTree(newTable);
+            currInst->getArea(i)->calculateShortestPathTree(newTableIPv6, newTableIPv4);
             if (currInst->getArea(i)->getTransitCapability()) {
                 hasTransitAreas = true;
             }
         }
-        //3)Inter-area routes are calculated by examining summary-LSAs (on backbone only)
+//        3)Inter-area routes are calculated by examining summary-LSAs (on backbone only)
         if (areaCount > 1) {
             OSPFv3Area *backbone = currInst->getAreaById(BACKBONE_AREAID);
             if (backbone != nullptr) {
-                backbone->calculateInterAreaRoutes(newTable);
+                backbone->calculateInterAreaRoutes(newTableIPv6, newTableIPv4);
             }
         }
         else {
             if (areaCount == 1) {
-                currInst->getArea(0)->calculateInterAreaRoutes(newTable);
+                currInst->getArea(0)->calculateInterAreaRoutes(newTableIPv6, newTableIPv4);
             }
         }
 
         //4)On BDR - Transit area LSAs(summary) are examined - find better paths then in 2) and 3)
-        if (hasTransitAreas) {
-            for (i = 0; i < areaCount; i++) {
-                if (currInst->getArea(i)->getTransitCapability()) {
-                    currInst->getArea(i)->recheckSummaryLSAs(newTable);
-                }
-            }
-        }
+//        if (hasTransitAreas) {
+//            for (i = 0; i < areaCount; i++) {
+//                if (currInst->getArea(i)->getTransitCapability()) {
+//                    currInst->getArea(i)->recheckInterAreaPrefixLSAs(newTable);
+//                }
+//            }
+//        }
 
         //5) Routes to external destinations are calculated
-        calculateASExternalRoutes(newTable);
+        calculateASExternalRoutes(newTableIPv6, newTableIPv4);
 
         // backup the routing table
-        unsigned long routeCount = routingTable.size();
-        std::vector<OSPFv3RoutingTableEntry *> oldTable;
+        unsigned long routeCount = routingTableIPv6.size();
+        std::vector<OSPFv3RoutingTableEntry *> oldTableIPv6;
+        std::vector<OSPFv3IPv4RoutingTableEntry *> oldTableIPv4;
 
-        oldTable.assign(routingTable.begin(), routingTable.end());
-        routingTable.clear();
-        routingTable.assign(newTable.begin(), newTable.end());
+        oldTableIPv6.assign(routingTableIPv6.begin(), routingTableIPv6.end());
+        routingTableIPv6.clear();
+        routingTableIPv6.assign(newTableIPv6.begin(), newTableIPv6.end());
 
-        std::vector<IPv6Route *> eraseEntries;
+
+        oldTableIPv4.assign(routingTableIPv4.begin(), routingTableIPv4.end());
+        routingTableIPv4.clear();
+        routingTableIPv4.assign(newTableIPv4.begin(), newTableIPv4.end());
+
+        std::vector<IPv6Route *> eraseEntriesIPv6;
         unsigned long routingEntryNumber = rt->getNumRoutes();
-        // remove entries from the IPv4 routing table inserted by the OSPF module
+        // remove entries from the IPv6 routing table inserted by the OSPF module
         for (i = 0; i < routingEntryNumber; i++) {
             IPv6Route *entry = rt->getRoute(i);
-            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
-            if (ospfEntry != nullptr) {
-                eraseEntries.push_back(entry);
-            }
-        }
-
-        unsigned int eraseCount = eraseEntries.size();
-        for (i = 0; i < eraseCount; i++) {
-            rt->deleteRoute(eraseEntries[i]);
-        }
-
-        // add the new routing entries
-        routeCount = routingTable.size();
-        for (i = 0; i < routeCount; i++) {
-//            if (routingTable[i]->getDestinationType() == OSPFv3RoutingTableEntry::NETWORK_DESTINATION) {
-//                rt->addRoute(new RoutingTableEntry(*(routingTable[i])));
+//            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
+            if (entry->getSourceType() == IRoute::OSPF)
+                eraseEntriesIPv6.push_back(entry);
+//            if (ospfEntry != nullptr) {
+//                eraseEntries.push_back(entry);
 //            }
         }
+        unsigned int eraseCount = eraseEntriesIPv6.size();
+        for (i = 0; i < eraseCount; i++) {
+            rt->deleteRoute(eraseEntriesIPv6[i]);
+        }
 
-        //notifyAboutRoutingTableChanges(oldTable);
+        std::vector<IPv4Route *> eraseEntriesIPv4;
+        routingEntryNumber = rt4->getNumRoutes();
+        // remove entries from the IPv64routing table inserted by the OSPF module
+        for (i = 0; i < routingEntryNumber; i++) {
+            IPv4Route *entry = rt4->getRoute(i);
+//            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
+            if (entry->getSourceType() == IRoute::OSPF)
+                eraseEntriesIPv4.push_back(entry);
+//            if (ospfEntry != nullptr) {
+//                eraseEntries.push_back(entry);
+//            }
+        }
+        eraseCount = eraseEntriesIPv4.size();
+        for (i = 0; i < eraseCount; i++) {
+            rt4->deleteRoute(eraseEntriesIPv4[i]);
+        }
 
-        routeCount = oldTable.size();
+        // TODO : LG dorobit aj pre IPv4 !!!!
+        // add the new routing entries
+        routeCount = routingTableIPv6.size();
         for (i = 0; i < routeCount; i++) {
-            delete (oldTable[i]);
+            if (routingTableIPv6[i]->getDestinationType() == OSPFv3RoutingTableEntry::NETWORK_DESTINATION) {
+
+                if (routingTableIPv6[i]->getNextHopCount() > 0)
+                {
+                    std::cout << "PRED ERROROM ADRESA - " <<  routingTableIPv6[i]->getDestPrefix() << "\n";
+                  /*  if (routingTable[i]->getDestinationAsGeneric().getType() ==  L3Address::IPv4)
+                    {
+                        std::cout  << "je to IPv4\n";
+                        std::cout << "dest = " << routingTable[i]->getDestinationAsGeneric().toIPv4().str()  << " , next hop = " <<  routingTable[i]->getNextHop(0).hopAddress.str() << "\n";
+                        std::cout << "is unspecified ? " << routingTable[i]->getNextHop(0).hopAddress.isUnspecified() << "\n";
+                    }
+                    else
+                    {
+                        std::cout  << "je to IPv6\n";
+                        std::cout << "dest = " << routingTable[i]->getDestinationAsGeneric().toIPv6().str()  << " , next hop = " <<  routingTable[i]->getNextHop(0).hopAddress.str() << "\n";
+                        std::cout << "is unspecified ? " << routingTableIPv6[i]->getNextHop(0).hopAddress.isUnspecified() << "\n";
+                    }*/
+                }
+               /* if (!routingTable[i]->getNextHop(0).hopAddress.isUnspecified())
+                {
+                    std::cout << "tu ma stopni \n";
+                }
+
+                if (routingTable[i]->getDestinationAsGeneric().getType() ==  L3Address::IPv6)
+                {
+
+                    IPv6Route *route = new IPv6Route(routingTable[i]->getDestinationAsGeneric().toIPv6(), routingTable[i]->getPrefixLength(), routingTable[i]->getSourceType());
+
+    //                IPv6Route(IPv6Address destPrefix, int prefixLength, SourceType sourceType)
+
+    //                routingTable[i]->getOptionalCapabilities()
+    //                routingTable[i]->getArea()
+    //                routingTable[i]->getPathType()
+    //                routingTable[i]->getCost()
+    //                routingTable[i]->getType2Cost()
+    //                routingTable[i]->getLinkStateOrigin()
+    //                routingTable[i]->getDestinationType()
+    //                routingTable[i]->getInterface()
+                    route->setNextHop(      routingTable[i]->getNextHop(0).hopAddress);
+    //                route->setDestination(  routingTable[i]->getDestinationAsGeneric().toIPv6());
+    //                route->setPrefixLength( routingTable[i]->getPrefixLength());
+    //                route->setSourceType(   routingTable[i]->getSourceType());
+                    route->setMetric(       routingTable[i]->getMetric());
+                    route->setInterface(    routingTable[i]->getInterface());
+                    route->setExpiryTime(   routingTable[i]->getExpiryTime());
+                    route->setAdminDist(    routingTable[i]->getAdminDist());
+
+                    rt->addRoute(route);
+                }
+                else
+                {
+                    std::cout << "TUTO TO ULOZIM DO RT4\n";
+//                    IPv4Route *route = new IPv4Route();
+//                    route->setDestination()
+//
+//                    rt4->addRoute();
+                }*/
+               // rt->addRoute(routingTable[i]);
+               //rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i]), routingTable[i]->getDestPrefix(), routingTable[i]->getPrefixLength(), routingTable[i]->getSourceType()));
+//                rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i]), *(routingTable[i])->getDestPrefix(), *(routingTableIPv6[i])->getPrefixLength(),  *(routingTableIPv6[i])->getSourceType()));
+
+            }
+        }
+        for (int g = 0; g < rt->getNumRoutes(); g++)
+        {
+            IPv6Route* route = rt->getRoute(g);
+            std::cout << route->getSourceTypeAbbreviation();
+                std::cout << " ";
+                if (route->getDestPrefix().isUnspecified())
+                    std::cout << "::";
+                else
+                    std::cout << route->getDestPrefix();
+                std::cout << "/" << route->getPrefixLength();
+                std::cout << " .. nexthop = " <<  route->getNextHop().str();
+                if (route->getNextHop().isUnspecified())
+                {
+                    std::cout << ", is directly connected";
+                }
+                else
+                {
+                    std::cout << ", [" << route->getAdminDist() << "/" << route->getMetric() << "]";
+                    std::cout << " via ";
+                    std::cout << route->getNextHop();
+                }
+                std::cout << ", " << route->getInterface()->getName();
+                std::cout << "\n";
+        }
+
+        //notifyAboutRoutingTableChanges(oldTableIPv6);
+
+        routeCount = oldTableIPv6.size();
+        for (i = 0; i < routeCount; i++) {
+            delete (oldTableIPv6[i]);
+        }
+
+        routeCount = oldTableIPv4.size();
+        for (i = 0; i < routeCount; i++) {
+           delete (oldTableIPv4[i]);
         }
 
         EV_INFO << "Routing table was rebuilt.\n"
                 << "Results:\n";
 
-        routeCount = routingTable.size();
+       /* routeCount = routingTable.size();
         for (i = 0; i < routeCount; i++) {
-            EV_INFO << *routingTable[i] << "\n";
-        }
+            EV_INFO << *routingTableIPv6[i] << "\n";
+        }*/
     }
 }
 }//namespace inet
