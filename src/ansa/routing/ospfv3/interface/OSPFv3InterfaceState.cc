@@ -122,7 +122,8 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
         for(int i=0; i< routerLSAcount; i++) {
             routerLSA = interface->getArea()->getRouterLSA(i);
             OSPFv3LSAHeader &header = routerLSA->getHeader();
-            if (header.getAdvertisingRouter() == interface->getArea()->getInstance()->getProcess()->getRouterID()) {
+            if (header.getAdvertisingRouter() == interface->getArea()->getInstance()->getProcess()->getRouterID() &&
+                    interface->getType() == OSPFv3Interface::BROADCAST_TYPE) {
                 EV_DEBUG << "Changing state -> deleting the old router LSA\n";
                 interface->getArea()->deleteRouterLSA(i);
             }

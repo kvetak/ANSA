@@ -182,6 +182,13 @@ IPv4Address OSPFv3Instance::getNewInterAreaPrefixLinkStateID()
     return currIP;
 }
 
+void OSPFv3Instance::subtractInterAreaPrefixLinkStateID()
+{
+    IPv4Address currIP = this->interAreaPrefixLsID;
+    int newIP = currIP.getInt()-1;
+    this->interAreaPrefixLsID = IPv4Address(newIP);
+}
+
 std::string OSPFv3Instance::detailedInfo() const
 {
     std::stringstream out;

@@ -37,6 +37,7 @@ class INET_API OSPFv3Instance : public cObject
     OSPFv3Area* getArea(int i){return this->areas.at(i);}
     void debugDump();
     IPv4Address getNewInterAreaPrefixLinkStateID();
+    void subtractInterAreaPrefixLinkStateID();
     void processPacket(OSPFv3Packet* packet);
     void init();
     OSPFv3Process* getProcess() const {return this->containingProcess;}

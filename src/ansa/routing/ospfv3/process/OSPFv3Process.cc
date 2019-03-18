@@ -838,96 +838,106 @@ void OSPFv3Process::rebuildRoutingTable()
         }
 
         //4)On BDR - Transit area LSAs(summary) are examined - find better paths then in 2) and 3)
-//        if (hasTransitAreas) {
-//            for (i = 0; i < areaCount; i++) {
-//                if (currInst->getArea(i)->getTransitCapability()) {
-//                    currInst->getArea(i)->recheckInterAreaPrefixLSAs(newTable);
-//                }
-//            }
-//        }
+       /* if (hasTransitAreas) {
+            for (i = 0; i < areaCount; i++) {
+                if (currInst->getArea(i)->getTransitCapability()) {
+                    if (currInst->getAddressFamily() == IPV6INSTANCE)
+                        currInst->getArea(i)->recheckInterAreaPrefixLSAs(newTableIPv6);
+                    else //IPV4INSTACE
+                        currInst->getArea(i)->recheckInterAreaPrefixLSAs(newTableIPv4);
+                }
+            }
+        }*/
 
         //5) Routes to external destinations are calculated
-        calculateASExternalRoutes(newTableIPv6, newTableIPv4);
+       // calculateASExternalRoutes(newTableIPv6, newTableIPv4);
 
         // backup the routing table
         unsigned long routeCount = routingTableIPv6.size();
         std::vector<OSPFv3RoutingTableEntry *> oldTableIPv6;
         std::vector<OSPFv3IPv4RoutingTableEntry *> oldTableIPv4;
 
-        oldTableIPv6.assign(routingTableIPv6.begin(), routingTableIPv6.end());
+      /*  oldTableIPv6.assign(routingTableIPv6.begin(), routingTableIPv6.end());
         routingTableIPv6.clear();
         routingTableIPv6.assign(newTableIPv6.begin(), newTableIPv6.end());
 
 
         oldTableIPv4.assign(routingTableIPv4.begin(), routingTableIPv4.end());
         routingTableIPv4.clear();
-        routingTableIPv4.assign(newTableIPv4.begin(), newTableIPv4.end());
+        routingTableIPv4.assign(newTableIPv4.begin(), newTableIPv4.end());*/
 
-        std::vector<IPv6Route *> eraseEntriesIPv6;
-        unsigned long routingEntryNumber = rt->getNumRoutes();
-        // remove entries from the IPv6 routing table inserted by the OSPF module
-        for (i = 0; i < routingEntryNumber; i++) {
-            IPv6Route *entry = rt->getRoute(i);
-//            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
-            if (entry->getSourceType() == IRoute::OSPF)
-                eraseEntriesIPv6.push_back(entry);
-//            if (ospfEntry != nullptr) {
-//                eraseEntries.push_back(entry);
-//            }
-        }
-        unsigned int eraseCount = eraseEntriesIPv6.size();
-        for (i = 0; i < eraseCount; i++) {
-            rt->deleteRoute(eraseEntriesIPv6[i]);
-        }
 
-        std::vector<IPv4Route *> eraseEntriesIPv4;
-        routingEntryNumber = rt4->getNumRoutes();
-        // remove entries from the IPv64routing table inserted by the OSPF module
-        for (i = 0; i < routingEntryNumber; i++) {
-            IPv4Route *entry = rt4->getRoute(i);
-//            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
-            if (entry->getSourceType() == IRoute::OSPF)
-                eraseEntriesIPv4.push_back(entry);
-//            if (ospfEntry != nullptr) {
-//                eraseEntries.push_back(entry);
-//            }
+
+
+        if (currInst->getAddressFamily() == IPV6INSTANCE) // IPv6 AF should not clear IPv4 Routing table and vice versa
+        {
+
+            oldTableIPv6.assign(routingTableIPv6.begin(), routingTableIPv6.end());
+            routingTableIPv6.clear();
+            routingTableIPv6.assign(newTableIPv6.begin(), newTableIPv6.end());
+
+            std::vector<IPv6Route *> eraseEntriesIPv6;
+            unsigned long routingEntryNumber = rt->getNumRoutes();
+            // remove entries from the IPv6 routing table inserted by the OSPF module
+            for (i = 0; i < routingEntryNumber; i++) {
+                IPv6Route *entry = rt->getRoute(i);
+    //            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
+                if (entry->getSourceType() == IRoute::OSPF)
+                    eraseEntriesIPv6.push_back(entry);
+    //            if (ospfEntry != nullptr) {
+    //                eraseEntries.push_back(entry);
+    //            }
+            }
+            unsigned int eraseCount = eraseEntriesIPv6.size();
+            for (i = 0; i < eraseCount; i++) {
+                rt->deleteRoute(eraseEntriesIPv6[i]);
+            }
         }
-        eraseCount = eraseEntriesIPv4.size();
-        for (i = 0; i < eraseCount; i++) {
-            rt4->deleteRoute(eraseEntriesIPv4[i]);
+        else
+        {
+            oldTableIPv4.assign(routingTableIPv4.begin(), routingTableIPv4.end());
+            routingTableIPv4.clear();
+            routingTableIPv4.assign(newTableIPv4.begin(), newTableIPv4.end());
+
+            std::vector<IPv4Route *> eraseEntriesIPv4;
+            unsigned long routingEntryNumber = rt4->getNumRoutes();
+            // remove entries from the IPv64routing table inserted by the OSPF module
+            for (i = 0; i < routingEntryNumber; i++) {
+                IPv4Route *entry = rt4->getRoute(i);
+    //            OSPFv3RoutingTableEntry *ospfEntry = dynamic_cast<OSPFv3RoutingTableEntry *>(entry);
+                if (entry->getSourceType() == IRoute::OSPF)
+                    eraseEntriesIPv4.push_back(entry);
+    //            if (ospfEntry != nullptr) {
+    //                eraseEntries.push_back(entry);
+    //            }
+            }
+            unsigned int eraseCount = eraseEntriesIPv4.size();
+            for (i = 0; i < eraseCount; i++) {
+                rt4->deleteRoute(eraseEntriesIPv4[i]);
+            }
         }
 
         // TODO : LG dorobit aj pre IPv4 !!!!
+
         // add the new routing entries
-        routeCount = routingTableIPv6.size();
-        for (i = 0; i < routeCount; i++) {
-            if (routingTableIPv6[i]->getDestinationType() == OSPFv3RoutingTableEntry::NETWORK_DESTINATION) {
+        if (currInst->getAddressFamily() == IPV6INSTANCE)
+        {
+            routeCount = routingTableIPv6.size();
+            EV_DEBUG  << "rebuild , routeCount - " << routeCount << "\n";
 
-                if (routingTableIPv6[i]->getNextHopCount() > 0)
-                {
-                    std::cout << "PRED ERROROM ADRESA - " <<  routingTableIPv6[i]->getDestPrefix() << "\n";
-                  /*  if (routingTable[i]->getDestinationAsGeneric().getType() ==  L3Address::IPv4)
+            for (i = 0; i < routeCount; i++) {
+                if (routingTableIPv6[i]->getDestinationType() == OSPFv3RoutingTableEntry::NETWORK_DESTINATION) {
+
+                    if (routingTableIPv6[i]->getNextHopCount() > 0)
                     {
-                        std::cout  << "je to IPv4\n";
-                        std::cout << "dest = " << routingTable[i]->getDestinationAsGeneric().toIPv4().str()  << " , next hop = " <<  routingTable[i]->getNextHop(0).hopAddress.str() << "\n";
-                        std::cout << "is unspecified ? " << routingTable[i]->getNextHop(0).hopAddress.isUnspecified() << "\n";
+                      /*  std::cout << "PRED ERROROM ADRESA - " <<  routingTableIPv6[i]->getDestPrefix() << "\n";
+                        EV_DEBUG << "PRED ERROROM ADRESA - " <<  routingTableIPv6[i]->getDestPrefix() << "\n";
                     }
-                    else
+                    if (!routingTableIPv6[i]->getNextHop(0).hopAddress.isUnspecified())
                     {
-                        std::cout  << "je to IPv6\n";
-                        std::cout << "dest = " << routingTable[i]->getDestinationAsGeneric().toIPv6().str()  << " , next hop = " <<  routingTable[i]->getNextHop(0).hopAddress.str() << "\n";
-                        std::cout << "is unspecified ? " << routingTableIPv6[i]->getNextHop(0).hopAddress.isUnspecified() << "\n";
+                        std::cout << "tu ma stopni \n";
+                        EV_DEBUG << "tu ma stopni \n";
                     }*/
-                }
-               /* if (!routingTable[i]->getNextHop(0).hopAddress.isUnspecified())
-                {
-                    std::cout << "tu ma stopni \n";
-                }
-
-                if (routingTable[i]->getDestinationAsGeneric().getType() ==  L3Address::IPv6)
-                {
-
-                    IPv6Route *route = new IPv6Route(routingTable[i]->getDestinationAsGeneric().toIPv6(), routingTable[i]->getPrefixLength(), routingTable[i]->getSourceType());
 
     //                IPv6Route(IPv6Address destPrefix, int prefixLength, SourceType sourceType)
 
@@ -939,66 +949,108 @@ void OSPFv3Process::rebuildRoutingTable()
     //                routingTable[i]->getLinkStateOrigin()
     //                routingTable[i]->getDestinationType()
     //                routingTable[i]->getInterface()
-                    route->setNextHop(      routingTable[i]->getNextHop(0).hopAddress);
     //                route->setDestination(  routingTable[i]->getDestinationAsGeneric().toIPv6());
     //                route->setPrefixLength( routingTable[i]->getPrefixLength());
     //                route->setSourceType(   routingTable[i]->getSourceType());
-                    route->setMetric(       routingTable[i]->getMetric());
-                    route->setInterface(    routingTable[i]->getInterface());
-                    route->setExpiryTime(   routingTable[i]->getExpiryTime());
-                    route->setAdminDist(    routingTable[i]->getAdminDist());
 
-                    rt->addRoute(route);
+                    if (routingTableIPv6[i]->getNextHop(0).hopAddress != IPv6Address::UNSPECIFIED_ADDRESS)
+                    {
+                        IPv6Route *route = new IPv6Route(routingTableIPv6[i]->getDestinationAsGeneric().toIPv6(), routingTableIPv6[i]->getPrefixLength(), routingTableIPv6[i]->getSourceType());
+                        route->setNextHop   (   routingTableIPv6[i]->getNextHop(0).hopAddress);
+                        route->setMetric    (       routingTableIPv6[i]->getMetric());
+                        route->setInterface (    routingTableIPv6[i]->getInterface());
+                        route->setExpiryTime(   routingTableIPv6[i]->getExpiryTime());
+                        route->setAdminDist (    routingTableIPv6[i]->getAdminDist());
+
+                        rt->addRoute(route);
+                    }
+                    }
+
+                   // rt->addRoute(routingTable[i]);
+                   //rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i]), routingTable[i]->getDestPrefix(), routingTable[i]->getPrefixLength(), routingTable[i]->getSourceType()));
+    //                rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i]), *(routingTable[i])->getDestPrefix(), *(routingTableIPv6[i])->getPrefixLength(),  *(routingTableIPv6[i])->getSourceType()));
+
                 }
-                else
-                {
-                    std::cout << "TUTO TO ULOZIM DO RT4\n";
-//                    IPv4Route *route = new IPv4Route();
-//                    route->setDestination()
-//
-//                    rt4->addRoute();
-                }*/
-               // rt->addRoute(routingTable[i]);
-               //rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i]), routingTable[i]->getDestPrefix(), routingTable[i]->getPrefixLength(), routingTable[i]->getSourceType()));
-//                rt->addRoute(new OSPFv3RoutingTableEntry(*(routingTable[i]), *(routingTable[i])->getDestPrefix(), *(routingTableIPv6[i])->getPrefixLength(),  *(routingTableIPv6[i])->getSourceType()));
+            }
+            for (int g = 0; g < rt->getNumRoutes(); g++)
+            {
+                IPv6Route* route = rt->getRoute(g);
+                std::cout << route->getSourceTypeAbbreviation();
+                    std::cout << " ";
+                    if (route->getDestPrefix().isUnspecified())
+                        std::cout << "::";
+                    else
+                        std::cout << route->getDestPrefix();
+                    std::cout << "/" << route->getPrefixLength();
+                    std::cout << " .. nexthop = " <<  route->getNextHop().str();
+                    if (route->getNextHop().isUnspecified())
+                    {
+                        std::cout << ", is directly connected";
+                    }
+                    else
+                    {
+                        std::cout << ", [" << route->getAdminDist() << "/" << route->getMetric() << "]";
+                        std::cout << " via ";
+                        std::cout << route->getNextHop();
+                    }
+                    std::cout << ", " << route->getInterface()->getName();
+                    std::cout << "\n";
+            }
 
+            //notifyAboutRoutingTableChanges(oldTableIPv6);
+
+            routeCount = oldTableIPv6.size();
+            for (i = 0; i < routeCount; i++)
+            {
+                delete (oldTableIPv6[i]);
             }
         }
-        for (int g = 0; g < rt->getNumRoutes(); g++)
+        else
         {
-            IPv6Route* route = rt->getRoute(g);
-            std::cout << route->getSourceTypeAbbreviation();
-                std::cout << " ";
-                if (route->getDestPrefix().isUnspecified())
-                    std::cout << "::";
-                else
-                    std::cout << route->getDestPrefix();
-                std::cout << "/" << route->getPrefixLength();
-                std::cout << " .. nexthop = " <<  route->getNextHop().str();
-                if (route->getNextHop().isUnspecified())
+            routeCount = routingTableIPv4.size();
+            EV_DEBUG  << "rebuild , routeCount - " << routeCount << "\n";
+
+            for (i = 0; i < routeCount; i++) {
+                if (routingTableIPv4[i]->getDestinationType() == OSPFv3IPv4RoutingTableEntry::NETWORK_DESTINATION)
                 {
-                    std::cout << ", is directly connected";
+                    if (routingTableIPv4[i]->getNextHopCount() > 0)
+                    {
+                  /*      std::cout << "PRED ERROROM ADRESA - " <<  routingTableIPv4[i]->getDestination() << "\n";
+                        EV_DEBUG << "PRED ERROROM ADRESA - " <<  routingTableIPv4[i]->getDestination() << "\n";
+                    }
+                    if (!routingTableIPv4[i]->getNextHop(0).hopAddress.isUnspecified())
+                    {
+                        std::cout << "tu ma stopni \n";
+                        EV_DEBUG << "tu ma stopni \n";
+                    }*/
+
+
+
+                    if (routingTableIPv4[i]->getNextHop(0).hopAddress != IPv4Address::UNSPECIFIED_ADDRESS)
+                    {
+                        IPv4Route *route = new IPv4Route();
+                        route->setDestination(  routingTableIPv4[i]->getDestinationAsGeneric().toIPv4());
+                        route->setNetmask   (   route->getDestination().makeNetmask(routingTableIPv4[i]->getPrefixLength()));
+                        route->setSourceType(   routingTableIPv4[i]->getSourceType());
+                        route->setNextHop   (   routingTableIPv4[i]->getNextHop(0).hopAddress);
+                        route->setMetric    (       routingTableIPv4[i]->getMetric());
+                        route->setInterface (    routingTableIPv4[i]->getInterface());
+    //                    route->setExpiryTime(   routingTableIPv6[i]->getExpiryTime());
+                        route->setAdminDist (    routingTableIPv4[i]->getAdminDist());
+
+
+                        rt4->addRoute(route);
+                    }
+                    }
+
                 }
-                else
-                {
-                    std::cout << ", [" << route->getAdminDist() << "/" << route->getMetric() << "]";
-                    std::cout << " via ";
-                    std::cout << route->getNextHop();
-                }
-                std::cout << ", " << route->getInterface()->getName();
-                std::cout << "\n";
-        }
+            }
 
-        //notifyAboutRoutingTableChanges(oldTableIPv6);
-
-        routeCount = oldTableIPv6.size();
-        for (i = 0; i < routeCount; i++) {
-            delete (oldTableIPv6[i]);
-        }
-
-        routeCount = oldTableIPv4.size();
-        for (i = 0; i < routeCount; i++) {
-           delete (oldTableIPv4[i]);
+            routeCount = oldTableIPv4.size();
+            for (i = 0; i < routeCount; i++)
+            {
+               delete (oldTableIPv4[i]);
+            }
         }
 
         EV_INFO << "Routing table was rebuilt.\n"

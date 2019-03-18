@@ -30,7 +30,6 @@ public:
     static const unsigned char NETWORK_DESTINATION = 0;
     static const unsigned char AREA_BORDER_ROUTER_DESTINATION = 1;
     static const unsigned char AS_BOUNDARY_ROUTER_DESTINATION = 2;
-    static const unsigned char ROUTER_DESTINATION = 3;
 
 private:
     IInterfaceTable *ift = nullptr;

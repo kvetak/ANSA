@@ -108,6 +108,7 @@ class INET_API OSPFv3Area : public cObject
     IPv4Address getNewInterAreaPrefixLinkStateID();
     uint32_t getCurrentInterAreaPrefixSequence(){return this->interAreaPrefixLSASequenceNumber;}
     void incrementInterAreaPrefixSequence(){this->interAreaPrefixLSASequenceNumber++;}
+    InterAreaPrefixLSA* InterAreaPrefixLSAAlreadyExists(OSPFv3InterAreaPrefixLSA *newLsa);
 
 
     //* INTRA AREA PREFIX LSA */
@@ -120,6 +121,7 @@ class INET_API OSPFv3Area : public cObject
     bool updateIntraAreaPrefixLSA(IntraAreaPrefixLSA* currentLsa, OSPFv3IntraAreaPrefixLSA* newLsa);
     bool intraAreaPrefixLSADiffersFrom(OSPFv3IntraAreaPrefixLSA* currentLsa, OSPFv3IntraAreaPrefixLSA* newLsa);
     IPv4Address getNewIntraAreaPrefixLinkStateID();
+    void subtractIntraAreaPrefixLinkStateID();
     IPv4Address getIntraAreaPrefixLinkStateID(){return this->intraAreaPrefixLsID;}
     uint32_t getCurrentIntraAreaPrefixSequence(){return this->intraAreaPrefixLSASequenceNumber;}
     void incrementIntraAreaPrefixSequence(){this->intraAreaPrefixLSASequenceNumber++;}
@@ -130,7 +132,8 @@ class INET_API OSPFv3Area : public cObject
     uint32_t getCurrentNetIntraAreaPrefixSequence(){return this->netIntraAreaPrefixLSASequenceNumber;}
     void incrementNetIntraAreaPrefixSequence(){this->netIntraAreaPrefixLSASequenceNumber++;}
     IntraAreaPrefixLSA*  findIntraAreaPrefixByAdvRouter(IPv4Address advRouter);
-    IntraAreaPrefixLSA* findNetIntraAreaPrefixLSAByReference(IPv4Address refLSID, IPv4Address refAdvRouter);
+    IntraAreaPrefixLSA* findIntraAreaPrefixLSAByReference(LSAKeyType lsaKey);
+    IntraAreaPrefixLSA* IntraAreaPrefixLSAAlreadyExists(OSPFv3IntraAreaPrefixLSA *newLsa);
 
     OSPFv3LSAHeader* findLSA(LSAKeyType lsaKey);
     bool floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface=nullptr, OSPFv3Neighbor* neighbor=nullptr);
@@ -142,6 +145,9 @@ class INET_API OSPFv3Area : public cObject
 
     void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* >& newTableIPv6, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
     void calculateInterAreaRoutes(std::vector<OSPFv3RoutingTableEntry* >& newTable, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
+
+    std::vector<NextHop> *calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const;
+    std::vector<NextHop> *calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const;
 
     bool findSameOrWorseCostRoute(const std::vector<OSPFv3RoutingTableEntry *>& newTable, // TODO >  PRE IPV4 SPRAVIT SAMOSTATNU METODU
             const InterAreaPrefixLSA& interAreaPrefixLSA,
@@ -159,11 +165,9 @@ class INET_API OSPFv3Area : public cObject
     OSPFv3IPv4RoutingTableEntry *createRoutingTableEntryFromInterAreaPrefixLSA(const InterAreaPrefixLSA& interAreaPrefixLSA,
             unsigned short entryCost,
             const OSPFv3IPv4RoutingTableEntry& borderRouterEntry) const;
-    void recheckInterAreaPrefixLSAs(std::vector<OSPFv3RoutingTableEntry* >& newTable, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
+    void recheckInterAreaPrefixLSAs(std::vector<OSPFv3RoutingTableEntry* >& newTableIPv6);
+    void recheckInterAreaPrefixLSAs(std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);
     bool hasLink(OSPFv3LSA *fromLSA, OSPFv3LSA *toLSA) const;
-    std::vector<NextHop> *calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const;
-    std::vector<NextHop> *calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const;
-
 
     std::string detailedInfo() const override;
 

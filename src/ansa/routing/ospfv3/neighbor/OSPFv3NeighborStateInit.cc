@@ -52,11 +52,11 @@ void OSPFv3NeighborStateInit::processEvent(OSPFv3Neighbor *neighbor, OSPFv3Neigh
             if (!(neighbor->isFirstAdjacencyInited())) {
                 neighbor->initFirstAdjacency();
             }
-//            else {
-//                neighbor->incrementDDSequenceNumber();
-//            }
-//            neighbor->sendDDPacket(true);
-//            neighbor->getInterface()->getArea()->getInstance()->getProcess()->setTimer(neighbor->getDDRetransmissionTimer(), neighbor->getInterface()->getRetransmissionInterval());
+            else {
+                neighbor->incrementDDSequenceNumber();
+            }
+            neighbor->sendDDPacket(true);
+            neighbor->getInterface()->getArea()->getInstance()->getProcess()->setTimer(neighbor->getDDRetransmissionTimer(), neighbor->getInterface()->getRetransmissionInterval());
             changeState(neighbor, new OSPFv3NeighborStateExStart, this);
         }
         else {
