@@ -149,6 +149,7 @@ class INET_API OSPFv3Area : public cObject
     std::vector<NextHop> *calculateNextHops(OSPFv3SPFVertex* destination, OSPFv3SPFVertex *parent) const;
     std::vector<NextHop> *calculateNextHops(OSPFv3LSA *destination, OSPFv3LSA *parent) const;
 
+    void addRouterEntry(RouterLSA* routerLSA, LSAKeyType lsaKey, std::vector<OSPFv3RoutingTableEntry *>& newTableIPv6, std::vector<OSPFv3IPv4RoutingTableEntry *>& newTableIPv4 );
     bool findSameOrWorseCostRoute(const std::vector<OSPFv3RoutingTableEntry *>& newTable, // TODO >  PRE IPV4 SPRAVIT SAMOSTATNU METODU
             const InterAreaPrefixLSA& interAreaPrefixLSA,
             unsigned short currentCost,
@@ -197,6 +198,7 @@ class INET_API OSPFv3Area : public cObject
 
     std::map<IPv4Address, RouterLSA *> routerLSAsByID;
     std::map<IPv4Address, NetworkLSA *> networkLSAsByID;
+    std::map<IPv4Address, InterAreaPrefixLSA *> interAreaPrefixLSAByID;
     std::map<IPv4Address, IntraAreaPrefixLSA *> intraAreaPrefixLSAByID;
 
     std::vector<RouterLSA* > routerLSAList;
