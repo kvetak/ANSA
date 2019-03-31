@@ -34,8 +34,6 @@ void OSPFv3NeighborState::changeState(OSPFv3Neighbor *neighbor, OSPFv3NeighborSt
 
     neighbor->changeState(newState, currentState);
 
-    // NEROZUMIEM , to akoze vytvorim cez neigbora jeho RouterLSA  a potom naplanujem
-    // cez jeho intf floodLSA ?
     if ((oldState == OSPFv3Neighbor::FULL_STATE) || (nextState == OSPFv3Neighbor::FULL_STATE)) {
         IPv4Address routerID = neighbor->getInterface()->getArea()->getInstance()->getProcess()->getRouterID();
 //        IPv4Address routerID = neighbor->getContainingInterface()->getContainingArea()->getContainingInstance()->getContainingProcess()->getRouterID();
@@ -63,10 +61,8 @@ void OSPFv3NeighborState::changeState(OSPFv3Neighbor *neighbor, OSPFv3NeighborSt
         }
 
         // FIXME: Sposobuje, za v sieti 2 routerov v stave kedy prejdu do FULLstate a podmienka je true
-        // ma DR NetworkLSAList.size() = 2 , napriek tomu, ze v DB ma NetworkLSA len jedno
+        // ma DR NetworkLSAList.size() = 2 , napriek tomu, ze v DB ma NetworkLSA len jedno LG
         if (neighbor->getInterface()->getState() == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) {
-            // Link State ID for NETWORK LSA is Interface Index - FALSE
-            // LG - JE TO INTERFACE ID. NIE INDEX !
             NetworkLSA *networkLSA = neighbor->getInterface()->getArea()->findNetworkLSAByLSID(
                     IPv4Address(neighbor->getInterface()->getInterfaceId()));
 

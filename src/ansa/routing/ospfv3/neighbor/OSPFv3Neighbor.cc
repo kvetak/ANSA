@@ -104,6 +104,16 @@ void OSPFv3Neighbor::reset()
         delete lastTransmittedDDPacket;
         lastTransmittedDDPacket = nullptr;
     }
+
+    EV_DEBUG << this->getNeighborID() << " -  Database Summary List \n";
+    EV_DEBUG << "advR\t\tLSID\t\tLSA Type\n";
+    for (auto it = databaseSummaryList.begin(); it != databaseSummaryList.end(); it++)
+    {
+
+        OSPFv3LSAHeader* hd =  (*it);
+        EV_DEBUG << hd->getAdvertisingRouter() << "\t" << hd->getLinkStateID() << "\t" << hd->getLsaType() << "\n";
+    }
+    EV_DEBUG << "------------------ LG\n";
 }
 
 bool OSPFv3Neighbor::needAdjacency()
@@ -122,6 +132,8 @@ bool OSPFv3Neighbor::needAdjacency()
         (interfaceType == OSPFv3Interface::VIRTUAL_TYPE) ||
         (dRouter == routerID) ||
         (backupDRouter == routerID) ||
+        (!designatedRoutersSetUp &&
+                neighborsDesignatedRouter == NULL_IPV4ADDRESS)||
         (this->getNeighborID() == dRouter) ||
         (this->getNeighborID() == backupDRouter))
     {
@@ -339,6 +351,17 @@ void OSPFv3Neighbor::createDatabaseSummary()
         OSPFv3LSAHeader* lsaHeader = new OSPFv3LSAHeader(area->getIntraAreaPrefixLSA(i)->getHeader());
         this->databaseSummaryList.push_back(lsaHeader);
     }
+
+
+    EV_DEBUG << this->getNeighborID() << " -  Database Summary List \n";
+    EV_DEBUG << "advR\t\tLSID\t\tLSA Type\n";
+    for (auto it = databaseSummaryList.begin(); it != databaseSummaryList.end(); it++)
+    {
+
+        OSPFv3LSAHeader* hd =  (*it);
+        EV_DEBUG << hd->getAdvertisingRouter() << "\t" << hd->getLinkStateID() << "\t" << hd->getLsaType() << "\n";
+    }
+    EV_DEBUG << "------------------ LG\n";
 }
 
 void OSPFv3Neighbor::retransmitUpdatePacket() //vyprsi timer Acku a zasle znovu
@@ -578,14 +601,19 @@ void OSPFv3Neighbor::addToRetransmissionList(OSPFv3LSA *lsa)
 void OSPFv3Neighbor::removeFromRetransmissionList(LSAKeyType lsaKey)
 {
     auto it = linkStateRetransmissionList.begin();
-    while (it != linkStateRetransmissionList.end()) {
+    int counter = 0;
+    while (it != linkStateRetransmissionList.end())
+    {
+
+        EV_DEBUG << counter++ << " - HEADER in retransmition list:\n" <<  (*it)->getHeader() << "\n";
         if (((*it)->getHeader().getLinkStateID() == lsaKey.linkStateID) &&
             ((*it)->getHeader().getAdvertisingRouter() == lsaKey.advertisingRouter))
         {
             delete (*it);
             it = linkStateRetransmissionList.erase(it);
         }
-        else {
+        else
+        {
             it++;
         }
     }

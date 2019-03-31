@@ -85,15 +85,21 @@ std::ostream& operator<<(std::ostream& ostr, const OSPFv3LSAHeader& lsaHeader)
             break;
 
         case INTER_AREA_PREFIX_LSA:
-            ostr << "SummaryLSA_Networks";
+            ostr << "InterAreaPrefixLSA";
             break;
 
         case INTER_AREA_ROUTER_LSA:
-            ostr << "SummaryLSA_ASBoundaryRouters";
+            ostr << "InterAreaRouterLSA";
             break;
 
         case AS_EXTERNAL_LSA:
             ostr << "ASExternalLSA";
+            break;
+        case LINK_LSA:
+            ostr << "LinkLSA";
+            break;
+        case INTRA_AREA_PREFIX_LSA:
+            ostr << "IntraAreaPrefixLSA";
             break;
 
         default:

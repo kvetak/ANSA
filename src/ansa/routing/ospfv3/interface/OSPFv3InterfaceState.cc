@@ -21,18 +21,18 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
     //change of state -> new router LSA needs to be generated
 
     if ((oldState == OSPFv3Interface::INTERFACE_STATE_DOWN) ||
-             (nextState == OSPFv3Interface::INTERFACE_STATE_DOWN) ||
-             (oldState == OSPFv3Interface::INTERFACE_STATE_LOOPBACK) ||
-             (nextState == OSPFv3Interface::INTERFACE_STATE_LOOPBACK) ||
-             (oldState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
-             (nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
-             ((intfType == OSPFv3Interface::POINTTOMULTIPOINT_TYPE) &&
-              ((oldState == OSPFv3Interface::INTERFACE_STATE_POINTTOPOINT) ||
-               (nextState == OSPFv3Interface::INTERFACE_STATE_POINTTOPOINT))) ||
-             (((intfType == OSPFv3Interface::BROADCAST_TYPE) ||
-               (intfType == OSPFv3Interface::NBMA_TYPE)) &&
-              ((oldState == OSPFv3Interface::INTERFACE_STATE_WAITING) ||
-               (nextState == OSPFv3Interface::INTERFACE_STATE_WAITING))))
+         (nextState == OSPFv3Interface::INTERFACE_STATE_DOWN) ||
+         (oldState == OSPFv3Interface::INTERFACE_STATE_LOOPBACK) ||
+         (nextState == OSPFv3Interface::INTERFACE_STATE_LOOPBACK) ||
+         (oldState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
+         (nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
+
+         ((intfType == OSPFv3Interface::POINTTOMULTIPOINT_TYPE) && ((oldState == OSPFv3Interface::INTERFACE_STATE_POINTTOPOINT) ||
+           (nextState == OSPFv3Interface::INTERFACE_STATE_POINTTOPOINT))) ||
+
+         (((intfType == OSPFv3Interface::BROADCAST_TYPE) ||
+           (intfType == OSPFv3Interface::NBMA_TYPE)) && ((oldState == OSPFv3Interface::INTERFACE_STATE_WAITING) ||
+           (nextState == OSPFv3Interface::INTERFACE_STATE_WAITING))))
     {
 
         LSAKeyType lsaKey;
@@ -119,7 +119,9 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
     {
         RouterLSA* routerLSA;
         int routerLSAcount = interface->getArea()->getRouterLSACount();
-        for(int i=0; i< routerLSAcount; i++) {
+        int i = 0;
+        while (i < routerLSAcount)
+        {
             routerLSA = interface->getArea()->getRouterLSA(i);
             OSPFv3LSAHeader &header = routerLSA->getHeader();
             if (header.getAdvertisingRouter() == interface->getArea()->getInstance()->getProcess()->getRouterID() &&
@@ -127,7 +129,25 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
                 EV_DEBUG << "Changing state -> deleting the old router LSA\n";
                 interface->getArea()->deleteRouterLSA(i);
             }
+
+            if (interface->getArea()->getRouterLSACount() == routerLSAcount)
+                i++;
+            else //some routerLSA was deleted
+            {
+                routerLSAcount = interface->getArea()->getRouterLSACount();
+                i = 0;
+            }
+
         }
+//        for(int i=0; i< routerLSAcount; i++) {
+//            routerLSA = interface->getArea()->getRouterLSA(i);
+//            OSPFv3LSAHeader &header = routerLSA->getHeader();
+//            if (header.getAdvertisingRouter() == interface->getArea()->getInstance()->getProcess()->getRouterID() &&
+//                    interface->getType() == OSPFv3Interface::BROADCAST_TYPE) {
+//                EV_DEBUG << "Changing state -> deleting the old router LSA\n";
+//                interface->getArea()->deleteRouterLSA(i);
+//            }
+//        }
 
         EV_DEBUG << "Changing state -> new Router LSA\n";
         std::cout <<  "som v  spesl stave WAITING , " << interface->getArea()->getInstance()->getProcess()->getRouterID() << " netCount = " << interface->getArea()->getNetworkLSACount() << endl;
@@ -135,18 +155,35 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
         if (routerLsa != nullptr)
         {
             if (interface->getArea()->installRouterLSA(routerLsa))
+            {
                 interface->getArea()->setSpfTreeRoot(routerLsa);
+                interface->getArea()->floodLSA(routerLsa);
+
+            }
         }
 
-        if (interface->getType() == OSPFv3Interface::POINTTOPOINT_TYPE) //TODO: LG , skontrolovoat, overit, prerobit
+        if (interface->getType() == OSPFv3Interface::POINTTOPOINT_TYPE || (interface->getArea()->hasAnyPassiveInterface())) //TODO: LG , skontrolovoat, overit, prerobit
         {
-            interface->getArea()->installIntraAreaPrefixLSA(interface->getArea()->originateIntraAreaPrefixLSA());
+            OSPFv3IntraAreaPrefixLSA* prefLSA  = interface->getArea()->originateIntraAreaPrefixLSA();
+            if (prefLSA != nullptr)
+                if (interface->getArea()->installIntraAreaPrefixLSA(prefLSA))
+                    interface->getArea()->floodLSA(prefLSA);
+
         }
 
         if(nextState == OSPFv3Interface::INTERFACE_STATE_BACKUP ||
            nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED ||
            nextState == OSPFv3Interface::INTERFACE_STATE_DROTHER) {
             interface->setTransitNetInt(true);//this interface is in broadcast network
+
+            // if router has any interface as Passive, create separate Intra-Area-Prefix-LSA for these interfaces
+            if (interface->getArea()->hasAnyPassiveInterface())
+            {
+                OSPFv3IntraAreaPrefixLSA* prefLSA  = interface->getArea()->originateIntraAreaPrefixLSA();
+                if (prefLSA != nullptr)
+                    if (interface->getArea()->installIntraAreaPrefixLSA(prefLSA))
+                        interface->getArea()->floodLSA(prefLSA);
+            }
         }
 
 //        if(interface->getArea()->getInstance()->getAreaCount()==1)
@@ -188,22 +225,25 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
 
     if (nextState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) {
         NetworkLSA* newLSA = interface->getArea()->originateNetworkLSA(interface);
-        if (newLSA != nullptr) { //TODO LG this is never nullptr
+        if (newLSA != nullptr) {
             shouldRebuildRoutingTable |= interface->getArea()->installNetworkLSA(newLSA);
+            if (shouldRebuildRoutingTable)
+            {
+                OSPFv3IntraAreaPrefixLSA* prefLSA = interface->getArea()->originateNetIntraAreaPrefixLSA(newLSA, interface);
+                interface->getArea()->installIntraAreaPrefixLSA(prefLSA);
+                InterfaceEntry* ie = interface->containingProcess->ift->getInterfaceById(interface->getInterfaceId());
+                IPv6InterfaceData *ipv6int = ie->ipv6Data();
+                ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
+                ipv6int->assignAddress(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, false, 0, 0);
 
-            OSPFv3IntraAreaPrefixLSA* prefLSA = interface->getArea()->originateNetIntraAreaPrefixLSA(newLSA, interface);
-            interface->getArea()->installIntraAreaPrefixLSA(prefLSA);
-            InterfaceEntry* ie = interface->containingProcess->ift->getInterfaceById(interface->getInterfaceId());
-            IPv6InterfaceData *ipv6int = ie->ipv6Data();
-            ipv6int->joinMulticastGroup(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST);
-            ipv6int->assignAddress(IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, false, 0, 0);
-
-//            shouldRebuildRoutingTable = true;
-            interface->getArea()->floodLSA(newLSA, interface);
-            interface->getArea()->floodLSA(prefLSA, interface);
+    //            shouldRebuildRoutingTable = true;
+                interface->getArea()->floodLSA(newLSA);
+                interface->getArea()->floodLSA(prefLSA);
+            }
+//            interface->getArea()->floodLSA(newLSA, interface);
+//            interface->getArea()->floodLSA(prefLSA, interface);
         }
-        // FIXME:
-        else        // pridane aj s if()
+        else
         {
             NetworkLSA *networkLSA = interface->getArea()->findNetworkLSAByLSID(IPv4Address(interface->getInterfaceId()));
             if (networkLSA != nullptr)
@@ -212,6 +252,11 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
                 interface->getArea()->floodLSA(networkLSA);
                 networkLSA->incrementInstallTime();
             }
+            // here I am in state when interface comes to DR state but there is no neighbor on this iface.
+            // so new LSA type 9 need to be created TODO
+            OSPFv3IntraAreaPrefixLSA* prefLSA = interface->getArea()->originateIntraAreaPrefixLSA();
+            shouldRebuildRoutingTable |= interface->getArea()->installIntraAreaPrefixLSA(prefLSA);
+            interface->getArea()->floodLSA(prefLSA);
         }
                 //InterfaceEntry* ie = ift->getInterfaceByName(intName);
 //        NetworkLSA *newLSA = interface->getArea()->originateNetworkLSA(intf);
@@ -232,7 +277,7 @@ void OSPFv3InterfaceState::changeState(OSPFv3Interface *interface, OSPFv3Interfa
 //        }
     }
 
-    if (oldState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) {
+    if ((oldState == OSPFv3Interface::INTERFACE_STATE_DESIGNATED )&& (nextState != OSPFv3Interface::INTERFACE_STATE_DESIGNATED)) {
         NetworkLSA *networkLSA = interface->getArea()->findNetworkLSA(interface->getInterfaceId(), interface->getArea()->getInstance()->getProcess()->getRouterID());
 //
         if (networkLSA != nullptr) {
@@ -492,6 +537,10 @@ void OSPFv3InterfaceState::calculateDesignatedRouter(OSPFv3Interface *intf){
         if (isOther) {
             changeState(intf, new OSPFv3InterfaceStateDROther, this);
         }
+        if (isDesignatedRouter) { // for case that link between routers was disconnected and Router become DR again
+            changeState(intf, new OSPFv3InterfaceStateDR, this);
+        }
+
     }
     if (wasOther) {
         if (isDesignatedRouter) {

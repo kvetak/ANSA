@@ -7,6 +7,7 @@
 #include "ansa/routing/ospfv3/interface/OSPFv3Interface.h"
 #include "ansa/routing/ospfv3/OSPFv3Packet_m.h"
 #include "ansa/routing/ospfv3/process/OSPFv3LSA.h"
+#include "ansa/routing/ospfv3/process/OSPFv3Process.h"
 #include "ansa/routing/ospfv3/process/OSPFv3RoutingTableEntry.h"
 #include "ansa/routing/ospfv3/neighbor/OSPFv3Neighbor.h"
 
@@ -141,6 +142,7 @@ class INET_API OSPFv3Area : public cObject
     void removeFromAllRetransmissionLists(LSAKeyType lsaKey);
     bool isOnAnyRetransmissionList(LSAKeyType lsaKey) const;
     bool hasAnyNeighborInStates(int states) const;
+    bool hasAnyPassiveInterface() const;
 
 
     void calculateShortestPathTree(std::vector<OSPFv3RoutingTableEntry* >& newTableIPv6, std::vector<OSPFv3IPv4RoutingTableEntry* >& newTableIPv4);

@@ -158,11 +158,11 @@ void OSPFv3Interface::reset()
 bool OSPFv3Interface::hasAnyNeighborInStates(int states) const
 {
     long neighborCount = neighbors.size();
-    for (long i = 0; i < neighborCount; i++) {
+    for (long i = 0; i < neighborCount; i++)
+    {
         OSPFv3Neighbor::OSPFv3NeighborStateType neighborState = neighbors[i]->getState();
-        if (neighborState & states) {
+        if (neighborState >= states)
             return true;
-        }
     }
     return false;
 }
@@ -445,7 +445,6 @@ void OSPFv3Interface::processHelloPacket(OSPFv3Packet* packet)
                 neighbor->setNeighborPriority(hello->getRouterPriority());
                 neighbor->setNeighborAddress(ctlInfo->getSourceAddress().toIPv6());
                 neighbor->setNeighborDeadInterval(hello->getDeadInterval());
-                EV_DEBUG << "HELLO: Interface ID used in hello packet: " << hello->getInterfaceID() << "\n";
                 neighbor->setNeighborInterfaceID(hello->getInterfaceID());
 
                 dRouterID = hello->getDesignatedRouterID();
@@ -1201,7 +1200,6 @@ void OSPFv3Interface::processLSU(OSPFv3Packet* packet, OSPFv3Neighbor* neighbor)
 
                     //b)immediately flood the LSA
                     EV_DEBUG << "Flooding the LSA out\n";
-                    // TODO : kontroluj èi sa toto da do false alebo true . OSPFv2 - t= 40 , FALSE !
                     if(currentLSA->getHeader().getLsaType()!=LINK_LSA)
                         ackFlags.floodedBackOut = this->getArea()->getInstance()->getProcess()->floodLSA(currentLSA, areaID, this, neighbor); // TODO: always true
                     if(ackFlags.floodedBackOut)
@@ -1336,7 +1334,7 @@ void OSPFv3Interface::processLSAck(OSPFv3Packet* packet, OSPFv3Neighbor* neighbo
 
         int lsaCount = lsAckPacket->getLsaHeadersArraySize();
 
-        EV_DETAIL << "  Processing packet contents:\n";
+        EV_DETAIL << " Link State Acknowledgement Processing packet contents:\n";
 
         for (int i = 0; i < lsaCount; i++) {
             OSPFv3LSAHeader& lsaHeader = lsAckPacket->getLsaHeaders(i);
@@ -1349,7 +1347,9 @@ void OSPFv3Interface::processLSAck(OSPFv3Packet* packet, OSPFv3Neighbor* neighbo
             lsaKey.advertisingRouter = lsaHeader.getAdvertisingRouter();
 
             if ((lsaOnRetransmissionList = neighbor->findOnRetransmissionList(lsaKey)) != nullptr) {
-                if (operator==(lsaHeader, lsaOnRetransmissionList->getHeader())) {
+                if (operator==(lsaHeader, lsaOnRetransmissionList->getHeader()))
+                {
+                    EV_DEBUG << "neighbor->removeFromRetransmissionList(lsaKey)\n";
                     neighbor->removeFromRetransmissionList(lsaKey);
                 }
                 else {
@@ -1358,6 +1358,7 @@ void OSPFv3Interface::processLSAck(OSPFv3Packet* packet, OSPFv3Neighbor* neighbo
             }
         }
         if (neighbor->isRetransmissionListEmpty()) {
+            EV_DEBUG << "neighbor clear Update Retransmission Timer\n";
             neighbor->clearUpdateRetransmissionTimer();
         }
     }
@@ -1467,6 +1468,7 @@ void OSPFv3Interface::sendLSAcknowledgement(OSPFv3LSAHeader *lsaHeader, IPv6Addr
 
 void OSPFv3Interface::addDelayedAcknowledgement(OSPFv3LSAHeader& lsaHeader)
 {
+    EV_DEBUG << "calling add delayded ack\n";
     if (interfaceType == OSPFv3Interface::BROADCAST_TYPE) {
         if ((getState() == OSPFv3Interface::INTERFACE_STATE_DESIGNATED) ||
                 (getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) ||
@@ -1493,6 +1495,7 @@ void OSPFv3Interface::addDelayedAcknowledgement(OSPFv3LSAHeader& lsaHeader)
 
 void OSPFv3Interface::sendDelayedAcknowledgements()
 {
+    EV_DEBUG << "calling send delayded ack\n";
     for (auto & elem : delayedAcknowledgements)
     {
         int ackCount = elem.second.size();
@@ -1526,17 +1529,24 @@ void OSPFv3Interface::sendDelayedAcknowledgements()
                             (getState() == OSPFv3Interface::INTERFACE_STATE_BACKUP) ||
                             (this->DesignatedRouterID == IPv4Address::UNSPECIFIED_ADDRESS))
                     {
+                        EV_DEBUG << "send ack 1\n";
                         this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getIntName().c_str(), ttl);
                     }
-                    else {
+                    else
+                    {
+                        EV_DEBUG << "send ack 2\n";
                         this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, IPv6Address::ALL_OSPF_DESIGNATED_ROUTERS_MCAST, this->getIntName().c_str(), ttl);
                     }
                 }
                 else {
-                    if (interfaceType == OSPFv3Interface::POINTTOPOINT_TYPE) {
+                    if (interfaceType == OSPFv3Interface::POINTTOPOINT_TYPE)
+                    {
+                        EV_DEBUG << "send ack 3\n";
                         this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, IPv6Address::ALL_OSPF_ROUTERS_MCAST, this->getIntName().c_str(), ttl);
                     }
-                    else {
+                    else
+                    {
+                        EV_DEBUG << "send ack 4\n";
                         this->getArea()->getInstance()->getProcess()->sendPacket(ackPacket, elem.first, this->getIntName().c_str(), ttl);
                     }
                 }
@@ -1609,6 +1619,9 @@ bool OSPFv3Interface::floodLSA(OSPFv3LSA* lsa, OSPFv3Interface* interface, OSPFv
                 EV_DEBUG << "1c - next neighbor\n";
                 continue;
             }
+            EV_DEBUG << "calling ADD TO RETRANSMITION LIST\nHEADER of lsa:\n" <<  lsa->getHeader() << "\n";
+            EV_DEBUG << "type is - " <<   lsa->getHeader().getLsaType() << "\n";
+
             this->neighbors.at(i)->addToRetransmissionList(lsa);    // (1) (d)
             lsaAddedToRetransmissionList = true;
         }
@@ -1761,7 +1774,7 @@ LinkLSA* OSPFv3Interface::originateLinkLSA()
     OSPFv3LSAHeader& lsaHeader = linkLSA->getHeader();
 
     //First the LSA Header
-    lsaHeader.setLsaAge((int)simTime().dbl());
+    lsaHeader.setLsaAge(0);
     lsaHeader.setLsaType(LINK_LSA);
     // ***ZMENA***  LUKAS GALBICKA
 //    lsaHeader.setLinkStateID(IPv4Add ress(this->getInterfaceIndex()));
